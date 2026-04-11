@@ -145,41 +145,82 @@ EOF
 }
 
 cmd_env() {
-  hdr "env discovery"
-  if [[ -n "${HYO_ENV_FILE_LOADED:-}" ]]; then
-    ok "loaded env file: $HYO_ENV_FILE_LOADED"
-  else
-    warn "no env file auto-loaded"
-    say ""
-    say "Searched (in order):"
-    say "  \$HYO_ENV_FILE override (currently: ${HYO_ENV_FILE:-<unset>})"
-    say "  ~/security/hyo.env"
-    say "  ~/security/.env"
-    say "  ~/.config/hyo/env"
-    say "  $ROOT/.secrets/env"
-    say ""
-    say "Create any one of these with lines like:"
-    say "  ANTHROPIC_API_KEY=sk-ant-..."
-    say "  GROK_API_KEY=xai-..."
-    say "  HYO_FOUNDER_TOKEN=..."
-    say "  FRED_API_KEY=..."
-  fi
-  say ""
-  hdr "detected credentials"
-  for k in ANTHROPIC_API_KEY GROK_API_KEY HYO_FOUNDER_TOKEN FRED_API_KEY OPENAI_API_KEY; do
-    v="${!k:-}"
-    if [[ -n "$v" ]]; then
-      local masked
-      if [[ ${#v} -gt 12 ]]; then
-        masked="${v:0:6}...${v: -4}"
+  local sub="${1:-show}"; shift || true
+  case "$sub" in
+    show|"")
+      hdr "env discovery"
+      if [[ -n "${HYO_ENV_FILE_LOADED:-}" ]]; then
+        ok "loaded env file: $HYO_ENV_FILE_LOADED"
       else
-        masked="***"
+        warn "no env file auto-loaded"
+        say ""
+        say "Searched (in order):"
+        say "  \$HYO_ENV_FILE override (currently: ${HYO_ENV_FILE:-<unset>})"
+        say "  ~/security/hyo.env"
+        say "  ~/security/.env"
+        say "  ~/.config/hyo/env"
+        say "  $ROOT/.secrets/env"
+        say ""
+        say "Quickest fix: ${BOLD}kai env set ANTHROPIC_API_KEY <your-key>${RST}"
       fi
-      ok "$k set ($masked, ${#v} chars)"
-    else
-      warn "$k not set"
-    fi
-  done
+      say ""
+      hdr "detected credentials"
+      local k v masked
+      for k in ANTHROPIC_API_KEY GROK_API_KEY HYO_FOUNDER_TOKEN FRED_API_KEY OPENAI_API_KEY; do
+        v="${!k:-}"
+        if [[ -n "$v" ]]; then
+          if [[ ${#v} -gt 12 ]]; then
+            masked="${v:0:6}...${v: -4}"
+          else
+            masked="***"
+          fi
+          ok "$k set ($masked, ${#v} chars)"
+        else
+          warn "$k not set"
+        fi
+      done
+      ;;
+    set)
+      local key="${1:-}"; local val="${2:-}"
+      [[ -z "$key" || -z "$val" ]] && die 'usage: kai env set KEY value'
+      # Target: first existing env file in search order, or fall back to
+      # .secrets/env (always safe — gitignored, inside the repo)
+      local target=""
+      for f in "${HYO_ENV_FILE:-}" "$HOME/security/hyo.env" "$HOME/security/.env" \
+               "$HOME/.config/hyo/env" "$SECRETS/env"; do
+        [[ -z "$f" ]] && continue
+        if [[ -f "$f" ]]; then target="$f"; break; fi
+      done
+      if [[ -z "$target" ]]; then
+        target="$SECRETS/env"
+        mkdir -p "$(dirname "$target")"
+        chmod 700 "$(dirname "$target")" 2>/dev/null || true
+        : > "$target"
+        chmod 600 "$target"
+        ok "created $target (mode 600)"
+      fi
+      # Upsert the key (remove old line, append new)
+      local tmp
+      tmp=$(mktemp)
+      if [[ -f "$target" ]]; then
+        grep -v "^[[:space:]]*\(export[[:space:]]\+\)\?${key}=" "$target" > "$tmp" || true
+      fi
+      printf '%s=%s\n' "$key" "$val" >> "$tmp"
+      mv "$tmp" "$target"
+      chmod 600 "$target"
+      ok "set $key in $target"
+      # Re-verify by reloading in a subshell
+      if ( set -a; source "$target"; [[ -n "${!key:-}" ]] ); then
+        ok "verified: $key loadable from $target"
+      fi
+      ;;
+    path)
+      say "${HYO_ENV_FILE_LOADED:-<none>}"
+      ;;
+    *)
+      die 'usage: kai env [show|set KEY value|path]'
+      ;;
+  esac
 }
 
 cmd_health() {
