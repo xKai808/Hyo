@@ -1,0 +1,110 @@
+{
+  "config": {
+    "user_agent": "hyo-newsletter/0.2 (+https://hyo.world)",
+    "request_timeout": 20,
+    "max_items_per_source": 50,
+    "output_dir": "~/Documents/Projects/Kai/intelligence",
+    "rolling_file": "all.jsonl"
+  },
+  "sources": [
+    {
+      "name": "hn_front_page",
+      "type": "hn_algolia",
+      "topic": "tech",
+      "url": "https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50"
+    },
+    {
+      "name": "arxiv_cs_AI",
+      "type": "rss",
+      "topic": "ai",
+      "url": "https://export.arxiv.org/rss/cs.AI"
+    },
+    {
+      "name": "arxiv_cs_LG",
+      "type": "rss",
+      "topic": "ai",
+      "url": "https://export.arxiv.org/rss/cs.LG"
+    },
+    {
+      "name": "arxiv_cs_CL",
+      "type": "rss",
+      "topic": "ai",
+      "url": "https://export.arxiv.org/rss/cs.CL"
+    },
+    {
+      "name": "reddit_singularity",
+      "type": "reddit",
+      "topic": "ai",
+      "subreddit": "singularity",
+      "period": "day",
+      "limit": 25
+    },
+    {
+      "name": "reddit_LocalLLaMA",
+      "type": "reddit",
+      "topic": "ai",
+      "subreddit": "LocalLLaMA",
+      "period": "day",
+      "limit": 25
+    },
+    {
+      "name": "reddit_macro",
+      "type": "reddit",
+      "topic": "macro",
+      "subreddit": "macro",
+      "period": "day",
+      "limit": 15
+    },
+    {
+      "name": "reddit_artificial",
+      "type": "reddit",
+      "topic": "ai",
+      "subreddit": "artificial",
+      "period": "day",
+      "limit": 25
+    },
+    {
+      "name": "github_trending_daily",
+      "type": "github_trending",
+      "topic": "tech",
+      "period": "daily"
+    },
+    {
+      "name": "product_hunt",
+      "type": "rss",
+      "topic": "apps",
+      "url": "https://www.producthunt.com/feed"
+    },
+    {
+      "name": "coingecko_top",
+      "type": "coingecko",
+      "topic": "crypto",
+      "vs_currency": "usd",
+      "per_page": 25
+    },
+    {
+      "name": "yahoo_indices",
+      "type": "yahoo_quote",
+      "topic": "macro",
+      "symbols": ["SPY", "QQQ", "TLT", "GLD", "DXY", "VIX", "BTC-USD", "ETH-USD"]
+    },
+    {
+      "name": "fred_dff",
+      "type": "fred",
+      "topic": "macro",
+      "series_id": "DFF"
+    },
+    {
+      "name": "fred_unrate",
+      "type": "fred",
+      "topic": "macro",
+      "series_id": "UNRATE"
+    },
+    {
+      "name": "fred_cpiaucsl",
+      "type": "fred",
+      "topic": "macro",
+      "series_id": "CPIAUCSL"
+    }
+  ]
+}

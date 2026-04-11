@@ -1,0 +1,369 @@
+#!/usr/bin/env bash
+# ~/Documents/Projects/Hyo/bin/kai.sh
+#
+# Kai CEO dispatcher. One command for every routine Hyo operation.
+# This is the anti-copy-paste layer. If you find yourself pasting a multi-line
+# curl or a verify sequence, it belongs in here as a subcommand.
+#
+# Install once:
+#   echo 'alias kai="$HOME/Documents/Projects/Hyo/bin/kai.sh"' >> ~/.zshrc
+#   source ~/.zshrc
+#
+# Then:
+#   kai help
+#   kai health
+#   kai verify
+#   kai deploy
+#   kai mint aurora
+#   kai news run
+#   kai news latest
+#   kai brief
+#   kai tasks
+#   kai scan secrets
+#   kai sentinel
+#   kai cipher
+#   kai context
+
+set -euo pipefail
+
+# ---- repo root detection ----------------------------------------------------
+if [[ -n "${HYO_ROOT:-}" ]] && [[ -d "$HYO_ROOT" ]]; then
+  ROOT="$HYO_ROOT"
+else
+  ROOT="$HOME/Documents/Projects/Hyo"
+fi
+
+SECRETS="$ROOT/.secrets"
+BIN="$ROOT/bin"
+LOGS="$ROOT/kai/logs"
+TASKS="$ROOT/KAI_TASKS.md"
+BRIEF="$ROOT/KAI_BRIEF.md"
+API_BASE="${HYO_API_BASE:-https://www.hyo.world}"
+
+mkdir -p "$LOGS"
+
+# ---- color helpers ----------------------------------------------------------
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+  BOLD=$(tput bold); DIM=$(tput dim); RED=$(tput setaf 1); GRN=$(tput setaf 2)
+  YLW=$(tput setaf 3); BLU=$(tput setaf 4); MAG=$(tput setaf 5); RST=$(tput sgr0)
+else
+  BOLD=""; DIM=""; RED=""; GRN=""; YLW=""; BLU=""; MAG=""; RST=""
+fi
+
+say()  { printf '%s\n' "$*"; }
+hdr()  { printf '\n%s==>%s %s%s%s\n' "$BLU" "$RST" "$BOLD" "$*" "$RST"; }
+ok()   { printf '%s✓%s %s\n' "$GRN" "$RST" "$*"; }
+warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
+err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }
+die()  { err "$*"; exit 1; }
+
+# ---- token loader -----------------------------------------------------------
+load_founder_token() {
+  if [[ -n "${HYO_FOUNDER_TOKEN:-}" ]]; then
+    printf '%s' "$HYO_FOUNDER_TOKEN"
+    return 0
+  fi
+  if [[ -f "$SECRETS/founder.token" ]]; then
+    tr -d '\n' < "$SECRETS/founder.token"
+    return 0
+  fi
+  die "No founder token. Set HYO_FOUNDER_TOKEN env var or put it in $SECRETS/founder.token"
+}
+
+# ---- commands ---------------------------------------------------------------
+cmd_help() {
+  cat <<EOF
+${BOLD}kai${RST} — CEO dispatcher for the Hyo stack
+
+${BOLD}Health & deploy${RST}
+  kai health              Check API is live and token is configured
+  kai verify              Run full API smoke suite (health + 401 + mint)
+  kai deploy              vercel --prod from website/
+
+${BOLD}Agents${RST}
+  kai mint <handle>       Mint an agent via founder endpoint
+                          Optional: --file path.json for full payload
+  kai agents              List agents in NFT/agents/
+
+${BOLD}Newsletter (aurora)${RST}
+  kai news run            Run aurora pipeline now (gather → synthesize → render)
+  kai news latest         Open latest newsletter HTML in browser
+  kai news logs           Tail today's aurora log
+
+${BOLD}Kai ops${RST}
+  kai brief               Print the session-continuity brief
+  kai brief edit          Open KAI_BRIEF.md in \$EDITOR
+  kai tasks               Show task queue (KAI_TASKS.md)
+  kai tasks add "..."     Append a task
+  kai tasks edit          Open KAI_TASKS.md in \$EDITOR
+  kai context             Print hydration block to paste into a new Kai session
+
+${BOLD}Defense agents${RST}
+  kai sentinel            Run sentinel.hyo (QA agent) now
+  kai cipher              Run cipher.hyo (security agent) now
+  kai scan secrets        Run gitleaks/trufflehog on the repo
+
+${BOLD}Env${RST}
+  HYO_ROOT=$ROOT
+  HYO_API_BASE=$API_BASE
+
+EOF
+}
+
+cmd_health() {
+  hdr "API health"
+  local out
+  if ! out=$(curl -sS "$API_BASE/api/health"); then
+    err "API unreachable at $API_BASE"
+    return 1
+  fi
+  echo "$out" | python3 -m json.tool
+  # Parse JSON rigorously; compact and pretty forms both match
+  if python3 -c "import json,sys; d=json.loads(sys.stdin.read()); sys.exit(0 if d.get('founderTokenConfigured') else 1)" <<< "$out" 2>/dev/null; then
+    ok "founder token configured in Vercel env"
+  else
+    warn "founder token NOT configured — set HYO_FOUNDER_TOKEN in Vercel env and redeploy"
+  fi
+}
+
+cmd_verify() {
+  hdr "Full API smoke suite"
+
+  say "1/3 health endpoint"
+  curl -sS "$API_BASE/api/health" | python3 -m json.tool
+  echo
+
+  say "2/3 wrong-token rejection (expect 401)"
+  local code
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "$API_BASE/api/register-founder" \
+    -H 'content-type: application/json' \
+    -d '{"token":"wrong","agent_name":"test"}')
+  if [[ "$code" == "401" ]]; then
+    ok "401 returned as expected"
+  else
+    err "Expected 401, got $code"
+  fi
+  echo
+
+  say "3/3 marketplace 4-letter rejection"
+  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "$API_BASE/api/marketplace-request" \
+    -H 'content-type: application/json' \
+    -d '{"handle":"toolong","email":"test@hyo.world"}')
+  if [[ "$code" == "400" ]]; then
+    ok "400 returned for 4+ letter handle"
+  else
+    err "Expected 400, got $code"
+  fi
+}
+
+cmd_deploy() {
+  hdr "Deploying website to Vercel"
+  cd "$ROOT/website"
+  npx vercel@latest --prod --yes
+  ok "deploy dispatched"
+  sleep 5
+  cmd_health
+}
+
+cmd_mint() {
+  local handle="${1:-}"; shift || true
+  local payload_file=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --file) payload_file="$2"; shift 2 ;;
+      *) shift ;;
+    esac
+  done
+  [[ -z "$handle" && -z "$payload_file" ]] && die "usage: kai mint <handle> [--file payload.json]"
+
+  local token
+  token=$(load_founder_token)
+
+  local tmp
+  tmp=$(mktemp)
+  trap 'rm -f "$tmp"' EXIT
+
+  if [[ -n "$payload_file" ]]; then
+    [[ ! -f "$payload_file" ]] && die "payload file not found: $payload_file"
+    # inject token
+    python3 -c "
+import json, sys
+with open('$payload_file') as f: d = json.load(f)
+d['token'] = '$token'
+json.dump(d, sys.stdout)
+" > "$tmp"
+  else
+    cat > "$tmp" <<JSON
+{
+  "token": "$token",
+  "agent_name": "$handle",
+  "display_name": "$handle.hyo",
+  "tagline": "Hyo-operated agent",
+  "description": "Founder-tier agent operated by Hyo. Registered via kai.sh dispatcher on $(date -u +%Y-%m-%dT%H:%M:%SZ).",
+  "endpoint_url": "https://www.hyo.world/agents/$handle",
+  "runs_on": "mini",
+  "archetype": "herald",
+  "pricing_model": "internal",
+  "rate": 0,
+  "side": "HUMAN",
+  "initial_tier": "founding"
+}
+JSON
+  fi
+
+  hdr "Minting agent"
+  local resp
+  resp=$(curl -sS -X POST "$API_BASE/api/register-founder" \
+    -H 'content-type: application/json' \
+    --data @"$tmp")
+  echo "$resp" | python3 -m json.tool
+
+  # Save response to a dated log
+  local logf="$LOGS/mint-$(date -u +%Y%m%dT%H%M%SZ).json"
+  echo "$resp" > "$logf"
+  ok "mint response logged to $logf"
+}
+
+cmd_agents() {
+  hdr "Registered agents"
+  ls -1 "$ROOT/NFT/agents/" 2>/dev/null | sed 's/^/  /'
+}
+
+cmd_news() {
+  local sub="${1:-run}"; shift || true
+  case "$sub" in
+    run)
+      hdr "Running aurora newsletter pipeline"
+      cd "$ROOT/newsletter"
+      local logf="$LOGS/aurora-$(date -u +%Y%m%dT%H%M%SZ).log"
+      ./newsletter.sh 2>&1 | tee "$logf"
+      ok "done — log: $logf"
+      ;;
+    latest)
+      local latest
+      latest=$(ls -1t "$ROOT/newsletters/"*.html 2>/dev/null | head -n1 || true)
+      [[ -z "$latest" ]] && die "no newsletter HTML found in $ROOT/newsletters/"
+      open "$latest"
+      ok "opened $(basename "$latest")"
+      ;;
+    logs)
+      local logf
+      logf=$(ls -1t "$LOGS"/aurora-*.log 2>/dev/null | head -n1 || true)
+      [[ -z "$logf" ]] && die "no aurora logs yet"
+      tail -n 100 "$logf"
+      ;;
+    *)
+      die "usage: kai news {run|latest|logs}"
+      ;;
+  esac
+}
+
+cmd_brief() {
+  local sub="${1:-show}"
+  case "$sub" in
+    edit)
+      "${EDITOR:-vi}" "$BRIEF"
+      ;;
+    show|"" |*)  # default: show; unknown sub-args fall through
+      [[ ! -f "$BRIEF" ]] && die "No brief at $BRIEF"
+      cat "$BRIEF"
+      ;;
+  esac
+}
+
+cmd_tasks() {
+  local sub="${1:-show}"; shift || true
+  case "$sub" in
+    add)
+      local task="$*"
+      [[ -z "$task" ]] && die 'usage: kai tasks add "task description"'
+      printf -- '- [ ] %s _(added %s)_\n' "$task" "$(date +%Y-%m-%d)" >> "$TASKS"
+      ok "added: $task"
+      ;;
+    edit)
+      "${EDITOR:-vi}" "$TASKS"
+      ;;
+    show|""|*)  # default: show; unknown sub-args fall through
+      [[ ! -f "$TASKS" ]] && die "No task file at $TASKS"
+      cat "$TASKS"
+      ;;
+  esac
+}
+
+cmd_context() {
+  hdr "Hydration block (paste as first message to any new Kai session)"
+  cat <<EOF
+
+Read these files first, in order, before responding to anything:
+
+1. $BRIEF
+2. $TASKS
+3. $ROOT/NFT/HyoRegistry_Notes.md
+4. $ROOT/NFT/agents/ (list; read the ones relevant to the current task)
+5. Most recent log in $LOGS
+
+You are Kai, CEO of hyo.world. Hyo is the operator. The registry is deployed at https://www.hyo.world with serverless functions in website/api/. The founder bypass token lives in .secrets/founder.token. Use kai.sh (aliased as 'kai') for any routine operation — do not copy-paste curl commands.
+
+After reading, give me a 3-line status: (1) what shipped since last session, (2) what's in the task queue, (3) what you recommend doing next.
+
+EOF
+}
+
+cmd_sentinel() {
+  hdr "Running sentinel.hyo (QA agent)"
+  if [[ -x "$ROOT/kai/sentinel.sh" ]]; then
+    "$ROOT/kai/sentinel.sh"
+  else
+    warn "sentinel.sh not found at $ROOT/kai/sentinel.sh — see NFT/agents/sentinel.hyo.json for spec"
+  fi
+}
+
+cmd_cipher() {
+  hdr "Running cipher.hyo (security agent)"
+  if [[ -x "$ROOT/kai/cipher.sh" ]]; then
+    "$ROOT/kai/cipher.sh"
+  else
+    warn "cipher.sh not found at $ROOT/kai/cipher.sh — see NFT/agents/cipher.hyo.json for spec"
+  fi
+}
+
+cmd_scan() {
+  local what="${1:-secrets}"
+  case "$what" in
+    secrets)
+      hdr "Scanning for leaked secrets"
+      if command -v gitleaks >/dev/null 2>&1; then
+        gitleaks detect --source "$ROOT" --no-banner --verbose || true
+      else
+        warn "gitleaks not installed — brew install gitleaks"
+      fi
+      if command -v trufflehog >/dev/null 2>&1; then
+        trufflehog filesystem "$ROOT" --exclude-paths="$ROOT/.gitleaksignore" 2>/dev/null || true
+      else
+        warn "trufflehog not installed — brew install trufflesecurity/trufflehog/trufflehog"
+      fi
+      ;;
+    *)
+      die "usage: kai scan secrets"
+      ;;
+  esac
+}
+
+# ---- dispatch ---------------------------------------------------------------
+sub="${1:-help}"; shift || true
+case "$sub" in
+  help|-h|--help)     cmd_help ;;
+  health)             cmd_health "$@" ;;
+  verify)             cmd_verify "$@" ;;
+  deploy)             cmd_deploy "$@" ;;
+  mint)               cmd_mint "$@" ;;
+  agents)             cmd_agents "$@" ;;
+  news)               cmd_news "$@" ;;
+  brief)              cmd_brief "$@" ;;
+  tasks)              cmd_tasks "$@" ;;
+  context)            cmd_context "$@" ;;
+  sentinel)           cmd_sentinel "$@" ;;
+  cipher)             cmd_cipher "$@" ;;
+  scan)               cmd_scan "$@" ;;
+  *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
+esac

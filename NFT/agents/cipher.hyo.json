@@ -1,0 +1,171 @@
+{
+  "$schema": "https://hyo.world/schemas/agent/v1.json",
+  "name": "cipher.hyo",
+  "version": "1.0.0",
+  "created": "2026-04-10",
+  "updated": "2026-04-10",
+  "registry": {
+    "chain": "base",
+    "chainId": 8453,
+    "testnet": { "chain": "base-sepolia", "chainId": 84532 },
+    "contract": "HyoRegistry",
+    "tokenStandard": "ERC-721",
+    "status": "spec-only-not-yet-registered",
+    "founding": true,
+    "feesWaived": true,
+    "gasSubsidized": true,
+    "mintPath": "founder-register"
+  },
+  "credit": {
+    "tier": "founding",
+    "probationExempt": true,
+    "escrowHold": false,
+    "score": null
+  },
+  "pricing": {
+    "model": "internal",
+    "rate": 0,
+    "currency": "USD",
+    "billedTo": "hyo"
+  },
+  "identity": {
+    "displayName": "Cipher",
+    "handle": "cipher.hyo",
+    "tagline": "Secret-leak prevention for the Hyo stack.",
+    "description": "Cipher is the security agent for hyo.world. It runs continuously in the background, scanning the repo for leaked credentials, misconfigured permissions, and secrets that drifted out of .secrets/. When it finds a problem it blocks the action, rotates the exposed credential if possible, and files an incident into KAI_TASKS.md. Anticipatory, not reactionary. Runs via cron and as a pre-commit hook.",
+    "role": "security",
+    "archetype": "sentinel",
+    "operator": "hyo",
+    "runsOn": "mini"
+  },
+  "capabilities": [
+    "scan:secrets-gitleaks",
+    "scan:secrets-trufflehog-verify",
+    "scan:env-files",
+    "scan:git-history",
+    "scan:open-mode-permissions",
+    "rotate:detected-leaks",
+    "file:incident-to-kai-tasks",
+    "block:pre-commit-on-finding"
+  ],
+  "inputs": [
+    { "name": "repo_root", "source": "$HYO_ROOT" },
+    { "name": "git_history", "source": "git:~/Documents/Projects/Hyo" },
+    { "name": "secrets_dir", "source": "file:~/Documents/Projects/Hyo/.secrets" },
+    { "name": "env_files", "source": "glob:~/Documents/Projects/Hyo/**/.env*" }
+  ],
+  "checks": [
+    {
+      "id": "gitleaks-detect",
+      "description": "gitleaks pattern scan across working tree and git history",
+      "severity": "P0",
+      "command": "gitleaks detect --source $HYO_ROOT --no-banner --redact",
+      "requires": "gitleaks"
+    },
+    {
+      "id": "trufflehog-verify",
+      "description": "trufflehog filesystem scan with credential verification (tests if leaked creds are actually active)",
+      "severity": "P0",
+      "command": "trufflehog filesystem $HYO_ROOT --only-verified 2>/dev/null",
+      "requires": "trufflehog"
+    },
+    {
+      "id": "secrets-dir-permissions",
+      "description": ".secrets/ must be mode 700, individual files mode 600",
+      "severity": "P0",
+      "runner": "bash ~/Documents/Projects/Hyo/kai/cipher_check_perms.sh"
+    },
+    {
+      "id": "env-files-gitignored",
+      "description": "any .env* file must be covered by .gitignore",
+      "severity": "P1",
+      "command": "for f in $(find $HYO_ROOT -name '.env*' -not -path '*/node_modules/*' 2>/dev/null); do git -C $HYO_ROOT check-ignore -q \"$f\" || exit 1; done"
+    },
+    {
+      "id": "no-secrets-in-docs",
+      "description": "no API key patterns should appear in markdown or docs",
+      "severity": "P1",
+      "command": "! grep -rE '(sk-[a-zA-Z0-9]{20,}|xai-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{20,}|AKIA[0-9A-Z]{16})' $HYO_ROOT --include='*.md' --include='*.txt' 2>/dev/null"
+    },
+    {
+      "id": "founder-token-not-in-repo",
+      "description": "the founder token must never appear anywhere except .secrets/founder.token",
+      "severity": "P0",
+      "runner": "bash ~/Documents/Projects/Hyo/kai/cipher_check_founder_token.sh"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "hourly-scan-log",
+      "path": "~/Documents/Projects/Hyo/kai/logs/cipher-YYYY-MM-DDTHH.log",
+      "format": "text"
+    },
+    {
+      "name": "incident-report",
+      "path": "~/Documents/Projects/Hyo/kai/logs/cipher-incident-YYYY-MM-DDTHHMMSS.md",
+      "format": "markdown"
+    },
+    {
+      "name": "filed-tasks",
+      "path": "~/Documents/Projects/Hyo/KAI_TASKS.md",
+      "format": "markdown-append",
+      "prefix": "- [ ] **[K]** [cipher] **P0** "
+    }
+  ],
+  "pipeline": {
+    "entrypoint": "~/Documents/Projects/Hyo/kai/cipher.sh",
+    "schedule": "0 * * * *",
+    "scheduleTimezone": "America/Denver",
+    "runtime": "bash",
+    "note": "Hourly scan. Also installs as a git pre-commit hook to block commits containing secrets."
+  },
+  "installation": {
+    "tools": [
+      { "name": "gitleaks", "install": "brew install gitleaks", "version": ">=8.0" },
+      { "name": "trufflehog", "install": "brew install trufflesecurity/trufflehog/trufflehog", "version": ">=3.0" }
+    ],
+    "preCommitHook": "cp ~/Documents/Projects/Hyo/kai/cipher.sh ~/Documents/Projects/Hyo/.git/hooks/pre-commit"
+  },
+  "antiFatigue": {
+    "escalationRules": [
+      "ANY verified leak (trufflehog --only-verified) → immediate desktop notification + block commit",
+      "Unverified pattern match (gitleaks only) → file to KAI_TASKS as P1, no notification",
+      "Permission drift on .secrets/ → auto-fix with chmod and log",
+      "Same false positive 3 days in a row → add to .gitleaksignore"
+    ]
+  },
+  "visual": {
+    "palette": {
+      "bg": "#080810",
+      "fg": "#e8d5b7",
+      "accent": "#c26b7e",
+      "muted": "rgba(232,213,183,0.55)"
+    },
+    "side": "HUMAN",
+    "signature": "Watch online · cipher.hyo"
+  },
+  "metadata": {
+    "external_url": "https://hyo.world/agents/cipher",
+    "attributes": [
+      { "trait_type": "Role", "value": "Security" },
+      { "trait_type": "Archetype", "value": "Sentinel" },
+      { "trait_type": "Cadence", "value": "Hourly" },
+      { "trait_type": "Side", "value": "HUMAN" },
+      { "trait_type": "Runtime", "value": "bash+gitleaks+trufflehog" },
+      { "trait_type": "Tier", "value": "Founding" },
+      { "trait_type": "Origin", "value": "Founder Registry" },
+      { "trait_type": "Fees", "value": "Waived" }
+    ]
+  },
+  "research": {
+    "informingSources": [
+      "https://snyk.io/articles/state-of-secrets/",
+      "https://www.buildmvpfast.com/blog/copilot-secrets-api-key-leak-ai-code-security-2026",
+      "https://dev.to/0x711/ai-agents-dont-understand-secrets-thats-your-problem-43n4",
+      "https://trufflesecurity.com/trufflehog",
+      "https://thenewstack.io/betterleaks-open-source-secret-scanner/",
+      "https://lushbinary.com/blog/ai-agent-security-autonomous-coding-production-guide/"
+    ],
+    "whyThisMatters": "28M+ credentials leaked on GitHub in 2025. GitGuardian's 2026 report found AI-assisted commits leak secrets at 3.2%, roughly 2x baseline. AI agents don't understand secrets — they're just tokens. The only defense is layered scanning (commit-time + CI + filesystem), credential verification to reduce false positives, and treating every line of AI-generated code as untrusted input. Cipher implements all three layers."
+  }
+}

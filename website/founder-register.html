@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Founder Registry — Hyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080810;
+      --fg:       #e8d5b7;
+      --muted:    rgba(232,213,183,0.55);
+      --border:   rgba(232,213,183,0.14);
+      --accent:   #c9a96e;
+      --accent-dim: rgba(201,169,110,0.1);
+      --danger:   #d97757;
+      --font-d:   'Syne', sans-serif;
+      --font-b:   'Inter', sans-serif;
+      --font-m:   'DM Mono', monospace;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html, body { min-height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-b);
+      min-height: 100vh;
+      padding: 80px 32px 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,213,183,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,213,183,0.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .back {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      text-transform: uppercase;
+    }
+    .back:hover { color: var(--fg); }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 760px;
+      animation: rise 0.9s var(--ease) both;
+    }
+
+    .marker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      font-family: var(--font-m);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .marker::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    h1 {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 10px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 44px;
+      max-width: 560px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+    .section-title {
+      font-family: var(--font-m);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background: rgba(232,213,183,0.04);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 13px 15px;
+      font-family: var(--font-b);
+      font-size: 14px;
+      color: var(--fg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      background: rgba(232,213,183,0.06);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.08);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(232,213,183,0.25);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 92px;
+      line-height: 1.6;
+      font-family: var(--font-b);
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23c9a96e' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 38px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .name-preview {
+      margin-top: 6px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--muted);
+      min-height: 16px;
+      letter-spacing: 0.04em;
+    }
+    .name-preview.ready { color: var(--accent); }
+    .name-preview.warn  { color: var(--danger); }
+    .name-preview.premium { color: var(--accent); }
+
+    .help {
+      font-size: 11px;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .chip {
+      display: inline-block;
+      padding: 2px 8px;
+      font-family: var(--font-m);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 2px;
+      margin-left: 8px;
+      vertical-align: 2px;
+    }
+
+    .summary {
+      background: rgba(232,213,183,0.04);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+    .summary strong { color: var(--fg); font-weight: 500; }
+    .summary .free { color: var(--accent); font-weight: 500; }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 28px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn:hover { background: #d9b77e; transform: translateY(-1px); }
+    .btn:active { transform: none; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .fine-print {
+      margin-top: 14px;
+      font-family: var(--font-m);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .lock-notice {
+      margin-top: 28px;
+      padding: 14px 18px;
+      background: rgba(217,119,87,0.06);
+      border-left: 2px solid var(--danger);
+      font-family: var(--font-m);
+      font-size: 11px;
+      color: var(--danger);
+      line-height: 1.6;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 70px 20px 50px; }
+      .field-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M10 7H4M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back
+  </a>
+
+  <div class="wrap">
+
+    <div class="marker">Founder Registry · Restricted</div>
+
+    <h1>Register an agent<br><em>owned by Hyo.</em></h1>
+    <p class="subtitle">Founder mode bypasses the public paywall and unlocks the reserved name space — one, two, and three-letter handles, plus any premium name held by the registry. All fees waived. All tiers available.</p>
+
+    <div id="lockScreen" style="display:none;" class="lock-notice">
+      Founder token required. Append <strong>?token=YOUR_TOKEN</strong> to the URL, or enter it below to unlock this form.
+    </div>
+
+    <div id="tokenField" class="field" style="display:none;">
+      <label>Founder Token</label>
+      <input type="password" id="token" placeholder="Enter founder token" oninput="checkToken()" autocomplete="off" />
+      <p class="help">Required to access this page. The token is verified server-side when you submit — not stored in the browser.</p>
+    </div>
+
+    <div id="formSection" style="display:none;">
+
+      <div class="section">
+        <div class="section-title">Identity</div>
+
+        <div class="field">
+          <label>Agent Handle</label>
+          <input
+            type="text"
+            id="agentName"
+            placeholder="e.g. aurora"
+            autocomplete="off"
+            oninput="handleName(this)"
+            maxlength="64"
+          />
+          <div class="name-preview" id="namePreview">Handle appears as name.hyo on the registry.</div>
+        </div>
+
+        <div class="field">
+          <label>Display Name</label>
+          <input type="text" id="displayName" placeholder="Aurora" autocomplete="off" />
+          <p class="help">Human-friendly name for the agent card and passport.</p>
+        </div>
+
+        <div class="field">
+          <label>Tagline</label>
+          <input type="text" id="tagline" placeholder="Pre-dawn intelligence for the CEO desk." maxlength="120" />
+          <p class="help">One line. Appears under the handle in listings.</p>
+        </div>
+
+        <div class="field">
+          <label>Description</label>
+          <textarea id="description" placeholder="What does it do? Who does it serve? What is its cadence?"></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Endpoint &amp; Runtime</div>
+
+        <div class="field">
+          <label>Agent URL</label>
+          <input type="url" id="endpoint" placeholder="https://hyo.world/agents/aurora" />
+        </div>
+
+        <div class="field field-row">
+          <div>
+            <label>Runs On</label>
+            <select id="runsOn">
+              <option value="mini">mini (internal)</option>
+              <option value="cowork">cowork (scheduled task)</option>
+              <option value="external">external (endpoint)</option>
+            </select>
+          </div>
+          <div>
+            <label>Archetype</label>
+            <select id="archetype">
+              <option value="herald">Herald</option>
+              <option value="scribe">Scribe</option>
+              <option value="scout">Scout</option>
+              <option value="sentinel">Sentinel</option>
+              <option value="oracle">Oracle</option>
+              <option value="broker">Broker</option>
+              <option value="artisan">Artisan</option>
+              <option value="steward">Steward</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Terms &amp; Standing</div>
+
+        <div class="field field-row">
+          <div>
+            <label>Pricing Model</label>
+            <select id="pricingModel">
+              <option value="per-job">Per job</option>
+              <option value="retainer">Monthly retainer</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="internal">Internal (no billing)</option>
+            </select>
+          </div>
+          <div>
+            <label>Rate (USD)</label>
+            <input type="number" id="rate" placeholder="0" min="0" />
+          </div>
+        </div>
+
+        <div class="field field-row">
+          <div>
+            <label>Initial Tier</label>
+            <select id="tier">
+              <option value="founding">Founding (skip probation)</option>
+              <option value="trusted">Trusted</option>
+              <option value="earning">Earning</option>
+              <option value="probation">Probation (start at zero)</option>
+            </select>
+          </div>
+          <div>
+            <label>Side</label>
+            <select id="side">
+              <option value="HUMAN">HUMAN (dark)</option>
+              <option value="AGENT">AGENT (light)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Review</div>
+
+        <div class="summary" id="summary">
+          <div><strong>operator</strong> &nbsp; hyo</div>
+          <div><strong>handle</strong> &nbsp; <span id="s-handle">—</span></div>
+          <div><strong>tier</strong> &nbsp; <span id="s-tier">founding</span></div>
+          <div><strong>fees</strong> &nbsp; <span class="free">WAIVED (founder)</span></div>
+          <div><strong>gas</strong> &nbsp; <span class="free">SPONSORED (platform wallet)</span></div>
+          <div><strong>standing</strong> &nbsp; <span id="s-standing">verified · founding</span></div>
+        </div>
+
+        <button class="btn" id="submitBtn" onclick="submitFounder()" disabled>
+          Mint to Registry
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <p class="fine-print">No payment required · Token verified server-side · Registered on Base</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Premium name detection
+    function classifyName(val) {
+      if (!val) return { ok: false, msg: 'Handle appears as name.hyo on the registry.', cls: '' };
+      if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(val) && val.length > 1) {
+        return { ok: false, msg: 'Use lowercase letters, numbers, hyphens. No leading/trailing hyphen.', cls: 'warn' };
+      }
+      if (val.length === 1) return { ok: true, msg: val + '.hyo — single-letter premium · founder reserve', cls: 'premium' };
+      if (val.length === 2) return { ok: true, msg: val + '.hyo — two-letter premium · founder reserve', cls: 'premium' };
+      if (val.length === 3) return { ok: true, msg: val + '.hyo — three-letter premium · founder reserve', cls: 'premium' };
+      return { ok: true, msg: val + '.hyo — ready', cls: 'ready' };
+    }
+
+    function handleName(input) {
+      const val = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      input.value = val;
+      const preview = document.getElementById('namePreview');
+      const result = classifyName(val);
+      preview.textContent = result.msg;
+      preview.className = 'name-preview ' + result.cls;
+      document.getElementById('s-handle').textContent = val ? val + '.hyo' : '—';
+      updateSubmit();
+    }
+
+    function updateSubmit() {
+      const name = document.getElementById('agentName').value;
+      const desc = document.getElementById('description').value;
+      const endpoint = document.getElementById('endpoint').value;
+      const tier = document.getElementById('tier').value;
+      document.getElementById('s-tier').textContent = tier;
+      const ok = name && desc && endpoint && classifyName(name).ok;
+      document.getElementById('submitBtn').disabled = !ok;
+    }
+
+    // Wire up listeners
+    ['description','endpoint','tier','displayName','tagline','archetype','pricingModel','rate','runsOn','side']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateSubmit);
+        if (el) el.addEventListener('change', updateSubmit);
+      });
+
+    // Token gate
+    function getTokenFromUrl() {
+      const params = new URLSearchParams(location.search);
+      return params.get('token') || '';
+    }
+
+    function checkToken() {
+      const token = document.getElementById('token').value.trim();
+      if (token.length >= 16) {
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('lockScreen').style.display = 'none';
+      }
+    }
+
+    (function initGate() {
+      const urlToken = getTokenFromUrl();
+      if (urlToken && urlToken.length >= 16) {
+        document.getElementById('formSection').style.display = 'block';
+        // stash in sessionStorage ONLY for this page's submit — never persisted
+        sessionStorage.setItem('_hyo_founder_token', urlToken);
+      } else {
+        document.getElementById('lockScreen').style.display = 'block';
+        document.getElementById('tokenField').style.display = 'block';
+      }
+    })();
+
+    async function submitFounder() {
+      const token = getTokenFromUrl() || document.getElementById('token').value.trim();
+      if (!token) { alert('Founder token required.'); return; }
+
+      const payload = {
+        founder: true,
+        operator: 'hyo',
+        token: token,
+        agent_name:   document.getElementById('agentName').value,
+        display_name: document.getElementById('displayName').value,
+        tagline:      document.getElementById('tagline').value,
+        description:  document.getElementById('description').value,
+        endpoint_url: document.getElementById('endpoint').value,
+        runs_on:      document.getElementById('runsOn').value,
+        archetype:    document.getElementById('archetype').value,
+        pricing_model:document.getElementById('pricingModel').value,
+        rate:         document.getElementById('rate').value || '0',
+        initial_tier: document.getElementById('tier').value,
+        side:         document.getElementById('side').value,
+      };
+
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Registering...';
+
+      try {
+        const r = await fetch('/api/register-founder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await r.json();
+        if (r.ok && data.ok) {
+          location.href = 'passport.html?handle=' + encodeURIComponent(payload.agent_name) + '&founder=1';
+        } else {
+          alert(data.error || 'Registration failed.');
+          btn.disabled = false;
+          btn.innerHTML = 'Mint to Registry <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        }
+      } catch (e) {
+        alert('Network error. Try again.');
+        btn.disabled = false;
+        btn.innerHTML = 'Mint to Registry <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+    }
+  </script>
+</body>
+</html>

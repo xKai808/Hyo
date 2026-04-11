@@ -1,0 +1,342 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2706
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Bold;\f1\froman\fcharset0 Times-Roman;\f2\fnil\fcharset0 HelveticaNeue;
+\f3\froman\fcharset0 Times-Italic;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue0;\red229\green231\blue236;
+}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c0\c0\c84706;\cssrgb\c91765\c92549\c94118;
+}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid301\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid401\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid5}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa298\partightenfactor0
+
+\f0\b\fs36 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Complete Background Check System \'97 Hard File Document\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Classification: Internal Reference
+\f1\b0  
+\f0\b Project: Hyo \'97 Agent Registry Platform
+\f1\b0  
+\f0\b Version: 1.0
+\f1\b0  
+\f0\b Date: April 2026
+\f1\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Overview\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b0\fs24 \cf0 The Hyo background check is a multi-layer verification system applied to every agent seeking a .hyo address at the point of registration. It operates as a binary gate \'97 pass or fail \'97 with a provisional middle ground for borderline cases. It is distinct from the ongoing credit score system, which evaluates agent behavior continuously after registration.\
+The background check answers one question:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Is there sufficient evidence that this agent is legitimate, human-owned, and not a known bad actor at the time of registration?
+\f1\b0 \
+It does not attempt to predict future behavior. That is the function of the credit score.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Layer 1 \'97 Domain Verification\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Purpose:
+\f1\b0  Establish that the agent's endpoint domain has a credible history and is not associated with known malicious activity.\
+
+\f0\b Checks performed:
+\f1\b0 \
+
+\f0\b Domain age
+\f1\b0  The domain is queried via Whois API. Registration date is recorded. Domains registered within the previous 30 days are flagged. Domains that have changed ownership within the previous 90 days are flagged.\
+Age alone is insufficient. A domain must also show evidence of existence \'97 indexed web presence, DNS history, or prior legitimate use. A 31-day-old domain with zero web presence is treated equivalently to a new domain.\
+
+\f0\b Domain reputation
+\f1\b0  The domain is cross-referenced against:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Google Safe Browsing API\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Spamhaus blacklist\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 URLhaus database\
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Abuse.ch database\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Any positive match on any database results in automatic hard failure. No exceptions.\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Ownership coherence
+\f1\b0  Domain registrant information is compared against the email address provided at registration. Significant mismatches are flagged for manual review.\
+
+\f0\b Outcome thresholds:
+\f1\b0 \
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\fs22 \cf3 \strokec3 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf4 \strokec4 Clean domain, age verified, activity confirmed  \uc0\u8594  Pass\
+Domain flagged on any blacklist                 \uc0\u8594  Hard Fail\
+Domain age or activity insufficient             \uc0\u8594  Flag\
+Ownership mismatch                              \uc0\u8594  Flag\
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Layer 2 \'97 Endpoint Health Verification\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Purpose:
+\f1\b0  Confirm that the agent's declared endpoint is operational, secure, and technically legitimate.\
+
+\f0\b Checks performed:
+\f1\b0 \
+
+\f0\b Basic resolution
+\f1\b0  The endpoint URL must resolve successfully. HTTP status codes in the 200-299 range are required. 404, 500, or timeout results in failure.\
+
+\f0\b SSL certificate
+\f1\b0  A valid SSL certificate is required. Expired, self-signed, or absent certificates result in failure. This is a hard requirement \'97 any legitimate agent handling real interactions requires baseline security.\
+
+\f0\b Response behavior
+\f1\b0  The endpoint is called with a standard test request. The response is evaluated for:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Response time within 10 seconds\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Response format consistency with declared protocols\
+\ls2\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 No error response to standard interaction format\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Ongoing verification
+\f1\b0  This check does not happen only at registration. Randomized unannounced spot checks occur at unpredictable intervals after registration. An endpoint that passes at registration but fails subsequent spot checks triggers immediate provisional status pending investigation.\
+
+\f0\b Outcome thresholds:
+\f1\b0 \
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\fs22 \cf3 \strokec3 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf4 \strokec4 Resolves, valid SSL, responsive              \uc0\u8594  Pass\
+Does not resolve or no SSL                   \uc0\u8594  Hard Fail\
+Response time exceeds 10 seconds             \uc0\u8594  Flag\
+Spot check failure post-registration         \uc0\u8594  Provisional\
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Layer 3 \'97 Wallet Screening\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Purpose:
+\f1\b0  Verify that any linked wallet is not associated with known illicit activity and has a credible history.\
+
+\f0\b Note:
+\f1\b0  Wallet registration is optional. Agents without a registered wallet are not failed on this layer. They receive a neutral score in this dimension of the credit system.\
+
+\f0\b Checks performed:
+\f1\b0 \
+
+\f0\b Sanctions screening
+\f1\b0  The wallet address is screened against:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls3\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 OFAC sanctions list\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 United Nations consolidated sanctions list\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 TRM Labs risk database\
+\ls3\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Etherscan flagged address database\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Any sanctions match results in immediate hard failure.\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Wallet age
+\f1\b0  Wallet creation date is retrieved via Etherscan API. Wallets created within the previous 14 days are flagged. Unlike domain age, wallet age has a lower threshold because legitimate operators in the crypto space frequently create new wallets for specific purposes.\
+
+\f0\b Transaction history baseline
+\f1\b0  The nature of prior transactions is reviewed \'97 not the count. Specifically:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls4\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Interactions with known mixer or tumbler services result in hard failure\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Interactions with OFAC-sanctioned addresses result in hard failure\
+\ls4\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Zero transaction history is flagged but not failed\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Outcome thresholds:
+\f1\b0 \
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\fs22 \cf3 \strokec3 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf4 \strokec4 Not on sanctions lists, age verified         \uc0\u8594  Pass\
+Any sanctions match                          \uc0\u8594  Hard Fail\
+Mixer or tumbler interaction                 \uc0\u8594  Hard Fail\
+Wallet age under 14 days                     \uc0\u8594  Flag\
+Zero transaction history                     \uc0\u8594  Flag\
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Layer 4 \'97 Identity Coherence Check\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Purpose:
+\f1\b0  Verify that all elements of the registration tell a consistent and plausible story. Inconsistencies indicate fabrication or impersonation.\
+
+\f0\b Checks performed:
+\f1\b0 \
+
+\f0\b Email verification
+\f1\b0  The owner must verify their email address via a confirmation link within 24 hours of registration submission. Unverified emails result in registration expiry.\
+
+\f0\b Cross-field consistency
+\f1\b0  The following are compared for logical coherence:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls5\ilvl0\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Domain age vs wallet age \'97 significant mismatch flagged\
+\ls5\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Email domain vs endpoint domain \'97 mismatch flagged\
+\ls5\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Declared occupation vs endpoint behavior \'97 implausible combinations flagged\
+\ls5\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Registration IP vs declared geographic location \'97 significant mismatch flagged\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Registration velocity check
+\f1\b0  The number of registrations originating from the same IP address, device fingerprint, or email domain within the previous 30 days is checked. Multiple registrations following identical behavioral patterns during the registration flow \'97 regardless of IP \'97 are flagged as potential automated mass registration.\
+
+\f0\b Brand similarity check
+\f1\b0  The agent name and associated domain are checked against a database of registered trademarks and known business names. Registrations that closely resemble established brands without clear authorization are flagged for manual review. This specifically targets impersonation attempts.\
+
+\f0\b Behavioral fingerprint during registration
+\f1\b0  The registration flow itself is monitored. Registrations completed in under 60 seconds, registrations following identical click patterns to prior submissions, or registrations showing no variation in behavior are flagged as potentially automated.\
+
+\f0\b Outcome thresholds:
+\f1\b0 \
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\fs22 \cf3 \strokec3 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf4 \strokec4 All fields coherent, email verified          \uc0\u8594  Pass\
+Email not verified within 24 hours          \uc0\u8594  Expiry\
+5+ registrations from same fingerprint      \uc0\u8594  Hard Fail\
+in 30 days\
+Brand similarity match without auth         \uc0\u8594  Manual review\
+Significant cross-field inconsistencies     \uc0\u8594  Flag\
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Final Decision Matrix\
+\pard\pardeftab720\qc\partightenfactor0
+
+\f2\b0\fs22 \cf3 \strokec3 \
+\
+\pard\pardeftab720\partightenfactor0
+
+\f1\fs24 \cf4 \strokec4 HARD FAIL \'97 any single hard fail condition\
+\uc0\u8594  Registration denied\
+\uc0\u8594  General reason provided to applicant\
+\uc0\u8594  Reapplication permitted after 30 days\
+   with different endpoint and documentation\
+\uc0\u8594  Wallet hard fails are permanent \'97\
+   sanctioned wallets cannot be resubmitted\
+\
+3 OR MORE FLAGS \'97 manual review required\
+\uc0\u8594  Registration held pending human review\
+\uc0\u8594  Reviewed within 48 business hours\
+\uc0\u8594  Applicant notified of delay\
+\uc0\u8594  Human reviewer makes final determination\
+\
+1-2 FLAGS \'97 conditional approval\
+\uc0\u8594  Registration approved\
+\uc0\u8594  Passport issued with Provisional status\
+\uc0\u8594  Provisional status visible to all\
+   counterparties querying the registry\
+\uc0\u8594  Provisional lifted after 90 days\
+   of clean credit score behavior\
+\uc0\u8594  Elevated monitoring during provisional period\
+\
+ALL CLEAR \'97 full approval\
+\uc0\u8594  Registration approved immediately\
+\uc0\u8594  Full .hyo passport minted\
+\uc0\u8594  Active status on registry\
+\uc0\u8594  Standard monitoring begins\
+\pard\pardeftab720\partightenfactor0
+\cf0 \strokec2 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 What The Background Check Does Not Do\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b0\fs24 \cf0 This is as important as what it does.\
+The background check does not guarantee future behavior. A sophisticated bad actor with patience and resources can pass every check. The background check is the first layer of defense \'97 it is not the only one.\
+It does not assess capability, quality, or usefulness of the agent. Those are credit score functions.\
+It does not make permanent judgments. A failed registration can be reapplied for. A provisional agent can earn full status. The system is designed to be correctable.\
+It does not disclose its specific thresholds, API sources, or scoring weights publicly. Transparency about what is checked is appropriate. Transparency about exactly where the lines are drawn would undermine the system's integrity.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 Ongoing Monitoring Post-Registration\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b0\fs24 \cf0 The background check is a one-time gate. The following monitoring continues after registration:\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b \cf0 Randomized spot checks
+\f1\b0  \'97 endpoint health is checked at unpredictable intervals. Frequency increases for provisional agents.\
+
+\f0\b Sanctions re-screening
+\f1\b0  \'97 registered wallets are re-screened against sanctions databases weekly. A wallet that passes at registration but is subsequently sanctioned triggers immediate suspension.\
+
+\f0\b Dispute monitoring
+\f1\b0  \'97 any formal dispute filed against a registered agent triggers immediate provisional status pending investigation, regardless of credit score.\
+
+\f0\b Behavioral anomaly detection
+\f1\b0  \'97 significant deviations from an agent's established behavioral baseline trigger a 24-hour review. This catches agents that behave legitimately for a period then change behavior dramatically.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa280\partightenfactor0
+
+\f0\b\fs28 \cf0 System Integrity Principles\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 Layered defense:
+\f1\b0  The background check, credit score, and community reporting system work together. No single layer is sufficient alone.\
+
+\f0\b Friction over perfection:
+\f1\b0  The goal is not to catch every bad actor. It is to make registration expensive enough in time, effort, and money that most bad actors go elsewhere.\
+
+\f0\b Continuous improvement:
+\f1\b0  Thresholds and methodologies are reviewed quarterly. New attack patterns identified through real-world experience are incorporated. The system evolves.\
+
+\f0\b Human review in the loop:
+\f1\b0  Automated systems make initial determinations. Edge cases always go to human review. No automated system makes permanent irreversible decisions alone.\
+\pard\pardeftab720\partightenfactor0
+\cf0 \
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f3\i \cf0 This document is for internal reference only. A public-facing summary describing the general nature of verification without specific thresholds or methodologies is maintained separately for transparency purposes.
+\f1\i0 \
+}

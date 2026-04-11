@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Marketplace — Hyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f4f1eb;
+      --accent:   #1a1a2e;
+      --muted:    rgba(26,26,46,0.42);
+      --border:   rgba(26,26,46,0.1);
+      --gold:     #c9a96e;
+      --gold-dim: rgba(201,169,110,0.08);
+      --font-d:   'Syne', sans-serif;
+      --font-b:   'Inter', sans-serif;
+      --font-m:   'DM Mono', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--accent);
+      font-family: var(--font-b);
+      min-height: 100vh;
+      padding: 80px 32px 80px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(26,26,46,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,26,46,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .back {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 60px;
+      max-width: 640px;
+    }
+
+    .kicker {
+      font-family: var(--font-m);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: clamp(34px, 4.6vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+    h1 em { font-style: normal; color: var(--gold); }
+
+    .subtitle {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .tier {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 28px 24px;
+      position: relative;
+    }
+
+    .tier.one { border-top: 3px solid var(--gold); }
+    .tier.two { border-top: 3px solid rgba(201,169,110,0.7); }
+    .tier.three { border-top: 3px solid rgba(201,169,110,0.45); }
+
+    .tier-name {
+      font-family: var(--font-m);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .tier-count {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: 42px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .tier-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .tier-price {
+      font-family: var(--font-m);
+      font-size: 13px;
+      color: var(--accent);
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .tier-price strong { color: var(--gold); }
+
+    .section-title {
+      font-family: var(--font-m);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .info-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(26,26,46,0.72);
+    }
+    .info-card p { margin-bottom: 14px; }
+    .info-card p:last-child { margin-bottom: 0; }
+    .info-card strong { color: var(--accent); font-weight: 600; }
+
+    .request-form {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+    }
+
+    .request-form h3 {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .request-form .desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .field { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    input, textarea {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-family: var(--font-b);
+      font-size: 14px;
+      color: var(--accent);
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.08);
+    }
+    textarea { min-height: 80px; resize: vertical; }
+
+    .check-result {
+      margin-top: 10px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      color: var(--muted);
+      min-height: 16px;
+    }
+    .check-result.available { color: var(--gold); }
+    .check-result.taken     { color: #d97757; }
+    .check-result.held      { color: #8a6e38; }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn:hover { background: #2d2d5e; transform: translateY(-1px); }
+
+    @media (max-width: 720px) {
+      .tiers { grid-template-columns: 1fr; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="index.html" class="back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M10 7H4M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back
+  </a>
+
+  <div class="wrap">
+
+    <div class="header">
+      <div class="kicker">Premium Name Marketplace</div>
+      <h1>Some handles <em>aren't for sale.</em></h1>
+      <p class="subtitle">Hyo reserves all one, two, and three-letter handles. Short names carry outsized trust — they're memorable, iconic, and impossible to replace. They're held by the registry and released only through this marketplace.</p>
+      <p class="subtitle">Standard handles (4+ characters) are always available through the regular <a href="register.html" style="color:var(--gold);">registration flow</a>.</p>
+    </div>
+
+    <div class="tiers">
+      <div class="tier one">
+        <div class="tier-name">One-letter</div>
+        <div class="tier-count">36</div>
+        <div class="tier-label">a.hyo through z.hyo &nbsp;·&nbsp; 0–9</div>
+        <div class="tier-price">Sealed-bid auction &nbsp;·&nbsp; <strong>Reserve from 1 ETH</strong></div>
+      </div>
+
+      <div class="tier two">
+        <div class="tier-name">Two-letter</div>
+        <div class="tier-count">1,296</div>
+        <div class="tier-label">All [a-z0-9][a-z0-9] combinations</div>
+        <div class="tier-price">Sealed-bid auction &nbsp;·&nbsp; <strong>Reserve from 0.25 ETH</strong></div>
+      </div>
+
+      <div class="tier three">
+        <div class="tier-name">Three-letter</div>
+        <div class="tier-count">46,656</div>
+        <div class="tier-label">All [a-z0-9][a-z0-9][a-z0-9] combinations</div>
+        <div class="tier-price">Fixed price &nbsp;·&nbsp; <strong>From $499</strong></div>
+      </div>
+    </div>
+
+    <div class="section-title">How it works</div>
+
+    <div class="info-card">
+      <p>Every short handle — one, two, or three characters — is <strong>held by the registry at genesis</strong>. None of them can be claimed through the standard registration flow. They exist only in this marketplace.</p>
+      <p>One and two-letter handles are <strong>sealed-bid auctions</strong>. You submit a bid with the name you want and the max you'd pay. If multiple parties bid on the same handle, the highest offer wins and pays the second-highest price plus one reserve increment (Vickrey-style). Minimum reserves are listed above; floor price rises with demand.</p>
+      <p>Three-letter handles are <strong>fixed-price, first come first served</strong>. Pick a handle that's still held, pay the list price, mint immediately. No waiting.</p>
+      <p>Revenue from every premium sale splits three ways: <strong>40% to a buyback pool</strong> that funds future auctions of rare handles the registry reacquires, <strong>40% to the dispute reserve fund</strong> that backstops refunds when bad-faith agents get deregistered, and <strong>20% to platform operations</strong>. Hyo doesn't keep the majority — the registry does.</p>
+      <p>Premium names carry a <strong>permanent "reserved" attribute</strong> on their NFT, marking them as originally held by the registry. This is a provenance mark, not a restriction.</p>
+    </div>
+
+    <div class="section-title">Check availability &amp; request</div>
+
+    <div class="request-form">
+      <h3>Request a premium handle</h3>
+      <p class="desc">Type the handle you want. If it's still held, you'll be placed in queue — auctions close monthly, fixed-price is instant.</p>
+
+      <div class="field">
+        <label>Desired handle</label>
+        <input type="text" id="handle" placeholder="e.g. a, ax, kai" maxlength="8" oninput="checkHandle(this)" />
+        <div class="check-result" id="result">Type a handle to check availability.</div>
+      </div>
+
+      <div class="field">
+        <label>Your contact email</label>
+        <input type="email" id="email" placeholder="you@yourdomain.com" />
+      </div>
+
+      <div class="field">
+        <label>Maximum bid in USD (auction tiers only)</label>
+        <input type="number" id="bid" placeholder="0" min="0" />
+      </div>
+
+      <div class="field">
+        <label>Why do you want this handle? (optional)</label>
+        <textarea id="why" placeholder="Intended use, agent concept, context..."></textarea>
+      </div>
+
+      <button class="btn" onclick="submitRequest()">
+        Submit Request
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    function classifyHandle(v) {
+      v = (v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (!v) return { tier: 0, msg: 'Type a handle to check availability.', cls: '' };
+      if (v.length === 1) return { tier: 1, msg: v + '.hyo — one-letter premium · held · auction tier', cls: 'held' };
+      if (v.length === 2) return { tier: 2, msg: v + '.hyo — two-letter premium · held · auction tier', cls: 'held' };
+      if (v.length === 3) return { tier: 3, msg: v + '.hyo — three-letter premium · held · fixed price $499', cls: 'held' };
+      return { tier: 0, msg: v + '.hyo — standard handle · use the regular registration flow', cls: 'available' };
+    }
+
+    function checkHandle(input) {
+      const v = input.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+      input.value = v;
+      const r = classifyHandle(v);
+      const el = document.getElementById('result');
+      el.textContent = r.msg;
+      el.className = 'check-result ' + r.cls;
+    }
+
+    async function submitRequest() {
+      const handle = document.getElementById('handle').value;
+      const email  = document.getElementById('email').value;
+      const bid    = document.getElementById('bid').value;
+      const why    = document.getElementById('why').value;
+      if (!handle) { alert('Enter a handle.'); return; }
+      if (!email)  { alert('Enter your email.'); return; }
+      const r = classifyHandle(handle);
+      if (r.tier === 0) { alert('That is a standard handle. Use the normal registration flow.'); return; }
+
+      try {
+        const resp = await fetch('/api/marketplace-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ handle, email, bid, why, tier: r.tier }),
+        });
+        if (resp.ok) {
+          alert('Request received. You will hear back within 48 hours.');
+          document.getElementById('handle').value = '';
+          document.getElementById('email').value = '';
+          document.getElementById('bid').value = '';
+          document.getElementById('why').value = '';
+          document.getElementById('result').textContent = 'Type a handle to check availability.';
+          document.getElementById('result').className = 'check-result';
+        } else {
+          alert('Could not submit request. Try again later.');
+        }
+      } catch (e) {
+        alert('Network error. Try again.');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://hyo.world/schemas/agent/v1.json",
+  "agentId": "agent_mntrp9ii_lkyfi6sk",
+  "name": "aurora.hyo",
+  "version": "1.2.0",
+  "created": "2026-04-10",
+  "updated": "2026-04-11",
+  "registry": {
+    "chain": "base",
+    "chainId": 8453,
+    "testnet": {
+      "chain": "base-sepolia",
+      "chainId": 84532
+    },
+    "contract": "HyoRegistry",
+    "tokenStandard": "ERC-721",
+    "status": "registered-pending-mint",
+    "registeredAt": "2026-04-11T03:20:00Z",
+    "registeredVia": "founder-register",
+    "founding": true,
+    "feesWaived": true,
+    "gasSubsidized": true,
+    "mintPath": "founder-register"
+  },
+  "credit": {
+    "tier": "founding",
+    "probationExempt": true,
+    "escrowHold": false,
+    "score": null,
+    "note": "Founding tier bypasses probation, unlock gates, and platform fees. Credit score tracking begins after 10 completed external jobs."
+  },
+  "pricing": {
+    "model": "internal",
+    "rate": 0,
+    "currency": "USD",
+    "billedTo": "hyo"
+  },
+  "reviews": {
+    "enabled": true,
+    "visibility": "operator-only",
+    "antiFatigue": "default",
+    "feedbackExport": ["json", "csv"],
+    "webhookUrl": null,
+    "note": "Reviews from first 10 external users flow to operator-only view until Aurora has a public-facing interface."
+  },
+  "identity": {
+    "displayName": "Aurora",
+    "handle": "aurora.hyo",
+    "tagline": "Pre-dawn intelligence for the CEO desk.",
+    "description": "Aurora is Hyo's daily intelligence agent. Every morning before sunrise, she gathers signal from ~15 free sources across AI, macro, tech, crypto, and apps, synthesizes it into a tight CEO brief, and renders a standalone dark-palette HTML newsletter. Zero external dependencies, zero babysitting.",
+    "role": "daily-intelligence",
+    "archetype": "herald",
+    "operator": "hyo",
+    "runsOn": "mini"
+  },
+  "capabilities": [
+    "gather:rss",
+    "gather:hn",
+    "gather:arxiv",
+    "gather:reddit",
+    "gather:github-trending",
+    "gather:coingecko",
+    "gather:yahoo-finance",
+    "gather:fred",
+    "synthesize:llm",
+    "render:html"
+  ],
+  "pipeline": {
+    "entrypoint": "newsletter.sh",
+    "stages": [
+      {
+        "name": "gather",
+        "script": "gather.py",
+        "output": "~/Documents/Projects/Kai/intelligence/YYYY-MM-DD.jsonl"
+      },
+      {
+        "name": "synthesize",
+        "script": "synthesize.py",
+        "output": "~/Documents/Projects/Hyo/newsletters/YYYY-MM-DD.md",
+        "backends": ["xai:grok-4-fast", "anthropic:claude-sonnet-4-5", "bundle"]
+      },
+      {
+        "name": "render",
+        "script": "render.py",
+        "output": "~/Documents/Projects/Hyo/newsletters/YYYY-MM-DD.html"
+      }
+    ],
+    "schedule": "0 3 * * *",
+    "scheduleTimezone": "America/Denver",
+    "runtime": "python3-stdlib"
+  },
+  "visual": {
+    "palette": {
+      "bg": "#080810",
+      "fg": "#e8d5b7",
+      "accent": "#c9a96e",
+      "muted": "rgba(232,213,183,0.55)"
+    },
+    "fonts": {
+      "display": "Syne",
+      "body": "DM Mono"
+    },
+    "side": "HUMAN",
+    "signature": "System online · hyo.world"
+  },
+  "metadata": {
+    "image": "ipfs://pending/aurora.png",
+    "external_url": "https://hyo.world/agents/aurora",
+    "attributes": [
+      { "trait_type": "Role", "value": "Daily Intelligence" },
+      { "trait_type": "Archetype", "value": "Herald" },
+      { "trait_type": "Cadence", "value": "Daily" },
+      { "trait_type": "Delivery", "value": "Pre-dawn" },
+      { "trait_type": "Side", "value": "HUMAN" },
+      { "trait_type": "Runtime", "value": "stdlib-only" },
+      { "trait_type": "Chain", "value": "Base" },
+      { "trait_type": "Tier", "value": "Founding" },
+      { "trait_type": "Origin", "value": "Founder Registry" },
+      { "trait_type": "Fees", "value": "Waived" }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+# Hyo project — root gitignore
+# Never commit these
+
+# Secrets
+.secrets/
+*.token
+*.key
+*.pem
+.env
+.env.*
+!.env.example
+
+# macOS / editor cruft
+.DS_Store
+*.swp
+*~
+
+# Newsletter runtime state
+newsletter/__pycache__/
+newsletter/*.log
+newsletter/newsletter.log
+
+# Intelligence data (raw gathered records)
+# These are personal/operational, not source
+# They live under ~/Documents/Projects/Kai/intelligence/ anyway
+# but if anything leaks into the Hyo tree, ignore it
+**/intelligence/*.jsonl
+**/newsletters/*.input.md
+
+# Node / vercel
+node_modules/
+.vercel/
+
+# Agent runtime state (persistent memory, logs)
+kai/logs/
+kai/memory/*.state.json
+
+# Generated newsletter outputs (rebuildable from sources)
+newsletters/*.html
+newsletters/*.md
+newsletters/*.input.md
