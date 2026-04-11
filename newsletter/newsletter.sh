@@ -18,6 +18,25 @@
 set -u
 cd "$(dirname "$0")"
 
+# ---- env auto-load ----------------------------------------------------------
+# Search the same places kai.sh does so credentials flow through even when
+# this script is invoked from cron/launchd/scheduled tasks with a blank env.
+_candidates=(
+  "${HYO_ENV_FILE:-}"
+  "$HOME/security/hyo.env"
+  "$HOME/security/.env"
+  "$HOME/.config/hyo/env"
+  "$HOME/Documents/Projects/Hyo/.secrets/env"
+)
+for _f in "${_candidates[@]}"; do
+  if [[ -n "$_f" && -f "$_f" && -r "$_f" ]]; then
+    set -a; . "$_f"; set +a
+    echo "[env] loaded $_f" >&2
+    break
+  fi
+done
+unset _candidates _f
+
 DATE_ARG=""
 GATHER_ONLY=0
 NO_GATHER=0

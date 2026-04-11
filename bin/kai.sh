@@ -57,6 +57,38 @@ warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
 err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }
 die()  { err "$*"; exit 1; }
 
+# ---- env loader -------------------------------------------------------------
+# Auto-discovery: scripts read env vars, kai.sh handles WHERE they come from.
+# Search order (first hit wins):
+#   1. $HYO_ENV_FILE (explicit override)
+#   2. ~/security/hyo.env
+#   3. ~/security/.env
+#   4. ~/.config/hyo/env
+#   5. $ROOT/.secrets/env
+# File format: plain `KEY=value` or `export KEY=value` lines, # for comments.
+# Any code that needs a credential should read ENV vars only, never hardcode
+# filesystem paths. That way if you move /security, nothing breaks.
+load_env_file() {
+  local candidates=()
+  [[ -n "${HYO_ENV_FILE:-}" ]] && candidates+=("$HYO_ENV_FILE")
+  candidates+=(
+    "$HOME/security/hyo.env"
+    "$HOME/security/.env"
+    "$HOME/.config/hyo/env"
+    "$ROOT/.secrets/env"
+  )
+  for f in "${candidates[@]}"; do
+    if [[ -f "$f" && -r "$f" ]]; then
+      # shellcheck disable=SC1090
+      set -a; source "$f"; set +a
+      export HYO_ENV_FILE_LOADED="$f"
+      return 0
+    fi
+  done
+  return 1
+}
+load_env_file || true
+
 # ---- token loader -----------------------------------------------------------
 load_founder_token() {
   if [[ -n "${HYO_FOUNDER_TOKEN:-}" ]]; then
@@ -106,8 +138,48 @@ ${BOLD}Defense agents${RST}
 ${BOLD}Env${RST}
   HYO_ROOT=$ROOT
   HYO_API_BASE=$API_BASE
+  HYO_ENV_FILE_LOADED=${HYO_ENV_FILE_LOADED:-<none>}
+  kai env                 Show which env file was auto-loaded and which keys are set
 
 EOF
+}
+
+cmd_env() {
+  hdr "env discovery"
+  if [[ -n "${HYO_ENV_FILE_LOADED:-}" ]]; then
+    ok "loaded env file: $HYO_ENV_FILE_LOADED"
+  else
+    warn "no env file auto-loaded"
+    say ""
+    say "Searched (in order):"
+    say "  \$HYO_ENV_FILE override (currently: ${HYO_ENV_FILE:-<unset>})"
+    say "  ~/security/hyo.env"
+    say "  ~/security/.env"
+    say "  ~/.config/hyo/env"
+    say "  $ROOT/.secrets/env"
+    say ""
+    say "Create any one of these with lines like:"
+    say "  ANTHROPIC_API_KEY=sk-ant-..."
+    say "  GROK_API_KEY=xai-..."
+    say "  HYO_FOUNDER_TOKEN=..."
+    say "  FRED_API_KEY=..."
+  fi
+  say ""
+  hdr "detected credentials"
+  for k in ANTHROPIC_API_KEY GROK_API_KEY HYO_FOUNDER_TOKEN FRED_API_KEY OPENAI_API_KEY; do
+    v="${!k:-}"
+    if [[ -n "$v" ]]; then
+      local masked
+      if [[ ${#v} -gt 12 ]]; then
+        masked="${v:0:6}...${v: -4}"
+      else
+        masked="***"
+      fi
+      ok "$k set ($masked, ${#v} chars)"
+    else
+      warn "$k not set"
+    fi
+  done
 }
 
 cmd_health() {
@@ -236,7 +308,12 @@ cmd_news() {
       hdr "Running aurora newsletter pipeline"
       cd "$ROOT/newsletter"
       local logf="$LOGS/aurora-$(date -u +%Y%m%dT%H%M%SZ).log"
-      ./newsletter.sh 2>&1 | tee "$logf"
+      # Env is already loaded by kai.sh's load_env_file at top; re-export
+      # anything the scheduled-task runner might have blanked
+      if ! ./newsletter.sh 2>&1 | tee "$logf"; then
+        err "newsletter.sh exited non-zero — see $logf"
+        return 1
+      fi
       ok "done — log: $logf"
       ;;
     latest)
@@ -365,5 +442,6 @@ case "$sub" in
   sentinel)           cmd_sentinel "$@" ;;
   cipher)             cmd_cipher "$@" ;;
   scan)               cmd_scan "$@" ;;
+  env)                cmd_env "$@" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac
