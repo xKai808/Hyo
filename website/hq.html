@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>HQ — Hyo Command Center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -195,7 +198,10 @@
       font-size: 13px; cursor: pointer; border-radius: 6px; transition: background 0.15s var(--ease);
     }
     .log-entry:last-child { border-bottom: none; }
-    .log-entry:hover { background: rgba(237,228,212,0.03); }
+    .log-entry:hover { background: rgba(237,228,212,0.06); }
+    .log-entry::after { content: '→'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--dim); font-size: 14px; opacity: 0; transition: opacity 0.15s var(--ease); }
+    .log-entry { position: relative; }
+    .log-entry:hover::after { opacity: 1; color: var(--accent); }
     .log-time { font-family: var(--font-m); font-size: 11px; color: var(--muted); min-width: 50px; padding-top: 2px; }
     .log-msg { color: var(--fg-soft); line-height: 1.5; }
     .log-msg .t { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-right: 8px; font-weight: 500; }
