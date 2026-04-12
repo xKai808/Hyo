@@ -845,6 +845,7 @@
       setEl('ciphToken', c.founderToken ?? '--', 'ok');
       setEl('ciphLeaks', c.leaks ?? '--', ok ? 'ok' : 'err');
       setEl('ciphLastRun', fmtDate(c.lastRun), 'ok');
+      if (c.latestDoc) { docURLs.cipher = c.latestDoc; document.getElementById('ciphViewBtn').style.display = ''; }
     }
     const ciphEvs = agentEvents(events, 'cipher');
     if (ciphEvs.length) document.getElementById('ciphHistory').innerHTML = historyHTML(ciphEvs);
@@ -854,6 +855,7 @@
       document.getElementById('simBadge').textContent = d.sim.status || 'complete';
       document.getElementById('simBadge').className = 'badge badge-ok';
       setEl('simStatus', d.sim.status || 'complete', 'ok');
+      if (d.sim.latestDoc) { docURLs.sim = d.sim.latestDoc; document.getElementById('simViewBtn').style.display = ''; }
     }
     const simEvs = agentEvents(events, 'sim');
     if (simEvs.length) document.getElementById('simHistory').innerHTML = historyHTML(simEvs);
