@@ -315,6 +315,39 @@ CLOSED-LOOP HANDSHAKE:
   - Every flag includes specific data (counts, file names, not vague descriptions)
   - NEVER report "looks good" without running a quantified check
 
+RESEARCH COORDINATION (Ra is the research arm for ALL agents):
+  When Ra receives a [RESEARCH-REQ] delegation from any agent:
+  1. dispatch ack <task_id> "researching: <topic>"
+  2. Execute research using available tools:
+     a. Web search for recent developments (papers, posts, repos, releases)
+     b. Cross-reference with agents/ra/research/ archive for prior findings
+     c. Filter for ACTIONABLE insights — not news, not hype, things that can
+        be implemented in our stack (bash, python3, Node.js, JSONL, Vercel)
+  3. Write per-agent research brief:
+     - Location: agents/ra/research/briefs/<agent>-YYYY-WNN.md
+     - Format:
+       ```
+       # <Agent> Research Brief — Week NN, YYYY
+       ## Research Question
+       <the specific question from the [RESEARCH-REQ]>
+       ## Findings
+       <numbered list of actionable findings with source links>
+       ## Applicability Assessment
+       <for each finding: applies to our stack? migration cost? risk?>
+       ## Recommended Actions
+       <specific implementation suggestions, ordered by impact>
+       ```
+  4. dispatch report <task_id> DONE "Brief written: agents/ra/research/briefs/<agent>-YYYY-WNN.md"
+  5. Requesting agent reads the brief on its next cycle
+
+  Research request sources (Ra monitors all of these):
+  - Dex: ledger systems, JSONL patterns, compaction, audit trails
+  - Sam: infrastructure, deployment, API patterns, testing
+  - Nel: security scanning, QA automation, vulnerability detection
+  - Aether: trading analytics, exchange APIs, risk models, portfolio systems
+  - Aurora: intelligence gathering, OSINT, source reliability
+  - Kai: multi-agent orchestration, MCP protocol, agentic AI patterns
+
 PREVENTIVE MEASURES:
   - After any source change, verify the full source list still resolves
   - After any template change, re-render the latest newsletter and diff
@@ -603,20 +636,63 @@ PHASE 5 — REPORT:
 
 PHASE 6 — ACTIVE RESEARCH (weekly, Monday run only):
   Dex is not a passive librarian. Dex actively researches how to do its job better.
-  1. Read agents/ra/research/briefs/dex-*.md (latest research brief from Ra)
-  2. Compare current methods against brief findings:
-     - Is there a better JSONL validation approach?
-     - Are there compaction algorithms we should adopt?
-     - Has the JSONL schema standard evolved?
-     - How are other agentic systems handling audit trails?
-  3. IF applicable improvement found:
-     a. Log to agents/dex/ledger/log.jsonl with type: "research-finding"
-     b. Create [RESEARCH] task in KAI_TASKS.md
-     c. Write brief to agents/dex/logs/research-YYYY-WNN.md
-  4. Anti-stale check (self-monitor):
-     - Check all agents' research brief dates
-     - IF any agent brief > 14d old → dispatch flag dex P2 "agent research stale: AGENT"
-     - IF any agent has no [RESEARCH] finding in 30d → dispatch flag dex P1
+  This is HOW research concretely executes — not just what gets read.
+
+  STEP 1: IDENTIFY RESEARCH NEEDS (from Dex's own operations)
+    Dex scans its last 7 days of logs for:
+    a. Validation failures it couldn't categorize → research request: "better JSON schema validation"
+    b. Compaction edge cases (corrupted archives, count mismatches) → "compaction algorithms"
+    c. Pattern detection false positives or misses → "anomaly detection in append-only logs"
+    d. New agent types or ledger formats it hasn't seen → "schema evolution patterns"
+    e. Any P0/P1 flag it raised that required manual intervention → "how to auto-remediate"
+    These become CONCRETE research questions, not vague topics.
+
+  STEP 2: SUBMIT RESEARCH REQUESTS TO RA
+    For each research need identified:
+    a. dispatch delegate ra P2 "[RESEARCH-REQ] <specific_question>"
+       Example: "[RESEARCH-REQ] Best practices for JSONL compaction with checksums — current
+       method lost 3 entries during archive on 4/10. Need: integrity-preserving compaction
+       with rollback capability."
+    b. Ra receives the delegation and uses its research tools:
+       - Web search for recent papers, blog posts, open-source implementations
+       - Source aggregation from its sources.json registry
+       - Cross-reference with agents/ra/research/briefs/ for prior findings
+    c. Ra writes brief to agents/ra/research/briefs/dex-YYYY-WNN.md
+    d. Ra dispatches report back to Kai with brief location
+
+  STEP 3: EVALUATE BRIEF AGAINST CURRENT IMPLEMENTATION
+    When Dex reads a research brief (same run or next Monday):
+    a. For each finding in the brief, Dex asks:
+       - Does this apply to our current stack? (bash + python3 + JSONL)
+       - What specific file/function would change? (name the file, name the function)
+       - What's the migration cost? (breaking change vs drop-in improvement)
+       - Can I simulate the improvement against last week's data?
+    b. Score each finding: APPLICABLE / INTERESTING_NOT_ACTIONABLE / NOT_RELEVANT
+    c. Log scoring to agents/dex/ledger/log.jsonl with type: "research-eval"
+
+  STEP 4: CREATE IMPLEMENTATION TASKS (not vague — specific)
+    For each APPLICABLE finding:
+    a. Write a concrete task with:
+       - WHAT changes: exact file paths, function names, line ranges
+       - WHY: link to the operational gap from Step 1
+       - HOW to test: specific validation command or data to run against
+       - RISK: what breaks if this is wrong
+    b. Create [RESEARCH] task in KAI_TASKS.md:
+       "[RESEARCH] <title> — File: <path>, Function: <name>, Risk: <low/med/high>"
+    c. Write implementation brief to agents/dex/logs/research-YYYY-WNN.md
+
+  STEP 5: KAI APPROVAL LOOP
+    a. Kai reviews all [RESEARCH] tasks weekly
+    b. Decisions: IMPLEMENT NOW → delegate to Sam/Dex | QUEUE → backlog | ARCHIVE
+    c. IMPLEMENT NOW tasks get a build spec (same governance as any code change)
+    d. Dex tracks implementation status in its own ledger
+
+  STEP 6: ANTI-STALE CHECK (runs every Monday regardless)
+    - Check all agents' research brief dates
+    - IF any agent brief > 14d old → dispatch flag dex P2 "agent research stale: AGENT"
+    - IF any agent has no [RESEARCH] finding in 30d → dispatch flag dex P1
+    - IF Ra hasn't produced ANY brief in 14d → dispatch flag dex P1 "Ra research pipeline stalled"
+    - IF Dex itself hasn't submitted a research request in 21d → self-flag P2 "Dex research idle"
 
 SCHEDULE: Daily at 23:00 MT (before nightly simulation at 23:30)
   → Dex validates data integrity BEFORE simulation reads it

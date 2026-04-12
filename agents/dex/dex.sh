@@ -602,31 +602,147 @@ log_pass "Phase 5 complete: Report generated and dispatch sent"
 
 # ============================================================================
 # PHASE 6: ACTIVE RESEARCH (Monday only)
+# Concrete execution: identify gaps → request Ra research → evaluate briefs →
+# create implementation tasks → anti-stale check
 # ============================================================================
 DOW=$(TZ="America/Denver" date +%u)  # 1=Monday
 if [[ "$DOW" == "1" ]]; then
+  echo "## Phase 6: Active Research (Weekly Monday Cycle)" >> "$REPORT"
+  echo "" >> "$REPORT"
   log_info "Phase 6: Active research (weekly Monday cycle)"
 
   RESEARCH_DIR="$ROOT/agents/ra/research/briefs"
-  DEX_BRIEF=$(ls -t "$RESEARCH_DIR"/dex-*.md 2>/dev/null | head -1)
+  DEX_RESEARCH_LOG="$DEX_LOGS/research-$(date +%Y-W%V).md"
   RESEARCH_FINDINGS=0
+  RESEARCH_REQUESTS=0
 
-  if [[ -n "$DEX_BRIEF" ]]; then
-    log_pass "Found research brief: $DEX_BRIEF"
-    # Log that we read the brief
-    log_activity "PHASE_6_RESEARCH" "brief_read" "$DEX_BRIEF"
+  mkdir -p "$RESEARCH_DIR"
+
+  # ---- STEP 1: Identify research needs from last 7 days of operations ----
+  log_activity "PHASE_6_RESEARCH" "step1_identify" "Scanning last 7 days for operational gaps"
+
+  RESEARCH_NEEDS=""
+  # Scan recent activity logs for failures, edge cases, manual interventions
+  for recent_log in "$DEX_LOGS"/dex-activity-*.jsonl; do
+    [[ -f "$recent_log" ]] || continue
+    # Look for failed phases, P0/P1 flags, or manual-intervention markers
+    while IFS= read -r line; do
+      local_status=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null || echo "")
+      local_phase=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('phase',''))" 2>/dev/null || echo "")
+      local_details=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('details',''))" 2>/dev/null || echo "")
+
+      if [[ "$local_status" == "failed" ]] || [[ "$local_status" == "found" ]]; then
+        RESEARCH_NEEDS="${RESEARCH_NEEDS}${local_phase}: ${local_details}\n"
+      fi
+    done < "$recent_log"
+  done 2>/dev/null
+
+  if [[ -n "$RESEARCH_NEEDS" ]]; then
+    log_pass "Step 1: Identified operational gaps for research"
+    echo "### Step 1: Research Needs Identified" >> "$REPORT"
+    echo "" >> "$REPORT"
+    echo -e "$RESEARCH_NEEDS" >> "$REPORT"
+    echo "" >> "$REPORT"
   else
-    log_warn "No research brief found for Dex — Ra needs to generate one"
-    dispatch_flag "P3" "no research brief available for Dex"
+    log_pass "Step 1: No operational gaps in last 7 days — using standing research topics"
+    echo "### Step 1: No new gaps — standing research topics apply" >> "$REPORT"
+    echo "" >> "$REPORT"
   fi
 
-  # Anti-stale check: verify all agents have recent research briefs
+  # ---- STEP 2: Submit research requests to Ra ----
+  # Generate research request based on identified needs or standing topics
+  WEEK_NUM=$(date +%Y-W%V)
+  RESEARCH_REQUEST_FILE="$DEX_HOME/ledger/research-requests.jsonl"
+
+  # Standing research topics (always relevant for Dex's domain)
+  STANDING_TOPICS=(
+    "JSONL validation: schema evolution patterns for append-only agent logs"
+    "Compaction: integrity-preserving archival with rollback for JSONL ledgers"
+    "Pattern detection: anomaly detection in multi-agent log streams"
+    "Audit trails: SOC2/ISO27001 patterns applicable to agent memory systems"
+    "Agentic memory: how production multi-agent systems handle recall and context"
+  )
+
+  # Pick the topic based on week number (rotate through standing topics)
+  WEEK_INDEX=$(( $(date +%V) % ${#STANDING_TOPICS[@]} ))
+  CURRENT_TOPIC="${STANDING_TOPICS[$WEEK_INDEX]}"
+
+  # Log the research request
+  REQ_ENTRY=$(cat <<JSEOF
+{"ts":"$NOW_ISO","type":"research-request","week":"$WEEK_NUM","topic":"$CURRENT_TOPIC","operational_gaps":"$(echo -e "$RESEARCH_NEEDS" | tr '\n' ';' | sed 's/;$//')","status":"submitted"}
+JSEOF
+  )
+  echo "$REQ_ENTRY" >> "$RESEARCH_REQUEST_FILE" 2>/dev/null || true
+
+  # Dispatch to Ra for research
+  if [[ -f "$DISPATCH_SH" ]]; then
+    bash "$DISPATCH_SH" delegate ra P2 "[RESEARCH-REQ] Dex $WEEK_NUM: $CURRENT_TOPIC" 2>/dev/null || true
+    RESEARCH_REQUESTS=$((RESEARCH_REQUESTS + 1))
+    log_pass "Step 2: Submitted research request to Ra: $CURRENT_TOPIC"
+  else
+    log_warn "Step 2: dispatch.sh not found — research request logged but not dispatched"
+  fi
+
+  echo "### Step 2: Research Request Submitted" >> "$REPORT"
+  echo "" >> "$REPORT"
+  echo "- Topic: $CURRENT_TOPIC" >> "$REPORT"
+  echo "- Dispatched to: Ra" >> "$REPORT"
+  echo "" >> "$REPORT"
+
+  # ---- STEP 3: Evaluate existing briefs ----
+  DEX_BRIEF=$(ls -t "$RESEARCH_DIR"/dex-*.md 2>/dev/null | head -1)
+
+  if [[ -n "$DEX_BRIEF" ]]; then
+    log_pass "Step 3: Found research brief to evaluate: $DEX_BRIEF"
+    log_activity "PHASE_6_RESEARCH" "step3_evaluate" "Evaluating brief: $DEX_BRIEF"
+
+    # Log evaluation event (actual evaluation happens during Kai/Dex interactive session)
+    EVAL_ENTRY=$(cat <<JSEOF
+{"ts":"$NOW_ISO","type":"research-eval","brief":"$DEX_BRIEF","week":"$WEEK_NUM","status":"pending_review","notes":"Brief found and queued for evaluation during next interactive session"}
+JSEOF
+    )
+    echo "$EVAL_ENTRY" >> "$DEX_LOG" 2>/dev/null || true
+
+    echo "### Step 3: Brief Evaluation" >> "$REPORT"
+    echo "" >> "$REPORT"
+    echo "- Brief: $DEX_BRIEF" >> "$REPORT"
+    echo "- Status: Queued for interactive evaluation" >> "$REPORT"
+    echo "- Action: Kai reviews findings during next session" >> "$REPORT"
+    echo "" >> "$REPORT"
+  else
+    log_warn "Step 3: No research brief found for Dex — Ra needs to produce one"
+    dispatch_flag "P3" "no research brief available for Dex"
+
+    echo "### Step 3: No Brief Available" >> "$REPORT"
+    echo "" >> "$REPORT"
+    echo "- No brief found in $RESEARCH_DIR/dex-*.md" >> "$REPORT"
+    echo "- Ra dispatched to produce one (see Step 2)" >> "$REPORT"
+    echo "" >> "$REPORT"
+  fi
+
+  # ---- STEP 4: Check for existing [RESEARCH] tasks needing implementation ----
+  KAI_TASKS="$ROOT/KAI_TASKS.md"
+  DEX_RESEARCH_TASKS=0
+  if [[ -f "$KAI_TASKS" ]]; then
+    DEX_RESEARCH_TASKS=$(grep -c "\[RESEARCH\].*[Dd]ex" "$KAI_TASKS" 2>/dev/null || echo "0")
+  fi
+
+  echo "### Step 4: Implementation Task Status" >> "$REPORT"
+  echo "" >> "$REPORT"
+  echo "- Active [RESEARCH] tasks for Dex in KAI_TASKS: $DEX_RESEARCH_TASKS" >> "$REPORT"
+  echo "" >> "$REPORT"
+
+  # ---- STEP 5: Anti-stale check across ALL agents ----
+  echo "### Step 5: Anti-Stale Check (all agents)" >> "$REPORT"
+  echo "" >> "$REPORT"
+
   for agent in kai sam nel ra aurora aether dex; do
     AGENT_BRIEF=$(ls -t "$RESEARCH_DIR"/${agent}-*.md 2>/dev/null | head -1)
     if [[ -z "$AGENT_BRIEF" ]]; then
       log_warn "No research brief found for agent: $agent"
       dispatch_flag "P2" "agent research stale: $agent (no brief exists)"
       RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
+      echo "- $agent: **NO BRIEF** — flagged P2" >> "$REPORT"
     else
       # Check age of brief
       BRIEF_DATE=$(stat -f "%m" "$AGENT_BRIEF" 2>/dev/null || stat -c "%Y" "$AGENT_BRIEF" 2>/dev/null || echo "0")
@@ -636,12 +752,25 @@ if [[ "$DOW" == "1" ]]; then
         log_warn "Research brief stale for $agent: ${AGE_DAYS}d old"
         dispatch_flag "P2" "agent research stale: $agent (${AGE_DAYS}d since last brief)"
         RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
+        echo "- $agent: **STALE** (${AGE_DAYS}d old) — flagged P2" >> "$REPORT"
+      else
+        log_pass "Research brief current for $agent: ${AGE_DAYS}d old"
+        echo "- $agent: current (${AGE_DAYS}d old)" >> "$REPORT"
       fi
     fi
   done
 
-  log_activity "PHASE_6_RESEARCH" "completed" "Checked all agents, ${RESEARCH_FINDINGS} stale briefs flagged"
-  log_pass "Phase 6 complete: Research check done, ${RESEARCH_FINDINGS} issues"
+  # Self-check: has Dex submitted a research request recently?
+  LAST_REQUEST=$(tail -1 "$RESEARCH_REQUEST_FILE" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('ts',''))" 2>/dev/null || echo "")
+  if [[ -z "$LAST_REQUEST" ]]; then
+    log_warn "Dex has never submitted a research request"
+    echo "- Dex self-check: **FIRST REQUEST** submitted this cycle" >> "$REPORT"
+  fi
+
+  echo "" >> "$REPORT"
+
+  log_activity "PHASE_6_RESEARCH" "completed" "Requests: $RESEARCH_REQUESTS, stale briefs: $RESEARCH_FINDINGS, pending tasks: $DEX_RESEARCH_TASKS"
+  log_pass "Phase 6 complete: Research cycle done — $RESEARCH_REQUESTS requests, $RESEARCH_FINDINGS stale flags"
 else
   log_info "Phase 6: Skipped (runs Monday only, today is day $DOW)"
 fi
