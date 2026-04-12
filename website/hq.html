@@ -312,10 +312,10 @@
         <div class="view-title">Dashboard</div>
         <div class="view-sub">Hyo systems at a glance</div>
         <div class="metric-row">
-          <div class="metric"><div class="metric-num" id="mBriefs">--</div><div class="metric-label">Ra briefs</div></div>
-          <div class="metric"><div class="metric-num" id="mSubs">0</div><div class="metric-label">Aurora subs</div></div>
-          <div class="metric"><div class="metric-num" id="mEvents">0</div><div class="metric-label">Events</div></div>
-          <div class="metric"><div class="metric-num" id="mUptime">--</div><div class="metric-label">API status</div></div>
+          <div class="metric" onclick="goView('ra')" style="cursor:pointer"><div class="metric-num" id="mBriefs">--</div><div class="metric-label">Ra briefs</div></div>
+          <div class="metric" onclick="goView('aurora')" style="cursor:pointer"><div class="metric-num" id="mSubs">0</div><div class="metric-label">Aurora subs</div></div>
+          <div class="metric" onclick="goView('activity')" style="cursor:pointer"><div class="metric-num" id="mEvents">0</div><div class="metric-label">Events</div></div>
+          <div class="metric" onclick="goView('health')" style="cursor:pointer"><div class="metric-num" id="mUptime">--</div><div class="metric-label">API status</div></div>
         </div>
         <div class="card">
           <div class="card-head"><span class="card-label">Recent activity</span><span class="badge badge-dim">live</span></div>
@@ -550,20 +550,21 @@
   }
 
   // ═══ NAV ═══
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      item.classList.add('active');
-      const target = item.dataset.view;
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      const view = document.getElementById('v-' + target);
-      if (view) {
-        view.classList.add('active');
-        view.style.animation = 'none';
-        view.offsetHeight;
-        view.style.animation = '';
-      }
+  function goView(name) {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.view === name);
     });
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const view = document.getElementById('v-' + name);
+    if (view) {
+      view.classList.add('active');
+      view.style.animation = 'none';
+      view.offsetHeight;
+      view.style.animation = '';
+    }
+  }
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => goView(item.dataset.view));
   });
 
   // ═══ CLOCK ═══
@@ -635,9 +636,14 @@
 
   // ═══ LOAD DATA from /api/hq-data ═══
   async function loadData() {
-    const d = await hqFetch('/api/hq-data');
+    let d;
+    try { d = await hqFetch('/api/hq-data'); } catch(e) { console.error('loadData fetch:', e); return; }
     if (!d || !d.ok) return;
 
+    try { _renderData(d); } catch(e) { console.error('loadData render:', e); }
+  }
+
+  function _renderData(d) {
     const events = d.events || [];
 
     // ── metrics ──
@@ -731,7 +737,7 @@
     // ── Health sidebar status from push data ──
     if (d.sentinel && d.sentinel.lastRun) setEl('hSentinel', fmtDate(d.sentinel.lastRun), 'ok');
     if (d.cipher && d.cipher.lastRun) setEl('hCipher', fmtDate(d.cipher.lastRun), 'ok');
-  }
+  } // end _renderData
 
   // ═══ HEALTH ═══
   async function checkHealth() {
