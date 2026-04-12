@@ -1,6 +1,24 @@
 {
-  "updatedAt": "2026-04-12T14:09:51Z",
+  "updatedAt": "2026-04-12T18:07:28Z",
   "events": [
+    {
+      "ts": "2026-04-12T18:07:28Z",
+      "agent": "sentinel",
+      "msg": "QA sweep — 7 passed, 0 failed",
+      "doc": "/viewer?agent=sentinel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T18:07:28Z",
+      "agent": "cipher",
+      "msg": "Security scan — secrets dir 700, token 600, 0 leaks (6 false positives confirmed)",
+      "doc": "/viewer?agent=cipher&file=2026-04-12T18"
+    },
+    {
+      "ts": "2026-04-12T18:07:28Z",
+      "agent": "ra",
+      "msg": "Newsletter check — 1 total, latest 2026-04-11 (2,254 words)",
+      "doc": "/viewer?agent=ra&file=2026-04-11"
+    },
     {
       "ts": "2026-04-12T14:09:51Z",
       "agent": "sentinel",
@@ -134,7 +152,7 @@
     }
   ],
   "ra": {
-    "lastRun": "2026-04-12T14:09:51Z",
+    "lastRun": "2026-04-12T18:07:28Z",
     "status": "delivered",
     "briefCount": 1,
     "wordCount": 2254,
@@ -144,18 +162,18 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-12T14:09:51Z",
+    "lastRun": "2026-04-12T18:07:28Z",
     "passed": 7,
     "failed": 0,
     "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
   },
   "cipher": {
-    "lastRun": "2026-04-12T14:09:51Z",
+    "lastRun": "2026-04-12T18:07:28Z",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan — no leaked tokens or secrets found",
-    "latestDoc": "/viewer?agent=cipher&file=2026-04-12T14"
+    "notes": "Clean scan — 6 grep hits all false positives (regex patterns in cipher.hyo.json, cipher.algorithm.md, consolidate.sh, and prior cipher logs)",
+    "latestDoc": "/viewer?agent=cipher&file=2026-04-12T18"
   },
   "sim": {
     "lastRun": "2026-04-10T22:14:00Z",
