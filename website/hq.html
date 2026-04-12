@@ -2023,7 +2023,7 @@
 
       // Agent-specific fields
       if (ag === 'ra') {
-        document.getElementById('raBriefs').textContent = agData.briefs || 0;
+        // raBriefs moved to raPipelineBriefs in redesign
         document.getElementById('raState').textContent = agData.state || '--';
         // Pipeline health summary
         document.getElementById('raPipelineBriefs').textContent = agData.briefs || 0;
@@ -2107,7 +2107,7 @@
         if (agData.pnl) { const el = document.getElementById('abPnl'); el.textContent = agData.pnl; el.style.color = String(agData.pnl).startsWith('-') ? 'var(--error)' : 'var(--success)'; }
         if (agData.pnlToday) { const el = document.getElementById('abPnlToday'); el.textContent = agData.pnlToday; el.style.color = String(agData.pnlToday).startsWith('-') ? 'var(--error)' : 'var(--success)'; }
         if (agData.winRate) document.getElementById('abWinRate').textContent = agData.winRate;
-        if (agData.strategy) document.getElementById('abStrategy').textContent = agData.strategy;
+        // abStrategy now in Active Strategies table, updated via push data
         if (agData.totalTrades) document.getElementById('abTotalTrades').textContent = agData.totalTrades;
         if (agData.wins) document.getElementById('abWins').textContent = agData.wins;
         if (agData.losses) document.getElementById('abLosses').textContent = agData.losses;
