@@ -44,9 +44,21 @@
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. The existing cron/launchd tasks on the Mini DO have full network access — that's where pipeline scripts with auto-push actually run.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 early AM — MCP Zod fix + full repo restructure committed)
+## Current state (as of 2026-04-13 — Aether/Dex formalized + daily research + tunnel fix)
 
-**Shipped this session (sixth pass — MCP fix + infrastructure commit + ops audit):**
+**Shipped this session (seventh pass — agent formalization + research architecture):**
+- **Aether + Dex agents formalized** — manifests, runners, ledgers, algorithms, 8/8 test pass each
+- **Aetherbot → Aether rename** (40+ files, zero orphans) + Ledger → Dex rename (19+ files)
+- **AETHER_OPERATIONS.md v2.0** — rewritten from actual AetherBot project data (70+ source files parsed): trading philosophy, 12-step Deep Analysis, GPT cross-check protocol, nightly 11-probe simulation, build governance, strategy families, issue tracking
+- **Kai↔Aether approval loop** — conversation ledger at `agents/aether/ledger/kai-aether-log.jsonl`, GPT interaction log at `gpt-interactions.jsonl`, Kai reviews all Aether decisions
+- **Dex daily intelligence scanning** — Phase 6 split: 6A runs daily (7 rotating research topics dispatched to Ra as [DAILY-INTEL]), 6B Monday deep synthesis ([RESEARCH-REQ] with implementation specs). Dex is never more than 24h behind on domain developments.
+- **Ra research coordination protocol** — Ra handles [RESEARCH-REQ] and [DAILY-INTEL] from all agents, produces actionable briefs with applicability assessment
+- **Agent Creation Protocol** (`docs/AGENT_CREATION_PROTOCOL.md`) — 13-section sellable blueprint for creating agents from scratch
+- **Continuous Learning Protocol** — all agents research their domains, Dex enforces anti-stale rules
+- **Tunnel plist TCC fix** — WorkingDirectory changed to /tmp (was project dir, TCC blocked access), install-tunnel.sh for one-command setup
+- **Commits:** `f09e17e` → `fbf6957` → `989d59c` → `3e869b4` → `f9e353e` → `8683c4b` → `f5fc5bc`
+
+**Shipped previous session (sixth pass — MCP fix + infrastructure commit + ops audit):**
 - **MCP server Zod fix committed** (`8566d2a`): SDK v1.29.0 requires Zod schemas, not plain objects. All 8 tools converted. Server ready to re-run on Mini.
 - **Full repo restructure committed** (`324ce89`): 228 files — all agent code canonically under `agents/<name>/`, manifests under `agents/manifests/`, legacy files moved to `docs/legacy/`, symlinks for backward compat.
 - **2 new MCP tools: `ledger_query` + `ledger_lifecycle`** — recall any task's full lifecycle from Cowork. Search by ID, agent, status, or keyword.
