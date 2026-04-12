@@ -739,7 +739,10 @@
   function evHTML(e, showDate) {
     const cls = AGENT_CLASS[e.agent] || 't-ra';
     const time = showDate ? fmtDate(e.ts) : fmtTime(e.ts);
-    return `<div class="log-entry" onclick="goView('${e.agent}')"><span class="log-time">${time}</span><span class="log-msg"><span class="t ${cls}">${e.agent}</span> ${esc(e.msg)}</span></div>`;
+    const action = e.doc
+      ? `window.open('${e.doc}','_blank')`
+      : `goView('${e.agent}')`;
+    return `<div class="log-entry" onclick="${action}"><span class="log-time">${time}</span><span class="log-msg"><span class="t ${cls}">${e.agent}</span> ${esc(e.msg)}</span></div>`;
   }
   function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
   function agentEvents(events, agent) { return (events || []).filter(e => e.agent === agent); }
