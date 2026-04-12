@@ -873,6 +873,18 @@
       document.getElementById('consBadge').textContent = 'synced';
       document.getElementById('consBadge').className = 'badge badge-ok';
       setEl('consLastRun', fmtDate(d.consolidation.lastRun), 'ok');
+      if (d.consolidation.latestDoc) { docURLs.consolidation = d.consolidation.latestDoc; document.getElementById('consViewBtn').style.display = ''; }
+      // Per-project status from events
+      const consEvts = agentEvents(events, 'consolidation');
+      const projStatus = {};
+      consEvts.forEach(e => {
+        const m = e.msg.match(/— (.+)$/);
+        if (m) projStatus[m[1]] = fmtDate(e.ts);
+      });
+      if (projStatus['hyo']) setEl('consHyo', projStatus['hyo'], 'ok');
+      if (projStatus['aurora-ra']) setEl('consAurora', projStatus['aurora-ra'], 'ok');
+      if (projStatus['aetherbot']) setEl('consAether', projStatus['aetherbot'], 'ok');
+      if (projStatus['kai-ceo']) setEl('consKai', projStatus['kai-ceo'], 'ok');
     }
     const consEvs = agentEvents(events, 'consolidation');
     if (consEvs.length) document.getElementById('consHistory').innerHTML = historyHTML(consEvs);
