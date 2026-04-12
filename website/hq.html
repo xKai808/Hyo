@@ -520,13 +520,21 @@
       <!-- CONSOLIDATION -->
       <div class="view" id="v-consolidation">
         <div class="view-title">Consolidation</div>
-        <div class="view-sub">Nightly memory sync</div>
+        <div class="view-sub">Nightly per-project consolidation with sentinel + cipher</div>
         <div class="card">
           <div class="card-head"><span class="card-label">Status</span><span class="badge badge-dim" id="consBadge">waiting</span></div>
           <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="consLastRun" style="color:var(--dim)">No data yet</span></div>
           <div class="btn-row">
-            <button class="btn primary" onclick="act('Running consolidation...')"><span class="ic">&#127761;</span> Run now</button>
+            <button class="btn primary" id="consViewBtn" style="display:none" onclick="openDoc('consolidation')"><span class="ic">&#128196;</span> View log</button>
+            <button class="btn" onclick="act('Running consolidation...')"><span class="ic">&#127761;</span> Run now</button>
           </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Projects</span></div>
+          <div class="d-row"><span class="d-label">Hyo (platform)</span><span class="d-val" id="consHyo" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Aurora / Ra</span><span class="d-val" id="consAurora" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Aetherbot</span><span class="d-val" id="consAether" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Kai (CEO)</span><span class="d-val" id="consKai" style="color:var(--dim)">--</span></div>
         </div>
         <div class="card">
           <div class="card-head"><span class="card-label">History</span></div>
