@@ -139,6 +139,12 @@ ${BOLD}Engineering (Sam)${RST}
   kai sam fix <issue>     Accept issue description, output fix command
   kai sam review          Scan recent changes, check for common issues
 
+${BOLD}MCP Tunnel (sandbox connectivity)${RST}
+  kai tunnel              Start MCP tunnel (cloudflared > localtunnel > ngrok)
+  kai tunnel --method <m> Force tunnel method (cloudflared|localtunnel|ngrok)
+  kai tunnel --help       Show tunnel setup help
+  kai tunnel-daemon       Install/start persistent tunnel daemon (launchd)
+
 ${BOLD}Defense agents${RST}
   kai sentinel            Run sentinel.hyo (QA agent) now
   kai cipher              Run cipher.hyo (security agent) now
@@ -624,6 +630,101 @@ cmd_scan() {
   esac
 }
 
+cmd_tunnel() {
+  hdr "MCP tunnel (Cowork connectivity)"
+  if [[ -x "$ROOT/agents/sam/mcp-server/tunnel.sh" ]]; then
+    "$ROOT/agents/sam/mcp-server/tunnel.sh" "$@"
+  else
+    die "tunnel.sh not found at $ROOT/agents/sam/mcp-server/tunnel.sh"
+  fi
+}
+
+cmd_tunnel_daemon() {
+  local sub="${1:-install}"; shift || true
+  case "$sub" in
+    install)
+      hdr "Installing MCP tunnel daemon (launchd)"
+      local plist="$ROOT/agents/sam/mcp-server/com.hyo.mcp-tunnel.plist"
+      local target="$HOME/Library/LaunchAgents/com.hyo.mcp-tunnel.plist"
+
+      [[ ! -f "$plist" ]] && die "plist not found at $plist"
+
+      # Expand $HOME in the plist
+      mkdir -p "$(dirname "$target")"
+      sed "s|\$HOME|$HOME|g" "$plist" > "$target"
+      chmod 644 "$target"
+      ok "plist installed to $target"
+
+      # Load it
+      launchctl load "$target" 2>/dev/null || {
+        warn "plist may already be loaded; unloading first..."
+        launchctl unload "$target" 2>/dev/null || true
+        launchctl load "$target"
+      }
+      ok "daemon loaded and will start on login"
+
+      # Show status
+      say ""
+      hdr "Daemon status"
+      launchctl list com.hyo.mcp-tunnel 2>/dev/null || warn "daemon not running yet"
+      say ""
+      say "To view logs: ${BOLD}tail -f /tmp/hyo-mcp-tunnel.log${RST}"
+      ;;
+    uninstall)
+      hdr "Uninstalling MCP tunnel daemon"
+      local target="$HOME/Library/LaunchAgents/com.hyo.mcp-tunnel.plist"
+      if [[ -f "$target" ]]; then
+        launchctl unload "$target" 2>/dev/null || warn "daemon not loaded"
+        rm -f "$target"
+        ok "daemon uninstalled"
+      else
+        warn "daemon not installed at $target"
+      fi
+      ;;
+    start)
+      hdr "Starting MCP tunnel daemon"
+      launchctl start com.hyo.mcp-tunnel || {
+        err "failed to start daemon"
+        return 1
+      }
+      ok "daemon started"
+      sleep 2
+      tail -n 20 /tmp/hyo-mcp-tunnel.log 2>/dev/null || warn "no logs yet"
+      ;;
+    stop)
+      hdr "Stopping MCP tunnel daemon"
+      launchctl stop com.hyo.mcp-tunnel || {
+        err "failed to stop daemon"
+        return 1
+      }
+      ok "daemon stopped"
+      ;;
+    status)
+      hdr "MCP tunnel daemon status"
+      launchctl list com.hyo.mcp-tunnel 2>/dev/null || {
+        warn "daemon not running"
+        return 1
+      }
+      say ""
+      if [[ -f /tmp/hyo-mcp-tunnel.log ]]; then
+        say "Recent logs:"
+        tail -n 10 /tmp/hyo-mcp-tunnel.log
+      fi
+      ;;
+    logs)
+      hdr "MCP tunnel daemon logs"
+      [[ -f /tmp/hyo-mcp-tunnel.log ]] || {
+        warn "no logs yet (daemon may not have run)"
+        return 1
+      }
+      tail -f /tmp/hyo-mcp-tunnel.log
+      ;;
+    *)
+      die "usage: kai tunnel-daemon {install|uninstall|start|stop|status|logs}"
+      ;;
+  esac
+}
+
 # ---- hq push ---------------------------------------------------------------
 cmd_push() {
   local agent="${1:-}"; shift || true
@@ -717,5 +818,7 @@ case "$sub" in
   simulate|sim)       bash "$ROOT/bin/dispatch.sh" simulate ;;
   dhealth)            bash "$ROOT/bin/dispatch.sh" health ;;
   memory)             bash "$ROOT/bin/dispatch.sh" memory ;;
+  tunnel)             cmd_tunnel "$@" ;;
+  tunnel-daemon)      cmd_tunnel_daemon "$@" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

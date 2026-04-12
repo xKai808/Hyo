@@ -317,6 +317,49 @@ print(json.dumps({
     >> "$LOG" 2>&1 && log "HQ push: ok" || log "HQ push: failed"
 }
 
+# ─── Verify Dashboard Data ─────────────────────────────────────────────────────
+verify_dashboard() {
+  local api_response dashboard_ts local_ts
+
+  # GET metrics from API to verify data landed
+  api_response=$(curl -sf "https://www.hyo.world/api/aether?action=metrics" 2>> "$LOG")
+
+  if [[ -z "$api_response" ]]; then
+    log "WARN: Dashboard verification failed (empty API response)"
+    local dispatch_bin="$ROOT/bin/dispatch.sh"
+    if [[ -x "$dispatch_bin" ]]; then
+      bash "$dispatch_bin" flag aether P2 "dashboard data verification failed: empty API response" 2>> "$LOG" || true
+    fi
+    return 1
+  fi
+
+  # Parse API response for updatedAt timestamp
+  dashboard_ts=$(echo "$api_response" | python3 -c "
+import json, sys
+try:
+    r = json.load(sys.stdin)
+    print(r.get('updatedAt', ''))
+except Exception as e:
+    print(f'')
+" 2>/dev/null)
+
+  # Parse local metrics file for updatedAt timestamp
+  local_ts=$(python3 -c "import json; d=json.load(open('$METRICS')); print(d.get('updatedAt', ''))" 2>/dev/null)
+
+  # Compare timestamps
+  if [[ "$dashboard_ts" == "$local_ts" && -n "$local_ts" ]]; then
+    log "Dashboard verified: data in sync (ts: $local_ts)"
+    return 0
+  else
+    log "WARN: Dashboard out of sync — local: $local_ts, API: $dashboard_ts"
+    local dispatch_bin="$ROOT/bin/dispatch.sh"
+    if [[ -x "$dispatch_bin" ]]; then
+      bash "$dispatch_bin" flag aether P2 "dashboard data mismatch: local ts $local_ts != API ts $dashboard_ts" 2>> "$LOG" || true
+    fi
+    return 1
+  fi
+}
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 main() {
   log "=== Aether metrics run ==="
@@ -388,14 +431,20 @@ d['updatedAt'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S-06:00')
 with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
 "
   push_to_hq
+  verify_dashboard
 
   # ─── Dispatch reporting (closed-loop) ──────────────────────────────────────
   local dispatch_bin="$ROOT/bin/dispatch.sh"
   if [[ -x "$dispatch_bin" ]]; then
-    local trade_count pnl_total
+    local trade_count pnl_total dashboard_status
     trade_count=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['trades'])" 2>/dev/null || echo "0")
     pnl_total=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['pnl'])" 2>/dev/null || echo "0")
-    bash "$dispatch_bin" report aether "cycle complete: ${trade_count} trades, PNL=\$${pnl_total}" 2>> "$LOG" || true
+    if verify_dashboard >/dev/null 2>&1; then
+      dashboard_status="synced"
+    else
+      dashboard_status="out-of-sync"
+    fi
+    bash "$dispatch_bin" report aether "cycle complete: ${trade_count} trades, PNL=\$${pnl_total}, dashboard: ${dashboard_status}" 2>> "$LOG" || true
   fi
 
   log "Metrics cycle complete"
