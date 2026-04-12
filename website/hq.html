@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>HQ — Hyo Command Center</title>
+  <title>hq — hyo command center</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -803,7 +803,7 @@
   <!-- AUTH GATE -->
   <div class="auth-gate" id="authGate">
     <div class="auth-box">
-      <div class="logo">HQ</div>
+      <div class="logo">hq</div>
       <div class="sub">Command Center</div>
       <input type="password" id="authInput" placeholder="password" />
       <div class="auth-err" id="authErr"></div>
@@ -816,14 +816,17 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-header">
-        <div class="logo">HQ</div>
-        <div class="logo-version">v7-0412</div>
+        <div class="logo">hq</div>
+        <div class="logo-version">v8-0412</div>
       </div>
 
       <div class="nav-section">Overview</div>
       <div class="nav-item active" data-view="dashboard"><span class="nav-icon">📊</span><span>Dashboard</span></div>
       <div class="nav-item" data-view="activity"><span class="nav-icon">📜</span><span>Activity</span></div>
-      <div class="nav-item" data-view="credits"><span class="nav-icon">💳</span><span>Credits</span></div>
+
+      <div class="nav-section">API Usage</div>
+      <div class="nav-item" data-view="openai-usage"><span class="nav-icon">🟢</span><span>OpenAI</span></div>
+      <div class="nav-item" data-view="claude-usage"><span class="nav-icon">🟠</span><span>Claude</span></div>
 
       <div class="nav-section">Products</div>
       <div class="nav-item" data-view="ra"><span class="nav-icon">📰</span><span>Ra</span><div class="nav-dot ok" id="dot-ra"></div></div>
@@ -840,6 +843,11 @@
       <div class="nav-item" data-view="consolidation"><span class="nav-icon">📦</span><span>Consolidation</span><div class="nav-dot ok" id="dot-consolidation"></div></div>
       <div class="nav-item" data-view="aetherbot"><span class="nav-icon">🤖</span><span>Aetherbot</span><div class="nav-dot ok" id="dot-aetherbot"></div></div>
       <div class="nav-item" data-view="health"><span class="nav-icon">❤️</span><span>Health</span></div>
+
+      <div class="nav-section">Intelligence</div>
+      <div class="nav-item" onclick="window.open('/research.html','_blank')">
+        <span class="nav-icon">📚</span> Research
+      </div>
 
       <div class="sidebar-footer">
         <div class="clock" id="clock">-- MT</div>
@@ -875,9 +883,9 @@
               <div class="metric-value" id="metricEvents">0</div>
               <div class="metric-label">Events</div>
             </div>
-            <div class="metric-card">
-              <div class="metric-value" id="metricCredits">0</div>
-              <div class="metric-label">Credits</div>
+            <div class="metric-card" style="cursor: pointer;" onclick="goView('claude-usage')">
+              <div class="metric-value" style="font-size: 22px;">182k</div>
+              <div class="metric-label">API Tokens</div>
             </div>
           </div>
 
@@ -935,37 +943,224 @@
         </div>
 
         <!-- CREDITS -->
-        <div class="view" id="v-credits">
-          <div class="view-title">Credits</div>
-          <div class="view-subtitle">Account balance & usage</div>
+        <!-- OPENAI USAGE -->
+        <div class="view" id="v-openai-usage">
+          <div class="view-title">OpenAI Usage</div>
+          <div class="view-subtitle">API consumption &mdash; platform.openai.com</div>
 
+          <!-- Summary metrics -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--success);">$0.05</div>
+              <div class="metric-label">April spend</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">11,889</div>
+              <div class="metric-label">Input tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">1,570</div>
+              <div class="metric-label">Output tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">3</div>
+              <div class="metric-label">Requests</div>
+            </div>
+          </div>
+
+          <!-- Budget bar -->
           <div class="card">
             <div class="card-header">
-              <span class="card-title">Balance</span>
+              <span class="card-title">April Budget</span>
+              <span class="badge success">$0.05 / $100.00</span>
             </div>
-            <div style="padding: 20px 0;">
-              <div style="text-align: center;">
-                <div style="font-size: 48px; font-weight: 700; color: var(--accent); margin-bottom: 8px;" id="creditsBalance">0</div>
-                <div style="color: var(--text-tertiary); font-size: 13px;">Available credits</div>
+            <div style="background: var(--bg-tertiary); border-radius: 6px; height: 12px; overflow: hidden; margin-bottom: 12px;">
+              <div style="background: var(--success); height: 100%; width: 0.05%; min-width: 3px; border-radius: 6px; transition: width 0.5s var(--ease);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono);">
+              <span>0.05% used</span>
+              <span>$99.95 remaining</span>
+            </div>
+          </div>
+
+          <!-- Daily breakdown chart (bar chart via CSS) -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Daily Token Usage</span>
+              <span class="badge" style="background: rgba(126, 196, 224, 0.15); color: var(--cyan);">gpt-4o</span>
+            </div>
+            <div id="openaiChart" style="display: flex; align-items: flex-end; gap: 8px; height: 180px; padding: 0 4px;">
+            </div>
+            <div id="openaiChartLabels" style="display: flex; gap: 8px; padding: 8px 4px 0; font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);">
+            </div>
+          </div>
+
+          <!-- Detailed table -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Request Log</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Mar 13 – Apr 12, 2026</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Date</th>
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Model</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Input</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Output</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Requests</th>
+                  </tr>
+                </thead>
+                <tbody id="openaiTable">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Account info -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Account</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">User</span>
+              <span class="data-value">Hyo Park</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Project</span>
+              <span class="data-value" style="font-family: var(--font-mono); font-size: 12px;">proj_PIX0QSLBaKRDaHp6eP9bfk7a</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">API Key</span>
+              <span class="data-value" style="font-family: var(--font-mono); font-size: 12px;">key_WEtWjd...Ps8U</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Primary Model</span>
+              <span class="data-value">gpt-4o-2024-08-06</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Tier</span>
+              <span class="data-value">Default</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLAUDE USAGE -->
+        <div class="view" id="v-claude-usage">
+          <div class="view-title">Claude Usage</div>
+          <div class="view-subtitle">API consumption &mdash; platform.claude.com</div>
+
+          <!-- Summary metrics -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--purple);">124,419</div>
+              <div class="metric-label">Input tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--purple);">44,276</div>
+              <div class="metric-label">Output tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">168,695</div>
+              <div class="metric-label">Total tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">0</div>
+              <div class="metric-label">Web searches</div>
+            </div>
+          </div>
+
+          <!-- Model breakdown -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Model Breakdown</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">April 2026</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 20px; text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;">claude-sonnet-4-6</div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--purple); margin-bottom: 4px;">117,356</div>
+                <div style="font-size: 11px; color: var(--text-muted);">in</div>
+                <div style="font-size: 20px; font-weight: 600; color: var(--purple); margin-top: 8px;">43,328</div>
+                <div style="font-size: 11px; color: var(--text-muted);">out</div>
+              </div>
+              <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 20px; text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;">claude-haiku-4-5</div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--cyan); margin-bottom: 4px;">7,063</div>
+                <div style="font-size: 11px; color: var(--text-muted);">in</div>
+                <div style="font-size: 20px; font-weight: 600; color: var(--cyan); margin-top: 8px;">948</div>
+                <div style="font-size: 11px; color: var(--text-muted);">out</div>
               </div>
             </div>
           </div>
 
+          <!-- Daily breakdown chart -->
           <div class="card">
             <div class="card-header">
-              <span class="card-title">Usage</span>
+              <span class="card-title">Daily Token Usage</span>
+              <span class="badge" style="background: rgba(180, 154, 240, 0.15); color: var(--purple);">anthropic api</span>
+            </div>
+            <div id="claudeChart" style="display: flex; align-items: flex-end; gap: 8px; height: 180px; padding: 0 4px;">
+            </div>
+            <div id="claudeChartLabels" style="display: flex; gap: 8px; padding: 8px 4px 0; font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);">
+            </div>
+          </div>
+
+          <!-- Detailed table -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Daily Breakdown</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Apr 8 – Apr 11, 2026</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Date</th>
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Model</th>
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">API Key</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Input</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Cache Write</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Cache Read</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Output</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Searches</th>
+                  </tr>
+                </thead>
+                <tbody id="claudeTable">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Account info -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Account</span>
             </div>
             <div class="data-row">
-              <span class="data-label">This month</span>
-              <span class="data-value" id="creditsMonth">--</span>
+              <span class="data-label">Workspace</span>
+              <span class="data-value">Default</span>
             </div>
             <div class="data-row">
-              <span class="data-label">Last month</span>
-              <span class="data-value" id="creditsLastMonth">--</span>
+              <span class="data-label">API Key</span>
+              <span class="data-value" style="font-family: var(--font-mono); font-size: 12px;">Kai2</span>
             </div>
             <div class="data-row">
-              <span class="data-label">Trending</span>
-              <span class="data-value" id="creditsTrend">--</span>
+              <span class="data-label">Primary Model</span>
+              <span class="data-value">claude-sonnet-4-6</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Fallback Model</span>
+              <span class="data-value">claude-haiku-4-5</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Context Window</span>
+              <span class="data-value">&le; 200k</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Inference</span>
+              <span class="data-value">Global</span>
             </div>
           </div>
         </div>
@@ -985,17 +1180,20 @@
               <span class="data-value" id="raLastRun">--</span>
             </div>
             <div class="data-row">
-              <span class="data-label">Briefs</span>
+              <span class="data-label">Briefs published</span>
               <span class="data-value" id="raBriefs">0</span>
             </div>
             <div class="data-row">
-              <span class="data-label">State</span>
+              <span class="data-label">Pipeline state</span>
               <span class="data-value" id="raState">--</span>
             </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('ra')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('ra')"><span>▶</span> Run Now</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Latest Brief</span>
             </div>
+            <div id="raLatestBrief" style="color: var(--text-muted); font-size: 13px; padding: 4px 0;">Loads from push data when Ra runs</div>
           </div>
 
           <div class="card">
@@ -1027,12 +1225,8 @@
               <span class="data-value" id="auroraSubscribers">0</span>
             </div>
             <div class="data-row">
-              <span class="data-label">State</span>
+              <span class="data-label">Pipeline state</span>
               <span class="data-value" id="auroraState">--</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('aurora')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('aurora')"><span>▶</span> Run Now</button>
             </div>
           </div>
 
@@ -1065,12 +1259,8 @@
               <span class="data-value success" id="sentinelResult">pass</span>
             </div>
             <div class="data-row">
-              <span class="data-label">Tests</span>
+              <span class="data-label">Tests executed</span>
               <span class="data-value" id="sentinelTests">0</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('sentinel')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('sentinel')"><span>▶</span> Run Now</button>
             </div>
           </div>
 
@@ -1103,12 +1293,8 @@
               <span class="data-value" id="cipherLeaks">0</span>
             </div>
             <div class="data-row">
-              <span class="data-label">State</span>
+              <span class="data-label">Posture</span>
               <span class="data-value success" id="cipherState">secure</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('cipher')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('cipher')"><span>▶</span> Run Now</button>
             </div>
           </div>
 
@@ -1143,10 +1329,6 @@
             <div class="data-row">
               <span class="data-label">Findings</span>
               <span class="data-value" id="nelFindings">0</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('nel')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('nel')"><span>▶</span> Run Now</button>
             </div>
           </div>
 
@@ -1204,10 +1386,6 @@
               <span class="data-label">State</span>
               <span class="data-value" id="samState">--</span>
             </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('sam')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('sam')"><span>▶</span> Run Now</button>
-            </div>
           </div>
 
           <div class="card">
@@ -1223,7 +1401,7 @@
         <!-- SIMULATIONS -->
         <div class="view" id="v-sim">
           <div class="view-title">Simulations</div>
-          <div class="view-subtitle">Agent stress tests</div>
+          <div class="view-subtitle">Nightly delegation lifecycle validation</div>
 
           <div class="card">
             <div class="card-header">
@@ -1235,16 +1413,12 @@
               <span class="data-value" id="simLastRun">--</span>
             </div>
             <div class="data-row">
-              <span class="data-label">Runs</span>
+              <span class="data-label">Total runs</span>
               <span class="data-value" id="simRuns">0</span>
             </div>
             <div class="data-row">
               <span class="data-label">State</span>
               <span class="data-value" id="simState">--</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('sim')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('sim')"><span>▶</span> Run Now</button>
             </div>
           </div>
 
@@ -1253,7 +1427,7 @@
               <span class="card-title">History</span>
             </div>
             <div id="simHistory">
-              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Simulations run</div>
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as simulations run</div>
             </div>
           </div>
         </div>
@@ -1280,10 +1454,6 @@
               <span class="data-label">State</span>
               <span class="data-value" id="consolidationState">--</span>
             </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('consolidation')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('consolidation')"><span>▶</span> Run Now</button>
-            </div>
           </div>
 
           <div class="card">
@@ -1291,7 +1461,7 @@
               <span class="card-title">History</span>
             </div>
             <div id="consolidationHistory">
-              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Consolidation runs</div>
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as consolidation runs</div>
             </div>
           </div>
         </div>
@@ -1299,11 +1469,115 @@
         <!-- AETHERBOT -->
         <div class="view" id="v-aetherbot">
           <div class="view-title">Aetherbot</div>
-          <div class="view-subtitle">Strategic oversight & execution</div>
+          <div class="view-subtitle">Autonomous trading agent</div>
 
+          <!-- Portfolio overview -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" id="abBalance">--</div>
+              <div class="metric-label">Balance</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="abPnl" style="color: var(--success);">--</div>
+              <div class="metric-label">PNL (all time)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="abPnlToday">--</div>
+              <div class="metric-label">PNL (today)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="abWinRate">--</div>
+              <div class="metric-label">Win rate</div>
+            </div>
+          </div>
+
+          <!-- Strategy performance -->
           <div class="card">
             <div class="card-header">
-              <span class="card-title">Status</span>
+              <span class="card-title">Strategy Performance</span>
+              <span class="badge" id="abStratBadge" style="background: rgba(109, 212, 156, 0.15); color: var(--success);">active</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Active strategy</span>
+              <span class="data-value" id="abStrategy">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Total trades</span>
+              <span class="data-value" id="abTotalTrades">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Wins / Losses</span>
+              <span class="data-value"><span id="abWins" style="color: var(--success);">--</span> / <span id="abLosses" style="color: var(--error);">--</span></span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Avg win</span>
+              <span class="data-value success" id="abAvgWin">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Avg loss</span>
+              <span class="data-value error" id="abAvgLoss">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Sharpe ratio</span>
+              <span class="data-value" id="abSharpe">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Max drawdown</span>
+              <span class="data-value error" id="abDrawdown">--</span>
+            </div>
+          </div>
+
+          <!-- Risk management -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Risk Management</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Stop-loss</span>
+              <span class="data-value" id="abStoploss">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Take-profit</span>
+              <span class="data-value" id="abTakeprofit">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Position size</span>
+              <span class="data-value" id="abPosSize">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Leverage</span>
+              <span class="data-value" id="abLeverage">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Harvest threshold</span>
+              <span class="data-value" id="abHarvest">--</span>
+            </div>
+          </div>
+
+          <!-- PNL chart -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">PNL History</span>
+            </div>
+            <div id="abPnlChart" style="display: flex; align-items: flex-end; gap: 4px; height: 140px; padding: 0 4px;">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Populated when Aetherbot pushes trade data</div>
+            </div>
+          </div>
+
+          <!-- Recent trades -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Recent Trades</span>
+            </div>
+            <div id="abTrades">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Trade log appears here as Aetherbot executes</div>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Agent Status</span>
               <span class="badge success" id="aetherbotBadge">operational</span>
             </div>
             <div class="data-row">
@@ -1317,10 +1591,6 @@
             <div class="data-row">
               <span class="data-label">State</span>
               <span class="data-value" id="aetherbotState">--</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn primary" onclick="viewDoc('aetherbot')"><span>📄</span> View</button>
-              <button class="btn secondary" onclick="runAgent('aetherbot')"><span>▶</span> Run Now</button>
             </div>
           </div>
 
@@ -1609,8 +1879,8 @@
     document.getElementById('metricRa').textContent = ra.briefs || 0;
     document.getElementById('metricAurora').textContent = aurora.subscribers || 0;
     document.getElementById('metricEvents').textContent = allEvents.length;
-    document.getElementById('creditsBalance').textContent = credits.balance || 0;
-    document.getElementById('metricCredits').textContent = credits.balance || 0;
+    const metricCredits = document.getElementById('metricCredits');
+    if (metricCredits) metricCredits.textContent = credits.balance || 0;
     document.getElementById('lastSync').textContent = new Date().toLocaleTimeString('en-US', { timeZone: 'America/Denver', hour: '2-digit', minute: '2-digit', hour12: false });
 
     // Update dashboard events
@@ -1672,6 +1942,24 @@
       } else if (ag === 'aetherbot') {
         document.getElementById('aetherbotDecisions').textContent = agData.decisions || 0;
         document.getElementById('aetherbotState').textContent = agData.state || '--';
+        // Trading metrics (populated when aetherbot pushes data)
+        if (agData.balance) document.getElementById('abBalance').textContent = agData.balance;
+        if (agData.pnl) { const el = document.getElementById('abPnl'); el.textContent = agData.pnl; el.style.color = String(agData.pnl).startsWith('-') ? 'var(--error)' : 'var(--success)'; }
+        if (agData.pnlToday) { const el = document.getElementById('abPnlToday'); el.textContent = agData.pnlToday; el.style.color = String(agData.pnlToday).startsWith('-') ? 'var(--error)' : 'var(--success)'; }
+        if (agData.winRate) document.getElementById('abWinRate').textContent = agData.winRate;
+        if (agData.strategy) document.getElementById('abStrategy').textContent = agData.strategy;
+        if (agData.totalTrades) document.getElementById('abTotalTrades').textContent = agData.totalTrades;
+        if (agData.wins) document.getElementById('abWins').textContent = agData.wins;
+        if (agData.losses) document.getElementById('abLosses').textContent = agData.losses;
+        if (agData.avgWin) document.getElementById('abAvgWin').textContent = agData.avgWin;
+        if (agData.avgLoss) document.getElementById('abAvgLoss').textContent = agData.avgLoss;
+        if (agData.sharpe) document.getElementById('abSharpe').textContent = agData.sharpe;
+        if (agData.drawdown) document.getElementById('abDrawdown').textContent = agData.drawdown;
+        if (agData.stoploss) document.getElementById('abStoploss').textContent = agData.stoploss;
+        if (agData.takeprofit) document.getElementById('abTakeprofit').textContent = agData.takeprofit;
+        if (agData.posSize) document.getElementById('abPosSize').textContent = agData.posSize;
+        if (agData.leverage) document.getElementById('abLeverage').textContent = agData.leverage;
+        if (agData.harvest) document.getElementById('abHarvest').textContent = agData.harvest;
       }
 
       // Populate history
@@ -1686,10 +1974,7 @@
       }
     });
 
-    // Update credits
-    document.getElementById('creditsMonth').textContent = credits.thisMonth || '--';
-    document.getElementById('creditsLastMonth').textContent = credits.lastMonth || '--';
-    document.getElementById('creditsTrend').textContent = credits.trend || '--';
+    // Credits data now shown on dedicated OpenAI/Claude usage pages
 
     renderActivity();
   }
@@ -1720,25 +2005,154 @@
     }
   }
 
-  function viewDoc(agent) {
-    const agId = agent === 'sim' ? 'sim' : agent === 'consolidation' ? 'consolidation' : agent === 'aetherbot' ? 'aetherbot' : agent;
-    const agData = { ra: {}, aurora: {}, sentinel: {}, cipher: {}, nel: {}, sam: {}, sim: {}, consolidation: {}, aetherbot: {} }[agId] || {};
-    if (agData.latestDoc) {
-      window.open(agData.latestDoc, '_blank');
-    } else {
-      toast('No document available');
-    }
-  }
-
-  function runAgent(agent) {
-    toast(`Sending run command to ${agent}...`);
-  }
+  // viewDoc and runAgent removed — no dead links
 
   function killSwitch() {
     if (confirm('⚠️  Kill all scheduled tasks?')) {
       toast('Kill switch activated — stopping all tasks');
     }
   }
+
+  // ═══ OPENAI USAGE DATA (from completions_usage CSV) ═══
+  const openaiData = [
+    { date: '2026-04-09', model: 'gpt-4o-2024-08-06', input: 3608, output: 564, requests: 1 },
+    { date: '2026-04-10', model: 'gpt-4o-2024-08-06', input: 6802, output: 545, requests: 1 },
+    { date: '2026-04-11', model: 'gpt-4o-2024-08-06', input: 1479, output: 461, requests: 1 },
+  ];
+
+  function renderOpenaiChart() {
+    const chart = document.getElementById('openaiChart');
+    const labels = document.getElementById('openaiChartLabels');
+    if (!chart) return;
+    const maxVal = Math.max(...openaiData.map(d => d.input + d.output));
+    chart.innerHTML = openaiData.map(d => {
+      const total = d.input + d.output;
+      const pct = Math.max((total / maxVal) * 100, 4);
+      const inPct = (d.input / total) * 100;
+      return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+        <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">${total.toLocaleString()}</div>
+        <div style="width: 100%; height: ${pct}%; border-radius: 6px 6px 4px 4px; overflow: hidden; display: flex; flex-direction: column; min-height: 8px;">
+          <div style="flex: ${inPct}; background: var(--cyan); opacity: 0.8;"></div>
+          <div style="flex: ${100 - inPct}; background: var(--success); opacity: 0.7;"></div>
+        </div>
+      </div>`;
+    }).join('');
+    labels.innerHTML = openaiData.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      return `<div style="flex: 1; text-align: center;">${dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>`;
+    }).join('');
+  }
+
+  function renderOpenaiTable() {
+    const tbody = document.getElementById('openaiTable');
+    if (!tbody) return;
+    const rowStyle = 'border-bottom: 1px solid var(--border-color);';
+    const cellL = 'padding: 12px; color: var(--text-primary);';
+    const cellR = 'padding: 12px; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 12px;';
+    tbody.innerHTML = openaiData.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      const fmtD = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return `<tr style="${rowStyle}">
+        <td style="${cellL}">${fmtD}</td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.model}</span></td>
+        <td style="${cellR}">${d.input.toLocaleString()}</td>
+        <td style="${cellR}">${d.output.toLocaleString()}</td>
+        <td style="${cellR}">${d.requests}</td>
+      </tr>`;
+    }).join('') + `<tr style="font-weight: 600;">
+      <td style="${cellL}">Total</td>
+      <td style="${cellL}"></td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.input, 0).toLocaleString()}</td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.output, 0).toLocaleString()}</td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.requests, 0)}</td>
+    </tr>`;
+  }
+
+  // ═══ CLAUDE USAGE DATA (from claude_api_tokens CSV) ═══
+  const claudeData = [
+    { date: '2026-04-08', model: 'claude-haiku-4-5', key: 'Kai2', input: 622, cacheWrite: 0, cacheRead: 0, output: 423, searches: 0 },
+    { date: '2026-04-08', model: 'claude-sonnet-4-6', key: 'Kai2', input: 113115, cacheWrite: 0, cacheRead: 0, output: 42762, searches: 0 },
+    { date: '2026-04-09', model: 'claude-haiku-4-5', key: 'Kai2', input: 1356, cacheWrite: 0, cacheRead: 0, output: 364, searches: 0 },
+    { date: '2026-04-10', model: 'claude-haiku-4-5', key: 'Kai2', input: 5077, cacheWrite: 0, cacheRead: 0, output: 141, searches: 0 },
+    { date: '2026-04-10', model: 'claude-sonnet-4-6', key: 'Kai2', input: 1448, cacheWrite: 0, cacheRead: 0, output: 500, searches: 0 },
+    { date: '2026-04-11', model: 'claude-haiku-4-5', key: 'Kai2', input: 8, cacheWrite: 0, cacheRead: 0, output: 20, searches: 0 },
+    { date: '2026-04-11', model: 'claude-sonnet-4-6', key: 'Kai2', input: 2793, cacheWrite: 0, cacheRead: 0, output: 66, searches: 0 },
+  ];
+
+  function renderClaudeChart() {
+    const chart = document.getElementById('claudeChart');
+    const labels = document.getElementById('claudeChartLabels');
+    if (!chart) return;
+    // Aggregate by date
+    const byDate = {};
+    claudeData.forEach(d => {
+      if (!byDate[d.date]) byDate[d.date] = { input: 0, output: 0, sonnet: 0, haiku: 0 };
+      byDate[d.date].input += d.input;
+      byDate[d.date].output += d.output;
+      if (d.model.includes('sonnet')) byDate[d.date].sonnet += d.input + d.output;
+      else byDate[d.date].haiku += d.input + d.output;
+    });
+    const dates = Object.keys(byDate).sort();
+    const maxVal = Math.max(...dates.map(dt => byDate[dt].input + byDate[dt].output));
+
+    chart.innerHTML = dates.map(dt => {
+      const d = byDate[dt];
+      const total = d.input + d.output;
+      const pct = Math.max((total / maxVal) * 100, 4);
+      const sonnetPct = total > 0 ? (d.sonnet / total) * 100 : 50;
+      return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+        <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">${total.toLocaleString()}</div>
+        <div style="width: 100%; height: ${pct}%; border-radius: 6px 6px 4px 4px; overflow: hidden; display: flex; flex-direction: column; min-height: 8px;">
+          <div style="flex: ${sonnetPct}; background: var(--purple); opacity: 0.8;"></div>
+          <div style="flex: ${100 - sonnetPct}; background: var(--cyan); opacity: 0.7;"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    labels.innerHTML = dates.map(dt => {
+      const d = new Date(dt + 'T00:00:00');
+      return `<div style="flex: 1; text-align: center;">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>`;
+    }).join('');
+  }
+
+  function renderClaudeTable() {
+    const tbody = document.getElementById('claudeTable');
+    if (!tbody) return;
+    const rowStyle = 'border-bottom: 1px solid var(--border-color);';
+    const cellL = 'padding: 12px; color: var(--text-primary);';
+    const cellR = 'padding: 12px; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 12px;';
+    const modelColor = m => m.includes('sonnet') ? 'var(--purple)' : 'var(--cyan)';
+    const modelShort = m => m.includes('sonnet') ? 'sonnet-4-6' : 'haiku-4-5';
+    tbody.innerHTML = claudeData.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      const fmtD = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return `<tr style="${rowStyle}">
+        <td style="${cellL}">${fmtD}</td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px; color: ${modelColor(d.model)};">${modelShort(d.model)}</span></td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.key}</span></td>
+        <td style="${cellR}">${d.input.toLocaleString()}</td>
+        <td style="${cellR}">${d.cacheWrite}</td>
+        <td style="${cellR}">${d.cacheRead}</td>
+        <td style="${cellR}">${d.output.toLocaleString()}</td>
+        <td style="${cellR}">${d.searches}</td>
+      </tr>`;
+    }).join('') + `<tr style="font-weight: 600;">
+      <td style="${cellL}">Total</td>
+      <td style="${cellL}"></td>
+      <td style="${cellL}"></td>
+      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.input, 0).toLocaleString()}</td>
+      <td style="${cellR}">0</td>
+      <td style="${cellR}">0</td>
+      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.output, 0).toLocaleString()}</td>
+      <td style="${cellR}">0</td>
+    </tr>`;
+  }
+
+  // Render usage views on boot
+  renderOpenaiChart();
+  renderOpenaiTable();
+  renderClaudeChart();
+  renderClaudeTable();
   </script>
 
 </body>

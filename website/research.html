@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Research Archive — Ra Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --bg-secondary: #161822;
+      --bg-tertiary: #1c1f2e;
+      --text-primary: #f0ece4;
+      --text-secondary: rgba(240, 236, 228, 0.72);
+      --text-tertiary: rgba(240, 236, 228, 0.50);
+      --text-muted: rgba(240, 236, 228, 0.32);
+      --border-color: rgba(240, 236, 228, 0.08);
+      --border-color-hover: rgba(240, 236, 228, 0.14);
+      --accent: #d4a853;
+      --accent-light: #e8b877;
+      --accent-bg: rgba(212, 168, 83, 0.08);
+      --success: #6dd49c;
+      --warning: #e8c96a;
+      --error: #e07060;
+      --purple: #b49af0;
+      --cyan: #7ec4e0;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.16);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.24);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html[data-theme="light"] {
+      --bg: #faf9f6;
+      --bg-secondary: #f0ede6;
+      --bg-tertiary: #e8e4dc;
+      --text-primary: #1a1a2e;
+      --text-secondary: rgba(26, 26, 46, 0.72);
+      --text-tertiary: rgba(26, 26, 46, 0.50);
+      --text-muted: rgba(26, 26, 46, 0.32);
+      --border-color: rgba(26, 26, 46, 0.08);
+      --border-color-hover: rgba(26, 26, 46, 0.14);
+      --accent: #2d3560;
+      --accent-light: #3a4575;
+      --accent-bg: rgba(45, 53, 96, 0.08);
+      --success: #2d5a42;
+      --warning: #8b6d3f;
+      --error: #7d3a2a;
+      --purple: #6b5b95;
+      --cyan: #3a6b8f;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ═══ HEADER ═══ */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header-left h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+
+    .header-left p {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--border-color-hover);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--accent-light);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent-light);
+    }
+
+    /* ═══ TRENDS SECTION ═══ */
+    .trends-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+
+    .trends-section h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--accent);
+    }
+
+    .trends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .trend-card {
+      background: var(--bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .trend-card:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--border-color-hover);
+    }
+
+    .trend-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .trend-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background: var(--accent-bg);
+      color: var(--accent);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+
+    .trend-badge.new { background: rgba(109, 212, 156, 0.1); color: var(--success); }
+    .trend-badge.rising { background: rgba(228, 201, 106, 0.1); color: var(--warning); }
+    .trend-badge.steady { background: rgba(126, 196, 224, 0.1); color: var(--cyan); }
+    .trend-badge.falling { background: rgba(224, 112, 96, 0.1); color: var(--error); }
+
+    .trend-counts {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    /* ═══ TABS ═══ */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+    }
+
+    .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ═══ TAB CONTENT ═══ */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .archive-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .archive-item:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .archive-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .archive-item-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ═══ EXPANDED CONTENT ═══ */
+    .expanded-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 16px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .expanded-content.visible {
+      max-height: 2000px;
+      opacity: 1;
+      margin-bottom: 24px;
+    }
+
+    .expanded-content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .expanded-content h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .expanded-content p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .expanded-content pre {
+      background: var(--bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin: 12px 0;
+    }
+
+    .expanded-content code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 2px 6px;
+      background: var(--bg);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      color: var(--accent-light);
+    }
+
+    /* ═══ LOADING & EMPTY STATES ═══ */
+    .loading {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-state p {
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+      .container {
+        padding: 24px 16px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .trends-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .archive-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        gap: 8px;
+        overflow-x: auto;
+      }
+
+      .tab {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <h1>Ra Research Archive</h1>
+        <p>Persistent intelligence, organized by entity, topic, and lab experiments</p>
+      </div>
+      <div class="header-right">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+        <a href="/hq.html" class="back-link">← Back to HQ</a>
+      </div>
+    </header>
+
+    <!-- TRENDS SUMMARY -->
+    <div class="trends-section" id="trends-container">
+      <div class="loading">Loading trends...</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('entities')">
+        <span>📊 Entities</span>
+      </button>
+      <button class="tab" onclick="switchTab('topics')">
+        <span>🔍 Topics</span>
+      </button>
+      <button class="tab" onclick="switchTab('lab')">
+        <span>🧪 Lab</span>
+      </button>
+    </div>
+
+    <!-- TAB CONTENT -->
+    <div id="entities" class="tab-content active">
+      <div class="archive-grid" id="entities-grid">
+        <div class="loading">Loading entities...</div>
+      </div>
+    </div>
+
+    <div id="topics" class="tab-content">
+      <div class="archive-grid" id="topics-grid">
+        <div class="loading">Loading topics...</div>
+      </div>
+    </div>
+
+    <div id="lab" class="tab-content">
+      <div class="archive-grid" id="lab-grid">
+        <div class="loading">Loading lab items...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load markdown files and parse them
+    async function loadArchive() {
+      try {
+        // Load index
+        const indexRes = await fetch('/docs/research/index.md');
+        const indexText = await indexRes.text();
+
+        // Load trends
+        const trendsRes = await fetch('/docs/research/trends.md');
+        const trendsText = await trendsRes.text();
+
+        // Load entities
+        const entityNames = ['bitcoin', 'fed', 'marimo', 'ai-scientist-v2', 'cpuid'];
+        const entities = {};
+        for (const name of entityNames) {
+          try {
+            const res = await fetch(`/docs/research/entities/${name}.md`);
+            if (res.ok) {
+              entities[name] = await res.text();
+            }
+          } catch (e) {}
+        }
+
+        // Load topics
+        const topicNames = ['macro-rates', 'crypto-flow', 'ai-research-architectures', 'agent-supply-chain'];
+        const topics = {};
+        for (const name of topicNames) {
+          try {
+            const res = await fetch(`/docs/research/topics/${name}.md`);
+            if (res.ok) {
+              topics[name] = await res.text();
+            }
+          } catch (e) {}
+        }
+
+        // Load lab
+        const labNames = ['agent-runtime-hybrid', 'ai-browser-extension-risk', 'ai-scientist-v2'];
+        const lab = {};
+        for (const name of labNames) {
+          try {
+            const res = await fetch(`/docs/research/lab/${name}.md`);
+            if (res.ok) {
+              lab[name] = await res.text();
+            }
+          } catch (e) {}
+        }
+
+        renderTrends(trendsText);
+        renderEntities(entities);
+        renderTopics(topics);
+        renderLab(lab);
+      } catch (error) {
+        console.error('Failed to load archive:', error);
+        document.getElementById('entities-grid').innerHTML = '<div class="empty-state"><p>Failed to load archive</p></div>';
+      }
+    }
+
+    function renderTrends(trendsText) {
+      const lines = trendsText.split('\n');
+      const trendItems = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.includes('| new ') || line.includes('| rising ') || line.includes('| steady ') || line.includes('| falling ')) {
+          const parts = line.split('|').map(p => p.trim()).filter(p => p);
+          if (parts.length >= 2) {
+            const name = parts[0];
+            const trend = parts[1];
+            const link = name.includes('[') ? name.match(/\[([^\]]+)\]/)?.[1] || name : name;
+            trendItems.push({ name: link, trend });
+          }
+        }
+      }
+
+      const html = trendItems.slice(0, 8).map(item => {
+        const trendClass = item.trend.toLowerCase().replace(/\s+/g, '');
+        return `<div class="trend-card">
+          <div class="trend-card-title">${item.name}</div>
+          <span class="trend-badge ${trendClass}">${item.trend}</span>
+          <div class="trend-counts">Last 7d/30d/90d mentions</div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('trends-container').innerHTML = `
+        <h2>Trends Summary</h2>
+        <div class="trends-grid">${html}</div>
+      `;
+    }
+
+    function renderEntities(entities) {
+      const html = Object.entries(entities).map(([slug, content]) => {
+        const title = extractTitle(content);
+        const meta = extractMeta(content);
+        return `<div class="archive-item" onclick="toggleExpanded(this, '${slug}', 'entities')">
+          <div class="archive-item-title">${title}</div>
+          <div class="archive-item-meta">
+            <span>📊 Entity</span>
+            <span>${meta.lastSeen}</span>
+          </div>
+          <div class="expanded-content">${renderMarkdown(content)}</div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('entities-grid').innerHTML = html || '<div class="empty-state"><p>No entities found</p></div>';
+    }
+
+    function renderTopics(topics) {
+      const html = Object.entries(topics).map(([slug, content]) => {
+        const title = extractTitle(content);
+        const meta = extractMeta(content);
+        return `<div class="archive-item" onclick="toggleExpanded(this, '${slug}', 'topics')">
+          <div class="archive-item-title">${title}</div>
+          <div class="archive-item-meta">
+            <span>🔍 Topic</span>
+            <span>${meta.lastSeen}</span>
+          </div>
+          <div class="expanded-content">${renderMarkdown(content)}</div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('topics-grid').innerHTML = html || '<div class="empty-state"><p>No topics found</p></div>';
+    }
+
+    function renderLab(lab) {
+      const html = Object.entries(lab).map(([slug, content]) => {
+        const title = extractTitle(content);
+        const meta = extractMeta(content);
+        return `<div class="archive-item" onclick="toggleExpanded(this, '${slug}', 'lab')">
+          <div class="archive-item-title">${title}</div>
+          <div class="archive-item-meta">
+            <span>🧪 Lab</span>
+            <span>${meta.lastSeen}</span>
+          </div>
+          <div class="expanded-content">${renderMarkdown(content)}</div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('lab-grid').innerHTML = html || '<div class="empty-state"><p>No lab items found</p></div>';
+    }
+
+    function extractTitle(content) {
+      const match = content.match(/^#\s+(.+)/m);
+      return match ? match[1].replace(/Entity:|Topic:|Lab:/, '').trim() : 'Untitled';
+    }
+
+    function extractMeta(content) {
+      const dateMatch = content.match(/(\d{4}-\d{2}-\d{2})/);
+      return {
+        lastSeen: dateMatch ? dateMatch[1] : 'N/A'
+      };
+    }
+
+    function renderMarkdown(content) {
+      let html = content
+        .replace(/^# .+\n/m, '')
+        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`(.+?)`/g, '<code>$1</code>')
+        .replace(/^\- (.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.+<\/li>)/s, '<ul>$1</ul>')
+        .split('\n\n')
+        .map(p => p.trim())
+        .filter(p => p && !p.startsWith('<'))
+        .map(p => `<p>${p}</p>`)
+        .join('\n');
+      return html;
+    }
+
+    function toggleExpanded(element, slug, type) {
+      const expanded = element.querySelector('.expanded-content');
+      const siblings = element.parentElement.querySelectorAll('.expanded-content');
+
+      siblings.forEach(el => {
+        if (el !== expanded) el.classList.remove('visible');
+      });
+
+      expanded.classList.toggle('visible');
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+
+      document.getElementById(tab).classList.add('active');
+      event.target.closest('.tab').classList.add('active');
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark' || !html.getAttribute('data-theme');
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      updateThemeButton();
+    }
+
+    function updateThemeButton() {
+      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+      document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+    }
+
+    // Initialize theme from localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeButton();
+      loadArchive();
+    });
+  </script>
+</body>
+</html>
