@@ -11,6 +11,56 @@
 
 ---
 
+## Continuous Learning Protocol (ALL AGENTS)
+
+Every agent — including Kai — must stay current with evolving methods, tools, and best practices in their domain. AI and agentic AI are moving fast. An agent that stops learning becomes a liability.
+
+```
+RESEARCH CYCLE (weekly, triggered Monday during nightly consolidation):
+  1. Each agent identifies its DOMAIN keywords:
+     - Kai:    "agentic AI orchestration", "multi-agent systems", "MCP protocol"
+     - Sam:    "Vercel serverless", "Node.js security", "CI/CD automation"
+     - Nel:    "security auditing", "JSONL validation", "automated QA"
+     - Ra:     "newsletter automation", "content synthesis", "audience growth"
+     - Aurora: "intelligence gathering", "OSINT automation", "source reliability"
+     - Aether: "trading bots", "portfolio analytics", "exchange APIs", "risk models"
+     - Dex:    "ledger systems", "JSONL schema evolution", "data compaction", "audit trails"
+
+  2. Ra (research coordinator) gathers current information for ALL agents:
+     - Searches for recent developments in each domain
+     - Filters for actionable insights (not just news)
+     - Writes per-agent research briefs to agents/ra/research/briefs/
+
+  3. Each agent's weekly cycle reads its brief and:
+     a. Identifies APPLICABLE improvements (not just interesting ones)
+     b. Creates [RESEARCH] tasks in KAI_TASKS.md for anything worth implementing
+     c. Logs the finding in its own ledger for pattern tracking
+
+  4. Dex specifically researches:
+     - Latest methods for data integrity validation
+     - Schema evolution patterns for append-only logs
+     - Compaction algorithms used in production systems
+     - How other agentic systems handle memory/recall
+     - Audit trail standards (SOC2, ISO 27001 patterns)
+
+  5. Kai reviews all [RESEARCH] tasks weekly and decides:
+     - IMPLEMENT NOW → delegate to appropriate agent
+     - QUEUE → add to backlog with priority
+     - ARCHIVE → log in research but no action needed
+
+ANTI-STALE RULE:
+  - If an agent's research brief hasn't been updated in 14 days → Dex flags P2
+  - If an agent hasn't logged a [RESEARCH] finding in 30 days → Dex flags P1
+  - If Kai hasn't reviewed [RESEARCH] tasks in 7 days → Nel flags P1
+
+OUTPUT:
+  - Per-agent briefs: agents/ra/research/briefs/<agent>-YYYY-WNN.md
+  - Research tasks: KAI_TASKS.md tagged [RESEARCH]
+  - Implementation reports: agents/<name>/ledger/log.jsonl
+```
+
+---
+
 ## Kai — CEO Algorithm
 
 ```
@@ -527,12 +577,31 @@ PHASE 5 — REPORT:
   2. dispatch report dex "integrity: OK/WARN, stale: N, compacted: N, regressions: N"
   3. Update agents/dex/ledger/ACTIVE.md
 
+PHASE 6 — ACTIVE RESEARCH (weekly, Monday run only):
+  Dex is not a passive librarian. Dex actively researches how to do its job better.
+  1. Read agents/ra/research/briefs/dex-*.md (latest research brief from Ra)
+  2. Compare current methods against brief findings:
+     - Is there a better JSONL validation approach?
+     - Are there compaction algorithms we should adopt?
+     - Has the JSONL schema standard evolved?
+     - How are other agentic systems handling audit trails?
+  3. IF applicable improvement found:
+     a. Log to agents/dex/ledger/log.jsonl with type: "research-finding"
+     b. Create [RESEARCH] task in KAI_TASKS.md
+     c. Write brief to agents/dex/logs/research-YYYY-WNN.md
+  4. Anti-stale check (self-monitor):
+     - Check all agents' research brief dates
+     - IF any agent brief > 14d old → dispatch flag dex P2 "agent research stale: AGENT"
+     - IF any agent has no [RESEARCH] finding in 30d → dispatch flag dex P1
+
 SCHEDULE: Daily at 23:00 MT (before nightly simulation at 23:30)
   → Dex validates data integrity BEFORE simulation reads it
   → Simulation results feed back into ledger for next day's pattern check
+  → Phase 6 only runs on Mondays (weekly research cycle)
 
 FAILURE MODES:
   - Corrupt JSONL → quarantine line to .corrupt file, do not delete
   - Compaction mismatch → abort, flag P0 "compaction integrity failure"
   - Pattern match false positive → log but don't auto-escalate above P2
+  - Research brief missing → skip Phase 6, flag P3 "no brief available"
 ```

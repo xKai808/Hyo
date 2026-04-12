@@ -601,6 +601,52 @@ log_activity "PHASE_5_REPORT" "completed" "Report generated"
 log_pass "Phase 5 complete: Report generated and dispatch sent"
 
 # ============================================================================
+# PHASE 6: ACTIVE RESEARCH (Monday only)
+# ============================================================================
+DOW=$(TZ="America/Denver" date +%u)  # 1=Monday
+if [[ "$DOW" == "1" ]]; then
+  log_info "Phase 6: Active research (weekly Monday cycle)"
+
+  RESEARCH_DIR="$ROOT/agents/ra/research/briefs"
+  DEX_BRIEF=$(ls -t "$RESEARCH_DIR"/dex-*.md 2>/dev/null | head -1)
+  RESEARCH_FINDINGS=0
+
+  if [[ -n "$DEX_BRIEF" ]]; then
+    log_pass "Found research brief: $DEX_BRIEF"
+    # Log that we read the brief
+    log_activity "PHASE_6_RESEARCH" "brief_read" "$DEX_BRIEF"
+  else
+    log_warn "No research brief found for Dex — Ra needs to generate one"
+    dispatch_flag "P3" "no research brief available for Dex"
+  fi
+
+  # Anti-stale check: verify all agents have recent research briefs
+  for agent in kai sam nel ra aurora aether dex; do
+    AGENT_BRIEF=$(ls -t "$RESEARCH_DIR"/${agent}-*.md 2>/dev/null | head -1)
+    if [[ -z "$AGENT_BRIEF" ]]; then
+      log_warn "No research brief found for agent: $agent"
+      dispatch_flag "P2" "agent research stale: $agent (no brief exists)"
+      RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
+    else
+      # Check age of brief
+      BRIEF_DATE=$(stat -f "%m" "$AGENT_BRIEF" 2>/dev/null || stat -c "%Y" "$AGENT_BRIEF" 2>/dev/null || echo "0")
+      NOW_EPOCH=$(date +%s)
+      AGE_DAYS=$(( (NOW_EPOCH - BRIEF_DATE) / 86400 ))
+      if [[ $AGE_DAYS -gt 14 ]]; then
+        log_warn "Research brief stale for $agent: ${AGE_DAYS}d old"
+        dispatch_flag "P2" "agent research stale: $agent (${AGE_DAYS}d since last brief)"
+        RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
+      fi
+    fi
+  done
+
+  log_activity "PHASE_6_RESEARCH" "completed" "Checked all agents, ${RESEARCH_FINDINGS} stale briefs flagged"
+  log_pass "Phase 6 complete: Research check done, ${RESEARCH_FINDINGS} issues"
+else
+  log_info "Phase 6: Skipped (runs Monday only, today is day $DOW)"
+fi
+
+# ============================================================================
 # FINAL: Dispatch to Kai
 # ============================================================================
 log_info "Dispatching daily summary to Kai"
