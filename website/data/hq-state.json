@@ -1,50 +1,48 @@
 {
-  "updatedAt": "2026-04-12T19:35:34Z",
+  "updatedAt": "2026-04-12T13:35:34-06:00",
   "events": [
     {
-      "ts": "2026-04-12T19:35:34Z",
+      "ts": "2026-04-12T13:35:34-06:00",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
-      "doc": "/viewer?agent=consolidation&file=2026-04-12"
+      "msg": "Nightly consolidation \u2014 sam"
     },
     {
-      "ts": "2026-04-12T19:35:34Z",
+      "ts": "2026-04-12T13:35:34-06:00",
       "agent": "simulation",
       "msg": "24h action plan \u2014 2026-04-12",
-      "doc": "/viewer?agent=simulation&file=2026-04-12"
+      "doc": "/viewer?agent=sim&file=2026-04-12"
     },
     {
-      "ts": "2026-04-12T18:07:28Z",
+      "ts": "2026-04-12T12:07:28-06:00",
       "agent": "sentinel",
       "msg": "QA sweep \u2014 7 passed, 0 failed",
-      "doc": "/viewer?agent=sentinel&file=2026-04-12"
+      "doc": "/viewer?agent=sentinel&file=2026-04-11"
     },
     {
-      "ts": "2026-04-12T18:07:28Z",
+      "ts": "2026-04-12T12:07:28-06:00",
       "agent": "cipher",
-      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (6 false positives confirmed)",
-      "doc": "/viewer?agent=cipher&file=2026-04-12T18"
+      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
     },
     {
-      "ts": "2026-04-12T18:07:28Z",
+      "ts": "2026-04-12T12:07:28-06:00",
       "agent": "ra",
       "msg": "Newsletter check \u2014 1 total, latest 2026-04-11 (2,254 words)",
       "doc": "/viewer?agent=ra&file=2026-04-11"
     },
     {
-      "ts": "2026-04-11T23:50:00Z",
+      "ts": "2026-04-11T17:50:00-06:00",
       "agent": "consolidation",
       "msg": "Nightly consolidation \u2014 KAI_BRIEF + KAI_TASKS synced"
     },
     {
-      "ts": "2026-04-11T22:14:00Z",
+      "ts": "2026-04-11T16:14:00-06:00",
       "agent": "sim",
       "msg": "Nightly simulation \u2014 overnight scenario mapped",
       "doc": "/viewer?agent=sim&file=2026-04-10"
     }
   ],
   "ra": {
-    "lastRun": "2026-04-12T18:07:28Z",
+    "lastRun": "2026-04-12T12:07:28-06:00",
     "status": "delivered",
     "briefCount": 1,
     "wordCount": 2254,
@@ -54,41 +52,34 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-12T18:07:28Z",
+    "lastRun": "2026-04-12T12:07:28-06:00",
     "passed": 7,
     "failed": 0,
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-11"
   },
   "cipher": {
-    "lastRun": "2026-04-12T18:07:28Z",
+    "lastRun": "2026-04-12T12:07:28-06:00",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
     "notes": "Clean scan \u2014 6 grep hits all false positives (regex patterns in cipher.hyo.json, cipher.algorithm.md, consolidate.sh, and prior cipher logs)",
-    "latestDoc": "/viewer?agent=cipher&file=2026-04-12T18"
+    "latestDoc": null
   },
   "sim": {
-    "lastRun": "2026-04-10T22:14:00Z",
+    "lastRun": "2026-04-10T16:14:00-06:00",
     "status": "complete",
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-04-12T19:35:34Z"
+    "lastRun": "2026-04-12T13:35:34-06:00"
   },
   "aetherbot": {},
-  "credits": {
-    "used": 0,
-    "available": 0,
-    "calls": 0,
-    "cost": 0,
-    "byAgent": {}
-  },
   "nel": {
-    "lastRun": "2026-04-12T20:17:36Z",
+    "lastRun": "2026-04-12T14:17:36-06:00",
     "improvementScore": 65,
     "findingsCount": 2,
     "staleFiles": 0,
-    "brokenLinks": 15,
+    "brokenLinks": 0,
     "untested": 2,
     "inefficient": 1,
     "sentinel": {

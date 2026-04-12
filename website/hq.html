@@ -846,7 +846,7 @@
 
       <div class="nav-section">Intelligence</div>
       <div class="nav-item" onclick="window.open('/research.html','_blank')">
-        <span class="nav-icon">📚</span> Research
+        <span class="nav-icon">📚</span> Research<div class="nav-dot ok" id="dot-research"></div>
       </div>
 
       <div class="sidebar-footer">
@@ -968,18 +968,21 @@
             </div>
           </div>
 
-          <!-- Budget bar -->
+          <!-- Budget bar (computed from CSV: gpt-4o $2.50/1M in, $10/1M out) -->
           <div class="card">
             <div class="card-header">
               <span class="card-title">April Budget</span>
-              <span class="badge success">$0.05 / $100.00</span>
+              <span class="badge success" id="oaiBudgetBadge">loading</span>
             </div>
             <div style="background: var(--bg-tertiary); border-radius: 6px; height: 12px; overflow: hidden; margin-bottom: 12px;">
-              <div style="background: var(--success); height: 100%; width: 0.05%; min-width: 3px; border-radius: 6px; transition: width 0.5s var(--ease);"></div>
+              <div id="oaiBudgetBar" style="background: var(--success); height: 100%; width: 0%; min-width: 3px; border-radius: 6px; transition: width 0.5s var(--ease);"></div>
             </div>
             <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono);">
-              <span>0.05% used</span>
-              <span>$99.95 remaining</span>
+              <span id="oaiBudgetPct">--</span>
+              <span id="oaiBudgetRemain">--</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+              Pricing: gpt-4o input $2.50/1M, output $10.00/1M &middot; Budget: $100/mo
             </div>
           </div>
 
@@ -1068,6 +1071,24 @@
             <div class="metric-card">
               <div class="metric-value">0</div>
               <div class="metric-label">Web searches</div>
+            </div>
+          </div>
+
+          <!-- Budget bar (computed from CSV: sonnet $3/1M in, $15/1M out; haiku $0.80/1M in, $4/1M out) -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">April Spend</span>
+              <span class="badge" id="claudeBudgetBadge" style="background: rgba(180, 154, 240, 0.15); color: var(--purple);">loading</span>
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: 6px; height: 12px; overflow: hidden; margin-bottom: 12px;">
+              <div id="claudeBudgetBar" style="background: var(--purple); height: 100%; width: 0%; min-width: 3px; border-radius: 6px; transition: width 0.5s var(--ease);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono);">
+              <span id="claudeBudgetPct">--</span>
+              <span id="claudeBudgetRemain">--</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+              Pricing: sonnet $3/1M in, $15/1M out &middot; haiku $0.80/1M in, $4/1M out
             </div>
           </div>
 
@@ -1172,16 +1193,36 @@
 
           <div class="card">
             <div class="card-header">
+              <span class="card-title">Pipeline Health</span>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; padding: 0;">
+              <div style="flex: 1; min-width: 180px;">
+                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Briefs Published</div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--accent);" id="raPipelineBriefs">0</div>
+              </div>
+              <div style="flex: 1; min-width: 180px;">
+                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Last Brief Date</div>
+                <div style="font-size: 14px; color: var(--text-primary);" id="raPipelineDate">--</div>
+              </div>
+              <div style="flex: 1; min-width: 180px;">
+                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Avg Word Count</div>
+                <div style="font-size: 14px; color: var(--text-primary);" id="raPipelineWords">--</div>
+              </div>
+              <div style="flex: 1; min-width: 180px;">
+                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Subscribers</div>
+                <div style="font-size: 14px; color: var(--text-primary);" id="raPipelineSubs">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
               <span class="card-title">Status</span>
               <span class="badge success" id="raBadge">operational</span>
             </div>
             <div class="data-row">
               <span class="data-label">Last run</span>
               <span class="data-value" id="raLastRun">--</span>
-            </div>
-            <div class="data-row">
-              <span class="data-label">Briefs published</span>
-              <span class="data-value" id="raBriefs">0</span>
             </div>
             <div class="data-row">
               <span class="data-label">Pipeline state</span>
@@ -1193,7 +1234,18 @@
             <div class="card-header">
               <span class="card-title">Latest Brief</span>
             </div>
-            <div id="raLatestBrief" style="color: var(--text-muted); font-size: 13px; padding: 4px 0;">Loads from push data when Ra runs</div>
+            <div id="raLatestBrief" style="color: var(--text-muted); font-size: 13px; padding: 4px 0;">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div>
+                  <div style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); margin-bottom: 4px;">Title</div>
+                  <div style="color: var(--text-primary);" id="raLatestTitle">--</div>
+                </div>
+                <div>
+                  <div style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); margin-bottom: 4px;">Published</div>
+                  <div style="color: var(--text-primary);" id="raLatestDate">--</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="card">
@@ -1326,31 +1378,52 @@
               <span class="data-label">Improvement score</span>
               <span class="data-value" id="nelScore">--</span>
             </div>
-            <div class="data-row">
-              <span class="data-label">Findings</span>
-              <span class="data-value" id="nelFindings">0</span>
-            </div>
           </div>
 
           <div class="card">
             <div class="card-header">
-              <span class="card-title">Analysis</span>
+              <span class="card-title">Findings Status</span>
             </div>
-            <div class="data-row">
-              <span class="data-label">Stale files</span>
-              <span class="data-value warning" id="nelStale">0</span>
-            </div>
-            <div class="data-row">
-              <span class="data-label">Broken links</span>
-              <span class="data-value error" id="nelBroken">0</span>
-            </div>
-            <div class="data-row">
-              <span class="data-label">Untested code</span>
-              <span class="data-value warning" id="nelUntested">0</span>
-            </div>
-            <div class="data-row">
-              <span class="data-label">Inefficient patterns</span>
-              <span class="data-value warning" id="nelInefficient">0</span>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <tbody id="nelFindingsTable">
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px 0; color: var(--text-secondary);">Stale files</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);" id="nelStaleCount">0</td>
+                    <td style="padding: 12px 0 12px 12px; text-align: right;">
+                      <span class="badge" id="nelStaleBadge" style="background: rgba(232, 201, 106, 0.15); color: var(--warning);">noted</span>
+                    </td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px 0; color: var(--text-secondary);">Broken links</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);" id="nelBrokenCount">0</td>
+                    <td style="padding: 12px 0 12px 12px; text-align: right;">
+                      <span class="badge" id="nelBrokenBadge" style="background: rgba(224, 112, 96, 0.15); color: var(--error);">pending</span>
+                    </td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px 0; color: var(--text-secondary);">Untested code</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);" id="nelUntestedCount">0</td>
+                    <td style="padding: 12px 0 12px 12px; text-align: right;">
+                      <span class="badge" id="nelUntestedBadge" style="background: rgba(224, 112, 96, 0.15); color: var(--error);">pending</span>
+                    </td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px 0; color: var(--text-secondary);">Inefficient patterns</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);" id="nelInefficientCount">0</td>
+                    <td style="padding: 12px 0 12px 12px; text-align: right;">
+                      <span class="badge" id="nelInefficientBadge" style="background: rgba(232, 201, 106, 0.15); color: var(--warning);">noted</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 12px 0; color: var(--text-secondary);">Sentinel tests</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);" id="nelSentinelCount">--</td>
+                    <td style="padding: 12px 0 12px 12px; text-align: right;">
+                      <span class="badge" id="nelSentinelBadge" style="background: rgba(109, 212, 156, 0.15); color: var(--success);">pass</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -1424,6 +1497,24 @@
 
           <div class="card">
             <div class="card-header">
+              <span class="card-title">Recent Simulations</span>
+            </div>
+            <div id="simRecentTable" style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: grid; grid-template-columns: 150px 1fr 100px; gap: 12px; font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);">
+                  <div>Date</div>
+                  <div>Agent</div>
+                  <div>Result</div>
+                </div>
+                <div id="simRecentRows" style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="color: var(--text-muted); font-size: 13px;">Loading simulations...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
               <span class="card-title">History</span>
             </div>
             <div id="simHistory">
@@ -1491,15 +1582,38 @@
             </div>
           </div>
 
+          <!-- Active Strategies -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Active Strategies</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <tbody>
+                  <tr style="border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono);">
+                    <td style="padding: 8px 0;">Strategy</td>
+                    <td style="padding: 8px 0; text-align: center;">Status</td>
+                    <td style="padding: 8px 0; text-align: right;">Trades</td>
+                    <td style="padding: 8px 0; text-align: right;">W/R</td>
+                    <td style="padding: 8px 0; text-align: right;">PNL</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px 0; color: var(--text-primary);">Grid Bot</td>
+                    <td style="padding: 12px 0; text-align: center;"><span class="badge" style="background: rgba(232, 201, 106, 0.15); color: var(--warning);">standby</span></td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);">0</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-muted);">--</td>
+                    <td style="padding: 12px 0; text-align: right; color: var(--text-muted);">--</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="color: var(--text-tertiary); font-size: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">Metrics populate automatically when Aetherbot begins trading</div>
+          </div>
+
           <!-- Strategy performance -->
           <div class="card">
             <div class="card-header">
-              <span class="card-title">Strategy Performance</span>
-              <span class="badge" id="abStratBadge" style="background: rgba(109, 212, 156, 0.15); color: var(--success);">active</span>
-            </div>
-            <div class="data-row">
-              <span class="data-label">Active strategy</span>
-              <span class="data-value" id="abStrategy">--</span>
+              <span class="card-title">Performance Metrics</span>
             </div>
             <div class="data-row">
               <span class="data-label">Total trades</span>
@@ -1847,7 +1961,7 @@
   }
 
   function fmtDate(ts) {
-    return new Date(ts).toLocaleDateString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+    return new Date(ts).toLocaleString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
   }
 
   function evHTML(e, showDate) {
@@ -1874,13 +1988,10 @@
     // Update metrics
     const ra = data.ra || {};
     const aurora = data.aurora || {};
-    const credits = data.credits || {};
 
     document.getElementById('metricRa').textContent = ra.briefs || 0;
     document.getElementById('metricAurora').textContent = aurora.subscribers || 0;
     document.getElementById('metricEvents').textContent = allEvents.length;
-    const metricCredits = document.getElementById('metricCredits');
-    if (metricCredits) metricCredits.textContent = credits.balance || 0;
     document.getElementById('lastSync').textContent = new Date().toLocaleTimeString('en-US', { timeZone: 'America/Denver', hour: '2-digit', minute: '2-digit', hour12: false });
 
     // Update dashboard events
@@ -1914,6 +2025,14 @@
       if (ag === 'ra') {
         document.getElementById('raBriefs').textContent = agData.briefs || 0;
         document.getElementById('raState').textContent = agData.state || '--';
+        // Pipeline health summary
+        document.getElementById('raPipelineBriefs').textContent = agData.briefs || 0;
+        document.getElementById('raPipelineDate').textContent = agData.latestDate ? fmtDate(agData.latestDate) : '--';
+        document.getElementById('raPipelineWords').textContent = agData.avgWords || '--';
+        document.getElementById('raPipelineSubs').textContent = agData.subscribers || 0;
+        // Latest brief
+        document.getElementById('raLatestTitle').textContent = agData.latestDoc || '--';
+        document.getElementById('raLatestDate').textContent = agData.latestDate ? fmtDate(agData.latestDate) : '--';
       } else if (ag === 'aurora') {
         document.getElementById('auroraSubscribers').textContent = agData.subscribers || 0;
         document.getElementById('auroraState').textContent = agData.state || '--';
@@ -1925,17 +2044,58 @@
         document.getElementById('cipherLeaks').textContent = agData.leaks || 0;
       } else if (ag === 'nel') {
         document.getElementById('nelScore').textContent = agData.improvementScore || '--';
-        document.getElementById('nelFindings').textContent = agData.findingsCount || 0;
-        document.getElementById('nelStale').textContent = agData.staleFiles || 0;
-        document.getElementById('nelBroken').textContent = agData.brokenLinks || 0;
-        document.getElementById('nelUntested').textContent = agData.untested || 0;
-        document.getElementById('nelInefficient').textContent = agData.inefficient || 0;
+        // Findings status table
+        const staleCount = agData.staleFiles || 0;
+        const brokenCount = agData.brokenLinks || 0;
+        const untestedCount = agData.untested || 0;
+        const inefficientCount = agData.inefficient || 0;
+        document.getElementById('nelStaleCount').textContent = staleCount;
+        document.getElementById('nelBrokenCount').textContent = brokenCount;
+        document.getElementById('nelUntestedCount').textContent = untestedCount;
+        document.getElementById('nelInefficientCount').textContent = inefficientCount;
+        // Status badges
+        document.getElementById('nelStaleBadge').textContent = staleCount === 0 ? 'clear' : 'noted';
+        document.getElementById('nelStaleBadge').style.background = staleCount === 0 ? 'rgba(109, 212, 156, 0.15)' : 'rgba(232, 201, 106, 0.15)';
+        document.getElementById('nelStaleBadge').style.color = staleCount === 0 ? 'var(--success)' : 'var(--warning)';
+        document.getElementById('nelBrokenBadge').textContent = brokenCount === 0 ? 'clear' : 'pending';
+        document.getElementById('nelBrokenBadge').style.background = brokenCount === 0 ? 'rgba(109, 212, 156, 0.15)' : 'rgba(224, 112, 96, 0.15)';
+        document.getElementById('nelBrokenBadge').style.color = brokenCount === 0 ? 'var(--success)' : 'var(--error)';
+        document.getElementById('nelUntestedBadge').textContent = untestedCount === 0 ? 'clear' : 'pending';
+        document.getElementById('nelUntestedBadge').style.background = untestedCount === 0 ? 'rgba(109, 212, 156, 0.15)' : 'rgba(224, 112, 96, 0.15)';
+        document.getElementById('nelUntestedBadge').style.color = untestedCount === 0 ? 'var(--success)' : 'var(--error)';
+        document.getElementById('nelInefficientBadge').textContent = inefficientCount === 0 ? 'clear' : 'noted';
+        document.getElementById('nelInefficientBadge').style.background = inefficientCount === 0 ? 'rgba(109, 212, 156, 0.15)' : 'rgba(232, 201, 106, 0.15)';
+        document.getElementById('nelInefficientBadge').style.color = inefficientCount === 0 ? 'var(--success)' : 'var(--warning)';
+        // Sentinel result
+        const sentinelResult = agData.sentinelResult || 'pass';
+        document.getElementById('nelSentinelBadge').textContent = sentinelResult.toUpperCase();
+        document.getElementById('nelSentinelBadge').style.background = sentinelResult === 'pass' ? 'rgba(109, 212, 156, 0.15)' : 'rgba(224, 112, 96, 0.15)';
+        document.getElementById('nelSentinelBadge').style.color = sentinelResult === 'pass' ? 'var(--success)' : 'var(--error)';
+        document.getElementById('nelSentinelCount').textContent = sentinelResult;
       } else if (ag === 'sam') {
         document.getElementById('samRecs').textContent = agData.recommendations || 0;
         document.getElementById('samState').textContent = agData.state || '--';
       } else if (ag === 'sim') {
         document.getElementById('simRuns').textContent = agData.runs || 0;
         document.getElementById('simState').textContent = agData.state || '--';
+        // Populate recent simulations from events
+        const simEvents = allEvents.filter(e => e.agent === 'sim' || e.agent === 'simulation').slice(0, 10);
+        const simRowsEl = document.getElementById('simRecentRows');
+        if (simRowsEl) {
+          if (simEvents.length) {
+            simRowsEl.innerHTML = simEvents.map(e => {
+              const resultBadge = e.msg && e.msg.toLowerCase().includes('pass') ? 'success' : e.msg && e.msg.toLowerCase().includes('fail') ? 'error' : 'warning';
+              const resultText = e.msg && e.msg.toLowerCase().includes('pass') ? 'PASS' : e.msg && e.msg.toLowerCase().includes('fail') ? 'FAIL' : 'RUN';
+              return `<div style="display: grid; grid-template-columns: 150px 1fr 100px; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border-color);">
+                <div style="color: var(--text-primary);">${fmtDate(e.ts)}</div>
+                <div style="color: var(--text-secondary);">${e.msg || 'simulation'}</div>
+                <div style="text-align: right;"><span class="badge ${resultBadge}">${resultText}</span></div>
+              </div>`;
+            }).join('');
+          } else {
+            simRowsEl.innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">No recent simulations</div>';
+          }
+        }
       } else if (ag === 'consolidation') {
         document.getElementById('consolidationRecords').textContent = agData.records || 0;
         document.getElementById('consolidationState').textContent = agData.state || '--';
@@ -2148,11 +2308,51 @@
     </tr>`;
   }
 
+  // ═══ BUDGET CALCULATIONS (from real CSV data) ═══
+  function computeOpenAIBudget() {
+    // gpt-4o-2024-08-06: $2.50/1M input, $10.00/1M output
+    const totalIn = openaiData.reduce((s, d) => s + d.input, 0);
+    const totalOut = openaiData.reduce((s, d) => s + d.output, 0);
+    const cost = (totalIn / 1e6) * 2.50 + (totalOut / 1e6) * 10.00;
+    const budget = 100.00;
+    const pct = (cost / budget) * 100;
+    const remain = budget - cost;
+
+    const el = id => document.getElementById(id);
+    el('oaiBudgetBadge').textContent = '$' + cost.toFixed(2) + ' / $' + budget.toFixed(2);
+    el('oaiBudgetBar').style.width = Math.max(pct, 0.3) + '%';
+    el('oaiBudgetPct').textContent = pct.toFixed(2) + '% used';
+    el('oaiBudgetRemain').textContent = '$' + remain.toFixed(2) + ' remaining';
+  }
+
+  function computeClaudeBudget() {
+    // sonnet-4-6: $3/1M in, $15/1M out; haiku-4-5: $0.80/1M in, $4/1M out
+    let cost = 0;
+    claudeData.forEach(d => {
+      if (d.model.includes('sonnet')) {
+        cost += (d.input / 1e6) * 3.0 + (d.output / 1e6) * 15.0;
+      } else {
+        cost += (d.input / 1e6) * 0.80 + (d.output / 1e6) * 4.0;
+      }
+    });
+    const budget = 50.00; // Claude API budget
+    const pct = (cost / budget) * 100;
+    const remain = budget - cost;
+
+    const el = id => document.getElementById(id);
+    el('claudeBudgetBadge').textContent = '$' + cost.toFixed(2) + ' / $' + budget.toFixed(2);
+    el('claudeBudgetBar').style.width = Math.max(pct, 0.5) + '%';
+    el('claudeBudgetPct').textContent = pct.toFixed(2) + '% used';
+    el('claudeBudgetRemain').textContent = '$' + remain.toFixed(2) + ' remaining';
+  }
+
   // Render usage views on boot
   renderOpenaiChart();
   renderOpenaiTable();
   renderClaudeChart();
   renderClaudeTable();
+  computeOpenAIBudget();
+  computeClaudeBudget();
   </script>
 
 </body>

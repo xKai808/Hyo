@@ -205,6 +205,19 @@
     .trend-badge.steady { background: rgba(126, 196, 224, 0.1); color: var(--cyan); }
     .trend-badge.falling { background: rgba(224, 112, 96, 0.1); color: var(--error); }
 
+    .new-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(212, 168, 83, 0.15);
+      color: var(--accent);
+      margin-left: 8px;
+    }
+
     .trend-counts {
       font-size: 12px;
       color: var(--text-tertiary);
@@ -417,7 +430,7 @@
       </div>
       <div class="header-right">
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
-        <a href="/hq.html" class="back-link">← Back to HQ</a>
+        <a href="/hq.html" class="back-link">← back to hq</a>
       </div>
     </header>
 
@@ -550,11 +563,21 @@
     }
 
     function renderEntities(entities) {
-      const html = Object.entries(entities).map(([slug, content]) => {
-        const title = extractTitle(content);
-        const meta = extractMeta(content);
+      const sorted = Object.entries(entities)
+        .map(([slug, content]) => {
+          const title = extractTitle(content);
+          const meta = extractMeta(content);
+          return { slug, content, title, meta };
+        })
+        .sort((a, b) => {
+          if (!a.meta.dateObj || !b.meta.dateObj) return 0;
+          return b.meta.dateObj - a.meta.dateObj;
+        });
+
+      const html = sorted.map(({ slug, content, title, meta }) => {
+        const newBadge = isNewItem(meta.dateObj) ? '<span class="new-badge">NEW</span>' : '';
         return `<div class="archive-item" onclick="toggleExpanded(this, '${slug}', 'entities')">
-          <div class="archive-item-title">${title}</div>
+          <div class="archive-item-title">${title}${newBadge}</div>
           <div class="archive-item-meta">
             <span>📊 Entity</span>
             <span>${meta.lastSeen}</span>
@@ -567,11 +590,21 @@
     }
 
     function renderTopics(topics) {
-      const html = Object.entries(topics).map(([slug, content]) => {
-        const title = extractTitle(content);
-        const meta = extractMeta(content);
+      const sorted = Object.entries(topics)
+        .map(([slug, content]) => {
+          const title = extractTitle(content);
+          const meta = extractMeta(content);
+          return { slug, content, title, meta };
+        })
+        .sort((a, b) => {
+          if (!a.meta.dateObj || !b.meta.dateObj) return 0;
+          return b.meta.dateObj - a.meta.dateObj;
+        });
+
+      const html = sorted.map(({ slug, content, title, meta }) => {
+        const newBadge = isNewItem(meta.dateObj) ? '<span class="new-badge">NEW</span>' : '';
         return `<div class="archive-item" onclick="toggleExpanded(this, '${slug}', 'topics')">
-          <div class="archive-item-title">${title}</div>
+          <div class="archive-item-title">${title}${newBadge}</div>
           <div class="archive-item-meta">
             <span>🔍 Topic</span>
             <span>${meta.lastSeen}</span>
@@ -584,11 +617,21 @@
     }
 
     function renderLab(lab) {
-      const html = Object.entries(lab).map(([slug, content]) => {
-        const title = extractTitle(content);
-        const meta = extractMeta(content);
+      const sorted = Object.entries(lab)
+        .map(([slug, content]) => {
+          const title = extractTitle(content);
+          const meta = extractMeta(content);
+          return { slug, content, title, meta };
+        })
+        .sort((a, b) => {
+          if (!a.meta.dateObj || !b.meta.dateObj) return 0;
+          return b.meta.dateObj - a.meta.dateObj;
+        });
+
+      const html = sorted.map(({ slug, content, title, meta }) => {
+        const newBadge = isNewItem(meta.dateObj) ? '<span class="new-badge">NEW</span>' : '';
         return `<div class="archive-item" onclick="toggleExpanded(this, '${slug}', 'lab')">
-          <div class="archive-item-title">${title}</div>
+          <div class="archive-item-title">${title}${newBadge}</div>
           <div class="archive-item-meta">
             <span>🧪 Lab</span>
             <span>${meta.lastSeen}</span>
@@ -607,9 +650,19 @@
 
     function extractMeta(content) {
       const dateMatch = content.match(/(\d{4}-\d{2}-\d{2})/);
+      const dateStr = dateMatch ? dateMatch[1] : null;
+      const dateObj = dateStr ? new Date(dateStr) : null;
       return {
-        lastSeen: dateMatch ? dateMatch[1] : 'N/A'
+        lastSeen: dateStr || 'N/A',
+        dateObj: dateObj
       };
+    }
+
+    function isNewItem(dateObj) {
+      if (!dateObj) return false;
+      const now = new Date();
+      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+      return (now - dateObj) <= threeDaysMs;
     }
 
     function renderMarkdown(content) {

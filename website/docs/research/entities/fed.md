@@ -7,7 +7,7 @@
 ## Timeline
 
 ### 2026-04-11
-**Brief:** [2026-04-11](../../../newsletters/2026-04-11.md)
+**Brief:** [2026-04-11](../../ra/2026-04-11.md)
 
 **Take:** Held 3.50-3.75% a second meeting; hawks openly floating a hike for the first time this cycle
 

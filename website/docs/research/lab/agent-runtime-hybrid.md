@@ -16,12 +16,12 @@ Any agent that needs scheduled triggers plus real file/network access — Ra its
 *(to be filled as we learn more)*
 
 ## References
-- [Brief 2026-04-11](../../../newsletters/2026-04-11.md)
+- [Brief 2026-04-11](../../ra/2026-04-11.md)
 
 ## Related
 
 ## Update 2026-04-11
-**Brief:** [2026-04-11](../../../newsletters/2026-04-11.md)
+**Brief:** [2026-04-11](../../ra/2026-04-11.md)
 - **What:** Small local program listens for triggers from the cloud and does the actual work on the user's own machine — not cloud-sandbox, not pure-local
 - **Why:** Cloud sandboxes can't reach the internet or touch personal files reliably; pure-local dies when the lid closes. Hybrid gets both.
 - **When:** Any agent that needs scheduled triggers plus real file/network access — Ra itself is the motivating example
