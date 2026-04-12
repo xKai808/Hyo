@@ -507,7 +507,8 @@
           <div class="card-head"><span class="card-label">Last Sim</span><span class="badge badge-dim" id="simBadge">waiting</span></div>
           <div class="d-row"><span class="d-label">Status</span><span class="d-val" id="simStatus" style="color:var(--dim)">No data yet</span></div>
           <div class="btn-row">
-            <button class="btn primary" onclick="act('Starting simulation...')"><span class="ic">&#9881;</span> Run new sim</button>
+            <button class="btn primary" id="simViewBtn" style="display:none" onclick="openDoc('sim')"><span class="ic">&#128196;</span> View report</button>
+            <button class="btn" onclick="act('Starting simulation...')"><span class="ic">&#9881;</span> Run new sim</button>
           </div>
         </div>
         <div class="card">
@@ -760,6 +761,13 @@
     if (!el) return;
     el.textContent = text;
     if (cls) el.className = 'd-val ' + cls;
+  }
+
+  // ═══ OPEN DOC ═══
+  let docURLs = {};
+  function openDoc(agent) {
+    const url = docURLs[agent];
+    if (url) window.open(url, '_blank');
   }
 
   // ═══ LOAD DATA ═══
