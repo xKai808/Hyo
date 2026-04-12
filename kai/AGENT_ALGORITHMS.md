@@ -36,12 +36,15 @@ RESEARCH CYCLE (weekly, triggered Monday during nightly consolidation):
      b. Creates [RESEARCH] tasks in KAI_TASKS.md for anything worth implementing
      c. Logs the finding in its own ledger for pattern tracking
 
-  4. Dex specifically researches:
+  4. Dex specifically researches (DAILY, not just weekly):
      - Latest methods for data integrity validation
      - Schema evolution patterns for append-only logs
      - Compaction algorithms used in production systems
      - How other agentic systems handle memory/recall
      - Audit trail standards (SOC2, ISO 27001 patterns)
+     - Novel AI/agentic AI developments relevant to ALL agents
+     - Dex sends daily [DAILY-INTEL] requests to Ra (P3, rotating topics)
+     - Monday deep-dive [RESEARCH-REQ] to Ra (P2, focused implementation questions)
 
   5. Kai reviews all [RESEARCH] tasks weekly and decides:
      - IMPLEMENT NOW → delegate to appropriate agent
@@ -634,70 +637,78 @@ PHASE 5 — REPORT:
   2. dispatch report dex "integrity: OK/WARN, stale: N, compacted: N, regressions: N"
   3. Update agents/dex/ledger/ACTIVE.md
 
-PHASE 6 — ACTIVE RESEARCH (weekly, Monday run only):
-  Dex is not a passive librarian. Dex actively researches how to do its job better.
-  This is HOW research concretely executes — not just what gets read.
+PHASE 6A — DAILY INTELLIGENCE SCAN (runs every day):
+  Dex is not a passive librarian. Dex actively researches every single day.
+  AI, agentic AI, and the tools we use are evolving constantly.
+  Dex stays on top of what's current, what's novel, and where things are heading.
 
-  STEP 1: IDENTIFY RESEARCH NEEDS (from Dex's own operations)
-    Dex scans its last 7 days of logs for:
-    a. Validation failures it couldn't categorize → research request: "better JSON schema validation"
-    b. Compaction edge cases (corrupted archives, count mismatches) → "compaction algorithms"
-    c. Pattern detection false positives or misses → "anomaly detection in append-only logs"
-    d. New agent types or ledger formats it hasn't seen → "schema evolution patterns"
-    e. Any P0/P1 flag it raised that required manual intervention → "how to auto-remediate"
-    These become CONCRETE research questions, not vague topics.
+  6A.1: SCAN TODAY'S OPERATIONS FOR RESEARCH GAPS
+    Check today's activity log + yesterday's for:
+    a. Validation failures Dex couldn't categorize
+    b. Compaction edge cases (corrupted archives, count mismatches)
+    c. Pattern detection false positives or misses
+    d. Any P0/P1 flag that required manual intervention
+    These become context attached to today's research request.
 
-  STEP 2: SUBMIT RESEARCH REQUESTS TO RA
-    For each research need identified:
-    a. dispatch delegate ra P2 "[RESEARCH-REQ] <specific_question>"
-       Example: "[RESEARCH-REQ] Best practices for JSONL compaction with checksums — current
-       method lost 3 entries during archive on 4/10. Need: integrity-preserving compaction
-       with rollback capability."
-    b. Ra receives the delegation and uses its research tools:
-       - Web search for recent papers, blog posts, open-source implementations
-       - Source aggregation from its sources.json registry
-       - Cross-reference with agents/ra/research/briefs/ for prior findings
-    c. Ra writes brief to agents/ra/research/briefs/dex-YYYY-WNN.md
-    d. Ra dispatches report back to Kai with brief location
+  6A.2: DISPATCH DAILY RESEARCH REQUEST TO RA
+    Every day, Dex sends Ra a [DAILY-INTEL] request at P3 priority.
+    Topics rotate daily through 7 domains:
+    - Day 1: Agentic AI — orchestration patterns, new frameworks, MCP updates
+    - Day 2: Ledger systems — append-only logs, JSONL alternatives, event sourcing
+    - Day 3: AI agents — autonomous architectures, memory systems, tool-use
+    - Day 4: Data integrity — validation algorithms, checksums, corruption recovery
+    - Day 5: Agent communication — inter-agent protocols, delegation, consensus
+    - Day 6: AI research — latest papers on coordination, planning, self-improvement
+    - Day 7: Infrastructure — automation patterns, scheduling, monitoring
+    If operational gaps were found in 6A.1, they're prepended as [OPS-GAP] context.
+    Ra processes and writes brief to agents/ra/research/briefs/dex-YYYY-MM-DD.md
 
-  STEP 3: EVALUATE BRIEF AGAINST CURRENT IMPLEMENTATION
-    When Dex reads a research brief (same run or next Monday):
-    a. For each finding in the brief, Dex asks:
-       - Does this apply to our current stack? (bash + python3 + JSONL)
-       - What specific file/function would change? (name the file, name the function)
-       - What's the migration cost? (breaking change vs drop-in improvement)
-       - Can I simulate the improvement against last week's data?
-    b. Score each finding: APPLICABLE / INTERESTING_NOT_ACTIONABLE / NOT_RELEVANT
-    c. Log scoring to agents/dex/ledger/log.jsonl with type: "research-eval"
+  6A.3: INGEST NEW BRIEFS
+    Check if any new briefs arrived since last run.
+    Log each as pending_review in dex ledger for Kai to evaluate.
 
-  STEP 4: CREATE IMPLEMENTATION TASKS (not vague — specific)
-    For each APPLICABLE finding:
-    a. Write a concrete task with:
-       - WHAT changes: exact file paths, function names, line ranges
-       - WHY: link to the operational gap from Step 1
-       - HOW to test: specific validation command or data to run against
-       - RISK: what breaks if this is wrong
-    b. Create [RESEARCH] task in KAI_TASKS.md:
-       "[RESEARCH] <title> — File: <path>, Function: <name>, Risk: <low/med/high>"
-    c. Write implementation brief to agents/dex/logs/research-YYYY-WNN.md
-
-  STEP 5: KAI APPROVAL LOOP
-    a. Kai reviews all [RESEARCH] tasks weekly
-    b. Decisions: IMPLEMENT NOW → delegate to Sam/Dex | QUEUE → backlog | ARCHIVE
-    c. IMPLEMENT NOW tasks get a build spec (same governance as any code change)
-    d. Dex tracks implementation status in its own ledger
-
-  STEP 6: ANTI-STALE CHECK (runs every Monday regardless)
+  6A.4: ANTI-STALE CHECK (runs daily, catches problems faster)
     - Check all agents' research brief dates
-    - IF any agent brief > 14d old → dispatch flag dex P2 "agent research stale: AGENT"
-    - IF any agent has no [RESEARCH] finding in 30d → dispatch flag dex P1
-    - IF Ra hasn't produced ANY brief in 14d → dispatch flag dex P1 "Ra research pipeline stalled"
-    - IF Dex itself hasn't submitted a research request in 21d → self-flag P2 "Dex research idle"
+    - IF any agent brief > 14d old → dispatch flag P2
+    - IF Ra hasn't produced ANY brief in 14d → dispatch flag P1
+
+PHASE 6B — WEEKLY DEEP RESEARCH SYNTHESIS (Monday only):
+  The Monday deep-dive goes beyond daily scanning. It synthesizes the week's
+  findings into implementation candidates.
+
+  6B.1: EVALUATE ALL BRIEFS FROM THE PAST WEEK
+    Read every brief that arrived in the last 7 days.
+    For each finding:
+    a. Does this apply to our current stack? (bash + python3 + JSONL)
+    b. What specific file/function would change?
+    c. What's the migration cost? (breaking change vs drop-in?)
+    d. Can we simulate it against last week's data?
+    Score: APPLICABLE / INTERESTING_NOT_ACTIONABLE / NOT_RELEVANT
+
+  6B.2: SUBMIT DEEP-DIVE RESEARCH REQUEST TO RA
+    One focused P2 request with specific implementation questions.
+    Example: "[RESEARCH-REQ] Dex 2026-W15 deep-dive: JSONL validation —
+    compare current python3 json.tool approach against jsonschema, pydantic,
+    or Zod-based validation for our scale."
+
+  6B.3: CREATE IMPLEMENTATION TASKS (concrete, not vague)
+    For each APPLICABLE finding:
+    a. Write task with: WHAT (file paths, function names), WHY (operational gap),
+       HOW TO TEST (specific command), RISK (what breaks if wrong)
+    b. Create [RESEARCH] task in KAI_TASKS.md
+    c. Write synthesis to agents/dex/logs/research-YYYY-WNN.md
+
+  6B.4: KAI APPROVAL LOOP
+    Kai reviews all [RESEARCH] tasks weekly.
+    IMPLEMENT NOW → delegate | QUEUE → backlog | ARCHIVE → log only
+    Self-idle check: if no synthesis output in 21d → self-flag P2
 
 SCHEDULE: Daily at 23:00 MT (before nightly simulation at 23:30)
+  → Phases 1-5 + 6A run every day (integrity, stale, compact, patterns, report, daily intel)
+  → Phase 6B runs Monday only (weekly deep synthesis)
   → Dex validates data integrity BEFORE simulation reads it
   → Simulation results feed back into ledger for next day's pattern check
-  → Phase 6 only runs on Mondays (weekly research cycle)
+  → Daily intel ensures Dex is never more than 24h behind on domain developments
 
 FAILURE MODES:
   - Corrupt JSONL → quarantine line to .corrupt file, do not delete

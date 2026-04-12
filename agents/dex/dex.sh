@@ -601,178 +601,261 @@ log_activity "PHASE_5_REPORT" "completed" "Report generated"
 log_pass "Phase 5 complete: Report generated and dispatch sent"
 
 # ============================================================================
-# PHASE 6: ACTIVE RESEARCH (Monday only)
-# Concrete execution: identify gaps → request Ra research → evaluate briefs →
-# create implementation tasks → anti-stale check
+# PHASE 6A: DAILY INTELLIGENCE SCAN (runs every day)
+# Lightweight: scan for operational gaps, dispatch research requests to Ra,
+# ingest any new briefs that arrived, check for stale research across agents.
 # ============================================================================
-DOW=$(TZ="America/Denver" date +%u)  # 1=Monday
-if [[ "$DOW" == "1" ]]; then
-  echo "## Phase 6: Active Research (Weekly Monday Cycle)" >> "$REPORT"
-  echo "" >> "$REPORT"
-  log_info "Phase 6: Active research (weekly Monday cycle)"
+echo "## Phase 6A: Daily Intelligence Scan" >> "$REPORT"
+echo "" >> "$REPORT"
+log_info "Phase 6A: Daily intelligence scan"
+log_activity "PHASE_6A_DAILY_INTEL" "in_progress" "Starting daily intelligence scan"
 
-  RESEARCH_DIR="$ROOT/agents/ra/research/briefs"
-  DEX_RESEARCH_LOG="$DEX_LOGS/research-$(date +%Y-W%V).md"
-  RESEARCH_FINDINGS=0
-  RESEARCH_REQUESTS=0
+RESEARCH_DIR="$ROOT/agents/ra/research/briefs"
+RESEARCH_REQUEST_FILE="$DEX_HOME/ledger/research-requests.jsonl"
+RESEARCH_FINDINGS=0
+RESEARCH_REQUESTS=0
+KAI_TASKS="$ROOT/KAI_TASKS.md"
 
-  mkdir -p "$RESEARCH_DIR"
+mkdir -p "$RESEARCH_DIR"
 
-  # ---- STEP 1: Identify research needs from last 7 days of operations ----
-  log_activity "PHASE_6_RESEARCH" "step1_identify" "Scanning last 7 days for operational gaps"
+# ---- 6A.1: Scan today's operations for research-worthy gaps ----
+RESEARCH_NEEDS=""
+# Check today's activity log for failures or issues that need investigation
+if [[ -f "$ACTIVITY_LOG" ]]; then
+  while IFS= read -r line; do
+    local_status=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null || echo "")
+    local_phase=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('phase',''))" 2>/dev/null || echo "")
+    local_details=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('details',''))" 2>/dev/null || echo "")
 
-  RESEARCH_NEEDS=""
-  # Scan recent activity logs for failures, edge cases, manual interventions
-  for recent_log in "$DEX_LOGS"/dex-activity-*.jsonl; do
-    [[ -f "$recent_log" ]] || continue
-    # Look for failed phases, P0/P1 flags, or manual-intervention markers
-    while IFS= read -r line; do
-      local_status=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null || echo "")
-      local_phase=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('phase',''))" 2>/dev/null || echo "")
-      local_details=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('details',''))" 2>/dev/null || echo "")
+    if [[ "$local_status" == "failed" ]] || [[ "$local_status" == "found" ]]; then
+      RESEARCH_NEEDS="${RESEARCH_NEEDS}${local_phase}: ${local_details}\n"
+    fi
+  done < "$ACTIVITY_LOG"
+fi 2>/dev/null
 
-      if [[ "$local_status" == "failed" ]] || [[ "$local_status" == "found" ]]; then
-        RESEARCH_NEEDS="${RESEARCH_NEEDS}${local_phase}: ${local_details}\n"
-      fi
-    done < "$recent_log"
-  done 2>/dev/null
+# Also scan yesterday's log for anything that wasn't caught
+YESTERDAY=$(date -u -d "1 day ago" +%Y-%m-%d 2>/dev/null || date -u -v-1d +%Y-%m-%d 2>/dev/null)
+YESTERDAY_LOG="$DEX_LOGS/dex-activity-${YESTERDAY}.jsonl"
+if [[ -f "$YESTERDAY_LOG" ]]; then
+  while IFS= read -r line; do
+    local_status=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null || echo "")
+    local_phase=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('phase',''))" 2>/dev/null || echo "")
+    local_details=$(echo "$line" | python3 -c "import sys,json; print(json.load(sys.stdin).get('details',''))" 2>/dev/null || echo "")
 
-  if [[ -n "$RESEARCH_NEEDS" ]]; then
-    log_pass "Step 1: Identified operational gaps for research"
-    echo "### Step 1: Research Needs Identified" >> "$REPORT"
-    echo "" >> "$REPORT"
-    echo -e "$RESEARCH_NEEDS" >> "$REPORT"
-    echo "" >> "$REPORT"
-  else
-    log_pass "Step 1: No operational gaps in last 7 days — using standing research topics"
-    echo "### Step 1: No new gaps — standing research topics apply" >> "$REPORT"
-    echo "" >> "$REPORT"
-  fi
+    if [[ "$local_status" == "failed" ]] || [[ "$local_status" == "found" ]]; then
+      RESEARCH_NEEDS="${RESEARCH_NEEDS}${local_phase}: ${local_details}\n"
+    fi
+  done < "$YESTERDAY_LOG"
+fi 2>/dev/null
 
-  # ---- STEP 2: Submit research requests to Ra ----
-  # Generate research request based on identified needs or standing topics
-  WEEK_NUM=$(date +%Y-W%V)
-  RESEARCH_REQUEST_FILE="$DEX_HOME/ledger/research-requests.jsonl"
+# ---- 6A.2: Daily research request to Ra ----
+# Rotate through domains daily so every topic gets covered within a week
+DAILY_TOPICS=(
+  "agentic AI: multi-agent orchestration patterns, new frameworks, MCP protocol updates"
+  "ledger systems: append-only log best practices, JSONL alternatives, event sourcing"
+  "AI agents: autonomous agent architectures, memory systems, tool-use patterns"
+  "data integrity: validation algorithms, checksums for streaming data, corruption recovery"
+  "agent communication: inter-agent protocols, delegation patterns, consensus mechanisms"
+  "AI research: latest papers on agent coordination, planning, self-improvement"
+  "infrastructure: automation patterns, scheduled agent execution, monitoring dashboards"
+)
 
-  # Standing research topics (always relevant for Dex's domain)
-  STANDING_TOPICS=(
-    "JSONL validation: schema evolution patterns for append-only agent logs"
-    "Compaction: integrity-preserving archival with rollback for JSONL ledgers"
-    "Pattern detection: anomaly detection in multi-agent log streams"
-    "Audit trails: SOC2/ISO27001 patterns applicable to agent memory systems"
-    "Agentic memory: how production multi-agent systems handle recall and context"
-  )
+DAY_INDEX=$(( $(date +%j) % ${#DAILY_TOPICS[@]} ))
+DAILY_TOPIC="${DAILY_TOPICS[$DAY_INDEX]}"
 
-  # Pick the topic based on week number (rotate through standing topics)
-  WEEK_INDEX=$(( $(date +%V) % ${#STANDING_TOPICS[@]} ))
-  CURRENT_TOPIC="${STANDING_TOPICS[$WEEK_INDEX]}"
+# If operational gaps found, prepend them as context to the research request
+if [[ -n "$RESEARCH_NEEDS" ]]; then
+  DAILY_TOPIC="[OPS-GAP] $(echo -e "$RESEARCH_NEEDS" | head -1 | tr -d '\n') + standing: $DAILY_TOPIC"
+fi
 
-  # Log the research request
-  REQ_ENTRY=$(cat <<JSEOF
-{"ts":"$NOW_ISO","type":"research-request","week":"$WEEK_NUM","topic":"$CURRENT_TOPIC","operational_gaps":"$(echo -e "$RESEARCH_NEEDS" | tr '\n' ';' | sed 's/;$//')","status":"submitted"}
+# Log and dispatch
+REQ_ENTRY=$(cat <<JSEOF
+{"ts":"$NOW_ISO","type":"research-request","date":"$TODAY","topic":"$DAILY_TOPIC","operational_gaps":"$(echo -e "$RESEARCH_NEEDS" | tr '\n' ';' | sed 's/;$//')","status":"submitted","cadence":"daily"}
 JSEOF
-  )
-  echo "$REQ_ENTRY" >> "$RESEARCH_REQUEST_FILE" 2>/dev/null || true
+)
+echo "$REQ_ENTRY" >> "$RESEARCH_REQUEST_FILE" 2>/dev/null || true
 
-  # Dispatch to Ra for research
-  if [[ -f "$DISPATCH_SH" ]]; then
-    bash "$DISPATCH_SH" delegate ra P2 "[RESEARCH-REQ] Dex $WEEK_NUM: $CURRENT_TOPIC" 2>/dev/null || true
-    RESEARCH_REQUESTS=$((RESEARCH_REQUESTS + 1))
-    log_pass "Step 2: Submitted research request to Ra: $CURRENT_TOPIC"
-  else
-    log_warn "Step 2: dispatch.sh not found — research request logged but not dispatched"
-  fi
+if [[ -f "$DISPATCH_SH" ]]; then
+  bash "$DISPATCH_SH" delegate ra P3 "[DAILY-INTEL] Dex $TODAY: $DAILY_TOPIC" 2>/dev/null || true
+  RESEARCH_REQUESTS=$((RESEARCH_REQUESTS + 1))
+  log_pass "6A.2: Daily research request dispatched to Ra"
+fi
 
-  echo "### Step 2: Research Request Submitted" >> "$REPORT"
-  echo "" >> "$REPORT"
-  echo "- Topic: $CURRENT_TOPIC" >> "$REPORT"
-  echo "- Dispatched to: Ra" >> "$REPORT"
-  echo "" >> "$REPORT"
+echo "### Daily Research Request" >> "$REPORT"
+echo "" >> "$REPORT"
+echo "- Topic: $DAILY_TOPIC" >> "$REPORT"
+echo "- Dispatched to: Ra (P3)" >> "$REPORT"
+if [[ -n "$RESEARCH_NEEDS" ]]; then
+  echo "- Operational gaps attached as context" >> "$REPORT"
+fi
+echo "" >> "$REPORT"
 
-  # ---- STEP 3: Evaluate existing briefs ----
-  DEX_BRIEF=$(ls -t "$RESEARCH_DIR"/dex-*.md 2>/dev/null | head -1)
+# ---- 6A.3: Ingest any new briefs that arrived since last run ----
+NEW_BRIEFS=0
+LAST_RUN_EPOCH=0
+# Check when Dex last ran by looking at the previous day's report
+PREV_REPORT="$DEX_LOGS/dex-${YESTERDAY}.md"
+if [[ -f "$PREV_REPORT" ]]; then
+  LAST_RUN_EPOCH=$(stat -f "%m" "$PREV_REPORT" 2>/dev/null || stat -c "%Y" "$PREV_REPORT" 2>/dev/null || echo "0")
+fi
 
-  if [[ -n "$DEX_BRIEF" ]]; then
-    log_pass "Step 3: Found research brief to evaluate: $DEX_BRIEF"
-    log_activity "PHASE_6_RESEARCH" "step3_evaluate" "Evaluating brief: $DEX_BRIEF"
+for brief in "$RESEARCH_DIR"/dex-*.md; do
+  [[ -f "$brief" ]] || continue
+  BRIEF_EPOCH=$(stat -f "%m" "$brief" 2>/dev/null || stat -c "%Y" "$brief" 2>/dev/null || echo "0")
+  if [[ $BRIEF_EPOCH -gt $LAST_RUN_EPOCH ]] && [[ $LAST_RUN_EPOCH -gt 0 ]]; then
+    NEW_BRIEFS=$((NEW_BRIEFS + 1))
+    log_pass "6A.3: New brief arrived: $brief"
 
-    # Log evaluation event (actual evaluation happens during Kai/Dex interactive session)
+    # Log for Kai review
     EVAL_ENTRY=$(cat <<JSEOF
-{"ts":"$NOW_ISO","type":"research-eval","brief":"$DEX_BRIEF","week":"$WEEK_NUM","status":"pending_review","notes":"Brief found and queued for evaluation during next interactive session"}
+{"ts":"$NOW_ISO","type":"research-eval","brief":"$brief","date":"$TODAY","status":"pending_review","notes":"New brief arrived — queued for Kai review"}
 JSEOF
     )
     echo "$EVAL_ENTRY" >> "$DEX_LOG" 2>/dev/null || true
+  fi
+done
 
-    echo "### Step 3: Brief Evaluation" >> "$REPORT"
-    echo "" >> "$REPORT"
-    echo "- Brief: $DEX_BRIEF" >> "$REPORT"
-    echo "- Status: Queued for interactive evaluation" >> "$REPORT"
-    echo "- Action: Kai reviews findings during next session" >> "$REPORT"
-    echo "" >> "$REPORT"
+echo "### Brief Ingestion" >> "$REPORT"
+echo "" >> "$REPORT"
+echo "- New briefs since last run: $NEW_BRIEFS" >> "$REPORT"
+echo "" >> "$REPORT"
+
+# ---- 6A.4: Anti-stale check (runs daily, not just Monday) ----
+echo "### Anti-Stale Check (all agents)" >> "$REPORT"
+echo "" >> "$REPORT"
+
+for agent in kai sam nel ra aurora aether dex; do
+  AGENT_BRIEF=$(ls -t "$RESEARCH_DIR"/${agent}-*.md 2>/dev/null | head -1)
+  if [[ -z "$AGENT_BRIEF" ]]; then
+    log_warn "No research brief found for agent: $agent"
+    dispatch_flag "P2" "agent research stale: $agent (no brief exists)"
+    RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
+    echo "- $agent: **NO BRIEF** — flagged P2" >> "$REPORT"
   else
-    log_warn "Step 3: No research brief found for Dex — Ra needs to produce one"
-    dispatch_flag "P3" "no research brief available for Dex"
+    BRIEF_DATE=$(stat -f "%m" "$AGENT_BRIEF" 2>/dev/null || stat -c "%Y" "$AGENT_BRIEF" 2>/dev/null || echo "0")
+    NOW_EPOCH=$(date +%s)
+    AGE_DAYS=$(( (NOW_EPOCH - BRIEF_DATE) / 86400 ))
+    if [[ $AGE_DAYS -gt 14 ]]; then
+      log_warn "Research brief stale for $agent: ${AGE_DAYS}d old"
+      dispatch_flag "P2" "agent research stale: $agent (${AGE_DAYS}d since last brief)"
+      RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
+      echo "- $agent: **STALE** (${AGE_DAYS}d old) — flagged P2" >> "$REPORT"
+    else
+      log_pass "Research brief current for $agent: ${AGE_DAYS}d old"
+      echo "- $agent: current (${AGE_DAYS}d old)" >> "$REPORT"
+    fi
+  fi
+done
 
-    echo "### Step 3: No Brief Available" >> "$REPORT"
-    echo "" >> "$REPORT"
-    echo "- No brief found in $RESEARCH_DIR/dex-*.md" >> "$REPORT"
-    echo "- Ra dispatched to produce one (see Step 2)" >> "$REPORT"
-    echo "" >> "$REPORT"
+echo "" >> "$REPORT"
+
+log_activity "PHASE_6A_DAILY_INTEL" "completed" "Requests: $RESEARCH_REQUESTS, new briefs: $NEW_BRIEFS, stale: $RESEARCH_FINDINGS"
+log_pass "Phase 6A complete: Daily intel done — $RESEARCH_REQUESTS requests, $NEW_BRIEFS new briefs, $RESEARCH_FINDINGS stale"
+
+# ============================================================================
+# PHASE 6B: DEEP RESEARCH SYNTHESIS (Monday only)
+# Full cycle: evaluate accumulated briefs, score findings, create concrete
+# [RESEARCH] implementation tasks, submit deep-dive requests to Ra.
+# ============================================================================
+DOW=$(TZ="America/Denver" date +%u)  # 1=Monday
+if [[ "$DOW" == "1" ]]; then
+  echo "## Phase 6B: Weekly Deep Research Synthesis (Monday)" >> "$REPORT"
+  echo "" >> "$REPORT"
+  log_info "Phase 6B: Weekly deep research synthesis"
+  log_activity "PHASE_6B_DEEP_RESEARCH" "in_progress" "Starting weekly synthesis"
+
+  WEEK_NUM=$(date +%Y-W%V)
+  DEX_RESEARCH_LOG="$DEX_LOGS/research-${WEEK_NUM}.md"
+
+  # ---- 6B.1: Evaluate ALL briefs from the past week ----
+  WEEKLY_BRIEFS=0
+  APPLICABLE_FINDINGS=0
+
+  cat > "$DEX_RESEARCH_LOG" <<REOF
+# Dex Research Synthesis — $WEEK_NUM
+
+**Generated:** $NOW_ISO
+**Agent:** dex.hyo v1.1.0
+
+## Briefs Evaluated This Week
+
+REOF
+
+  for brief in "$RESEARCH_DIR"/dex-*.md; do
+    [[ -f "$brief" ]] || continue
+    BRIEF_EPOCH=$(stat -f "%m" "$brief" 2>/dev/null || stat -c "%Y" "$brief" 2>/dev/null || echo "0")
+    NOW_EPOCH=$(date +%s)
+    BRIEF_AGE=$(( (NOW_EPOCH - BRIEF_EPOCH) / 86400 ))
+
+    if [[ $BRIEF_AGE -le 7 ]]; then
+      WEEKLY_BRIEFS=$((WEEKLY_BRIEFS + 1))
+      echo "- $(basename "$brief") (${BRIEF_AGE}d old)" >> "$DEX_RESEARCH_LOG"
+    fi
+  done
+
+  echo "" >> "$DEX_RESEARCH_LOG"
+  echo "## Implementation Candidates" >> "$DEX_RESEARCH_LOG"
+  echo "" >> "$DEX_RESEARCH_LOG"
+  echo "Findings scored APPLICABLE will appear here after Kai interactive review." >> "$DEX_RESEARCH_LOG"
+  echo "" >> "$DEX_RESEARCH_LOG"
+
+  echo "### Weekly Brief Evaluation" >> "$REPORT"
+  echo "" >> "$REPORT"
+  echo "- Briefs from this week: $WEEKLY_BRIEFS" >> "$REPORT"
+  echo "- Research synthesis: $DEX_RESEARCH_LOG" >> "$REPORT"
+  echo "" >> "$REPORT"
+
+  # ---- 6B.2: Submit deep-dive research request (more specific than daily) ----
+  # Scan last 7 days of research requests to find patterns
+  STANDING_DEEP_TOPICS=(
+    "JSONL validation: schema evolution patterns for append-only agent logs — compare current python3 json.tool approach against jsonschema, pydantic, or Zod-based validation"
+    "Compaction: integrity-preserving archival with rollback for JSONL ledgers — evaluate write-ahead logging, CRC32 checksums, and atomic rename patterns"
+    "Pattern detection: anomaly detection in multi-agent log streams — compare rule-based vs statistical approaches for our scale (100-1000 entries/day)"
+    "Audit trails: SOC2/ISO27001 patterns applicable to agent memory systems — what's the minimum viable audit trail for a multi-agent system"
+    "Agentic memory: how production multi-agent systems handle recall and context — survey LangGraph, CrewAI, AutoGen memory architectures"
+  )
+
+  WEEK_INDEX=$(( $(date +%V) % ${#STANDING_DEEP_TOPICS[@]} ))
+  DEEP_TOPIC="${STANDING_DEEP_TOPICS[$WEEK_INDEX]}"
+
+  if [[ -f "$DISPATCH_SH" ]]; then
+    bash "$DISPATCH_SH" delegate ra P2 "[RESEARCH-REQ] Dex $WEEK_NUM deep-dive: $DEEP_TOPIC" 2>/dev/null || true
+    log_pass "6B.2: Weekly deep-dive request dispatched to Ra"
   fi
 
-  # ---- STEP 4: Check for existing [RESEARCH] tasks needing implementation ----
-  KAI_TASKS="$ROOT/KAI_TASKS.md"
+  echo "### Deep-Dive Research Request" >> "$REPORT"
+  echo "" >> "$REPORT"
+  echo "- Topic: $DEEP_TOPIC" >> "$REPORT"
+  echo "- Priority: P2 (higher than daily P3)" >> "$REPORT"
+  echo "" >> "$REPORT"
+
+  # ---- 6B.3: Check implementation task pipeline ----
   DEX_RESEARCH_TASKS=0
   if [[ -f "$KAI_TASKS" ]]; then
     DEX_RESEARCH_TASKS=$(grep -c "\[RESEARCH\].*[Dd]ex" "$KAI_TASKS" 2>/dev/null || echo "0")
   fi
 
-  echo "### Step 4: Implementation Task Status" >> "$REPORT"
+  echo "### Implementation Pipeline" >> "$REPORT"
   echo "" >> "$REPORT"
-  echo "- Active [RESEARCH] tasks for Dex in KAI_TASKS: $DEX_RESEARCH_TASKS" >> "$REPORT"
-  echo "" >> "$REPORT"
-
-  # ---- STEP 5: Anti-stale check across ALL agents ----
-  echo "### Step 5: Anti-Stale Check (all agents)" >> "$REPORT"
+  echo "- Active [RESEARCH] tasks for Dex: $DEX_RESEARCH_TASKS" >> "$REPORT"
+  echo "- Pending Kai review: check KAI_TASKS.md [RESEARCH] section" >> "$REPORT"
   echo "" >> "$REPORT"
 
-  for agent in kai sam nel ra aurora aether dex; do
-    AGENT_BRIEF=$(ls -t "$RESEARCH_DIR"/${agent}-*.md 2>/dev/null | head -1)
-    if [[ -z "$AGENT_BRIEF" ]]; then
-      log_warn "No research brief found for agent: $agent"
-      dispatch_flag "P2" "agent research stale: $agent (no brief exists)"
-      RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
-      echo "- $agent: **NO BRIEF** — flagged P2" >> "$REPORT"
-    else
-      # Check age of brief
-      BRIEF_DATE=$(stat -f "%m" "$AGENT_BRIEF" 2>/dev/null || stat -c "%Y" "$AGENT_BRIEF" 2>/dev/null || echo "0")
-      NOW_EPOCH=$(date +%s)
-      AGE_DAYS=$(( (NOW_EPOCH - BRIEF_DATE) / 86400 ))
-      if [[ $AGE_DAYS -gt 14 ]]; then
-        log_warn "Research brief stale for $agent: ${AGE_DAYS}d old"
-        dispatch_flag "P2" "agent research stale: $agent (${AGE_DAYS}d since last brief)"
-        RESEARCH_FINDINGS=$((RESEARCH_FINDINGS + 1))
-        echo "- $agent: **STALE** (${AGE_DAYS}d old) — flagged P2" >> "$REPORT"
-      else
-        log_pass "Research brief current for $agent: ${AGE_DAYS}d old"
-        echo "- $agent: current (${AGE_DAYS}d old)" >> "$REPORT"
-      fi
+  # Self-idle check: has Dex produced any research output in 21 days?
+  LAST_RESEARCH_OUTPUT=$(ls -t "$DEX_LOGS"/research-*.md 2>/dev/null | head -1)
+  if [[ -n "$LAST_RESEARCH_OUTPUT" ]]; then
+    RESEARCH_EPOCH=$(stat -f "%m" "$LAST_RESEARCH_OUTPUT" 2>/dev/null || stat -c "%Y" "$LAST_RESEARCH_OUTPUT" 2>/dev/null || echo "0")
+    RESEARCH_AGE=$(( ($(date +%s) - RESEARCH_EPOCH) / 86400 ))
+    if [[ $RESEARCH_AGE -gt 21 ]]; then
+      dispatch_flag "P2" "Dex research idle: no synthesis output in ${RESEARCH_AGE}d"
+      log_warn "Self-check: Dex research idle for ${RESEARCH_AGE}d"
     fi
-  done
-
-  # Self-check: has Dex submitted a research request recently?
-  LAST_REQUEST=$(tail -1 "$RESEARCH_REQUEST_FILE" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('ts',''))" 2>/dev/null || echo "")
-  if [[ -z "$LAST_REQUEST" ]]; then
-    log_warn "Dex has never submitted a research request"
-    echo "- Dex self-check: **FIRST REQUEST** submitted this cycle" >> "$REPORT"
   fi
 
-  echo "" >> "$REPORT"
-
-  log_activity "PHASE_6_RESEARCH" "completed" "Requests: $RESEARCH_REQUESTS, stale briefs: $RESEARCH_FINDINGS, pending tasks: $DEX_RESEARCH_TASKS"
-  log_pass "Phase 6 complete: Research cycle done — $RESEARCH_REQUESTS requests, $RESEARCH_FINDINGS stale flags"
+  log_activity "PHASE_6B_DEEP_RESEARCH" "completed" "Weekly briefs: $WEEKLY_BRIEFS, deep-dive dispatched, pipeline: $DEX_RESEARCH_TASKS tasks"
+  log_pass "Phase 6B complete: Weekly synthesis done"
 else
-  log_info "Phase 6: Skipped (runs Monday only, today is day $DOW)"
+  log_info "Phase 6B: Skipped (deep synthesis runs Monday only, today is day $DOW)"
 fi
 
 # ============================================================================
