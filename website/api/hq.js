@@ -15,6 +15,7 @@ if (!globalThis.__hq) {
     events: [],
     ra: {}, aurora: {}, sentinel: {}, cipher: {},
     sim: {}, consolidation: {}, aetherbot: {}, health: {},
+    credits: {},
   };
 }
 function getStore() { return globalThis.__hq; }
