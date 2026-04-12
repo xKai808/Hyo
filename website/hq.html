@@ -806,6 +806,7 @@
       document.getElementById('raRunRow').style.display = '';
       setEl('raLastRun', fmtDate(d.ra.lastRun), 'ok');
       document.getElementById('mBriefs').textContent = d.ra.briefCount || agentEvents(events, 'ra').length || '--';
+      if (d.ra.latestDoc) { docURLs.ra = d.ra.latestDoc; document.getElementById('raViewBtn').style.display = ''; }
     }
     const raEvs = agentEvents(events, 'ra');
     if (raEvs.length) document.getElementById('raHistory').innerHTML = historyHTML(raEvs);
@@ -829,6 +830,7 @@
       setEl('sentPassed', s.passed ?? '--', 'ok');
       setEl('sentFailed', s.failed ?? '--', (s.failed || 0) === 0 ? 'ok' : 'err');
       setEl('sentLastRun', fmtDate(s.lastRun), 'ok');
+      if (s.latestDoc) { docURLs.sentinel = s.latestDoc; document.getElementById('sentViewBtn').style.display = ''; }
     }
     const sentEvs = agentEvents(events, 'sentinel');
     if (sentEvs.length) document.getElementById('sentHistory').innerHTML = historyHTML(sentEvs);
