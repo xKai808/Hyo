@@ -5,7 +5,7 @@
 
 ## Next 24 Hours — Task Plan
 
-### aetherbot
+### aether
 
 **Task:** **[B
 **Prerequisites:**

@@ -4,7 +4,7 @@
 # updates project task lists, syncs to HQ.
 #
 # Usage: bash kai/consolidation/consolidate.sh [--project <name>]
-#   --project hyo|aurora-ra|aetherbot|kai-ceo   Run one project only
+#   --project hyo|aurora-ra|aether|kai-ceo   Run one project only
 #   (no args)                                    Run all four + cross-project sentinel/cipher
 
 set -uo pipefail
@@ -152,22 +152,22 @@ sentinel_aurora_ra() {
   [[ -n "$findings" ]] && echo -e "findings:$findings"
 }
 
-sentinel_aetherbot() {
+sentinel_aether() {
   local findings=""
   local passed=0 failed=0
 
   # Manifest exists
-  if [[ -f "$ROOT/agents/manifests/aetherbot.hyo.json" ]]; then
+  if [[ -f "$ROOT/agents/manifests/aether.hyo.json" ]]; then
     passed=$((passed+1))
   else
-    failed=$((failed+1)); findings="${findings}\n- FAIL: aetherbot.hyo.json manifest missing"
+    failed=$((failed+1)); findings="${findings}\n- FAIL: aether.hyo.json manifest missing"
   fi
 
   # Runner script exists
-  if [[ -f "$ROOT/kai/aetherbot.sh" ]]; then
+  if [[ -f "$ROOT/kai/aether.sh" ]]; then
     passed=$((passed+1))
   else
-    failed=$((failed+1)); findings="${findings}\n- FAIL: kai/aetherbot.sh runner missing"
+    failed=$((failed+1)); findings="${findings}\n- FAIL: kai/aether.sh runner missing"
   fi
 
   echo "passed=$passed failed=$failed"
@@ -201,7 +201,7 @@ sentinel_kai_ceo() {
 
   # Consolidation histories exist for all projects
   local all_exist=true
-  for proj in hyo aurora-ra aetherbot kai-ceo nel sam; do
+  for proj in hyo aurora-ra aether kai-ceo nel sam; do
     if [[ ! -f "$SCRIPT_DIR/$proj/history.md" ]]; then
       all_exist=false
       findings="${findings}\n- FAIL: consolidation/$proj/history.md missing"
@@ -359,13 +359,13 @@ run_project() {
       append_history "aurora-ra" "$entry"
       ;;
 
-    aetherbot)
-      local result; result=$(sentinel_aetherbot)
-      log "Sentinel [aetherbot]: $result"
+    aether)
+      local result; result=$(sentinel_aether)
+      log "Sentinel [aether]: $result"
 
       local entry="**Sentinel:** $result
 **Status:** awaiting scope definition"
-      append_history "aetherbot" "$entry"
+      append_history "aether" "$entry"
       ;;
 
     kai-ceo)
@@ -425,7 +425,7 @@ if [[ "${1:-}" == "--project" && -n "${2:-}" ]]; then
 fi
 
 if [[ "$TARGET" == "all" ]]; then
-  for proj in hyo aurora-ra aetherbot kai-ceo nel sam; do
+  for proj in hyo aurora-ra aether kai-ceo nel sam; do
     run_project "$proj"
   done
 else
@@ -625,7 +625,7 @@ except:
 state["events"] = [e for e in state["events"] if not (e.get("agent") == "consolidation" and e.get("ts", "").startswith(date))]
 
 # Add consolidation events per project
-projects = ["hyo", "aurora-ra", "aetherbot", "kai-ceo", "nel", "sam"]
+projects = ["hyo", "aurora-ra", "aether", "kai-ceo", "nel", "sam"]
 for proj in projects:
     state["events"].insert(0, {
         "ts": ts,

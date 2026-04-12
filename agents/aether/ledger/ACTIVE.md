@@ -1,11 +1,11 @@
-# Aetherbot Active Tasks
+# Aether Active Tasks
 
-Agent: aetherbot.hyo  
+Agent: aether.hyo  
 Last updated: 2026-04-12
 
 ## Open Tasks
 
-(None at this time. Aetherbot is in autonomous operation.)
+(None at this time. Aether is in autonomous operation.)
 
 ## Recent Completions
 

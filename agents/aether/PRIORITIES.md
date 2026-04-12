@@ -1,6 +1,6 @@
-# Aetherbot Priorities
+# Aether Priorities
 
-Agent: aetherbot.hyo  
+Agent: aether.hyo  
 Updated: 2026-04-12
 
 ## Current Priorities
@@ -9,17 +9,17 @@ Updated: 2026-04-12
 
 2. **Weekly reset integrity** — Validate that Monday 00:00 MT reset correctly archives current week, resets counters, and carries forward balance.
 
-3. **Trade API health** — Monitor `/api/aetherbot` endpoint availability and response times. Ensure founder-token authentication works.
+3. **Trade API health** — Monitor `/api/aether` endpoint availability and response times. Ensure founder-token authentication works.
 
-4. **Metrics JSON consistency** — Maintain valid JSON structure in `website/data/aetherbot-metrics.json`. Prevent corruption on concurrent writes.
+4. **Metrics JSON consistency** — Maintain valid JSON structure in `website/data/aether-metrics.json`. Prevent corruption on concurrent writes.
 
 5. **HQ dashboard push reliability** — Validate that metrics reach HQ dashboard with current founder token. Log failures for manual review.
 
 ## Monitoring
 
-- Daily review of `agents/aetherbot/logs/` for errors or missed cycles
-- Weekly validation of `website/data/aetherbot-metrics.json` structure
-- Monthly audit of trades ledger (`agents/aetherbot/ledger/trades.jsonl`) for data integrity
+- Daily review of `agents/aether/logs/` for errors or missed cycles
+- Weekly validation of `website/data/aether-metrics.json` structure
+- Monthly audit of trades ledger (`agents/aether/ledger/trades.jsonl`) for data integrity
 - Real-time alert if 15-minute cycle fails or HQ push returns errors
 
 ## Success Criteria

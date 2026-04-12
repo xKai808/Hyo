@@ -18,14 +18,14 @@ findings:
 [19:35:34] Cipher [aurora-ra]: leaks=0 in agents/ra/pipeline/
 [19:35:34] Finished aurora-ra consolidation
 
-## aetherbot
+## aether
 
-[19:35:34] Starting aetherbot consolidation
-[19:35:34] Sentinel [aetherbot]: passed=0 failed=2
+[19:35:34] Starting aether consolidation
+[19:35:34] Sentinel [aether]: passed=0 failed=2
 findings:
-- FAIL: aetherbot.hyo.json manifest missing
-- FAIL: kai/aetherbot.sh runner missing
-[19:35:34] Finished aetherbot consolidation
+- FAIL: aether.hyo.json manifest missing
+- FAIL: kai/aether.sh runner missing
+[19:35:34] Finished aether consolidation
 
 ## kai-ceo
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://hyo.world/schemas/agent/v1.json",
-  "name": "aetherbot.hyo",
+  "name": "aether.hyo",
   "description": "Trading metrics and portfolio intelligence agent — trade recording, weekly metrics aggregation, PNL tracking, win-rate calculation, strategy tagging, risk monitoring, and HQ dashboard auto-upload.",
   "version": "1.0.0",
   "created": "2026-04-12",
@@ -33,10 +33,10 @@
     "billedTo": "hyo"
   },
   "identity": {
-    "displayName": "Aetherbot",
-    "handle": "aetherbot.hyo",
+    "displayName": "Aether",
+    "handle": "aether.hyo",
     "tagline": "Trading metrics collector. Portfolio intelligence for Hyo.",
-    "description": "Aetherbot is the trading metrics and portfolio intelligence agent. Autonomous trade recorder responsible for portfolio monitoring, PNL tracking, win-rate calculation, strategy performance analysis, risk monitoring, and HQ dashboard updates. Runs on a 15-minute schedule via launchd. Records trades via API endpoint, aggregates weekly metrics (Monday reset), and pushes live metrics to HQ dashboard for real-time portfolio visibility. Reports directly to Kai.",
+    "description": "Aether is the trading metrics and portfolio intelligence agent. Autonomous trade recorder responsible for portfolio monitoring, PNL tracking, win-rate calculation, strategy performance analysis, risk monitoring, and HQ dashboard updates. Runs on a 15-minute schedule via launchd. Records trades via API endpoint, aggregates weekly metrics (Monday reset), and pushes live metrics to HQ dashboard for real-time portfolio visibility. Reports directly to Kai.",
     "role": "trading-metrics-collector",
     "archetype": "monitor",
     "operator": "hyo",
@@ -63,23 +63,23 @@
   "inputs": [
     {
       "name": "trade_events",
-      "source": "api:/api/aetherbot?action=trade"
+      "source": "api:/api/aether?action=trade"
     },
     {
       "name": "metrics_updates",
-      "source": "api:/api/aetherbot?action=metrics"
+      "source": "api:/api/aether?action=metrics"
     },
     {
       "name": "exchange_feeds",
-      "source": "env:AETHERBOT_SOURCE (file|ccxt|manual)"
+      "source": "env:AETHER_SOURCE (file|ccxt|manual)"
     },
     {
       "name": "current_metrics",
-      "source": "file:~/Documents/Projects/Hyo/website/data/aetherbot-metrics.json"
+      "source": "file:~/Documents/Projects/Hyo/website/data/aether-metrics.json"
     },
     {
       "name": "trades_ledger",
-      "source": "file:~/Documents/Projects/Hyo/agents/aetherbot/ledger/trades.jsonl"
+      "source": "file:~/Documents/Projects/Hyo/agents/aether/ledger/trades.jsonl"
     }
   ],
   "commands": {
@@ -91,7 +91,7 @@
   "outputs": [
     {
       "name": "metrics-json",
-      "path": "~/Documents/Projects/Hyo/website/data/aetherbot-metrics.json",
+      "path": "~/Documents/Projects/Hyo/website/data/aether-metrics.json",
       "format": "json",
       "fields": [
         "currentWeek",
@@ -99,11 +99,11 @@
         "allTimeStats",
         "updatedAt"
       ],
-      "consumed-by": "HQ dashboard, website/api/aetherbot.js"
+      "consumed-by": "HQ dashboard, website/api/aether.js"
     },
     {
       "name": "trades-ledger",
-      "path": "~/Documents/Projects/Hyo/agents/aetherbot/ledger/trades.jsonl",
+      "path": "~/Documents/Projects/Hyo/agents/aether/ledger/trades.jsonl",
       "format": "jsonl",
       "fields": [
         "timestamp",
@@ -118,7 +118,7 @@
     },
     {
       "name": "activity-log",
-      "path": "~/Documents/Projects/Hyo/agents/aetherbot/logs/aetherbot-YYYY-MM-DD.log",
+      "path": "~/Documents/Projects/Hyo/agents/aether/logs/aether-YYYY-MM-DD.log",
       "format": "text",
       "fields": [
         "timestamp",
@@ -134,21 +134,21 @@
     }
   ],
   "pipeline": {
-    "entrypoint": "~/Documents/Projects/Hyo/agents/aetherbot/aetherbot.sh",
+    "entrypoint": "~/Documents/Projects/Hyo/agents/aether/aether.sh",
     "schedule": "*/15 * * * *",
     "scheduleTimezone": "America/Denver",
     "scheduleNote": "Every 15 minutes, 24/7. Special: Monday 00:00 triggers weekly reset.",
     "runtime": "bash + python3",
     "launchd": {
-      "label": "com.hyo.aetherbot.plist",
+      "label": "com.hyo.aether.plist",
       "interval": 900,
-      "path": "~/Documents/Projects/Hyo/agents/aetherbot/com.hyo.aetherbot.plist"
+      "path": "~/Documents/Projects/Hyo/agents/aether/com.hyo.aether.plist"
     },
-    "invocation": "bash ~/Documents/Projects/Hyo/agents/aetherbot/aetherbot.sh [--reset|--record-trade JSON]",
+    "invocation": "bash ~/Documents/Projects/Hyo/agents/aether/aether.sh [--reset|--record-trade JSON]",
     "note": "Runs via launchd on Mac. Auto-pushes metrics to HQ. Monday reset happens automatically at 00:00 MT."
   },
   "apiEndpoint": {
-    "path": "/api/aetherbot",
+    "path": "/api/aether",
     "methods": [
       {
         "method": "POST",
@@ -246,7 +246,7 @@
       "description": "Project root directory"
     },
     {
-      "name": "AETHERBOT_SOURCE",
+      "name": "AETHER_SOURCE",
       "default": "file",
       "values": [
         "file",
@@ -256,17 +256,17 @@
       "description": "Trade data source"
     },
     {
-      "name": "AETHERBOT_EXCHANGE",
+      "name": "AETHER_EXCHANGE",
       "default": null,
       "description": "Exchange name for CCXT mode (binance, coinbase, etc.)"
     },
     {
-      "name": "AETHERBOT_API_KEY",
+      "name": "AETHER_API_KEY",
       "default": null,
       "description": "Exchange API key (read-only recommended)"
     },
     {
-      "name": "AETHERBOT_API_SECRET",
+      "name": "AETHER_API_SECRET",
       "default": null,
       "description": "Exchange API secret"
     },
@@ -279,7 +279,7 @@
   "runtime": {
     "environment": "launchd on Mac Mini",
     "networkAccess": "full (API calls to exchange, HQ push)",
-    "filesystemAccess": "agents/aetherbot/, website/data/",
+    "filesystemAccess": "agents/aether/, website/data/",
     "sandboxRestrictions": "none"
   },
   "weeklyReset": {
@@ -291,7 +291,7 @@
       "Carry forward currentBalance as next startingBalance",
       "Reset strategies (pnl=0, trades=0, but keep name and status)"
     ],
-    "manualTrigger": "aetherbot.sh --reset"
+    "manualTrigger": "aether.sh --reset"
   },
   "visual": {
     "palette": {
@@ -301,10 +301,10 @@
       "muted": "rgba(232,213,183,0.55)"
     },
     "side": "HUMAN",
-    "signature": "Portfolio monitoring · aetherbot.hyo"
+    "signature": "Portfolio monitoring · aether.hyo"
   },
   "metadata": {
-    "external_url": "https://hyo.world/agents/aetherbot",
+    "external_url": "https://hyo.world/agents/aether",
     "attributes": [
       {
         "trait_type": "Role",

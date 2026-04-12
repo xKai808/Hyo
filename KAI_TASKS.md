@@ -15,7 +15,7 @@
 ## P0 — Active blockers
 
 - [ ] **[H]** **Install MCP server on Mini.** `cd ~/Documents/Projects/Hyo/agents/sam/mcp-server && npm install`, then `brew install tailscale && tailscale up`, add connector in Cowork Settings. This removes the #1 bottleneck (every deploy requires Hyo to type `git push`). SETUP.md has full walkthrough. _(Audit B1)_
-- [ ] **[H]** **Install Aetherbot launchd.** `cp agents/aetherbot/com.hyo.aetherbot.plist ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hyo.aetherbot.plist`. Enables 15-min auto metrics cycle. _(Audit B14)_
+- [ ] **[H]** **Install Aether launchd.** `cp agents/aether/com.hyo.aether.plist ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hyo.aether.plist`. Enables 15-min auto metrics cycle. _(Audit B14)_
 - [ ] **[B]** **Migrate aurora off Cowork scheduled-task sandbox onto Mini launchd.** Cowork's sandbox blocks egress to aurora's sources (all 403). Fix: create launchd plist for `newsletter.sh` at 03:00 MT daily. _(Audit B10, B12)_
 - [ ] **[K]** Add `newsletters/` to the list of paths monitored by `kai verify` and have it read the real FS mtime.
 - [ ] **[K]** Have sentinel's `aurora-ran-today` check also verify `mtime < 25h` and file size > 500 bytes.
@@ -29,7 +29,7 @@
 - [ ] **[K]** [AUTOMATE] **Add "no newsletter by 06:00 MT" sentinel check.** In nel.sh Phase 1, check if today's newsletter .md exists. If not by 06:00, flag P1. _(Audit B12 detection gap)_
 - [ ] **[K]** [AUTOMATE] **Build kai-context-save scheduled task.** Runs every 30 min during active sessions. If files changed since last save, run `kai save`. Prevents memory loss on session crash. _(Audit B3)_
 - [ ] **[K]** [AUTOMATE] **Build kai hydrate command.** Concatenate the 9 hydration files into a single briefing doc. One read instead of nine. _(Audit B2)_
-- [ ] **[H]** Provide exchange API keys (read-only) for Aetherbot CCXT integration. _(Audit B13)_
+- [ ] **[H]** Provide exchange API keys (read-only) for Aether CCXT integration. _(Audit B13)_
 - [ ] **[H]** Confirm `claude` CLI is on PATH used by launchd on Mini. Needed for aurora migration.
 - [ ] **[B]** Deploy `HyoRegistry.sol` to Base Sepolia testnet for on-chain mint dry-run.
 - [ ] **[K]** Implement `mintReserved` admin function on the contract (spec in `NFT/HyoRegistry_Marketplace.md`).
@@ -53,7 +53,7 @@
 
 - [ ] **[K]** [AUTOMATE] **Convert watch-deploy.sh to launchd agent** with KeepAlive. If fswatch process dies, it auto-restarts. _(Audit B8)_
 - [ ] **[K]** [AUTOMATE] **Reduce cipher to daily** (from hourly) — or wait for Hyo to install gitleaks/trufflehog. 51 runs, 0 findings. _(Audit B6)_
-- [ ] **[K]** **Clean up disabled scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aetherbot-analysis from Cowork. Dead entries.
+- [ ] **[K]** **Clean up disabled scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aether-analysis from Cowork. Dead entries.
 - [ ] **[K]** [AUTOMATE] **Add UTC timestamp check to Nel.** Nel should flag any Z-suffix timestamps in hq-state.json during its nightly audit.
 
 - [ ] **[K]** Add `/api/agents` GET endpoint that returns the full registry (reads from KV once persistent storage exists). Unblocks cross-device sync without git.
@@ -106,7 +106,7 @@ _(2026-04-11 cleanup: removed 7 auto-filed sentinel/cipher findings that were fa
 _(2026-04-12 cleanup: removed 4 stale sentinel auto-filed items referencing old session path `/sessions/clever-beautiful-cray/`. These were environmental — aurora not running and API health unreachable are both documented sandbox limitations, not code bugs.)_
 
 - [x] **2026-04-12** Nel, Ra, Sam agents built, verified end-to-end (multiple runs each, idempotent). Bugs fixed: `set -e` → `set -uo pipefail` across all three, sentinel pattern matching, Python heredoc variable injection, subscriber count double-output.
-- [x] **2026-04-12** Full 6-project consolidation verified (Hyo, Aurora/Ra, Aetherbot, Kai CEO, Nel, Sam) — runs clean, idempotent, simulation included.
+- [x] **2026-04-12** Full 6-project consolidation verified (Hyo, Aurora/Ra, Aether, Kai CEO, Nel, Sam) — runs clean, idempotent, simulation included.
 - [x] **2026-04-12** Scheduled tasks cleaned up: `nightly-per-project-consolidation` updated to 6 projects + Nel + Ra health checks; old `nightly-consolidation` and `nightly-simulation` disabled (superseded).
 - [x] **2026-04-12** HQ Dashboard v7 — complete rewrite. Plus Jakarta Sans + JetBrains Mono fonts, light/dark mode toggle, Nel + Sam views, premium design, responsive.
 - [x] **2026-04-12** Ra newsletter aesthetics overhaul — body font changed from DM Mono to Plus Jakarta Sans (16px, wt 400, lh 1.8), JetBrains Mono for code, richer colors, better spacing. Template in render.py updated, 2026-04-11 newsletter re-rendered.

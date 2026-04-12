@@ -1,10 +1,10 @@
-# Ledger Agent — Active Tasks
+# Dex Agent — Active Tasks
 
 Last updated: 2026-04-12T00:00:00Z
 
 ## In Progress
 
-None yet. Ledger agent is newly initialized.
+None yet. Dex agent is newly initialized.
 
 ## Queued
 
@@ -17,7 +17,7 @@ None yet.
 ---
 
 **Legend:**
-- **Task ID:** ledger-NNN (sequential, per PROTOCOL.md)
+- **Task ID:** dex-NNN (sequential, per PROTOCOL.md)
 - **Priority:** P0 (critical), P1 (high), P2 (medium), P3 (low)
 - **Status:** CREATED, DELEGATED, IN_PROGRESS, TESTING, VERIFIED, DONE, BLOCKED, FAILED
 

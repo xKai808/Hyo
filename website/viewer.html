@@ -44,7 +44,7 @@
     .tag-cipher { color: var(--err); background: rgba(232,144,112,0.12); }
     .tag-sim { color: var(--warn); background: rgba(232,201,106,0.12); }
     .tag-consolidation { color: var(--cyan); background: rgba(138,201,232,0.12); }
-    .tag-aetherbot { color: var(--cyan); background: rgba(138,201,232,0.12); }
+    .tag-aether { color: var(--cyan); background: rgba(138,201,232,0.12); }
 
     /* Markdown rendered content */
     .doc-body { line-height: 1.75; }
@@ -121,12 +121,12 @@
     cipher: 'Cipher — Security Scan',
     sim: 'Simulations — Nightly Run',
     consolidation: 'Consolidation — Memory Sync',
-    aetherbot: 'Aetherbot — Analysis'
+    aether: 'Aether — Analysis'
   };
 
   const TAG_CLASS = {
     ra: 'tag-ra', sentinel: 'tag-sentinel', cipher: 'tag-cipher',
-    sim: 'tag-sim', consolidation: 'tag-consolidation', aetherbot: 'tag-aetherbot'
+    sim: 'tag-sim', consolidation: 'tag-consolidation', aether: 'tag-aether'
   };
 
   // Set breadcrumb + header
@@ -149,7 +149,7 @@
     if (agent === 'cipher') {
       return { log: `/docs/cipher/${file}.log`, hasHTML: false };
     }
-    // sentinel, sim, consolidation, aetherbot — all markdown
+    // sentinel, sim, consolidation, aether — all markdown
     return { md: `/docs/${agent}/${file}.md`, hasHTML: false };
   }
 

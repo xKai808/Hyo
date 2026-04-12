@@ -160,7 +160,7 @@ ${BOLD}Ra newsletter product manager${RST}
 
 ${BOLD}HQ dashboard${RST}
   kai push <agent> "msg"  Push a task result + event to hyo.world/hq
-                          agent: ra|aurora|sentinel|cipher|sim|consolidation|aetherbot|ledger
+                          agent: ra|aurora|sentinel|cipher|sim|consolidation|aether|dex
                           Optional: --data '{"key":"val"}' for structured section update
 
 ${BOLD}Auto-deploy${RST}
@@ -697,11 +697,11 @@ case "$sub" in
   ra)                 cmd_ra "$@" ;;
   push)               cmd_push "$@" ;;
   sam)                bash "$ROOT/agents/sam/sam.sh" "$@" ;;
-  aetherbot|ab)       bash "$ROOT/agents/aetherbot/aetherbot.sh" "$@" ;;
-  ledger)             bash "$ROOT/agents/ledger/ledger.sh" "$@" ;;
+  aether|ab)       bash "$ROOT/agents/aether/aether.sh" "$@" ;;
+  dex)             bash "$ROOT/agents/dex/dex.sh" "$@" ;;
   trade)
     # Shortcut: kai trade '{"pair":"BTC/USD","side":"buy","pnl":12.50,"strategy":"Grid Bot"}'
-    bash "$ROOT/agents/aetherbot/aetherbot.sh" --record-trade "${1:-'{}'}"
+    bash "$ROOT/agents/aether/aether.sh" --record-trade "${1:-'{}'}"
     ;;
   watch)              bash "$ROOT/bin/watch-deploy.sh" ;;
   gitwatch)           bash "$ROOT/bin/watch-commit.sh" ;;

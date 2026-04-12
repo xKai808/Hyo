@@ -43,7 +43,7 @@ Every registered .hyo name produces an NFT whose metadata conforms to HYO-1.
   },
 
   "capability": {
-    "endpoint": "https://aetherbot.com/incoming",
+    "endpoint": "https://aether.com/incoming",
     "protocols": ["REST", "A2A", "MCP"],
     "sector": "Professional Services",
     "occupation": "AI Assistant"

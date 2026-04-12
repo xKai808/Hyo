@@ -177,7 +177,7 @@ Each tokenId maps to a JSON file at {baseURI}/{tokenId}.json
   },
 
   "capability": {
-    "endpoint": "https://aetherbot.com/incoming",
+    "endpoint": "https://aether.com/incoming",
     "protocols": ["REST", "A2A", "MCP"],
     "sector": "Professional Services",
     "occupation": "AI Assistant"

@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
-# ~/Documents/Projects/Hyo/agents/ledger/ledger.sh
+# ~/Documents/Projects/Hyo/agents/dex/dex.sh
 #
-# Ledger Agent — System memory manager
+# Dex Agent — System memory manager
 # Owns integrity, compaction, indexing, pattern detection, and recall for ALL agent ledgers.
 #
 # Usage:
-#   kai ledger validate   - validate all JSONL files for integrity
-#   kai ledger stale      - detect tasks older than 72h with no update
-#   kai ledger compact    - archive old entries (>30 days) into archives
-#   kai ledger patterns   - cross-reference known-issues with recent logs
-#   kai ledger report     - run all phases and produce summary report
+#   kai dex validate   - validate all JSONL files for integrity
+#   kai dex stale      - detect tasks older than 72h with no update
+#   kai dex compact    - archive old entries (>30 days) into archives
+#   kai dex patterns   - cross-reference known-issues with recent logs
+#   kai dex report     - run all phases and produce summary report
 #
 
 set -uo pipefail
 
 # ---- Setup ------------------------------------------------------------------
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-LEDGER_HOME="$ROOT/agents/ledger"
-LEDGER_LOGS="$LEDGER_HOME/logs"
-LEDGER_ACTIVE="$LEDGER_HOME/ledger/ACTIVE.md"
-LEDGER_LOG="$LEDGER_HOME/ledger/log.jsonl"
+DEX_HOME="$ROOT/agents/dex"
+DEX_LOGS="$DEX_HOME/logs"
+DEX_ACTIVE="$DEX_HOME/ledger/ACTIVE.md"
+DEX_LOG="$DEX_HOME/ledger/log.jsonl"
 
 KAI_LEDGER="$ROOT/kai/ledger"
 NEL_LEDGER="$ROOT/agents/nel/ledger"
@@ -28,10 +28,10 @@ SAM_LEDGER="$ROOT/agents/sam/ledger"
 
 TODAY=$(date +%Y-%m-%d)
 NOW_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-REPORT="$LEDGER_LOGS/ledger-$TODAY.md"
-ACTIVITY_LOG="$LEDGER_LOGS/ledger-activity-$TODAY.jsonl"
+REPORT="$DEX_LOGS/dex-$TODAY.md"
+ACTIVITY_LOG="$DEX_LOGS/dex-activity-$TODAY.jsonl"
 
-mkdir -p "$LEDGER_LOGS" "$LEDGER_HOME/ledger"
+mkdir -p "$DEX_LOGS" "$DEX_HOME/ledger"
 
 # ---- Dispatch sourcing for flag/report commands ----------------------------
 DISPATCH_SH="$ROOT/bin/dispatch.sh"
@@ -39,7 +39,7 @@ DISPATCH_SH="$ROOT/bin/dispatch.sh"
 dispatch_flag() {
   local severity="$1" title="$2"
   if [[ -f "$DISPATCH_SH" ]]; then
-    bash "$DISPATCH_SH" flag ledger "$severity" "$title" 2>/dev/null || true
+    bash "$DISPATCH_SH" flag dex "$severity" "$title" 2>/dev/null || true
   fi
 }
 
@@ -67,7 +67,7 @@ log_fail() { printf '%s✗%s %s\n' "$RED" "$RST" "$*" | tee -a "$REPORT"; }
 log_activity() {
   local phase="$1" status="$2" details="${3:-}"
   local entry=$(cat <<JSEOF
-{"ts":"$NOW_ISO","phase":"$phase","status":"$status","details":"$details","agent":"ledger.hyo"}
+{"ts":"$NOW_ISO","phase":"$phase","status":"$status","details":"$details","agent":"dex.hyo"}
 JSEOF
 )
   echo "$entry" >> "$ACTIVITY_LOG" 2>/dev/null || true
@@ -75,17 +75,17 @@ JSEOF
 
 # ---- Report Header ----------------------------------------------------------
 cat > "$REPORT" <<EOF
-# Ledger System Maintenance Report
+# Dex System Maintenance Report
 
 **Date:** $TODAY ($NOW_ISO)
-**Agent:** ledger.hyo v1.0.0
+**Agent:** dex.hyo v1.0.0
 **Reports to:** Kai (CEO)
 
 ---
 
 ## Executive Summary
 
-Ledger conducts daily system memory validation, compaction, pattern detection, and integrity audits.
+Dex conducts daily system memory validation, compaction, pattern detection, and integrity audits.
 This report summarizes findings across all agent ledgers (kai, nel, ra, sam).
 Corrupt entries, stale tasks, and recurrent patterns are flagged for Kai action.
 
@@ -93,7 +93,7 @@ Corrupt entries, stale tasks, and recurrent patterns are flagged for Kai action.
 
 EOF
 
-log_info "ledger.hyo daily run start"
+log_info "dex.hyo daily run start"
 
 # ============================================================================
 # PHASE 1: INTEGRITY VALIDATION
@@ -162,8 +162,8 @@ validate_jsonl "$SAM_LEDGER/log.jsonl" "sam" || true
 validate_jsonl "$KAI_LEDGER/known-issues.jsonl" "kai:known-issues" || true
 validate_jsonl "$KAI_LEDGER/simulation-outcomes.jsonl" "kai:simulation-outcomes" || true
 
-# Validate ledger's own log
-validate_jsonl "$LEDGER_LOG" "ledger" || true
+# Validate dex's own ledger log
+validate_jsonl "$DEX_LOG" "dex" || true
 
 # Report Phase 1 results
 {
@@ -183,7 +183,7 @@ validate_jsonl "$LEDGER_LOG" "ledger" || true
 
 if [[ $INTEGRITY_FAIL -gt 0 ]]; then
   log_activity "PHASE_1_INTEGRITY" "failed" "Found $INTEGRITY_FAIL corrupt JSONL files"
-  dispatch_flag "P0" "Ledger Phase 1 FAILED: $INTEGRITY_FAIL JSONL files have corrupt entries"
+  dispatch_flag "P0" "Dex Phase 1 FAILED: $INTEGRITY_FAIL JSONL files have corrupt entries"
 else
   log_activity "PHASE_1_INTEGRITY" "passed" "All JSONL files validated successfully"
   log_pass "Phase 1 complete: All JSONL files valid"
@@ -254,7 +254,7 @@ check_stale_tasks "$SAM_LEDGER/ACTIVE.md" "sam" || true
 
 if [[ $STALE_COUNT -gt 0 ]]; then
   log_activity "PHASE_2_STALE" "found" "$STALE_COUNT tasks older than 72h"
-  dispatch_flag "P1" "Ledger Phase 2: Found $STALE_COUNT stale tasks (>72h without update)"
+  dispatch_flag "P1" "Dex Phase 2: Found $STALE_COUNT stale tasks (>72h without update)"
 else
   log_activity "PHASE_2_STALE" "passed" "No stale tasks detected"
   log_pass "Phase 2 complete: No stale tasks detected"
@@ -360,7 +360,7 @@ compact_log "$KAI_LEDGER/log.jsonl" "kai" || true
 compact_log "$NEL_LEDGER/log.jsonl" "nel" || true
 compact_log "$RA_LEDGER/log.jsonl" "ra" || true
 compact_log "$SAM_LEDGER/log.jsonl" "sam" || true
-compact_log "$LEDGER_LOG" "ledger" || true
+compact_log "$DEX_LOG" "dex" || true
 
 # Report Phase 3 results
 {
@@ -546,7 +546,7 @@ fi
 
 if [[ $PATTERNS_FOUND -gt 0 ]]; then
   log_activity "PHASE_4_PATTERNS" "found" "$PATTERNS_FOUND recurrent patterns detected"
-  dispatch_flag "P1" "Ledger Phase 4: $PATTERNS_FOUND recurrent patterns detected — check safeguard status"
+  dispatch_flag "P1" "Dex Phase 4: $PATTERNS_FOUND recurrent patterns detected — check safeguard status"
 else
   log_activity "PHASE_4_PATTERNS" "passed" "No recurrent patterns detected"
   log_pass "Phase 4 complete: No recurrent patterns detected"
@@ -605,10 +605,10 @@ log_pass "Phase 5 complete: Report generated and dispatch sent"
 # ============================================================================
 log_info "Dispatching daily summary to Kai"
 
-dispatch_report "ledger-daily" "COMPLETED" "Integrity: $INTEGRITY_PASS files validated, $INTEGRITY_FAIL issues. Stale: $STALE_COUNT tasks >72h. Patterns: $PATTERNS_FOUND recurrent. See $REPORT for details."
+dispatch_report "dex-daily" "COMPLETED" "Integrity: $INTEGRITY_PASS files validated, $INTEGRITY_FAIL issues. Stale: $STALE_COUNT tasks >72h. Patterns: $PATTERNS_FOUND recurrent. See $REPORT for details."
 
 # Write final summary line
-log_info "ledger.hyo daily run complete — status: $STATUS"
+log_info "dex.hyo daily run complete — status: $STATUS"
 
 cat >> "$REPORT" <<EOF
 
@@ -616,7 +616,7 @@ cat >> "$REPORT" <<EOF
 
 **Report location:** $REPORT
 **Activity log:** $ACTIVITY_LOG
-**Agent:** ledger.hyo v1.0.0
+**Agent:** dex.hyo v1.0.0
 **Next scheduled run:** $(date -u -d "24 hours" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+24H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)
 
 EOF

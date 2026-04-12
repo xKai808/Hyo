@@ -80,7 +80,7 @@ SENTINEL_FAIL=0
 SENTINEL_FINDINGS=""
 
 # Find most recent sentinel reports across all projects
-for project in hyo aurora-ra aetherbot kai-ceo; do
+for project in hyo aurora-ra aether kai-ceo; do
   proj_dir="$CONSOLIDATION/$project"
   if [[ -d "$proj_dir" ]]; then
     # Read the most recent history entry

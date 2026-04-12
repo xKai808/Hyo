@@ -1,4 +1,4 @@
-// /api/aetherbot — Aetherbot trade ingestion + metrics API
+// /api/aether — Aether trade ingestion + metrics API
 //
 // Routes (via ?action= query param):
 //   POST ?action=trade    { trade }        → records a trade (founder-token gated)
@@ -7,8 +7,8 @@
 //   GET  (no action)                       → returns service status
 
 // ─── In-memory metrics store ───
-if (!globalThis.__aetherbot) {
-  globalThis.__aetherbot = {
+if (!globalThis.__aether) {
+  globalThis.__aether = {
     currentWeek: {
       start: "", end: "",
       startingBalance: 1000, currentBalance: 1000,
@@ -23,7 +23,7 @@ if (!globalThis.__aetherbot) {
   };
 }
 
-function getStore() { return globalThis.__aetherbot; }
+function getStore() { return globalThis.__aether; }
 
 function mtnNow() {
   return new Date().toLocaleString("sv-SE", { timeZone: "America/Denver" }).replace(" ", "T") + "-06:00";
@@ -33,7 +33,7 @@ function todayMTN() {
   return new Date().toLocaleDateString("sv-SE", { timeZone: "America/Denver" });
 }
 
-// ─── Trade recording logic (mirrors aetherbot.sh) ───
+// ─── Trade recording logic (mirrors aether.sh) ───
 function recordTrade(trade) {
   const store = getStore();
   const cw = store.currentWeek;
@@ -136,7 +136,7 @@ export default function handler(req, res) {
     const store = getStore();
     return res.status(200).json({
       ok: true,
-      service: "aetherbot",
+      service: "aether",
       trades: store.currentWeek.trades,
       balance: store.currentWeek.currentBalance,
       updatedAt: store.updatedAt,

@@ -79,7 +79,7 @@ out.txt
 - All runners have corresponding consolidation projects and KAI_BRIEF entries
 - Aetherbot consolidation exists (nel/, sam/ are newer additions that expanded the 4-project system to include per-agent consolidations)
 
-**Note:** The consolidation structure is now 6 projects (4 functional: hyo, aurora-ra, kai-ceo, aetherbot + 2 agent-specific: nel, sam). This is a valid expansion but should be documented in the next KAI_BRIEF update.
+**Note:** The consolidation structure is now 6 projects (4 functional: hyo, aurora-ra, kai-ceo, aether + 2 agent-specific: nel, sam). This is a valid expansion but should be documented in the next KAI_BRIEF update.
 
 ### 2. Cipher Logs
 **Status:** Retention correct. No action needed.

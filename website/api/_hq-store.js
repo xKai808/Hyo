@@ -13,7 +13,7 @@ if (!globalThis.__hq) {
     cipher: {},     // { lastRun, secretsDir, founderToken, leaks }
     sim: {},        // { lastRun, briefs, errors, wallTime, report }
     consolidation: {},  // { lastRun, briefSynced, tasksSynced }
-    aetherbot: {},  // { lastRun, status }
+    aether: {},  // { lastRun, status }
     health: {},     // { apiOk, tokenOk, deployOk }
   };
 }

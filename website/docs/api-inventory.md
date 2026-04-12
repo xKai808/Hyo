@@ -26,7 +26,7 @@ Location: `agents/sam/website/api/`
 - **Method:** GET
 - **Auth:** Session token via `Authorization: Bearer`
 - **Purpose:** Returns full HQ dashboard state snapshot.
-- **Response:** `{ ok, ts, ...store }` — includes ra, aurora, sentinel, cipher, sim, consolidation, aetherbot, health sections.
+- **Response:** `{ ok, ts, ...store }` — includes ra, aurora, sentinel, cipher, sim, consolidation, aether, health sections.
 
 ### /api/hq-push
 - **File:** `hq-push.js`
@@ -81,7 +81,7 @@ Location: `agents/sam/website/api/`
 - **Type:** Internal module (not an endpoint)
 - **Exports:** `getStore()`, `pushEvent(agent, msg)`, `updateSection(section, data)`
 - **Storage:** In-memory via `globalThis.__hq`. Resets on cold start.
-- **Sections:** events, ra, aurora, sentinel, cipher, sim, consolidation, aetherbot, health
+- **Sections:** events, ra, aurora, sentinel, cipher, sim, consolidation, aether, health
 
 ## Auth Patterns Summary
 

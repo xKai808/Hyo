@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
-# agents/aetherbot/aetherbot.sh — Aetherbot metrics collector + HQ uploader
+# agents/aether/aether.sh — Aether metrics collector + HQ uploader
 #
 # Runs on a schedule (every 15 min via launchd/cron). Does three things:
 #   1. Reads trade data from the configured exchange/source
-#   2. Updates website/data/aetherbot-metrics.json (consumed by HQ dashboard)
+#   2. Updates website/data/aether-metrics.json (consumed by HQ dashboard)
 #   3. Pushes summary to HQ API (so live dashboard updates without redeploy)
 #
 # Monday reset: at 00:00 MT on Monday, current week → last week, current resets.
 #
 # Usage:
-#   bash aetherbot.sh              # normal metrics update
-#   bash aetherbot.sh --reset      # force Monday reset (manual)
-#   bash aetherbot.sh --record-trade '{"side":"buy","pair":"BTC/USD","price":67500,"qty":0.01,"pnl":12.50}'
+#   bash aether.sh              # normal metrics update
+#   bash aether.sh --reset      # force Monday reset (manual)
+#   bash aether.sh --record-trade '{"side":"buy","pair":"BTC/USD","price":67500,"qty":0.01,"pnl":12.50}'
 #
 # Env vars:
 #   HYO_ROOT           — project root (default: ~/Documents/Projects/Hyo)
-#   AETHERBOT_SOURCE   — data source: "file" (default), "ccxt", "manual"
-#   AETHERBOT_EXCHANGE  — exchange for ccxt mode (e.g., "binance", "coinbase")
-#   AETHERBOT_API_KEY   — exchange API key (read-only!)
-#   AETHERBOT_API_SECRET — exchange API secret
+#   AETHER_SOURCE   — data source: "file" (default), "ccxt", "manual"
+#   AETHER_EXCHANGE  — exchange for ccxt mode (e.g., "binance", "coinbase")
+#   AETHER_API_KEY   — exchange API key (read-only!)
+#   AETHER_API_SECRET — exchange API secret
 
 set -uo pipefail
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-METRICS="$ROOT/website/data/aetherbot-metrics.json"
-TRADES_LOG="$ROOT/agents/aetherbot/ledger/trades.jsonl"
-LOGS="$ROOT/agents/aetherbot/logs"
+METRICS="$ROOT/website/data/aether-metrics.json"
+TRADES_LOG="$ROOT/agents/aether/ledger/trades.jsonl"
+LOGS="$ROOT/agents/aether/logs"
 SECRETS="$ROOT/agents/nel/security"
 
 mkdir -p "$LOGS" "$(dirname "$TRADES_LOG")"
 
-LOG="$LOGS/aetherbot-$(date +%Y-%m-%d).log"
+LOG="$LOGS/aether-$(date +%Y-%m-%d).log"
 TS=$(TZ="America/Denver" date +"%Y-%m-%dT%H:%M:%S-06:00")
 
 log() { echo "[$TS] $*" | tee -a "$LOG"; }
@@ -206,6 +206,76 @@ print(f"Trade recorded: {trade.get('pair','')} {trade.get('side','')} PNL={pnl}"
 PYEOF
 }
 
+# ─── GPT Fact-Check ──────────────────────────────────────────────────────────
+# Aether owns all GPT/OpenAI API calls for trade verification.
+# Kai does NOT call GPT. If something needs external LLM validation,
+# it routes through Aether.
+#
+# Usage: fact_check "Is BTC/USD above the 200-day MA?" → returns GPT's answer
+# Usage: fact_check_trade '{"pair":"BTC/USD","side":"buy","pnl":12.50}' → validates trade logic
+#
+fact_check() {
+  local question="$1"
+  local api_key_file="$SECRETS/openai.key"
+
+  if [[ ! -f "$api_key_file" ]]; then
+    log "WARN: no OpenAI API key at $api_key_file — fact-check skipped"
+    echo '{"status":"skipped","reason":"no API key"}'
+    return 0
+  fi
+
+  local api_key
+  api_key=$(cat "$api_key_file" | tr -d '[:space:]')
+
+  local response
+  response=$(curl -sf -X POST "https://api.openai.com/v1/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $api_key" \
+    -d "$(python3 -c "
+import json
+print(json.dumps({
+    'model': 'gpt-4o-mini',
+    'messages': [
+        {'role': 'system', 'content': 'You are a trading fact-checker for a portfolio intelligence system called Aether. Give concise, data-driven answers. If you cannot verify something, say so clearly. Always include confidence level (high/medium/low).'},
+        {'role': 'user', 'content': '''$question'''}
+    ],
+    'max_tokens': 500,
+    'temperature': 0.2
+}))
+")" 2>> "$LOG")
+
+  if [[ -z "$response" ]]; then
+    log "WARN: GPT fact-check failed (empty response)"
+    echo '{"status":"error","reason":"empty response"}'
+    return 1
+  fi
+
+  local answer
+  answer=$(echo "$response" | python3 -c "
+import json, sys
+try:
+    r = json.load(sys.stdin)
+    print(r['choices'][0]['message']['content'])
+except Exception as e:
+    print(f'Parse error: {e}')
+")
+
+  log "Fact-check result: ${answer:0:200}"
+  echo "$answer"
+}
+
+# Validate a trade against market conditions before recording
+fact_check_trade() {
+  local trade_json="$1"
+  local pair side pnl strategy
+  pair=$(echo "$trade_json" | python3 -c "import json,sys; print(json.loads(sys.stdin.read()).get('pair','unknown'))")
+  side=$(echo "$trade_json" | python3 -c "import json,sys; print(json.loads(sys.stdin.read()).get('side','unknown'))")
+  pnl=$(echo "$trade_json" | python3 -c "import json,sys; print(json.loads(sys.stdin.read()).get('pnl',0))")
+  strategy=$(echo "$trade_json" | python3 -c "import json,sys; print(json.loads(sys.stdin.read()).get('strategy','unknown'))")
+
+  fact_check "Trade validation request: $pair $side with PNL \$$pnl using $strategy strategy. Does this trade make sense given current market conditions? Flag any concerns about size, direction, or timing."
+}
+
 # ─── Push to HQ API ──────────────────────────────────────────────────────────
 push_to_hq() {
   local token_file="$SECRETS/founder.token"
@@ -227,7 +297,7 @@ push_to_hq() {
   payload=$(python3 -c "
 import json
 print(json.dumps({
-    'agent': 'aetherbot',
+    'agent': 'aether',
     'event': 'metrics update',
     'data': {
         'balance': $balance,
@@ -249,7 +319,7 @@ print(json.dumps({
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
 main() {
-  log "=== Aetherbot metrics run ==="
+  log "=== Aether metrics run ==="
 
   # Init metrics file if missing
   if [[ ! -f "$METRICS" ]]; then
@@ -283,9 +353,28 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
   # Check for Monday reset
   check_monday_reset "$@"
 
-  # Handle --record-trade
+  # Handle --fact-check (standalone query to GPT)
+  if [[ "${1:-}" == "--fact-check" ]]; then
+    fact_check "${2:-'What are the current market conditions?'}"
+    return 0
+  fi
+
+  # Handle --record-trade (optional: add --verify flag to fact-check before recording)
   if [[ "${1:-}" == "--record-trade" ]]; then
-    record_trade "${2:-'{}'}"
+    local trade_data="${2:-'{}'}"
+
+    # If --verify flag is present, fact-check before recording
+    if [[ "${3:-}" == "--verify" ]]; then
+      log "Pre-trade fact-check requested"
+      local check_result
+      check_result=$(fact_check_trade "$trade_data")
+      log "Fact-check: $check_result"
+      # Log the verification but always record — Aether doesn't block trades,
+      # it annotates them with intelligence
+      echo "$check_result"
+    fi
+
+    record_trade "$trade_data"
     push_to_hq
     return 0
   fi
@@ -299,7 +388,26 @@ d['updatedAt'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S-06:00')
 with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
 "
   push_to_hq
+
+  # ─── Dispatch reporting (closed-loop) ──────────────────────────────────────
+  local dispatch_bin="$ROOT/bin/dispatch.sh"
+  if [[ -x "$dispatch_bin" ]]; then
+    local trade_count pnl_total
+    trade_count=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['trades'])" 2>/dev/null || echo "0")
+    pnl_total=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['pnl'])" 2>/dev/null || echo "0")
+    bash "$dispatch_bin" report aether "cycle complete: ${trade_count} trades, PNL=\$${pnl_total}" 2>> "$LOG" || true
+  fi
+
   log "Metrics cycle complete"
 }
+
+# ─── Error trap for dispatch flagging ────────────────────────────────────────
+trap_error() {
+  local dispatch_bin="$ROOT/bin/dispatch.sh"
+  if [[ -x "$dispatch_bin" ]]; then
+    bash "$dispatch_bin" flag aether P2 "aether.sh exited with error" 2>/dev/null || true
+  fi
+}
+trap trap_error ERR
 
 main "$@"

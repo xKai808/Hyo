@@ -76,7 +76,7 @@ Hyo/
 │   │   │   ├── consolidate.sh
 │   │   │   ├── hyo/
 │   │   │   ├── aurora-ra/
-│   │   │   ├── aetherbot/
+│   │   │   ├── aether/
 │   │   │   └── kai-ceo/
 │   │   └── memory/              ← sentinel + cipher state
 │   ├── ra/                      ← Ra: newsletter product manager

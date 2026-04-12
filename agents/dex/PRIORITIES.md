@@ -1,7 +1,7 @@
-# Ledger Agent — Operational Priorities
+# Dex Agent — Operational Priorities
 
 **Last updated:** 2026-04-12  
-**Agent:** ledger.hyo v1.0.0
+**Agent:** dex.hyo v1.0.0
 
 ---
 
@@ -10,13 +10,13 @@
 ### P0: JSONL Integrity Validation
 - **Goal:** Ensure all .jsonl ledger files are structurally sound and can be reliably parsed
 - **Scope:** kai/ledger/*.jsonl, agents/*/ledger/log.jsonl, known-issues.jsonl, simulation-outcomes.jsonl
-- **Cadence:** Daily (Phase 1 of ledger.sh)
+- **Cadence:** Daily (Phase 1 of dex.sh)
 - **Success criteria:**
   - All JSONL files parse without errors
   - All entries have required fields: ts, action/type, agent
   - No truncated or corrupt lines
 - **Failure handling:** Dispatch P0 flag to Kai immediately; do not proceed with other phases until fixed
-- **Tool:** ledger.sh Phase 1 (INTEGRITY)
+- **Tool:** dex.sh Phase 1 (INTEGRITY)
 
 ---
 
@@ -25,25 +25,25 @@
 ### P1: Stale Task Detection
 - **Goal:** Identify tasks that have been delegated but not updated for >72 hours, escalate for unblocking or closure
 - **Scope:** All ACTIVE.md files in kai/ledger/, agents/*/ledger/
-- **Cadence:** Daily (Phase 2 of ledger.sh)
+- **Cadence:** Daily (Phase 2 of dex.sh)
 - **Definition of stale:** Delegated timestamp >72 hours ago with no recent status update
 - **Action:** Flag stale tasks to Kai via dispatch escalate for follow-up
 - **Success criteria:**
   - All open tasks with age >72h are identified and flagged
   - Kai receives actionable list for unblocking
-- **Tool:** ledger.sh Phase 2 (STALE TASKS)
+- **Tool:** dex.sh Phase 2 (STALE TASKS)
 
 ### P1: Log Compaction Automation
 - **Goal:** Archive old log entries (>30 days) into dated archive files to keep active logs lean and queryable
-- **Scope:** log.jsonl files in all ledgers (kai, nel, ra, sam, ledger)
-- **Cadence:** Weekly (Phase 3 of ledger.sh, runs during daily execution but targets 30-day threshold)
+- **Scope:** log.jsonl files in all ledgers (kai, nel, ra, sam, dex)
+- **Cadence:** Weekly (Phase 3 of dex.sh, runs during daily execution but targets 30-day threshold)
 - **Archive naming:** log-archive-YYYY-MM.jsonl (one per month per ledger)
 - **Retention:** Keep active log trimmed to ~7-14 days of entries
 - **Success criteria:**
   - All entries >30 days old are moved to archive
   - Recent entries remain in active log.jsonl for fast queries
   - Archive files are readable and indexed
-- **Tool:** ledger.sh Phase 3 (COMPACTION)
+- **Tool:** dex.sh Phase 3 (COMPACTION)
 
 ---
 
@@ -52,14 +52,14 @@
 ### P2: Pattern Detection & Recurrence Tracking
 - **Goal:** Cross-reference known-issues.jsonl with recent log entries to detect if resolved issues have re-occurred
 - **Scope:** known-issues.jsonl vs recent entries in all agent logs
-- **Cadence:** Daily (Phase 4 of ledger.sh)
+- **Cadence:** Daily (Phase 4 of dex.sh)
 - **Detection method:** Substring matching on description/title fields; flag if same pattern found in logs within 7-day window
 - **Action:** Flag recurrence to Kai with details on safeguard status (when was prevention deployed, is it still active)
 - **Success criteria:**
   - All known patterns are tracked
   - Recurrences are detected within 24h of happening
   - Safeguard cascade is triggered if pattern recurs
-- **Tool:** ledger.sh Phase 4 (PATTERNS)
+- **Tool:** dex.sh Phase 4 (PATTERNS)
 
 ---
 
@@ -68,7 +68,7 @@
 ### P3: Enhanced Pattern Detection & Regression Tracking
 - **Goal:** Improve pattern detection algorithm to detect higher-order patterns (N-grams, sequence patterns, similar error messages)
 - **Scope:** Full cross-agent log analysis
-- **Cadence:** Weekly (separate enhanced analysis, not part of daily ledger.sh)
+- **Cadence:** Weekly (separate enhanced analysis, not part of daily dex.sh)
 - **Methods:**
   - Fuzzy string matching for similar error messages (Levenshtein distance)
   - Sequence analysis: tasks that always fail in same order
@@ -84,7 +84,7 @@
 
 ## Operational Guidelines
 
-### Daily Execution (ledger.sh)
+### Daily Execution (dex.sh)
 1. **Phase 1: Integrity** — Must pass. If corrupt entries found, dispatch P0 flag and halt.
 2. **Phase 2: Stale Tasks** — Scan and flag. Prepare list for Kai escalation.
 3. **Phase 3: Compaction** — Archive old entries. Run even if phases 1-2 flag issues.
@@ -97,7 +97,7 @@
 - **Safeguard cascade:** When known pattern recurs → Nel audit + Sam test coverage + memory log update
 
 ### Integration with dispatch.sh
-- `dispatch flag ledger <severity> <title>` — escalate issues to Kai
+- `dispatch flag dex <severity> <title>` — escalate issues to Kai
 - `dispatch report <task_id> <status> <result>` — acknowledge completion and provide details
 - `dispatch safeguard <issue_id> <description>` — trigger parallel prevention (Nel + Sam + memory)
 
@@ -105,7 +105,7 @@
 - **Limitation:** Substring matching for patterns can produce false positives
   - *Mitigation:* Manual review by Kai before declaring pattern recurrence
 - **Limitation:** Stale task detection relies on ACTIVE.md being kept current
-  - *Mitigation:* Kai is responsible for updating ACTIVE.md; Ledger flags if detected as stale
+  - *Mitigation:* Kai is responsible for updating ACTIVE.md; Dex flags if detected as stale
 - **Limitation:** Compaction timing can be affected by large log files
   - *Mitigation:* Run compaction during low-activity hours (03:00 MT daily)
 
@@ -125,8 +125,8 @@
 
 ## Contact & Escalation
 
-**Agent:** ledger.hyo v1.0.0  
+**Agent:** dex.hyo v1.0.0  
 **Reports to:** Kai (CEO)  
 **Escalation path:** dispatch flag → Kai review → dispatch safeguard (if needed)  
 **Schedule:** Daily 03:00 MT (after nightly consolidation)  
-**Manual invocation:** `kai ledger [validate|stale|compact|patterns|report]`
+**Manual invocation:** `kai dex [validate|stale|compact|patterns|report]`

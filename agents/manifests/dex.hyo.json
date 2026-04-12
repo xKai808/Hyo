@@ -1,6 +1,6 @@
 {
   "$schema": "https://hyo.world/schemas/agent/v1.json",
-  "name": "ledger.hyo",
+  "name": "dex.hyo",
   "description": "System memory manager — owns integrity, compaction, indexing, pattern detection, and recall for ALL agent ledgers.",
   "version": "1.0.0",
   "created": "2026-04-12",
@@ -34,7 +34,7 @@
   },
   "identity": {
     "displayName": "Ledger",
-    "handle": "ledger.hyo",
+    "handle": "dex.hyo",
     "tagline": "System memory keeper. Integrity, compaction, pattern detection.",
     "description": "Ledger is the system memory manager for hyo.world. Ledger owns all agent ledgers, validation, compaction, pattern detection, and recall. Ensures no task is lost, no work is duplicated, and every delegation has clear lifecycle tracking. Identifies stale tasks, detects recurrence patterns, maintains integrity across kai/ledger/, agents/*/ledger/, and all .jsonl files. Reports to Kai. Runs autonomously via cron; also callable via `kai ledger`.",
     "role": "memory-manager",
@@ -99,8 +99,8 @@
     "agents/ra/ledger/ACTIVE.md",
     "agents/sam/ledger/log.jsonl",
     "agents/sam/ledger/ACTIVE.md",
-    "agents/ledger/ledger/log.jsonl",
-    "agents/ledger/ledger/ACTIVE.md"
+    "agents/dex/ledger/log.jsonl",
+    "agents/dex/ledger/ACTIVE.md"
   ],
   "commands": {
     "validate": "validate all JSONL files (kai/ledger/*.jsonl, agents/*/ledger/log.jsonl) — check valid JSON per line, check required fields, report corrupt lines",
@@ -112,7 +112,7 @@
   "outputs": [
     {
       "name": "integrity-report",
-      "path": "~/Documents/Projects/Hyo/agents/ledger/logs/ledger-YYYY-MM-DD.md",
+      "path": "~/Documents/Projects/Hyo/agents/dex/logs/dex-YYYY-MM-DD.md",
       "format": "markdown",
       "fields": [
         "date",
@@ -126,7 +126,7 @@
     },
     {
       "name": "activity-log",
-      "path": "~/Documents/Projects/Hyo/agents/ledger/logs/ledger-activity-YYYY-MM-DD.jsonl",
+      "path": "~/Documents/Projects/Hyo/agents/dex/logs/dex-activity-YYYY-MM-DD.jsonl",
       "format": "jsonl",
       "update": "append validation and maintenance operations"
     }
@@ -164,12 +164,12 @@
     }
   ],
   "pipeline": {
-    "entrypoint": "~/Documents/Projects/Hyo/agents/ledger/ledger.sh",
+    "entrypoint": "~/Documents/Projects/Hyo/agents/dex/dex.sh",
     "schedule": "0 3 * * *",
     "scheduleTimezone": "America/Denver",
     "scheduleNote": "Daily 03:00 MT — after nightly simulation/consolidation, before dawn work begins",
     "runtime": "bash",
-    "invocation": "kai ledger [validate|stale|compact|patterns|report]",
+    "invocation": "kai dex [validate|stale|compact|patterns|report]",
     "exitCodes": {
       "0": "success",
       "1": "validation warnings (corrupt entries found, stale tasks detected)",
@@ -190,7 +190,7 @@
       "muted": "rgba(232,213,183,0.55)"
     },
     "side": "HUMAN",
-    "signature": "Memory online · ledger.hyo"
+    "signature": "Memory online · dex.hyo"
   },
   "metadata": {
     "external_url": "https://hyo.world/agents/ledger",

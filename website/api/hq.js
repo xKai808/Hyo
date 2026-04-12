@@ -14,7 +14,7 @@ if (!globalThis.__hq) {
   globalThis.__hq = {
     events: [],
     ra: {}, aurora: {}, sentinel: {}, cipher: {},
-    sim: {}, consolidation: {}, aetherbot: {}, health: {},
+    sim: {}, consolidation: {}, aether: {}, health: {},
     credits: {},
   };
 }

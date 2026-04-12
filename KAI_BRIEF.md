@@ -301,7 +301,7 @@ Recommended next step on the Mini: `kai verify && ls -la .secrets/ newsletters/ 
 - `cipher-hyo-hourly` — `0 * * * *` MT — enabled, runs every :01
 - `nightly-consolidation` — `50 23 * * *` MT — enabled (now daily, was Sun-Thu)
 - `nightly-simulation` — `0 23 * * *` MT — enabled (now daily, was Sun-Thu)
-- `daily-aetherbot-analysis` — one-time 4/10 (completed)
+- `daily-aether-analysis` — one-time 4/10 (completed)
 
 ## Known blockers / open questions
 
