@@ -468,7 +468,8 @@
           <div class="d-row"><span class="d-label">Failed</span><span class="d-val" id="sentFailed" style="color:var(--dim)">--</span></div>
           <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="sentLastRun" style="color:var(--dim)">No data yet</span></div>
           <div class="btn-row">
-            <button class="btn primary" onclick="act('Running sentinel...')"><span class="ic">&#128737;</span> Run now</button>
+            <button class="btn primary" id="sentViewBtn" style="display:none" onclick="openDoc('sentinel')"><span class="ic">&#128196;</span> View report</button>
+            <button class="btn" onclick="act('Running sentinel...')"><span class="ic">&#128737;</span> Run now</button>
           </div>
         </div>
         <div class="card">
@@ -488,7 +489,8 @@
           <div class="d-row"><span class="d-label">Leaks found</span><span class="d-val" id="ciphLeaks" style="color:var(--dim)">--</span></div>
           <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="ciphLastRun" style="color:var(--dim)">No data yet</span></div>
           <div class="btn-row">
-            <button class="btn primary" onclick="act('Running cipher...')"><span class="ic">&#128274;</span> Scan now</button>
+            <button class="btn primary" id="ciphViewBtn" style="display:none" onclick="openDoc('cipher')"><span class="ic">&#128196;</span> View log</button>
+            <button class="btn" onclick="act('Running cipher...')"><span class="ic">&#128274;</span> Scan now</button>
           </div>
         </div>
         <div class="card">
