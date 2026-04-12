@@ -1,0 +1,236 @@
+{
+  "$schema": "https://hyo.world/schemas/agent/v1.json",
+  "name": "ledger.hyo",
+  "description": "System memory manager — owns integrity, compaction, indexing, pattern detection, and recall for ALL agent ledgers.",
+  "version": "1.0.0",
+  "created": "2026-04-12",
+  "updated": "2026-04-12",
+  "registry": {
+    "chain": "base",
+    "chainId": 8453,
+    "testnet": {
+      "chain": "base-sepolia",
+      "chainId": 84532
+    },
+    "contract": "HyoRegistry",
+    "tokenStandard": "ERC-721",
+    "status": "spec-only-not-yet-registered",
+    "founding": true,
+    "feesWaived": true,
+    "gasSubsidized": true,
+    "mintPath": "founder-register"
+  },
+  "credit": {
+    "tier": "founding",
+    "probationExempt": true,
+    "escrowHold": false,
+    "score": null
+  },
+  "pricing": {
+    "model": "internal",
+    "rate": 0,
+    "currency": "USD",
+    "billedTo": "hyo"
+  },
+  "identity": {
+    "displayName": "Ledger",
+    "handle": "ledger.hyo",
+    "tagline": "System memory keeper. Integrity, compaction, pattern detection.",
+    "description": "Ledger is the system memory manager for hyo.world. Ledger owns all agent ledgers, validation, compaction, pattern detection, and recall. Ensures no task is lost, no work is duplicated, and every delegation has clear lifecycle tracking. Identifies stale tasks, detects recurrence patterns, maintains integrity across kai/ledger/, agents/*/ledger/, and all .jsonl files. Reports to Kai. Runs autonomously via cron; also callable via `kai ledger`.",
+    "role": "memory-manager",
+    "archetype": "system",
+    "operator": "hyo",
+    "runsOn": "mini"
+  },
+  "capabilities": [
+    "validate:jsonl-integrity",
+    "validate:task-lifecycle",
+    "detect:stale-tasks",
+    "detect:corrupt-entries",
+    "detect:patterns",
+    "detect:regressions",
+    "compact:logs",
+    "archive:old-entries",
+    "index:task-metadata",
+    "surface:memory",
+    "deduplicate:entries",
+    "audit:task-status",
+    "cross-reference:patterns",
+    "track:safeguards"
+  ],
+  "inputs": [
+    {
+      "name": "kai_ledger",
+      "source": "dir:~/Documents/Projects/Hyo/kai/ledger/"
+    },
+    {
+      "name": "nel_ledger",
+      "source": "dir:~/Documents/Projects/Hyo/agents/nel/ledger/"
+    },
+    {
+      "name": "ra_ledger",
+      "source": "dir:~/Documents/Projects/Hyo/agents/ra/ledger/"
+    },
+    {
+      "name": "sam_ledger",
+      "source": "dir:~/Documents/Projects/Hyo/agents/sam/ledger/"
+    },
+    {
+      "name": "known_issues",
+      "source": "file:~/Documents/Projects/Hyo/kai/ledger/known-issues.jsonl"
+    },
+    {
+      "name": "simulation_outcomes",
+      "source": "file:~/Documents/Projects/Hyo/kai/ledger/simulation-outcomes.jsonl"
+    },
+    {
+      "name": "active_tasks",
+      "source": "glob:~/Documents/Projects/Hyo/agents/*/ledger/ACTIVE.md"
+    }
+  ],
+  "manages": [
+    "kai/ledger/log.jsonl",
+    "kai/ledger/known-issues.jsonl",
+    "kai/ledger/simulation-outcomes.jsonl",
+    "kai/ledger/safeguards.jsonl",
+    "agents/nel/ledger/log.jsonl",
+    "agents/nel/ledger/ACTIVE.md",
+    "agents/ra/ledger/log.jsonl",
+    "agents/ra/ledger/ACTIVE.md",
+    "agents/sam/ledger/log.jsonl",
+    "agents/sam/ledger/ACTIVE.md",
+    "agents/ledger/ledger/log.jsonl",
+    "agents/ledger/ledger/ACTIVE.md"
+  ],
+  "commands": {
+    "validate": "validate all JSONL files (kai/ledger/*.jsonl, agents/*/ledger/log.jsonl) — check valid JSON per line, check required fields, report corrupt lines",
+    "stale": "scan all ACTIVE.md files for tasks older than 72 hours with no update, flag them via dispatch",
+    "compact": "archive entries older than 30 days from log.jsonl files into log-archive-YYYY-MM.jsonl in the same directory",
+    "patterns": "scan known-issues.jsonl, cross-reference with recent log entries, detect if any known pattern has recurred",
+    "report": "write summary report and dispatch status to Kai"
+  },
+  "outputs": [
+    {
+      "name": "integrity-report",
+      "path": "~/Documents/Projects/Hyo/agents/ledger/logs/ledger-YYYY-MM-DD.md",
+      "format": "markdown",
+      "fields": [
+        "date",
+        "validation_status",
+        "corrupt_entries_found",
+        "stale_tasks_flagged",
+        "compaction_summary",
+        "patterns_detected",
+        "recommendations"
+      ]
+    },
+    {
+      "name": "activity-log",
+      "path": "~/Documents/Projects/Hyo/agents/ledger/logs/ledger-activity-YYYY-MM-DD.jsonl",
+      "format": "jsonl",
+      "update": "append validation and maintenance operations"
+    }
+  ],
+  "monitors": [
+    {
+      "id": "jsonl-integrity",
+      "description": "Validate every .jsonl file has valid JSON per line, required fields (ts, type/action, agent), no corrupt or truncated entries",
+      "frequency": "daily",
+      "priority": "P0"
+    },
+    {
+      "id": "stale-task-detection",
+      "description": "Scan all ACTIVE.md files for tasks older than 72 hours with no status update, flag via dispatch escalate",
+      "frequency": "daily",
+      "priority": "P0"
+    },
+    {
+      "id": "log-compaction",
+      "description": "Archive entries older than 30 days from log.jsonl into dated archive files, maintain indexing",
+      "frequency": "weekly",
+      "priority": "P1"
+    },
+    {
+      "id": "pattern-detection",
+      "description": "Cross-reference known-issues.jsonl with recent log entries, detect recurrence of known patterns, trigger safeguard cascade if pattern recurs",
+      "frequency": "daily",
+      "priority": "P1"
+    },
+    {
+      "id": "task-lifecycle-audit",
+      "description": "Verify task state transitions follow protocol (CREATED → DELEGATED → IN_PROGRESS → TESTING → VERIFIED → DONE), detect orphaned or stuck tasks",
+      "frequency": "daily",
+      "priority": "P2"
+    }
+  ],
+  "pipeline": {
+    "entrypoint": "~/Documents/Projects/Hyo/agents/ledger/ledger.sh",
+    "schedule": "0 3 * * *",
+    "scheduleTimezone": "America/Denver",
+    "scheduleNote": "Daily 03:00 MT — after nightly simulation/consolidation, before dawn work begins",
+    "runtime": "bash",
+    "invocation": "kai ledger [validate|stale|compact|patterns|report]",
+    "exitCodes": {
+      "0": "success",
+      "1": "validation warnings (corrupt entries found, stale tasks detected)",
+      "2": "critical issues (ledger integrity compromised)"
+    }
+  },
+  "safeguards": {
+    "backup": "Daily backup of kai/ledger/*.jsonl before compaction",
+    "archiveRetention": "Keep archived logs for 90 days, then consolidate to quarterly summaries",
+    "corruption_detection": "Any JSON parse failure triggers immediate P0 flag to Kai",
+    "pattern_cascades": "Recurrent pattern detection triggers dispatch safeguard cascade (Nel audit + Sam test coverage + memory log)"
+  },
+  "visual": {
+    "palette": {
+      "bg": "#080810",
+      "fg": "#e8d5b7",
+      "accent": "#c7a8d4",
+      "muted": "rgba(232,213,183,0.55)"
+    },
+    "side": "HUMAN",
+    "signature": "Memory online · ledger.hyo"
+  },
+  "metadata": {
+    "external_url": "https://hyo.world/agents/ledger",
+    "attributes": [
+      {
+        "trait_type": "Role",
+        "value": "Memory Manager"
+      },
+      {
+        "trait_type": "Archetype",
+        "value": "System"
+      },
+      {
+        "trait_type": "Cadence",
+        "value": "Daily"
+      },
+      {
+        "trait_type": "Side",
+        "value": "HUMAN"
+      },
+      {
+        "trait_type": "Runtime",
+        "value": "bash"
+      },
+      {
+        "trait_type": "Tier",
+        "value": "Founding"
+      },
+      {
+        "trait_type": "Origin",
+        "value": "Founder Registry"
+      },
+      {
+        "trait_type": "Fees",
+        "value": "Waived"
+      },
+      {
+        "trait_type": "Manages",
+        "value": "All Agent Ledgers"
+      }
+    ]
+  }
+}

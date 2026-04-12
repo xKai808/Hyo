@@ -44,7 +44,17 @@
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. The existing cron/launchd tasks on the Mini DO have full network access — that's where pipeline scripts with auto-push actually run.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-12 late night — HQ v8.1 live + pre-deploy safeguard)
+## Current state (as of 2026-04-13 early AM — MCP Zod fix + full repo restructure committed)
+
+**Shipped this session (sixth pass — MCP fix + infrastructure commit + ops audit):**
+- **MCP server Zod fix committed** (`8566d2a`): SDK v1.29.0 requires Zod schemas, not plain objects. All 8 tools converted. Server ready to re-run on Mini.
+- **Full repo restructure committed** (`324ce89`): 228 files — all agent code canonically under `agents/<name>/`, manifests under `agents/manifests/`, legacy files moved to `docs/legacy/`, symlinks for backward compat.
+- **2 new MCP tools: `ledger_query` + `ledger_lifecycle`** — recall any task's full lifecycle from Cowork. Search by ID, agent, status, or keyword.
+- **Ops audit completed** (`agents/ra/research/lab/ops-audit-2026-04-12.md`): 14 bottlenecks identified (B1–B14), severity ranked, all with automation fixes and owners assigned. Tasks created in KAI_TASKS.
+- **Nel auto-dispatch wired** — nel.sh now calls `dispatch flag` after each phase that finds failures. Findings no longer sit unread.
+- **Simulate-review built** — `dispatch simulate-review` reads simulation outcomes and auto-flags failures. Appended to nightly simulation.
+- **Aurora launchd plist built** (`agents/ra/com.hyo.aurora.plist`) — ready for Hyo to install.
+- **Automation Gate** permanently wired into AGENT_ALGORITHMS.md — every task asks "can this be automated?" before and after execution.
 
 **Shipped this session (fifth pass — HQ v8.1 + deployment safeguards):**
 - **HQ v8.1 deployed and verified live** on hyo.world/hq. Both commits (`bfcedf8` + `422e0f2`) confirmed READY on Vercel production.

@@ -1,0 +1,351 @@
+{
+  "$schema": "https://hyo.world/schemas/agent/v1.json",
+  "name": "aetherbot.hyo",
+  "description": "Trading metrics and portfolio intelligence agent — trade recording, weekly metrics aggregation, PNL tracking, win-rate calculation, strategy tagging, risk monitoring, and HQ dashboard auto-upload.",
+  "version": "1.0.0",
+  "created": "2026-04-12",
+  "updated": "2026-04-12",
+  "registry": {
+    "chain": "base",
+    "chainId": 8453,
+    "testnet": {
+      "chain": "base-sepolia",
+      "chainId": 84532
+    },
+    "contract": "HyoRegistry",
+    "tokenStandard": "ERC-721",
+    "status": "spec-only-not-yet-registered",
+    "founding": true,
+    "feesWaived": true,
+    "gasSubsidized": true,
+    "mintPath": "founder-register"
+  },
+  "credit": {
+    "tier": "founding",
+    "probationExempt": true,
+    "escrowHold": false,
+    "score": null
+  },
+  "pricing": {
+    "model": "internal",
+    "rate": 0,
+    "currency": "USD",
+    "billedTo": "hyo"
+  },
+  "identity": {
+    "displayName": "Aetherbot",
+    "handle": "aetherbot.hyo",
+    "tagline": "Trading metrics collector. Portfolio intelligence for Hyo.",
+    "description": "Aetherbot is the trading metrics and portfolio intelligence agent. Autonomous trade recorder responsible for portfolio monitoring, PNL tracking, win-rate calculation, strategy performance analysis, risk monitoring, and HQ dashboard updates. Runs on a 15-minute schedule via launchd. Records trades via API endpoint, aggregates weekly metrics (Monday reset), and pushes live metrics to HQ dashboard for real-time portfolio visibility. Reports directly to Kai.",
+    "role": "trading-metrics-collector",
+    "archetype": "monitor",
+    "operator": "hyo",
+    "runsOn": "launchd-15min"
+  },
+  "capabilities": [
+    "trade:recording",
+    "trade:batch-import",
+    "metrics:aggregation",
+    "metrics:weekly-reset",
+    "metrics:pnl-tracking",
+    "metrics:win-rate-calculation",
+    "strategy:tagging",
+    "strategy:performance-tracking",
+    "risk:monitoring",
+    "risk:stoploss-tracking",
+    "portfolio:balance-tracking",
+    "portfolio:daily-pnl",
+    "dashboard:auto-upload",
+    "hq:metrics-push",
+    "api:trade-ingestion",
+    "api:metrics-query"
+  ],
+  "inputs": [
+    {
+      "name": "trade_events",
+      "source": "api:/api/aetherbot?action=trade"
+    },
+    {
+      "name": "metrics_updates",
+      "source": "api:/api/aetherbot?action=metrics"
+    },
+    {
+      "name": "exchange_feeds",
+      "source": "env:AETHERBOT_SOURCE (file|ccxt|manual)"
+    },
+    {
+      "name": "current_metrics",
+      "source": "file:~/Documents/Projects/Hyo/website/data/aetherbot-metrics.json"
+    },
+    {
+      "name": "trades_ledger",
+      "source": "file:~/Documents/Projects/Hyo/agents/aetherbot/ledger/trades.jsonl"
+    }
+  ],
+  "commands": {
+    "metrics": "run standard 15-minute metrics cycle — read trades, update metrics JSON, push to HQ",
+    "record-trade": "record a single trade: --record-trade '{\"side\":\"buy\",\"pair\":\"BTC/USD\",\"price\":67500,\"qty\":0.01,\"pnl\":12.50,\"strategy\":\"GridBot\"}'",
+    "reset": "force Monday reset (manual trigger) — archive current week, start new week",
+    "status": "return current portfolio balance, PNL, trade count, and win rate"
+  },
+  "outputs": [
+    {
+      "name": "metrics-json",
+      "path": "~/Documents/Projects/Hyo/website/data/aetherbot-metrics.json",
+      "format": "json",
+      "fields": [
+        "currentWeek",
+        "lastWeek",
+        "allTimeStats",
+        "updatedAt"
+      ],
+      "consumed-by": "HQ dashboard, website/api/aetherbot.js"
+    },
+    {
+      "name": "trades-ledger",
+      "path": "~/Documents/Projects/Hyo/agents/aetherbot/ledger/trades.jsonl",
+      "format": "jsonl",
+      "fields": [
+        "timestamp",
+        "side",
+        "pair",
+        "price",
+        "qty",
+        "pnl",
+        "strategy",
+        "type"
+      ]
+    },
+    {
+      "name": "activity-log",
+      "path": "~/Documents/Projects/Hyo/agents/aetherbot/logs/aetherbot-YYYY-MM-DD.log",
+      "format": "text",
+      "fields": [
+        "timestamp",
+        "event",
+        "status"
+      ]
+    },
+    {
+      "name": "hq-push",
+      "path": "https://www.hyo.world/api/hq?action=push",
+      "format": "json",
+      "purpose": "Live metrics push to HQ dashboard (founder-token gated)"
+    }
+  ],
+  "pipeline": {
+    "entrypoint": "~/Documents/Projects/Hyo/agents/aetherbot/aetherbot.sh",
+    "schedule": "*/15 * * * *",
+    "scheduleTimezone": "America/Denver",
+    "scheduleNote": "Every 15 minutes, 24/7. Special: Monday 00:00 triggers weekly reset.",
+    "runtime": "bash + python3",
+    "launchd": {
+      "label": "com.hyo.aetherbot.plist",
+      "interval": 900,
+      "path": "~/Documents/Projects/Hyo/agents/aetherbot/com.hyo.aetherbot.plist"
+    },
+    "invocation": "bash ~/Documents/Projects/Hyo/agents/aetherbot/aetherbot.sh [--reset|--record-trade JSON]",
+    "note": "Runs via launchd on Mac. Auto-pushes metrics to HQ. Monday reset happens automatically at 00:00 MT."
+  },
+  "apiEndpoint": {
+    "path": "/api/aetherbot",
+    "methods": [
+      {
+        "method": "POST",
+        "action": "trade",
+        "auth": "x-founder-token",
+        "body": "{ \"trade\": { \"side\", \"pair\", \"price\", \"qty\", \"pnl\", \"strategy\", \"type\" } }",
+        "response": "{ ok, balance, pnl, trades }"
+      },
+      {
+        "method": "POST",
+        "action": "metrics",
+        "auth": "x-founder-token",
+        "body": "{ \"metrics\": { \"currentWeek\", \"lastWeek\", \"allTimeStats\" } }",
+        "response": "{ ok, ts }"
+      },
+      {
+        "method": "GET",
+        "action": "metrics",
+        "auth": "public",
+        "response": "full metrics object"
+      },
+      {
+        "method": "GET",
+        "action": "(none)",
+        "auth": "public",
+        "response": "service status (trades, balance, updatedAt)"
+      }
+    ]
+  },
+  "dataModel": {
+    "currentWeek": {
+      "start": "YYYY-MM-DD",
+      "end": "YYYY-MM-DD",
+      "startingBalance": "number",
+      "currentBalance": "number",
+      "pnl": "number (profit/loss)",
+      "pnlPercent": "number (% of starting balance)",
+      "trades": "integer",
+      "wins": "integer",
+      "losses": "integer",
+      "winRate": "number (0-100)",
+      "stoplossTriggers": "integer",
+      "harvestEvents": "integer",
+      "strategies": [
+        {
+          "name": "string",
+          "status": "active|standby",
+          "pnl": "number",
+          "trades": "integer",
+          "winRate": "number",
+          "lastAction": "ISO8601"
+        }
+      ],
+      "dailyPnl": [
+        {
+          "date": "YYYY-MM-DD",
+          "pnl": "number",
+          "balance": "number",
+          "trades": "integer"
+        }
+      ],
+      "recentTrades": [
+        {
+          "ts": "ISO8601",
+          "side": "buy|sell",
+          "pair": "string",
+          "price": "number",
+          "qty": "number",
+          "pnl": "number",
+          "strategy": "string",
+          "type": "market|stoploss|harvest"
+        }
+      ]
+    },
+    "lastWeek": "same structure as currentWeek + bestStrategy, worstStrategy",
+    "allTimeStats": {
+      "totalPnl": "number",
+      "totalTrades": "integer",
+      "weeklyHistory": [
+        {
+          "start": "YYYY-MM-DD",
+          "end": "YYYY-MM-DD",
+          "pnl": "number",
+          "trades": "integer",
+          "winRate": "number"
+        }
+      ]
+    },
+    "updatedAt": "ISO8601"
+  },
+  "environmentVariables": [
+    {
+      "name": "HYO_ROOT",
+      "default": "~/Documents/Projects/Hyo",
+      "description": "Project root directory"
+    },
+    {
+      "name": "AETHERBOT_SOURCE",
+      "default": "file",
+      "values": [
+        "file",
+        "ccxt",
+        "manual"
+      ],
+      "description": "Trade data source"
+    },
+    {
+      "name": "AETHERBOT_EXCHANGE",
+      "default": null,
+      "description": "Exchange name for CCXT mode (binance, coinbase, etc.)"
+    },
+    {
+      "name": "AETHERBOT_API_KEY",
+      "default": null,
+      "description": "Exchange API key (read-only recommended)"
+    },
+    {
+      "name": "AETHERBOT_API_SECRET",
+      "default": null,
+      "description": "Exchange API secret"
+    },
+    {
+      "name": "HYO_FOUNDER_TOKEN",
+      "source": "agents/nel/security/founder.token",
+      "description": "Founder token for HQ API authentication"
+    }
+  ],
+  "runtime": {
+    "environment": "launchd on Mac Mini",
+    "networkAccess": "full (API calls to exchange, HQ push)",
+    "filesystemAccess": "agents/aetherbot/, website/data/",
+    "sandboxRestrictions": "none"
+  },
+  "weeklyReset": {
+    "trigger": "Monday 00:00 MT",
+    "actions": [
+      "Move currentWeek → lastWeek",
+      "Archive currentWeek metrics to allTimeStats.weeklyHistory",
+      "Reset currentWeek counters (pnl, trades, wins, losses, winRate)",
+      "Carry forward currentBalance as next startingBalance",
+      "Reset strategies (pnl=0, trades=0, but keep name and status)"
+    ],
+    "manualTrigger": "aetherbot.sh --reset"
+  },
+  "visual": {
+    "palette": {
+      "bg": "#080810",
+      "fg": "#e8d5b7",
+      "accent": "#c9e4ca",
+      "muted": "rgba(232,213,183,0.55)"
+    },
+    "side": "HUMAN",
+    "signature": "Portfolio monitoring · aetherbot.hyo"
+  },
+  "metadata": {
+    "external_url": "https://hyo.world/agents/aetherbot",
+    "attributes": [
+      {
+        "trait_type": "Role",
+        "value": "Trading Metrics Collector"
+      },
+      {
+        "trait_type": "Archetype",
+        "value": "Monitor"
+      },
+      {
+        "trait_type": "Specialization",
+        "value": "Portfolio Intelligence"
+      },
+      {
+        "trait_type": "Side",
+        "value": "HUMAN"
+      },
+      {
+        "trait_type": "Runtime",
+        "value": "launchd"
+      },
+      {
+        "trait_type": "Schedule",
+        "value": "Every 15 minutes"
+      },
+      {
+        "trait_type": "Tier",
+        "value": "Founding"
+      },
+      {
+        "trait_type": "Origin",
+        "value": "Founder Registry"
+      },
+      {
+        "trait_type": "Fees",
+        "value": "Waived"
+      },
+      {
+        "trait_type": "Access",
+        "value": "Full Network + Filesystem"
+      }
+    ]
+  }
+}

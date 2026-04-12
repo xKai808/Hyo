@@ -433,3 +433,95 @@ WRITE ORDER (every session end):
   4. Ensure all ledger entries are committed
   5. dispatch health (final)
 ```
+
+---
+
+## Aetherbot — Trading Intelligence Algorithm
+
+```
+STARTUP:
+  1. Read agents/aetherbot/PRIORITIES.md
+  2. Read agents/aetherbot/ledger/ACTIVE.md
+  3. Check Monday reset (is it a new week? → archive lastWeek, reset currentWeek with balance carry)
+  4. Load current metrics from website/data/aetherbot-metrics.json
+
+CYCLE (every 15 minutes via launchd):
+  1. Check for new trade data (manual input via kai trade or API POST)
+  2. Update running totals: PNL, win rate, trade count, daily breakdown
+  3. Recalculate strategy performance table
+  4. Push metrics to HQ (/api/aetherbot?action=metrics)
+  5. Write local state to website/data/aetherbot-metrics.json
+  6. dispatch report aetherbot "cycle complete: $TRADE_COUNT trades, $PNL PNL"
+
+TRADE RECORDING:
+  1. Validate input JSON (pair, side, pnl, strategy required)
+  2. Append to ledger/trades.jsonl
+  3. Update currentWeek totals
+  4. IF pnl < -$50 → dispatch flag aetherbot P1 "significant loss: $pnl on $pair"
+  5. IF drawdown > 5% → dispatch flag aetherbot P0 "drawdown threshold breached"
+  6. Push updated metrics to HQ
+
+WEEKLY RESET (Monday 00:00 MT):
+  1. Copy currentWeek → lastWeek (preserve for dashboard comparison)
+  2. Reset currentWeek: zero PNL, zero trades, carry forward balance
+  3. Archive previous week to ledger/weekly-archive.jsonl
+  4. dispatch report aetherbot "weekly reset: last week $PNL_TOTAL ($WIN_RATE% W/R)"
+
+FAILURE MODES:
+  - API push fails → retry 3x, then dispatch flag P2 "HQ push failed"
+  - Invalid trade JSON → reject, log to ledger, do not corrupt metrics
+  - Monday reset missed → next cycle detects and runs it (idempotent check)
+```
+
+---
+
+## Ledger — System Memory Manager Algorithm
+
+```
+STARTUP:
+  1. Read agents/ledger/PRIORITIES.md
+  2. Read agents/ledger/ledger/ACTIVE.md
+  3. Enumerate all JSONL files: kai/ledger/*.jsonl + agents/*/ledger/log.jsonl
+
+PHASE 1 — INTEGRITY (run first, always):
+  1. For each .jsonl file:
+     a. Read every line, validate JSON parse
+     b. Check required fields: ts, type/action, agent
+     c. Count corrupt/incomplete lines
+  2. IF corrupt lines found → dispatch flag ledger P1 "N corrupt entries in FILE"
+  3. Report: total files, total entries, corrupt count
+
+PHASE 2 — STALE TASKS:
+  1. Scan all agents/*/ledger/ACTIVE.md files
+  2. For each task: check last-updated timestamp
+  3. IF task > 72h with no update → dispatch flag ledger P2 "stale task: TASK_ID in AGENT"
+  4. IF task > 7d → dispatch flag ledger P1 "abandoned task: TASK_ID — needs close or re-delegate"
+
+PHASE 3 — COMPACTION:
+  1. For each log.jsonl with entries older than 30 days:
+     a. Separate old entries → log-archive-YYYY-MM.jsonl
+     b. Keep recent entries in log.jsonl
+     c. Validate line counts: archived + remaining = original
+  2. Report: entries archived, space saved, files touched
+
+PHASE 4 — PATTERN DETECTION:
+  1. Read kai/ledger/known-issues.jsonl (known failure patterns)
+  2. Scan last 7 days of all log.jsonl entries
+  3. For each known pattern → check if it recurred
+  4. IF recurrence found → dispatch flag ledger P1 "regression: PATTERN_ID recurred in AGENT"
+  5. Look for NEW patterns: same error appearing 3+ times across agents
+
+PHASE 5 — REPORT:
+  1. Write summary to agents/ledger/logs/ledger-YYYY-MM-DD.md
+  2. dispatch report ledger "integrity: OK/WARN, stale: N, compacted: N, regressions: N"
+  3. Update agents/ledger/ledger/ACTIVE.md
+
+SCHEDULE: Daily at 23:00 MT (before nightly simulation at 23:30)
+  → Ledger validates data integrity BEFORE simulation reads it
+  → Simulation results feed back into ledger for next day's pattern check
+
+FAILURE MODES:
+  - Corrupt JSONL → quarantine line to .corrupt file, do not delete
+  - Compaction mismatch → abort, flag P0 "compaction integrity failure"
+  - Pattern match false positive → log but don't auto-escalate above P2
+```
