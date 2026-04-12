@@ -8,7 +8,17 @@
 
 set -euo pipefail
 
-ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+# Resolve Hyo root: honor HYO_ROOT, else auto-detect from script location, else $HOME default.
+if [[ -n "${HYO_ROOT:-}" ]]; then
+  ROOT="$HYO_ROOT"
+else
+  SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+  if [[ -f "$SCRIPT_DIR/../CLAUDE.md" && -d "$SCRIPT_DIR/../kai" ]]; then
+    ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+  else
+    ROOT="$HOME/Documents/Projects/Hyo"
+  fi
+fi
 LOGS="$ROOT/kai/logs"
 MEMORY="$ROOT/kai/memory"
 STATE="$MEMORY/cipher.state.json"
@@ -19,6 +29,14 @@ TODAY=$(date +%Y-%m-%d)
 HOURLY_LOG="$LOGS/cipher-$(date +%Y-%m-%dT%H).log"
 
 mkdir -p "$LOGS" "$MEMORY"
+
+# ---- portable stat wrapper (macOS BSD vs Linux GNU) ------------------------
+# Probe once: GNU stat supports -c, BSD stat supports -f.
+if stat -c %a / >/dev/null 2>&1; then
+  stat_mode() { stat -c %a "$1" 2>/dev/null; }
+else
+  stat_mode() { stat -f %Mp%Lp "$1" 2>/dev/null; }
+fi
 
 # ---- state bootstrap --------------------------------------------------------
 if [[ ! -f "$STATE" ]]; then
@@ -96,14 +114,14 @@ fi
 
 # ---- Layer 3: Filesystem hygiene (auto-fix) ---------------------------------
 if [[ -d "$ROOT/.secrets" ]]; then
-  SMODE=$(stat -f %Mp%Lp "$ROOT/.secrets" 2>/dev/null || stat -c %a "$ROOT/.secrets")
+  SMODE=$(stat_mode "$ROOT/.secrets")
   if [[ ! "$SMODE" =~ ^7[0-9][0-9]$ ]]; then
     chmod 700 "$ROOT/.secrets"
     autofix ".secrets/ dir mode $SMODE -> 700"
   fi
   for f in "$ROOT/.secrets"/*; do
     [[ -f "$f" ]] || continue
-    FMODE=$(stat -f %Mp%Lp "$f" 2>/dev/null || stat -c %a "$f")
+    FMODE=$(stat_mode "$f")
     if [[ ! "$FMODE" =~ ^6[0-9][0-9]$ ]]; then
       chmod 600 "$f"
       autofix "$(basename "$f") mode $FMODE -> 600"
@@ -295,6 +313,15 @@ RC=$?
 # ---- summary output ---------------------------------------------------------
 # Rotate old hourly logs (keep last 48h)
 find "$LOGS" -name 'cipher-*.log' -mtime +2 -delete 2>/dev/null || true
+
+# ---- auto-push to HQ -------------------------------------------------------
+KAI="$ROOT/bin/kai.sh"
+SDIR_MODE=$(stat_mode "$ROOT/.secrets" 2>/dev/null || echo "???")
+FT_MODE=$(stat_mode "$ROOT/.secrets/founder.token" 2>/dev/null || echo "???")
+if [[ -x "$KAI" ]]; then
+  "$KAI" push cipher "Scan — ${#FINDINGS[@]} findings, ${#AUTOFIXES[@]} autofixes" \
+    --data "{\"secretsDir\":\"$SDIR_MODE\",\"founderToken\":\"$FT_MODE\",\"leaks\":${#FINDINGS[@]}}" 2>/dev/null || true
+fi
 
 if [[ $RC -eq 0 ]]; then
   if [[ ${#AUTOFIXES[@]} -gt 0 ]]; then

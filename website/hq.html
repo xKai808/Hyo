@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HQ — Hyo Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #060610;
+      --bg-side:  #080814;
+      --bg-card:  #0c0c1a;
+      --bg-deep:  #050509;
+      --fg:       #f2e2c4;
+      --muted:    rgba(242, 226, 196, 0.50);
+      --dim:      rgba(242, 226, 196, 0.28);
+      --border:   rgba(242, 226, 196, 0.08);
+      --accent:   #e8b877;
+      --accent-b: #f6c98a;
+      --accent-d: rgba(232, 184, 119, 0.06);
+      --ok:       #a3c98a;
+      --warn:     #e8c96a;
+      --err:      #e89070;
+      --font-d:   'Syne', sans-serif;
+      --font-b:   'Inter', sans-serif;
+      --font-m:   'DM Mono', monospace;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html, body { height: 100%; background: var(--bg); color: var(--fg); font-family: var(--font-b); overflow: hidden; }
+
+    /* ═══ AUTH ═══ */
+    .auth-gate { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+    .auth-gate.hidden { display: none; }
+    .auth-box { text-align: center; max-width: 340px; }
+    .auth-box .logo { font-family: var(--font-d); font-weight: 700; font-size: 32px; color: var(--accent); margin-bottom: 6px; }
+    .auth-box .sub { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); margin-bottom: 32px; }
+    .auth-box input { width: 100%; padding: 14px 18px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: 10px; color: var(--fg); font-family: var(--font-m); font-size: 14px; text-align: center; letter-spacing: 0.1em; }
+    .auth-box input:focus { outline: none; border-color: var(--accent); }
+    .auth-box input::placeholder { color: var(--dim); }
+    .auth-err { font-family: var(--font-m); font-size: 11px; color: var(--err); margin-top: 12px; min-height: 18px; }
+
+    /* ═══ SHELL: sidebar + main ═══ */
+    .shell { display: flex; height: 100vh; }
+
+    /* ── sidebar ── */
+    .side {
+      width: 220px; min-width: 220px;
+      background: var(--bg-side);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+    .side-logo {
+      padding: 0 20px 20px;
+      font-family: var(--font-d); font-weight: 700; font-size: 20px;
+      color: var(--accent); letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .side-logo span { font-family: var(--font-m); font-size: 9px; color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase; display: block; margin-top: 2px; }
+
+    .side-section {
+      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--dim);
+      padding: 16px 20px 6px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; margin: 1px 8px; border-radius: 8px;
+      font-size: 13px; color: var(--muted);
+      cursor: pointer; transition: all 0.15s var(--ease);
+      user-select: none; border: 1px solid transparent;
+    }
+    .nav-item:hover { color: var(--fg); background: rgba(242,226,196,0.03); }
+    .nav-item.active {
+      color: var(--accent-b); background: var(--accent-d);
+      border-color: rgba(232,184,119,0.12);
+    }
+    .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+    .nav-dot {
+      width: 6px; height: 6px; border-radius: 50%; margin-left: auto;
+    }
+
+    .side-footer {
+      margin-top: auto; padding: 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .side-clock {
+      font-family: var(--font-m); font-size: 11px; color: var(--dim);
+      letter-spacing: 0.06em;
+    }
+    .side-status {
+      display: flex; align-items: center; gap: 6px; margin-top: 6px;
+      font-family: var(--font-m); font-size: 10px; color: var(--dim);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; animation: pulse 2s infinite; }
+    .dot.green { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+    .dot.red { background: var(--err); box-shadow: 0 0 6px var(--err); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── main content area ── */
+    .main {
+      flex: 1; overflow-y: auto; padding: 32px 40px;
+    }
+    .main::-webkit-scrollbar { width: 4px; }
+    .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .view { display: none; animation: fadeIn 0.3s var(--ease) both; }
+    .view.active { display: block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+    .view-title {
+      font-family: var(--font-d); font-weight: 700; font-size: 22px;
+      color: var(--fg); margin-bottom: 4px;
+    }
+    .view-sub {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 28px;
+    }
+
+    /* ── cards inside views ── */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-label {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .badge {
+      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 3px 8px;
+      border-radius: 4px; border: 1px solid;
+    }
+    .badge-ok { color: var(--ok); border-color: rgba(163,201,138,0.3); }
+    .badge-warn { color: var(--warn); border-color: rgba(232,201,106,0.3); }
+    .badge-err { color: var(--err); border-color: rgba(232,144,112,0.3); }
+    .badge-dim { color: var(--dim); border-color: var(--border); }
+
+    /* ── metrics ── */
+    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .metric {
+      text-align: center; padding: 18px 12px;
+      border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card);
+    }
+    .metric-num { font-family: var(--font-d); font-weight: 700; font-size: 28px; color: var(--accent-b); line-height: 1; }
+    .metric-label { font-family: var(--font-m); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); margin-top: 6px; }
+
+    /* ── data rows ── */
+    .d-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .d-row:last-child { border-bottom: none; }
+    .d-label { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+    .d-val { font-size: 13px; color: var(--fg); }
+    .d-val.ok { color: var(--ok); }
+    .d-val.warn { color: var(--warn); }
+    .d-val.err { color: var(--err); }
+
+    /* ── buttons ── */
+    .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px;
+      background: transparent; color: var(--fg);
+      font-family: var(--font-b); font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s var(--ease);
+    }
+    .btn:hover { border-color: var(--accent); background: var(--accent-d); color: var(--accent-b); }
+    .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+    .btn.primary:hover { background: var(--accent-b); }
+    .btn.danger:hover { border-color: var(--err); color: var(--err); background: rgba(232,144,112,0.06); }
+    .btn .ic { font-size: 14px; }
+
+    /* ── brief viewer ── */
+    .brief-box {
+      background: var(--bg-deep); border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px; max-height: 400px; overflow-y: auto;
+      font-size: 13px; line-height: 1.7; color: var(--muted);
+    }
+    .brief-box::-webkit-scrollbar { width: 4px; }
+    .brief-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .brief-box h3 { font-family: var(--font-d); font-size: 14px; color: var(--accent-b); margin: 14px 0 4px; }
+    .brief-box h3:first-child { margin-top: 0; }
+
+    /* ── sub table ── */
+    .sub-table { width: 100%; font-size: 12px; }
+    .sub-table th { text-align: left; padding: 8px 12px; font-family: var(--font-m); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); border-bottom: 1px solid var(--border); }
+    .sub-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--muted); }
+    .sub-table tr:hover td { color: var(--fg); background: var(--accent-d); }
+
+    /* ── log feed ── */
+    .log-entry { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(242,226,196,0.04); font-size: 12px; }
+    .log-entry:last-child { border-bottom: none; }
+    .log-time { font-family: var(--font-m); font-size: 10px; color: var(--dim); min-width: 48px; padding-top: 2px; }
+    .log-msg { color: var(--muted); line-height: 1.5; }
+    .log-msg .t { font-family: var(--font-m); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; margin-right: 6px; }
+    .t-ra { color: var(--accent-b); background: rgba(232,184,119,0.12); }
+    .t-aurora { color: #b8a3e8; background: rgba(184,163,232,0.10); }
+    .t-sentinel { color: var(--ok); background: rgba(163,201,138,0.10); }
+    .t-cipher { color: var(--err); background: rgba(232,144,112,0.10); }
+    .t-sim { color: var(--warn); background: rgba(232,201,106,0.10); }
+    .t-aether { color: #8ac9e8; background: rgba(138,201,232,0.10); }
+
+    /* ── toast ── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      padding: 12px 20px; border-radius: 10px;
+      background: var(--bg-card); border: 1px solid var(--accent);
+      font-family: var(--font-m); font-size: 12px; color: var(--accent-b);
+      opacity: 0; transform: translateY(10px);
+      transition: all 0.3s var(--ease); pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── responsive ── */
+    @media (max-width: 800px) {
+      .side { width: 56px; min-width: 56px; }
+      .side-logo, .side-section, .nav-item span:not(.nav-icon):not(.nav-dot) { display: none; }
+      .nav-item { justify-content: center; padding: 10px; margin: 1px 4px; }
+      .side-footer { padding: 12px 8px; }
+      .side-clock { font-size: 9px; text-align: center; }
+      .side-status span:not(.dot) { display: none; }
+      .main { padding: 20px; }
+      .metric-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ AUTH ═══ -->
+  <div class="auth-gate" id="authGate">
+    <div class="auth-box">
+      <div class="logo">hq</div>
+      <div class="sub">hyo command center</div>
+      <input type="password" id="authInput" placeholder="password" autofocus />
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SHELL ═══ -->
+  <div class="shell" id="shell" style="display:none;">
+
+    <!-- ── sidebar ── -->
+    <nav class="side">
+      <div class="side-logo">hq <span>command center</span></div>
+
+      <div class="side-section">overview</div>
+      <div class="nav-item active" data-view="overview">
+        <span class="nav-icon">&#9670;</span> Dashboard
+      </div>
+      <div class="nav-item" data-view="activity">
+        <span class="nav-icon">&#9776;</span> Activity
+      </div>
+
+      <div class="side-section">products</div>
+      <div class="nav-item" data-view="ra">
+        <span class="nav-icon">&#9737;</span> Ra
+        <span class="nav-dot dot green"></span>
+      </div>
+      <div class="nav-item" data-view="aurora">
+        <span class="nav-icon">&#9788;</span> Aurora
+        <span class="nav-dot dot green"></span>
+      </div>
+
+      <div class="side-section">agents</div>
+      <div class="nav-item" data-view="sentinel">
+        <span class="nav-icon">&#128737;</span> Sentinel
+      </div>
+      <div class="nav-item" data-view="cipher">
+        <span class="nav-icon">&#128274;</span> Cipher
+      </div>
+
+      <div class="side-section">ops</div>
+      <div class="nav-item" data-view="sim">
+        <span class="nav-icon">&#9881;</span> Simulations
+      </div>
+      <div class="nav-item" data-view="consolidation">
+        <span class="nav-icon">&#127761;</span> Consolidation
+      </div>
+      <div class="nav-item" data-view="aetherbot">
+        <span class="nav-icon">&#129302;</span> Aetherbot
+      </div>
+      <div class="nav-item" data-view="health">
+        <span class="nav-icon">&#128267;</span> Health
+      </div>
+
+      <div class="side-footer">
+        <div class="side-clock" id="clock"></div>
+        <div class="side-status">
+          <span class="dot green" id="statusDot"></span>
+          <span id="statusText">nominal</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── main content ── -->
+    <div class="main">
+
+      <!-- OVERVIEW -->
+      <div class="view active" id="v-overview">
+        <div class="view-title">Dashboard</div>
+        <div class="view-sub">Hyo systems at a glance</div>
+        <div class="metric-row">
+          <div class="metric"><div class="metric-num" id="mBriefs">--</div><div class="metric-label">Ra briefs</div></div>
+          <div class="metric"><div class="metric-num" id="mSubs">0</div><div class="metric-label">Aurora subs</div></div>
+          <div class="metric"><div class="metric-num" id="mEvents">0</div><div class="metric-label">Events</div></div>
+          <div class="metric"><div class="metric-num" id="mUptime">--</div><div class="metric-label">API status</div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Recent activity</span><span class="badge badge-dim">live</span></div>
+          <div id="overviewEvents"><div class="log-entry"><span class="log-time">--</span><span class="log-msg" style="color:var(--dim)">Waiting for first push...</span></div></div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY -->
+      <div class="view" id="v-activity">
+        <div class="view-title">Activity</div>
+        <div class="view-sub">Full event log</div>
+        <div class="card" id="activityCard">
+          <div class="log-entry"><span class="log-time">--</span><span class="log-msg" style="color:var(--dim)">Waiting for first push...</span></div>
+        </div>
+      </div>
+
+      <!-- RA -->
+      <div class="view" id="v-ra">
+        <div class="view-title">Ra</div>
+        <div class="view-sub">Pre-dawn intelligence brief</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Latest brief</span><span class="badge badge-dim" id="raBadge">waiting</span></div>
+          <div id="raContent">
+            <div class="d-row"><span class="d-label">Status</span><span class="d-val" id="raStatus" style="color:var(--dim)">No data pushed yet</span></div>
+            <div class="d-row" id="raSourceRow" style="display:none"><span class="d-label">Sources</span><span class="d-val" id="raSources">--</span></div>
+            <div class="d-row" id="raWordRow" style="display:none"><span class="d-label">Words</span><span class="d-val" id="raWords">--</span></div>
+            <div class="d-row" id="raRunRow" style="display:none"><span class="d-label">Last run</span><span class="d-val ok" id="raLastRun">--</span></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Triggering Ra...')"><span class="ic">&#9737;</span> Trigger now</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">History</span></div>
+          <div id="raHistory"><div class="d-row"><span class="d-label" style="color:var(--dim)">Events appear here as Ra runs</span></div></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Schedule</span></div>
+          <div class="d-row"><span class="d-label">Cron</span><span class="d-val">0 3 * * * MT</span></div>
+          <div class="d-row"><span class="d-label">Archive</span><span class="d-val">kai/research/</span></div>
+        </div>
+      </div>
+
+      <!-- AURORA -->
+      <div class="view" id="v-aurora">
+        <div class="view-title">Aurora</div>
+        <div class="view-sub">Consumer-facing newsletter</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Subscribers</span><span class="badge badge-dim" id="subCount">0 active</span></div>
+          <table class="sub-table">
+            <thead><tr><th>Email</th><th>Voice</th><th>Depth</th><th>Topics</th><th>Status</th></tr></thead>
+            <tbody id="subBody">
+              <tr><td colspan="5" style="text-align:center;color:var(--dim);padding:24px;">No subscribers yet.</td></tr>
+            </tbody>
+          </table>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Sending Aurora briefs...')"><span class="ic">&#9788;</span> Send briefs</button>
+            <button class="btn" onclick="window.open('/aurora.html','_blank')"><span class="ic">&#128279;</span> Intake page</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Config</span></div>
+          <div class="d-row"><span class="d-label">Schedule</span><span class="d-val">After Ra (05:00 MT planned)</span></div>
+          <div class="d-row"><span class="d-label">Pipeline</span><span class="d-val">gather &rarr; ra_context &rarr; aurora_public &rarr; send_email</span></div>
+          <div class="d-row"><span class="d-label">Voices</span><span class="d-val">gentle / balanced / sharp</span></div>
+          <div class="d-row"><span class="d-label">Email backend</span><span class="d-val warn">not configured (needs SPF/DKIM)</span></div>
+        </div>
+      </div>
+
+      <!-- SENTINEL -->
+      <div class="view" id="v-sentinel">
+        <div class="view-title">Sentinel</div>
+        <div class="view-sub">QA agent</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Last run</span><span class="badge badge-dim" id="sentBadge">waiting</span></div>
+          <div class="d-row"><span class="d-label">Schedule</span><span class="d-val">0 4 * * * MT</span></div>
+          <div class="d-row"><span class="d-label">Checks passed</span><span class="d-val" id="sentPassed" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Failed</span><span class="d-val" id="sentFailed" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="sentLastRun" style="color:var(--dim)">No data pushed yet</span></div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Running sentinel...')"><span class="ic">&#128737;</span> Run now</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">History</span></div>
+          <div id="sentHistory"><div class="d-row"><span class="d-label" style="color:var(--dim)">Events appear here as sentinel runs</span></div></div>
+        </div>
+      </div>
+
+      <!-- CIPHER -->
+      <div class="view" id="v-cipher">
+        <div class="view-title">Cipher</div>
+        <div class="view-sub">Security agent</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Last run</span><span class="badge badge-dim" id="ciphBadge">waiting</span></div>
+          <div class="d-row"><span class="d-label">Schedule</span><span class="d-val">hourly</span></div>
+          <div class="d-row"><span class="d-label">Secrets dir</span><span class="d-val" id="ciphSecrets" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Founder token</span><span class="d-val" id="ciphToken" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Leaks found</span><span class="d-val" id="ciphLeaks" style="color:var(--dim)">--</span></div>
+          <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="ciphLastRun" style="color:var(--dim)">No data pushed yet</span></div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Running cipher...')"><span class="ic">&#128274;</span> Scan now</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">History</span></div>
+          <div id="ciphHistory"><div class="d-row"><span class="d-label" style="color:var(--dim)">Events appear here as cipher runs</span></div></div>
+        </div>
+      </div>
+
+      <!-- SIMULATIONS -->
+      <div class="view" id="v-sim">
+        <div class="view-title">Simulations</div>
+        <div class="view-sub">Pipeline testing</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Last sim</span><span class="badge badge-dim" id="simBadge">waiting</span></div>
+          <div class="d-row"><span class="d-label">Status</span><span class="d-val" id="simStatus" style="color:var(--dim)">No data pushed yet</span></div>
+          <div class="d-row"><span class="d-label">Schedule</span><span class="d-val">0 23 * * * MT</span></div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Starting simulation...')"><span class="ic">&#9881;</span> Run new sim</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">History</span></div>
+          <div id="simHistory"><div class="d-row"><span class="d-label" style="color:var(--dim)">Events appear here as sims run</span></div></div>
+        </div>
+      </div>
+
+      <!-- CONSOLIDATION -->
+      <div class="view" id="v-consolidation">
+        <div class="view-title">Consolidation</div>
+        <div class="view-sub">Nightly memory sync</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Status</span><span class="badge badge-dim" id="consBadge">waiting</span></div>
+          <div class="d-row"><span class="d-label">Schedule</span><span class="d-val">50 23 * * * MT</span></div>
+          <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="consLastRun" style="color:var(--dim)">No data pushed yet</span></div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Running consolidation...')"><span class="ic">&#127761;</span> Run now</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">History</span></div>
+          <div id="consHistory"><div class="d-row"><span class="d-label" style="color:var(--dim)">Events appear here as consolidation runs</span></div></div>
+        </div>
+      </div>
+
+      <!-- AETHERBOT -->
+      <div class="view" id="v-aetherbot">
+        <div class="view-title">Aetherbot</div>
+        <div class="view-sub">Strategic analysis agent</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Last analysis</span><span class="badge badge-dim" id="aethBadge">waiting</span></div>
+          <div class="d-row"><span class="d-label">Status</span><span class="d-val" id="aethStatus" style="color:var(--dim)">No data pushed yet</span></div>
+          <div class="d-row"><span class="d-label">Last run</span><span class="d-val" id="aethLastRun" style="color:var(--dim)">--</span></div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="act('Running Aetherbot...')"><span class="ic">&#129302;</span> Run analysis</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">History</span></div>
+          <div id="aethHistory"><div class="d-row"><span class="d-label" style="color:var(--dim)">Events appear here as Aetherbot runs</span></div></div>
+        </div>
+      </div>
+
+      <!-- HEALTH -->
+      <div class="view" id="v-health">
+        <div class="view-title">System Health</div>
+        <div class="view-sub">Infrastructure status</div>
+        <div class="card">
+          <div class="card-head"><span class="card-label">Live checks</span><span class="badge badge-ok" id="healthBadge">ok</span></div>
+          <div class="d-row"><span class="d-label">API /health</span><span class="d-val ok" id="hApi">checking...</span></div>
+          <div class="d-row"><span class="d-label">Founder token</span><span class="d-val ok">configured</span></div>
+          <div class="d-row"><span class="d-label">Vercel deploy</span><span class="d-val">live</span></div>
+          <div class="d-row"><span class="d-label">Gather pipeline</span><span class="d-val" id="hGather">--</span></div>
+          <div class="d-row"><span class="d-label">Research archive</span><span class="d-val" id="hArchive">--</span></div>
+          <div class="d-row"><span class="d-label">Last sentinel</span><span class="d-val" id="hSentinel">--</span></div>
+          <div class="d-row"><span class="d-label">Last cipher</span><span class="d-val" id="hCipher">--</span></div>
+          <div class="btn-row">
+            <button class="btn primary" onclick="checkHealth()"><span class="ic">&#128267;</span> Check now</button>
+          </div>
+        </div>
+        <div class="card" style="border-color: rgba(232,144,112,0.2);">
+          <div class="card-head"><span class="card-label" style="color:var(--err);">Emergency</span></div>
+          <div class="btn-row">
+            <button class="btn danger" onclick="killSwitch()"><span class="ic">&#9888;</span> Kill all scheduled tasks</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ═══ AUTH (server-side) ═══
+  let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
+  const authGate = document.getElementById('authGate');
+  const authInput = document.getElementById('authInput');
+
+  authInput.addEventListener('keydown', async e => {
+    if (e.key !== 'Enter') return;
+    const pw = authInput.value;
+    if (!pw) return;
+    try {
+      const r = await fetch('/api/hq?action=auth', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ password: pw }),
+      });
+      const j = await r.json();
+      if (j.ok && j.token) {
+        HQ_TOKEN = j.token;
+        sessionStorage.setItem('hq_token', HQ_TOKEN);
+        authGate.classList.add('hidden');
+        document.getElementById('shell').style.display = 'flex';
+        boot();
+      } else {
+        document.getElementById('authErr').textContent = j.error || 'wrong password';
+        authInput.value = '';
+      }
+    } catch {
+      document.getElementById('authErr').textContent = 'could not reach server';
+    }
+  });
+
+  // auto-resume if token exists (will re-validate on first data fetch)
+  if (HQ_TOKEN) {
+    authGate.classList.add('hidden');
+    document.getElementById('shell').style.display = 'flex';
+    boot();
+  }
+
+  // ═══ NAV ═══
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+      const target = item.dataset.view;
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      const view = document.getElementById('v-' + target);
+      if (view) {
+        view.classList.add('active');
+        view.style.animation = 'none';
+        view.offsetHeight;
+        view.style.animation = '';
+      }
+    });
+  });
+
+  // ═══ CLOCK ═══
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { timeZone:'America/Denver', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false }) + ' MT';
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // ═══ TOAST ═══
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+  function act(msg) { toast(msg); }
+
+  // ═══ API HELPERS ═══
+  async function hqFetch(path, opts = {}) {
+    const headers = { ...opts.headers, 'Authorization': 'Bearer ' + HQ_TOKEN };
+    const r = await fetch('/api/hq?action=data', { ...opts, headers });
+    if (r.status === 401) {
+      // token expired — back to login
+      sessionStorage.removeItem('hq_token');
+      HQ_TOKEN = null;
+      authGate.classList.remove('hidden');
+      document.getElementById('shell').style.display = 'none';
+      return null;
+    }
+    return r.json();
+  }
+
+  // ═══ BOOT ═══
+  function boot() {
+    checkHealth();
+    loadData();
+    // poll every 30s
+    setInterval(loadData, 30000);
+  }
+
+  // ═══ HELPERS ═══
+  const AGENT_CLASS = { ra:'t-ra', aurora:'t-aurora', sentinel:'t-sentinel', cipher:'t-cipher', sim:'t-sim', aetherbot:'t-aether', consolidation:'t-aether' };
+  function fmtTime(ts) {
+    return new Date(ts).toLocaleTimeString('en-US', { timeZone:'America/Denver', hour:'2-digit', minute:'2-digit', hour12:false });
+  }
+  function fmtDate(ts) {
+    return new Date(ts).toLocaleDateString('en-US', { timeZone:'America/Denver', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false });
+  }
+  function evHTML(e) {
+    const cls = AGENT_CLASS[e.agent] || 't-ra';
+    return `<div class="log-entry"><span class="log-time">${fmtTime(e.ts)}</span><span class="log-msg"><span class="t ${cls}">${e.agent}</span> ${esc(e.msg)}</span></div>`;
+  }
+  function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  function agentEvents(events, agent) { return (events || []).filter(e => e.agent === agent); }
+  function historyHTML(events) {
+    if (!events.length) return '';
+    return events.slice(0, 20).map(e =>
+      `<div class="d-row"><span class="d-label">${fmtDate(e.ts)}</span><span class="d-val">${esc(e.msg)}</span></div>`
+    ).join('');
+  }
+  function setEl(id, text, cls) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    if (cls) el.className = 'd-val ' + cls;
+  }
+
+  // ═══ LOAD DATA from /api/hq-data ═══
+  async function loadData() {
+    const d = await hqFetch('/api/hq-data');
+    if (!d || !d.ok) return;
+
+    const events = d.events || [];
+
+    // ── metrics ──
+    document.getElementById('mEvents').textContent = events.length;
+
+    // ── events → overview + activity ──
+    if (events.length) {
+      document.getElementById('overviewEvents').innerHTML = events.slice(0, 5).map(evHTML).join('');
+      document.getElementById('activityCard').innerHTML = events.map(evHTML).join('');
+    }
+
+    // ── Ra ──
+    if (d.ra && d.ra.lastRun) {
+      setEl('raBadge', d.ra.status || 'delivered');
+      document.getElementById('raBadge').className = 'badge badge-ok';
+      setEl('raStatus', d.ra.status || 'delivered', 'ok');
+      if (d.ra.sourceCount) { document.getElementById('raSourceRow').style.display = ''; setEl('raSources', d.ra.sourceCount); }
+      if (d.ra.wordCount) { document.getElementById('raWordRow').style.display = ''; setEl('raWords', d.ra.wordCount.toLocaleString()); }
+      document.getElementById('raRunRow').style.display = '';
+      setEl('raLastRun', fmtDate(d.ra.lastRun), 'ok');
+      document.getElementById('mBriefs').textContent = d.ra.briefCount || agentEvents(events, 'ra').length || '--';
+    }
+    const raEvs = agentEvents(events, 'ra');
+    if (raEvs.length) document.getElementById('raHistory').innerHTML = historyHTML(raEvs);
+
+    // ── Aurora ──
+    if (d.aurora && d.aurora.subscribers && d.aurora.subscribers.length) {
+      const subs = d.aurora.subscribers;
+      document.getElementById('mSubs').textContent = subs.length;
+      document.getElementById('subCount').textContent = subs.length + ' active';
+      document.getElementById('subBody').innerHTML = subs.map(s =>
+        `<tr><td>${esc(s.email)}</td><td>${esc(s.voice || '--')}</td><td>${esc(s.depth || '--')}</td><td>${esc((s.topics || []).join(', '))}</td><td>${esc(s.status || 'active')}</td></tr>`
+      ).join('');
+    }
+
+    // ── Sentinel ──
+    if (d.sentinel && d.sentinel.lastRun) {
+      const s = d.sentinel;
+      const ok = (s.failed || 0) === 0;
+      document.getElementById('sentBadge').textContent = ok ? 'passed' : 'issues';
+      document.getElementById('sentBadge').className = 'badge ' + (ok ? 'badge-ok' : 'badge-err');
+      setEl('sentPassed', s.passed ?? '--', 'ok');
+      setEl('sentFailed', s.failed ?? '--', (s.failed || 0) === 0 ? 'ok' : 'err');
+      setEl('sentLastRun', fmtDate(s.lastRun), 'ok');
+    }
+    const sentEvs = agentEvents(events, 'sentinel');
+    if (sentEvs.length) document.getElementById('sentHistory').innerHTML = historyHTML(sentEvs);
+
+    // ── Cipher ──
+    if (d.cipher && d.cipher.lastRun) {
+      const c = d.cipher;
+      const ok = (c.leaks || 0) === 0;
+      document.getElementById('ciphBadge').textContent = ok ? 'clean' : 'leaks!';
+      document.getElementById('ciphBadge').className = 'badge ' + (ok ? 'badge-ok' : 'badge-err');
+      setEl('ciphSecrets', c.secretsDir ?? '--', 'ok');
+      setEl('ciphToken', c.founderToken ?? '--', 'ok');
+      setEl('ciphLeaks', c.leaks ?? '--', ok ? 'ok' : 'err');
+      setEl('ciphLastRun', fmtDate(c.lastRun), 'ok');
+    }
+    const ciphEvs = agentEvents(events, 'cipher');
+    if (ciphEvs.length) document.getElementById('ciphHistory').innerHTML = historyHTML(ciphEvs);
+
+    // ── Sim ──
+    if (d.sim && d.sim.lastRun) {
+      document.getElementById('simBadge').textContent = d.sim.status || 'complete';
+      document.getElementById('simBadge').className = 'badge badge-ok';
+      setEl('simStatus', d.sim.status || 'complete', 'ok');
+    }
+    const simEvs = agentEvents(events, 'sim');
+    if (simEvs.length) document.getElementById('simHistory').innerHTML = historyHTML(simEvs);
+
+    // ── Consolidation ──
+    if (d.consolidation && d.consolidation.lastRun) {
+      document.getElementById('consBadge').textContent = 'synced';
+      document.getElementById('consBadge').className = 'badge badge-ok';
+      setEl('consLastRun', fmtDate(d.consolidation.lastRun), 'ok');
+    }
+    const consEvs = agentEvents(events, 'consolidation');
+    if (consEvs.length) document.getElementById('consHistory').innerHTML = historyHTML(consEvs);
+
+    // ── Aetherbot ──
+    if (d.aetherbot && d.aetherbot.lastRun) {
+      document.getElementById('aethBadge').textContent = d.aetherbot.status || 'complete';
+      document.getElementById('aethBadge').className = 'badge badge-ok';
+      setEl('aethStatus', d.aetherbot.status || 'complete', 'ok');
+      setEl('aethLastRun', fmtDate(d.aetherbot.lastRun), 'ok');
+    }
+    const aethEvs = agentEvents(events, 'aetherbot');
+    if (aethEvs.length) document.getElementById('aethHistory').innerHTML = historyHTML(aethEvs);
+
+    // ── Health sidebar status from push data ──
+    if (d.sentinel && d.sentinel.lastRun) setEl('hSentinel', fmtDate(d.sentinel.lastRun), 'ok');
+    if (d.cipher && d.cipher.lastRun) setEl('hCipher', fmtDate(d.cipher.lastRun), 'ok');
+  }
+
+  // ═══ HEALTH ═══
+  async function checkHealth() {
+    const el = document.getElementById('hApi');
+    try {
+      const r = await fetch('/api/health');
+      const j = await r.json();
+      el.textContent = j.founderTokenConfigured ? 'ok — token wired' : 'ok — no token';
+      el.className = 'd-val ' + (j.founderTokenConfigured ? 'ok' : 'warn');
+      document.getElementById('mUptime').textContent = 'ok';
+      document.getElementById('statusDot').className = 'dot green';
+      document.getElementById('statusText').textContent = 'nominal';
+    } catch {
+      el.textContent = 'unreachable';
+      el.className = 'd-val err';
+      document.getElementById('mUptime').textContent = 'down';
+      document.getElementById('statusDot').className = 'dot red';
+      document.getElementById('statusText').textContent = 'down';
+    }
+  }
+
+  // ═══ KILL SWITCH ═══
+  function killSwitch() {
+    if (confirm('Kill ALL scheduled tasks? Ra, Aurora, sentinel, cipher, consolidation, simulation — everything stops.')) {
+      toast('KILL SWITCH ACTIVATED');
+      document.getElementById('statusDot').className = 'dot red';
+      document.getElementById('statusText').textContent = 'killed';
+    }
+  }
+  </script>
+</body>
+</html>

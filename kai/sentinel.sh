@@ -20,6 +20,16 @@ REPORT="$LOGS/sentinel-$TODAY.md"
 
 mkdir -p "$LOGS" "$MEMORY"
 
+# ---- portable stat wrapper (macOS BSD vs Linux GNU) ------------------------
+# Probe once: GNU stat supports -c, BSD stat supports -f. stderr only.
+if stat -c %a / >/dev/null 2>&1; then
+  stat_mode() { stat -c %a "$1" 2>/dev/null; }
+  stat_mtime() { stat -c %Y "$1" 2>/dev/null; }
+else
+  stat_mode() { stat -f %Mp%Lp "$1" 2>/dev/null; }
+  stat_mtime() { stat -f %m "$1" 2>/dev/null; }
+fi
+
 # ---- state bootstrap --------------------------------------------------------
 if [[ ! -f "$STATE" ]]; then
   cat > "$STATE" <<'JSON'
@@ -66,7 +76,7 @@ fi
 
 # P0 founder-token-integrity
 if [[ -f "$ROOT/.secrets/founder.token" ]]; then
-  FTMODE=$(stat -f %Mp%Lp "$ROOT/.secrets/founder.token" 2>/dev/null || stat -c %a "$ROOT/.secrets/founder.token")
+  FTMODE=$(stat_mode "$ROOT/.secrets/founder.token")
   if [[ "$FTMODE" =~ ^6[0-9][0-9]$ ]]; then
     pass "P0 founder-token-integrity"
   else
@@ -79,7 +89,7 @@ fi
 # P1 scheduled-tasks-fired (proxy: recent aurora log)
 LAST_AURORA_LOG=$(ls -1t "$LOGS"/aurora-*.log 2>/dev/null | head -n1 || true)
 if [[ -n "$LAST_AURORA_LOG" ]]; then
-  AGE_SEC=$(( $(date +%s) - $(stat -f %m "$LAST_AURORA_LOG" 2>/dev/null || stat -c %Y "$LAST_AURORA_LOG") ))
+  AGE_SEC=$(( $(date +%s) - $(stat_mtime "$LAST_AURORA_LOG") ))
   if [[ $AGE_SEC -lt 90000 ]]; then
     pass "P1 scheduled-tasks-fired"
   else
@@ -110,7 +120,7 @@ fi
 
 # P1 secrets-dir-permissions
 if [[ -d "$ROOT/.secrets" ]]; then
-  SMODE=$(stat -f %Mp%Lp "$ROOT/.secrets" 2>/dev/null || stat -c %a "$ROOT/.secrets")
+  SMODE=$(stat_mode "$ROOT/.secrets")
   if [[ "$SMODE" =~ ^7[0-9][0-9]$ ]]; then
     pass "P1 secrets-dir-permissions"
   else
@@ -325,6 +335,18 @@ PYEOF
 RC=$?
 
 # ---- summary output ---------------------------------------------------------
+# ---- auto-push to HQ -------------------------------------------------------
+KAI="$ROOT/bin/kai.sh"
+if [[ -x "$KAI" ]]; then
+  if [[ $RC -eq 0 ]]; then
+    "$KAI" push sentinel "QA sweep — ${#PASSED[@]} passed, 0 failed" \
+      --data "{\"passed\":${#PASSED[@]},\"failed\":0}" 2>/dev/null || true
+  else
+    "$KAI" push sentinel "QA sweep — ${#PASSED[@]} passed, ${#FINDINGS[@]} failed" \
+      --data "{\"passed\":${#PASSED[@]},\"failed\":${#FINDINGS[@]}}" 2>/dev/null || true
+  fi
+fi
+
 if [[ $RC -eq 0 ]]; then
   echo "sentinel: ${#PASSED[@]} checks passed, 0 failed. Silence = success."
   exit 0

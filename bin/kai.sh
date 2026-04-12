@@ -135,6 +135,29 @@ ${BOLD}Defense agents${RST}
   kai cipher              Run cipher.hyo (security agent) now
   kai scan secrets        Run gitleaks/trufflehog on the repo
 
+${BOLD}Ra research archive${RST}
+  kai ra index            Show the master archive index
+  kai ra trends           Show the rolling trend report
+  kai ra entity <slug>    Show one entity's timeline
+  kai ra topic <slug>     Show one topic's timeline
+  kai ra lab <slug>       Show one lab entry
+  kai ra search <query>   Grep the entire archive
+  kai ra since <date>     Show every entry on or after YYYY-MM-DD
+  kai ra rebuild          Rebuild index + trends from existing files
+  kai ra archive [date]   File a specific brief into the archive (default today)
+  kai ra context [date]   Build .context.md from today's gather + archive
+
+${BOLD}HQ dashboard${RST}
+  kai push <agent> "msg"  Push a task result + event to hyo.world/hq
+                          agent: ra|aurora|sentinel|cipher|sim|consolidation|aetherbot
+                          Optional: --data '{"key":"val"}' for structured section update
+
+${BOLD}Auto-deploy${RST}
+  kai watch               Start file watcher — auto-deploys when website/ changes
+  kai gitwatch            Start git watcher — auto-commit + push on website/ changes
+                          Vercel GitHub integration handles the deploy.
+                          Requires: brew install fswatch
+
 ${BOLD}Env${RST}
   HYO_ROOT=$ROOT
   HYO_API_BASE=$API_BASE
@@ -445,6 +468,87 @@ cmd_cipher() {
   fi
 }
 
+cmd_ra() {
+  local sub="${1:-index}"; shift || true
+  local research="$ROOT/kai/research"
+  case "$sub" in
+    index)
+      [[ -f "$research/index.md" ]] || {
+        warn "no index yet — run: kai ra rebuild"
+        return 1
+      }
+      cat "$research/index.md"
+      ;;
+    trends)
+      [[ -f "$research/trends.md" ]] || {
+        warn "no trends yet — run: kai ra rebuild"
+        return 1
+      }
+      cat "$research/trends.md"
+      ;;
+    entity)
+      local slug="${1:-}"
+      [[ -z "$slug" ]] && die 'usage: kai ra entity <slug>'
+      local f="$research/entities/$slug.md"
+      [[ -f "$f" ]] || die "no entity at $f (see kai ra index)"
+      cat "$f"
+      ;;
+    topic)
+      local slug="${1:-}"
+      [[ -z "$slug" ]] && die 'usage: kai ra topic <slug>'
+      local f="$research/topics/$slug.md"
+      [[ -f "$f" ]] || die "no topic at $f (see kai ra index)"
+      cat "$f"
+      ;;
+    lab)
+      local slug="${1:-}"
+      [[ -z "$slug" ]] && die 'usage: kai ra lab <slug>'
+      local f="$research/lab/$slug.md"
+      [[ -f "$f" ]] || die "no lab entry at $f (see kai ra index)"
+      cat "$f"
+      ;;
+    search)
+      local q="$*"
+      [[ -z "$q" ]] && die 'usage: kai ra search <query>'
+      hdr "Archive results for: $q"
+      grep -rniI --color=auto --include="*.md" "$q" "$research" || warn "no matches"
+      ;;
+    since)
+      local date="${1:-}"
+      [[ -z "$date" ]] && die 'usage: kai ra since YYYY-MM-DD'
+      hdr "Archive entries on or after $date"
+      grep -rnE --include="*.md" "^### 2[0-9]{3}-[0-9]{2}-[0-9]{2}" "$research" \
+        | awk -F: -v d="$date" '{
+            # reconstruct the date from the matched line
+            n = split($0, p, "### ")
+            if (n >= 2 && p[2] >= d) print
+          }' || warn "no matches"
+      ;;
+    rebuild)
+      HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_archive.py" --rebuild-index
+      ;;
+    archive)
+      local date="${1:-}"
+      if [[ -n "$date" ]]; then
+        HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_archive.py" --date "$date"
+      else
+        HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_archive.py"
+      fi
+      ;;
+    context)
+      local date="${1:-}"
+      if [[ -n "$date" ]]; then
+        HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_context.py" --date "$date"
+      else
+        HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_context.py"
+      fi
+      ;;
+    *)
+      die "usage: kai ra {index|trends|entity|topic|lab|search|since|rebuild|archive|context}"
+      ;;
+  esac
+}
+
 cmd_scan() {
   local what="${1:-secrets}"
   case "$what" in
@@ -467,6 +571,56 @@ cmd_scan() {
   esac
 }
 
+# ---- hq push ---------------------------------------------------------------
+cmd_push() {
+  local agent="${1:-}"; shift || true
+  local event="${1:-}"; shift || true
+  local data_json="{}"
+
+  # parse --data flag
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --data) data_json="$2"; shift 2 ;;
+      *) shift ;;
+    esac
+  done
+
+  if [[ -z "$agent" ]]; then
+    die "usage: kai push <agent> \"event message\" [--data '{...}']"
+  fi
+
+  local token
+  token=$(load_founder_token) || die "no founder token — cannot push to HQ"
+
+  hdr "Pushing to HQ: $agent"
+
+  local payload
+  # Build JSON without printf to avoid brace doubling
+  payload="{\"agent\":\"$agent\",\"event\":\"$event\",\"data\":$data_json}"
+
+  say "${DIM}payload: $payload${RST}"
+
+  local tmpfile
+  tmpfile=$(mktemp)
+  local http_code
+  http_code=$(curl -sS -o "$tmpfile" -w '%{http_code}' -X POST "$API_BASE/api/hq?action=push" \
+    -H "Content-Type: application/json" \
+    -H "x-founder-token: $token" \
+    -d "$payload") || { err "failed to reach $API_BASE/api/hq?action=push"; rm -f "$tmpfile"; return 1; }
+
+  local out
+  out=$(cat "$tmpfile")
+  rm -f "$tmpfile"
+
+  say "${DIM}http $http_code${RST}"
+
+  if [[ "$http_code" == "200" ]] && echo "$out" | grep -q '"ok":true'; then
+    ok "pushed to HQ"
+  else
+    warn "HQ responded ($http_code): $out"
+  fi
+}
+
 # ---- dispatch ---------------------------------------------------------------
 sub="${1:-help}"; shift || true
 case "$sub" in
@@ -483,6 +637,10 @@ case "$sub" in
   sentinel)           cmd_sentinel "$@" ;;
   cipher)             cmd_cipher "$@" ;;
   scan)               cmd_scan "$@" ;;
+  ra)                 cmd_ra "$@" ;;
+  push)               cmd_push "$@" ;;
+  watch)              bash "$ROOT/bin/watch-deploy.sh" ;;
+  gitwatch)           bash "$ROOT/bin/watch-commit.sh" ;;
   env)                cmd_env "$@" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

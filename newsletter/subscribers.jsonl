@@ -1,0 +1,8 @@
+# subscribers.jsonl — one JSON object per line, append-only.
+# Each line is a full subscriber record; see docs/aurora-public.md.
+# Comments (lines starting with "#") are ignored by the reader.
+# The /api/aurora-subscribe endpoint logs new records to Vercel; until
+# persistent storage (Vercel KV / Octokit commits) is wired in v1,
+# replay those logs into this file manually. Example shape:
+#
+# {"id":"sub_sample","email":"you@example.com","created":"2026-04-11T00:00:00Z","status":"active","interests":{"topics":["ai","macro"],"voice":"balanced","depth":"balanced","length":"6min","freetext":""},"delivery":{"channel":"email","cadence":"daily","sendAt":"06:30","timezone":"America/Denver"},"lastSent":null,"lastBriefId":null,"history":[]}

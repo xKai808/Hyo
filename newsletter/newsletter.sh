@@ -54,6 +54,12 @@ PY=${PYTHON:-python3}
 STAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 echo "[$STAMP] hyo-newsletter: starting pipeline"
 
+# path to Kai's archive scripts, independent of cwd
+HYO_ROOT_DEFAULT="$(cd "$(dirname "$0")/.." && pwd)"
+export HYO_ROOT="${HYO_ROOT:-$HYO_ROOT_DEFAULT}"
+RA_CONTEXT="$HYO_ROOT/kai/ra_context.py"
+RA_ARCHIVE="$HYO_ROOT/kai/ra_archive.py"
+
 if [[ $NO_GATHER -eq 0 ]]; then
   echo "[$STAMP] gather.py ..."
   if ! $PY gather.py $DATE_ARG; then
@@ -65,6 +71,16 @@ fi
 if [[ $GATHER_ONLY -eq 1 ]]; then
   echo "[$STAMP] --gather-only set, stopping here"
   exit 0
+fi
+
+# pre-synthesize: build the prior-context block from the research archive
+if [[ -f "$RA_CONTEXT" ]]; then
+  echo "[$STAMP] ra_context.py ..."
+  if ! $PY "$RA_CONTEXT" $DATE_ARG; then
+    echo "[$STAMP] ra_context.py failed (non-fatal, continuing)" >&2
+  fi
+else
+  echo "[$STAMP] ra_context.py not found at $RA_CONTEXT — skipping" >&2
 fi
 
 echo "[$STAMP] synthesize.py ..."
@@ -82,6 +98,31 @@ if ! $PY render.py $DATE_ARG; then
   # not fatal if bundle mode
   [[ $SYNTH_RC -eq 2 ]] && exit 2
   exit 1
+fi
+
+# post-render: file today's research into the persistent archive
+if [[ -f "$RA_ARCHIVE" && $SYNTH_RC -ne 2 ]]; then
+  echo "[$STAMP] ra_archive.py ..."
+  if ! $PY "$RA_ARCHIVE" $DATE_ARG; then
+    echo "[$STAMP] ra_archive.py failed (non-fatal, brief is still rendered)" >&2
+  fi
+elif [[ ! -f "$RA_ARCHIVE" ]]; then
+  echo "[$STAMP] ra_archive.py not found at $RA_ARCHIVE — skipping" >&2
+fi
+
+# ---- auto-push to HQ -------------------------------------------------------
+KAI="$HYO_ROOT/bin/kai.sh"
+if [[ -x "$KAI" ]]; then
+  # Count sources from today's gather output
+  GATHER_DIR="$HYO_ROOT/newsletter"
+  TODAY_DATE=$(date +%Y-%m-%d)
+  MD_FILE="$HYO_ROOT/newsletters/${TODAY_DATE}.md"
+  WORD_COUNT=0
+  if [[ -f "$MD_FILE" ]]; then
+    WORD_COUNT=$(wc -w < "$MD_FILE" | tr -d ' ')
+  fi
+  "$KAI" push ra "Daily brief — ${WORD_COUNT} words" \
+    --data "{\"wordCount\":$WORD_COUNT,\"status\":\"delivered\"}" 2>/dev/null || true
 fi
 
 echo "[$STAMP] hyo-newsletter: done"
