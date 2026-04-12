@@ -664,17 +664,54 @@
   function act(msg) { toast(msg); }
 
   // ═══ API ═══
-  async function hqFetch(path, opts = {}) {
-    const headers = { ...opts.headers, 'Authorization': 'Bearer ' + HQ_TOKEN };
-    const r = await fetch('/api/hq?action=data', { ...opts, headers });
-    if (r.status === 401) {
-      sessionStorage.removeItem('hq_token');
-      HQ_TOKEN = null;
-      authGate.classList.remove('hidden');
-      document.getElementById('shell').style.display = 'none';
-      return null;
+  // Primary data source: static JSON file (persists across deploys)
+  // Secondary: in-memory API push (for real-time updates within a warm lambda)
+  async function hqFetchStatic() {
+    try {
+      const r = await fetch('/data/hq-state.json?t=' + Date.now());
+      if (r.ok) return await r.json();
+    } catch(e) { console.warn('static fetch failed:', e); }
+    return null;
+  }
+  async function hqFetchApi() {
+    try {
+      const headers = { 'Authorization': 'Bearer ' + HQ_TOKEN };
+      const r = await fetch('/api/hq?action=data', { headers });
+      if (r.status === 401) {
+        sessionStorage.removeItem('hq_token');
+        HQ_TOKEN = null;
+        authGate.classList.remove('hidden');
+        document.getElementById('shell').style.display = 'none';
+        return null;
+      }
+      if (r.ok) return await r.json();
+    } catch(e) { console.warn('api fetch failed:', e); }
+    return null;
+  }
+  function mergeData(staticD, apiD) {
+    // Merge: API data overlays static data (API has real-time pushes)
+    if (!staticD) return apiD;
+    if (!apiD || !apiD.ok) return { ok: true, ...staticD };
+    const merged = { ok: true, ...staticD };
+    // Merge events: combine and dedupe by timestamp+agent
+    const allEvts = [...(apiD.events || []), ...(staticD.events || [])];
+    const seen = new Set();
+    merged.events = allEvts.filter(e => {
+      const key = e.ts + '|' + e.agent;
+      if (seen.has(key)) return false;
+      seen.add(key); return true;
+    }).sort((a, b) => new Date(b.ts) - new Date(a.ts)).slice(0, 100);
+    // Merge agent sections: prefer whichever has a more recent lastRun
+    for (const sec of ['ra','aurora','sentinel','cipher','sim','consolidation','aetherbot','credits']) {
+      const s = staticD[sec] || {};
+      const a = apiD[sec] || {};
+      if (a.lastRun && (!s.lastRun || new Date(a.lastRun) > new Date(s.lastRun))) {
+        merged[sec] = { ...s, ...a };
+      } else {
+        merged[sec] = { ...a, ...s };
+      }
     }
-    return r.json();
+    return merged;
   }
 
   // ═══ BOOT ═══
@@ -715,7 +752,10 @@
   // ═══ LOAD DATA ═══
   async function loadData() {
     let d;
-    try { d = await hqFetch('/api/hq-data'); } catch(e) { console.error('loadData fetch:', e); return; }
+    try {
+      const [staticD, apiD] = await Promise.all([hqFetchStatic(), hqFetchApi()]);
+      d = mergeData(staticD, apiD);
+    } catch(e) { console.error('loadData fetch:', e); return; }
     if (!d || !d.ok) return;
     try { _renderData(d); } catch(e) { console.error('loadData render:', e); }
   }
