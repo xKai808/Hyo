@@ -3,6 +3,24 @@
   "events": [
     {
       "ts": "2026-04-12T07:12:40Z",
+      "agent": "sentinel",
+      "msg": "QA sweep \u2014 7 passed, 0 failed",
+      "doc": "/viewer?agent=sentinel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T07:12:40Z",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (2 false positives confirmed)",
+      "doc": "/viewer?agent=cipher&file=2026-04-12T07"
+    },
+    {
+      "ts": "2026-04-12T07:12:40Z",
+      "agent": "ra",
+      "msg": "Newsletter check \u2014 1 total, latest 2026-04-11 (2,254 words)",
+      "doc": "/viewer?agent=ra&file=2026-04-11"
+    },
+    {
+      "ts": "2026-04-12T07:12:40Z",
       "agent": "consolidation",
       "msg": "Nightly consolidation \u2014 kai-ceo",
       "doc": "/viewer?agent=consolidation&file=2026-04-12"
@@ -80,7 +98,7 @@
     }
   ],
   "ra": {
-    "lastRun": "2026-04-11T09:00:00Z",
+    "lastRun": "2026-04-12T07:12:40Z",
     "status": "delivered",
     "briefCount": 1,
     "wordCount": 2254,
@@ -90,17 +108,18 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-11T10:00:00Z",
-    "passed": 4,
-    "failed": 5,
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-11"
+    "lastRun": "2026-04-12T07:12:40Z",
+    "passed": 7,
+    "failed": 0,
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
   },
   "cipher": {
-    "lastRun": "2026-04-12T06:01:24Z",
+    "lastRun": "2026-04-12T07:12:40Z",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "latestDoc": "/viewer?agent=cipher&file=2026-04-12"
+    "notes": "2 false positives: sk- matched 'task-' strings; PRIVATE_KEY matched env var references only",
+    "latestDoc": "/viewer?agent=cipher&file=2026-04-12T07"
   },
   "sim": {
     "lastRun": "2026-04-10T22:14:00Z",
@@ -108,7 +127,8 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-04-12T07:12:40Z"
+    "lastRun": "2026-04-12T07:12:40Z",
+    "latestDoc": "/viewer?agent=consolidation&file=2026-04-12"
   },
   "aetherbot": {},
   "credits": {
