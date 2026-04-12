@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-12 late night (HQ dashboard v2 + autonomous ops wiring)
+**Updated:** 2026-04-12 late night (HQ v8.1 deployed + pre-deploy validation + live verification)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 
 ---
@@ -44,20 +44,151 @@
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. The existing cron/launchd tasks on the Mini DO have full network access — that's where pipeline scripts with auto-push actually run.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-12 late night)
+## Current state (as of 2026-04-12 late night — HQ v8.1 live + pre-deploy safeguard)
 
-**Shipped tonight:**
-- **HQ Dashboard v2** — `website/hq.html` fully data-driven. All hardcoded fake data removed. Every view (Ra, Sentinel, Cipher, Sim, Consolidation, Aetherbot) populates from push data with history cards showing filtered agent events. Removed fake `kai/memory/sentinel.state.json` and `kai/memory/cipher.state.json` references.
-- **Unified `/api/hq.js`** — merged hq-auth, hq-push, hq-data into one lambda. Fixes the critical bug where push and data hit different Vercel lambda instances and couldn't share in-memory state.
-- **`kai push --data` fix** — `${2:-{}}` in bash was silently appending an extra `}` to every payload. Changed to `"$2"` since the default is set earlier. Confirmed 200s on ra, sentinel, cipher pushes.
-- **`hq-auth.js` SHA-256 fix** — was using `createHmac('sha256', '')` (HMAC with empty key) instead of `createHash('sha256')` for password hashing. These produce different digests. Password login now works.
-- **Auto-push wired into all pipeline scripts:**
-  - `kai/sentinel.sh` → pushes passed/failed counts after every run
-  - `kai/cipher.sh` → pushes secrets dir mode, token mode, leak count after every run
-  - `newsletter/newsletter.sh` → pushes word count and delivery status after Ra brief renders
-- **`kai push` endpoint updated** to use unified `/api/hq?action=push` route.
-- **`kai watch`** — fswatch-based auto-deploy watcher for `website/`. Debounces 5s, deploys on any file change.
-- **Aurora intake page** (`website/aurora.html`) — 6+ iterations of UX/copy redesign: 4-step progressive flow, hover-reveal cards, accordion topic categories, keyword freetext, Miller's Law topic grouping.
+**Shipped this session (fifth pass — HQ v8.1 + deployment safeguards):**
+- **HQ v8.1 deployed and verified live** on hyo.world/hq. Both commits (`bfcedf8` + `422e0f2`) confirmed READY on Vercel production.
+- **HQ overhaul:** Lowercase title/logo, OpenAI/Claude API usage pages with real CSV data + dynamic budget bars, rebuilt Ra/Nel/Sim/Aetherbot views, purged all dead links/buttons, research nav dot indicator, Mountain Time timestamps throughout.
+- **Pre-deploy validation script** (`bin/predeploy-validate.py`): 6 automated checks — doc link resolution, HTML ID consistency, dead onclick handlers, UTC timestamp detection, sidebar↔view consistency. Runs before every `kai deploy` and `kai gitpush`.
+- **Delegation checklist** wired into `kai/AGENT_ALGORITHMS.md` and `CLAUDE.md` — 6-step protocol before every task.
+- **4 recurrence patterns logged** in `kai/ledger/known-issues.jsonl`: dead links shipped without verification, UTC timestamps, findings without resolution status, tasks marked complete without verification.
+- **All 15 broken research links fixed** (`newsletters/` → `ra/` paths in 12 .md files).
+- **website/ is now a real directory** (was symlink to agents/sam/website/) — fixes git tracking for Vercel auto-deploy.
+
+**Shipped this session (fourth pass — closed-loop architecture):**
+- **Bidirectional dispatch protocol:** Agents can now communicate upward to Kai via `dispatch flag` (report issues), `dispatch escalate` (blocked tasks), and `dispatch self-delegate` (autonomous task creation). All entries land in both agent and Kai ledgers.
+- **Safeguard cascade system:** When a P0/P1 issue is flagged, `dispatch safeguard` auto-triggers: Nel cross-reference scan, Sam test coverage, and memory log to `known-issues.jsonl`. Single issue → systemic prevention → monitored forever.
+- **Nightly simulation (`dispatch simulate`):** 5-phase validation: downward delegation lifecycle, upward communication, agent runner execution, cross-reference integrity, known-issue regression checks. Outcomes logged to `simulation-outcomes.jsonl`. Scheduled at 23:30 MT daily.
+- **Per-agent execution algorithms (`kai/AGENT_ALGORITHMS.md`):** Complete runbooks for Kai, Nel, Sam, Ra. Every step has a handshake. Every failure triggers prevention. Every session reads and writes memory.
+- **Agent runners integrated with dispatch:** nel.sh (Phase 11), sam.sh (test summary), ra.sh (health report) all now auto-report findings to Kai's ledger. Nel flags cipher leaks and sentinel failures. Sam flags test failures. Ra flags pipeline warnings.
+- **Memory architecture:** `known-issues.jsonl` (pattern memory), `safeguards.jsonl` (cascade log), `simulation-outcomes.jsonl` (nightly results). All read at session start, written at session end.
+- **CLAUDE.md hydration protocol updated:** Now includes known-issues, simulation outcomes, agent algorithms, and agent ACTIVE.md files. Starts every session with `dispatch health` + `dispatch status`.
+- **Fixed dispatch bugs:** Octal interpretation in next_id (`008` → base-10 forced), flag ID generation (separate sequence via `next_flag_id`).
+
+**Shipped this session (third pass — dispatch + simulations):**
+- **Task dispatch system built and hardened:** `bin/dispatch.sh` — full delegation lifecycle (delegate → ACK → report → verify → close). JSONL append-only logs per agent + Kai cross-reference. Python-based ACTIVE.md rebuilder. Bugs found and fixed during simulation:
+  - Python heredoc arg passing (args after heredoc → `python3 -` before heredoc)
+  - JSON string injection via bash interpolation → all JSON now generated via `python3 json.dumps`
+  - Flag parsing bug (--context/--deadline consumed by title) → array-based word collection
+  - Agent validation (unknown agents returned empty string) → error check in log_entry
+  - next_id regex didn't match json.dumps spacing → `\s*` added to grep pattern
+- **Kai→Sam simulation complete:** 5 tasks delegated, all executed and verified. Sam found console.logs are load-bearing MVP persistence (correctly did NOT delete), added 3 HTML files to test suite, added descriptions to all 6 manifests, created API endpoint inventory doc.
+- **Kai→Nel simulation complete:** 5 tasks delegated, all executed and verified. Nel audited dispatch.sh (found 6 issues, 3 fixed), verified all agent runners exit 0, confirmed no hardcoded paths break portability, scanned for secrets (clean), ran permissions audit (all dirs 700, secrets 600, fixed watch-deploy.sh).
+- **Kai→Ra simulation complete:** 5 tasks delegated, all executed and verified. Ra verified archive integrity (12/12 match), audited source coverage (15 sources, 7 fetchers, gaps in culture/sports), validated output dir (1 edition, properly paired), confirmed prompt↔renderer alignment, published archive summary report.
+- **Agent processing patterns documented:** `kai/AGENT_PROCESSING_PATTERNS.md` — Sam gets individual tasks, Nel gets investigation batches, Ra gets pipeline-stage health checks.
+- **Ledger protocol documented:** `kai/ledger/PROTOCOL.md` — task lifecycle, JSONL format, rules.
+- **All 6 agent manifests now have description field** (were missing from all).
+- **API endpoint inventory created:** `agents/sam/website/docs/api-inventory.md` — 8 endpoints + 1 shared module documented.
+- **Research archive summary published:** `agents/sam/website/docs/research/archive-summary.md`.
+
+
+**Shipped this session (second pass — continued from earlier):**
+- **Full folder reorganization:** Top-down agent-centric structure. `agents/` is the root for all agents (nel/, ra/, sam/). Each agent has its own runner, logs, memory, and products. Symlinks at root for backward compat (website/ → agents/sam/website/, .secrets/ → agents/nel/security/, etc.). Zero breaking changes.
+- **Research page shipped:** `hyo.world/research.html` — browsable archive of Ra's entity/topic/lab research. Three tabs, expandable cards, dark mode, responsive. HQ sidebar now has "Intelligence → Research" nav link.
+- **Nel upgraded to nightly auditor:** Phase 10 added — file/folder audit that checks agent runner executability, manifest JSON validity, security permissions, large file detection, sensitive file detection, repo size tracking. Nel now reports nightly to Kai.
+- **All scheduled tasks updated** with new agent paths post-reorg.
+- **CLAUDE.md rewritten** with new folder layout, agent delegation rules, "never ask permission" mandate.
+- **consolidate.sh paths fixed** — all sentinel/cipher checks now reference agents/ instead of old kai/ and NFT/ paths. Verified: 5/6 projects clean (only Aetherbot missing by design).
+
+**Also shipped earlier this session:**
+- **Nel, Ra, Sam agents — end-to-end verified.** All three agents run clean, produce reports, and update HQ state. Bugs found and fixed:
+  - nel.sh: `set -e` → `set -uo pipefail` (grep failures in sentinel synthesis were killing execution); sentinel pattern match fixed for `**Sentinel:**` format; Python heredoc variable injection fixed
+  - ra.sh: `set -e` → `set -uo pipefail`; subscriber count double-output fixed (grep -c returns 0 on stdout AND exit 1)
+  - sam.sh: `set -e` → `set -uo pipefail` (curl failures in sandbox killed test suite)
+  - All tested multiple times for idempotency
+- **Full 6-project consolidation verified.** Hyo, Aurora/Ra, Aetherbot, Kai CEO, Nel, Sam — all 6 projects run with per-project sentinel + cipher + simulation. Idempotent on re-run (7 events, deduped).
+- **Scheduled tasks cleaned up:**
+  - `nightly-per-project-consolidation` updated: now references all 6 projects + Nel + Ra health checks in the prompt
+  - `nightly-consolidation` and `nightly-simulation` DISABLED (superseded by per-project consolidation which includes simulation)
+- **HQ Dashboard v7** — complete rewrite (1745 lines):
+  - Fonts: Plus Jakarta Sans (body) + JetBrains Mono (code) — replaces Syne + DM Mono
+  - Light/dark mode toggle (sun/moon icon in sidebar, preference saved to localStorage)
+  - Nel + Sam agent views added to sidebar and content area
+  - Activity filter pills include Nel + Sam
+  - Version stamp: v7-0412
+  - Premium design: modern cards, smooth transitions, proper responsive (210px sidebar → 56px on mobile)
+- **Ra newsletter aesthetics overhaul:**
+  - Body font: DM Mono (monospace) → Plus Jakarta Sans (16px, weight 400, line-height 1.8)
+  - Code font: JetBrains Mono
+  - Richer color palette with better contrast
+  - Blockquotes with gold-tinted background
+  - More generous spacing, cleaner hierarchy
+  - Branded "Ra · hyo.world" header eyebrow
+  - 2026-04-11 newsletter re-rendered with new template
+
+**Nel findings (first real run):**
+- Improvement score: 65/100
+- Sentinel: 2 projects passing (Aurora/Ra, Kai CEO), 2 with findings (Hyo — API sandbox, Aetherbot — no manifest)
+- Cipher: 0 leaks
+- 2 broken links in research/README.md (relative paths to newsletters/)
+- 7 scripts without test coverage (render.py, send_email.py, synthesize.py, ra_archive.py, ra_context.py, watch-commit.sh, watch-deploy.sh)
+- 2 inefficient patterns ($(cat) usage in kai.sh, nel.sh)
+
+---
+
+## Current state (as of 2026-04-12 cipher hourly — 20:02 UTC)
+
+**Cipher run #51:** 2 findings (both P2 — gitleaks/trufflehog not installed, environmental). 0 leaks. 0 autofixes.
+- **False positive caught and fixed:** `founder-token-leak` P0 was firing because `grep --exclude-dir=.secrets` didn't exclude `agents/nel/security/` (the symlink target). The token was only ever in the one correct location. Fix: added `--exclude-dir=security` to cipher.sh's Layer 4 token search. Marked as false positive in cipher state. Auto-filed KAI_TASKS entry resolved.
+- Permissions: `.secrets/` = 700, `founder.token` = 600. Clean.
+- Run 51 of 51 with 0 verified leaks lifetime.
+
+---
+
+## Current state (as of 2026-04-12 sentinel daily run #2 — 10:04 UTC)
+
+**Sentinel ran 2026-04-12T10:04:50Z:** 6 passed, 3 failed (exit 2 — P0). All recurring, no new issues:
+- `aurora-ran-today` (P0, day 2): No `newsletters/2026-04-12.md`. Aurora migration to Mini launchd still pending (Hyo action item). Last newsletter: 2026-04-11.
+- `api-health-green` (P0, day 3, **escalated**): Sandbox blocks outbound HTTPS. Environmental — cannot be fixed from Cowork. Needs verification on Mini with `kai verify`.
+- `scheduled-tasks-fired` (P1, day 2): No aurora run logs. Consequence of aurora not running.
+- **No new issues. All three are known environmental limitations of the Cowork sandbox. The two real action items remain: (1) Hyo migrates aurora to launchd on the Mini, (2) verify API health from the Mini.**
+
+Previous run (07:13 UTC) had same findings — timing was ruled out as cause since aurora should have fired at 09:00 UTC.
+
+---
+
+## Current state (as of 2026-04-12 nightly consolidation)
+
+**Nightly consolidation ran 2026-04-12T07:12:40Z:**
+
+| Project | Sentinel | Cipher | Notes |
+|---|---|---|---|
+| Hyo | 3 pass / 1 fail | 0 leaks | API health fail = environmental (sandbox blocks HTTPS) |
+| Aurora/Ra | 4 pass / 0 fail | 0 leaks | Clean — 1 newsletter, 9 research archive entries |
+| Aetherbot | 0 pass / 2 fail | — | Expected — manifest + runner still missing, awaiting scope |
+| Kai CEO | 4 pass / 0 fail | 0 leaks | All ops files current |
+
+- No P0s to escalate. No cipher leaks anywhere.
+- HQ state updated: 13 events, `consolidation.lastRun: 2026-04-12T07:12:40Z`
+- Consolidation log synced to `website/docs/consolidation/2026-04-12.md`
+- 41 open tasks across all projects, 20 completed
+- **Open blockers:** Aurora launchd migration (H), Aetherbot scope definition (H+K), SPF/DKIM/DMARC (H)
+
+---
+
+## Current state (as of 2026-04-12 early morning — HQ v6 + per-project consolidation)
+
+**Shipped this session:**
+- **HQ Dashboard v6** — no-cache meta tags (kills browser caching), hover arrows on clickable activity entries, version stamp (`v6-0412`) in sidebar footer for build verification
+- **Document viewer** — `hyo.world/viewer` renders full reports, briefs, and logs in the HQ dark theme. Ra briefs show rendered HTML with markdown source toggle. Sentinel/cipher/sim reports render markdown with proper formatting. Every activity entry with a document opens the viewer in a new tab.
+- **Per-agent "View brief/report/log" buttons** in Ra, Sentinel, Cipher, and Simulations detail views
+- **Documents deployed** to `website/docs/` — Ra 2026-04-11 (HTML + MD), Sentinel reports (Apr 10 + 11), Cipher log (Apr 12), Nightly simulation (Apr 10)
+- **Per-project consolidation system** — replaces the monolithic nightly consolidation:
+  - Four projects: **Hyo** (platform), **Aurora/Ra** (newsletter), **Aetherbot** (strategic analysis), **Kai CEO** (self-assessment)
+  - Each project has `kai/consolidation/{project}/history.md` (compounding log) + `tasks.md` (project-specific task list)
+  - `kai/consolidation/consolidate.sh` — master runner that does all four projects
+  - Sentinel + cipher run per-project (not just globally) — each project gets its own targeted checks
+  - Compounding: each run appends to history, never overwrites. Read bottom-up for recency.
+  - System improvement tracking: Kai CEO consolidation includes self-assessment (what's working, what's failing, what to prioritize)
+  - Consolidation log synced to `website/docs/consolidation/` and viewable via document viewer
+  - `kai consolidate` subcommand added to kai.sh
+  - Scheduled task `nightly-per-project-consolidation` at 23:50 MT daily
+- **Updated HQ Consolidation view** — now shows all four project statuses (Hyo, Aurora/Ra, Aetherbot, Kai CEO) with per-project last-run timestamps and a View Log button
+
+**Previous session (also 2026-04-12):**
+- HQ Dashboard v2-v4 — data-driven views, unified API, SHA-256 auth fix, auto-push wiring
+- `kai watch` — fswatch-based auto-deploy
+- Aurora intake page (`website/aurora.html`) — 6+ iterations of UX/copy redesign
 
 ## Current state (as of 2026-04-11 morning recovery)
 
@@ -146,7 +277,6 @@ Recommended next step on the Mini: `kai verify && ls -la .secrets/ newsletters/ 
 - QA agent (sentinel.hyo) and security agent (cipher.hyo) specs + scheduled tasks wired
 - **Persistent memory infrastructure** for both agents: `kai/memory/{sentinel,cipher}.state.json` + `.algorithm.md` — schema `hyo.agent.memory.v1`. MD5-hashed issue IDs for stable de-dup. Escalation thresholds in code. Run history (last 30). Known false positives list per agent.
 - `kai/sentinel.sh` and `kai/cipher.sh` runners rewritten around the persistent memory pattern — findings reconciled against state.json every run, idempotent filing to KAI_TASKS, 7-day auto-purge of resolved issues.
-- `OVERNIGHT_QUEUE.md` — prioritized overnight checklist that rebuilds every night during consolidation
 - `nightly-consolidation` and `nightly-simulation` scheduled tasks converted from Sunday-only to every-night
 
 **Live in Vercel:**

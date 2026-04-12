@@ -35,7 +35,7 @@ fi
 
 SECRETS="$ROOT/.secrets"
 BIN="$ROOT/bin"
-LOGS="$ROOT/kai/logs"
+LOGS="$ROOT/agents/nel/logs"
 TASKS="$ROOT/KAI_TASKS.md"
 BRIEF="$ROOT/KAI_BRIEF.md"
 API_BASE="${HYO_API_BASE:-https://www.hyo.world}"
@@ -129,13 +129,24 @@ ${BOLD}Kai ops${RST}
   kai tasks add "..."     Append a task
   kai tasks edit          Open KAI_TASKS.md in \$EDITOR
   kai context             Print hydration block to paste into a new Kai session
+  kai save                Save a context snapshot for session recovery
+  kai recover             View the latest context snapshot
+
+${BOLD}Engineering (Sam)${RST}
+  kai sam deploy          Git add, commit, push → Vercel deploy + verify live
+  kai sam test            Run all tests (API endpoints, static files, JSON)
+  kai sam build           Run build steps (npm, transpile, etc.)
+  kai sam fix <issue>     Accept issue description, output fix command
+  kai sam review          Scan recent changes, check for common issues
 
 ${BOLD}Defense agents${RST}
   kai sentinel            Run sentinel.hyo (QA agent) now
   kai cipher              Run cipher.hyo (security agent) now
+  kai nel                 Run nel.hyo (system improvement agent) now
   kai scan secrets        Run gitleaks/trufflehog on the repo
 
-${BOLD}Ra research archive${RST}
+${BOLD}Ra newsletter product manager${RST}
+  kai ra run              Run Ra health check and reporting (product manager)
   kai ra index            Show the master archive index
   kai ra trends           Show the rolling trend report
   kai ra entity <slug>    Show one entity's timeline
@@ -292,7 +303,14 @@ cmd_verify() {
   fi
 }
 
+cmd_validate() {
+  hdr "Pre-deploy validation"
+  HYO_ROOT="$ROOT" python3 "$BIN/predeploy-validate.py" || die "validation failed — fix issues before deploying"
+  ok "validation passed"
+}
+
 cmd_deploy() {
+  cmd_validate
   hdr "Deploying website to Vercel"
   cd "$ROOT/website"
   npx vercel@latest --prod --yes
@@ -450,28 +468,63 @@ After reading, give me a 3-line status: (1) what shipped since last session, (2)
 EOF
 }
 
+cmd_save() {
+  if [[ -x "$ROOT/kai/context-save.sh" ]]; then
+    "$ROOT/kai/context-save.sh" "$@"
+  else
+    die "context-save.sh not found at $ROOT/kai/context-save.sh"
+  fi
+}
+
+cmd_recover() {
+  local latest="$ROOT/kai/context/LATEST.md"
+  if [[ ! -f "$latest" ]]; then
+    warn "no context snapshot yet — run: kai save"
+    return 1
+  fi
+  hdr "Latest context snapshot"
+  cat "$latest"
+}
+
 cmd_sentinel() {
   hdr "Running sentinel.hyo (QA agent)"
-  if [[ -x "$ROOT/kai/sentinel.sh" ]]; then
-    "$ROOT/kai/sentinel.sh"
+  if [[ -x "$ROOT/agents/nel/sentinel.sh" ]]; then
+    "$ROOT/agents/nel/sentinel.sh"
   else
-    warn "sentinel.sh not found at $ROOT/kai/sentinel.sh — see NFT/agents/sentinel.hyo.json for spec"
+    warn "sentinel.sh not found at $ROOT/agents/nel/sentinel.sh — see agents/manifests/sentinel.hyo.json for spec"
   fi
 }
 
 cmd_cipher() {
   hdr "Running cipher.hyo (security agent)"
-  if [[ -x "$ROOT/kai/cipher.sh" ]]; then
-    "$ROOT/kai/cipher.sh"
+  if [[ -x "$ROOT/agents/nel/cipher.sh" ]]; then
+    "$ROOT/agents/nel/cipher.sh"
   else
-    warn "cipher.sh not found at $ROOT/kai/cipher.sh — see NFT/agents/cipher.hyo.json for spec"
+    warn "cipher.sh not found at $ROOT/agents/nel/cipher.sh — see agents/manifests/cipher.hyo.json for spec"
+  fi
+}
+
+cmd_nel() {
+  hdr "Running nel.hyo (system improvement agent)"
+  if [[ -x "$ROOT/agents/nel/nel.sh" ]]; then
+    "$ROOT/agents/nel/nel.sh"
+  else
+    warn "nel.sh not found at $ROOT/agents/nel/nel.sh — see agents/manifests/nel.hyo.json for spec"
   fi
 }
 
 cmd_ra() {
   local sub="${1:-index}"; shift || true
-  local research="$ROOT/kai/research"
+  local research="$ROOT/agents/ra/research"
   case "$sub" in
+    run)
+      hdr "Running Ra newsletter product manager"
+      if [[ -x "$ROOT/agents/ra/ra.sh" ]]; then
+        "$ROOT/agents/ra/ra.sh" "$@"
+      else
+        die "ra.sh not found at $ROOT/agents/ra/ra.sh"
+      fi
+      ;;
     index)
       [[ -f "$research/index.md" ]] || {
         warn "no index yet — run: kai ra rebuild"
@@ -525,14 +578,14 @@ cmd_ra() {
           }' || warn "no matches"
       ;;
     rebuild)
-      HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_archive.py" --rebuild-index
+      HYO_ROOT="$ROOT" python3 "$ROOT/agents/ra/ra_archive.py" --rebuild-index
       ;;
     archive)
       local date="${1:-}"
       if [[ -n "$date" ]]; then
-        HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_archive.py" --date "$date"
+        HYO_ROOT="$ROOT" python3 "$ROOT/agents/ra/ra_archive.py" --date "$date"
       else
-        HYO_ROOT="$ROOT" python3 "$ROOT/kai/ra_archive.py"
+        HYO_ROOT="$ROOT" python3 "$ROOT/agents/ra/ra_archive.py"
       fi
       ;;
     context)
@@ -544,7 +597,7 @@ cmd_ra() {
       fi
       ;;
     *)
-      die "usage: kai ra {index|trends|entity|topic|lab|search|since|rebuild|archive|context}"
+      die "usage: kai ra {run|index|trends|entity|topic|lab|search|since|rebuild|archive|context}"
       ;;
   esac
 }
@@ -627,6 +680,7 @@ case "$sub" in
   help|-h|--help)     cmd_help ;;
   health)             cmd_health "$@" ;;
   verify)             cmd_verify "$@" ;;
+  validate)           cmd_validate "$@" ;;
   deploy)             cmd_deploy "$@" ;;
   mint)               cmd_mint "$@" ;;
   agents)             cmd_agents "$@" ;;
@@ -634,13 +688,28 @@ case "$sub" in
   brief)              cmd_brief "$@" ;;
   tasks)              cmd_tasks "$@" ;;
   context)            cmd_context "$@" ;;
+  save)               cmd_save "$@" ;;
+  recover)            cmd_recover "$@" ;;
   sentinel)           cmd_sentinel "$@" ;;
   cipher)             cmd_cipher "$@" ;;
+  nel)                cmd_nel "$@" ;;
   scan)               cmd_scan "$@" ;;
   ra)                 cmd_ra "$@" ;;
   push)               cmd_push "$@" ;;
+  sam)                bash "$ROOT/agents/sam/sam.sh" "$@" ;;
   watch)              bash "$ROOT/bin/watch-deploy.sh" ;;
   gitwatch)           bash "$ROOT/bin/watch-commit.sh" ;;
+  gitpush)
+    cmd_validate
+    hdr "Pushing to origin/main"
+    cd "$ROOT" && git push origin main
+    ok "pushed to origin/main"
+    ;;
   env)                cmd_env "$@" ;;
+  consolidate)        bash "$ROOT/agents/nel/consolidation/consolidate.sh" "$@" ;;
+  dispatch|d)         bash "$ROOT/bin/dispatch.sh" "$@" ;;
+  simulate|sim)       bash "$ROOT/bin/dispatch.sh" simulate ;;
+  dhealth)            bash "$ROOT/bin/dispatch.sh" health ;;
+  memory)             bash "$ROOT/bin/dispatch.sh" memory ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac
