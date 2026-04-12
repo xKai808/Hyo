@@ -1,0 +1,257 @@
+{
+  "$schema": "https://hyo.world/schemas/agent/v1.json",
+  "name": "nel.hyo",
+  "description": "System improvement and QA agent \u2014 nightly consolidation, file/folder auditing, security oversight, agent health monitoring.",
+  "version": "1.0.0",
+  "created": "2026-04-12",
+  "updated": "2026-04-12",
+  "registry": {
+    "chain": "base",
+    "chainId": 8453,
+    "testnet": {
+      "chain": "base-sepolia",
+      "chainId": 84532
+    },
+    "contract": "HyoRegistry",
+    "tokenStandard": "ERC-721",
+    "status": "spec-only-not-yet-registered",
+    "founding": true,
+    "feesWaived": true,
+    "gasSubsidized": true,
+    "mintPath": "founder-register"
+  },
+  "credit": {
+    "tier": "founding",
+    "probationExempt": true,
+    "escrowHold": false,
+    "score": null
+  },
+  "pricing": {
+    "model": "internal",
+    "rate": 0,
+    "currency": "USD",
+    "billedTo": "hyo"
+  },
+  "identity": {
+    "displayName": "Nel",
+    "handle": "nel.hyo",
+    "tagline": "System improvement agent for the Hyo fleet.",
+    "description": "Nel is the system improvement agent for hyo.world. Nel manages sentinel (QA) and cipher (security) across all projects, continuously identifying opportunities to improve code quality, security posture, and operational efficiency. Nel produces weekly improvement recommendations, tracks system health metrics, identifies stale files and broken links, detects inefficient patterns, and prioritizes fixes by impact. Nel reports to Kai. Runs autonomously via cron; also callable via `kai nel`.",
+    "role": "system-improvement",
+    "archetype": "analyst",
+    "operator": "hyo",
+    "runsOn": "mini"
+  },
+  "capabilities": [
+    "delegate:sentinel-sweeps",
+    "delegate:cipher-scans",
+    "monitor:system-health",
+    "identify:stale-files",
+    "identify:broken-links",
+    "identify:inefficient-patterns",
+    "identify:missing-tests",
+    "track:code-quality-metrics",
+    "recommend:improvements",
+    "prioritize:by-impact",
+    "report:structured-findings",
+    "report:weekly-summary",
+    "file:improvement-tasks",
+    "manage:sentinel-hyo-sub-agent",
+    "manage:cipher-hyo-sub-agent"
+  ],
+  "subAgents": [
+    {
+      "name": "sentinel.hyo",
+      "role": "quality-assurance",
+      "responsibility": "Daily QA checks, output validation, scheduled task verification"
+    },
+    {
+      "name": "cipher.hyo",
+      "role": "security",
+      "responsibility": "Hourly security scans, secret leak detection, permission checks"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "sentinel_daily_reports",
+      "source": "glob:~/Documents/Projects/Hyo/kai/logs/sentinel-*.md"
+    },
+    {
+      "name": "cipher_hourly_logs",
+      "source": "glob:~/Documents/Projects/Hyo/kai/logs/cipher-*.log"
+    },
+    {
+      "name": "consolidation_history",
+      "source": "glob:~/Documents/Projects/Hyo/kai/consolidation/*/history.md"
+    },
+    {
+      "name": "all_projects",
+      "source": "file:~/Documents/Projects/Hyo/kai/consolidation/"
+    },
+    {
+      "name": "code_tree",
+      "source": "file:~/Documents/Projects/Hyo"
+    },
+    {
+      "name": "website_docs",
+      "source": "glob:~/Documents/Projects/Hyo/website/docs/**/*.md"
+    }
+  ],
+  "monitors": [
+    {
+      "id": "system-health-aggregate",
+      "description": "Weekly synthesis of sentinel + cipher reports across all projects. Trend detection: are P0s increasing? Is sentinel noise rising? Are cipher false-positives recurring?",
+      "frequency": "weekly",
+      "priority": "P0"
+    },
+    {
+      "id": "stale-file-detection",
+      "description": "Find files not modified in 60+ days with clear ownership gaps (no author comment, no TODO, not in .gitkeep patterns). Flag as candidates for archival or refresh.",
+      "frequency": "weekly",
+      "priority": "P1"
+    },
+    {
+      "id": "broken-links-in-docs",
+      "description": "Scan all markdown files for broken relative/absolute links, dead references to deleted files, missing sections cited in prose.",
+      "frequency": "weekly",
+      "priority": "P1"
+    },
+    {
+      "id": "missing-test-patterns",
+      "description": "Identify pipeline stages (gather.py, synthesize.py, render.py, etc.) without corresponding test or smoke-test coverage mentioned in their docs.",
+      "frequency": "weekly",
+      "priority": "P2"
+    },
+    {
+      "id": "inefficient-patterns",
+      "description": "Flag shell script patterns that could be optimized: redundant loops, subshells, repeated file reads. Suggest consolidation opportunities.",
+      "frequency": "weekly",
+      "priority": "P2"
+    },
+    {
+      "id": "code-quality-metrics",
+      "description": "Aggregate stats: lines of code per project, script complexity (cyclomatic via shellcheck), function/method coverage, file churn rate.",
+      "frequency": "weekly",
+      "priority": "P3"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "weekly-nel-report",
+      "path": "~/Documents/Projects/Hyo/kai/logs/nel-YYYY-MM-DD.md",
+      "format": "markdown",
+      "fields": [
+        "date",
+        "systemHealthSummary",
+        "staleCandidates",
+        "brokenLinks",
+        "missingTests",
+        "inefficientPatterns",
+        "qualityMetrics",
+        "recommendedActions",
+        "improved"
+      ]
+    },
+    {
+      "name": "hq-state-update",
+      "path": "~/Documents/Projects/Hyo/website/data/hq-state.json",
+      "format": "json",
+      "fields": [
+        "nel.lastRun",
+        "nel.findingsCount",
+        "nel.improvement",
+        "sentinel.healthScore",
+        "cipher.healthScore"
+      ]
+    },
+    {
+      "name": "nel-doc",
+      "path": "~/Documents/Projects/Hyo/website/docs/nel/report-YYYY-MM-DD.md",
+      "format": "markdown",
+      "purpose": "Browsable via document viewer at hyo.world/viewer"
+    },
+    {
+      "name": "filed-tasks",
+      "path": "~/Documents/Projects/Hyo/KAI_TASKS.md",
+      "format": "markdown-append",
+      "prefix": "- [ ] **[K]** [nel] "
+    }
+  ],
+  "pipeline": {
+    "entrypoint": "~/Documents/Projects/Hyo/kai/nel.sh",
+    "schedule": "0 5 * * 0",
+    "scheduleTimezone": "America/Denver",
+    "scheduleNote": "Sunday 05:00 MT \u2014 weekly, after nightly consolidation + all project reports are fresh",
+    "runtime": "bash+python3",
+    "exitCodes": {
+      "0": "success",
+      "1": "warnings (findings filed, improvement record updated)",
+      "2": "critical issues (sentinel or cipher reported P0)"
+    }
+  },
+  "antiFatigue": {
+    "escalationRules": [
+      "Same stale-file pattern found 3 weeks in a row \u2192 file as P1 in KAI_TASKS (consider auto-archive)",
+      "Broken link pointing to recently-deleted file \u2192 link suggestion to replacement (if exists)",
+      "Same inefficient pattern found in >2 scripts \u2192 consolidate and file once (don't duplicate findings)",
+      "Nel findings dismissed by Kai 2 weeks in a row \u2192 reduce frequency to bi-weekly, note in consolidation"
+    ],
+    "falsePositiveSuppression": [
+      "Exclude .git/ subdirs from link/stale checks",
+      "Exclude node_modules/, .venv/, build/ from all scans",
+      "Links to test fixtures (.fixture.json, .example.md) are exempt from broken-link checks",
+      "Temporary files matching pattern /tmp/*, *.tmp, *.bak are never flagged as stale"
+    ]
+  },
+  "visual": {
+    "palette": {
+      "bg": "#080810",
+      "fg": "#e8d5b7",
+      "accent": "#b4d4a8",
+      "muted": "rgba(232,213,183,0.55)"
+    },
+    "side": "HUMAN",
+    "signature": "System online \u00b7 nel.hyo"
+  },
+  "metadata": {
+    "external_url": "https://hyo.world/agents/nel",
+    "attributes": [
+      {
+        "trait_type": "Role",
+        "value": "System Improvement"
+      },
+      {
+        "trait_type": "Archetype",
+        "value": "Analyst"
+      },
+      {
+        "trait_type": "Cadence",
+        "value": "Weekly"
+      },
+      {
+        "trait_type": "Side",
+        "value": "HUMAN"
+      },
+      {
+        "trait_type": "Runtime",
+        "value": "bash+python3"
+      },
+      {
+        "trait_type": "Tier",
+        "value": "Founding"
+      },
+      {
+        "trait_type": "Origin",
+        "value": "Founder Registry"
+      },
+      {
+        "trait_type": "Fees",
+        "value": "Waived"
+      },
+      {
+        "trait_type": "Delegation",
+        "value": "Manages Sentinel + Cipher"
+      }
+    ]
+  }
+}

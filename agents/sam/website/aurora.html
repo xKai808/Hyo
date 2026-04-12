@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurora — a sharper morning</title>
+  <meta name="description" content="Aurora reads the world before you wake up and writes you one brief — only the parts that matter, in a voice that fits." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a12;
+      --bg-deep:  #050509;
+      --bg-card:  #0f0f1a;
+      --fg:       #f2e2c4;
+      --muted:    rgba(242, 226, 196, 0.50);
+      --dim:      rgba(242, 226, 196, 0.28);
+      --border:   rgba(242, 226, 196, 0.12);
+      --accent:   #e8b877;
+      --accent-bright: #f6c98a;
+      --accent-dim: rgba(232, 184, 119, 0.08);
+      --accent-line: rgba(232, 184, 119, 0.30);
+      --ok:       #a3c98a;
+      --err:      #e89070;
+      --font-d:   'Syne', sans-serif;
+      --font-b:   'Inter', sans-serif;
+      --font-m:   'DM Mono', monospace;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html { height: 100%; background: var(--bg); }
+    body {
+      min-height: 100%; color: var(--fg); font-family: var(--font-b);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 32px;
+      position: relative; overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232,184,119,0.10), transparent 65%),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(232,184,119,0.04), transparent 60%);
+    }
+
+    /* ── layout — two-column (mirrors register.html) ── */
+    .layout {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 72px; width: 100%; max-width: 960px; align-items: center;
+    }
+
+    /* ── mast bar ── */
+    .mast {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 32px;
+      font-family: var(--font-m); font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim);
+    }
+    .mast a { color: var(--dim); text-decoration: none; }
+    .mast a:hover { color: var(--fg); }
+    .mast .logo { color: var(--accent); font-family: var(--font-d); font-weight: 700; letter-spacing: 0.06em; }
+
+    /* ── progress bar ── */
+    .progress {
+      position: fixed; top: 0; left: 0; height: 2px; z-index: 60;
+      background: var(--accent);
+      transition: width 0.5s var(--ease);
+    }
+
+    /* ── step container ── */
+    .step { display: none; }
+    .step.active { display: contents; }
+
+    /* ── left column ── */
+    .hook { animation: rise 0.7s var(--ease) both; }
+    .hook-sup {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+    }
+    .hook-line {
+      font-family: var(--font-d); font-weight: 600;
+      font-size: clamp(22px, 2.6vw, 32px); line-height: 1.22;
+      color: var(--accent-bright); margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .hook h1 {
+      font-family: var(--font-b); font-weight: 600;
+      font-size: clamp(28px, 3.2vw, 42px); line-height: 1.2;
+      letter-spacing: -0.015em; color: var(--fg);
+    }
+    .hook h1 em { font-style: italic; color: var(--accent-bright); }
+    .hook-body {
+      margin-top: 20px; font-size: 15px; line-height: 1.7;
+      color: var(--muted); max-width: 400px;
+    }
+    .hook-body strong { color: var(--fg); font-weight: 500; }
+
+    /* ── right column ── */
+    .form-side { animation: rise 0.7s var(--ease) 0.06s both; }
+
+    .step-label {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 18px;
+    }
+
+    /* ── voice / depth cards — hover-reveal ── */
+    .opt-card {
+      padding: 18px 20px; margin-bottom: 10px;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg-card);
+      cursor: pointer; transition: all 0.25s var(--ease); user-select: none;
+      overflow: hidden;
+    }
+    .opt-card:hover { border-color: var(--accent-line); background: var(--accent-dim); }
+    .opt-card.on {
+      border-color: var(--accent); background: rgba(232,184,119,0.12);
+    }
+    .opt-title {
+      font-family: var(--font-d); font-weight: 600; font-size: 16px;
+      color: var(--fg); margin-bottom: 0;
+      transition: margin-bottom 0.25s var(--ease);
+    }
+    .opt-card.on .opt-title { color: var(--accent-bright); }
+    .opt-desc {
+      font-size: 13px; line-height: 1.55; color: var(--dim);
+      max-height: 0; opacity: 0; overflow: hidden;
+      transition: max-height 0.35s var(--ease), opacity 0.25s var(--ease), margin-top 0.25s var(--ease);
+      margin-top: 0;
+    }
+    .opt-card:hover .opt-desc,
+    .opt-card.on .opt-desc {
+      max-height: 80px; opacity: 1; margin-top: 6px;
+    }
+    .opt-card:hover .opt-title,
+    .opt-card.on .opt-title { margin-bottom: 0; }
+    .opt-card.on .opt-desc { color: var(--muted); }
+
+    /* ── length row ── */
+    .len-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+    .len-card {
+      text-align: center; padding: 16px 10px;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg-card);
+      cursor: pointer; transition: all 0.25s var(--ease); user-select: none;
+    }
+    .len-card:hover { border-color: var(--accent-line); }
+    .len-card.on { border-color: var(--accent); background: rgba(232,184,119,0.12); }
+    .len-num {
+      font-family: var(--font-d); font-weight: 700; font-size: 22px;
+      color: var(--fg); line-height: 1;
+    }
+    .len-card.on .len-num { color: var(--accent-bright); }
+    .len-unit {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--dim); margin-top: 4px;
+    }
+
+    /* ── preview card (step 2 left) ── */
+    .preview-card {
+      width: 100%; border-radius: 14px; overflow: hidden;
+      background: #111118; padding: 28px 24px 24px;
+      box-shadow: 0 28px 56px rgba(0,0,0,0.22), 0 6px 18px rgba(0,0,0,0.14),
+                  inset 0 1px 0 rgba(255,255,255,0.05);
+      position: relative;
+    }
+    .preview-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
+      background: linear-gradient(90deg, transparent 0%, rgba(232,184,119,0.4) 20%,
+        rgba(232,184,119,0.7) 50%, rgba(232,184,119,0.4) 80%, transparent 100%);
+    }
+    .pv-hero { font-family: var(--font-d); font-size: 16px; color: var(--accent-bright); margin-bottom: 4px; }
+    .pv-date { font-family: var(--font-m); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.40); margin-bottom: 16px; }
+    .pv-subj { font-family: var(--font-d); font-size: 14px; color: var(--fg); margin-bottom: 12px; line-height: 1.35; }
+    .pv-body { font-size: 12.5px; line-height: 1.7; color: rgba(255,255,255,0.55); }
+    .pv-body em { color: var(--accent-bright); }
+
+    /* ── accordion topic groups (step 3) ── */
+    .topic-accordion { margin-bottom: 8px; }
+    .ta-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg-card);
+      cursor: pointer; transition: all 0.25s var(--ease); user-select: none;
+    }
+    .ta-header:hover { border-color: var(--accent-line); background: var(--accent-dim); }
+    .topic-accordion.open .ta-header { border-color: var(--accent); background: rgba(232,184,119,0.08); border-radius: 10px 10px 0 0; }
+    .ta-name {
+      font-family: var(--font-d); font-weight: 600; font-size: 15px; color: var(--fg);
+    }
+    .topic-accordion.open .ta-name { color: var(--accent-bright); }
+    .ta-count {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.1em;
+      color: var(--dim); margin-left: auto; margin-right: 12px;
+    }
+    .ta-chevron {
+      width: 14px; height: 14px; color: var(--dim);
+      transition: transform 0.3s var(--ease), color 0.2s;
+    }
+    .topic-accordion.open .ta-chevron { transform: rotate(180deg); color: var(--accent); }
+    .ta-body {
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.35s var(--ease), opacity 0.25s var(--ease), padding 0.25s var(--ease);
+      border: 1px solid transparent; border-top: none;
+      border-radius: 0 0 10px 10px; padding: 0 20px;
+    }
+    .topic-accordion.open .ta-body {
+      max-height: 300px; opacity: 1;
+      border-color: var(--accent); border-top: none;
+      padding: 14px 20px 16px; background: rgba(232,184,119,0.03);
+    }
+    .ta-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      display: inline-flex; align-items: center;
+      padding: 8px 14px; border-radius: 999px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--fg); font-family: var(--font-b); font-size: 13px;
+      cursor: pointer; transition: all 0.2s var(--ease); user-select: none;
+    }
+    .chip:hover { border-color: var(--accent-line); color: var(--accent-bright); background: var(--accent-dim); }
+    .chip.on { border-color: var(--accent); background: rgba(232,184,119,0.18); color: var(--accent-bright); font-weight: 500; }
+
+    /* ── keyword freetext (step 3 left) ── */
+    .kw-wrap { margin-top: 24px; }
+    .kw-label {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--dim); margin-bottom: 10px;
+    }
+    textarea.kw-input {
+      width: 100%; min-height: 70px; padding: 14px 16px;
+      background: var(--bg-deep); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--fg); font-family: var(--font-b); font-size: 14px; line-height: 1.55;
+      resize: vertical; transition: border-color 0.2s var(--ease);
+    }
+    textarea.kw-input:focus { outline: none; border-color: var(--accent-line); }
+    textarea.kw-input::placeholder { color: var(--dim); font-style: italic; }
+    .kw-hint {
+      font-size: 11px; color: var(--dim); margin-top: 6px; line-height: 1.5;
+    }
+
+    /* ── email (step 4) ── */
+    input.email {
+      width: 100%; padding: 16px 20px; margin-top: 16px;
+      background: var(--bg-deep); border: 1px solid var(--border); border-radius: 10px;
+      color: var(--fg); font-family: var(--font-b); font-size: 15px;
+      transition: border-color 0.2s var(--ease);
+    }
+    input.email:focus { outline: none; border-color: var(--accent-line); }
+    input.email::placeholder { color: var(--dim); }
+
+    /* ── summary recap (step 4 left) ── */
+    .recap { margin-top: 16px; }
+    .recap-row {
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .recap-row:last-child { border-bottom: none; }
+    .recap-label {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--dim); min-width: 60px;
+    }
+    .recap-val {
+      font-family: var(--font-b); font-size: 14px; color: var(--accent-bright);
+    }
+    .recap-topics {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .recap-chip {
+      padding: 4px 10px; border-radius: 999px; font-size: 11px;
+      border: 1px solid var(--accent-line); color: var(--accent-bright);
+      font-family: var(--font-b);
+    }
+
+    /* ── buttons ── */
+    .btn-row { margin-top: 24px; display: flex; align-items: center; gap: 16px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 28px; border: none; border-radius: 8px;
+      font-family: var(--font-b); font-size: 14px; font-weight: 600;
+      letter-spacing: 0.03em; cursor: pointer;
+      transition: all 0.2s var(--ease);
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-primary:hover { background: var(--accent-bright); transform: translateY(-1px); box-shadow: 0 10px 30px rgba(232,184,119,0.25); }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn svg { transition: transform 0.2s; }
+    .btn:hover svg { transform: translateX(3px); }
+    .btn-back {
+      background: transparent; color: var(--dim); border: 1px solid var(--border);
+    }
+    .btn-back:hover { color: var(--fg); border-color: var(--accent-line); }
+    .btn-back:hover svg { transform: translateX(-3px); }
+
+    .status { font-family: var(--font-m); font-size: 11px; color: var(--dim); margin-top: 10px; min-height: 16px; }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--err); }
+
+    /* ── done screen ── */
+    .done-wrap { display: none; grid-column: 1 / -1; text-align: center; padding: 60px 20px; }
+    .done-wrap.show { display: block; }
+    .done-sun {
+      display: inline-block; width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 40px var(--accent-bright), 0 0 80px rgba(232,184,119,0.5);
+      margin-bottom: 32px;
+    }
+    .done-title { font-family: var(--font-d); font-size: 30px; color: var(--fg); margin-bottom: 16px; }
+    .done-body { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 440px; margin: 0 auto; }
+
+    /* ── footer ── */
+    footer {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      padding: 14px 32px; text-align: center;
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.08em;
+      color: rgba(242,226,196,0.22); z-index: 50;
+    }
+    footer a { color: rgba(242,226,196,0.30); text-decoration: none; }
+    footer a:hover { color: var(--muted); }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 760px) {
+      body { padding: 80px 20px 60px; align-items: flex-start; }
+      .layout { grid-template-columns: 1fr; gap: 40px; }
+      .preview-card { margin-bottom: 12px; }
+      .desires { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress" style="width: 25%"></div>
+  <div class="mast">
+    <a href="/" class="logo">hyo</a>
+    <span>&#9737; aurora &middot; beta</span>
+  </div>
+
+  <div class="layout" id="layout">
+
+    <!-- ════════════════════════════════════════════════════
+         STEP 1 — THE HOOK + VOICE (identity, foot-in-the-door)
+         ════════════════════════════════════════════════════ -->
+    <div class="step active" id="s1">
+      <div class="hook">
+        <div class="hook-line">You don't need more news.</div>
+        <p class="hook-body">
+          Aurora reads the world before you wake up and creates a personalized brief &mdash;
+          <strong>only the parts that matter. The way you want it.</strong>
+        </p>
+      </div>
+      <div class="form-side">
+        <div class="step-label">Aurora can be&hellip;</div>
+        <div class="opt-card" data-group="voice" data-val="gentle">
+          <div class="opt-title">Gentle</div>
+          <div class="opt-desc">Warm. Careful. No anxiety-bait, no hot takes. You want to understand the day without being stressed by it.</div>
+        </div>
+        <div class="opt-card on" data-group="voice" data-val="balanced">
+          <div class="opt-title">Balanced</div>
+          <div class="opt-desc">Has a point of view. Willing to disagree, but fair. Opinionated without being obnoxious.</div>
+        </div>
+        <div class="opt-card" data-group="voice" data-val="sharp">
+          <div class="opt-title">Sharp</div>
+          <div class="opt-desc">Edgy. First-mover. Willing to call things dumb. You want your morning with a little mischief.</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="goStep(2)">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════
+         STEP 2 — DEPTH + LENGTH + PREVIEW (investment + reward)
+         ════════════════════════════════════════════════════ -->
+    <div class="step" id="s2">
+      <div class="hook">
+        <div class="hook-sup">she's already learning</div>
+        <div class="preview-card" id="previewCard">
+          <div class="pv-hero">Aurora &#9737;</div>
+          <div class="pv-date">Tomorrow morning</div>
+          <div class="pv-subj" id="pvSubj">Three stories that actually matter today</div>
+          <div class="pv-body" id="pvBody">
+            <em>The quiet part of this morning is that everything moved at once &mdash; and most people missed it.</em><br><br>
+            A daily brief, written for you. Personalized to your voice, your depth, your attention span.
+          </div>
+        </div>
+      </div>
+      <div class="form-side">
+        <div class="step-label">how deep should she go?</div>
+        <div class="opt-card" data-group="depth" data-val="headlines">
+          <div class="opt-title">Headlines</div>
+          <div class="opt-desc">Just the signal. What moved, why it matters, done. A 60-second scan.</div>
+        </div>
+        <div class="opt-card on" data-group="depth" data-val="balanced">
+          <div class="opt-title">Balanced</div>
+          <div class="opt-desc">A few real stories with enough context to form an opinion by lunch.</div>
+        </div>
+        <div class="opt-card" data-group="depth" data-val="deep-dives">
+          <div class="opt-title">Deep dives</div>
+          <div class="opt-desc">One dominant story with real explanation and second-order implications. For when you want to think, not just scroll.</div>
+        </div>
+
+        <div class="step-label" style="margin-top: 24px;">how much of your morning?</div>
+        <div class="len-row">
+          <div class="len-card" data-group="length" data-val="3min">
+            <div class="len-num">3</div>
+            <div class="len-unit">minutes</div>
+          </div>
+          <div class="len-card on" data-group="length" data-val="6min">
+            <div class="len-num">6</div>
+            <div class="len-unit">minutes</div>
+          </div>
+          <div class="len-card" data-group="length" data-val="12min">
+            <div class="len-num">12</div>
+            <div class="len-unit">minutes</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-back" onclick="goStep(1)">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 6.5H1M5.5 2L1 6.5 5.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back
+          </button>
+          <button class="btn btn-primary" onclick="goStep(3)">
+            Continue
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════
+         STEP 3 — TOPICS (accordion, full-width)
+         ════════════════════════════════════════════════════ -->
+    <div class="step" id="s3">
+      <div class="hook">
+        <div class="hook-sup">what interests you?</div>
+        <div class="hook-line" style="color: var(--fg); font-size: clamp(20px, 2.2vw, 28px);">Tell Aurora where to look.</div>
+        <p class="hook-body">Pick categories on the right, or type anything here &mdash; names, teams, places, obsessions. She'll figure it out.</p>
+        <div class="kw-wrap">
+          <div class="kw-label">your keywords</div>
+          <textarea class="kw-input" id="keywords" maxlength="300" placeholder="BTS, LAFC, local events in Silver Lake, new ramen spots, SEC filings, V..."></textarea>
+          <div class="kw-hint">People, teams, neighborhoods, niche interests &mdash; anything Aurora should track.</div>
+        </div>
+      </div>
+      <div class="form-side">
+        <div id="topic-accordions"></div>
+        <div class="btn-row">
+          <button class="btn btn-back" onclick="goStep(2)">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 6.5H1M5.5 2L1 6.5 5.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back
+          </button>
+          <button class="btn btn-primary" id="topicContinue" onclick="goStep(4)" disabled>
+            Continue
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════
+         STEP 4 — SUMMARY + EMAIL (close)
+         ════════════════════════════════════════════════════ -->
+    <div class="step" id="s4">
+      <div class="hook">
+        <div class="hook-sup">here's what she'll build for you</div>
+        <div class="recap" id="recap"></div>
+      </div>
+      <div class="form-side">
+        <div class="step-label">where should Aurora find you?</div>
+        <input type="email" class="email" id="email" placeholder="you@wherever.com" autocomplete="email" />
+        <div class="btn-row">
+          <button class="btn btn-back" onclick="goStep(3)">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M12 6.5H1M5.5 2L1 6.5 5.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back
+          </button>
+          <button class="btn btn-primary" id="go" disabled onclick="submit()">
+            Start my morning
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+
+    <!-- done -->
+    <div class="done-wrap" id="done">
+      <div class="done-sun"></div>
+      <div class="done-title">You're in.</div>
+      <p class="done-body">
+        Your first Aurora brief lands in your inbox tomorrow morning.
+        Check spam for the first one &mdash; after that she'll be where you expect.
+        <br /><br />
+        Want to tune her later? The first email has a one-tap link.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    Aurora is a <a href="/">Hyo</a> product &middot; we store your email and interests only &middot; we never sell or share them
+  </footer>
+
+  <script>
+  // ── topic taxonomy grouped ──
+  const TOPIC_GROUPS = {
+    money:   { label: 'Money & Markets', topics: [
+      { slug: 'finance',     label: 'finance' },
+      { slug: 'macro',       label: 'macro' },
+      { slug: 'stocks',      label: 'stocks' },
+      { slug: 'crypto',      label: 'crypto' },
+      { slug: 'real-estate', label: 'real estate' },
+    ]},
+    tech:    { label: 'Tech & Build', topics: [
+      { slug: 'ai',          label: 'ai' },
+      { slug: 'tech',        label: 'tech' },
+      { slug: 'startups',    label: 'startups' },
+      { slug: 'gaming',      label: 'gaming' },
+      { slug: 'design',      label: 'design' },
+    ]},
+    culture: { label: 'Culture & Life', topics: [
+      { slug: 'fashion',     label: 'fashion' },
+      { slug: 'celebrity',   label: 'celebrity' },
+      { slug: 'film-and-tv', label: 'film & tv' },
+      { slug: 'music',       label: 'music' },
+      { slug: 'books',       label: 'books' },
+      { slug: 'gossip',      label: 'gossip' },
+    ]},
+    world:   { label: 'The World', topics: [
+      { slug: 'politics',    label: 'politics' },
+      { slug: 'science',     label: 'science' },
+      { slug: 'climate',     label: 'climate' },
+      { slug: 'space',       label: 'space' },
+      { slug: 'education',   label: 'education' },
+      { slug: 'labor',       label: 'labor & jobs' },
+      { slug: 'culture-wars',label: 'culture wars' },
+      { slug: 'architecture',label: 'architecture' },
+    ]},
+    body:    { label: 'Body & Play', topics: [
+      { slug: 'health',      label: 'health' },
+      { slug: 'fitness',     label: 'fitness' },
+      { slug: 'food',        label: 'food' },
+      { slug: 'travel',      label: 'travel' },
+      { slug: 'sports',      label: 'sports' },
+      { slug: 'social-media',label: 'social media' },
+    ]},
+  };
+
+  const CHEVRON_SVG = '<svg class="ta-chevron" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  // ── render accordion topic groups ──
+  const accWrap = document.getElementById('topic-accordions');
+  Object.entries(TOPIC_GROUPS).forEach(([key, group]) => {
+    const acc = document.createElement('div');
+    acc.className = 'topic-accordion';
+    acc.dataset.group = key;
+
+    const header = document.createElement('div');
+    header.className = 'ta-header';
+    header.innerHTML = `<span class="ta-name">${group.label}</span><span class="ta-count" data-group="${key}"></span>${CHEVRON_SVG}`;
+    header.addEventListener('click', () => acc.classList.toggle('open'));
+
+    const body = document.createElement('div');
+    body.className = 'ta-body';
+    const chips = document.createElement('div');
+    chips.className = 'ta-chips';
+    group.topics.forEach(t => {
+      const c = document.createElement('div');
+      c.className = 'chip';
+      c.dataset.val = t.slug;
+      c.dataset.group = key;
+      c.textContent = t.label;
+      chips.appendChild(c);
+    });
+    body.appendChild(chips);
+    acc.appendChild(header);
+    acc.appendChild(body);
+    accWrap.appendChild(acc);
+  });
+
+  // ── state ──
+  const state = { topics: new Set(), voice: 'balanced', depth: 'balanced', length: '6min', email: '', keywords: '' };
+
+  // ── keywords ──
+  const kwEl = document.getElementById('keywords');
+  kwEl.addEventListener('input', () => { state.keywords = kwEl.value; });
+  let currentStep = 1;
+
+  // ── exclusive card selection (voice, depth) ──
+  document.querySelectorAll('.opt-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const group = card.dataset.group;
+      document.querySelectorAll(`.opt-card[data-group="${group}"]`).forEach(c => c.classList.remove('on'));
+      card.classList.add('on');
+      state[group] = card.dataset.val;
+      updatePreview();
+    });
+  });
+
+  // ── length cards ──
+  document.querySelectorAll('.len-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.len-card').forEach(c => c.classList.remove('on'));
+      card.classList.add('on');
+      state.length = card.dataset.val;
+    });
+  });
+
+  // ── topic chip clicks (delegated) ──
+  accWrap.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    const val = chip.dataset.val;
+    if (state.topics.has(val)) { state.topics.delete(val); chip.classList.remove('on'); }
+    else { state.topics.add(val); chip.classList.add('on'); }
+    updateAccordionCounts();
+    refreshTopicContinue();
+  });
+
+  function updateAccordionCounts() {
+    Object.entries(TOPIC_GROUPS).forEach(([key, group]) => {
+      const selected = group.topics.filter(t => state.topics.has(t.slug)).length;
+      const el = document.querySelector(`.ta-count[data-group="${key}"]`);
+      el.textContent = selected > 0 ? (selected + ' selected') : '';
+    });
+  }
+
+  function refreshTopicContinue() {
+    document.getElementById('topicContinue').disabled = state.topics.size === 0 && !state.keywords.trim();
+  }
+
+  // keywords also enable continue
+  document.getElementById('keywords').addEventListener('input', () => { refreshTopicContinue(); });
+
+  // ── email ──
+  const emailEl = document.getElementById('email');
+  emailEl.addEventListener('input', () => { state.email = emailEl.value.trim(); refreshSubmit(); });
+
+  function emailValid(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+
+  function refreshSubmit() {
+    const ok = emailValid(state.email);
+    document.getElementById('go').disabled = !ok;
+    const st = document.getElementById('status');
+    st.className = 'status';
+    if (!ok) st.textContent = '';
+    else { st.textContent = 'ready when you are'; st.className = 'status ok'; }
+  }
+
+  // ── build recap (step 4 left) ──
+  function buildRecap() {
+    const depth = state.depth === 'deep-dives' ? 'deep dives' : state.depth;
+    const len = state.length.replace('min', ' min');
+    const topicChips = Array.from(state.topics).map(t => `<span class="recap-chip">${t.replace(/-/g,' ')}</span>`).join('');
+    const kwLine = state.keywords.trim()
+      ? `<div class="recap-row"><span class="recap-label">keywords</span><span class="recap-val" style="font-size:13px;color:var(--fg);">${state.keywords.trim()}</span></div>`
+      : '';
+    document.getElementById('recap').innerHTML = `
+      <div class="recap-row"><span class="recap-label">voice</span><span class="recap-val">${state.voice}</span></div>
+      <div class="recap-row"><span class="recap-label">depth</span><span class="recap-val">${depth}</span></div>
+      <div class="recap-row"><span class="recap-label">length</span><span class="recap-val">${len}</span></div>
+      <div class="recap-row"><span class="recap-label">topics</span><div class="recap-topics">${topicChips}</div></div>
+      ${kwLine}
+    `;
+  }
+
+  // ── preview card dynamic text ──
+  const PREVIEW_SUBJECTS = {
+    gentle:   'A quiet day that still moved the needle',
+    balanced: 'Three stories that actually matter today',
+    sharp:    'The Fed blinked and your grocery bill didn\'t',
+  };
+  const PREVIEW_HOOKS = {
+    gentle:   '<em>A week that moved quietly &mdash; and most of it was good news.</em>',
+    balanced: '<em>The quiet part of this morning is that everything moved at once &mdash; and most people missed it.</em>',
+    sharp:    '<em>Three things happened overnight. Two of them are going to cost you money if you ignore them.</em>',
+  };
+  function updatePreview() {
+    document.getElementById('pvSubj').textContent = PREVIEW_SUBJECTS[state.voice] || PREVIEW_SUBJECTS.balanced;
+    document.getElementById('pvBody').innerHTML =
+      (PREVIEW_HOOKS[state.voice] || PREVIEW_HOOKS.balanced) +
+      '<br><br>A daily brief, written for you. Your voice, your depth, your attention span.';
+  }
+
+  // ── step navigation (now 4 steps) ──
+  function goStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('s' + n).classList.add('active');
+    document.getElementById('progress').style.width = (n * 25) + '%';
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (n === 2) updatePreview();
+    if (n === 3) refreshTopicContinue();
+    if (n === 4) { buildRecap(); refreshSubmit(); }
+    // re-trigger animations
+    document.querySelectorAll('#s' + n + ' .hook, #s' + n + ' .form-side').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  // ── submit ──
+  async function submit() {
+    const goBtn = document.getElementById('go');
+    if (goBtn.disabled) return;
+    goBtn.disabled = true;
+    const st = document.getElementById('status');
+    st.className = 'status'; st.textContent = 'sending Aurora your profile\u2026';
+    const payload = {
+      email: state.email,
+      topics: Array.from(state.topics),
+      voice: state.voice,
+      depth: state.depth,
+      length: state.length,
+      keywords: state.keywords.slice(0, 300),
+      source: 'aurora.html',
+    };
+    try {
+      const r = await fetch('/api/aurora-subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
+      const j = await r.json();
+      if (!r.ok || !j.ok) throw new Error(j.error || ('HTTP ' + r.status));
+      document.getElementById('layout').innerHTML = '';
+      document.getElementById('done').classList.add('show');
+      document.getElementById('layout').appendChild(document.getElementById('done'));
+      document.getElementById('progress').style.width = '100%';
+    } catch (err) {
+      st.className = 'status err';
+      st.textContent = 'something broke: ' + err.message;
+      goBtn.disabled = false;
+    }
+  }
+  </script>
+</body>
+</html>

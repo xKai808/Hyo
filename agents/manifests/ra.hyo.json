@@ -1,0 +1,179 @@
+{
+  "$schema": "https://hyo.world/schemas/agent/v1.json",
+  "agentId": "agent_ra_newsletter_pm",
+  "name": "ra.hyo",
+  "description": "Newsletter product manager \u2014 owns the research archive, synthesize\u2192render pipeline, and editorial voice for Hyo's daily intelligence brief.",
+  "nickname": "Ra",
+  "version": "1.0.0",
+  "created": "2026-04-12",
+  "updated": "2026-04-12",
+  "registry": {
+    "chain": "base",
+    "chainId": 8453,
+    "testnet": {
+      "chain": "base-sepolia",
+      "chainId": 84532
+    },
+    "contract": "HyoRegistry",
+    "tokenStandard": "ERC-721",
+    "status": "registered-meta",
+    "registeredAt": "2026-04-12T00:00:00Z",
+    "registeredVia": "internal-product",
+    "founding": false,
+    "feesWaived": true,
+    "note": "Ra is a meta-agent that manages the newsletter product (both Ra internal brief and Aurora Public consumer newsletter). Not a minted agent, but a product manager agent."
+  },
+  "credit": {
+    "tier": "internal",
+    "probationExempt": true,
+    "escrowHold": false,
+    "score": null,
+    "note": "Internal product agent \u2014 no external billing."
+  },
+  "pricing": {
+    "model": "internal",
+    "rate": 0,
+    "currency": "USD",
+    "billedTo": "hyo"
+  },
+  "reviews": {
+    "enabled": false,
+    "visibility": "operator-only",
+    "note": "Meta-agent managing sub-products; reviews disabled."
+  },
+  "identity": {
+    "displayName": "Ra",
+    "legalName": "Ra Newsletter Product Manager",
+    "handle": "ra.hyo",
+    "tagline": "Newsletter product orchestrator. Manages Ra internal brief and Aurora Public consumer newsletter.",
+    "description": "Ra is a fully autonomous product manager for the Hyo newsletter platform. Ra oversees two products: (1) Ra \u2014 the internal daily CEO brief for Hyo, and (2) Aurora Public \u2014 the consumer-facing subscriber newsletter. Ra monitors pipeline health, manages the research archive, tracks subscriber status, identifies content gaps, and generates structured health reports. Ra reports to Kai (CEO) and manages aurora.hyo as a sub-product.",
+    "role": "newsletter-product-manager",
+    "archetype": "coordinator",
+    "operator": "hyo",
+    "runsOn": "cowork-scheduled-tasks",
+    "productStatus": "v1.0.0-operational",
+    "publicLaunchTarget": null
+  },
+  "managedProducts": [
+    {
+      "id": "ra",
+      "name": "Ra Internal Brief",
+      "archiveWriter": true,
+      "description": "Daily opinionated intelligence brief for Hyo. Only product with write access to the research archive."
+    },
+    {
+      "id": "aurora-public",
+      "name": "Aurora Public Consumer Newsletter",
+      "archiveWriter": false,
+      "description": "Per-subscriber consumer newsletter. Reads the research archive (via PRN context) but does not write to it."
+    }
+  ],
+  "capabilities": [
+    "pipeline:health-check",
+    "pipeline:source-verification",
+    "pipeline:prompt-freshness",
+    "pipeline:archive-build-verification",
+    "newsletter:count-and-measure",
+    "newsletter:word-count",
+    "newsletter:date-range-analysis",
+    "subscriber:status-check",
+    "subscriber:list-verification",
+    "content:gap-analysis",
+    "archive:entry-freshness",
+    "archive:orphan-detection",
+    "reporting:structured-reports",
+    "reporting:hq-push",
+    "reporting:document-viewer-integration"
+  ],
+  "pipeline": {
+    "entrypoint": "kai/ra.sh",
+    "stages": [
+      {
+        "name": "health-check",
+        "script": "kai/ra.sh",
+        "command": "kai ra run",
+        "output": "kai/logs/ra-YYYY-MM-DD.md + website/docs/ra/",
+        "schedule": "daily (via scheduled task or manual trigger)",
+        "purpose": "Comprehensive health check and reporting on the newsletter product"
+      }
+    ],
+    "runtime": "bash"
+  },
+  "monitoring": {
+    "healthChecks": [
+      "newsletter pipeline sources present and readable",
+      "synthesis prompt current and valid",
+      "research archive building correctly",
+      "newsletters directory has expected files",
+      "newsletter word counts within bounds",
+      "subscribers.jsonl exists and has content",
+      "research archive entries not stale (mtime < 30 days)"
+    ],
+    "reportFormat": "markdown",
+    "reportDestinations": [
+      "kai/logs/ra-YYYY-MM-DD.md",
+      "website/docs/ra/YYYY-MM-DD.md",
+      "hyo.world/hq data endpoint (via kai push)"
+    ]
+  },
+  "visual": {
+    "palette": {
+      "bg": "#f5f3f0",
+      "fg": "#1a1a18",
+      "accent": "#c9a96e",
+      "muted": "rgba(26,26,24,0.55)"
+    },
+    "fonts": {
+      "display": "Syne",
+      "body": "DM Mono"
+    },
+    "side": "HUMAN",
+    "signature": "Ra \u00b7 Newsletter PM"
+  },
+  "metadata": {
+    "image": "ipfs://pending/ra.png",
+    "external_url": "https://hyo.world/agents/ra",
+    "attributes": [
+      {
+        "trait_type": "Name",
+        "value": "Ra"
+      },
+      {
+        "trait_type": "Role",
+        "value": "Newsletter Product Manager"
+      },
+      {
+        "trait_type": "Archetype",
+        "value": "Coordinator"
+      },
+      {
+        "trait_type": "Type",
+        "value": "Meta-Agent"
+      },
+      {
+        "trait_type": "Cadence",
+        "value": "Daily"
+      },
+      {
+        "trait_type": "Runtime",
+        "value": "Bash + Python"
+      },
+      {
+        "trait_type": "Side",
+        "value": "HUMAN"
+      },
+      {
+        "trait_type": "Tier",
+        "value": "Internal"
+      },
+      {
+        "trait_type": "Reports To",
+        "value": "Kai (CEO)"
+      },
+      {
+        "trait_type": "Manages",
+        "value": "Ra Brief, Aurora Public"
+      }
+    ]
+  }
+}

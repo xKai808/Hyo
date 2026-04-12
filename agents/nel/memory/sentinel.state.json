@@ -1,0 +1,148 @@
+{
+  "schema": "hyo.agent.memory.v1",
+  "agent": "sentinel.hyo",
+  "firstSeenAt": "2026-04-10T21:55:00Z",
+  "lastRunAt": "2026-04-12T22:10:46Z",
+  "totalRuns": 5,
+  "runHistory": [
+    {
+      "ts": "2026-04-11T10:04:55Z",
+      "passed": 4,
+      "failed": 5,
+      "newIssues": 5,
+      "recurringIssues": 0,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-12T07:13:47Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 4
+    },
+    {
+      "ts": "2026-04-12T07:13:50Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-12T22:10:34Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-04-12T22:10:46Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    }
+  ],
+  "knownIssues": {
+    "aurora-ran-today:9d7771a3": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/busy-wizardly-johnson/mnt/Hyo/newsletters/2026-04-11.md",
+      "firstSeen": "2026-04-11T10:04:55Z",
+      "lastSeen": "2026-04-11T10:04:55Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-12T07:13:47Z"
+    },
+    "api-health-green:82547bfc": {
+      "severity": "P0",
+      "check_id": "api-health-green",
+      "detail": "health endpoint not green or token unconfigured",
+      "firstSeen": "2026-04-11T10:04:55Z",
+      "lastSeen": "2026-04-12T22:10:46Z",
+      "daysFailing": 5,
+      "status": "open"
+    },
+    "founder-token-integrity:2dffc5f6": {
+      "severity": "P0",
+      "check_id": "founder-token-integrity",
+      "detail": "founder.token mode is   File: \"/sessions/busy-wizardly-johnson/mnt/Hyo/.secrets/founder.token\"\n    ID: 0        Namelen: 255     Type: fuseblk\nBlock size: 1048576    Fundamental block size: 4096\nBlocks: Total: 59840624   Free: 42535868   Available: 42535868\nInodes: Total: 1702043791 Free: 1701434720\n600, want 6xx",
+      "firstSeen": "2026-04-11T10:04:55Z",
+      "lastSeen": "2026-04-11T10:04:55Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-12T07:13:47Z"
+    },
+    "scheduled-tasks-fired:aa18e1cf": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/busy-wizardly-johnson/mnt/Hyo/kai/logs",
+      "firstSeen": "2026-04-11T10:04:55Z",
+      "lastSeen": "2026-04-11T10:04:55Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-12T07:13:47Z"
+    },
+    "secrets-dir-permissions:48738cd1": {
+      "severity": "P1",
+      "check_id": "secrets-dir-permissions",
+      "detail": "  File: \"/sessions/busy-wizardly-johnson/mnt/Hyo/.secrets\"\n    ID: 0        Namelen: 255     Type: fuseblk\nBlock size: 1048576    Fundamental block size: 4096\nBlocks: Total: 59840624   Free: 42535868   Available: 42535868\nInodes: Total: 1702043791 Free: 1701434720\n700 (want 700) \u2014 run: chmod 700 /sessions/busy-wizardly-johnson/mnt/Hyo/.secrets",
+      "firstSeen": "2026-04-11T10:04:55Z",
+      "lastSeen": "2026-04-11T10:04:55Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-12T07:13:47Z"
+    },
+    "aurora-ran-today:0c142622": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/clever-beautiful-cray/mnt/Hyo/newsletters/2026-04-12.md",
+      "firstSeen": "2026-04-12T07:13:47Z",
+      "lastSeen": "2026-04-12T07:13:50Z",
+      "daysFailing": 2,
+      "status": "resolved",
+      "resolvedAt": "2026-04-12T22:10:34Z"
+    },
+    "scheduled-tasks-fired:07c43f6a": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/clever-beautiful-cray/mnt/Hyo/kai/logs",
+      "firstSeen": "2026-04-12T07:13:47Z",
+      "lastSeen": "2026-04-12T07:13:50Z",
+      "daysFailing": 2,
+      "status": "resolved",
+      "resolvedAt": "2026-04-12T22:10:34Z"
+    },
+    "aurora-ran-today:feb31bdf": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/vigilant-nifty-darwin/mnt/Hyo/newsletters/2026-04-12.md",
+      "firstSeen": "2026-04-12T22:10:34Z",
+      "lastSeen": "2026-04-12T22:10:46Z",
+      "daysFailing": 2,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:3d76170a": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/vigilant-nifty-darwin/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-12T22:10:34Z",
+      "lastSeen": "2026-04-12T22:10:46Z",
+      "daysFailing": 2,
+      "status": "open"
+    }
+  },
+  "falsePositives": [],
+  "trendCounters": {
+    "aurora_ran_today_failures_in_a_row": 0,
+    "api_health_failures_in_a_row": 0,
+    "manifest_invalid_failures_in_a_row": 0
+  },
+  "escalationState": {
+    "lastEscalationAt": null,
+    "escalationsFiledThisWeek": 0
+  }
+}

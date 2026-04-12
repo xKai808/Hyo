@@ -1,0 +1,122 @@
+{
+  "updatedAt": "2026-04-12T22:11:50Z",
+  "events": [
+    {
+      "ts": "2026-04-12T22:11:50Z",
+      "agent": "sentinel",
+      "msg": "QA sweep \u2014 6 passed, 3 failed (sandbox-expected)",
+      "doc": "/viewer?agent=sentinel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T22:11:50Z",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 secrets 700/600, 0 leaks",
+      "doc": "/viewer?agent=cipher&file=2026-04-12T22"
+    },
+    {
+      "ts": "2026-04-12T22:11:50Z",
+      "agent": "nel",
+      "msg": "System audit \u2014 score 65, 15 broken links, 2 sentinel issues",
+      "doc": "/viewer?agent=nel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T19:35:34Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T19:35:34Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-04-12",
+      "doc": "/viewer?agent=simulation&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T18:07:28Z",
+      "agent": "sentinel",
+      "msg": "QA sweep \u2014 7 passed, 0 failed",
+      "doc": "/viewer?agent=sentinel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T18:07:28Z",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (6 false positives confirmed)",
+      "doc": "/viewer?agent=cipher&file=2026-04-12T18"
+    },
+    {
+      "ts": "2026-04-12T18:07:28Z",
+      "agent": "ra",
+      "msg": "Newsletter check \u2014 1 total, latest 2026-04-11 (2,254 words)",
+      "doc": "/viewer?agent=ra&file=2026-04-11"
+    },
+    {
+      "ts": "2026-04-11T23:50:00Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 KAI_BRIEF + KAI_TASKS synced"
+    },
+    {
+      "ts": "2026-04-11T22:14:00Z",
+      "agent": "sim",
+      "msg": "Nightly simulation \u2014 overnight scenario mapped",
+      "doc": "/viewer?agent=sim&file=2026-04-10"
+    }
+  ],
+  "ra": {
+    "lastRun": "2026-04-12T18:07:28Z",
+    "status": "delivered",
+    "briefCount": 1,
+    "wordCount": 2254,
+    "latestDoc": "/viewer?agent=ra&file=2026-04-11"
+  },
+  "aurora": {
+    "subscribers": []
+  },
+  "sentinel": {
+    "lastRun": "2026-04-12T22:11:50Z",
+    "passed": 6,
+    "failed": 3,
+    "escalations": 2,
+    "notes": "P0: aurora not run today (day 2), API health unreachable from sandbox (day 5). P1: no aurora logs (day 2). All expected sandbox limitations.",
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
+  },
+  "cipher": {
+    "lastRun": "2026-04-12T22:11:50Z",
+    "secretsDir": "700",
+    "founderToken": "600",
+    "leaks": 0,
+    "notes": "Clean scan. gitleaks/trufflehog not installed (sandbox). Permissions verified: .secrets/ 700, founder.token 600.",
+    "latestDoc": "/viewer?agent=cipher&file=2026-04-12T22"
+  },
+  "sim": {
+    "lastRun": "2026-04-10T22:14:00Z",
+    "status": "complete",
+    "latestDoc": "/viewer?agent=sim&file=2026-04-10"
+  },
+  "consolidation": {
+    "lastRun": "2026-04-12T19:35:34Z"
+  },
+  "aetherbot": {},
+  "credits": {
+    "used": 0,
+    "available": 0,
+    "calls": 0,
+    "cost": 0,
+    "byAgent": {}
+  },
+  "nel": {
+    "lastRun": "2026-04-12T22:11:28Z",
+    "improvementScore": 65,
+    "findingsCount": 2,
+    "staleFiles": 0,
+    "brokenLinks": 15,
+    "untested": 2,
+    "inefficient": 1,
+    "sentinel": {
+      "pass": 2,
+      "fail": 2
+    },
+    "cipher": {
+      "leaks": 0
+    }
+  }
+}

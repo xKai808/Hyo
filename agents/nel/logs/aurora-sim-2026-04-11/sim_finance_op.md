@@ -1,0 +1,78 @@
+---
+date: 2026-04-11
+kind: aurora-public
+subscriber_id: sim_finance_op
+voice: sharp
+depth: deep-dives
+length: 12min
+topics: [macro, finance, stocks, crypto, labor, real-estate]
+subject_line: "Soft CPI, missed payrolls, June is live"
+---
+
+*Three data prints inside 24 hours, and they all said the same thing: the Fed has its cover.*
+
+///
+
+You don't often get confluence like this. A softer CPI. A payrolls miss. A Fed meeting. All landing in the same news cycle, all pointing the same direction. Markets took one look and moved: June cut probability jumped from 58% to 72% overnight.
+
+Here's the actual read, not the headline version.
+
+March CPI came in at 2.3% year-over-year against a 2.5% consensus. Core — the measure that strips food and energy and the one the Fed actually manages to — was 2.6%. Neither is at the 2.0% target. But the Fed isn't waiting for 2.0% to cut. They're waiting for a credible glide path. A print 20 basis points below consensus is a credible glide path.
+
+The jobs number reinforced it. 186k nonfarm payrolls against a 210k expectation. That's a miss, but the more important number is the one inside it: wage growth cooled to 3.7% year-over-year. Wages are what keep services inflation sticky. Services prices track what employers pay workers — when wages run hot at 5%, core services inflation runs hot too. At 3.7%, that transmission mechanism is weakening. The Fed knows this. It's why Powell, despite the hold, sounded less hawkish in his presser than he has all year.
+
+Unemployment held at 4.1%. Services sectors drove most of the payroll gains. Manufacturing shed 11,000 jobs — a real number, but not the kind of waterfall that historically precedes recession. This is a softening print, not a recession print. The distinction matters enormously for how you read the cut.
+
+///
+
+The dot plot (the FOMC's published median guess at where rates are headed, released quarterly) still shows one more 25bp cut for 2026. That's unchanged from December. The market had already priced roughly one cut, so the dot plot wasn't the surprise — the CPI and payrolls data preceding it were. What shifted is the timing: the conversation about *when* that cut arrives has moved decisively from "September maybe" to "June probably."
+
+This has real positioning implications.
+
+If June is the meeting, you have eight weeks of runway. Duration trades — long-dated Treasuries, rate-sensitive equities, anything that re-rates on a falling discount rate — get cleaner. The uncertainty window closes. Markets don't love cuts; they love the *certainty* that a cut is coming, because it allows them to front-run it cleanly. The moment June becomes consensus, the front-running is already happening. The trade after that is whether the cut is followed by another.
+
+That's where the dot plot matters. One cut, full stop. Not one-and-a-glide. If this cycle is one-and-done, then duration trades have a ceiling. The risk/reward on aggressive long duration isn't the same as if you're pricing three cuts over 18 months. One cut means the Fed thinks inflation is mostly solved but growth is fine enough that they're not in rescue mode. That's a goldilocks narrative — and goldilocks narratives tend to die on the next data surprise.
+
+///
+
+The bank earnings are the supporting evidence for the soft-landing thesis, and they're worth taking seriously.
+
+JPMorgan and Wells Fargo both beat on top and bottom lines. The number underneath that matters is NII — net interest income, the spread between what banks earn on loans versus what they pay depositors. NII has been the central question for bank stocks all year: when the Fed cuts, does the liability side of the balance sheet reprice faster than the asset side, compressing margins? The beats suggest the answer is no, or at least not catastrophically so.
+
+Banks have managed deposit betas (how much of a rate cut passes through to depositor rates) better than feared. If they can absorb one more 25bp cut without an NII implosion, the S&P 500 to 6,100 by mid-year becomes less bold and more obvious. That's roughly 2-3% from current levels. Not a moonshot — an earnings multiple that stays intact because the credit cycle isn't blowing up and the Fed has given the all-clear for cheaper money.
+
+The NASDAQ leading with chips is the other tell. Semiconductors re-rate on rate cuts because their valuation methodology — long-duration, heavy capex, growth priced far into the future — is exquisitely sensitive to the discount rate. Chips up on a cut-confirmation day is textbook, not insight. The insight is that it confirms the market believes the cut is happening, not just that it's possible.
+
+///
+
+Bitcoin at $95,000 is not a surprise if you've been watching the ETF flows.
+
+Spot bitcoin ETFs pulled in $1.8 billion in weekly inflows — the biggest weekly figure since launch. Let's be clear about what that number represents: not retail FOMO, not exchange-driven volume, not paper Bitcoin. Spot ETF inflows are institutional dollars moving through regulated structures into the actual asset. Pension funds, RIAs, family offices checking a box on an allocation policy. The flow numbers are the institutional adoption story made legible.
+
+And the macro timing is not coincidental. Hard assets with a fixed supply schedule re-rate when the cost of capital is falling. Bitcoin is the purest expression of that trade in crypto. When June cut probability went from 58% to 72%, BTC didn't hesitate.
+
+Ethereum at $4,200 is the quieter story, and possibly the more interesting one. ETH doesn't have the same ETF flow momentum BTC does, but DeFi total value locked (TVL — the aggregate capital sitting in decentralized lending, trading, and yield protocols on-chain) just crossed $120B for the first time since 2022. That's not a hype metric; it's a liquidity metric. It means the on-chain infrastructure for actual capital deployment is growing. When DeFi TVL rises alongside a falling rate environment, the implication is that on-chain yields are becoming competitive alternatives to off-chain ones — or at minimum, a credible complement.
+
+The stablecoin story is the one that flies under the radar most consistently. Market cap crossing $300B, with USDC growing 4% last month, is a regulatory story as much as a demand story. Circle got MiCA (the EU's Markets in Crypto-Assets framework — the most comprehensive crypto regulation passed by any major jurisdiction) compliance right. Tether didn't prioritize European markets the same way. USDC is capturing the institutional pocket that regulation just legalized. A $300B stablecoin market is plumbing, not speculation — wider, more liquid rails for institutional crypto activity. If BTC breaks $100k on June cut confirmation, the stablecoin liquidity sitting on-chain is what makes that move orderly rather than chaotic.
+
+///
+
+The real estate print is the sleeper story of the day.
+
+The 30-year fixed mortgage rate dropped 12 basis points in a single week to 6.1%. Existing-home sales ticked up 2.1% month-over-month. Rent growth cooled to 2.9% year-over-year.
+
+The 6.1% rate matters less as a number than as a direction. The locked-in seller problem — the reason housing inventory has been depressed for two-plus years — is a rate math problem. Homeowners who bought or refinanced at 2.9-3.5% are stuck: selling means buying back in at 6%+, and the math doesn't work. But the unlock doesn't happen at 6.1%. It probably starts somewhere in the 5.5% zone, which implies one or two cuts beyond June.
+
+The timeline, if this plays out: June cut → mortgage rates drift toward 5.75% by Q4 2026 → sellers who need to move (divorce, death, job relocation) start accepting the math → inventory ticks up Q1 2027 → prices correct modestly but transaction volume recovers. Existing-home sales up 2.1% this month is a toe dip, not a flood. Don't over-rotate on it.
+
+The rent cooling is actually more immediately actionable. Shelter is the largest single component in the CPI basket, weighted around 35%. Rent growth at 2.9% YoY versus the 5%+ of two years ago is a meaningful chunk of why today's 2.3% headline was achievable. If rent keeps cooling toward 2.5%, the Fed's glide path gets cleaner. If it re-accelerates — because housing supply stays constrained — the glide path breaks. Watch the shelter component of CPI as closely as the headline. It's doing more work than people acknowledge.
+
+///
+
+One labor note worth flagging.
+
+March tech layoffs fell to 8,400 — the lowest monthly total since early 2023. Hiring picked up specifically for ML engineers and distributed systems roles. This is the AI labor transition made visible: generalist engineering headcount was the casualty of 2023-2024, absorbed by AI tooling cost savings; companies are now rehiring at the margins where AI doesn't yet work — infrastructure at scale, model fine-tuning, the plumbing that makes AI products reliable. The 186k payroll print is partly this story. The labor market isn't collapsing; it's reshuffling. A composed but softening labor market is precisely what the Fed needs to justify a cut without looking like they're panicking into one.
+
+///
+
+*Worth sitting with: June cut is now the 72% consensus trade — so what happens to the entire setup if the next CPI print comes in 20 basis points hot?*
