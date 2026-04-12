@@ -7,17 +7,16 @@
 
     <key>ProgramArguments</key>
     <array>
-        <string>/bin/bash</string>
-        <string>-c</string>
-        <string>exec $HOME/Documents/Projects/Hyo/agents/sam/mcp-server/tunnel.sh --method cloudflared</string>
+        <string>/opt/homebrew/bin/cloudflared</string>
+        <string>tunnel</string>
+        <string>--url</string>
+        <string>http://localhost:3847</string>
     </array>
 
     <key>EnvironmentVariables</key>
     <dict>
-        <key>HYO_ROOT</key>
-        <string>$HOME/Documents/Projects/Hyo</string>
         <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
     </dict>
 
     <key>RunAtLoad</key>
@@ -33,18 +32,9 @@
     <string>/tmp/hyo-mcp-tunnel.log</string>
 
     <key>WorkingDirectory</key>
-    <string>$HOME/Documents/Projects/Hyo</string>
+    <string>/Users/kai/Documents/Projects/Hyo</string>
 
-    <!-- Restart after crash, with exponential backoff -->
-    <key>StartInterval</key>
-    <integer>10</integer>
-
-    <!-- Allow 10 seconds for startup before retrying -->
-    <key>TimeOut</key>
-    <integer>10</integer>
-
-    <!-- Limit restart frequency -->
     <key>ThrottleInterval</key>
-    <integer>5</integer>
+    <integer>10</integer>
 </dict>
 </plist>

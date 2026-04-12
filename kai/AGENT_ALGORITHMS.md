@@ -488,12 +488,19 @@ WRITE ORDER (every session end):
 
 ## Aether — Trading Intelligence Algorithm
 
+Aether wraps around Aetherbot (mechanical execution) and provides intelligence.
+**Canonical reference:** `agents/aether/AETHER_OPERATIONS.md` — the full operations manual.
+All decisions must pass through the philosophies defined there.
+
 ```
-STARTUP:
-  1. Read agents/aether/PRIORITIES.md
-  2. Read agents/aether/ledger/ACTIVE.md
-  3. Check Monday reset (is it a new week? → archive lastWeek, reset currentWeek with balance carry)
-  4. Load current metrics from website/data/aether-metrics.json
+STARTUP (hydration — do NOT skip):
+  1. Read agents/aether/AETHER_OPERATIONS.md (philosophies + checklist)
+  2. Read agents/aether/PRIORITIES.md
+  3. Read agents/aether/ledger/ACTIVE.md
+  4. Read agents/aether/ledger/kai-aether-log.jsonl (recent Kai decisions, especially disapprovals)
+  5. Read agents/aether/ledger/gpt-interactions.jsonl (recent GPT interactions)
+  6. Check Monday reset (is it a new week? → archive lastWeek, reset currentWeek with balance carry)
+  7. Load current metrics from website/data/aether-metrics.json
 
 CYCLE (every 15 minutes via launchd):
   1. Check for new trade data (manual input via kai trade or API POST)
@@ -517,14 +524,29 @@ WEEKLY RESET (Monday 00:00 MT):
   3. Archive previous week to ledger/weekly-archive.jsonl
   4. dispatch report aether "weekly reset: last week $PNL_TOTAL ($WIN_RATE% W/R)"
 
+DASHBOARD OWNERSHIP:
+  1. Aether owns the full data pipeline: bot → aether.sh → metrics JSON → API → dashboard
+  2. After every push, call verify_dashboard() — compare local vs API timestamps
+  3. If mismatch: dispatch flag P2, retry, verify again
+  4. If data > 30 min stale: dispatch flag P1
+  5. This is NOT Sam's job. Aether is responsible for real-time dashboard accuracy.
+
 GPT FACT-CHECKING (Aether owns ALL OpenAI/GPT calls):
   1. Kai does NOT call GPT. Any external LLM verification routes through Aether.
   2. kai aether --fact-check "question" → standalone GPT query
   3. kai trade '{}' --verify → fact-checks trade before recording
-  4. Aether annotates trades with GPT intelligence but never blocks them
-  5. API key lives at agents/nel/security/openai.key (mode 600, gitignored)
-  6. Model: gpt-4o-mini (cost-efficient for verification tasks)
-  7. System prompt: trading fact-checker, concise, data-driven, confidence levels
+  4. Every GPT call logged to agents/aether/ledger/gpt-interactions.jsonl
+  5. GPT responses are RECOMMENDATIONS, not decisions
+  6. Model: gpt-4o-mini | Key: agents/nel/security/openai.key (mode 600)
+  7. System prompt changes require Kai approval (logged in kai-aether-log.jsonl)
+
+KAI APPROVAL LOOP (Aether recommends, Kai decides):
+  1. Aether logs recommendations to agents/aether/ledger/kai-aether-log.jsonl
+  2. Kai reviews weekly (or immediately for P0/P1)
+  3. Kai marks each: APPROVED, DISAPPROVED, or NOTED
+  4. Only APPROVED changes get implemented
+  5. Disapprovals include reasoning — Aether learns from the pattern
+  6. Kai periodically fact-checks Aether: is GPT usage producing signal or noise?
 
 FAILURE MODES:
   - API push fails → retry 3x, then dispatch flag P2 "HQ push failed"
@@ -532,6 +554,8 @@ FAILURE MODES:
   - Monday reset missed → next cycle detects and runs it (idempotent check)
   - GPT API unavailable → log warning, skip fact-check, record trade normally
   - No OpenAI key → silent skip (fact-checking is advisory, not blocking)
+  - Dashboard mismatch → P2 flag, retry push, verify again
+  - Strategy change without Kai approval → REJECT, flag P1
 ```
 
 ---
