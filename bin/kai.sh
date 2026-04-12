@@ -697,6 +697,11 @@ case "$sub" in
   ra)                 cmd_ra "$@" ;;
   push)               cmd_push "$@" ;;
   sam)                bash "$ROOT/agents/sam/sam.sh" "$@" ;;
+  aetherbot|ab)       bash "$ROOT/agents/aetherbot/aetherbot.sh" "$@" ;;
+  trade)
+    # Shortcut: kai trade '{"pair":"BTC/USD","side":"buy","pnl":12.50,"strategy":"Grid Bot"}'
+    bash "$ROOT/agents/aetherbot/aetherbot.sh" --record-trade "${1:-'{}'}"
+    ;;
   watch)              bash "$ROOT/bin/watch-deploy.sh" ;;
   gitwatch)           bash "$ROOT/bin/watch-commit.sh" ;;
   gitpush)

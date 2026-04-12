@@ -2136,9 +2136,22 @@
   // ═══ AETHERBOT METRICS ═══
   async function loadAetherbotMetrics() {
     try {
-      const r = await fetch('/data/aetherbot-metrics.json');
-      if (!r.ok) return;
-      const data = await r.json();
+      // Try live API first, fall back to static JSON
+      let data;
+      try {
+        const apiR = await fetch('/api/aetherbot?action=metrics');
+        if (apiR.ok) {
+          const apiData = await apiR.json();
+          if (apiData.ok && apiData.currentWeek && apiData.currentWeek.trades > 0) {
+            data = apiData;
+          }
+        }
+      } catch(e) { /* API unavailable, use static file */ }
+      if (!data) {
+        const r = await fetch('/data/aetherbot-metrics.json');
+        if (!r.ok) return;
+        data = await r.json();
+      }
       const cw = data.currentWeek;
       const lw = data.lastWeek;
 
