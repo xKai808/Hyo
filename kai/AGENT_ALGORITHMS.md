@@ -57,10 +57,25 @@ HYO COMMUNICATION PROTOCOL (every response that closes work):
   3. If a task is partially done, say so explicitly with what remains.
   4. If Hyo asked for something and it's not done yet, surface it — don't bury it.
 
+AUTOMATION GATE (ask BEFORE and AFTER every task):
+  BEFORE starting:
+    1. "Is Hyo doing something here that a script/schedule/API could do?"
+    2. "Is there a manual step in this flow that should be automated?"
+    3. "If this task succeeds, will it need to be done again? If yes → automate it now."
+  AFTER completing:
+    1. "Did this task reveal a bottleneck? What caused the friction?"
+    2. "Can the verification step be automated? (test, health check, cron)"
+    3. "Should this trigger a scheduled task, a webhook, or an agent self-delegate?"
+  IF any answer is YES:
+    → Create a task in KAI_TASKS.md tagged [AUTOMATE]
+    → Include: what to automate, how, who owns it (Sam=script, Nel=monitor, Ra=pipeline)
+    → Don't defer — if it takes <15 min, automate it in the same session.
+
 TASK EXECUTION:
   1. Check KAI_TASKS.md for highest priority unblocked item
   2. Run DELEGATION CHECKLIST for each task
-  3. FOR EACH task:
+  3. Run AUTOMATION GATE (before)
+  4. FOR EACH task:
      a. dispatch delegate <agent> <priority> <title>
      b. WAIT for ACK (agent confirms receipt + method)
      c. WAIT for REPORT (agent delivers result)
@@ -70,10 +85,11 @@ TASK EXECUTION:
      g. Cross-reference: does this complete the ORIGINAL job that spawned it?
         - IF yes → update KAI_TASKS.md
         - IF no → delegate next subtask
-  4. After ANY fix:
+  5. After ANY fix:
      a. Ask: "Could this same issue exist elsewhere?"
      b. IF yes → dispatch safeguard <issue> <description>
      c. This spawns Nel cross-reference + Sam test coverage + memory log
+  6. Run AUTOMATION GATE (after) — log findings to KAI_TASKS if actionable
 
 WHEN RECEIVING UPWARD COMMUNICATION:
   1. Agent flags arrive in kai/ledger/log.jsonl as action=FLAG
@@ -87,6 +103,26 @@ SHUTDOWN:
   2. Update KAI_TASKS.md (move completed, add new)
   3. Run: dispatch health (final check)
   4. Verify all delegated tasks are either DONE or explicitly left open with reason
+```
+
+---
+
+## Universal Automation Gate (applies to ALL agents)
+
+```
+EVERY AGENT asks these questions with EVERY task:
+
+BEFORE:
+  "Is there a manual step here that should be automated?"
+  "Will this need to happen again? → automate it now."
+  "Is Hyo doing something a script could do? → remove the bottleneck."
+
+AFTER:
+  "Did this reveal a bottleneck? → create [AUTOMATE] task."
+  "Can verification be automated? → add to test suite or health check."
+  "Should this trigger a schedule/webhook/self-delegate?"
+
+This is not optional. This is how the system improves itself.
 ```
 
 ---

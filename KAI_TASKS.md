@@ -14,12 +14,23 @@
 
 ## P0 — Active blockers
 
-- [ ] **[B]** **Migrate aurora off Cowork scheduled-task sandbox onto Mini launchd.** Cowork's sandbox blocks egress to aurora's sources (reddit/arxiv/HN/github/coingecko/producthunt all 403 Tunnel) AND writes to ephemeral disk that isn't the real Hyo folder. Fix: create launchd plist on the Mini that runs `~/Documents/Projects/Hyo/newsletter/newsletter.sh` at 03:00 MT daily. Leave Cowork `aurora-hyo-daily` scheduled task as a keepalive / no-op. See 2026-04-11 newsletter "System status" for full action plan. _(Kai writes the plist, Hyo runs `launchctl bootstrap` on the Mini.)_
-- [ ] **[K]** Add `newsletters/` to the list of paths monitored by `kai verify` and have it read the real FS mtime — today's recovery edition proves the render pipeline works, so ongoing verification is now meaningful.
-- [ ] **[K]** Have sentinel's `aurora-ran-today` check also verify `mtime < 25h` and file size > 500 bytes so a stale file from days ago can't mask a failure.
+- [ ] **[H]** **Install MCP server on Mini.** `cd ~/Documents/Projects/Hyo/agents/sam/mcp-server && npm install`, then `brew install tailscale && tailscale up`, add connector in Cowork Settings. This removes the #1 bottleneck (every deploy requires Hyo to type `git push`). SETUP.md has full walkthrough. _(Audit B1)_
+- [ ] **[H]** **Install Aetherbot launchd.** `cp agents/aetherbot/com.hyo.aetherbot.plist ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hyo.aetherbot.plist`. Enables 15-min auto metrics cycle. _(Audit B14)_
+- [ ] **[B]** **Migrate aurora off Cowork scheduled-task sandbox onto Mini launchd.** Cowork's sandbox blocks egress to aurora's sources (all 403). Fix: create launchd plist for `newsletter.sh` at 03:00 MT daily. _(Audit B10, B12)_
+- [ ] **[K]** Add `newsletters/` to the list of paths monitored by `kai verify` and have it read the real FS mtime.
+- [ ] **[K]** Have sentinel's `aurora-ran-today` check also verify `mtime < 25h` and file size > 500 bytes.
+- [ ] **[K]** [AUTOMATE] **Add dispatch flag calls to nel.sh.** After each phase that finds failures, nel.sh should call `dispatch flag nel <severity> <description>`. Currently nel detects issues but doesn't auto-create tasks. _(Audit B4)_
+- [ ] **[K]** [AUTOMATE] **Build dispatch simulate-review.** Post-simulation step that reads `simulation-outcomes.jsonl`, checks for failures, auto-creates tasks. Sim found `nel:exit-1` and `ra:exit-2` but nothing acted on it. _(Audit B5)_
 
 ## P1 — This week
 
+- [ ] **[K]** [AUTOMATE] **Fix website/ vs agents/sam/website/ divergence.** Delete `agents/sam/website/`, symlink to `website/`. Update all agent runner paths. Add Nel check: if both dirs exist and aren't linked, flag it. _(Audit B9)_
+- [ ] **[K]** [AUTOMATE] **Add post-deploy API test via MCP.** After git push succeeds, auto-run `sam.sh test-api` on Mini. If any test fails, auto-flag. _(Audit B7 — after MCP is live)_
+- [ ] **[K]** [AUTOMATE] **Add "no newsletter by 06:00 MT" sentinel check.** In nel.sh Phase 1, check if today's newsletter .md exists. If not by 06:00, flag P1. _(Audit B12 detection gap)_
+- [ ] **[K]** [AUTOMATE] **Build kai-context-save scheduled task.** Runs every 30 min during active sessions. If files changed since last save, run `kai save`. Prevents memory loss on session crash. _(Audit B3)_
+- [ ] **[K]** [AUTOMATE] **Build kai hydrate command.** Concatenate the 9 hydration files into a single briefing doc. One read instead of nine. _(Audit B2)_
+- [ ] **[H]** Provide exchange API keys (read-only) for Aetherbot CCXT integration. _(Audit B13)_
+- [ ] **[H]** Confirm `claude` CLI is on PATH used by launchd on Mini. Needed for aurora migration.
 - [ ] **[B]** Deploy `HyoRegistry.sol` to Base Sepolia testnet for on-chain mint dry-run.
 - [ ] **[K]** Implement `mintReserved` admin function on the contract (spec in `NFT/HyoRegistry_Marketplace.md`).
 - [ ] **[K]** Swap `/api/register-founder` MVP console logging for persistent storage — Vercel KV or GitHub commit via `@octokit`. Right now the manifest only lives in Vercel function logs (ephemeral).
@@ -38,9 +49,12 @@
 - [ ] **[K]** Once v1 persistence ships, run sim 02 with real gather output to verify that culture/gossip/sports profiles still get enough matching records to sustain balanced and deep-dive depths. Today's gather.py is Ra-biased.
 - [ ] **[K]** Parallelism check: sim 01 averaged ~79s per subscriber. At 100 subs sequential, that's ~132 minutes per daily run. v1 should batch or parallelize generation (e.g. 4-way concurrent calls) before the beta subscriber list crosses ~15 people.
 
-- [ ] **[K]** Resolve `website/` vs `agents/sam/website/` divergence. `website/` is now the canonical git-tracked directory (real, not symlink). `agents/sam/website/` is a separate copy that may drift. Options: delete agents/sam/website/ and symlink it to website/, or vice versa. The Vercel deploy watches the repo root `website/` path.
-
 ## P2 — Near-term
+
+- [ ] **[K]** [AUTOMATE] **Convert watch-deploy.sh to launchd agent** with KeepAlive. If fswatch process dies, it auto-restarts. _(Audit B8)_
+- [ ] **[K]** [AUTOMATE] **Reduce cipher to daily** (from hourly) — or wait for Hyo to install gitleaks/trufflehog. 51 runs, 0 findings. _(Audit B6)_
+- [ ] **[K]** **Clean up disabled scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aetherbot-analysis from Cowork. Dead entries.
+- [ ] **[K]** [AUTOMATE] **Add UTC timestamp check to Nel.** Nel should flag any Z-suffix timestamps in hq-state.json during its nightly audit.
 
 - [ ] **[K]** Add `/api/agents` GET endpoint that returns the full registry (reads from KV once persistent storage exists). Unblocks cross-device sync without git.
 - [ ] **[K]** Add `/api/brief` GET endpoint that returns a JSON version of KAI_BRIEF.md. Unblocks "hydrate a new Kai session from any machine without file access."
@@ -117,3 +131,9 @@ _(2026-04-12 cleanup: removed 4 stale sentinel auto-filed items referencing old 
 - [x] **2026-04-12** Delegation checklist added to `kai/AGENT_ALGORITHMS.md` and wired into CLAUDE.md operating rules.
 - [x] **2026-04-12** 4 recurrence patterns logged to `kai/ledger/known-issues.jsonl` with mitigations.
 - [x] **2026-04-12** All 15 broken research .md links fixed (newsletters/ → ra/ paths). website/ converted from symlink to real directory for git tracking.
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/vigilant-nifty-darwin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:feb31bdf] _(filed 2026-04-12)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/vigilant-nifty-darwin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3d76170a] _(filed 2026-04-12)_
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 4 runs in a row: health endpoint not green or token unconfigured [sentinel:api-health-green:82547bfc:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/vigilant-nifty-darwin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:feb31bdf:escalated]
