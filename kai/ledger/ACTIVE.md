@@ -1,11 +1,11 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-13T02:16:20Z
+Last updated: 2026-04-13T02:17:15Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-dex-001): Dex Phase 4: 13 recurrent patterns detected — check safeguard status
-  - Delegated: 2026-04-13T01:43:51Z
+- **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-13T02:17:15Z
   - Method: grep -rn console.log across agents/sam/website/api/ and remove all instances
   - Status: DELEGATED — Found 4 console.log calls in 3 API files (register-founder.js:2, marketplace-request.js:1, aurora-subscribe.js:1). These are intentional MVP persistence — they ARE the storage layer. Removing without replacement would lose registration/subscription data. Recommend: swap for Vercel KV writes (already in KAI_TASKS P1). No console.log removed — awaiting KV implementation.
 
@@ -19,8 +19,8 @@ Last updated: 2026-04-13T02:16:20Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-dex-001) — scan entire codebase for similar patterns: Dex Phase 4: 13 recurrent patterns detected — check safeguard status
-  - Delegated: 2026-04-13T01:43:51Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
+  - Delegated: 2026-04-13T02:17:15Z
   - Method: Static analysis of dispatch.sh: check unquoted vars, missing args validation, edge cases in next_id, rebuild_active failure modes
   - Status: DELEGATED — Found 6 issues: (1) broken flag parsing — title consumed all args before flags parsed, FIXED: collect words into array stopping at flags; (2) unquoted vars in JSON strings — special chars would corrupt JSON, FIXED: all JSON now generated via python3 json.dumps; (3) no agent_ledger validation — empty string passed through, FIXED: log_entry returns error for unknown agents; (4) race condition in next_id — no locking, NOTED: acceptable for single-operator use; (5) corrupted JSON lines — python already handles via try/except; (6) cmd_status Python uses unquoted log path — acceptable since HYO_ROOT never has spaces.
 
@@ -100,6 +100,9 @@ Last updated: 2026-04-13T02:16:20Z
 
 - **flag-nel-019** [P2] Audit found 5 system issues — review security/structure
   - Created: 2026-04-13T02:11:45Z
+
+- **flag-nel-001** [P2] agents/nel/security is NOT gitignored
+  - Created: 2026-04-13T02:17:15Z
 
 ## Recently Completed
 

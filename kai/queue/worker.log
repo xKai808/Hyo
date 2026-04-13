@@ -112,3 +112,18 @@
 [2026-04-13T02:16:10Z] BATCH: processed 1 commands
 [2026-04-13T02:16:11Z] IDLE: no pending commands
 [2026-04-13T02:16:21Z] EXEC: [cmd-1776046580-4341] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'kai: Nel v2.0 QA engine, link checker, q6h daemon, worker timeout cap, runner bug fixes' && git push origin main 2>&1 (timeout: 120s)
+[2026-04-13T02:16:26Z] DONE: [cmd-1776046580-4341] exit=0 (5s)
+[2026-04-13T02:16:26Z] BATCH: processed 1 commands
+[2026-04-13T02:16:26Z] IDLE: no pending commands
+[2026-04-13T02:16:33Z] EXEC: [cmd-1776046592-4368] cp ~/Documents/Projects/Hyo/agents/nel/com.hyo.nel-qa.plist ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.hyo.nel-qa.plist 2>&1 && launchctl list | grep 'nel-qa' && echo 'Nel QA daemon installed' (timeout: 60s)
+[2026-04-13T02:16:33Z] DONE: [cmd-1776046592-4368] exit=0 (0s)
+[2026-04-13T02:16:33Z] BATCH: processed 1 commands
+[2026-04-13T02:16:34Z] EXEC: [cmd-1776046594-4390] cd ~/Documents/Projects/Hyo && bash bin/kai.sh push 2>&1 | tail -20 (timeout: 60s)
+[2026-04-13T02:16:34Z] DONE: [cmd-1776046594-4390] exit=0 (0s)
+[2026-04-13T02:16:34Z] BATCH: processed 1 commands
+[2026-04-13T02:16:35Z] IDLE: no pending commands
+[2026-04-13T02:16:52Z] EXEC: [cmd-1776046610-4420] cd ~/Documents/Projects/Hyo && bash bin/kai.sh push ra 'Nel QA Architecture Research published — 8-phase autonomous QA cycle, link validation, security scanning, industry best practices' --data '{"type":"research","title":"nel-qa-architecture-research","path":"agents/ra/research/lab/nel-qa-architecture-research.md"}' 2>&1 | tail -10 (timeout: 60s)
+[2026-04-13T02:16:53Z] DONE: [cmd-1776046610-4420] exit=0 (1s)
+[2026-04-13T02:16:53Z] BATCH: processed 1 commands
+[2026-04-13T02:16:53Z] IDLE: no pending commands
+[2026-04-13T02:16:59Z] EXEC: [cmd-1776046618-4444] cd ~/Documents/Projects/Hyo && bash agents/nel/nel-qa-cycle.sh 2>&1 | tail -40 (timeout: 240s)
