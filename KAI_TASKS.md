@@ -156,6 +156,9 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [x] **2026-04-13** Continuous Learning Protocol — all agents, Dex enforces anti-stale.
 - [x] **2026-04-13** [AUTOMATE] **Command queue (`kai/queue/`)** — Kai submits commands via JSON, Mini worker daemon auto-executes, Kai reads results. Zero copy/paste for routine ops. Proxy stripping, macOS timeout compat, security filter.
 - [x] **2026-04-13** [AUTOMATE] **2-hour health check** — Cowork scheduled task. Checks P0/P1 flags, stale tasks, queue health, agent output. What's Next gate auto-dispatches remediation.
+- [x] **2026-04-13** Research.html split-pane rewrite — left panel (tabs + item list), right panel (in-page markdown reader). No new tabs. Mobile responsive. Deployed live at hyo.world/research.
+- [x] **2026-04-13** Research index updated — 3 new lab entries added (Nel QA research, Ops Audit, Cowork Sandbox Bridge). Dynamic discovery working.
+- [x] **2026-04-13** Site bottom nav bar added to index.html. HQ research link fixed (window.open → `<a>` tag).
 - [x] **2026-04-13** What's Next gate wired into dispatch.sh + AGENT_ALGORITHMS.md. No agent detects a problem and only logs it.
 - [x] **2026-04-13** Step-by-step instruction protocol wired into CLAUDE.md + AGENT_ALGORITHMS.md.
 - [x] **2026-04-13** [AUTOMATE] **Aether launchd installed** — `com.hyo.aether` running every 15 min.

@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 early morning (copy-paste elimination complete — queue round-trip proven)
+**Updated:** 2026-04-13 ~02:30 MT (research split-pane live, index updated, 8 commits pushed this session)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 
 ---
@@ -45,7 +45,7 @@
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 — agent autonomy framework shipped, mobile HQ, real-time usage)
+## Current state (as of 2026-04-13 — research split-pane live, Nel v2.0, agent autonomy, zero copy-paste)
 
 **⚠ HEALTHCHECK ALERT (2026-04-13T02:10Z):**
 - **P0** — 1 corrupt JSONL file (Dex Phase 1). Auto-remediation dispatched, unconfirmed.
@@ -60,10 +60,11 @@
 - `com.hyo.aether` — every 15 min (trade metrics, dashboard, GPT fact-check)
 - `com.hyo.mcp-tunnel` — cloudflared tunnel to MCP server on port 3847
 
-**All launchd daemons confirmed running (7 total, verified via queue `launchctl list | grep hyo`):**
+**All launchd daemons confirmed running (8 total, verified via queue `launchctl list | grep hyo`):**
 - `com.hyo.consolidation` — nightly at 01:00 MT
 - `com.hyo.simulation` — nightly at 23:30 MT
 - `com.hyo.aurora` — daily at 03:00 MT
+- `com.hyo.nel-qa` — every 6 hours (8-phase QA cycle)
 
 **Nightly sequence (correct order):**
 23:00 Dex → 23:30 Simulation → 01:00 Consolidation → 02:00 Daily Audit → 03:00 Aurora
@@ -111,6 +112,16 @@
 - **HQ push verification** — kai push now verifies data arrived via GET /api/hq?action=data, retries once
 - **Protocol staleness prevention** — PLAYBOOK >7d = P2, >14d = P1. evolution.jsonl >48h = P1. Wired into daily audit + agent self-evolution + CLAUDE.md.
 - Plus: daily audit, self-review, ACTIVE.md cleanup, aurora plist fix, consolidation/simulation plists, kai audit subcommand
+- **Nel v2.0 QA engine** — 8-phase autonomous cycle (link validation, security scan, API health, data integrity, agent health, deploy verification, research sync, report+dispatch). Runs q6h via `com.hyo.nel-qa` launchd daemon.
+- **Link checker** (`agents/nel/link-check.sh`) — comprehensive HTML/JS/MD link validation with live HTTP checks. Zero false positives.
+- **Worker timeout cap** — 5-min max per command in queue worker (prevents blocking like the sleep-1800 incident).
+- **5 agent runner Python bug fixes** — all runners had `playbook_updated=false` (bash) in Python inline code → fixed to `"False"` (Python). Dex `local` outside function fixed.
+- **Research split-pane** (`website/research.html`) — complete rewrite per Hyo's request. Left panel: tabs + scrollable item list. Right panel: in-page markdown reader. No new tabs. Mobile responsive.
+- **Research index updated** — 3 new lab entries (Nel QA research, Ops Audit, Cowork Sandbox Bridge).
+- **Site navigation** — bottom nav bar added to index.html (cafe, marketplace, aurora, research, hq). HQ research link changed from window.open to proper `<a>` tag.
+- **Auto-publish rule** — wired for ALL agents, not just Ra. Every agent saves, syncs, pushes to HQ autonomously.
+- **MTN timezone rule** — all user-facing timestamps use America/Denver. Wired into CLAUDE.md.
+- **Agent self-improvement autonomy** — agents research and improve their own domain, make changes PRN, communicate back to Kai.
 
 **Shipped previous session (seventh pass — agent formalization + research architecture):**
 - Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename
