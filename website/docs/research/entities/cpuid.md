@@ -7,7 +7,7 @@
 ## Timeline
 
 ### 2026-04-11
-**Brief:** [2026-04-11](../../ra/2026-04-11.md)
+**Brief:** [2026-04-11](../../../newsletters/2026-04-11.md)
 
 **Take:** Attackers stopped targeting code and started targeting delivery channels — the trust question has moved one layer up
 

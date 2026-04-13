@@ -5,7 +5,7 @@
 ## Timeline
 
 ### 2026-04-11
-**Brief:** [2026-04-11](../../ra/2026-04-11.md)
+**Brief:** [2026-04-11](../../../newsletters/2026-04-11.md)
 
 **Signal:** Marimo RCE exploited in <10h + CPUID download hijack — both attack the pipes, not the code
 

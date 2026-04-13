@@ -300,12 +300,35 @@
 
     @media (max-width: 768px) {
       html, body { overflow: auto; cursor: auto; }
-      .container { flex-direction: column; }
-      .cursor, .cursor-ring { display: none; }
-      .side { cursor: pointer; min-height: 50vh; }
-      .divider { top: 50%; left: 10%; height: 1px; width: 80%; }
-      .eyebrow, .desc, .cta, .pulse { opacity: 1; transform: none; }
-      .heading { font-size: 44px; }
+      .container { flex-direction: column; min-height: 100vh; }
+      .cursor, .cursor-ring { display: none !important; }
+      .side { cursor: pointer; min-height: 50vh; flex: 1 !important; }
+      .side:hover { flex: 1 !important; }
+      .side-content { padding: 32px 24px; gap: 16px; }
+      .divider {
+        position: relative;
+        top: auto; left: auto;
+        height: 1px; width: 80%;
+        margin: 0 auto;
+        transform: none;
+      }
+      .eyebrow, .desc, .cta, .pulse {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none;
+      }
+      .heading { font-size: clamp(36px, 10vw, 48px); }
+      .side:hover .heading { transform: none; }
+      .desc { max-width: 90%; }
+      .cta { cursor: pointer; padding: 14px 28px; font-size: 12px; }
+      .h-ring-1, .h-ring-2, .a-sq-1, .a-sq-2 { display: none; }
+    }
+
+    @media (max-width: 400px) {
+      .side-content { padding: 24px 16px; gap: 12px; }
+      .heading { font-size: 32px; }
+      .desc { font-size: 11.5px; }
+      .cta { padding: 12px 22px; font-size: 11px; }
     }
   </style>
 </head>

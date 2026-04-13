@@ -473,50 +473,64 @@
   </div>
 
   <script>
-    // Load markdown files and parse them
+    // Parse index.md to discover all entities, topics, and lab items dynamically
+    function parseIndexForNames(indexText) {
+      const sections = { entities: [], topics: [], lab: [] };
+      let current = null;
+      for (const line of indexText.split('\n')) {
+        if (/^## Entities/i.test(line)) { current = 'entities'; continue; }
+        if (/^## Topics/i.test(line)) { current = 'topics'; continue; }
+        if (/^## Lab/i.test(line)) { current = 'lab'; continue; }
+        if (/^## /.test(line)) { current = null; continue; }
+        if (!current) continue;
+        // Match markdown table links like [Name](entities/filename.md)
+        const match = line.match(/\[([^\]]+)\]\((?:entities|topics|lab)\/([^)]+)\.md\)/);
+        if (match) {
+          sections[current].push(match[2]); // filename without .md
+        }
+      }
+      return sections;
+    }
+
+    // Load markdown files dynamically from index
     async function loadArchive() {
       try {
-        // Load index
+        // Load index first to discover files
         const indexRes = await fetch('/docs/research/index.md');
         const indexText = await indexRes.text();
+        const discovered = parseIndexForNames(indexText);
 
         // Load trends
         const trendsRes = await fetch('/docs/research/trends.md');
         const trendsText = await trendsRes.text();
 
-        // Load entities
-        const entityNames = ['bitcoin', 'fed', 'marimo', 'ai-scientist-v2', 'cpuid'];
+        // Load entities (dynamic from index)
+        const entityNames = discovered.entities.length > 0 ? discovered.entities : ['bitcoin', 'fed', 'marimo', 'ai-scientist-v2', 'cpuid'];
         const entities = {};
         for (const name of entityNames) {
           try {
             const res = await fetch(`/docs/research/entities/${name}.md`);
-            if (res.ok) {
-              entities[name] = await res.text();
-            }
+            if (res.ok) entities[name] = await res.text();
           } catch (e) {}
         }
 
-        // Load topics
-        const topicNames = ['macro-rates', 'crypto-flow', 'ai-research-architectures', 'agent-supply-chain'];
+        // Load topics (dynamic from index)
+        const topicNames = discovered.topics.length > 0 ? discovered.topics : ['macro-rates', 'crypto-flow', 'ai-research-architectures', 'agent-supply-chain'];
         const topics = {};
         for (const name of topicNames) {
           try {
             const res = await fetch(`/docs/research/topics/${name}.md`);
-            if (res.ok) {
-              topics[name] = await res.text();
-            }
+            if (res.ok) topics[name] = await res.text();
           } catch (e) {}
         }
 
-        // Load lab
-        const labNames = ['agent-runtime-hybrid', 'ai-browser-extension-risk', 'ai-scientist-v2'];
+        // Load lab (dynamic from index)
+        const labNames = discovered.lab.length > 0 ? discovered.lab : ['agent-runtime-hybrid', 'ai-browser-extension-risk', 'ai-scientist-v2'];
         const lab = {};
         for (const name of labNames) {
           try {
             const res = await fetch(`/docs/research/lab/${name}.md`);
-            if (res.ok) {
-              lab[name] = await res.text();
-            }
+            if (res.ok) lab[name] = await res.text();
           } catch (e) {}
         }
 
