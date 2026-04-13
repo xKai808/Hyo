@@ -1,16 +1,11 @@
 # Ra Active Tasks
 
-Last updated: 2026-04-13T06:07:10Z
+Last updated: 2026-04-13T18:10:01Z
 
 ## In Progress
 
-- **ra-001** [P2] [RESEARCH-REQ] Dex 2026-W16 deep-dive: Compaction: integrity-preserving archival with rollback for JSONL ledgers — evaluate write-ahead logging, CRC32 checksums, and atomic rename patterns
-  - Delegated: 2026-04-13T06:07:10Z
-  - Method: sim-ack: agent handshake test
-  - Status: DELEGATED — sim-report: all clear
-
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-13T05:10:26Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-04-13T18:10:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -61,6 +56,10 @@ Last updated: 2026-04-13T06:07:10Z
 - **ra-008** [P3] SIM-TEST: autonomous task creation verification — 2026-04-12T20:26:49Z (DONE)
 
 - **ra-007** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:33:16Z (DONE)
+  - Result: sim-report: all clear
+  - Notes: sim-verify: nightly handshake passed
+
+- **ra-001** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T06:30:05Z (DONE)
   - Result: sim-report: all clear
   - Notes: sim-verify: nightly handshake passed
 

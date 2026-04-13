@@ -1,16 +1,16 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-13T15:13:52Z
+Last updated: 2026-04-13T21:36:47Z
 
 ## In Progress
 
 - **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
-  - Delegated: 2026-04-13T15:13:52Z
+  - Delegated: 2026-04-13T21:36:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T05:10:26Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-13 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T18:10:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

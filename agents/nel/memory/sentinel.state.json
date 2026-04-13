@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-13T14:10:22Z",
-  "totalRuns": 14,
+  "lastRunAt": "2026-04-13T18:09:55Z",
+  "totalRuns": 15,
   "runHistory": [
     {
       "ts": "2026-04-11T10:04:55Z",
@@ -116,6 +116,14 @@
       "newIssues": 2,
       "recurringIssues": 2,
       "resolved": 2
+    },
+    {
+      "ts": "2026-04-13T18:09:55Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -134,8 +142,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-13T14:10:22Z",
-      "daysFailing": 14,
+      "lastSeen": "2026-04-13T18:09:55Z",
+      "daysFailing": 15,
       "status": "open"
     },
     "founder-token-integrity:2dffc5f6": {
@@ -253,8 +261,8 @@
       "check_id": "task-queue-size",
       "detail": "10 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-13T05:10:19Z",
-      "lastSeen": "2026-04-13T14:10:22Z",
-      "daysFailing": 4,
+      "lastSeen": "2026-04-13T18:09:55Z",
+      "daysFailing": 5,
       "status": "open"
     },
     "aurora-ran-today:599f97b6": {
@@ -304,7 +312,8 @@
       "firstSeen": "2026-04-13T14:10:22Z",
       "lastSeen": "2026-04-13T14:10:22Z",
       "daysFailing": 1,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T18:09:55Z"
     },
     "scheduled-tasks-fired:a44e5467": {
       "severity": "P1",
@@ -312,6 +321,25 @@
       "detail": "no aurora logs in /sessions/stoic-practical-franklin/mnt/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-13T14:10:22Z",
       "lastSeen": "2026-04-13T14:10:22Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T18:09:55Z"
+    },
+    "aurora-ran-today:dbac3f9f": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/pensive-intelligent-euler/mnt/Hyo/newsletters/2026-04-13.md",
+      "firstSeen": "2026-04-13T18:09:55Z",
+      "lastSeen": "2026-04-13T18:09:55Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:38dd677e": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/pensive-intelligent-euler/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-13T18:09:55Z",
+      "lastSeen": "2026-04-13T18:09:55Z",
       "daysFailing": 1,
       "status": "open"
     }

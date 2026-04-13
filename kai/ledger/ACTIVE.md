@@ -1,16 +1,16 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-13T15:13:52Z
+Last updated: 2026-04-13T21:36:47Z
 
 ## In Progress
 
 - **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-13T15:13:52Z
+  - Delegated: 2026-04-13T21:36:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T05:10:26Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T18:10:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -30,12 +30,12 @@ Last updated: 2026-04-13T15:13:52Z
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
 - **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
-  - Delegated: 2026-04-13T15:13:52Z
+  - Delegated: 2026-04-13T21:36:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T05:10:26Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-13 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T18:10:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -53,8 +53,8 @@ Last updated: 2026-04-13T15:13:52Z
   - Delegated: 2026-04-13T03:31:03Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-13T05:10:26Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-04-13T18:10:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -103,7 +103,7 @@ Last updated: 2026-04-13T15:13:52Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by kai)
-  - Delegated: 2026-04-13T09:12:32Z
+  - Delegated: 2026-04-13T15:13:54Z
   - Status: DELEGATED
 
 ## Queued

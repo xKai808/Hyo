@@ -1,48 +1,79 @@
 {
-  "ts": "2026-04-13T08:15:00-06:00",
+  "ts": "2026-04-13T14:00:00-06:00",
   "status": "ISSUES",
-  "issues": 3,
-  "warnings": 3,
+  "issues": 5,
+  "warnings": 4,
   "findings": [
     {
-      "severity": "P1",
-      "area": "newsletter-pipeline",
-      "detail": "No newsletter produced for 2026-04-12 — now 50+ hours past deadline. Multiple cascade flags (sam-002/003/004/005) show sim-ack only, no actual pipeline execution. Root cause unchanged: pipeline requires API keys + network egress on Mini, cannot run in Cowork sandbox. This remains the #1 blocker."
+      "severity": "P0",
+      "area": "security",
+      "detail": "nel-001: agents/nel/security NOT gitignored. Persists across 4+ healthchecks (since 02:17 MT). UNRESOLVED — all remediation was sim-ack only."
     },
     {
       "severity": "P1",
-      "area": "api-hq",
-      "detail": "/api/hq?action=data HTTP 401 — sam-001 delegated at 09:12 UTC, only sim-ack received. HQ dashboard likely inaccessible. No resolution evidence."
+      "area": "newsletter",
+      "detail": "No newsletter produced for 2026-04-13 OR 2026-04-12. Two consecutive missed days. Pipeline not running. ra-002 delegated at 18:10 UTC but sim-ack only."
     },
     {
       "severity": "P1",
-      "area": "sam-agent-silent",
-      "detail": "Sam has produced ZERO log files — logs directory is completely empty (no files at all, not even from prior days). Sam has 7+ in-progress tasks in Kai ACTIVE.md but no evidence of execution beyond sim-ack. Sam runner may be non-functional or never connected."
+      "area": "api",
+      "detail": "sam-001: /api/hq?action=data HTTP 401. Flagged at 15:13 UTC, sam delegated but sim-ack only. HQ dashboard inaccessible."
+    },
+    {
+      "severity": "P1",
+      "area": "task-resolution",
+      "detail": "ZERO P0/P1 tasks have been actually resolved today. All 15+ delegated tasks are sim-ack with no real execution. The delegation loop is producing paperwork, not fixes."
+    },
+    {
+      "severity": "P1",
+      "area": "agent-sam",
+      "detail": "Sam produced zero logs today. No code shipped, no tests run, no deployments. All sam-00X tasks stuck in DELEGATED."
     },
     {
       "severity": "P2",
-      "area": "flag-noise-aether",
-      "detail": "Aether emitting 3 duplicate P2 flags every 15 minutes for the same dashboard timestamp mismatch. log.jsonl is flooded — all entries in last 5+ hours are aether duplicates only. Dedup or rate-limiting needed in aether.sh flag emission."
+      "area": "aether-flag-spam",
+      "detail": "217 duplicate flag-aether-001 entries in log.jsonl (948 total lines = 23% noise). Triple-firing every 15min. Aether runner lacks dedup. Ledger is being polluted at scale."
     },
     {
       "severity": "P2",
-      "area": "flag-duplication-cascade",
-      "detail": "Kai ACTIVE.md has 15+ in-progress items that are derivatives of one root cause (missing newsletter). Safeguard cascade needs dedup logic to prevent task inflation from a single root issue."
+      "area": "queue-stale-paths",
+      "detail": "recheck-flag-nel-003 failed: references /sessions/pensive-intelligent-euler/ (dead session). Queue commands using hardcoded session paths break across sessions."
     },
     {
       "severity": "P2",
-      "area": "broken-docs",
-      "detail": "15 broken documentation links flagged repeatedly across multiple Nel runs. Not yet remediated."
+      "area": "data-integrity",
+      "detail": "dex-001: Corrupt JSONL entries (59 recurrent patterns). Delegated but unresolved."
+    },
+    {
+      "severity": "P3",
+      "area": "documentation",
+      "detail": "15 broken documentation links. Nel self-delegated nel-003 to fix symlinks."
     }
   ],
-  "queue_status": {
+  "agent_activity_today": {
+    "nel": true,
+    "sam": false,
+    "ra": true,
+    "aether": true,
+    "dex": true
+  },
+  "queue_state": {
     "pending": 0,
     "running": 0,
-    "completed_recent": ["recheck-flag-nel-001.json", "recheck-flag-dex-001.json", "recheck-flag-nel-003.json"],
-    "failed_recent": ["recheck-1776044635.json"]
+    "last_completed": "recheck-flag-nel-003.json (failed - stale path)",
+    "last_failed": "recheck-1776044635.json (sleep timeout)"
   },
-  "agents_active_today": ["aether", "dex", "nel", "ra"],
-  "agents_silent_today": ["sam"],
-  "log_noise": "aether emitting ~12 duplicate P2 flags/hour — log.jsonl contains only aether noise since 10:59 UTC",
-  "next_check": "in 2 hours"
+  "recent_queue_results": [
+    {"id": "recheck-flag-nel-003", "status": "failed", "note": "stale session path /sessions/pensive-intelligent-euler/"},
+    {"id": "recheck-flag-nel-001", "status": "ok", "exit_code": 0, "note": "dispatched 3 remediations"},
+    {"id": "recheck-flag-dex-001", "status": "ok", "exit_code": 0, "note": "dispatched dex corrupt JSONL remediation"}
+  ],
+  "log_pollution": {
+    "total_lines": 948,
+    "aether_duplicate_flags": 217,
+    "noise_ratio": "23%"
+  },
+  "critical_pattern": "Delegation loop without execution. Tasks are created, sim-acked, and marked DELEGATED — but no agent actually runs the fix. This has been the state for 12+ hours.",
+  "delta_from_last_check": "All P0/P1 findings unchanged from 12:05 MT check. Aether spam worsened (30 → 217 duplicates). Newsletter now missed 2 consecutive days. Sam still zero output.",
+  "next_check": "2026-04-13T16:00:00-06:00"
 }
