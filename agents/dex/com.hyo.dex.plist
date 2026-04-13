@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.hyo.aether</string>
+    <string>com.hyo.dex</string>
 
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/kai/Documents/Projects/Hyo/agents/aether/aether.sh</string>
+        <string>/Users/kai/Documents/Projects/Hyo/agents/dex/dex.sh</string>
     </array>
 
     <key>EnvironmentVariables</key>
@@ -19,14 +19,19 @@
         <string>/Users/kai/Documents/Projects/Hyo</string>
     </dict>
 
-    <key>StartInterval</key>
-    <integer>900</integer>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>23</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
 
     <key>StandardOutPath</key>
-    <string>/tmp/hyo-aether.log</string>
+    <string>/tmp/hyo-dex.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/tmp/hyo-aether.log</string>
+    <string>/tmp/hyo-dex.log</string>
 
     <key>WorkingDirectory</key>
     <string>/Users/kai/Documents/Projects/Hyo</string>
