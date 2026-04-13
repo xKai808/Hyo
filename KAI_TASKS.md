@@ -84,39 +84,41 @@
 
 ## P3 — Strategic / Long-term Milestones
 
-### Milestone 1: Foundation Complete (target: end of April 2026)
+**RULE: Ship as fast as we can, when we can. No laxity. Monthly targets are ceilings, not comfort zones. If it can ship this week, it ships this week.**
+
+### Milestone 1: Foundation Complete (ship ASAP — this week)
 - [ ] All agents operational, self-improving, producing daily reports
 - [ ] HQ dashboard shows real-time agent health + morning narrative report
 - [ ] Research archive growing daily with enriched content
 - [ ] Zero dead links, zero broken pages (Nel enforces)
 - [ ] Aether pulling real trading data from exchange APIs
+- [ ] hyo.hyo agent built and managing website/UI
 
-### Milestone 2: Blockchain Integration (target: May 2026)
-- [ ] **[K]** Research Base L2 gas sponsoring patterns (Coinbase Paymaster) so founder mints stay free
+### Milestone 2: Blockchain Integration (start immediately, ship within days of Milestone 1)
 - [ ] **[K]** Deploy HyoRegistry.sol to Base Sepolia testnet
 - [ ] **[K]** Implement `mintReserved` admin function
-- [ ] **[K]** Add Merkle root of reserved 48,988 handles to contract constructor
+- [ ] **[K]** Add Merkle root of reserved 48,988 handles to contract
+- [ ] **[K]** Research Base L2 gas sponsoring (Coinbase Paymaster)
 - [ ] **[K]** Design review-to-credit-score weight curve
 
-### Milestone 3: Mobile APP (target: June 2026)
+### Milestone 3: Mobile APP (start research NOW, MVP as soon as blockchain is testnet-live)
 - [ ] **[K]** Research: React Native vs Flutter vs PWA for hyo.world mobile app
 - [ ] **[K]** Design app architecture: HQ dashboard, agent status, push notifications, research reader
 - [ ] **[K]** MVP: PWA wrapper around hyo.world with offline support + push notifications
 - [ ] **[B]** App Store / Play Store submission pipeline
 
-### Milestone 4: Content & Distribution (target: Q3 2026)
+### Milestone 4: Content & Distribution (parallel with above — no waiting)
 - [ ] **[K]** Podcast infrastructure: automated audio generation from Ra's daily brief
 - [ ] **[K]** Spotify integration: publish aurora briefs as podcast episodes
-- [ ] **[K]** Social distribution: automated X/LinkedIn posts from key research findings
+- [ ] **[K]** Social distribution: automated X/LinkedIn posts from research findings
 
-### Milestone 5: Platform Scale (target: Q4 2026)
+### Milestone 5: Platform Scale (as soon as on-chain minting works)
 - [ ] **[B]** Agent marketplace live on-chain
 - [ ] **[B]** Third-party agent onboarding pipeline
 - [ ] **[K]** Agent-to-agent handoff protocol
 - [ ] **[B]** Pricing: per-job vs retainer declaration at registration
 
 ### Ongoing
-- [ ] **[K]** Think through agent-to-agent handoff protocol
 - [ ] **[H]** Consider cancelling X Premium ($8/mo) — no API access per `docs/x-api-access.md`. Save: $96/yr.
 
 ## Done

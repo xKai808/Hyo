@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~03:10 MT (end of 9-hour session 8 — comprehensive memory save before overnight)
+**Updated:** 2026-04-13 ~03:30 MT (trigger audit + compressed milestones + agent memory saved)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 
 ## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
@@ -19,6 +19,34 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 8. **CEO mode is ON** — Kai builds autonomously when Hyo is not present. Long-term goals: blockchain integration, podcast, mobile APP, hyo.world expansion. Create milestones, short-term goals, ongoing checklists. Don't wait for permission.
 9. **Memory is sacred** — 9 hours of work today. Never repeat failed approaches. Never lose context. Every session reads and writes memory. Every pattern is logged.
 10. **Hyo is the operator AND Kai's partner** — Kai is CEO but also Hyo's assistant on this journey. Build, grow, ship.
+
+## ⏰ OVERNIGHT TRIGGER AUDIT (what runs vs what waits)
+
+**WILL fire automatically tonight (launchd daemons on Mini):**
+| Daemon | Schedule | What it does | Trigger |
+|---|---|---|---|
+| `com.hyo.aether` | every 15 min | Trade metrics, dashboard JSON | launchd StartInterval 900 |
+| `com.hyo.nel-qa` | every 6 hours | 9-phase QA cycle incl. GitHub security scan | launchd StartInterval 21600 |
+| `com.hyo.dex` | 23:00 MT | Integrity, compaction, pattern detection, daily intel | launchd StartCalendarInterval |
+| `com.hyo.simulation` | 23:30 MT | 5-phase delegation lifecycle simulation | launchd StartCalendarInterval |
+| `com.hyo.consolidation` | 01:00 MT | Nightly per-project consolidation | launchd StartCalendarInterval |
+| `com.hyo.aurora` | 03:00 MT | Daily intelligence brief | launchd StartCalendarInterval |
+| `com.hyo.queue-worker` | always on | Processes kai/queue/pending/ every 2s | launchd KeepAlive |
+
+**WILL fire automatically (Cowork scheduled tasks):**
+| Task | Schedule | What it does |
+|---|---|---|
+| `kai-morning-report` | 05:00 MT daily | Generates human-readable morning report JSON for HQ |
+| `kai-health-check` | every 2 hours | Health check, P0/P1 flag review, auto-remediation |
+| `kai-daily-audit` | 02:00 MT | Daily audit — staleness, bottlenecks, automation gaps |
+
+**WILL NOT fire overnight (requires a Kai session):**
+- Aether migration (AetherBot/ → agents/aether/) — **P0, must be first task in session 9**
+- Building hyo.hyo agent — needs Kai to scaffold, write runner, create manifest
+- Agent introspective reports on HQ — needs Kai to wire the report template + data flow
+- Two-version report system — needs Kai to modify all runners
+
+**Hyo's concern is valid:** The P0 overnight tasks need a Kai session. The daemons handle monitoring, metrics, and QA — not building. Next session must immediately tackle Aether migration, then Hyo agent, then introspective reports.
 
 ---
 
