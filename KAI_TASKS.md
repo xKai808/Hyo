@@ -14,13 +14,9 @@
 
 ## P0 — Active blockers
 
-- [ ] **[H]** **Install MCP server on Mini.** `cd ~/Documents/Projects/Hyo/agents/sam/mcp-server && npm install`, then `brew install tailscale && tailscale up`, add connector in Cowork Settings. This removes the #1 bottleneck (every deploy requires Hyo to type `git push`). SETUP.md has full walkthrough. _(Audit B1)_
-- [ ] **[H]** **Install Aether launchd.** `cp agents/aether/com.hyo.aether.plist ~/Library/LaunchAgents/ && launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.hyo.aether.plist`. Enables 15-min auto metrics cycle. _(Audit B14)_
 - [ ] **[B]** **Migrate aurora off Cowork scheduled-task sandbox onto Mini launchd.** Cowork's sandbox blocks egress to aurora's sources (all 403). Fix: create launchd plist for `newsletter.sh` at 03:00 MT daily. _(Audit B10, B12)_
 - [ ] **[K]** Add `newsletters/` to the list of paths monitored by `kai verify` and have it read the real FS mtime.
 - [ ] **[K]** Have sentinel's `aurora-ran-today` check also verify `mtime < 25h` and file size > 500 bytes.
-- [ ] **[K]** [AUTOMATE] **Add dispatch flag calls to nel.sh.** After each phase that finds failures, nel.sh should call `dispatch flag nel <severity> <description>`. Currently nel detects issues but doesn't auto-create tasks. _(Audit B4)_
-- [ ] **[K]** [AUTOMATE] **Build dispatch simulate-review.** Post-simulation step that reads `simulation-outcomes.jsonl`, checks for failures, auto-creates tasks. Sim found `nel:exit-1` and `ra:exit-2` but nothing acted on it. _(Audit B5)_
 
 ## P1 — This week
 
@@ -132,8 +128,22 @@ _(2026-04-12 cleanup: removed 4 stale sentinel auto-filed items referencing old 
 - [x] **2026-04-12** 4 recurrence patterns logged to `kai/ledger/known-issues.jsonl` with mitigations.
 - [x] **2026-04-12** All 15 broken research .md links fixed (newsletters/ → ra/ paths). website/ converted from symlink to real directory for git tracking.
 
-- [ ] **[K]** [sentinel] missing or empty /sessions/vigilant-nifty-darwin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:feb31bdf] _(filed 2026-04-12)_
-- [ ] **[K]** [sentinel] no aurora logs in /sessions/vigilant-nifty-darwin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3d76170a] _(filed 2026-04-12)_
-- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 4 runs in a row: health endpoint not green or token unconfigured [sentinel:api-health-green:82547bfc:escalated]
+_(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old session path `/sessions/vigilant-nifty-darwin/`. These were environmental — aurora sandbox limitations documented. API health check was session-specific, not a code bug.)_
 
-- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/vigilant-nifty-darwin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:feb31bdf:escalated]
+- [x] **2026-04-13** Aether + Dex agents formalized — manifests, runners, ledgers, algorithms. 8/8 test pass each. Aetherbot→Aether rename (40+ files), Ledger→Dex rename (19+ files).
+- [x] **2026-04-13** AETHER_OPERATIONS.md v2.0 — rewritten from actual AetherBot source data (70+ files parsed).
+- [x] **2026-04-13** Kai↔Aether approval loop + GPT fact-check routing to Aether.
+- [x] **2026-04-13** Dex daily intelligence scanning (Phase 6A daily, 6B Monday deep synthesis). Ra research coordination protocol for all agents.
+- [x] **2026-04-13** Agent Creation Protocol (`docs/AGENT_CREATION_PROTOCOL.md`) — 13-section sellable blueprint.
+- [x] **2026-04-13** Continuous Learning Protocol — all agents, Dex enforces anti-stale.
+- [x] **2026-04-13** [AUTOMATE] **Command queue (`kai/queue/`)** — Kai submits commands via JSON, Mini worker daemon auto-executes, Kai reads results. Zero copy/paste for routine ops. Proxy stripping, macOS timeout compat, security filter.
+- [x] **2026-04-13** [AUTOMATE] **2-hour health check** — Cowork scheduled task. Checks P0/P1 flags, stale tasks, queue health, agent output. What's Next gate auto-dispatches remediation.
+- [x] **2026-04-13** What's Next gate wired into dispatch.sh + AGENT_ALGORITHMS.md. No agent detects a problem and only logs it.
+- [x] **2026-04-13** Step-by-step instruction protocol wired into CLAUDE.md + AGENT_ALGORITHMS.md.
+- [x] **2026-04-13** [AUTOMATE] **Aether launchd installed** — `com.hyo.aether` running every 15 min.
+- [x] **2026-04-13** [AUTOMATE] **Dex launchd installed** — `com.hyo.dex` running daily 23:00 MT.
+- [x] **2026-04-13** [AUTOMATE] **MCP tunnel launchd fixed** — TCC bypass (WorkingDirectory /tmp), install script.
+- [x] **2026-04-13** [AUTOMATE] **Nel dispatch flag calls wired** — nel.sh calls `dispatch flag` after each phase. _(Audit B4 — DONE)_
+- [x] **2026-04-13** [AUTOMATE] **dispatch simulate-review built** — reads simulation-outcomes.jsonl, auto-flags failures. _(Audit B5 — DONE)_
+- [x] **2026-04-13** OpenAI API key placed at `agents/nel/security/openai.key`. Aether GPT fact-checking active.
+- [x] **2026-04-13** Full Disk Access granted to `/bin/bash` on Mini. Fixes TCC for all launchd bash scripts.

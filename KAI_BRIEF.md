@@ -44,19 +44,36 @@
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. The existing cron/launchd tasks on the Mini DO have full network access — that's where pipeline scripts with auto-push actually run.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 — Aether/Dex formalized + daily research + tunnel fix)
+## Current state (as of 2026-04-13 01:00 MT — command queue operational, all daemons live)
 
-**Shipped this session (seventh pass — agent formalization + research architecture):**
-- **Aether + Dex agents formalized** — manifests, runners, ledgers, algorithms, 8/8 test pass each
-- **Aetherbot → Aether rename** (40+ files, zero orphans) + Ledger → Dex rename (19+ files)
-- **AETHER_OPERATIONS.md v2.0** — rewritten from actual AetherBot project data (70+ source files parsed): trading philosophy, 12-step Deep Analysis, GPT cross-check protocol, nightly 11-probe simulation, build governance, strategy families, issue tracking
-- **Kai↔Aether approval loop** — conversation ledger at `agents/aether/ledger/kai-aether-log.jsonl`, GPT interaction log at `gpt-interactions.jsonl`, Kai reviews all Aether decisions
-- **Dex daily intelligence scanning** — Phase 6 split: 6A runs daily (7 rotating research topics dispatched to Ra as [DAILY-INTEL]), 6B Monday deep synthesis ([RESEARCH-REQ] with implementation specs). Dex is never more than 24h behind on domain developments.
-- **Ra research coordination protocol** — Ra handles [RESEARCH-REQ] and [DAILY-INTEL] from all agents, produces actionable briefs with applicability assessment
-- **Agent Creation Protocol** (`docs/AGENT_CREATION_PROTOCOL.md`) — 13-section sellable blueprint for creating agents from scratch
-- **Continuous Learning Protocol** — all agents research their domains, Dex enforces anti-stale rules
-- **Tunnel plist TCC fix** — WorkingDirectory changed to /tmp (was project dir, TCC blocked access), install-tunnel.sh for one-command setup
-- **Commits:** `f09e17e` → `fbf6957` → `989d59c` → `3e869b4` → `f9e353e` → `8683c4b` → `f5fc5bc`
+**Running daemons on Mini (all confirmed via `launchctl list | grep hyo`):**
+- `com.hyo.queue-worker` — file-based command queue, auto-processes `kai/queue/pending/`
+- `com.hyo.dex` — daily at 23:00 MT (integrity, compaction, patterns, daily intel)
+- `com.hyo.aether` — every 15 min (trade metrics, dashboard, GPT fact-check)
+- `com.hyo.mcp-tunnel` — cloudflared tunnel to MCP server on port 3847
+
+**Scheduled tasks (Cowork):**
+- `kai-health-check` — every 2 hours, checks flags/stale tasks/queue/agent output
+
+**Active infrastructure:**
+- Command queue: Kai writes JSON to `kai/queue/pending/`, daemon executes on Mini, Kai reads `completed/`. Zero copy/paste for routine ops. Tested end-to-end.
+- OpenAI API key: placed at `agents/nel/security/openai.key` (24 bytes). Aether GPT fact-checking active.
+- Full Disk Access: granted to `/bin/bash` on Mini. Fixes TCC for all launchd bash scripts.
+
+**Shipped this session (eighth pass — command queue + autonomous operations):**
+- **Command queue (`kai/queue/`)** — worker.sh, submit.py, com.hyo.queue-worker.plist. Kai submits, Mini executes, Kai reads result. Security filter blocks dangerous patterns. macOS timeout compatibility (gtimeout/fallback). Proxy stripping for git operations.
+- **2-hour health check** — scheduled via Cowork. Checks P0/P1 flags, stale tasks, queue health, agent output freshness. What's Next gate: auto-dispatches remediation on findings, queues accelerated re-check on P0.
+- **What's Next gate** — wired into AGENT_ALGORITHMS.md and dispatch.sh. No agent is allowed to detect a problem and only log it. Detection → route to owner → fix → verify.
+- **Step-by-step instruction protocol** — wired into CLAUDE.md and AGENT_ALGORITHMS.md. When Hyo must act: numbered steps, one command per step, expected output, failure fallback. Non-negotiable.
+- **Dex + Aether launchd plists** — built, installed, running
+- **Commits:** `8683c4b` → `f5fc5bc` → `1be9a65` → `1784de9` → `bd729a3` → `5efc23a` → `bb99353` → `f040dde`
+
+**Shipped previous session (seventh pass — agent formalization + research architecture):**
+- Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename
+- AETHER_OPERATIONS.md v2.0 from actual AetherBot source data (70+ files)
+- Kai↔Aether approval loop, GPT fact-check routing
+- Dex daily intelligence (Phase 6A daily / 6B Monday deep synthesis)
+- Ra research coordination protocol, Agent Creation Protocol, Continuous Learning Protocol
 
 **Shipped previous session (sixth pass — MCP fix + infrastructure commit + ops audit):**
 - **MCP server Zod fix committed** (`8566d2a`): SDK v1.29.0 requires Zod schemas, not plain objects. All 8 tools converted. Server ready to re-run on Mini.
