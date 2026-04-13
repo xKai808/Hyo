@@ -1,13 +1,13 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-13T02:47:39Z
+Last updated: 2026-04-13T02:49:16Z
 
 ## In Progress
 
-- **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-13T02:47:39Z
-  - Method: grep -rn console.log across agents/sam/website/api/ and remove all instances
-  - Status: DELEGATED — Found 4 console.log calls in 3 API files (register-founder.js:2, marketplace-request.js:1, aurora-subscribe.js:1). These are intentional MVP persistence — they ARE the storage layer. Removing without replacement would lose registration/subscription data. Recommend: swap for Vercel KV writes (already in KAI_TASKS P1). No console.log removed — awaiting KV implementation.
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T02:49:11Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
 
 - **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-011): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
   - Delegated: 2026-04-13T02:10:28Z
@@ -19,10 +19,10 @@ Last updated: 2026-04-13T02:47:39Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
-  - Delegated: 2026-04-13T02:47:39Z
-  - Method: Static analysis of dispatch.sh: check unquoted vars, missing args validation, edge cases in next_id, rebuild_active failure modes
-  - Status: DELEGATED — Found 6 issues: (1) broken flag parsing — title consumed all args before flags parsed, FIXED: collect words into array stopping at flags; (2) unquoted vars in JSON strings — special chars would corrupt JSON, FIXED: all JSON now generated via python3 json.dumps; (3) no agent_ledger validation — empty string passed through, FIXED: log_entry returns error for unknown agents; (4) race condition in next_id — no locking, NOTED: acceptable for single-operator use; (5) corrupted JSON lines — python already handles via try/except; (6) cmd_status Python uses unquoted log path — acceptable since HYO_ROOT never has spaces.
+- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
+  - Delegated: 2026-04-13T02:49:16Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-011) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
   - Delegated: 2026-04-13T02:10:28Z
@@ -34,10 +34,10 @@ Last updated: 2026-04-13T02:47:39Z
   - Method: grep -rn for /Documents/Projects/Hyo, /sessions/, /home/ in all shell/python scripts
   - Status: DELEGATED — All scripts use HYO_ROOT with fallback to $HOME/Documents/Projects/Hyo — correct pattern for Mini+Cowork portability. No /sessions/ paths hardcoded in scripts. Two pipeline scripts (newsletter.sh, aurora_public.sh) source $HOME/Documents/Projects/Hyo/.secrets/env which resolves correctly on Mini. Comments referencing old paths are cosmetic only. No breaking hardcoded paths found.
 
-- **ra-001** [P3] [DAILY-INTEL] Dex 2026-04-12: [OPS-GAP] PHASE_1_INTEGRITY: Found 1 corrupt JSONL files + standing: agent communication: inter-agent protocols, delegation patterns, consensus mechanisms
-  - Delegated: 2026-04-13T01:43:53Z
-  - Method: Cross-reference index.md entries against actual files in entities/, topics/, lab/
-  - Status: DELEGATED — Archive integrity check: 12/12 index entries match actual files (5 entities, 4 topics, 3 lab). No orphaned files. No missing references. Archive is consistent.
+- **ra-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-13T02:49:11Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-011)
   - Delegated: 2026-04-13T02:10:28Z
@@ -53,8 +53,8 @@ Last updated: 2026-04-13T02:47:39Z
   - Delegated: 2026-04-13T01:43:51Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by kai)
-  - Delegated: 2026-04-13T02:17:21Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-04-13T02:49:16Z
   - Status: DELEGATED
 
 ## Queued

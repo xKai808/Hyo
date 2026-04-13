@@ -1,13 +1,13 @@
 # Ra Active Tasks
 
-Last updated: 2026-04-13T02:11:42Z
+Last updated: 2026-04-13T02:49:14Z
 
 ## In Progress
 
-- **ra-001** [P3] [DAILY-INTEL] Dex 2026-04-12: [OPS-GAP] PHASE_1_INTEGRITY: Found 1 corrupt JSONL files + standing: agent communication: inter-agent protocols, delegation patterns, consensus mechanisms
-  - Delegated: 2026-04-13T01:43:53Z
-  - Method: Cross-reference index.md entries against actual files in entities/, topics/, lab/
-  - Status: DELEGATED — Archive integrity check: 12/12 index entries match actual files (5 entities, 4 topics, 3 lab). No orphaned files. No missing references. Archive is consistent.
+- **ra-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-13T02:49:11Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-011)
   - Delegated: 2026-04-13T02:10:28Z

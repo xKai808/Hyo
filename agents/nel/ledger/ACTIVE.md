@@ -1,13 +1,13 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-13T02:47:39Z
+Last updated: 2026-04-13T02:49:16Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
-  - Delegated: 2026-04-13T02:47:39Z
-  - Method: Static analysis of dispatch.sh: check unquoted vars, missing args validation, edge cases in next_id, rebuild_active failure modes
-  - Status: DELEGATED — Found 6 issues: (1) broken flag parsing — title consumed all args before flags parsed, FIXED: collect words into array stopping at flags; (2) unquoted vars in JSON strings — special chars would corrupt JSON, FIXED: all JSON now generated via python3 json.dumps; (3) no agent_ledger validation — empty string passed through, FIXED: log_entry returns error for unknown agents; (4) race condition in next_id — no locking, NOTED: acceptable for single-operator use; (5) corrupted JSON lines — python already handles via try/except; (6) cmd_status Python uses unquoted log path — acceptable since HYO_ROOT never has spaces.
+- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
+  - Delegated: 2026-04-13T02:49:16Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-011) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
   - Delegated: 2026-04-13T02:10:28Z
