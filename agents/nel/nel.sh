@@ -771,7 +771,7 @@ if [[ $IMPROVEMENT_SCORE -lt 70 ]]; then
   exit 1
 elif [[ $IMPROVEMENT_SCORE -lt 90 ]]; then
   log_warn "System health acceptable, improvement opportunities identified."
-  exit 1
+  exit 0
 else
   log_pass "System health excellent. All systems nominal."
   exit 0

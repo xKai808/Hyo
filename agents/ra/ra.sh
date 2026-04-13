@@ -39,6 +39,8 @@ RA_ARCHIVE="$ROOT/agents/ra/ra_archive.py"
 AURORA_PUBLIC="$NEWSLETTER_DIR/aurora_public.py"
 SEND_EMAIL="$NEWSLETTER_DIR/send_email.py"
 
+TODAY=$(TZ=America/Denver date +%Y-%m-%d)
+
 mkdir -p "$LOGS_DIR" "$DOCS_DIR" "$RESEARCH_DIR"
 
 # ---- color helpers ----
