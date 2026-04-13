@@ -14,7 +14,7 @@
 
 ## P0 — OVERNIGHT (do before 05:00 MT 2026-04-13)
 
-- [x] **[K]** **Aether migration: ~/Documents/Projects/AetherBot/ → agents/aether/.** COMPLETE 2026-04-13T04:15 MT. Migrated: 6 log files (April 7-12), 41 analysis files, 3 code versions, operational scripts, docs. Real data extracted: 542 tickers traded, 501 resolved (92.4%), $93.04→$90.25 balance change. Metrics JSON populated with real P&L data. AETHER_OPERATIONS.md updated with operational reality. Symlink source active. Note: ongoing sync from AetherBot/Logs/ to agents/aether/logs/ needed for live updates.
+- [x] **[K]** **Aether migration + GPT integration.** COMPLETE 2026-04-13. Migrated all AetherBot data to `agents/aether/`. GPT daily log review wired into `aether.sh` — auto-sends raw log to GPT-4o for independent analysis + fact-checking (triggers once/day after 500+ lines). `gpt_factcheck.py` rewritten with dual-mode. PLAYBOOK rewritten (460 lines), PRIORITIES rewritten (204 lines). Real data live on HQ ($90.25 balance). All committed + pushed (c2a88fb).
 - [ ] **[K]** **Build 05:00 MT morning report.** Create `/api/morning-report` or static `website/data/morning-report.json` + HQ view. Content: what was done overnight, per-agent accomplishments, what went well / didn't, improvements, next steps. Human-readable. Scheduled to generate at 05:00 MT daily.
 - [ ] **[K]** **Agent introspective reports on HQ.** Each agent writes a self-assessment (performance, learnings, recommendations) visible on hyo.world/hq under their section. Two versions: technical (for agent ledger) + human-readable (for HQ). Kai writes CEO report too.
 - [ ] **[K]** **Build `hyo.hyo` agent.** UI/UX specialist. Owns: website, HQ, future apps/dApps, mobile web, podcast, Spotify presence. Follows Agent Creation Protocol. Wire into dispatch, give it a runner, PLAYBOOK, manifest, ledger.
@@ -129,6 +129,10 @@
 
 ## Done
 
+- [x] **2026-04-13** GPT daily log review integration — `gpt_factcheck.py` dual-mode, wired into `aether.sh` main cycle, `run_factcheck.sh` updated for post-migration paths
+- [x] **2026-04-13** Aether full migration — 41 analysis files, 6 logs, ops, docs, code-versions all in `agents/aether/`. PLAYBOOK (460 lines) + PRIORITIES (204 lines) rewritten from comprehensive digest
+- [x] **2026-04-13** Aether real data on HQ — `aether-metrics.json` populated with real trading data ($90.25 balance). Verified live
+- [x] **2026-04-13** Session 8 continuation mega-commit — 127 files, 55k insertions, pushed (c2a88fb)
 - [x] **2026-04-10** Founder bypass infrastructure: page, backend, token, Vercel env var, smoke-tested end-to-end
 - [x] **2026-04-10** aurora.hyo minted (first founder-tier agent, `agent_mntrp9ii_lkyfi6sk`)
 - [x] **2026-04-10** Premium name marketplace page + API endpoint

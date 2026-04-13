@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~03:33 MT (nightly simulation run + ra.sh/sam.sh stat bug fixed)
+**Updated:** 2026-04-13 ~00:15 MT (Aether GPT daily log review integration + full migration committed + pushed)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 
@@ -10,7 +10,7 @@
 
 These are Hyo's direct instructions. They override lower-priority tasks. Do not skip.
 
-1. **Aether migration** — ✓ COMPLETE. All historical logs (April 7-12), 41 analysis files, code versions, and operational scripts migrated from `~/Documents/Projects/AetherBot/` to `agents/aether/`. Real trading data (542 tickers, 92.4% resolution rate, $90.25 current balance) extracted into `website/data/aether-metrics.json`. AETHER_OPERATIONS.md updated with real operational details. Symlink `source → /Users/kai/Documents/Projects/AetherBot/` active. aether.sh runner functional at `agents/aether/aether.sh`. Note: AetherBot logger continues writing to original location; post-migration sync to agents/aether/logs/ required for live updates.
+1. **Aether migration** — ✓ COMPLETE + GPT INTEGRATION DONE. All historical logs (April 7-12), 41 analysis files, code versions, and operational scripts migrated from `~/Documents/Projects/AetherBot/` to `agents/aether/`. Real trading data (542 tickers, 92.4% resolution rate, $90.25 current balance) live on HQ at `website/data/aether-metrics.json`. PLAYBOOK.md rewritten (460+ lines) from all 41 analysis files. PRIORITIES.md rewritten with P0 blockers (phantom positions, harvest 12.4% failure, COUNTER sizing). **GPT daily log review wired into aether.sh** — automatically sends raw AetherBot log to GPT-4o for independent analysis + fact-checking after 500+ lines accumulate. `gpt_factcheck.py` rewritten with dual-mode (`--log` for raw log, default for analysis critique). All paths use post-migration layout with legacy fallback. Committed + pushed (c2a88fb). Note: AetherBot logger continues writing to original location; post-migration sync to agents/aether/logs/ required for live updates.
 2. **Nel GitHub scan must be autonomous** — already wired into q6h QA cycle (Phase 2.5). Verify it actually runs via launchd, not just manually.
 3. **Agent introspective reports on HQ** — every agent produces a self-assessment report visible on hyo.world/hq under their respective section. Kai also produces a CEO report. Human-readable.
 4. **Agent self-improvement research** — each agent researches improvements in their domain, generates recommendations, can implement changes PRN but Kai has veto. Reports published to HQ.
@@ -214,6 +214,10 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Runner fixes** — nel.sh exit code (score 70-89 now exit 0), ra.sh TODAY variable (was unbound).
 - **Gitignore hardened** — credentials.json, service-account*.json, *.p12, *.pfx added.
 - **Simulations run** — 24 pass, 2 fail (nel/ra runner issues now fixed for next run).
+- **Aether full migration** — 41 analysis files, 6 log files, ops scripts, code versions, docs → all in `agents/aether/`. PLAYBOOK.md (460 lines), PRIORITIES.md (204 lines) rewritten from comprehensive digest of all historical data.
+- **GPT daily log review** — `gpt_factcheck.py` rewritten with dual-mode: `--log` sends raw AetherBot log to GPT-4o for session summary, pattern detection, decision fact-checking, risk flags, and structural recommendations. Wired into aether.sh main cycle (auto-triggers once/day after 500+ lines). `run_factcheck.sh` updated for post-migration paths.
+- **Aether dashboard — real data live** — `aether-metrics.json` now serves real trading data ($90.25 balance, -$2.79 P&L, 542 tickers). Verified live on hyo.world.
+- **Session 8 continuation commit** — 127 files, 55k insertions. Pushed to GitHub (c2a88fb).
 
 **Shipped previous session (seventh pass — agent formalization + research architecture):**
 - Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename

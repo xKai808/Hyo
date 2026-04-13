@@ -160,8 +160,8 @@ try:
   with open(metrics_file) as f:
     data = json.load(f)
 
-  cw = data["currentWeek"]
-  old_balance = cw["currentBalance"]
+  cw = data.get("currentWeek", data.get("currentPeriod", {}))
+  old_balance = cw.get("currentBalance", 0)
   cw["currentBalance"] = round(new_balance, 2)
 
   # Recalculate PnL from starting balance
@@ -421,12 +421,12 @@ push_to_hq() {
   local token
   token=$(cat "$token_file" | tr -d '[:space:]')
 
-  # Read current metrics
+  # Read current metrics (handle both currentWeek and currentPeriod structures)
   local balance pnl trades winrate
-  balance=$(python3 -c "import json; d=json.load(open('$METRICS')); print(d['currentWeek']['currentBalance'])")
-  pnl=$(python3 -c "import json; d=json.load(open('$METRICS')); print(d['currentWeek']['pnl'])")
-  trades=$(python3 -c "import json; d=json.load(open('$METRICS')); print(d['currentWeek']['trades'])")
-  winrate=$(python3 -c "import json; d=json.load(open('$METRICS')); print(d['currentWeek']['winRate'])")
+  balance=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('currentBalance',0))")
+  pnl=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('pnl',0))")
+  trades=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('trades',cw.get('totalTickersTraded',0)))")
+  winrate=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('winRate',cw.get('resolutionRate',0)))")
 
   local payload
   payload=$(python3 -c "
@@ -636,8 +636,8 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
   local dashboard_status="unknown"
 
   if [[ -f "$METRICS" ]]; then
-    trade_count=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['trades'])" 2>/dev/null || echo "0")
-    pnl_total=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['pnl'])" 2>/dev/null || echo "0")
+    trade_count=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('trades',cw.get('totalTickersTraded',0)))" 2>/dev/null || echo "0")
+    pnl_total=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('pnl',0))" 2>/dev/null || echo "0")
   fi
 
   if verify_dashboard >/dev/null 2>&1; then
@@ -725,8 +725,8 @@ PYEOF
   local dispatch_bin="$ROOT/bin/dispatch.sh"
   if [[ -x "$dispatch_bin" ]]; then
     local trade_count pnl_total dashboard_status
-    trade_count=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['trades'])" 2>/dev/null || echo "0")
-    pnl_total=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['pnl'])" 2>/dev/null || echo "0")
+    trade_count=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('trades',cw.get('totalTickersTraded',0)))" 2>/dev/null || echo "0")
+    pnl_total=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('pnl',0))" 2>/dev/null || echo "0")
     if verify_dashboard >/dev/null 2>&1; then
       dashboard_status="synced"
     else

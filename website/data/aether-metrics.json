@@ -4,18 +4,89 @@
   "strategy": "Kalshi BTC 15M Binary (KXBTC15M). Automated YES/NO strike price prediction. 15-minute expiry cycles. Price action quality (PAQ), context state (CTX), and confidence (BCDP) signals drive entry/exit.",
   "status": "active",
   "lastUpdated": "2026-04-12T21:35:00-06:00",
-  "currentPeriod": {
+  "currentWeek": {
     "start": "2026-04-07",
     "end": "2026-04-12",
     "startingBalance": 93.04,
     "currentBalance": 90.25,
     "pnl": -2.79,
     "pnlPercent": -3.0,
-    "daysActive": 6,
-    "totalTickersTraded": 542,
-    "totalTickersResolved": 501,
-    "resolutionRate": 92.4,
-    "averageTickersPerDay": 90
+    "trades": 542,
+    "wins": 501,
+    "losses": 41,
+    "winRate": 92.4,
+    "stoplossTriggers": 0,
+    "harvestEvents": 0,
+    "strategies": [
+      {
+        "name": "KXBTC15M Binary",
+        "status": "active",
+        "pnl": -2.79,
+        "trades": 542,
+        "winRate": 92.4,
+        "lastAction": "2026-04-12T21:35:00-06:00"
+      }
+    ],
+    "dailyPnl": [
+      {
+        "date": "2026-04-07",
+        "pnl": 5.43,
+        "balance": 98.47,
+        "trades": 82
+      },
+      {
+        "date": "2026-04-08",
+        "pnl": -7.91,
+        "balance": 90.56,
+        "trades": 96
+      },
+      {
+        "date": "2026-04-09",
+        "pnl": -5.96,
+        "balance": 84.6,
+        "trades": 85
+      },
+      {
+        "date": "2026-04-10",
+        "pnl": 5.65,
+        "balance": 90.25,
+        "trades": 96
+      },
+      {
+        "date": "2026-04-11",
+        "pnl": 0.0,
+        "balance": 90.25,
+        "trades": 96
+      },
+      {
+        "date": "2026-04-12",
+        "pnl": 0.0,
+        "balance": 90.25,
+        "trades": 87
+      }
+    ],
+    "recentTrades": []
+  },
+  "lastWeek": {
+    "start": "",
+    "end": "",
+    "startingBalance": 0,
+    "endingBalance": 0,
+    "pnl": 0,
+    "pnlPercent": 0,
+    "trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "winRate": 0,
+    "stoplossTriggers": 0,
+    "harvestEvents": 0,
+    "bestStrategy": "\u2014",
+    "worstStrategy": "\u2014"
+  },
+  "allTimeStats": {
+    "totalPnl": -2.79,
+    "totalTrades": 542,
+    "weeklyHistory": []
   },
   "btcMarketContext": {
     "period": "2026-04-07 to 2026-04-12",
@@ -24,92 +95,6 @@
     "priceRange": 5840.21,
     "volatility": "moderate-high"
   },
-  "dailyMetrics": [
-    {
-      "date": "2026-04-07",
-      "openingBalance": 93.04,
-      "closingBalance": 98.47,
-      "dailyPnl": 5.43,
-      "dailyPnlPercent": 5.84,
-      "tickersTraded": 82,
-      "tickersResolved": 79,
-      "resolutionRate": 96.3,
-      "btcLow": 67835.49,
-      "btcHigh": 72532.02,
-      "btcAvg": 69235.07,
-      "performanceRating": "positive"
-    },
-    {
-      "date": "2026-04-08",
-      "openingBalance": 98.47,
-      "closingBalance": 90.56,
-      "dailyPnl": -7.91,
-      "dailyPnlPercent": -8.04,
-      "tickersTraded": 96,
-      "tickersResolved": 95,
-      "resolutionRate": 98.96,
-      "btcLow": 70598.13,
-      "btcHigh": 72614.52,
-      "btcAvg": 71388.49,
-      "performanceRating": "negative"
-    },
-    {
-      "date": "2026-04-09",
-      "openingBalance": 90.56,
-      "closingBalance": 84.6,
-      "dailyPnl": -5.96,
-      "dailyPnlPercent": -6.58,
-      "tickersTraded": 85,
-      "tickersResolved": 82,
-      "resolutionRate": 96.47,
-      "btcLow": 70653.96,
-      "btcHigh": 72573.85,
-      "btcAvg": 71805.58,
-      "performanceRating": "negative"
-    },
-    {
-      "date": "2026-04-10",
-      "openingBalance": 84.6,
-      "closingBalance": 90.25,
-      "dailyPnl": 5.65,
-      "dailyPnlPercent": 6.68,
-      "tickersTraded": 96,
-      "tickersResolved": 70,
-      "resolutionRate": 72.92,
-      "btcLow": 71477.84,
-      "btcHigh": 73364.46,
-      "btcAvg": 72594.56,
-      "performanceRating": "positive"
-    },
-    {
-      "date": "2026-04-11",
-      "openingBalance": 90.25,
-      "closingBalance": 90.25,
-      "dailyPnl": 0.0,
-      "dailyPnlPercent": 0.0,
-      "tickersTraded": 96,
-      "tickersResolved": 91,
-      "resolutionRate": 94.79,
-      "btcLow": 71440.69,
-      "btcHigh": 73675.7,
-      "btcAvg": 72762.95,
-      "performanceRating": "neutral"
-    },
-    {
-      "date": "2026-04-12",
-      "openingBalance": 90.25,
-      "closingBalance": 90.25,
-      "dailyPnl": 0.0,
-      "dailyPnlPercent": 0.0,
-      "tickersTraded": 87,
-      "tickersResolved": 84,
-      "resolutionRate": 96.55,
-      "btcLow": 70641.71,
-      "btcHigh": 71739.14,
-      "btcAvg": 71193.7,
-      "performanceRating": "neutral"
-    }
-  ],
   "operationalMetadata": {
     "dataSource": "REAL \u2014 AetherBot v254 live trading logs",
     "logsLocation": "agents/aether/logs/",
@@ -118,7 +103,7 @@
     "verificationDate": "2026-04-12T21:35:00-06:00",
     "logFilesPresent": 6,
     "capital": "real",
-    "note": "Real trading capital on Kalshi. Balance reflects actual wins and losses from binary options trading. P&L is not simulated."
+    "note": "Real trading capital on Kalshi. Balance reflects actual wins and losses from binary options trading."
   },
   "strategySummary": {
     "product": "Kalshi BTC 15M Binary Options (KXBTC15M)",
@@ -127,5 +112,5 @@
     "executionMethod": "Automated YES/NO predictions with real-time strike locking",
     "riskManagement": "Position size: 1 contract per ticker. No leverage."
   },
-  "updatedAt": "2026-04-12T21:46:41-06:00"
+  "updatedAt": "2026-04-12T22:01:46-06:00"
 }

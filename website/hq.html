@@ -2511,7 +2511,8 @@
         const apiR = await fetch('/api/aether?action=metrics');
         if (apiR.ok) {
           const apiData = await apiR.json();
-          if (apiData.ok && apiData.currentWeek && apiData.currentWeek.trades > 0) {
+          const apiCw = apiData.currentWeek || apiData.currentPeriod;
+          if (apiData.ok && apiCw && (apiCw.trades > 0 || apiCw.totalTickersTraded > 0)) {
             data = apiData;
           }
         }
@@ -2521,8 +2522,10 @@
         if (!r.ok) return;
         data = await r.json();
       }
-      const cw = data.currentWeek;
-      const lw = data.lastWeek;
+      // Handle both currentWeek and currentPeriod structures
+      const cw = data.currentWeek || data.currentPeriod;
+      const lw = data.lastWeek || { start: '', end: '', pnl: 0, pnlPercent: 0, trades: 0, winRate: 0, bestStrategy: '—', worstStrategy: '—' };
+      if (!cw) return;
 
       // Format date range
       const fmtDateShort = (d) => {
@@ -2531,10 +2534,10 @@
       };
 
       // Week headers
-      document.getElementById('abWeekStart').textContent = fmtDateShort(cw.start);
-      document.getElementById('abWeekEnd').textContent = fmtDateShort(cw.end);
-      document.getElementById('abLastWeekStart').textContent = fmtDateShort(lw.start);
-      document.getElementById('abLastWeekEnd').textContent = fmtDateShort(lw.end);
+      document.getElementById('abWeekStart').textContent = cw.start ? fmtDateShort(cw.start) : '—';
+      document.getElementById('abWeekEnd').textContent = cw.end ? fmtDateShort(cw.end) : '—';
+      document.getElementById('abLastWeekStart').textContent = lw.start ? fmtDateShort(lw.start) : '—';
+      document.getElementById('abLastWeekEnd').textContent = lw.end ? fmtDateShort(lw.end) : '—';
 
       // Top metrics
       document.getElementById('abBalance').textContent = '$' + cw.currentBalance.toFixed(2);
@@ -2546,22 +2549,25 @@
       const wrColor = cw.winRate >= 60 ? 'var(--success)' : cw.winRate >= 40 ? 'var(--warning)' : 'var(--error)';
       document.getElementById('abWinRate').style.color = wrColor;
 
-      document.getElementById('abTradeCount').textContent = cw.trades;
+      document.getElementById('abTradeCount').textContent = cw.trades || cw.totalTickersTraded || 0;
 
-      // Daily PNL chart (7 bars)
+      // Daily PNL chart (bars)
       const chartDiv = document.getElementById('abDailyChart');
-      const dailyData = cw.dailyPnl;
-      const maxPnl = Math.max(...dailyData.map(d => Math.abs(d.pnl)), 1);
+      const dailyData = cw.dailyPnl || data.dailyMetrics || [];
+      const getPnl = (d) => d.pnl !== undefined ? d.pnl : (d.dailyPnl !== undefined ? d.dailyPnl : 0);
+      const maxPnl = Math.max(...dailyData.map(d => Math.abs(getPnl(d))), 1);
       chartDiv.innerHTML = dailyData.map(d => {
-        const h = maxPnl === 0 ? 5 : Math.max(Math.abs(d.pnl) / maxPnl * 140, 4);
-        const color = d.pnl > 0 ? 'var(--success)' : d.pnl < 0 ? 'var(--error)' : 'var(--border-color)';
-        const opacity = d.pnl === 0 ? 0.3 : 0.8;
+        const pnlVal = getPnl(d);
+        const h = maxPnl === 0 ? 5 : Math.max(Math.abs(pnlVal) / maxPnl * 140, 4);
+        const color = pnlVal > 0 ? 'var(--success)' : pnlVal < 0 ? 'var(--error)' : 'var(--border-color)';
+        const opacity = pnlVal === 0 ? 0.3 : 0.8;
         return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
           <div style="width: 100%; height: ${h}px; background: ${color}; opacity: ${opacity}; border-radius: 2px;"></div>
         </div>`;
       }).join('');
 
       // Strategies table
+      const strategies = cw.strategies || [];
       const tbody = document.getElementById('abStrategiesTable');
       tbody.innerHTML = `<tr style="border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono);">
         <td style="padding: 8px 0;">Strategy</td>
@@ -2570,7 +2576,7 @@
         <td style="padding: 8px 0; text-align: right;">W/R</td>
         <td style="padding: 8px 0; text-align: right;">PNL</td>
         <td style="padding: 8px 0; text-align: right; color: var(--text-muted);">Last</td>
-      </tr>` + cw.strategies.map(s => {
+      </tr>` + strategies.map(s => {
         const statusBg = s.status === 'active' ? 'rgba(109, 212, 156, 0.15)' : 'rgba(232, 201, 106, 0.15)';
         const statusColor = s.status === 'active' ? 'var(--success)' : 'var(--warning)';
         const pnlColor = s.pnl > 0 ? 'var(--success)' : s.pnl < 0 ? 'var(--error)' : 'var(--text-muted)';
@@ -2586,24 +2592,34 @@
       }).join('');
 
       // Risk events
-      document.getElementById('abStoplossCount').textContent = cw.stoplossTriggers;
-      document.getElementById('abHarvestCount').textContent = cw.harvestEvents;
+      document.getElementById('abStoplossCount').textContent = cw.stoplossTriggers || 0;
+      document.getElementById('abHarvestCount').textContent = cw.harvestEvents || 0;
 
-      // Last week summary
+      // Last week summary (gracefully handle no prior week data)
       const lwPnlEl = document.getElementById('abLastWeekPnl');
-      lwPnlEl.textContent = (lw.pnl >= 0 ? '+' : '') + '$' + lw.pnl.toFixed(2) + ' (' + lw.pnlPercent.toFixed(1) + '%)';
-      lwPnlEl.style.color = lw.pnl >= 0 ? 'var(--success)' : 'var(--error)';
-      document.getElementById('abLastWeekTrades').textContent = lw.trades;
-      document.getElementById('abLastWeekWr').textContent = lw.winRate.toFixed(1) + '%';
-      document.getElementById('abLastWeekBest').textContent = lw.bestStrategy;
-      document.getElementById('abLastWeekWorst').textContent = lw.worstStrategy;
+      if (lw.start && lw.trades > 0) {
+        lwPnlEl.textContent = (lw.pnl >= 0 ? '+' : '') + '$' + lw.pnl.toFixed(2) + ' (' + lw.pnlPercent.toFixed(1) + '%)';
+        lwPnlEl.style.color = lw.pnl >= 0 ? 'var(--success)' : 'var(--error)';
+        document.getElementById('abLastWeekTrades').textContent = lw.trades;
+        document.getElementById('abLastWeekWr').textContent = lw.winRate.toFixed(1) + '%';
+        document.getElementById('abLastWeekBest').textContent = lw.bestStrategy || '—';
+        document.getElementById('abLastWeekWorst').textContent = lw.worstStrategy || '—';
+      } else {
+        lwPnlEl.textContent = 'No prior week';
+        lwPnlEl.style.color = 'var(--text-muted)';
+        document.getElementById('abLastWeekTrades').textContent = '—';
+        document.getElementById('abLastWeekWr').textContent = '—';
+        document.getElementById('abLastWeekBest').textContent = '—';
+        document.getElementById('abLastWeekWorst').textContent = '—';
+      }
 
       // Recent trades
       const tradesDiv = document.getElementById('abTrades');
-      if (cw.recentTrades.length === 0) {
+      const recentTrades = cw.recentTrades || [];
+      if (recentTrades.length === 0) {
         tradesDiv.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No trades this week</div>';
       } else {
-        tradesDiv.innerHTML = cw.recentTrades.map(t => {
+        tradesDiv.innerHTML = recentTrades.map(t => {
           const tradeTime = new Date(t.ts).toLocaleString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
           const tradeColor = t.pnl > 0 ? 'var(--success)' : 'var(--error)';
           return `<div style="padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between;">
