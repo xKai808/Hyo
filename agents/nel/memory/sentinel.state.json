@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-13T05:10:19Z",
-  "totalRuns": 11,
+  "lastRunAt": "2026-04-13T14:10:22Z",
+  "totalRuns": 14,
   "runHistory": [
     {
       "ts": "2026-04-11T10:04:55Z",
@@ -92,6 +92,30 @@
       "newIssues": 3,
       "recurringIssues": 1,
       "resolved": 2
+    },
+    {
+      "ts": "2026-04-13T10:04:47Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-04-13T10:10:16Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-04-13T14:10:22Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -110,8 +134,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-13T05:10:19Z",
-      "daysFailing": 11,
+      "lastSeen": "2026-04-13T14:10:22Z",
+      "daysFailing": 14,
       "status": "open"
     },
     "founder-token-integrity:2dffc5f6": {
@@ -211,7 +235,8 @@
       "firstSeen": "2026-04-13T05:10:19Z",
       "lastSeen": "2026-04-13T05:10:19Z",
       "daysFailing": 1,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T10:04:47Z"
     },
     "scheduled-tasks-fired:6688e451": {
       "severity": "P1",
@@ -220,14 +245,73 @@
       "firstSeen": "2026-04-13T05:10:19Z",
       "lastSeen": "2026-04-13T05:10:19Z",
       "daysFailing": 1,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T10:04:47Z"
     },
     "task-queue-size:d2598827": {
       "severity": "P2",
       "check_id": "task-queue-size",
       "detail": "10 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-13T05:10:19Z",
-      "lastSeen": "2026-04-13T05:10:19Z",
+      "lastSeen": "2026-04-13T14:10:22Z",
+      "daysFailing": 4,
+      "status": "open"
+    },
+    "aurora-ran-today:599f97b6": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/brave-modest-cori/mnt/Hyo/newsletters/2026-04-13.md",
+      "firstSeen": "2026-04-13T10:04:47Z",
+      "lastSeen": "2026-04-13T10:04:47Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T10:10:16Z"
+    },
+    "scheduled-tasks-fired:bff8d8d6": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/brave-modest-cori/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-13T10:04:47Z",
+      "lastSeen": "2026-04-13T10:04:47Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T10:10:16Z"
+    },
+    "aurora-ran-today:966539e7": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/sharp-loving-mendel/mnt/Hyo/newsletters/2026-04-13.md",
+      "firstSeen": "2026-04-13T10:10:16Z",
+      "lastSeen": "2026-04-13T10:10:16Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T14:10:22Z"
+    },
+    "scheduled-tasks-fired:eb18cd53": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/sharp-loving-mendel/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-13T10:10:16Z",
+      "lastSeen": "2026-04-13T10:10:16Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T14:10:22Z"
+    },
+    "aurora-ran-today:0d0aa335": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/stoic-practical-franklin/mnt/Hyo/newsletters/2026-04-13.md",
+      "firstSeen": "2026-04-13T14:10:22Z",
+      "lastSeen": "2026-04-13T14:10:22Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:a44e5467": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/stoic-practical-franklin/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-13T14:10:22Z",
+      "lastSeen": "2026-04-13T14:10:22Z",
       "daysFailing": 1,
       "status": "open"
     }

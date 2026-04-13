@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-13T09:12:30Z
+Last updated: 2026-04-13T15:13:52Z
 
 ## In Progress
 
 - **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-13T09:12:30Z
+  - Delegated: 2026-04-13T15:13:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

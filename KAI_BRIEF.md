@@ -5,6 +5,7 @@
 **Updated:** 2026-04-13 ~01:20 MT (strategy dashboard live, aether.sh verified post-migration, simulation 25/1)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
+**Last sentinel run:** 2026-04-13 ~04:04 MT (run #12) — 5 passed, 4 failed. **P0 ESCALATION: `api-health-green` failing 12 consecutive runs** (health endpoint unreachable or token unconfigured). P0 `aurora-ran-today` (no newsletter for 04-13, expected — aurora blocked on Mini migration). P1 `scheduled-tasks-fired` (session-path artifact). P2 `task-queue-size` (10 P0 tasks, threshold 5). See `agents/nel/logs/sentinel-2026-04-13.md`.
 
 ## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
 
@@ -327,12 +328,16 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 
 ---
 
-## Current state (as of 2026-04-12 cipher hourly — 20:02 UTC)
+## Current state (as of 2026-04-13 cipher hourly — 12:xx UTC, Cowork sandbox)
 
-**Cipher run #51:** 2 findings (both P2 — gitleaks/trufflehog not installed, environmental). 0 leaks. 0 autofixes.
-- **False positive caught and fixed:** `founder-token-leak` P0 was firing because `grep --exclude-dir=.secrets` didn't exclude `agents/nel/security/` (the symlink target). The token was only ever in the one correct location. Fix: added `--exclude-dir=security` to cipher.sh's Layer 4 token search. Marked as false positive in cipher state. Auto-filed KAI_TASKS entry resolved.
-- Permissions: `.secrets/` = 700, `founder.token` = 600. Clean.
-- Run 51 of 51 with 0 verified leaks lifetime.
+**Cipher scan (Cowork sandbox run):** 1 P1 finding, 1 autofix. 0 verified credential leaks.
+- **P1 AUTOFIX: RSA private key in `agents/aether/docs/AethelBot.txt`** — full RSA private key was sitting in a non-secured, non-gitignored file. **Fixed:** moved key to `.secrets/aethel-bot.key` (mode 600), replaced original file with placeholder note. If this key is live, it should be rotated.
+- **All managed secrets clean:** founder.token, openai.key, deploy-hook — no leaks found outside `.secrets/`.
+- **Permissions:** `.secrets/` = 700, all secret files = 600. Clean.
+- **False positives:** `github-security-scanning-best-practices.md` hits are regex examples only (3 copies via symlinks).
+- **Note:** gitleaks/trufflehog not available in Cowork sandbox (P2, environmental). Full Layer 1+2 scans run on Mini via launchd.
+
+**Previous state (2026-04-12 cipher run #51):** 2 P2 findings (tool not installed). 0 leaks. 0 autofixes.
 
 ---
 

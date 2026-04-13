@@ -1,71 +1,48 @@
 {
-  "ts": "2026-04-13T08:13:00-06:00",
+  "ts": "2026-04-13T08:15:00-06:00",
   "status": "ISSUES",
   "issues": 3,
-  "warnings": 4,
+  "warnings": 3,
   "findings": [
     {
       "severity": "P1",
-      "area": "safeguard-stale",
-      "detail": "18 P1 safeguard tasks (sam-002 thru nel-015, dex-001, kai-001) delegated 2-6h ago still show DELEGATED with no resolution. Root cause: 2026-04-12 newsletter was never produced. Cascades created audit work but did not fix the pipeline. Recommend closing completed audits and creating a single focused task to produce the missing newsletter or mark it skipped."
+      "area": "newsletter-pipeline",
+      "detail": "No newsletter produced for 2026-04-12 — now 50+ hours past deadline. Multiple cascade flags (sam-002/003/004/005) show sim-ack only, no actual pipeline execution. Root cause unchanged: pipeline requires API keys + network egress on Mini, cannot run in Cowork sandbox. This remains the #1 blocker."
+    },
+    {
+      "severity": "P1",
+      "area": "api-hq",
+      "detail": "/api/hq?action=data HTTP 401 — sam-001 delegated at 09:12 UTC, only sim-ack received. HQ dashboard likely inaccessible. No resolution evidence."
+    },
+    {
+      "severity": "P1",
+      "area": "sam-agent-silent",
+      "detail": "Sam has produced ZERO log files — logs directory is completely empty (no files at all, not even from prior days). Sam has 7+ in-progress tasks in Kai ACTIVE.md but no evidence of execution beyond sim-ack. Sam runner may be non-functional or never connected."
     },
     {
       "severity": "P2",
-      "area": "aether-dashboard-sync",
-      "detail": "Aether flagging dashboard data mismatch every 15 min since 06:43Z (API ts frozen at 06:06:41Z). 18+ duplicate P2 flags logged. API endpoint not refreshing data. Duplicate flag suppression needed."
+      "area": "flag-noise-aether",
+      "detail": "Aether emitting 3 duplicate P2 flags every 15 minutes for the same dashboard timestamp mismatch. log.jsonl is flooded — all entries in last 5+ hours are aether duplicates only. Dedup or rate-limiting needed in aether.sh flag emission."
     },
     {
       "severity": "P2",
-      "area": "flag-deduplication",
-      "detail": "Nel generating identical flags across runs (broken doc links x3, no newsletter x4, system issues x3). No dedup logic — log.jsonl growing with noise. Queued flags in ACTIVE.md are duplicates of each other."
+      "area": "flag-duplication-cascade",
+      "detail": "Kai ACTIVE.md has 15+ in-progress items that are derivatives of one root cause (missing newsletter). Safeguard cascade needs dedup logic to prevent task inflation from a single root issue."
     },
     {
       "severity": "P2",
-      "area": "security-gitignore",
-      "detail": "flag-nel-001: agents/nel/security reported as NOT gitignored. Secrets directory may be exposed in git. Needs immediate verification and fix."
-    },
-    {
-      "severity": "P2",
-      "area": "dex-jsonl-corrupt",
-      "detail": "flag-dex-001: Dex Phase 1 reports corrupt JSONL entries. Data integrity issue unresolved since 01:43Z."
-    },
-    {
-      "severity": "P3",
-      "area": "sam-no-logs",
-      "detail": "Sam agent has no log files for 2026-04-13. Other agents (nel, ra, aether, dex) all produced logs today."
-    },
-    {
-      "severity": "P3",
-      "area": "queue-idle",
-      "detail": "Queue has 0 pending, 0 running. Last command completed at 06:07Z. Worker appears idle but functional."
+      "area": "broken-docs",
+      "detail": "15 broken documentation links flagged repeatedly across multiple Nel runs. Not yet remediated."
     }
   ],
-  "recent_queue_results": [
-    {
-      "id": "recheck-flag-dex-001",
-      "status": "ok",
-      "exit_code": 0,
-      "summary": "Healthcheck dispatched auto-remediation for P0/P1 flags"
-    },
-    {
-      "id": "cmd-1776053719-413",
-      "status": "ok",
-      "exit_code": 0,
-      "summary": "git push origin main succeeded"
-    },
-    {
-      "id": "recheck-flag-nel-003",
-      "status": "ok",
-      "exit_code": 0,
-      "summary": "Attempted healthcheck from stale session path — no-op"
-    }
-  ],
-  "agent_activity_today": {
-    "nel": ["nel-2026-04-13.md", "simulation-2026-04-13.md", "consolidation-2026-04-13.md", "cipher logs x3"],
-    "ra": ["ra-2026-04-13.md"],
-    "aether": ["aether-2026-04-13.log"],
-    "dex": ["dex-2026-04-13.md", "dex-activity-2026-04-13.jsonl"],
-    "sam": []
+  "queue_status": {
+    "pending": 0,
+    "running": 0,
+    "completed_recent": ["recheck-flag-nel-001.json", "recheck-flag-dex-001.json", "recheck-flag-nel-003.json"],
+    "failed_recent": ["recheck-1776044635.json"]
   },
+  "agents_active_today": ["aether", "dex", "nel", "ra"],
+  "agents_silent_today": ["sam"],
+  "log_noise": "aether emitting ~12 duplicate P2 flags/hour — log.jsonl contains only aether noise since 10:59 UTC",
   "next_check": "in 2 hours"
 }

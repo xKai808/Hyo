@@ -255,3 +255,12 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] missing or empty /sessions/fervent-sweet-newton/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:c7767404] _(filed 2026-04-12)_
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/fervent-sweet-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6688e451] _(filed 2026-04-12)_
 - [ ] **[K]** [sentinel] 10 P0 tasks (overload threshold 5) [sentinel:task-queue-size:d2598827] _(filed 2026-04-12)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/brave-modest-cori/mnt/Hyo/newsletters/2026-04-13.md [sentinel:aurora-ran-today:599f97b6] _(filed 2026-04-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/brave-modest-cori/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:bff8d8d6] _(filed 2026-04-13)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/sharp-loving-mendel/mnt/Hyo/newsletters/2026-04-13.md [sentinel:aurora-ran-today:966539e7] _(filed 2026-04-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/sharp-loving-mendel/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:eb18cd53] _(filed 2026-04-13)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/stoic-practical-franklin/mnt/Hyo/newsletters/2026-04-13.md [sentinel:aurora-ran-today:0d0aa335] _(filed 2026-04-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/stoic-practical-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a44e5467] _(filed 2026-04-13)_

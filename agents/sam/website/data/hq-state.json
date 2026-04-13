@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-12T23:10:26-06:00",
+  "updatedAt": "2026-04-13T05:09:00-06:00",
   "morningReport": {
-    "date": "2026-04-12",
-    "generatedAt": "2026-04-12T21:30:00-06:00",
+    "date": "2026-04-13",
+    "generatedAt": "2026-04-13T05:09:00-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Overnight was a productive but imperfect run. All 7 daemons fired on schedule. Aether pushed metrics every 15 min with zero gaps. Two persistent simulation failures (nel/ra runner exits) and an Aether dispatch.sh config bug are the top items for the next Kai session.",
+    "summary": "Sunday night was a full automation cycle \u2014 all 7 daemons fired, consolidation ran clean across 6 projects, and Dex completed its weekly deep research synthesis. The big win from yesterday's session was Aether migration completion with GPT integration. Persistent sore spots: no newsletter (Aurora sandbox-blocked), API health failing 13 consecutive runs, 2 JSONL schema mismatches.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,69 +14,69 @@
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint failing — 11 consecutive sentinel runs",
-      "No newsletter for 2026-04-12 — Aurora still sandbox-blocked",
-      "Nel/Ra simulation runner exits (exit-1 / exit-2) — consistent",
-      "15 broken documentation links flagged by Nel",
-      "10 P0 tasks in queue (overload threshold is 5)"
+      "API health endpoint failing \u2014 13 consecutive sentinel runs (P0 escalation)",
+      "No newsletter since 2026-04-11 \u2014 Aurora blocked on sandbox egress, needs Mini launchd migration",
+      "2 JSONL files flagged by Dex \u2014 schema mismatch between simulation output and validator",
+      "15 broken documentation links in website/docs/research/lab/",
+      "OpenAI API key is placeholder \u2014 Aether GPT fact-checking non-functional"
     ]
   },
   "events": [
     {
       "ts": "2026-04-12T23:10:26-06:00",
       "agent": "nel",
-      "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
       "doc": "/viewer?agent=nel&file=2026-04-12"
     },
     {
       "ts": "2026-04-12T23:10:26-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health down, task overload)",
+      "msg": "QA sweep \u2014 5 passed, 4 failed (aurora missing, API health down, task overload)",
       "doc": "/viewer?agent=sentinel&file=2026-04-12"
     },
     {
       "ts": "2026-04-12T23:10:26-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, clean"
+      "msg": "Security scan \u2014 0 verified leaks, clean"
     },
     {
       "ts": "2026-04-13T03:30:56Z",
       "agent": "consolidation",
-      "msg": "Nightly consolidation — sam",
+      "msg": "Nightly consolidation \u2014 sam",
       "doc": "/viewer?agent=consolidation&file=2026-04-13"
     },
     {
       "ts": "2026-04-13T03:30:56Z",
       "agent": "simulation",
-      "msg": "24h action plan — 2026-04-13",
+      "msg": "24h action plan \u2014 2026-04-13",
       "doc": "/viewer?agent=simulation&file=2026-04-13"
     },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "consolidation",
-      "msg": "Nightly consolidation — sam"
+      "msg": "Nightly consolidation \u2014 sam"
     },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "simulation",
-      "msg": "24h action plan — 2026-04-12",
+      "msg": "24h action plan \u2014 2026-04-12",
       "doc": "/viewer?agent=sim&file=2026-04-12"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep — 7 passed, 0 failed",
+      "msg": "QA sweep \u2014 7 passed, 0 failed",
       "doc": "/viewer?agent=sentinel&file=2026-04-11"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
       "agent": "cipher",
-      "msg": "Security scan — secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
+      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
       "agent": "ra",
-      "msg": "Newsletter check — 1 total, latest 2026-04-11 (2,254 words)",
+      "msg": "Newsletter check \u2014 1 total, latest 2026-04-11 (2,254 words)",
       "doc": "/viewer?agent=ra&file=2026-04-11"
     }
   ],
@@ -91,26 +91,26 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-12T23:10:26-06:00",
+    "lastRun": "2026-04-13T05:09:00-06:00",
     "passed": 5,
     "failed": 4,
     "findings": [
-      "P0: aurora-ran-today — no newsletter for 2026-04-12",
-      "P0: api-health-green — endpoint failing (day 11 recurring)",
-      "P1: scheduled-tasks-fired — no aurora logs detected",
-      "P2: task-queue-size — 10 P0 tasks (overload threshold 5)"
+      "P0: aurora-ran-today \u2014 no newsletter for 2026-04-13",
+      "P0: api-health-green \u2014 endpoint failing (day 13 recurring)",
+      "P1: scheduled-tasks-fired \u2014 no aurora logs detected",
+      "P2: task-queue-size \u2014 10 P0 tasks (overload threshold 5)"
     ],
     "escalations": [
-      "P0 escalated: api-health-green failing 11 runs in a row"
+      "P0 escalated: api-health-green failing 13 runs in a row"
     ],
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-13"
   },
   "cipher": {
     "lastRun": "2026-04-12T23:10:26-06:00",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan — 0 verified leaks",
+    "notes": "Clean scan \u2014 0 verified leaks",
     "latestDoc": null
   },
   "sim": {
@@ -123,9 +123,9 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-12T23:10:26-06:00",
+    "lastRun": "2026-04-13T14:10:47Z",
     "improvementScore": 65,
-    "findingsCount": 6,
+    "findingsCount": 2,
     "staleFiles": 0,
     "brokenLinks": 15,
     "untested": 2,
