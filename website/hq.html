@@ -2010,6 +2010,26 @@
             </div>
           </div>
 
+          <!-- Conviction Buckets -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Conviction Buckets</span>
+            </div>
+            <div id="abConvictionBuckets">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 8px 0;">Loading...</div>
+            </div>
+          </div>
+
+          <!-- Trading Zones -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Trading Zones</span>
+            </div>
+            <div id="abTradingZones">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 8px 0;">Loading...</div>
+            </div>
+          </div>
+
           <!-- Risk management -->
           <div class="card">
             <div class="card-header">
@@ -2023,6 +2043,7 @@
               <span class="data-label">Harvest events</span>
               <span class="data-value" id="abHarvestCount">0</span>
             </div>
+            <div id="abRiskDetails" style="margin-top: 8px;"></div>
           </div>
 
           <!-- Last week comparison -->
@@ -2060,7 +2081,7 @@
 
           <!-- Footer note -->
           <div style="color: var(--text-tertiary); font-size: 12px; padding: 12px 0; border-top: 1px solid var(--border-color); margin-top: 16px;">
-            Resets Monday 00:00 MT • Data from aether-metrics.json
+            Resets Monday 00:00 MT • Data from aether-metrics.json • Strategies ranked by PNL
           </div>
         </div>
 
@@ -2566,34 +2587,100 @@
         </div>`;
       }).join('');
 
-      // Strategies table
-      const strategies = cw.strategies || [];
+      // ── Strategies table (ranked by PNL) ──
+      const strategies = (cw.strategies || []).slice().sort((a, b) => b.pnl - a.pnl);
       const tbody = document.getElementById('abStrategiesTable');
-      tbody.innerHTML = `<tr style="border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono);">
-        <td style="padding: 8px 0;">Strategy</td>
-        <td style="padding: 8px 0; text-align: center;">Status</td>
-        <td style="padding: 8px 0; text-align: right;">Trades</td>
-        <td style="padding: 8px 0; text-align: right;">W/R</td>
-        <td style="padding: 8px 0; text-align: right;">PNL</td>
-        <td style="padding: 8px 0; text-align: right; color: var(--text-muted);">Last</td>
-      </tr>` + strategies.map(s => {
-        const statusBg = s.status === 'active' ? 'rgba(109, 212, 156, 0.15)' : 'rgba(232, 201, 106, 0.15)';
-        const statusColor = s.status === 'active' ? 'var(--success)' : 'var(--warning)';
-        const pnlColor = s.pnl > 0 ? 'var(--success)' : s.pnl < 0 ? 'var(--error)' : 'var(--text-muted)';
-        const lastTime = s.lastAction ? new Date(s.lastAction).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Denver' }) : '--';
-        return `<tr style="border-bottom: 1px solid var(--border-color);">
-          <td style="padding: 12px 0; color: var(--text-primary);">${s.name}</td>
-          <td style="padding: 12px 0; text-align: center;"><span class="badge" style="background: ${statusBg}; color: ${statusColor};">${s.status}</span></td>
-          <td style="padding: 12px 0; text-align: right; color: var(--text-primary); font-family: var(--font-mono);">${s.trades}</td>
-          <td style="padding: 12px 0; text-align: right; color: ${wrColor}; font-family: var(--font-mono);">${s.winRate.toFixed(1)}%</td>
-          <td style="padding: 12px 0; text-align: right; color: ${pnlColor}; font-family: var(--font-mono);">${s.pnl > 0 ? '+' : ''}$${s.pnl.toFixed(2)}</td>
-          <td style="padding: 12px 0; text-align: right; color: var(--text-muted); font-family: var(--font-mono); font-size: 12px;">${lastTime}</td>
+      const sHeader = `<tr style="border-bottom: 1px solid var(--border-color); font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono);">
+        <td style="padding: 6px 0;">Strategy</td>
+        <td style="padding: 6px 4px; text-align: center;">Status</td>
+        <td style="padding: 6px 4px; text-align: right;">Trades</td>
+        <td style="padding: 6px 4px; text-align: right;">W/R</td>
+        <td style="padding: 6px 4px; text-align: right;">PNL</td>
+        <td style="padding: 6px 4px; text-align: right;">$/Trade</td>
+      </tr>`;
+      tbody.innerHTML = sHeader + strategies.map(s => {
+        const statusColors = { active: ['rgba(109,212,156,0.15)', 'var(--success)'], caution: ['rgba(232,201,106,0.15)', 'var(--warning)'], monitoring: ['rgba(150,150,150,0.15)', 'var(--text-muted)'] };
+        const [sBg, sCol] = statusColors[s.status] || statusColors.active;
+        const pC = s.pnl > 0 ? 'var(--success)' : s.pnl < 0 ? 'var(--error)' : 'var(--text-muted)';
+        const wC = s.winRate >= 60 ? 'var(--success)' : s.winRate >= 40 ? 'var(--warning)' : 'var(--error)';
+        const avg = s.avgPnlPerTrade !== undefined ? s.avgPnlPerTrade : (s.trades ? s.pnl / s.trades : 0);
+        const avgC = avg > 0 ? 'var(--success)' : avg < 0 ? 'var(--error)' : 'var(--text-muted)';
+        return `<tr style="border-bottom: 1px solid var(--border-color);" title="${s.notes || ''}">
+          <td style="padding: 10px 0; color: var(--text-primary); font-size: 13px;">${s.name}</td>
+          <td style="padding: 10px 4px; text-align: center;"><span class="badge" style="background: ${sBg}; color: ${sCol}; font-size: 11px;">${s.status}</span></td>
+          <td style="padding: 10px 4px; text-align: right; color: var(--text-primary); font-family: var(--font-mono); font-size: 13px;">${s.trades}</td>
+          <td style="padding: 10px 4px; text-align: right; color: ${wC}; font-family: var(--font-mono); font-size: 13px;">${s.winRate.toFixed(1)}%</td>
+          <td style="padding: 10px 4px; text-align: right; color: ${pC}; font-family: var(--font-mono); font-size: 13px;">${s.pnl > 0 ? '+' : ''}$${s.pnl.toFixed(2)}</td>
+          <td style="padding: 10px 4px; text-align: right; color: ${avgC}; font-family: var(--font-mono); font-size: 12px;">${avg > 0 ? '+' : ''}$${avg.toFixed(2)}</td>
         </tr>`;
       }).join('');
 
-      // Risk events
+      // ── Conviction Buckets ──
+      const buckets = cw.convictionBuckets || [];
+      const bucketsDiv = document.getElementById('abConvictionBuckets');
+      if (bucketsDiv && buckets.length > 0) {
+        bucketsDiv.innerHTML = `<div style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); margin-bottom: 8px;">Conviction Buckets</div>` +
+          buckets.map(b => {
+            const riskColors = { low: 'var(--success)', moderate: 'var(--warning)', critical: 'var(--error)' };
+            const rC = riskColors[b.risk] || 'var(--text-muted)';
+            const pC = b.pnl > 0 ? 'var(--success)' : b.pnl < 0 ? 'var(--error)' : 'var(--text-muted)';
+            return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px;">
+              <div style="flex: 1;">
+                <span style="color: var(--text-primary); font-weight: 500;">${b.name}</span>
+                <span style="color: ${rC}; font-size: 11px; margin-left: 6px; text-transform: uppercase;">${b.risk}</span>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 12px; display: flex; gap: 16px;">
+                <span style="color: var(--text-secondary);">${b.trades}t</span>
+                <span style="color: ${b.winRate >= 60 ? 'var(--success)' : b.winRate >= 40 ? 'var(--warning)' : 'var(--error)'};">${b.winRate.toFixed(0)}%</span>
+                <span style="color: ${pC}; min-width: 60px; text-align: right;">${b.pnl > 0 ? '+' : ''}$${b.pnl.toFixed(2)}</span>
+              </div>
+            </div>`;
+          }).join('');
+      }
+
+      // ── Trading Zones ──
+      const zones = cw.tradingZones || [];
+      const zonesDiv = document.getElementById('abTradingZones');
+      if (zonesDiv && zones.length > 0) {
+        const zSorted = zones.slice().sort((a, b) => b.winRate - a.winRate);
+        zonesDiv.innerHTML = `<div style="font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-mono); margin-bottom: 8px;">Trading Zones (ranked by W/R)</div>` +
+          zSorted.map(z => {
+            const pC = z.pnl > 0 ? 'var(--success)' : z.pnl < 0 ? 'var(--error)' : 'var(--text-muted)';
+            const wC = z.winRate >= 60 ? 'var(--success)' : z.winRate >= 40 ? 'var(--warning)' : 'var(--error)';
+            return `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px;">
+              <div style="flex: 1;">
+                <span style="color: var(--text-primary); font-weight: 500;">${z.name}</span>
+                <span style="color: var(--text-muted); font-size: 11px; margin-left: 6px;">${z.hours}</span>
+              </div>
+              <div style="font-family: var(--font-mono); font-size: 12px; display: flex; gap: 16px;">
+                <span style="color: var(--text-secondary);">${z.trades}t</span>
+                <span style="color: ${wC};">${z.winRate.toFixed(0)}%</span>
+                <span style="color: ${pC}; min-width: 60px; text-align: right;">${z.pnl > 0 ? '+' : ''}$${z.pnl.toFixed(2)}</span>
+              </div>
+            </div>`;
+          }).join('');
+      }
+
+      // ── Risk Events (expanded) ──
+      const riskEvents = cw.riskEvents || {};
       document.getElementById('abStoplossCount').textContent = cw.stoplossTriggers || 0;
       document.getElementById('abHarvestCount').textContent = cw.harvestEvents || 0;
+      const riskDiv = document.getElementById('abRiskDetails');
+      if (riskDiv && Object.keys(riskEvents).length > 0) {
+        const riskItems = [
+          { label: 'BDI=0 forced exits', value: riskEvents.bdi0ForcedExits || 0, loss: riskEvents.bdi0TotalLoss },
+          { label: 'Harvest success', value: `${riskEvents.harvestDone || 0}/${riskEvents.harvestAttempts || 0} (${riskEvents.harvestSuccessRate || 0}%)` },
+          { label: 'Phantom positions', value: riskEvents.phantomPositions || 0, loss: riskEvents.reconciliationGap },
+          { label: 'Harvest below entry', value: riskEvents.harvestBelowEntry || 0, loss: riskEvents.harvestBelowEntryLoss }
+        ];
+        riskDiv.innerHTML = riskItems.map(r => {
+          const lossStr = r.loss ? ` <span style="color: var(--error);">(${r.loss > 0 ? '+' : ''}$${r.loss.toFixed(2)})</span>` : '';
+          return `<div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px;">
+            <span style="color: var(--text-muted);">${r.label}</span>
+            <span style="color: var(--text-primary); font-family: var(--font-mono);">${r.value}${lossStr}</span>
+          </div>`;
+        }).join('');
+      }
 
       // Last week summary (gracefully handle no prior week data)
       const lwPnlEl = document.getElementById('abLastWeekPnl');

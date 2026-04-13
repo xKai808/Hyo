@@ -1,7 +1,6 @@
 {
   "agent": "aether.hyo",
   "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
-  "strategy": "Kalshi BTC 15M Binary (KXBTC15M). Automated YES/NO strike price prediction. 15-minute expiry cycles. Price action quality (PAQ), context state (CTX), and confidence (BCDP) signals drive entry/exit.",
   "status": "active",
   "lastUpdated": "2026-04-12T21:35:00-06:00",
   "currentWeek": {
@@ -15,55 +14,235 @@
     "wins": 501,
     "losses": 41,
     "winRate": 92.4,
-    "stoplossTriggers": 0,
-    "harvestEvents": 0,
+    "stoplossTriggers": 14,
+    "harvestEvents": 56,
+    "harvestSuccessRate": 51.0,
     "strategies": [
       {
-        "name": "KXBTC15M Binary",
+        "name": "bps_premium",
         "status": "active",
-        "pnl": -2.79,
-        "trades": 542,
-        "winRate": 92.4,
-        "lastAction": "2026-04-12T21:35:00-06:00"
+        "description": "Basis-point premium scalping on binary options",
+        "trades": 17,
+        "wins": 12,
+        "losses": 5,
+        "winRate": 70.6,
+        "pnl": 12.91,
+        "avgPnlPerTrade": 0.76,
+        "lastAction": "2026-04-12T21:35:00-06:00",
+        "bestDay": "2026-04-09 (+$10.58, 88% WR)",
+        "notes": "Most consistent strategy. Strong in NY_PRIME."
+      },
+      {
+        "name": "PAQ_EARLY_AGG",
+        "status": "active",
+        "description": "Price-action quality aggressive early entry",
+        "trades": 35,
+        "wins": 18,
+        "losses": 17,
+        "winRate": 51.4,
+        "pnl": -17.62,
+        "avgPnlPerTrade": -0.50,
+        "lastAction": "2026-04-12T20:15:00-06:00",
+        "bestDay": "2026-04-09 (+$0.99, 54% WR)",
+        "notes": "Highest volume. Catastrophic Apr 8 loss (-$26.75 single HIGH+COUNTER trade). EU_MORNING subset: 100% WR."
+      },
+      {
+        "name": "bps_late",
+        "status": "active",
+        "description": "Late-entry BPS scaling variant",
+        "trades": 4,
+        "wins": 4,
+        "losses": 0,
+        "winRate": 100.0,
+        "pnl": 2.50,
+        "avgPnlPerTrade": 0.63,
+        "lastAction": "2026-04-11T15:30:00-06:00",
+        "bestDay": "2026-04-09 (+$1.25, 100% WR)",
+        "notes": "Small sample but perfect record. Needs more data."
+      },
+      {
+        "name": "BCDP_FAST_COMMIT",
+        "status": "active",
+        "description": "Fast BCDP commitment signal (EU morning sessions)",
+        "trades": 3,
+        "wins": 3,
+        "losses": 0,
+        "winRate": 100.0,
+        "pnl": 2.13,
+        "avgPnlPerTrade": 0.71,
+        "lastAction": "2026-04-10T04:30:00-06:00",
+        "bestDay": "2026-04-08 (+$0.71)",
+        "notes": "EU_MORNING only. Perfect record across 3 sessions."
+      },
+      {
+        "name": "PAQ_STRUCT_GATE",
+        "status": "caution",
+        "description": "Structural gate recovery trades",
+        "trades": 3,
+        "wins": 1,
+        "losses": 2,
+        "winRate": 33.3,
+        "pnl": 4.83,
+        "avgPnlPerTrade": 1.61,
+        "lastAction": "2026-04-09T14:00:00-06:00",
+        "bestDay": "2026-04-08 (+$10.03 recovery)",
+        "notes": "Recovery trades post-catastrophe. High variance: big wins or BDI=0 exits."
+      },
+      {
+        "name": "WES_EARLY",
+        "status": "monitoring",
+        "description": "WES early indicator (first operational Apr 8)",
+        "trades": 3,
+        "wins": 0,
+        "losses": 3,
+        "winRate": 0.0,
+        "pnl": -1.64,
+        "avgPnlPerTrade": -0.55,
+        "lastAction": "2026-04-09T11:00:00-06:00",
+        "bestDay": "N/A",
+        "notes": "New strategy, 0% WR across first 3 trades. Under observation."
       }
     ],
-    "dailyPnl": [
+    "convictionBuckets": [
       {
-        "date": "2026-04-07",
-        "pnl": 5.43,
-        "balance": 98.47,
-        "trades": 82
+        "name": "HIGH+ALIGNED",
+        "description": "Conviction ≥7.0 + safe directional bias (BPS -5 to -3)",
+        "trades": 7,
+        "wins": 7,
+        "losses": 0,
+        "winRate": 100.0,
+        "pnl": 17.05,
+        "avgPnlPerTrade": 2.44,
+        "risk": "low",
+        "notes": "Perfect record across 6 days. Best bucket."
       },
       {
-        "date": "2026-04-08",
-        "pnl": -7.91,
-        "balance": 90.56,
-        "trades": 96
+        "name": "HIGH+COUNTER",
+        "description": "Conviction ≥7.0 + risky contrarian (BPS +3 to +5)",
+        "trades": 6,
+        "wins": 2,
+        "losses": 4,
+        "winRate": 33.3,
+        "pnl": -47.37,
+        "avgPnlPerTrade": -7.89,
+        "risk": "critical",
+        "notes": "CATASTROPHIC. Two identical -$26.75 losses. Oversized 43c positions (28% of balance). P1 BLOCKER: COUNTER sizing must be capped."
       },
       {
-        "date": "2026-04-09",
-        "pnl": -5.96,
-        "balance": 84.6,
-        "trades": 85
+        "name": "MID+ALIGNED",
+        "description": "Conviction 5.0-7.0 + safe bias",
+        "trades": 12,
+        "wins": 7,
+        "losses": 5,
+        "winRate": 58.3,
+        "pnl": 3.82,
+        "avgPnlPerTrade": 0.32,
+        "risk": "moderate",
+        "notes": "Decent edge, moderate risk."
       },
       {
-        "date": "2026-04-10",
-        "pnl": 5.65,
-        "balance": 90.25,
-        "trades": 96
-      },
-      {
-        "date": "2026-04-11",
-        "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 96
-      },
-      {
-        "date": "2026-04-12",
-        "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 87
+        "name": "NO_FLAG",
+        "description": "No directional BPS signal",
+        "trades": 18,
+        "wins": 10,
+        "losses": 8,
+        "winRate": 55.6,
+        "pnl": -1.20,
+        "avgPnlPerTrade": -0.07,
+        "risk": "moderate",
+        "notes": "Marginal edge without BPS signal. Evening trades mostly here."
       }
+    ],
+    "tradingZones": [
+      {
+        "name": "EU_MORNING",
+        "hours": "03:00-05:00 MT",
+        "timezone": "Europe",
+        "trades": 6,
+        "wins": 6,
+        "losses": 0,
+        "winRate": 100.0,
+        "pnl": 7.46,
+        "notes": "Perfect record. Low volume but high reliability. BCDP_FAST_COMMIT thrives here."
+      },
+      {
+        "name": "NY_OPEN",
+        "hours": "06:00-09:00 MT",
+        "timezone": "New York",
+        "trades": 28,
+        "wins": 18,
+        "losses": 10,
+        "winRate": 64.3,
+        "pnl": 8.50,
+        "notes": "Strong open. bps_premium strongest here."
+      },
+      {
+        "name": "NY_PRIME",
+        "hours": "09:00-15:00 MT",
+        "timezone": "New York",
+        "trades": 82,
+        "wins": 49,
+        "losses": 33,
+        "winRate": 59.8,
+        "pnl": 4.50,
+        "notes": "Highest volume period. Mixed: strong bps_premium offset by HIGH+COUNTER disasters."
+      },
+      {
+        "name": "NY_CLOSE",
+        "hours": "15:00-17:00 MT",
+        "timezone": "New York",
+        "trades": 18,
+        "wins": 10,
+        "losses": 8,
+        "winRate": 55.6,
+        "pnl": -1.80,
+        "notes": "Marginal. Liquidity thins toward close."
+      },
+      {
+        "name": "EVENING",
+        "hours": "17:00-22:00 MT",
+        "timezone": "After-hours",
+        "trades": 24,
+        "wins": 13,
+        "losses": 11,
+        "winRate": 54.2,
+        "pnl": -10.20,
+        "notes": "Thin book, slippage risk. No BPS flags. PAQ_EARLY_AGG volatile here."
+      },
+      {
+        "name": "OVERNIGHT",
+        "hours": "22:00-03:00 MT",
+        "timezone": "Overnight",
+        "trades": 8,
+        "wins": 5,
+        "losses": 3,
+        "winRate": 62.5,
+        "pnl": 1.25,
+        "notes": "Low volume. Position caps active."
+      }
+    ],
+    "riskEvents": {
+      "bdi0ForcedExits": 5,
+      "bdi0TotalLoss": -17.19,
+      "bdi0RecoveryRate": 0.0,
+      "harvestAttempts": 56,
+      "harvestDone": 20,
+      "harvestMiss": 19,
+      "harvestSkipBdi0": 17,
+      "harvestSuccessRate": 51.0,
+      "harvestBelowEntry": 3,
+      "harvestBelowEntryLoss": -0.46,
+      "phantomPositions": 2,
+      "reconciliationGap": -25.96,
+      "posWarnings": 2
+    },
+    "dailyPnl": [
+      { "date": "2026-04-07", "pnl": 5.43, "balance": 98.47, "trades": 82 },
+      { "date": "2026-04-08", "pnl": -7.91, "balance": 90.56, "trades": 96 },
+      { "date": "2026-04-09", "pnl": -5.96, "balance": 84.60, "trades": 85 },
+      { "date": "2026-04-10", "pnl": 5.65, "balance": 90.25, "trades": 96 },
+      { "date": "2026-04-11", "pnl": 0.00, "balance": 90.25, "trades": 96 },
+      { "date": "2026-04-12", "pnl": 0.00, "balance": 90.25, "trades": 87 }
     ],
     "recentTrades": []
   },
@@ -80,8 +259,8 @@
     "winRate": 0,
     "stoplossTriggers": 0,
     "harvestEvents": 0,
-    "bestStrategy": "\u2014",
-    "worstStrategy": "\u2014"
+    "bestStrategy": "—",
+    "worstStrategy": "—"
   },
   "allTimeStats": {
     "totalPnl": -2.79,
@@ -91,26 +270,15 @@
   "btcMarketContext": {
     "period": "2026-04-07 to 2026-04-12",
     "lowPrice": 67835.49,
-    "highPrice": 73675.7,
+    "highPrice": 73675.70,
     "priceRange": 5840.21,
     "volatility": "moderate-high"
   },
   "operationalMetadata": {
-    "dataSource": "REAL \u2014 AetherBot v254 live trading logs",
+    "dataSource": "REAL — AetherBot v254 live trading logs + analysis files",
     "logsLocation": "agents/aether/logs/",
-    "originalSource": "/Users/kai/Documents/Projects/AetherBot/",
-    "dataVerified": true,
-    "verificationDate": "2026-04-12T21:35:00-06:00",
-    "logFilesPresent": 6,
     "capital": "real",
-    "note": "Real trading capital on Kalshi. Balance reflects actual wins and losses from binary options trading."
+    "note": "Strategy data extracted from 6 days of trading logs + 41 analysis files. All P&L numbers are real USD from Kalshi binary options."
   },
-  "strategySummary": {
-    "product": "Kalshi BTC 15M Binary Options (KXBTC15M)",
-    "timeframe": "15-minute expiry cycles",
-    "signalType": "Price action quality (PAQ), context (CTX), confidence (BCDP)",
-    "executionMethod": "Automated YES/NO predictions with real-time strike locking",
-    "riskManagement": "Position size: 1 contract per ticker. No leverage."
-  },
-  "updatedAt": "2026-04-12T22:01:46-06:00"
+  "updatedAt": "2026-04-13T00:45:00-06:00"
 }
