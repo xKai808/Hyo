@@ -97,15 +97,27 @@ with open('$FAILED/$basename', 'w') as f:
   local stderr_file=$(mktemp)
 
   # Run in project root with timeout (macOS-compatible)
+  # Clear proxy vars — launchd inherits system proxy which blocks GitHub/npm/etc
+  unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY all_proxy no_proxy NO_PROXY
+  # Also override git's own proxy config for this execution
+  export GIT_CONFIG_NOSYSTEM=1
+  export GIT_TERMINAL_PROMPT=0
+  # Force git to use no proxy regardless of system config
+  export GIT_CONFIG_COUNT=2
+  export GIT_CONFIG_KEY_0="http.proxy"
+  export GIT_CONFIG_VALUE_0=""
+  export GIT_CONFIG_KEY_1="https.proxy"
+  export GIT_CONFIG_VALUE_1=""
+
   cd "$ROOT"
   if command -v gtimeout >/dev/null 2>&1; then
     # GNU coreutils via homebrew (brew install coreutils)
-    gtimeout "${timeout}s" bash -c "$command" > "$stdout_file" 2> "$stderr_file"
+    gtimeout "${timeout}s" env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY -u ALL_PROXY -u all_proxy bash -c "$command" > "$stdout_file" 2> "$stderr_file"
   elif command -v timeout >/dev/null 2>&1; then
-    timeout "${timeout}s" bash -c "$command" > "$stdout_file" 2> "$stderr_file"
+    timeout "${timeout}s" env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY -u ALL_PROXY -u all_proxy bash -c "$command" > "$stdout_file" 2> "$stderr_file"
   else
     # Fallback: no timeout, just run with a background kill timer
-    bash -c "$command" > "$stdout_file" 2> "$stderr_file" &
+    env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY bash -c "$command" > "$stdout_file" 2> "$stderr_file" &
     local cmd_pid=$!
     ( sleep "$timeout" && kill "$cmd_pid" 2>/dev/null ) &
     local timer_pid=$!
