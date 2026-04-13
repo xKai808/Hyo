@@ -21,13 +21,16 @@
 | [Crypto Flows](topics/crypto-flow.md) | 2026-04-11 | 1 |
 | [Macro & Rates](topics/macro-rates.md) | 2026-04-11 | 1 |
 
-## Lab (3)
+## Lab (6)
 
 | Name | First seen | Last updated |
 | --- | --- | --- |
 | [Hybrid Cloud-Trigger / Local-Runtime Agents](lab/agent-runtime-hybrid.md) | 2026-04-11 | 2026-04-11 |
 | [AI Browser Extension Security Risk](lab/ai-browser-extension-risk.md) | 2026-04-11 | 2026-04-11 |
 | [AI Scientist-v2](lab/ai-scientist-v2.md) | 2026-04-11 | 2026-04-11 |
+| [Nel QA Architecture Research](lab/nel-qa-architecture-research.md) | 2026-04-12 | 2026-04-12 |
+| [Ops Audit 2026-04-12](lab/ops-audit-2026-04-12.md) | 2026-04-12 | 2026-04-12 |
+| [Cowork Sandbox Execution Bridge](lab/cowork-sandbox-execution-bridge.md) | 2026-04-12 | 2026-04-12 |
 
 ---
 
