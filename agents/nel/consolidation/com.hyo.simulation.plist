@@ -3,12 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.hyo.aurora</string>
+    <string>com.hyo.simulation</string>
 
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/kai/Documents/Projects/Hyo/agents/ra/pipeline/newsletter.sh</string>
+        <string>-c</string>
+        <string>/Users/kai/Documents/Projects/Hyo/bin/dispatch.sh simulate &amp;&amp; /Users/kai/Documents/Projects/Hyo/bin/dispatch.sh simulate-review</string>
     </array>
 
     <key>EnvironmentVariables</key>
@@ -22,16 +23,16 @@
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
-        <integer>3</integer>
+        <integer>23</integer>
         <key>Minute</key>
-        <integer>0</integer>
+        <integer>30</integer>
     </dict>
 
     <key>StandardOutPath</key>
-    <string>/tmp/hyo-aurora.log</string>
+    <string>/tmp/hyo-simulation.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/tmp/hyo-aurora.log</string>
+    <string>/tmp/hyo-simulation.log</string>
 
     <key>WorkingDirectory</key>
     <string>/tmp</string>

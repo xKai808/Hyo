@@ -1,11 +1,17 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-12T22:11:30Z
+Last updated: 2026-04-13T01:16:07Z
 
 ## Queued
 
 - **nel-019** [P3] Nel run complete: score=65, actions=2, sentinel=2/4
   - Created: 2026-04-12T22:11:30Z
+
+- **kai-sim-failure** [P2] Simulation failure: FAIL:runner:nel:exit-1
+  - Created: 2026-04-12T22:19:12.356391Z
+
+- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-12T18:45:59-06:00 != API ts 2026-04-13T00:42:58.332Z
+  - Created: 2026-04-13T00:46:00Z
 
 ## Recently Completed
 

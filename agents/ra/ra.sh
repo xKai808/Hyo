@@ -311,6 +311,151 @@ if [[ -x "$KAI" ]]; then
   ok "pushed status to HQ"
 fi
 
+# ── Self-Review: Ra Pathway Audit ──
+say "Self-review: Ra pathway audit..."
+SELF_REVIEW_ISSUES=0
+
+# INPUT: Are source files accessible?
+if [[ ! -f "$NEWSLETTER_DIR/sources.json" ]]; then
+  warn "Self-review: sources.json missing"
+  SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+fi
+if [[ ! -f "$NEWSLETTER_DIR/gather.py" ]]; then
+  warn "Self-review: gather.py missing"
+  SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+fi
+
+# PROCESSING: Are pipeline scripts executable?
+for script in gather.py synthesize.py render.py; do
+  if [[ -f "$NEWSLETTER_DIR/$script" ]] && [[ ! -r "$NEWSLETTER_DIR/$script" ]]; then
+    warn "Self-review: $script not readable"
+    SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+  fi
+done
+
+# OUTPUT: Does today's newsletter exist (if it should)?
+HOUR=$(date +%H)
+if [[ $HOUR -gt 6 ]]; then
+  if [[ ! -f "$NEWSLETTERS_OUT/${TODAY}.md" ]] && [[ ! -f "$NEWSLETTERS_OUT/${TODAY}.html" ]]; then
+    warn "Self-review: no newsletter output for today (after 06:00)"
+    SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+  fi
+fi
+
+# EXTERNAL: Is archive accessible?
+ARCHIVE_DIR="$ROOT/agents/ra/research"
+if [[ ! -d "$ARCHIVE_DIR" ]]; then
+  warn "Self-review: research archive directory missing"
+  SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+fi
+
+# REPORTING: Is ACTIVE.md current?
+RA_ACTIVE="$ROOT/agents/ra/ledger/ACTIVE.md"
+if [[ -f "$RA_ACTIVE" ]]; then
+  if [[ "$(uname)" == "Darwin" ]]; then
+    active_age=$(( ($(date +%s) - $(stat -f %m "$RA_ACTIVE")) / 3600 ))
+  else
+    active_age=$(( ($(date +%s) - $(stat -c %Y "$RA_ACTIVE")) / 3600 ))
+  fi
+  if [[ $active_age -gt 48 ]]; then
+    warn "Self-review: ACTIVE.md stale (${active_age}h old)"
+    SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+  fi
+fi
+
+if [[ $SELF_REVIEW_ISSUES -eq 0 ]]; then
+  ok "Self-review: Ra pathway healthy"
+else
+  warn "Self-review: $SELF_REVIEW_ISSUES issues in Ra pathway"
+fi
+
+# ── Self-Evolution: Ra Learning & Improvement Tracking ──
+say "Self-evolution: capturing metrics and learning signals..."
+
+EVOLUTION_FILE="$ROOT/agents/ra/evolution.jsonl"
+PLAYBOOK="$ROOT/agents/ra/PLAYBOOK.md"
+
+# Collect Ra-specific metrics
+CRITICAL=${CRITICAL:-0}
+WARNINGS=${WARNINGS:-0}
+SOURCE_COUNT=${SOURCE_COUNT:-0}
+ARCHIVE_ENTITIES=$(find "$RESEARCH_DIR/entities" -name "*.md" -type f 2>/dev/null | wc -l || echo "0")
+
+# Get last evolution entry for comparison
+LAST_EVOLUTION=""
+if [[ -f "$EVOLUTION_FILE" && -s "$EVOLUTION_FILE" ]]; then
+  LAST_EVOLUTION=$(tail -1 "$EVOLUTION_FILE")
+fi
+
+# Extract last critical count for regression detection
+LAST_CRITICAL=0
+if [[ -n "$LAST_EVOLUTION" ]]; then
+  LAST_CRITICAL=$(echo "$LAST_EVOLUTION" | python3 -c "import sys, json; d=json.load(sys.stdin); print(d.get('metrics', {}).get('critical', 0))" 2>/dev/null || echo "0")
+fi
+
+# Determine assessment
+ASSESSMENT="newsletter health check completed"
+IMPROVEMENTS_PROPOSED=0
+if [[ $CRITICAL -gt $LAST_CRITICAL ]]; then
+  ASSESSMENT="critical issues increased: $LAST_CRITICAL → $CRITICAL"
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+elif [[ $CRITICAL -lt $LAST_CRITICAL && $LAST_CRITICAL -gt 0 ]]; then
+  ASSESSMENT="improvement: critical issues resolved ($LAST_CRITICAL → $CRITICAL)"
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+fi
+
+if [[ $WARNINGS -gt 0 ]]; then
+  if [[ -z "$ASSESSMENT" ]] || [[ "$ASSESSMENT" == "newsletter health check completed" ]]; then
+    ASSESSMENT="health check with $WARNINGS warning(s)"
+  fi
+fi
+
+# Check if PLAYBOOK is stale (>7 days)
+PLAYBOOK_UPDATED=false
+STALENESS_FLAG=false
+if [[ -f "$PLAYBOOK" ]]; then
+  PLAYBOOK_MTIME=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+  PLAYBOOK_AGE=$(( ($(date +%s) - PLAYBOOK_MTIME) / 86400 ))
+  if [[ $PLAYBOOK_AGE -lt 7 ]]; then
+    PLAYBOOK_UPDATED=true
+  elif [[ $PLAYBOOK_AGE -gt 7 ]]; then
+    STALENESS_FLAG=true
+  fi
+fi
+
+# Build evolution entry
+EVOLUTION_ENTRY=$(python3 << PYEOF
+import json
+from datetime import datetime
+import sys
+
+entry = {
+  "ts": "$TIMESTAMP",
+  "version": "1.0",
+  "metrics": {
+    "critical": $CRITICAL,
+    "warnings": $WARNINGS,
+    "source_count": $SOURCE_COUNT,
+    "archive_entities": $ARCHIVE_ENTITIES
+  },
+  "assessment": "$ASSESSMENT",
+  "improvements_proposed": $IMPROVEMENTS_PROPOSED,
+  "playbook_updated": $PLAYBOOK_UPDATED,
+  "staleness_flag": $STALENESS_FLAG
+}
+
+print(json.dumps(entry))
+PYEOF
+)
+
+# Append to evolution ledger
+echo "$EVOLUTION_ENTRY" >> "$EVOLUTION_FILE"
+ok "Self-evolution logged: $ASSESSMENT"
+
+if [[ "$STALENESS_FLAG" == "True" ]]; then
+  warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+fi
+
 # Dispatch integration: report findings to Kai ledger
 DISPATCH="$ROOT/bin/dispatch.sh"
 if [[ -x "$DISPATCH" ]]; then

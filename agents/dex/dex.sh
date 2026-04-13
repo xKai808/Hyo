@@ -859,6 +859,150 @@ else
 fi
 
 # ============================================================================
+# SELF-REVIEW: Dex Pathway Audit
+# ============================================================================
+log_info "Self-review: Dex pathway audit..."
+SR_ISSUES=0
+
+# INPUT: Are JSONL ledger files accessible?
+for jfile in "$ROOT/kai/ledger/log.jsonl" "$ROOT/agents/nel/ledger/log.jsonl" "$ROOT/agents/sam/ledger/log.jsonl" "$ROOT/agents/ra/ledger/log.jsonl"; do
+  if [[ ! -f "$jfile" ]]; then
+    log_warn "Self-review: missing ledger file: $jfile"
+    SR_ISSUES=$((SR_ISSUES + 1))
+  fi
+done
+
+# PROCESSING: Did integrity checks complete?
+if [[ -z "${INTEGRITY_PASS:-}" ]]; then
+  log_warn "Self-review: integrity check variable not set"
+  SR_ISSUES=$((SR_ISSUES + 1))
+fi
+
+# OUTPUT: Is report file valid?
+if [[ -f "$REPORT" ]]; then
+  local rsize
+  rsize=$(wc -c < "$REPORT" 2>/dev/null || echo 0)
+  if [[ $rsize -lt 100 ]]; then
+    log_warn "Self-review: report file suspiciously small (${rsize}B)"
+    SR_ISSUES=$((SR_ISSUES + 1))
+  fi
+else
+  log_warn "Self-review: report file not generated"
+  SR_ISSUES=$((SR_ISSUES + 1))
+fi
+
+# REPORTING: ACTIVE.md current?
+DEX_ACTIVE="$ROOT/agents/dex/ledger/ACTIVE.md"
+if [[ -f "$DEX_ACTIVE" ]]; then
+  if [[ "$(uname)" == "Darwin" ]]; then
+    dex_mtime=$(stat -f %m "$DEX_ACTIVE" 2>/dev/null || echo 0)
+  else
+    dex_mtime=$(stat -c %Y "$DEX_ACTIVE" 2>/dev/null || echo 0)
+  fi
+  dex_age_h=$(( ($(date +%s) - dex_mtime) / 3600 ))
+  if [[ $dex_age_h -gt 48 ]]; then
+    log_warn "Self-review: ACTIVE.md stale (${dex_age_h}h)"
+    SR_ISSUES=$((SR_ISSUES + 1))
+  fi
+fi
+
+if [[ $SR_ISSUES -eq 0 ]]; then
+  log_pass "Self-review: Dex pathway healthy"
+else
+  log_warn "Self-review: $SR_ISSUES issues in Dex pathway"
+fi
+
+# ============================================================================
+# SELF-EVOLUTION: Dex Learning & Improvement Tracking
+# ============================================================================
+log_info "Self-evolution: capturing metrics and learning signals..."
+
+EVOLUTION_FILE="$ROOT/agents/dex/evolution.jsonl"
+PLAYBOOK="$ROOT/agents/dex/PLAYBOOK.md"
+
+# Collect Dex-specific metrics
+INTEGRITY_PASS=${INTEGRITY_PASS:-0}
+INTEGRITY_FAIL=${INTEGRITY_FAIL:-0}
+STALE_COUNT=${STALE_COUNT:-0}
+PATTERNS_FOUND=${PATTERNS_FOUND:-0}
+
+# Get last evolution entry for comparison
+LAST_EVOLUTION=""
+if [[ -f "$EVOLUTION_FILE" && -s "$EVOLUTION_FILE" ]]; then
+  LAST_EVOLUTION=$(tail -1 "$EVOLUTION_FILE")
+fi
+
+# Extract last integrity metrics for regression detection
+LAST_INTEGRITY_FAIL=0
+if [[ -n "$LAST_EVOLUTION" ]]; then
+  LAST_INTEGRITY_FAIL=$(echo "$LAST_EVOLUTION" | python3 -c "import sys, json; d=json.load(sys.stdin); print(d.get('metrics', {}).get('integrity_fail', 0))" 2>/dev/null || echo "0")
+fi
+
+# Determine assessment
+ASSESSMENT="daily memory maintenance completed"
+IMPROVEMENTS_PROPOSED=0
+if [[ $INTEGRITY_FAIL -gt $LAST_INTEGRITY_FAIL ]]; then
+  ASSESSMENT="integrity issues increased: $LAST_INTEGRITY_FAIL → $INTEGRITY_FAIL corrupt JSONL entries"
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+elif [[ $INTEGRITY_FAIL -lt $LAST_INTEGRITY_FAIL && $LAST_INTEGRITY_FAIL -gt 0 ]]; then
+  ASSESSMENT="integrity improved: $LAST_INTEGRITY_FAIL → $INTEGRITY_FAIL corrupt entries fixed"
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+fi
+
+if [[ $PATTERNS_FOUND -gt 0 ]]; then
+  if [[ -z "$ASSESSMENT" ]] || [[ "$ASSESSMENT" == "daily memory maintenance completed" ]]; then
+    ASSESSMENT="pattern detection: $PATTERNS_FOUND recurrent issues found"
+  fi
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+fi
+
+# Check if PLAYBOOK is stale (>7 days)
+PLAYBOOK_UPDATED=false
+STALENESS_FLAG=false
+if [[ -f "$PLAYBOOK" ]]; then
+  PLAYBOOK_MTIME=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+  PLAYBOOK_AGE=$(( ($(date +%s) - PLAYBOOK_MTIME) / 86400 ))
+  if [[ $PLAYBOOK_AGE -lt 7 ]]; then
+    PLAYBOOK_UPDATED=true
+  elif [[ $PLAYBOOK_AGE -gt 7 ]]; then
+    STALENESS_FLAG=true
+  fi
+fi
+
+# Build evolution entry
+EVOLUTION_ENTRY=$(python3 << PYEOF
+import json
+from datetime import datetime
+import sys
+
+entry = {
+  "ts": "$NOW_ISO",
+  "version": "1.0",
+  "metrics": {
+    "integrity_pass": $INTEGRITY_PASS,
+    "integrity_fail": $INTEGRITY_FAIL,
+    "stale_count": $STALE_COUNT,
+    "patterns_found": $PATTERNS_FOUND
+  },
+  "assessment": "$ASSESSMENT",
+  "improvements_proposed": $IMPROVEMENTS_PROPOSED,
+  "playbook_updated": $PLAYBOOK_UPDATED,
+  "staleness_flag": $STALENESS_FLAG
+}
+
+print(json.dumps(entry))
+PYEOF
+)
+
+# Append to evolution ledger
+echo "$EVOLUTION_ENTRY" >> "$EVOLUTION_FILE"
+log_pass "Self-evolution logged: $ASSESSMENT"
+
+if [[ "$STALENESS_FLAG" == "True" ]]; then
+  log_warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+fi
+
+# ============================================================================
 # FINAL: Dispatch to Kai
 # ============================================================================
 log_info "Dispatching daily summary to Kai"

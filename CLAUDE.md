@@ -44,6 +44,9 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 - **Secrets live in agents/nel/security/ only.** Gitignored, mode 700/600. If you see a secret anywhere else, fix it immediately.
 - **Don't apologize for autonomous work.** Make the call, ship it, log what you did, move on.
 - **Research produces reports.** Any research done must be saved as a readable report in `agents/ra/research/` and published to HQ for Hyo to browse.
+- **Agents are autonomous.** Each agent assesses, plans, executes, and evolves on its own. They consult Kai PRN (as needed), not on a schedule. Kai holds override authority via `AGENT_ALGORITHMS.md` (the constitution). Agents manage their own `PLAYBOOK.md` (operational manual), `evolution.jsonl` (learning log), and `PRIORITIES.md` (research + priorities). See the Agent Autonomy Framework in `kai/AGENT_ALGORITHMS.md`.
+- **Protocol staleness prevention.** Any file change that affects agent behavior MUST trigger: (1) update the relevant PLAYBOOK.md, (2) log to evolution.jsonl, (3) update PRIORITIES.md if priorities shifted. Dex enforces staleness across all agents. Daily audit checks. No file goes stale without being flagged.
+- **Every behavior change updates the protocol.** When you change how an agent works (modify a runner, add a phase, change a threshold), you MUST also update that agent's PLAYBOOK.md and AGENT_ALGORITHMS.md if the change affects cross-agent behavior. This is wired into the self-evolution cycle and daily audit. Do not defer this — update in the same session.
 
 ## Project layout
 

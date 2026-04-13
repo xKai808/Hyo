@@ -44,29 +44,62 @@
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. The existing cron/launchd tasks on the Mini DO have full network access — that's where pipeline scripts with auto-push actually run.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 01:00 MT — command queue operational, all daemons live)
+## Current state (as of 2026-04-13 — agent autonomy framework shipped, mobile HQ, real-time usage)
 
-**Running daemons on Mini (all confirmed via `launchctl list | grep hyo`):**
+**Running daemons on Mini (confirmed via `launchctl list | grep hyo`):**
 - `com.hyo.queue-worker` — file-based command queue, auto-processes `kai/queue/pending/`
 - `com.hyo.dex` — daily at 23:00 MT (integrity, compaction, patterns, daily intel)
 - `com.hyo.aether` — every 15 min (trade metrics, dashboard, GPT fact-check)
 - `com.hyo.mcp-tunnel` — cloudflared tunnel to MCP server on port 3847
 
-**Scheduled tasks (Cowork):**
-- `kai-health-check` — every 2 hours, checks flags/stale tasks/queue/agent output
+**Pending launchd installation on Mini (plists ready, need `launchctl load`):**
+- `com.hyo.consolidation` — nightly at 01:00 MT (6-project consolidation)
+- `com.hyo.simulation` — nightly at 23:30 MT (dispatch simulate + simulate-review)
+- `com.hyo.aurora` — daily at 03:00 MT (newsletter pipeline) — path fixed from xkai808→kai
+
+**Nightly sequence (correct order):**
+23:00 Dex → 23:30 Simulation → 01:00 Consolidation → 02:00 Daily Audit → 03:00 Aurora
+
+**Scheduled tasks (Cowork — active):**
+- `kai-health-check` — every 2 hours
+- `kai-daily-audit` — daily at 02:00 MT (moved from 22:00, runs AFTER nightly processes)
+- `aurora-hyo-daily` — 03:00 MT (Cowork backup, primary is launchd)
+- `sentinel-hyo-daily` — 04:04 MT
+- `cipher-hyo-hourly` — every hour
+- `hq-ops-sync` — every 4 hours
+
+**Scheduled tasks (Cowork — disabled, superseded by launchd):**
+- `nightly-delegation-simulation` — superseded by com.hyo.simulation
+- `nightly-per-project-consolidation` — superseded by com.hyo.consolidation
+- `nightly-consolidation`, `nightly-simulation`, `kai-ops`, `daily-aetherbot-analysis` — old, disabled
+
+**Agent autonomy architecture:**
+- AGENT_ALGORITHMS.md = THE CONSTITUTION (Kai owns, agents read, cannot override)
+- agents/<name>/PLAYBOOK.md = agent's own operational manual (agent owns, Kai can override)
+- agents/<name>/evolution.jsonl = learning log (append-only, every run cycle)
+- agents/<name>/PRIORITIES.md = research mandate + priority queue
+- Agents assess, plan, execute, and evolve autonomously. Consult Kai PRN only.
+- Protocol staleness prevention: Dex + daily audit flag any PLAYBOOK/evolution/PRIORITIES >7d stale.
 
 **Active infrastructure:**
-- Command queue: Kai writes JSON to `kai/queue/pending/`, daemon executes on Mini, Kai reads `completed/`. Zero copy/paste for routine ops. Tested end-to-end.
-- OpenAI API key: placed at `agents/nel/security/openai.key` (24 bytes). Aether GPT fact-checking active.
-- Full Disk Access: granted to `/bin/bash` on Mini. Fixes TCC for all launchd bash scripts.
+- Command queue: Kai→Mini via JSON, zero copy/paste
+- Daily bottleneck audit: 02:00 MT, reviews all agents + staleness + automation gaps
+- Agent self-review + self-evolution: every run cycle per agent
+- Real-time usage API: `/api/usage` reads CSV data, configurable budgets in `usage-config.json`
+- HQ push verification: kai push now verifies data arrived at HQ
+- Mobile-responsive HQ: bottom nav bar, touch targets, responsive cards
+- OpenAI API key: placed. Aether GPT fact-checking active.
+- Full Disk Access: granted to /bin/bash on Mini.
 
-**Shipped this session (eighth pass — command queue + autonomous operations):**
-- **Command queue (`kai/queue/`)** — worker.sh, submit.py, com.hyo.queue-worker.plist. Kai submits, Mini executes, Kai reads result. Security filter blocks dangerous patterns. macOS timeout compatibility (gtimeout/fallback). Proxy stripping for git operations.
-- **2-hour health check** — scheduled via Cowork. Checks P0/P1 flags, stale tasks, queue health, agent output freshness. What's Next gate: auto-dispatches remediation on findings, queues accelerated re-check on P0.
-- **What's Next gate** — wired into AGENT_ALGORITHMS.md and dispatch.sh. No agent is allowed to detect a problem and only log it. Detection → route to owner → fix → verify.
-- **Step-by-step instruction protocol** — wired into CLAUDE.md and AGENT_ALGORITHMS.md. When Hyo must act: numbered steps, one command per step, expected output, failure fallback. Non-negotiable.
-- **Dex + Aether launchd plists** — built, installed, running
-- **Commits:** `8683c4b` → `f5fc5bc` → `1be9a65` → `1784de9` → `bd729a3` → `5efc23a` → `bb99353` → `f040dde`
+**Shipped this session (eighth pass — autonomy + mobile + real-time):**
+- **Agent autonomy framework** — PLAYBOOK.md for all 5 agents (self-managed), evolution.jsonl, self-evolution phase wired into all runners. Agents can modify their own checklists, propose improvements, log decisions. Kai holds override via constitution.
+- **Agent-specific self-review checklists** — unique per agent with actual files, commands, metrics (not generic)
+- **Scheduled task sequencing fixed** — Dex 23:00 → Sim 23:30 → Consolidation 01:00 → Audit 02:00 → Aurora 03:00. Disabled duplicate Cowork tasks superseded by launchd.
+- **Real-time usage data** — `/api/usage` endpoint, `usage-config.json` for budgets, `refresh-usage.sh` for API pulls. HQ fetches dynamically, auto-refreshes every 60s.
+- **HQ mobile responsive** — bottom nav bar at 768px, touch targets 44px+, scrollable tables, 480px ultra-compact breakpoint
+- **HQ push verification** — kai push now verifies data arrived via GET /api/hq?action=data, retries once
+- **Protocol staleness prevention** — PLAYBOOK >7d = P2, >14d = P1. evolution.jsonl >48h = P1. Wired into daily audit + agent self-evolution + CLAUDE.md.
+- Plus: daily audit, self-review, ACTIVE.md cleanup, aurora plist fix, consolidation/simulation plists, kai audit subcommand
 
 **Shipped previous session (seventh pass — agent formalization + research architecture):**
 - Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename

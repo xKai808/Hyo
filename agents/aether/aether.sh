@@ -433,6 +433,148 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
   push_to_hq
   verify_dashboard
 
+  # ─── Self-Review: Aether Pathway Audit ────────────────────────────────────
+  log "Self-review: Aether pathway audit..."
+  local sr_issues=0
+
+  # INPUT: metrics file exists and readable?
+  if [[ ! -f "$METRICS" ]]; then
+    log "Self-review WARN: metrics file missing: $METRICS"
+    sr_issues=$((sr_issues + 1))
+  elif [[ $(wc -c < "$METRICS" 2>/dev/null || echo 0) -lt 50 ]]; then
+    log "Self-review WARN: metrics file suspiciously small"
+    sr_issues=$((sr_issues + 1))
+  fi
+
+  # PROCESSING: updatedAt timestamp present?
+  if [[ -f "$METRICS" ]]; then
+    local updated_at
+    updated_at=$(python3 -c "import json; print(json.load(open('$METRICS')).get('updatedAt',''))" 2>/dev/null || echo "")
+    if [[ -z "$updated_at" ]]; then
+      log "Self-review WARN: metrics missing updatedAt timestamp"
+      sr_issues=$((sr_issues + 1))
+    fi
+  fi
+
+  # REPORTING: ACTIVE.md current?
+  local aether_active="$ROOT/agents/aether/ledger/ACTIVE.md"
+  if [[ -f "$aether_active" ]]; then
+    local active_mtime active_age_h
+    if [[ "$(uname)" == "Darwin" ]]; then
+      active_mtime=$(stat -f %m "$aether_active" 2>/dev/null || echo 0)
+    else
+      active_mtime=$(stat -c %Y "$aether_active" 2>/dev/null || echo 0)
+    fi
+    active_age_h=$(( ($(date +%s) - active_mtime) / 3600 ))
+    if [[ $active_age_h -gt 48 ]]; then
+      log "Self-review WARN: ACTIVE.md stale (${active_age_h}h)"
+      sr_issues=$((sr_issues + 1))
+    fi
+  fi
+
+  if [[ $sr_issues -eq 0 ]]; then
+    log "Self-review: Aether pathway healthy"
+  else
+    log "Self-review: $sr_issues issues in Aether pathway"
+  fi
+
+  # ─── Self-Evolution: Aether Learning & Improvement Tracking ─────────────────
+  log "Self-evolution: capturing metrics and learning signals..."
+
+  EVOLUTION_FILE="$ROOT/agents/aether/evolution.jsonl"
+  PLAYBOOK="$ROOT/agents/aether/PLAYBOOK.md"
+
+  # Collect Aether-specific metrics
+  local trade_count=0
+  local pnl_total=0
+  local dashboard_status="unknown"
+
+  if [[ -f "$METRICS" ]]; then
+    trade_count=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['trades'])" 2>/dev/null || echo "0")
+    pnl_total=$(python3 -c "import json; print(json.load(open('$METRICS'))['currentWeek']['pnl'])" 2>/dev/null || echo "0")
+  fi
+
+  if verify_dashboard >/dev/null 2>&1; then
+    dashboard_status="synced"
+  else
+    dashboard_status="out-of-sync"
+  fi
+
+  # Get last evolution entry for comparison
+  local last_evolution=""
+  if [[ -f "$EVOLUTION_FILE" && -s "$EVOLUTION_FILE" ]]; then
+    last_evolution=$(tail -1 "$EVOLUTION_FILE")
+  fi
+
+  # Extract last PNL for regression detection
+  local last_pnl=0
+  if [[ -n "$last_evolution" ]]; then
+    last_pnl=$(echo "$last_evolution" | python3 -c "import sys, json; d=json.load(sys.stdin); print(d.get('metrics', {}).get('pnl_total', 0))" 2>/dev/null || echo "0")
+  fi
+
+  # Determine assessment
+  local assessment="metrics cycle complete"
+  local improvements_proposed=0
+  if [[ $trade_count -eq 0 ]]; then
+    assessment="standby mode: no trades this cycle"
+  elif (( $(echo "$pnl_total > $last_pnl" | bc -l) )); then
+    assessment="trading active: PNL improved $last_pnl → $pnl_total"
+    improvements_proposed=$((improvements_proposed + 1))
+  elif (( $(echo "$pnl_total < $last_pnl" | bc -l) )); then
+    assessment="PNL degradation detected: $last_pnl → $pnl_total"
+    improvements_proposed=$((improvements_proposed + 1))
+  fi
+
+  if [[ "$dashboard_status" == "out-of-sync" ]]; then
+    assessment="${assessment}; WARNING: dashboard out-of-sync"
+    improvements_proposed=$((improvements_proposed + 1))
+  fi
+
+  # Check if PLAYBOOK is stale (>7 days)
+  local playbook_updated=false
+  local staleness_flag=false
+  if [[ -f "$PLAYBOOK" ]]; then
+    local playbook_mtime=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+    local playbook_age=$(( ($(date +%s) - playbook_mtime) / 86400 ))
+    if [[ $playbook_age -lt 7 ]]; then
+      playbook_updated=true
+    elif [[ $playbook_age -gt 7 ]]; then
+      staleness_flag=true
+    fi
+  fi
+
+  # Build evolution entry
+  local evolution_entry=$(python3 << PYEOF
+import json
+from datetime import datetime
+import sys
+
+entry = {
+  "ts": "$TS",
+  "version": "1.0",
+  "metrics": {
+    "trade_count": $trade_count,
+    "pnl_total": $pnl_total,
+    "dashboard_status": "$dashboard_status"
+  },
+  "assessment": "$assessment",
+  "improvements_proposed": $improvements_proposed,
+  "playbook_updated": $playbook_updated,
+  "staleness_flag": $staleness_flag
+}
+
+print(json.dumps(entry))
+PYEOF
+)
+
+  # Append to evolution ledger
+  echo "$evolution_entry" >> "$EVOLUTION_FILE"
+  log "Self-evolution logged: $assessment"
+
+  if [[ "$staleness_flag" == "True" ]]; then
+    log "WARN: PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+  fi
+
   # ─── Dispatch reporting (closed-loop) ──────────────────────────────────────
   local dispatch_bin="$ROOT/bin/dispatch.sh"
   if [[ -x "$dispatch_bin" ]]; then

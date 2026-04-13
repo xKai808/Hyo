@@ -419,6 +419,181 @@ ${BOLD}HQ state tracking${RST}
 EOF
 }
 
+# ---- evolve: Sam self-evolution logging ----------------------------------------
+cmd_evolve() {
+  hdr "Sam: Self-evolution logging"
+
+  local EVOLUTION_FILE="$ROOT/agents/sam/evolution.jsonl"
+  local PLAYBOOK="$ROOT/agents/sam/PLAYBOOK.md"
+  local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+  # Collect Sam-specific metrics
+  local tests_passed=0
+  local tests_failed=0
+  local deploy_status="not_run"
+  local api_health="unknown"
+
+  # Quick API health check
+  if curl -sf "$API_BASE/api/health" > /dev/null 2>&1; then
+    api_health="up"
+  else
+    api_health="down"
+  fi
+
+  # If we have recent test results in the log, parse them
+  local latest_test_log="$LOGS/sam-$(date +%Y-%m-%d).md"
+  if [[ -f "$latest_test_log" ]]; then
+    # Try to extract test results if present
+    if grep -q "Passed:" "$latest_test_log"; then
+      tests_passed=$(grep "Passed:" "$latest_test_log" | tail -1 | grep -oP 'Passed: \K[0-9]+' | tail -1 || echo "0")
+    fi
+    if grep -q "Failed:" "$latest_test_log"; then
+      tests_failed=$(grep "Failed:" "$latest_test_log" | tail -1 | grep -oP 'Failed: \K[0-9]+' | tail -1 || echo "0")
+    fi
+  fi
+
+  # Get last evolution entry for comparison
+  local last_evolution=""
+  if [[ -f "$EVOLUTION_FILE" && -s "$EVOLUTION_FILE" ]]; then
+    last_evolution=$(tail -1 "$EVOLUTION_FILE")
+  fi
+
+  # Extract last test pass rate
+  local last_tests_passed=0
+  if [[ -n "$last_evolution" ]]; then
+    last_tests_passed=$(echo "$last_evolution" | python3 -c "import sys, json; d=json.load(sys.stdin); print(d.get('metrics', {}).get('tests_passed', 0))" 2>/dev/null || echo "0")
+  fi
+
+  # Determine assessment
+  local assessment="routine engineering check"
+  local improvements_proposed=0
+  if [[ $tests_failed -gt 0 ]]; then
+    assessment="$tests_failed test failures detected"
+    improvements_proposed=$((improvements_proposed + 1))
+  elif [[ $tests_passed -gt $last_tests_passed ]]; then
+    assessment="test coverage improved: $last_tests_passed → $tests_passed"
+    improvements_proposed=$((improvements_proposed + 1))
+  fi
+
+  if [[ "$api_health" == "down" ]]; then
+    assessment="${assessment}; API health CRITICAL"
+    improvements_proposed=$((improvements_proposed + 1))
+  fi
+
+  # Check if PLAYBOOK is stale (>7 days)
+  local playbook_updated=false
+  local staleness_flag=false
+  if [[ -f "$PLAYBOOK" ]]; then
+    local playbook_mtime=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+    local playbook_age=$(( ($(date +%s) - playbook_mtime) / 86400 ))
+    if [[ $playbook_age -lt 7 ]]; then
+      playbook_updated=true
+    elif [[ $playbook_age -gt 7 ]]; then
+      staleness_flag=true
+    fi
+  fi
+
+  # Build evolution entry
+  local evolution_entry=$(python3 << PYEOF
+import json
+from datetime import datetime
+import sys
+
+entry = {
+  "ts": "$timestamp",
+  "version": "1.0",
+  "metrics": {
+    "tests_passed": $tests_passed,
+    "tests_failed": $tests_failed,
+    "deploy_status": "$deploy_status",
+    "api_health": "$api_health"
+  },
+  "assessment": "$assessment",
+  "improvements_proposed": $improvements_proposed,
+  "playbook_updated": $playbook_updated,
+  "staleness_flag": $staleness_flag
+}
+
+print(json.dumps(entry))
+PYEOF
+)
+
+  # Append to evolution ledger
+  echo "$evolution_entry" >> "$EVOLUTION_FILE"
+  ok "Self-evolution logged: $assessment"
+
+  if [[ "$staleness_flag" == "True" ]]; then
+    warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+  fi
+}
+
+# ---- self-review: Sam pathway audit -----------------------------------------
+cmd_self_review() {
+  say "Self-review: Sam pathway audit..."
+  local sr_issues=0
+
+  # INPUT: Website dir exists and has files?
+  if [[ ! -d "$WEBSITE" ]]; then
+    err "Self-review: website dir missing: $WEBSITE"
+    sr_issues=$((sr_issues + 1))
+  fi
+  if [[ ! -d "$WEBSITE/api" ]]; then
+    err "Self-review: api dir missing: $WEBSITE/api"
+    sr_issues=$((sr_issues + 1))
+  fi
+
+  # PROCESSING: Can we reach the live site?
+  local http_code
+  http_code=$(curl -s -o /dev/null -w '%{http_code}' "${API_BASE}/api/health" 2>/dev/null || echo "000")
+  if [[ "$http_code" != "200" ]]; then
+    err "Self-review: /api/health returned $http_code (expected 200)"
+    sr_issues=$((sr_issues + 1))
+  fi
+
+  # OUTPUT: Are key HTML files present?
+  for page in index.html hq.html research.html; do
+    if [[ ! -f "$WEBSITE/$page" ]]; then
+      err "Self-review: missing page: $WEBSITE/$page"
+      sr_issues=$((sr_issues + 1))
+    fi
+  done
+
+  # EXTERNAL: Is git status clean?
+  local dirty
+  dirty=$(cd "$ROOT" && git status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+  if [[ $dirty -gt 20 ]]; then
+    warn "Self-review: $dirty uncommitted files in repo"
+  fi
+
+  # REPORTING: ACTIVE.md current?
+  local sam_active="$ROOT/agents/sam/ledger/ACTIVE.md"
+  if [[ -f "$sam_active" ]]; then
+    local active_mtime active_age_h
+    if [[ "$(uname)" == "Darwin" ]]; then
+      active_mtime=$(stat -f %m "$sam_active" 2>/dev/null || echo 0)
+    else
+      active_mtime=$(stat -c %Y "$sam_active" 2>/dev/null || echo 0)
+    fi
+    active_age_h=$(( ($(date +%s) - active_mtime) / 3600 ))
+    if [[ $active_age_h -gt 48 ]]; then
+      warn "Self-review: ACTIVE.md stale (${active_age_h}h)"
+      sr_issues=$((sr_issues + 1))
+    fi
+  fi
+
+  if [[ $sr_issues -eq 0 ]]; then
+    ok "Self-review: Sam pathway healthy"
+  else
+    err "Self-review: $sr_issues issues in Sam pathway"
+
+    # Auto-dispatch if issues found
+    local dispatch_bin="$ROOT/bin/dispatch.sh"
+    if [[ -x "$dispatch_bin" ]]; then
+      bash "$dispatch_bin" flag sam P2 "Sam self-review: $sr_issues pathway issues" 2>/dev/null || true
+    fi
+  fi
+}
+
 # ---- dispatch ---------------------------------------------------------------
 sub="${1:-help}"
 case "$sub" in
@@ -428,5 +603,7 @@ case "$sub" in
   build)           cmd_build "$@" ;;
   fix)             shift; cmd_fix "$@" ;;
   review)          cmd_review "$@" ;;
+  self-review)     cmd_self_review "$@" ;;
+  evolve)          cmd_evolve "$@" ;;
   *)               err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

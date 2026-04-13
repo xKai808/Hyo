@@ -599,7 +599,143 @@ echo "" >> "$REPORT"
 log_info "nel.hyo system run complete"
 
 # ============================================================================
-# PHASE 11: Dispatch Integration (Upward Communication to Kai)
+# PHASE 11.5: Self-Review (Agent Pathway Audit)
+# ============================================================================
+log_info "Running self-review: nel pathway audit..."
+SELF_REVIEW_ISSUES=0
+
+# INPUT: Can I access all config/state files?
+for check_file in "$MEMORY/sentinel.state.json" "$ROOT/kai/ledger/known-issues.jsonl"; do
+  if [[ ! -f "$check_file" ]]; then
+    log_warn "Self-review: missing input file: $check_file"
+    SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+  fi
+done
+
+# PROCESSING: Did all phases complete?
+if [[ ! -f "$REPORT" ]]; then
+  log_warn "Self-review: report file not generated"
+  SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+fi
+
+# OUTPUT: Is report accessible for downstream consumers?
+if [[ -f "$REPORT" ]] && [[ $(wc -c < "$REPORT") -lt 100 ]]; then
+  log_warn "Self-review: report suspiciously small (<100 bytes)"
+  SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+fi
+
+# EXTERNAL: Is HQ state file writable?
+if [[ -f "$HQ_STATE" ]] && [[ ! -w "$HQ_STATE" ]]; then
+  log_warn "Self-review: HQ state file not writable"
+  SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+fi
+
+# REPORTING: Is ACTIVE.md current?
+if [[ -f "$ROOT/agents/nel/ledger/ACTIVE.md" ]]; then
+  if [[ "$(uname)" == "Darwin" ]]; then
+    active_age=$(( ($(date +%s) - $(stat -f %m "$ROOT/agents/nel/ledger/ACTIVE.md")) / 3600 ))
+  else
+    active_age=$(( ($(date +%s) - $(stat -c %Y "$ROOT/agents/nel/ledger/ACTIVE.md")) / 3600 ))
+  fi
+  if [[ $active_age -gt 48 ]]; then
+    log_warn "Self-review: ACTIVE.md stale (${active_age}h old)"
+    SELF_REVIEW_ISSUES=$((SELF_REVIEW_ISSUES + 1))
+  fi
+fi
+
+if [[ $SELF_REVIEW_ISSUES -eq 0 ]]; then
+  log_pass "Self-review: nel pathway healthy"
+else
+  log_warn "Self-review: $SELF_REVIEW_ISSUES issues in nel pathway"
+fi
+
+# ============================================================================
+# PHASE 11.6: Self-Evolution (Agent Learning & Improvement Tracking)
+# ============================================================================
+log_info "Running self-evolution: capturing metrics and learning signals..."
+
+EVOLUTION_FILE="$ROOT/agents/nel/evolution.jsonl"
+PLAYBOOK="$ROOT/agents/nel/PLAYBOOK.md"
+
+# Collect Nel-specific metrics
+IMPROVEMENT_SCORE=${IMPROVEMENT_SCORE:-0}
+SENTINEL_PASS=${SENTINEL_PASS:-0}
+SENTINEL_FAIL=${SENTINEL_FAIL:-0}
+CIPHER_LEAKS=${CIPHER_LEAKS:-0}
+ACTIONS_FILED=${ACTIONS_FILED:-0}
+
+# Get last evolution entry for comparison
+LAST_EVOLUTION=""
+if [[ -f "$EVOLUTION_FILE" && -s "$EVOLUTION_FILE" ]]; then
+  LAST_EVOLUTION=$(tail -1 "$EVOLUTION_FILE")
+fi
+
+# Extract last improvement score for regression detection
+LAST_SCORE=100
+if [[ -n "$LAST_EVOLUTION" ]]; then
+  LAST_SCORE=$(echo "$LAST_EVOLUTION" | python3 -c "import sys, json; d=json.load(sys.stdin); print(d.get('metrics', {}).get('improvement_score', 100))" 2>/dev/null || echo "100")
+fi
+
+# Determine assessment
+ASSESSMENT="routine maintenance run"
+IMPROVEMENTS_PROPOSED=0
+if [[ $(( IMPROVEMENT_SCORE - LAST_SCORE )) -lt -5 ]]; then
+  ASSESSMENT="regression detected: score dropped $LAST_SCORE → $IMPROVEMENT_SCORE"
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+elif [[ $(( IMPROVEMENT_SCORE - LAST_SCORE )) -gt 5 ]]; then
+  ASSESSMENT="improvement: score improved $LAST_SCORE → $IMPROVEMENT_SCORE"
+  IMPROVEMENTS_PROPOSED=$((IMPROVEMENTS_PROPOSED + 1))
+fi
+
+# Check if PLAYBOOK is stale (>7 days)
+PLAYBOOK_UPDATED=false
+STALENESS_FLAG=false
+if [[ -f "$PLAYBOOK" ]]; then
+  PLAYBOOK_MTIME=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+  PLAYBOOK_AGE=$(( ($(date +%s) - PLAYBOOK_MTIME) / 86400 ))
+  if [[ $PLAYBOOK_AGE -lt 7 ]]; then
+    PLAYBOOK_UPDATED=true
+  elif [[ $PLAYBOOK_AGE -gt 7 ]]; then
+    STALENESS_FLAG=true
+    ASSESSMENT="${ASSESSMENT}; PLAYBOOK stale (${PLAYBOOK_AGE}d old)"
+  fi
+fi
+
+# Build evolution entry
+EVOLUTION_ENTRY=$(python3 << PYEOF
+import json
+from datetime import datetime
+import sys
+
+entry = {
+  "ts": "$NOW_ISO",
+  "version": "1.0",
+  "metrics": {
+    "improvement_score": $IMPROVEMENT_SCORE,
+    "sentinel_pass": $SENTINEL_PASS,
+    "sentinel_fail": $SENTINEL_FAIL,
+    "cipher_leaks": $CIPHER_LEAKS,
+    "actions_filed": $ACTIONS_FILED
+  },
+  "assessment": "$ASSESSMENT",
+  "improvements_proposed": $IMPROVEMENTS_PROPOSED,
+  "playbook_updated": $PLAYBOOK_UPDATED,
+  "staleness_flag": $STALENESS_FLAG
+}
+
+print(json.dumps(entry))
+PYEOF
+)
+
+# Append to evolution ledger
+echo "$EVOLUTION_ENTRY" >> "$EVOLUTION_FILE"
+log_pass "Self-evolution logged: $ASSESSMENT"
+
+if [[ "$STALENESS_FLAG" == "True" ]]; then
+  log_warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+fi
+
+# PHASE 12: Dispatch Integration (Upward Communication to Kai)
 # ============================================================================
 DISPATCH="$ROOT/bin/dispatch.sh"
 if [[ -x "$DISPATCH" ]]; then

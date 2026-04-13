@@ -1,24 +1,23 @@
-# Dex Agent — Active Tasks
+# Dex Active Tasks
 
-Last updated: 2026-04-12T00:00:00Z
-
-## In Progress
-
-None yet. Dex agent is newly initialized.
+Agent: dex.hyo
+Last updated: 2026-04-13T07:30:00Z
 
 ## Queued
 
-None yet.
+- **dex-001** [P2] First daily intelligence scan (Phase 6A) — awaiting 23:00 MT run
+  - Created: 2026-04-13T07:30:00Z
+  - Status: [AUTO-VERIFY] Launchd installed. First full cycle at 23:00 MT tonight. Topic: infrastructure (Sunday rotation).
+
+## In Progress
+
+- Autonomous operation: daily at 23:00 MT via com.hyo.dex launchd
+- Phase 6A daily intelligence scanning (7 rotating topics)
+- Phase 6B Monday deep synthesis (next run: Monday 2026-04-13)
 
 ## Recently Completed
 
-None yet.
-
----
-
-**Legend:**
-- **Task ID:** dex-NNN (sequential, per PROTOCOL.md)
-- **Priority:** P0 (critical), P1 (high), P2 (medium), P3 (low)
-- **Status:** CREATED, DELEGATED, IN_PROGRESS, TESTING, VERIFIED, DONE, BLOCKED, FAILED
-
-See `/sessions/sharp-gracious-franklin/mnt/Hyo/kai/ledger/PROTOCOL.md` for full lifecycle definition.
+- 2026-04-13: Agent formalized — manifest, runner, ledger, algorithms
+- 2026-04-13: Phase 6A/6B split implemented (daily scan + Monday synthesis)
+- 2026-04-13: Ra research coordination protocol wired
+- 2026-04-13: Continuous Learning Protocol + anti-stale enforcement

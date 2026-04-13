@@ -742,17 +742,32 @@
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
+      /* Layout: transform sidebar to bottom nav bar */
+      .shell {
+        flex-direction: column-reverse;
+      }
+
       .sidebar {
-        width: 56px;
+        width: 100%;
+        min-width: 100%;
+        height: 60px;
+        flex-direction: row;
         align-items: center;
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        padding: 0 12px;
+        overflow-x: auto;
+        overflow-y: hidden;
       }
 
       .sidebar-header {
-        padding: 16px 8px;
+        display: none;
       }
 
       .logo {
-        font-size: 20px;
+        font-size: 16px;
+        margin-right: auto;
+        min-width: 40px;
       }
 
       .logo-version {
@@ -764,36 +779,390 @@
       }
 
       .nav-item {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         padding: 0;
-        margin: 4px auto;
+        margin: 0 4px;
         justify-content: center;
+        flex-shrink: 0;
+        font-size: 12px;
       }
 
       .nav-item span:not(.nav-icon):not(.nav-dot) {
         display: none;
       }
 
+      .sidebar-footer {
+        display: none;
+      }
+
+      /* Main content: full width with adjusted padding */
       .main-content {
-        padding: 20px;
+        padding: 20px 16px;
+        overflow-x: hidden;
       }
 
       .view-title {
         font-size: 24px;
+        margin-bottom: 12px;
       }
 
+      .view-subtitle {
+        font-size: 13px;
+        margin-bottom: 20px;
+      }
+
+      /* Auth box sizing for mobile */
+      .auth-box {
+        max-width: 90%;
+        padding: 32px 24px;
+        margin: 0 auto;
+      }
+
+      .auth-box .logo {
+        font-size: 32px;
+      }
+
+      /* Cards: reduce padding, full width */
+      .card {
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        gap: 12px;
+      }
+
+      .card-title {
+        font-size: 12px;
+      }
+
+      /* Metric cards: stack vertically */
       .metrics-grid {
         grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
       }
 
+      .metric-card {
+        padding: 16px;
+        border-radius: 8px;
+      }
+
+      .metric-value {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+
+      .metric-label {
+        font-size: 11px;
+      }
+
+      /* Filter pills: smaller, wrappable */
       .filter-pills {
-        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
       }
 
+      .filter-pill {
+        padding: 6px 12px;
+        font-size: 11px;
+        border-radius: 16px;
+      }
+
+      /* Data rows: adjusted spacing */
+      .data-row {
+        padding: 12px 0;
+        font-size: 12px;
+      }
+
+      .data-label {
+        font-size: 12px;
+      }
+
+      .data-value {
+        font-size: 12px;
+      }
+
+      /* Event rows: stack on mobile */
       .event-row {
         flex-direction: column;
         align-items: flex-start;
+        gap: 8px;
+        padding: 12px 0;
+        font-size: 12px;
+      }
+
+      .event-time {
+        font-size: 11px;
+        min-width: unset;
+      }
+
+      .event-agent {
+        font-size: 10px;
+        padding: 3px 8px;
+        min-width: unset;
+      }
+
+      .event-msg {
+        font-size: 12px;
+        word-break: break-word;
+      }
+
+      /* Buttons: more compact */
+      .btn {
+        padding: 8px 14px;
+        font-size: 12px;
+        min-height: 40px;
+        min-width: 40px;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
+
+      .btn-group .btn {
+        width: 100%;
+      }
+
+      /* Agent sections: more compact */
+      .agent-section {
+        margin-bottom: 20px;
+      }
+
+      .agent-header {
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .agent-title {
+        font-size: 18px;
+      }
+
+      /* Tables: horizontal scroll */
+      table {
+        font-size: 12px;
+      }
+
+      table th, table td {
+        padding: 8px;
+      }
+
+      /* Toast: bottom positioning adjustment */
+      .toast {
+        bottom: 80px;
+        right: 12px;
+        left: 12px;
+        max-width: unset;
+      }
+
+      /* Input fields: better touch targets */
+      input[type="text"],
+      input[type="password"],
+      input[type="email"],
+      input[type="number"],
+      textarea,
+      select {
+        font-size: 16px;
+        padding: 12px;
+        min-height: 44px;
+        border-radius: 8px;
+      }
+    }
+
+    /* ═══ SMALL SCREENS (480px and below) ═══ */
+    @media (max-width: 480px) {
+      .sidebar {
+        height: 56px;
+        padding: 0 8px;
+      }
+
+      .logo {
+        font-size: 14px;
+        min-width: 30px;
+      }
+
+      .nav-item {
+        width: 40px;
+        height: 40px;
+        margin: 0 2px;
+      }
+
+      .nav-icon {
+        font-size: 18px;
+      }
+
+      .main-content {
+        padding: 16px 12px;
+      }
+
+      .view-title {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+
+      .view-subtitle {
+        font-size: 12px;
+        margin-bottom: 16px;
+      }
+
+      /* Auth box: minimal padding */
+      .auth-box {
+        max-width: 95%;
+        padding: 24px 16px;
+      }
+
+      .auth-box .logo {
+        font-size: 28px;
+        margin-bottom: 4px;
+      }
+
+      .auth-box .sub {
+        font-size: 10px;
+        margin-bottom: 24px;
+      }
+
+      .auth-box input {
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+
+      /* Cards: minimal padding */
+      .card {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+      }
+
+      .card-header {
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        gap: 8px;
+      }
+
+      .card-title {
+        font-size: 11px;
+      }
+
+      /* Metrics: extra compact */
+      .metrics-grid {
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .metric-card {
+        padding: 12px;
+        border-radius: 6px;
+      }
+
+      .metric-value {
+        font-size: 24px;
+        margin-bottom: 4px;
+      }
+
+      .metric-label {
+        font-size: 10px;
+      }
+
+      /* Filter pills: minimal size */
+      .filter-pills {
+        gap: 4px;
+        margin-bottom: 12px;
+      }
+
+      .filter-pill {
+        padding: 4px 10px;
+        font-size: 10px;
+        border-radius: 14px;
+      }
+
+      /* Data rows: compact */
+      .data-row {
+        padding: 8px 0;
+        font-size: 11px;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .data-label {
+        font-size: 11px;
+        flex: 1;
+        min-width: 100%;
+      }
+
+      .data-value {
+        font-size: 11px;
+        flex: 1;
+        min-width: 100%;
+      }
+
+      /* Event rows: very compact */
+      .event-row {
+        gap: 6px;
+        padding: 8px 0;
+        font-size: 11px;
+      }
+
+      .event-time {
+        font-size: 10px;
+      }
+
+      .event-agent {
+        font-size: 9px;
+        padding: 2px 6px;
+      }
+
+      .event-msg {
+        font-size: 11px;
+      }
+
+      /* Buttons: stack and fill width */
+      .btn {
+        padding: 10px 12px;
+        font-size: 11px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .btn-group {
+        gap: 6px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+      }
+
+      /* Agent sections: compact */
+      .agent-section {
+        margin-bottom: 16px;
+      }
+
+      .agent-header {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .agent-title {
+        font-size: 16px;
+      }
+
+      .agent-status {
+        font-size: 9px;
+        padding: 2px 8px;
+      }
+
+      /* Toast: adjust for small screens */
+      .toast {
+        bottom: 70px;
+        right: 8px;
+        left: 8px;
+        font-size: 11px;
+        padding: 10px 12px;
       }
     }
   </style>
@@ -982,7 +1351,7 @@
               <span id="oaiBudgetRemain">--</span>
             </div>
             <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
-              Pricing: gpt-4o input $2.50/1M, output $10.00/1M &middot; Budget: $100/mo
+              Pricing: gpt-4o input $2.50/1M, output $10.00/1M &middot; Budget: <span id="oaiBudgetDisplay">$100/mo</span> (editable in <code>website/data/usage-config.json</code>)
             </div>
           </div>
 
@@ -1088,7 +1457,7 @@
               <span id="claudeBudgetRemain">--</span>
             </div>
             <div style="margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
-              Pricing: sonnet $3/1M in, $15/1M out &middot; haiku $0.80/1M in, $4/1M out
+              Pricing: sonnet $3/1M in, $15/1M out &middot; haiku $0.80/1M in, $4/1M out &middot; Budget: <span id="claudeBudgetDisplay">$50/mo</span> (editable in <code>website/data/usage-config.json</code>)
             </div>
           </div>
 
@@ -2248,22 +2617,21 @@
     }
   }
 
-  // ═══ OPENAI USAGE DATA (from completions_usage CSV) ═══
-  const openaiData = [
-    { date: '2026-04-09', model: 'gpt-4o-2024-08-06', input: 3608, output: 564, requests: 1 },
-    { date: '2026-04-10', model: 'gpt-4o-2024-08-06', input: 6802, output: 545, requests: 1 },
-    { date: '2026-04-11', model: 'gpt-4o-2024-08-06', input: 1479, output: 461, requests: 1 },
-  ];
+  // ═══ OPENAI USAGE DATA (from /api/usage) ═══
+  let openaiData = [];
 
   function renderOpenaiChart() {
     const chart = document.getElementById('openaiChart');
     const labels = document.getElementById('openaiChartLabels');
-    if (!chart) return;
-    const maxVal = Math.max(...openaiData.map(d => d.input + d.output));
+    if (!chart || !openaiData.length) {
+      if (chart) chart.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-tertiary);">Loading...</div>';
+      return;
+    }
+    const maxVal = Math.max(...openaiData.map(d => d.input_tokens + d.output_tokens));
     chart.innerHTML = openaiData.map(d => {
-      const total = d.input + d.output;
+      const total = d.input_tokens + d.output_tokens;
       const pct = Math.max((total / maxVal) * 100, 4);
-      const inPct = (d.input / total) * 100;
+      const inPct = (d.input_tokens / total) * 100;
       return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
         <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">${total.toLocaleString()}</div>
         <div style="width: 100%; height: ${pct}%; border-radius: 6px 6px 4px 4px; overflow: hidden; display: flex; flex-direction: column; min-height: 8px;">
@@ -2281,6 +2649,10 @@
   function renderOpenaiTable() {
     const tbody = document.getElementById('openaiTable');
     if (!tbody) return;
+    if (!openaiData.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="padding: 20px; text-align: center; color: var(--text-tertiary);">Loading...</td></tr>';
+      return;
+    }
     const rowStyle = 'border-bottom: 1px solid var(--border-color);';
     const cellL = 'padding: 12px; color: var(--text-primary);';
     const cellR = 'padding: 12px; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 12px;';
@@ -2290,49 +2662,44 @@
       return `<tr style="${rowStyle}">
         <td style="${cellL}">${fmtD}</td>
         <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.model}</span></td>
-        <td style="${cellR}">${d.input.toLocaleString()}</td>
-        <td style="${cellR}">${d.output.toLocaleString()}</td>
+        <td style="${cellR}">${d.input_tokens.toLocaleString()}</td>
+        <td style="${cellR}">${d.output_tokens.toLocaleString()}</td>
         <td style="${cellR}">${d.requests}</td>
       </tr>`;
     }).join('') + `<tr style="font-weight: 600;">
       <td style="${cellL}">Total</td>
       <td style="${cellL}"></td>
-      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.input, 0).toLocaleString()}</td>
-      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.output, 0).toLocaleString()}</td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.input_tokens, 0).toLocaleString()}</td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.output_tokens, 0).toLocaleString()}</td>
       <td style="${cellR}">${openaiData.reduce((s,d) => s+d.requests, 0)}</td>
     </tr>`;
   }
 
-  // ═══ CLAUDE USAGE DATA (from claude_api_tokens CSV) ═══
-  const claudeData = [
-    { date: '2026-04-08', model: 'claude-haiku-4-5', key: 'Kai2', input: 622, cacheWrite: 0, cacheRead: 0, output: 423, searches: 0 },
-    { date: '2026-04-08', model: 'claude-sonnet-4-6', key: 'Kai2', input: 113115, cacheWrite: 0, cacheRead: 0, output: 42762, searches: 0 },
-    { date: '2026-04-09', model: 'claude-haiku-4-5', key: 'Kai2', input: 1356, cacheWrite: 0, cacheRead: 0, output: 364, searches: 0 },
-    { date: '2026-04-10', model: 'claude-haiku-4-5', key: 'Kai2', input: 5077, cacheWrite: 0, cacheRead: 0, output: 141, searches: 0 },
-    { date: '2026-04-10', model: 'claude-sonnet-4-6', key: 'Kai2', input: 1448, cacheWrite: 0, cacheRead: 0, output: 500, searches: 0 },
-    { date: '2026-04-11', model: 'claude-haiku-4-5', key: 'Kai2', input: 8, cacheWrite: 0, cacheRead: 0, output: 20, searches: 0 },
-    { date: '2026-04-11', model: 'claude-sonnet-4-6', key: 'Kai2', input: 2793, cacheWrite: 0, cacheRead: 0, output: 66, searches: 0 },
-  ];
+  // ═══ CLAUDE USAGE DATA (from /api/usage) ═══
+  let claudeData = [];
 
   function renderClaudeChart() {
     const chart = document.getElementById('claudeChart');
     const labels = document.getElementById('claudeChartLabels');
-    if (!chart) return;
+    if (!chart || !claudeData.length) {
+      if (chart) chart.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-tertiary);">Loading...</div>';
+      return;
+    }
     // Aggregate by date
     const byDate = {};
     claudeData.forEach(d => {
-      if (!byDate[d.date]) byDate[d.date] = { input: 0, output: 0, sonnet: 0, haiku: 0 };
-      byDate[d.date].input += d.input;
-      byDate[d.date].output += d.output;
-      if (d.model.includes('sonnet')) byDate[d.date].sonnet += d.input + d.output;
-      else byDate[d.date].haiku += d.input + d.output;
+      if (!byDate[d.date]) byDate[d.date] = { input_tokens: 0, output_tokens: 0, sonnet: 0, haiku: 0 };
+      byDate[d.date].input_tokens += d.input_tokens;
+      byDate[d.date].output_tokens += d.output_tokens;
+      if (d.model.includes('sonnet')) byDate[d.date].sonnet += d.input_tokens + d.output_tokens;
+      else byDate[d.date].haiku += d.input_tokens + d.output_tokens;
     });
     const dates = Object.keys(byDate).sort();
-    const maxVal = Math.max(...dates.map(dt => byDate[dt].input + byDate[dt].output));
+    const maxVal = Math.max(...dates.map(dt => byDate[dt].input_tokens + byDate[dt].output_tokens));
 
     chart.innerHTML = dates.map(dt => {
       const d = byDate[dt];
-      const total = d.input + d.output;
+      const total = d.input_tokens + d.output_tokens;
       const pct = Math.max((total / maxVal) * 100, 4);
       const sonnetPct = total > 0 ? (d.sonnet / total) * 100 : 50;
       return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
@@ -2353,81 +2720,156 @@
   function renderClaudeTable() {
     const tbody = document.getElementById('claudeTable');
     if (!tbody) return;
+    if (!claudeData.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="padding: 20px; text-align: center; color: var(--text-tertiary);">Loading...</td></tr>';
+      return;
+    }
     const rowStyle = 'border-bottom: 1px solid var(--border-color);';
     const cellL = 'padding: 12px; color: var(--text-primary);';
     const cellR = 'padding: 12px; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 12px;';
-    const modelColor = m => m.includes('sonnet') ? 'var(--purple)' : 'var(--cyan)';
-    const modelShort = m => m.includes('sonnet') ? 'sonnet-4-6' : 'haiku-4-5';
+    const modelColor = m => m.toLowerCase().includes('sonnet') ? 'var(--purple)' : 'var(--cyan)';
+    const modelShort = m => m.toLowerCase().includes('sonnet') ? 'sonnet' : 'haiku';
     tbody.innerHTML = claudeData.map(d => {
       const dt = new Date(d.date + 'T00:00:00');
       const fmtD = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       return `<tr style="${rowStyle}">
         <td style="${cellL}">${fmtD}</td>
         <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px; color: ${modelColor(d.model)};">${modelShort(d.model)}</span></td>
-        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.key}</span></td>
-        <td style="${cellR}">${d.input.toLocaleString()}</td>
-        <td style="${cellR}">${d.cacheWrite}</td>
-        <td style="${cellR}">${d.cacheRead}</td>
-        <td style="${cellR}">${d.output.toLocaleString()}</td>
-        <td style="${cellR}">${d.searches}</td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.api_key || '—'}</span></td>
+        <td style="${cellR}">${d.input_tokens.toLocaleString()}</td>
+        <td style="${cellR}">0</td>
+        <td style="${cellR}">0</td>
+        <td style="${cellR}">${d.output_tokens.toLocaleString()}</td>
+        <td style="${cellR}">0</td>
       </tr>`;
     }).join('') + `<tr style="font-weight: 600;">
       <td style="${cellL}">Total</td>
       <td style="${cellL}"></td>
       <td style="${cellL}"></td>
-      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.input, 0).toLocaleString()}</td>
+      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.input_tokens, 0).toLocaleString()}</td>
       <td style="${cellR}">0</td>
       <td style="${cellR}">0</td>
-      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.output, 0).toLocaleString()}</td>
+      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.output_tokens, 0).toLocaleString()}</td>
       <td style="${cellR}">0</td>
     </tr>`;
   }
 
-  // ═══ BUDGET CALCULATIONS (from real CSV data) ═══
+  // ═══ BUDGET CALCULATIONS (from API) ═══
+  let usageConfig = { openai_budget: 100.00, claude_budget: 50.00 };
+
   function computeOpenAIBudget() {
-    // gpt-4o-2024-08-06: $2.50/1M input, $10.00/1M output
-    const totalIn = openaiData.reduce((s, d) => s + d.input, 0);
-    const totalOut = openaiData.reduce((s, d) => s + d.output, 0);
-    const cost = (totalIn / 1e6) * 2.50 + (totalOut / 1e6) * 10.00;
-    const budget = 100.00;
-    const pct = (cost / budget) * 100;
-    const remain = budget - cost;
+    // Costs are pre-computed by the API
+    if (!openaiData.length) {
+      const el = id => document.getElementById(id);
+      el('oaiBudgetBadge').textContent = '—';
+      el('oaiBudgetPct').textContent = '—';
+      el('oaiBudgetRemain').textContent = '—';
+      return;
+    }
+    const totalCost = openaiData.reduce((s, d) => s + (d.total_cost || 0), 0);
+    const budget = usageConfig.openai_budget;
+    const pct = (totalCost / budget) * 100;
+    const remain = budget - totalCost;
 
     const el = id => document.getElementById(id);
-    el('oaiBudgetBadge').textContent = '$' + cost.toFixed(2) + ' / $' + budget.toFixed(2);
+    el('oaiBudgetBadge').textContent = '$' + totalCost.toFixed(2) + ' / $' + budget.toFixed(2);
     el('oaiBudgetBar').style.width = Math.max(pct, 0.3) + '%';
-    el('oaiBudgetPct').textContent = pct.toFixed(2) + '% used';
+    el('oaiBudgetPct').textContent = pct.toFixed(1) + '% used';
     el('oaiBudgetRemain').textContent = '$' + remain.toFixed(2) + ' remaining';
   }
 
   function computeClaudeBudget() {
-    // sonnet-4-6: $3/1M in, $15/1M out; haiku-4-5: $0.80/1M in, $4/1M out
-    let cost = 0;
-    claudeData.forEach(d => {
-      if (d.model.includes('sonnet')) {
-        cost += (d.input / 1e6) * 3.0 + (d.output / 1e6) * 15.0;
-      } else {
-        cost += (d.input / 1e6) * 0.80 + (d.output / 1e6) * 4.0;
-      }
-    });
-    const budget = 50.00; // Claude API budget
-    const pct = (cost / budget) * 100;
-    const remain = budget - cost;
+    // Costs are pre-computed by the API
+    if (!claudeData.length) {
+      const el = id => document.getElementById(id);
+      el('claudeBudgetBadge').textContent = '—';
+      el('claudeBudgetPct').textContent = '—';
+      el('claudeBudgetRemain').textContent = '—';
+      return;
+    }
+    const totalCost = claudeData.reduce((s, d) => s + (d.total_cost || 0), 0);
+    const budget = usageConfig.claude_budget;
+    const pct = (totalCost / budget) * 100;
+    const remain = budget - totalCost;
 
     const el = id => document.getElementById(id);
-    el('claudeBudgetBadge').textContent = '$' + cost.toFixed(2) + ' / $' + budget.toFixed(2);
+    el('claudeBudgetBadge').textContent = '$' + totalCost.toFixed(2) + ' / $' + budget.toFixed(2);
     el('claudeBudgetBar').style.width = Math.max(pct, 0.5) + '%';
-    el('claudeBudgetPct').textContent = pct.toFixed(2) + '% used';
+    el('claudeBudgetPct').textContent = pct.toFixed(1) + '% used';
     el('claudeBudgetRemain').textContent = '$' + remain.toFixed(2) + ' remaining';
   }
 
-  // Render usage views on boot
+  // ═══ FETCH LIVE USAGE DATA ═══
+  async function fetchUsageData() {
+    try {
+      const response = await fetch('/api/usage?provider=all');
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      const data = await response.json();
+      if (!data.ok) throw new Error(data.error || 'API returned error');
+
+      // Update OpenAI data
+      if (data.openai && data.openai.daily) {
+        openaiData = data.openai.daily.map(d => ({
+          date: d.date,
+          model: d.model,
+          input_tokens: d.input_tokens || 0,
+          output_tokens: d.output_tokens || 0,
+          requests: d.requests || 1,
+          total_cost: d.total_cost || 0,
+        }));
+      }
+
+      // Update Claude data
+      if (data.claude && data.claude.daily) {
+        claudeData = data.claude.daily.map(d => ({
+          date: d.date,
+          model: d.model,
+          api_key: d.api_key || '',
+          input_tokens: d.input_tokens || 0,
+          output_tokens: d.output_tokens || 0,
+          requests: d.requests || 1,
+          total_cost: d.total_cost || 0,
+        }));
+      }
+
+      // Update config
+      if (data.config) {
+        usageConfig = data.config;
+        // Update budget displays
+        const el = id => document.getElementById(id);
+        if (el('oaiBudgetDisplay')) el('oaiBudgetDisplay').textContent = '$' + usageConfig.openai_budget.toFixed(2) + '/mo';
+        if (el('claudeBudgetDisplay')) el('claudeBudgetDisplay').textContent = '$' + usageConfig.claude_budget.toFixed(2) + '/mo';
+      }
+
+      // Re-render all views
+      renderOpenaiChart();
+      renderOpenaiTable();
+      renderClaudeChart();
+      renderClaudeTable();
+      computeOpenAIBudget();
+      computeClaudeBudget();
+
+      console.log('[hq] Usage data refreshed', { openai: openaiData.length, claude: claudeData.length });
+    } catch (err) {
+      console.error('[hq] Usage fetch failed:', err.message);
+      // Show error state but don't crash
+      const el = id => document.getElementById(id);
+      if (el('oaiBudgetBadge')) el('oaiBudgetBadge').textContent = 'Error loading';
+      if (el('claudeBudgetBadge')) el('claudeBudgetBadge').textContent = 'Error loading';
+    }
+  }
+
+  // Render usage views on boot (with loading placeholders)
   renderOpenaiChart();
   renderOpenaiTable();
   renderClaudeChart();
   renderClaudeTable();
   computeOpenAIBudget();
   computeClaudeBudget();
+
+  // Fetch live data and refresh every 60 seconds
+  fetchUsageData();
+  setInterval(fetchUsageData, 60000);
   </script>
 
 </body>

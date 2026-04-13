@@ -147,3 +147,17 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [x] **2026-04-13** [AUTOMATE] **dispatch simulate-review built** — reads simulation-outcomes.jsonl, auto-flags failures. _(Audit B5 — DONE)_
 - [x] **2026-04-13** OpenAI API key placed at `agents/nel/security/openai.key`. Aether GPT fact-checking active.
 - [x] **2026-04-13** Full Disk Access granted to `/bin/bash` on Mini. Fixes TCC for all launchd bash scripts.
+- [x] **2026-04-13** [AUTOMATE] **Daily bottleneck audit** (`kai/queue/daily-audit.sh`) — Kai reviews all agents daily at 22:00 MT. Checks ACTIVE.md freshness, ledger logs, runner output, daemon health, queue status, automation gaps. Scheduled via Cowork.
+- [x] **2026-04-13** **Agent self-review protocol** — wired into AGENT_ALGORITHMS.md + all 5 agent runners (nel.sh, sam.sh, ra.sh, aether.sh, dex.sh). Each agent audits own pipeline: input→processing→output→external→reporting. Breaks auto-dispatch flags.
+- [x] **2026-04-13** **All 6 agent ACTIVE.md cleaned** — stale sim-test entries purged, status categories applied ([NEEDS HYO], [KAI DOING], [AUTO-VERIFY]).
+- [x] **2026-04-13** **Aurora plist fixed** — user path xkai808→kai, WorkingDirectory→/tmp (TCC).
+- [x] **2026-04-13** [AUTOMATE] **Consolidation launchd plist** — `com.hyo.consolidation.plist` for nightly 01:00 MT.
+- [x] **2026-04-13** [AUTOMATE] **Simulation launchd plist** — `com.hyo.simulation.plist` for nightly 23:30 MT.
+- [x] **2026-04-13** **`kai audit` subcommand** — runs daily bottleneck audit on demand.
+- [x] **2026-04-13** **Agent autonomy framework** — PLAYBOOK.md for all 5 agents (self-managed operational manual), evolution.jsonl (learning log), self-evolution phase wired into all runners. Agents can modify own checklists, propose improvements, log decisions. Kai holds override via constitution (AGENT_ALGORITHMS.md).
+- [x] **2026-04-13** **Agent-specific self-review checklists** — unique per agent with actual files, commands, exit codes, metrics. Not generic copy-paste.
+- [x] **2026-04-13** **Scheduled task sequencing fixed** — Dex 23:00 → Sim 23:30 → Consolidation 01:00 → Audit 02:00 → Aurora 03:00. Disabled duplicate Cowork tasks superseded by launchd.
+- [x] **2026-04-13** **Real-time usage data** — `/api/usage` endpoint reads CSVs, `usage-config.json` for budgets, `refresh-usage.sh` for API pulls. HQ fetches dynamically, auto-refreshes 60s.
+- [x] **2026-04-13** **HQ mobile responsive** — bottom nav at 768px, 44px+ touch targets, scrollable tables, 480px ultra-compact. Comprehensive CSS overhaul.
+- [x] **2026-04-13** **HQ push verification** — kai push verifies data arrived at HQ endpoint, retries once on failure.
+- [x] **2026-04-13** **Protocol staleness prevention** — PLAYBOOK >7d=P2, >14d=P1, evolution.jsonl >48h=P1. Wired into daily audit, agent self-evolution, and CLAUDE.md operating rules.

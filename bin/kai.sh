@@ -770,6 +770,78 @@ cmd_push() {
 
   if [[ "$http_code" == "200" ]] && echo "$out" | grep -q '"ok":true'; then
     ok "pushed to HQ"
+
+    # ── VERIFY: fetch data endpoint to confirm push arrived ──
+    say "${DIM}verifying push...${RST}"
+    local hq_password="${HYO_HQ_PASSWORD:-}"
+    if [[ -z "$hq_password" ]]; then
+      say "${DIM}(HYO_HQ_PASSWORD not set — skipping verification)${RST}"
+      return 0
+    fi
+
+    local verify_attempt=1
+    local verify_max=2
+
+    # Get session token via auth endpoint
+    local auth_tmpfile
+    auth_tmpfile=$(mktemp)
+    local auth_http_code
+    auth_http_code=$(curl -sS -o "$auth_tmpfile" -w '%{http_code}' -X POST "$API_BASE/api/hq?action=auth" \
+      -H "Content-Type: application/json" \
+      -d "{\"password\":\"$hq_password\"}") || {
+      warn "failed to reach auth endpoint — skipping verification"
+      rm -f "$auth_tmpfile"
+      return 0
+    }
+
+    local auth_response
+    auth_response=$(cat "$auth_tmpfile")
+    rm -f "$auth_tmpfile"
+
+    if [[ "$auth_http_code" != "200" ]] || ! echo "$auth_response" | grep -q '"ok":true'; then
+      warn "auth failed (wrong password?) — skipping verification"
+      return 0
+    fi
+
+    local session_token
+    session_token=$(echo "$auth_response" | grep -o '"token":"[^"]*' | cut -d'"' -f4)
+    if [[ -z "$session_token" ]]; then
+      warn "failed to extract session token — skipping verification"
+      return 0
+    fi
+
+    # Fetch data and verify agent section exists
+    while [[ $verify_attempt -le $verify_max ]]; do
+      local data_tmpfile
+      data_tmpfile=$(mktemp)
+      local data_http_code
+      data_http_code=$(curl -sS -o "$data_tmpfile" -w '%{http_code}' -X GET "$API_BASE/api/hq?action=data" \
+        -H "Authorization: Bearer $session_token") || {
+        say "${DIM}attempt $verify_attempt/$verify_max: failed to reach data endpoint${RST}"
+        rm -f "$data_tmpfile"
+        verify_attempt=$((verify_attempt + 1))
+        [[ $verify_attempt -le $verify_max ]] && sleep 1
+        continue
+      }
+
+      local data_response
+      data_response=$(cat "$data_tmpfile")
+      rm -f "$data_tmpfile"
+
+      # Check if agent section and pushed data appear in response
+      if [[ "$data_http_code" == "200" ]] && echo "$data_response" | grep -q "\"$agent\""; then
+        if echo "$data_response" | grep -q "lastRun"; then
+          ok "verified: $agent data received and stored"
+          return 0
+        fi
+      fi
+
+      say "${DIM}attempt $verify_attempt/$verify_max: agent data not yet visible${RST}"
+      verify_attempt=$((verify_attempt + 1))
+      [[ $verify_attempt -le $verify_max ]] && sleep 1
+    done
+
+    warn "verification: $agent data not confirmed after $verify_max attempts"
   else
     warn "HQ responded ($http_code): $out"
   fi
@@ -899,5 +971,6 @@ case "$sub" in
   tunnel)             cmd_tunnel "$@" ;;
   tunnel-daemon)      cmd_tunnel_daemon "$@" ;;
   queue|q)            cmd_queue "$@" ;;
+  audit)              bash "$ROOT/kai/queue/daily-audit.sh" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

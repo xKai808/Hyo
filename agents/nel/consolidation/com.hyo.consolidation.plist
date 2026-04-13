@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.hyo.aurora</string>
+    <string>com.hyo.consolidation</string>
 
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/kai/Documents/Projects/Hyo/agents/ra/pipeline/newsletter.sh</string>
+        <string>/Users/kai/Documents/Projects/Hyo/agents/nel/consolidation/consolidate.sh</string>
     </array>
 
     <key>EnvironmentVariables</key>
@@ -22,16 +22,16 @@
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
-        <integer>3</integer>
+        <integer>1</integer>
         <key>Minute</key>
         <integer>0</integer>
     </dict>
 
     <key>StandardOutPath</key>
-    <string>/tmp/hyo-aurora.log</string>
+    <string>/tmp/hyo-consolidation.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/tmp/hyo-aurora.log</string>
+    <string>/tmp/hyo-consolidation.log</string>
 
     <key>WorkingDirectory</key>
     <string>/tmp</string>
