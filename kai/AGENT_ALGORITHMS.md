@@ -180,6 +180,55 @@ This is not optional. This is how the system improves itself.
 
 ---
 
+## Universal "What's Next" Gate (applies to ALL agents)
+
+```
+EVERY AGENT runs this gate after EVERY detection, finding, or completed task.
+Seeing a problem and stopping is not acceptable. Detection without response
+is a clipboard, not an agent.
+
+AFTER DETECTING AN ISSUE:
+  1. "Can I fix this right now without escalation?"
+     → YES: fix it, verify the fix, log what you did
+     → NO: go to step 2
+  2. "Which agent owns the fix?"
+     → dispatch delegate <agent> <severity> <description>
+     → DO NOT just log it and wait. Delegate NOW.
+  3. "Does this affect anything else?"
+     → IF yes: dispatch safeguard (triggers cross-reference scan)
+     → IF no: proceed
+  4. "What should I check in 2 hours to confirm this is resolved?"
+     → Write a follow-up check into the next health cycle
+     → If P0: queue an immediate re-check in 30 minutes
+
+AFTER COMPLETING A TASK:
+  1. "What does this unblock?"
+     → Check KAI_TASKS.md for tasks that were blocked by this one
+     → If something is unblocked: start it or delegate it immediately
+  2. "What's the next highest-priority item?"
+     → Read KAI_TASKS.md, pick it up. Don't idle.
+  3. "Did this create new work?"
+     → If yes: add to KAI_TASKS.md with priority, delegate if execution-level
+
+AFTER A HEALTH CHECK FINDS ISSUES:
+  1. P0: Queue immediate remediation command + flag Kai + re-check in 30min
+  2. P1: Dispatch to owning agent + add follow-up to next health cycle
+  3. P2: Create task in KAI_TASKS.md with owner
+  4. P3: Log for weekly review
+
+NO AGENT IS ALLOWED TO:
+  - Detect a problem and only log it
+  - Complete a task and idle without checking what's next
+  - Flag an issue and wait for someone else to notice
+  - Run a health check and produce a report without acting on findings
+
+This gate is as mandatory as the Automation Gate. Together they ensure:
+  Automation Gate → "should this be automated?"
+  What's Next Gate → "what do I do now that I've seen this?"
+```
+
+---
+
 ## Nel — QA/Security/System Improvement Algorithm
 
 ```

@@ -775,6 +775,84 @@ cmd_push() {
   fi
 }
 
+# ---- command queue ----------------------------------------------------------
+cmd_queue() {
+  local QUEUE="$ROOT/kai/queue"
+  local subcmd="${1:-status}"; shift || true
+
+  case "$subcmd" in
+    submit)
+      # kai queue submit "git push origin main"
+      local command="$*"
+      [[ -z "$command" ]] && die "usage: kai queue submit <command>"
+      local cmd_id="cmd-$(date +%s)-$$"
+      local ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+      local timeout="${KAI_QUEUE_TIMEOUT:-60}"
+
+      python3 -c "
+import json
+cmd = {
+  'id': '$cmd_id',
+  'ts': '$ts',
+  'command': '''$command''',
+  'timeout': $timeout,
+  'agent': 'kai'
+}
+with open('$QUEUE/pending/$cmd_id.json', 'w') as f:
+  json.dump(cmd, f, indent=2)
+print('$cmd_id')
+"
+      ok "queued: $cmd_id → $command"
+      ;;
+    status)
+      local pending=$(ls "$QUEUE/pending/"*.json 2>/dev/null | wc -l | tr -d ' ')
+      local running=$(ls "$QUEUE/running/"*.json 2>/dev/null | wc -l | tr -d ' ')
+      local completed=$(ls "$QUEUE/completed/"*.json 2>/dev/null | wc -l | tr -d ' ')
+      local failed=$(ls "$QUEUE/failed/"*.json 2>/dev/null | wc -l | tr -d ' ')
+      say "Queue: ${pending} pending, ${running} running, ${completed} completed, ${failed} failed"
+      ;;
+    results)
+      # Show recent results
+      for f in $(ls -t "$QUEUE/completed/"*.json "$QUEUE/failed/"*.json 2>/dev/null | head -5); do
+        python3 -c "
+import json
+with open('$f') as fh:
+  r = json.load(fh)
+  status = '✓' if r['exit_code'] == 0 else '✗'
+  print(f\"{status} [{r['id']}] exit={r['exit_code']} ({r['duration_s']}s): {r['command'][:60]}\")
+  if r.get('stdout','').strip():
+    for line in r['stdout'].strip().split('\n')[:3]:
+      print(f'    {line}')
+" 2>/dev/null
+      done
+      ;;
+    process)
+      # Run worker once (process all pending)
+      bash "$ROOT/kai/queue/worker.sh"
+      ;;
+    watch)
+      # Start continuous worker
+      bash "$ROOT/kai/queue/worker.sh" --watch
+      ;;
+    install)
+      # Install launchd daemon
+      local plist_src="$QUEUE/com.hyo.queue-worker.plist"
+      local plist_dst="$HOME/Library/LaunchAgents/com.hyo.queue-worker.plist"
+      launchctl bootout "gui/$(id -u)/com.hyo.queue-worker" 2>/dev/null || true
+      sleep 1
+      cp "$plist_src" "$plist_dst"
+      launchctl bootstrap "gui/$(id -u)" "$plist_dst"
+      ok "queue worker daemon installed and running"
+      ;;
+    log)
+      tail -20 "$QUEUE/worker.log" 2>/dev/null || warn "no worker log yet"
+      ;;
+    *)
+      say "usage: kai queue {submit|status|results|process|watch|install|log}"
+      ;;
+  esac
+}
+
 # ---- dispatch ---------------------------------------------------------------
 sub="${1:-help}"; shift || true
 case "$sub" in
@@ -820,5 +898,6 @@ case "$sub" in
   memory)             bash "$ROOT/bin/dispatch.sh" memory ;;
   tunnel)             cmd_tunnel "$@" ;;
   tunnel-daemon)      cmd_tunnel_daemon "$@" ;;
+  queue|q)            cmd_queue "$@" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

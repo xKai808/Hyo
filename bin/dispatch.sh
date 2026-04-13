@@ -394,13 +394,42 @@ print(json.dumps({
   rebuild_active "$agent"
   rebuild_active "kai"
 
-  # If P0 or P1, auto-trigger safeguard cascade
+  # If P0 or P1, auto-trigger safeguard cascade + What's Next response
   if [[ "$severity" == "P0" || "$severity" == "P1" ]]; then
     echo "⚠ HIGH SEVERITY FLAG: $fid [$severity] $title (from $agent)"
     echo "  → Auto-triggering safeguard cascade..."
     cmd_safeguard "$fid" "$title"
-  else
+
+    # WHAT'S NEXT: Don't just log — determine remediation owner and dispatch
+    local owner="$agent"  # default: flagging agent owns the fix
+    # Route by domain keywords
+    case "$title" in
+      *queue*|*deploy*|*build*|*server*|*API*|*api*)  owner="sam" ;;
+      *security*|*secret*|*token*|*leak*|*cipher*)    owner="nel" ;;
+      *newsletter*|*source*|*content*|*brief*)        owner="ra" ;;
+      *trade*|*aether*|*dashboard*|*kalshi*|*GPT*)    owner="aether" ;;
+      *integrity*|*compact*|*stale*|*ledger*|*jsonl*) owner="dex" ;;
+    esac
+
+    echo "  → What's Next: dispatching auto-remediation to $owner"
+    cmd_delegate "$owner" "$severity" "[AUTO-REMEDIATE] $title (flagged by $agent, cascade $fid)"
+
+    # Queue accelerated health check (30 min)
+    local QUEUE_DIR="$ROOT/kai/queue/pending"
+    if [[ -d "$QUEUE_DIR" ]]; then
+      local recheck_id="recheck-$fid"
+      python3 -c "
+import json
+cmd = {'id':'$recheck_id','ts':'$NOW','command':'bash $ROOT/kai/queue/healthcheck.sh','timeout':120,'agent':'dispatch-recheck','note':'auto-queued after $severity flag $fid'}
+with open('$QUEUE_DIR/${recheck_id}.json','w') as f:
+  json.dump(cmd,f)
+" 2>/dev/null && echo "  → Queued re-check: $recheck_id"
+    fi
+  elif [[ "$severity" == "P2" ]]; then
     echo "Flag: $fid [$severity] $title (from $agent → kai)"
+    echo "  → What's Next: task created for next review cycle"
+  else
+    echo "Flag: $fid [$severity] $title (from $agent → kai, logged for weekly review)"
   fi
 }
 
