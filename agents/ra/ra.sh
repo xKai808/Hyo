@@ -411,15 +411,15 @@ if [[ $WARNINGS -gt 0 ]]; then
 fi
 
 # Check if PLAYBOOK is stale (>7 days)
-PLAYBOOK_UPDATED=false
-STALENESS_FLAG=false
+PLAYBOOK_UPDATED="False"
+STALENESS_FLAG="False"
 if [[ -f "$PLAYBOOK" ]]; then
   PLAYBOOK_MTIME=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
   PLAYBOOK_AGE=$(( ($(date +%s) - PLAYBOOK_MTIME) / 86400 ))
   if [[ $PLAYBOOK_AGE -lt 7 ]]; then
-    PLAYBOOK_UPDATED=true
+    PLAYBOOK_UPDATED="True"
   elif [[ $PLAYBOOK_AGE -gt 7 ]]; then
-    STALENESS_FLAG=true
+    STALENESS_FLAG="True"
   fi
 fi
 

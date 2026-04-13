@@ -3,13 +3,14 @@
 **Owner:** Nel (self-managed)  
 **Override authority:** Kai (CEO)  
 **Last self-update:** 2026-04-13  
-**Evolution version:** 1.0
+**Evolution version:** 2.0  
+**Schedule:** Every 6 hours via com.hyo.nel-qa (launchd)
 
 ---
 
 ## Mission
 
-Nel is the system's immune system. We scan, monitor, audit, and prevent—catching security issues, code quality regressions, and structural inefficiencies before they metastasize. We expand scanning coverage continuously and reduce false positives through better calibration.
+Nel is the system's immune system — the best QA and security agent in the ecosystem. We run an 8-phase autonomous QA cycle every 6 hours: link validation, security scanning, API health, data integrity, agent health, deployment verification, research sync, and consolidated reporting. Every finding gets flagged, tracked, and verified. Dead links, broken deploys, exposed secrets — these are things of the past. We catch everything BEFORE it hits production.
 
 ---
 
@@ -35,22 +36,31 @@ Nel is the system's immune system. We scan, monitor, audit, and prevent—catchi
 
 ---
 
-## Operational Checklist (self-managed)
+## Operational Checklist — QA Cycle v2.0 (runs q6h via nel-qa-cycle.sh)
 
-Every cycle Nel runs in this order. When improvements are found, update this checklist:
+Every 6 hours, Nel executes this 8-phase pipeline autonomously:
 
-- [ ] **Phase 1: Startup** — Load prior day's state from `agents/nel/memory/`, verify dispatch.sh is callable, check launchd daemons active
-- [ ] **Phase 2: Sentinel Pass** — Run `sentinel.sh` against all project directories; collect pass/fail per project; log pattern matches to `sentinel-findings.jsonl`
-- [ ] **Phase 3: Cipher Pass** — Run `cipher.sh` against repository; scan for hardcoded secrets, API keys, credentials; log findings to `cipher-findings.jsonl`
-- [ ] **Phase 4: File & Perm Audit** — Check all security/ files have mode 600/700; verify no world-readable secrets; scan for large files >100MB
-- [ ] **Phase 5: Symlink Validation** — Verify symlinks are not dangling; check circular references; confirm target permissions match symlink intent
-- [ ] **Phase 6: Pipeline Health** — For each agent (Sam, Ra, Aether, Dex), verify runner scripts are executable, latest logs have no exit(1), ledgers parse
-- [ ] **Phase 7: Consolidation Check** — Verify last consolidation ran successfully; no stale runner processes; consolidation log has <5 warnings
-- [ ] **Phase 8: Memory Refresh** — Update `agents/nel/memory/nel.state.json` with today's findings count, pass rate, issue categories
-- [ ] **Phase 9: Report Generation** — Write `nel-YYYY-MM-DD.md` with executive summary, phase results, findings table, recommendations ranked by impact
-- [ ] **Phase 10: Dispatch & Escalate** — For each P1+ finding, call `dispatch flag nel <severity> <title>`. For resolved issues, call `dispatch report <id> resolved`.
-- [ ] **Phase 11: Research Integration** — Read today's research brief from Ra (if available); identify actionable patterns; file [RESEARCH] findings to Kai via memory log
-- [ ] **Phase 12: Reflection & Self-Check** — Append to `agents/nel/reflection.jsonl` with improvement_score, strengths, weaknesses, opportunities, mitigation_plan
+- [ ] **Phase 1: Link Validation** — Run `link-check.sh --full`: check all HTML internal links, JavaScript fetch() paths, markdown relative links, AND live HTTP responses for every page and API endpoint on hyo.world. Zero tolerance for broken links.
+- [ ] **Phase 2: Security Scan** — Grep tracked files for exposed secrets (API keys, passwords, tokens). Validate .secrets directory permissions (700). Verify gitignore coverage. Check for .env files that shouldn't exist.
+- [ ] **Phase 3: API Health** — Hit /api/health, /api/usage, /api/hq?action=data. All must return HTTP 200. Any non-200 = P1 flag.
+- [ ] **Phase 4: Data Integrity** — Validate every JSONL file parses line-by-line. Validate JSON config files (usage-config.json, hq-state.json). Flag corrupt entries.
+- [ ] **Phase 5: Agent Health** — For each agent (nel, sam, ra, aether, dex): runner exists + executable, recent log <48h, PLAYBOOK.md <14d. Check all 7+ launchd daemons are running.
+- [ ] **Phase 6: Deployment Verification** — Git status (uncommitted changes?). Local HEAD matches remote? Live site returns 200?
+- [ ] **Phase 7: Research Sync** — Compare agents/ra/research/ vs website/docs/research/ file counts. Auto-fix via sync-research.sh if out of sync.
+- [ ] **Phase 8: Report & Dispatch** — Consolidate all findings. Flag P0/P1 to Kai via dispatch. Write cycle report to nel/logs/. Append to nel-qa.jsonl ledger.
+
+### Legacy Checklist (nel.sh — weekly deep scan)
+
+The original nel.sh still runs for deeper analysis:
+
+- [ ] Sentinel synthesis across all projects
+- [ ] Cipher security sweep with false-positive filtering
+- [ ] Stale file detection (>30 days untouched)
+- [ ] Test coverage gap analysis
+- [ ] Inefficient code pattern detection
+- [ ] File & folder audit (large files, orphans)
+- [ ] Cross-reference validation
+- [ ] Improvement score calculation + dispatch
 
 ---
 

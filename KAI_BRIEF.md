@@ -47,6 +47,13 @@
 
 ## Current state (as of 2026-04-13 — agent autonomy framework shipped, mobile HQ, real-time usage)
 
+**⚠ HEALTHCHECK ALERT (2026-04-13T02:10Z):**
+- **P0** — 1 corrupt JSONL file (Dex Phase 1). Auto-remediation dispatched, unconfirmed.
+- **P1** — Nightly sim failures: nel exit-1, ra exit-2 (since 22:19Z). Unresolved.
+- **P1** — 13 recurrent patterns (Dex Phase 4). Safeguard cascade triggered, unconfirmed.
+- **P2** — Aether dashboard mismatch (MT vs UTC) repeating every 15min. Under investigation.
+- Next session: confirm corrupt JSONL fix, verify sim runner exits, resolve aether timezone.
+
 **Running daemons on Mini (confirmed via `launchctl list | grep hyo`):**
 - `com.hyo.queue-worker` — file-based command queue, auto-processes `kai/queue/pending/`
 - `com.hyo.dex` — daily at 23:00 MT (integrity, compaction, patterns, daily intel)

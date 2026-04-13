@@ -222,10 +222,9 @@ PYEOF
 
 # ---- Schedule accelerated re-check if P0 found ----
 if [[ $ISSUES -gt 0 ]]; then
-  # Write a re-check command to the queue (runs in 30 min via worker)
-  RECHECK_ID="recheck-$(date +%s)"
-  RECHECK_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-  cat > "$QUEUE/pending/${RECHECK_ID}.json" <<RCEOF
-{"id":"$RECHECK_ID","ts":"$RECHECK_TS","command":"sleep 1800 && bash $ROOT/kai/queue/healthcheck.sh","timeout":1860,"agent":"healthcheck-recheck"}
-RCEOF
+  # NOTE: Do NOT schedule re-checks via the queue with `sleep` commands.
+  # The queue worker is single-threaded — a sleep blocks ALL commands.
+  # Instead, the healthcheck runs on its own launchd schedule (every 2h).
+  # If a P0 issue needs faster re-checking, add a separate launchd timer.
+  echo "Re-check skipped — rely on 2h launchd schedule for next run."
 fi

@@ -973,5 +973,8 @@ case "$sub" in
   queue|q)            cmd_queue "$@" ;;
   audit)              bash "$ROOT/kai/queue/daily-audit.sh" ;;
   exec|x)             bash "$ROOT/kai/queue/exec.sh" "$@" ;;
+  nel-qa)             bash "$ROOT/agents/nel/nel-qa-cycle.sh" "$@" ;;
+  link-check|lc)      bash "$ROOT/agents/nel/link-check.sh" "$@" ;;
+  sync-research)      bash "$ROOT/kai/queue/sync-research.sh" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

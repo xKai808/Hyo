@@ -880,7 +880,6 @@ fi
 
 # OUTPUT: Is report file valid?
 if [[ -f "$REPORT" ]]; then
-  local rsize
   rsize=$(wc -c < "$REPORT" 2>/dev/null || echo 0)
   if [[ $rsize -lt 100 ]]; then
     log_warn "Self-review: report file suspiciously small (${rsize}B)"

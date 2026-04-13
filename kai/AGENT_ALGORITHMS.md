@@ -636,14 +636,69 @@ ON FINDING A BREAK IN THE PATHWAY:
 
 ---
 
-## Nel — QA/Security/System Improvement Algorithm
+## Nel v2.0 — Autonomous QA/Security Agent Algorithm
+
+Nel is the system's immune system. Runs an 8-phase QA cycle every 6 hours
+via `com.hyo.nel-qa` launchd daemon. Zero tolerance for dead links, exposed
+secrets, broken deploys, or stale data. Catches everything BEFORE production.
 
 ```
-STARTUP:
-  1. Read agents/nel/ledger/ACTIVE.md (tasks from Kai)
-  2. Read agents/nel/ledger/log.jsonl (recent history)
-  3. Read agents/nel/memory/ (sentinel.state.json, cipher state)
-  4. Read kai/ledger/known-issues.jsonl (patterns to check for)
+AUTONOMOUS QA CYCLE (every 6 hours — nel-qa-cycle.sh):
+  Phase 1: LINK VALIDATION
+    - Run link-check.sh --full
+    - Check ALL HTML internal links (href/src) resolve to actual files
+    - Check ALL JavaScript fetch() paths have corresponding files
+    - Check ALL markdown relative links resolve
+    - Check ALL live URLs on hyo.world return HTTP 200
+    - Check ALL API endpoints respond correctly
+    - Check ALL research file references are accessible
+    → Zero broken links is the standard. Any failure = P1 flag.
+
+  Phase 2: SECURITY SCAN
+    - Grep tracked files for exposed secrets (API keys, passwords, tokens)
+    - Validate .secrets directory permissions (mode 700)
+    - Verify gitignore coverage for sensitive paths
+    - Check for .env files that shouldn't exist
+    - Scan for hardcoded credentials (regex: 20+ char base64 near key/secret/password)
+    → Any exposed secret = P0 flag (immediate).
+
+  Phase 3: API HEALTH
+    - Hit /api/health, /api/usage, /api/hq?action=data
+    - All MUST return HTTP 200 within 15s
+    → Any non-200 = P1 flag.
+
+  Phase 4: DATA INTEGRITY
+    - Validate every JSONL file (parse each line as JSON)
+    - Validate JSON config files (usage-config.json, hq-state.json)
+    - Flag corrupt entries with line numbers
+    → Corrupt data = P2 flag.
+
+  Phase 5: AGENT HEALTH
+    - For each agent (nel, sam, ra, aether, dex):
+      - Runner exists and is executable
+      - Latest log is <48h old
+      - PLAYBOOK.md is <14d old (>7d = P2, >14d = P1)
+      - evolution.jsonl has recent entries
+    - All 8 launchd daemons must be running
+    → Missing daemon = P1 flag.
+
+  Phase 6: DEPLOYMENT VERIFICATION
+    - Git status: flag if >10 uncommitted changes
+    - Compare local HEAD vs remote (divergence check)
+    - Verify live site returns HTTP 200
+    → Site down = P0 flag.
+
+  Phase 7: RESEARCH SYNC
+    - Compare agents/ra/research/ vs website/docs/research/ file counts
+    - Auto-fix: run sync-research.sh if out of sync
+    → Self-healing phase. Log the fix.
+
+  Phase 8: REPORT & DISPATCH
+    - Consolidate all findings into cycle report
+    - Flag P0/P1 issues to Kai via dispatch
+    - Write cycle report to agents/nel/logs/
+    - Append metrics to agents/nel/ledger/nel-qa.jsonl
+    - If auto-fixes were applied: git commit + push
 
 TASK EXECUTION (from Kai delegation):
   1. dispatch ack <task_id> <planned_method>
@@ -655,19 +710,10 @@ TASK EXECUTION (from Kai delegation):
   4. dispatch report <task_id> <status> <result>
   5. WAIT for Kai verify/close
 
-AUTONOMOUS EXECUTION (scheduled runs):
-  1. Run nel.sh (10-phase system audit)
-  2. Parse output for issues
-  3. FOR EACH issue found:
-     a. dispatch self-delegate nel <priority> <description>
-     b. Execute fix
-     c. dispatch report <task_id> TESTING <result>
-     d. Verify own fix (run nel.sh again for that specific check)
-     e. IF verified: dispatch report <task_id> DONE <verification>
-     f. LOG to kai via dispatch (Kai sees it in cross-reference)
-  4. IF issue matches a known-issues.jsonl pattern:
-     a. FLAG as regression: dispatch flag nel P0 "REGRESSION: <description>"
-     b. This auto-triggers safeguard cascade
+WEEKLY DEEP SCAN (nel.sh — separate from q6h cycle):
+  - 12-phase comprehensive analysis (sentinel, cipher, stale files, test coverage, etc.)
+  - Runs on weekly schedule for deeper analysis that q6h can't cover
+  - Reports stored in agents/nel/logs/nel-YYYY-MM-DD.md
 
 CLOSED-LOOP HANDSHAKE:
   - Every task received from Kai MUST get an ACK within the same run
@@ -680,6 +726,8 @@ PREVENTIVE MEASURES:
   - After finding any security issue, scan all agents for the same class
   - After any path-related fix, verify all symlinks still resolve
   - Log every pattern to known-issues.jsonl via dispatch safeguard
+  - Auto-sync research files on every QA cycle
+  - Auto-commit fixes when possible (don't wait for manual push)
 ```
 
 ---

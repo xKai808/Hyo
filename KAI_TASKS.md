@@ -161,3 +161,11 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [x] **2026-04-13** **HQ mobile responsive** — bottom nav at 768px, 44px+ touch targets, scrollable tables, 480px ultra-compact. Comprehensive CSS overhaul.
 - [x] **2026-04-13** **HQ push verification** — kai push verifies data arrived at HQ endpoint, retries once on failure.
 - [x] **2026-04-13** **Protocol staleness prevention** — PLAYBOOK >7d=P2, >14d=P1, evolution.jsonl >48h=P1. Wired into daily audit, agent self-evolution, and CLAUDE.md operating rules.
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/affectionate-relaxed-franklin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:e98fd1df] _(filed 2026-04-12)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/affectionate-relaxed-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d986a828] _(filed 2026-04-12)_
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 6 runs in a row: health endpoint not green or token unconfigured [sentinel:api-health-green:82547bfc:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/affectionate-relaxed-franklin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:e98fd1df:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/affectionate-relaxed-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d986a828:escalated]

@@ -57,7 +57,10 @@ process_command() {
   # Parse JSON
   local cmd_id=$(python3 -c "import json,sys; print(json.load(open('$cmd_file'))['id'])" 2>/dev/null)
   local command=$(python3 -c "import json,sys; print(json.load(open('$cmd_file'))['command'])" 2>/dev/null)
-  local timeout=$(python3 -c "import json,sys; print(json.load(open('$cmd_file')).get('timeout',60))" 2>/dev/null)
+  local timeout=$(python3 -c "import json,sys; print(min(json.load(open('$cmd_file')).get('timeout',60), 300))" 2>/dev/null)
+  # SAFETY: Max timeout capped at 300s (5 min). Worker is single-threaded —
+  # a long command blocks ALL other commands. For >5min tasks, run them
+  # directly via launchd or nohup, not through the queue.
 
   if [[ -z "$cmd_id" ]] || [[ -z "$command" ]]; then
     log "SKIP: invalid command file $basename"

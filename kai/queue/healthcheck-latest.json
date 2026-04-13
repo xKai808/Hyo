@@ -1,0 +1,26 @@
+{
+  "ts": "2026-04-13T02:13:56Z",
+  "status": "ISSUES",
+  "issues": 1,
+  "warnings": 2,
+  "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "4 unaddressed P0/P1 flags in last 2h"
+    },
+    {
+      "severity": "P2",
+      "area": "queue-worker",
+      "detail": "Worker last active 493346h ago \u2014 may be dead"
+    },
+    {
+      "severity": "P2",
+      "area": "queue",
+      "detail": "2 commands pending \u2014 worker may be stalled"
+    }
+  ],
+  "actions_taken": "Dispatched auto-remediation for 1 P0/P1 issues; Kicked queue worker for 2 stalled commands",
+  "recent_queue_results": [],
+  "next_check": "in 2 hours (30min if P0 found)"
+}

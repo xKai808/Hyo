@@ -531,15 +531,15 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
   fi
 
   # Check if PLAYBOOK is stale (>7 days)
-  local playbook_updated=false
-  local staleness_flag=false
+  local playbook_updated="False"
+  local staleness_flag="False"
   if [[ -f "$PLAYBOOK" ]]; then
     local playbook_mtime=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
     local playbook_age=$(( ($(date +%s) - playbook_mtime) / 86400 ))
     if [[ $playbook_age -lt 7 ]]; then
-      playbook_updated=true
+      playbook_updated="True"
     elif [[ $playbook_age -gt 7 ]]; then
-      staleness_flag=true
+      staleness_flag="True"
     fi
   fi
 

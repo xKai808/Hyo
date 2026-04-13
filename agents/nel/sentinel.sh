@@ -101,7 +101,7 @@ fi
 
 # P1 manifest-valid-json
 MANIFEST_ERR=""
-for f in "$ROOT"/NFT/agents/*.hyo.json; do
+for f in "$ROOT"/agents/manifests/*.hyo.json; do
   [[ -f "$f" ]] || continue
   if ! python3 -c "
 import json, sys
