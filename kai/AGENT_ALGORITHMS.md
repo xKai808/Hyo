@@ -100,15 +100,36 @@ HYO COMMUNICATION PROTOCOL (every response that closes work):
   1. End EVERY substantive response with a PENDING block:
      ```
      ---
-     PENDING:
-     - [BLOCKED] what's blocked and why (e.g., "git push blocked by sandbox")
-     - [NEEDS HYO] what requires Hyo's action (e.g., "run `git push origin main` on Mini")
-     - [QUEUED] what Kai is working on next
-     - [WATCHING] known risks or things that might break
+     [NEEDS HYO] — numbered steps, exact commands, copy/paste ready:
+       1. `exact command here`
+       2. `next command here`
+       3. Expected output: "what they should see"
+     [KAI DOING] — what Kai is handling, with ETA
+     [AUTO-VERIFY] — what's running autonomously, Kai confirms at next check
      ```
   2. Never omit the PENDING block. If nothing is pending, write "PENDING: clear."
   3. If a task is partially done, say so explicitly with what remains.
   4. If Hyo asked for something and it's not done yet, surface it — don't bury it.
+
+  MANDATORY RULE — STEP-BY-STEP INSTRUCTIONS:
+  When Hyo needs to do ANYTHING on the Mini, Kai provides:
+  - Numbered steps in execution order
+  - Exact commands (copy/paste ready, no prose mixed in)
+  - Expected output after each command (so Hyo knows if it worked)
+  - What to do if it fails (the fallback)
+
+  NEVER:
+  - Give a single compound command and say "run this"
+  - Mix explanation prose between commands
+  - Say "run X and if Y then Z" in paragraph form
+  - Assume Hyo will figure out the order
+  - Give vague instructions like "check if X is running"
+
+  ALWAYS:
+  - Number every step
+  - One command per step
+  - Expected output on the line after
+  - If a step can fail, say what the failure looks like and what to do
 
 AUTOMATION GATE (ask BEFORE and AFTER every task):
   BEFORE starting:
