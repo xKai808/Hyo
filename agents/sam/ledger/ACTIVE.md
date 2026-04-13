@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-13T02:17:15Z
+Last updated: 2026-04-13T02:47:39Z
 
 ## In Progress
 
 - **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-13T02:17:15Z
+  - Delegated: 2026-04-13T02:47:39Z
   - Method: grep -rn console.log across agents/sam/website/api/ and remove all instances
   - Status: DELEGATED — Found 4 console.log calls in 3 API files (register-founder.js:2, marketplace-request.js:1, aurora-subscribe.js:1). These are intentional MVP persistence — they ARE the storage layer. Removing without replacement would lose registration/subscription data. Recommend: swap for Vercel KV writes (already in KAI_TASKS P1). No console.log removed — awaiting KV implementation.
 

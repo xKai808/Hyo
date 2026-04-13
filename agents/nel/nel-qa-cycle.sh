@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # agents/nel/nel-qa-cycle.sh — Nel v2.0 Autonomous QA Cycle (runs every 6 hours)
 #
-# 8-Phase Quality Assurance Pipeline:
+# 9-Phase Quality Assurance Pipeline:
 #   Phase 1: Link Validation (local + live)
 #   Phase 2: Security Scan (secrets, permissions, exposed data)
+#   Phase 2.5: GitHub Security Scan (repo secrets, history, gitignore coverage)
 #   Phase 3: API Health (all endpoints respond correctly)
 #   Phase 4: Data Integrity (JSONL valid, configs parse, no corruption)
 #   Phase 5: Agent Health (all runners execute, daemons alive, logs fresh)
@@ -148,6 +149,59 @@ if [[ $REAL_SECRETS -eq 0 ]] && [[ $P2_ISSUES -eq 0 ]]; then
 else
   echo "**$((REAL_SECRETS + P2_ISSUES)) security issues found.**" >> "$REPORT"
   phase_result "2-security" "FAIL" "$((REAL_SECRETS + P2_ISSUES)) issues"
+fi
+echo "" >> "$REPORT"
+
+# ============================================================================
+# PHASE 2.5: GITHUB SECURITY SCAN
+# ============================================================================
+echo "## Phase 2.5: GitHub Security Scan" >> "$REPORT"
+echo "" >> "$REPORT"
+
+P2_5_ISSUES=0
+P2_5_FINDINGS=()
+
+if [[ -f "$ROOT/agents/nel/github-security-scan.sh" ]]; then
+  P2_5_OUTPUT=$(bash "$ROOT/agents/nel/github-security-scan.sh" 2>&1) || true
+
+  # Parse JSONL output line by line
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    [[ "$line" =~ ^{\"type ]] || continue
+
+    # Extract fields from JSON
+    type=$(echo "$line" | grep -oP '(?<="type":")[^"]+')
+    severity=$(echo "$line" | grep -oP '(?<="severity":")[^"]+')
+    file=$(echo "$line" | grep -oP '(?<="file":")[^"]+')
+    detail=$(echo "$line" | grep -oP '(?<="detail":")[^"]*')
+
+    P2_5_FINDINGS+=("$severity|$type|$file|$detail")
+    [[ "$severity" == "P0" ]] || [[ "$severity" == "P1" ]] && P2_5_ISSUES=$((P2_5_ISSUES + 1))
+  done <<< "$P2_5_OUTPUT"
+
+  if [[ $P2_5_ISSUES -gt 0 ]]; then
+    echo "**${#P2_5_FINDINGS[@]} GitHub security findings found:**" >> "$REPORT"
+    echo "" >> "$REPORT"
+    for finding in "${P2_5_FINDINGS[@]}"; do
+      IFS='|' read -r sev ftype fname fdetail <<< "$finding"
+      echo "- \`$fname\` [$sev] $ftype: $fdetail" >> "$REPORT"
+    done
+    echo "" >> "$REPORT"
+    phase_result "2.5-github" "FAIL" "${#P2_5_FINDINGS[@]} security issues"
+
+    # Flag each finding
+    for finding in "${P2_5_FINDINGS[@]}"; do
+      IFS='|' read -r sev ftype fname fdetail <<< "$finding"
+      add_finding "$sev" "github-security" "$fdetail"
+    done
+  else
+    echo "GitHub security scan clean. ✓" >> "$REPORT"
+    phase_result "2.5-github" "PASS" "0 exposed secrets, gitignore coverage OK"
+  fi
+else
+  echo "github-security-scan.sh not found — skipped" >> "$REPORT"
+  add_finding "P2" "github-security" "github-security-scan.sh missing"
+  phase_result "2.5-github" "SKIP" "github-security-scan.sh not found"
 fi
 echo "" >> "$REPORT"
 
