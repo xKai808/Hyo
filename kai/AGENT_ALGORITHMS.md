@@ -201,10 +201,7 @@ HYO COMMUNICATION PROTOCOL (every response that closes work):
   1. End EVERY substantive response with a PENDING block:
      ```
      ---
-     [NEEDS HYO] — numbered steps, exact commands, copy/paste ready:
-       1. `exact command here`
-       2. `next command here`
-       3. Expected output: "what they should see"
+     [NEEDS HYO] — physical/GUI-only actions (rare — most things go through queue)
      [KAI DOING] — what Kai is handling, with ETA
      [AUTO-VERIFY] — what's running autonomously, Kai confirms at next check
      ```
@@ -212,19 +209,27 @@ HYO COMMUNICATION PROTOCOL (every response that closes work):
   3. If a task is partially done, say so explicitly with what remains.
   4. If Hyo asked for something and it's not done yet, surface it — don't bury it.
 
-  MANDATORY RULE — STEP-BY-STEP INSTRUCTIONS:
-  When Hyo needs to do ANYTHING on the Mini, Kai provides:
-  - Numbered steps in execution order
-  - Exact commands (copy/paste ready, no prose mixed in)
-  - Expected output after each command (so Hyo knows if it worked)
-  - What to do if it fails (the fallback)
+  ZERO COPY-PASTE RULE (absolute — no exceptions):
+  Kai NEVER gives Hyo terminal commands to copy/paste. Instead:
+  - Use `kai exec "command"` (kai/queue/exec.sh) to run ANY command on the Mini
+  - The queue worker (com.hyo.queue-worker) has full user permissions
+  - Supports: git, launchctl, npm, python, bash scripts, curl, ALL CLI tools
+  - Submit via: HYO_ROOT=<mount> python3 kai/queue/submit.py --wait 45 "command"
+  - Or via: HYO_ROOT=<mount> bash kai/queue/exec.sh "command"
+  
+  The ONLY valid [NEEDS HYO] items are:
+  - Physical hardware interaction (plug in device, press button)
+  - GUI-only actions (approve biometric prompt, enter password in app)
+  - First-time setup that requires Full Disk Access approval
+  
+  If a command can't go through the queue, ADD the capability to the queue
+  worker — don't ask Hyo to run it manually.
 
-  NEVER:
-  - Give a single compound command and say "run this"
-  - Mix explanation prose between commands
-  - Say "run X and if Y then Z" in paragraph form
-  - Assume Hyo will figure out the order
-  - Give vague instructions like "check if X is running"
+  LEGACY RULE (kept for rare physical-access cases):
+  When Hyo truly must act on the Mini (physical/GUI only), provide:
+  - Numbered steps in execution order
+  - Exact commands with expected output
+  - What to do if it fails
 
   ALWAYS:
   - Number every step

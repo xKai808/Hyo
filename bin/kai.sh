@@ -972,5 +972,6 @@ case "$sub" in
   tunnel-daemon)      cmd_tunnel_daemon "$@" ;;
   queue|q)            cmd_queue "$@" ;;
   audit)              bash "$ROOT/kai/queue/daily-audit.sh" ;;
+  exec|x)             bash "$ROOT/kai/queue/exec.sh" "$@" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

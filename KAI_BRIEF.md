@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-12 late night (HQ v8.1 deployed + pre-deploy validation + live verification)
+**Updated:** 2026-04-13 early morning (copy-paste elimination complete — queue round-trip proven)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 
 ---
@@ -37,11 +37,12 @@
 ## Operational model (established 2026-04-12)
 
 **How Kai executes without Hyo pasting commands:**
+- **Command queue (PRIMARY):** `kai exec "command"` or `python3 kai/queue/submit.py --wait 45 "command"` submits ANY command to the Mini's queue worker. Worker has full user permissions — git, launchctl, npm, everything. Round-trip proven: submit from Cowork → worker executes on Mini → result returned. **Hyo never copy/pastes commands.**
 - **File edits:** Kai edits files via Cowork mounted folder → sync to Mini instantly.
 - **Auto-push to HQ:** `sentinel.sh`, `cipher.sh`, and `newsletter.sh` all call `kai push` at the end of every run. The HQ dashboard (`hyo.world/hq`) populates itself from live push data. No manual pushes needed.
 - **Unified HQ endpoint:** All dashboard ops (auth, push, data) go through `/api/hq?action={auth|push|data}` — single Vercel lambda, shared `globalThis` in-memory store. Push and data share state because they're the same function.
 - **Auto-deploy:** `kai watch` starts an fswatch watcher on `website/` that auto-deploys to Vercel when files change. Requires `brew install fswatch` on the Mini. Run once: `nohup kai watch &`
-- **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. The existing cron/launchd tasks on the Mini DO have full network access — that's where pipeline scripts with auto-push actually run.
+- **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
 ## Current state (as of 2026-04-13 — agent autonomy framework shipped, mobile HQ, real-time usage)
@@ -52,10 +53,10 @@
 - `com.hyo.aether` — every 15 min (trade metrics, dashboard, GPT fact-check)
 - `com.hyo.mcp-tunnel` — cloudflared tunnel to MCP server on port 3847
 
-**Pending launchd installation on Mini (plists ready, need `launchctl load`):**
-- `com.hyo.consolidation` — nightly at 01:00 MT (6-project consolidation)
-- `com.hyo.simulation` — nightly at 23:30 MT (dispatch simulate + simulate-review)
-- `com.hyo.aurora` — daily at 03:00 MT (newsletter pipeline) — path fixed from xkai808→kai
+**All launchd daemons confirmed running (7 total, verified via queue `launchctl list | grep hyo`):**
+- `com.hyo.consolidation` — nightly at 01:00 MT
+- `com.hyo.simulation` — nightly at 23:30 MT
+- `com.hyo.aurora` — daily at 03:00 MT
 
 **Nightly sequence (correct order):**
 23:00 Dex → 23:30 Simulation → 01:00 Consolidation → 02:00 Daily Audit → 03:00 Aurora
@@ -91,7 +92,10 @@
 - OpenAI API key: placed. Aether GPT fact-checking active.
 - Full Disk Access: granted to /bin/bash on Mini.
 
-**Shipped this session (eighth pass — autonomy + mobile + real-time):**
+**Shipped this session (eighth pass — autonomy + mobile + real-time + zero copy-paste):**
+- **ZERO COPY-PASTE achieved** — queue round-trip proven from Cowork: git status, launchctl, git add+commit+push all tested successfully via `kai exec`. Hyo never needs to copy/paste commands again.
+- **kai exec helper** — `kai/queue/exec.sh` wraps submit+wait+read into one call. Added `exec|x` subcommand to kai.sh.
+- **NEVER-COPY-PASTE rule** — wired into CLAUDE.md (operating rules) and AGENT_ALGORITHMS.md (communication protocol). Every future session enforces this.
 - **Agent autonomy framework** — PLAYBOOK.md for all 5 agents (self-managed), evolution.jsonl, self-evolution phase wired into all runners. Agents can modify their own checklists, propose improvements, log decisions. Kai holds override via constitution.
 - **Agent-specific self-review checklists** — unique per agent with actual files, commands, metrics (not generic)
 - **Scheduled task sequencing fixed** — Dex 23:00 → Sim 23:30 → Consolidation 01:00 → Audit 02:00 → Aurora 03:00. Disabled duplicate Cowork tasks superseded by launchd.
