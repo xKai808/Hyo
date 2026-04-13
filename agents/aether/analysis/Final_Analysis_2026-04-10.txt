@@ -1,0 +1,114 @@
+FINAL ANALYSIS — AetherBot 2026-04-10 (Friday)
+Generated: 2026-04-10 18:19 MDT by Kai (autonomous Cowork run)
+Authoritative-until: GPT cross-check synthesis lands (file pending)
+
+================================================================================
+TL;DR FOR OPERATOR
+================================================================================
+Friday looks like a clean +$28.91 / 8-for-8 day on the surface. It is not.
+
+  - Real balance change: $84.60 → $87.55 = **+$2.95**.
+  - Bot-reported P&L: **+$28.91**.
+  - Reconciliation gap: **-$25.96** (worse than 4/9's -$18.88).
+  - Smoking gun: a single POS WARNING line at 03:28:03 — `API 0 local 14`.
+    Kalshi reports zero open contracts; the bot's local book asserts 14.
+    The trade was logged as a +$6.44 win regardless. The same divergence
+    is almost certainly happening silently on the other 4-5 trades that
+    didn't credit cash.
+  - **v254 is not actually running.** Zero OB_FORMAT_DIAG, zero HARVEST
+    BLOCKED, zero TIME_BDI_LOW, 78/78 harvest MISS diagnostics still show
+    `yes_bids:ABSENT | no_bids:ABSENT`. Either the 4/9 19:55 deploy
+    silently rolled back, the bot restarted from old source, or the
+    deploy command never replaced bot.py. Issues #2/#3/#7 cannot be
+    validated until v254 is verified live on the Mini.
+
+The analysis below is the deep read. The Deep_Analysis_2026-04-10.txt has
+the full trade-by-trade. Numbers are not yet GPT-cross-checked (Mini cron
+fired before this analysis ran — needs manual rerun).
+
+================================================================================
+THE THREE THINGS THAT MATTER
+================================================================================
+
+1. **Verify v254 on the Mini.** Highest priority. Until we know what binary
+   is actually running we cannot trust any signal:
+     ssh mini "head -40 ~/bot.py | grep -E 'VERSION|v254'"
+     ssh mini "ls -la ~/bot.py ~/Documents/Projects/AetherBot/Code\ versions/AetherBot_MASTER_v254.py"
+   If v253 → re-deploy with the same paste-ready command from the 4/9
+   session brief and tail the log for OB_FORMAT_DIAG within one ticker
+   cycle (~15 min) before walking away.
+
+2. **Reconciliation gap is structural, not statistical.** Two consecutive
+   days with a widening gap (-$18.88 → -$25.96) and one POS WARNING that
+   directly observes API 0 vs local 14 is enough multi-day evidence to
+   build the v255 reconciliation spec. **But do not write v255 code on
+   top of an unknown binary** — first land v254, then v255.
+
+3. **Halt-or-run decision for the weekend.** Bot already idle (price-ceiling
+   filter) since 12:30 MTN. Real downside between now and Friday close is
+   small. Recommendation: let it ride to Friday close, halt over weekend,
+   bring back up Monday on a verified v254 + v255 reconciliation patch.
+   This is operator-call, not Kai-call.
+
+================================================================================
+NUMBERS (CLAIMED vs REAL)
+================================================================================
+Strategy P&L (claimed, native 4/10 entries only):
+  bps_premium      2 trades  +$4.34
+  PAQ_EARLY_AGG    4 trades  +$20.93
+  TOTAL native     6 trades  +$25.27   (100% claimed WR)
+  Carryover (4/9)  2 trades  +$3.64
+  GRAND TOTAL      8 trades  +$28.91
+
+Real-credit attribution (best-effort from SETTLE RECHECK deltas):
+  +$2.35 bump at line 802 (~10:42)   → covers T1 (HIGH) or T3
+  +$0.60 bump at line 1005 (~12:00)  → covers T5 or delayed T3 credit
+  Everything else                    → ZERO real credit
+  REAL BALANCE CHANGE                = +$2.95
+  HALLUCINATED P&L                   = -$25.96
+
+Conviction breakdown (native):
+  HIGH (≥7.0):  1 trade  (T1, Conv 7.4) — claimed +$2.08
+  MID  (5-7):   5 trades — claimed +$23.19
+  LOW (<5):     0 trades
+
+BPS_SESSION breakdown (native):
+  ALIGNED:  6 / 6 (100%)
+  COUNTER:  0 / 6
+
+Running totals:
+  HC (HIGH+COUNTER):  -$47.37  (unchanged — 6 trades, 6 sessions)
+  HA (HIGH+ALIGNED):  +$19.56 claimed / ambiguous real  (+1 trade)
+
+Open issues: see Deep_Analysis (10 prior + 1 new — #11 phantom positions)
+
+================================================================================
+PENDING — DO NOT TREAT AS FINAL UNTIL THESE LAND
+================================================================================
+- GPT cross-check (Mini fact-check rerun against this analysis)
+- Mini-side verification of v254 binary
+- Operator decision on halt-vs-run for the rest of Friday
+- v255 build spec (deferred until v254 confirmed live)
+
+When GPT_CrossCheck_2026-04-10.txt arrives, it should be synthesized into
+this file (overwrite the "PENDING" block at the bottom of Deep_Analysis).
+Until then this Final read stands.
+
+
+==============================================================================
+GPT-4o FACT-CHECK -- 18:44 MTN
+==============================================================================
+
+The analysis identifies several structural issues and gaps that could have systemic implications across multiple sessions. Here are the key points:
+
+1. **Version Verification Issue**: The analysis highlights that version v254 is not running as expected, which is a critical structural issue. This means that any analysis or data from this session (and potentially previous sessions) cannot be trusted until the correct version is verified and running. This issue could affect multiple sessions if not resolved, as it impacts the bot's ability to function as intended.
+
+2. **Reconciliation Gap**: The widening reconciliation gap over consecutive days suggests a systemic issue rather than a statistical anomaly. The gap indicates that the bot's reported P&L does not match the real balance change, which could be due to phantom positions or incorrect trade logging. This issue is structural and requires a thorough investigation and fix in the upcoming version (v255).
+
+3. **Conviction Scoring at Session Boundaries**: The analysis does not explicitly address conviction scoring behavior at session boundaries. However, the fact that there is a discrepancy in reported vs. real P&L suggests that there might be issues with how trades are being logged or scored, particularly around session transitions. This could be a potential area for further investigation to ensure that conviction scoring is consistent and accurate across session boundaries.
+
+4. **Session-Boundary Behavior**: The analysis does not provide specific insights into how conviction or sizing logic behaves at window transitions. However, the presence of phantom positions and the reconciliation gap could imply that there are issues with how the bot handles trades at session boundaries. This is a gap in the analysis that needs to be addressed to ensure consistent behavior across sessions.
+
+5. **Reactive Recommendation**: The recommendation to halt or run the bot for the weekend is reactive and based on the current session's issues. While it is prudent to halt operations until the correct version is running, this recommendation does not address the underlying structural issues that could affect future sessions.
+
+Overall, the analysis identifies critical structural issues that need to be resolved to ensure the bot functions correctly across multiple sessions. The focus should be on verifying the correct version is running and addressing the reconciliation gap to prevent similar issues in the future. Additionally, further investigation into conviction scoring and session-boundary behavior is warranted to ensure consistent and accurate performance.

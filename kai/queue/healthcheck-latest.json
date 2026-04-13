@@ -1,5 +1,5 @@
 {
-  "ts": "2026-04-13T02:17:20Z",
+  "ts": "2026-04-13T02:49:15Z",
   "status": "ISSUES",
   "issues": 1,
   "warnings": 1,
@@ -7,7 +7,7 @@
     {
       "severity": "P1",
       "area": "flags",
-      "detail": "6 unaddressed P0/P1 flags in last 2h"
+      "detail": "11 unaddressed P0/P1 flags in last 2h"
     },
     {
       "severity": "P2",
@@ -18,33 +18,33 @@
   "actions_taken": "Dispatched auto-remediation for 1 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776046618-4444",
+      "id": "cmd-1776048548-6259",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash agents/nel/nel-qa-cycle.sh 2>&1 | tail -40",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh simulate 2>&1 | grep -E '(Phase|\u2713",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776046610-4420",
+      "id": "recheck-flag-nel-001",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh push ra 'Nel QA Architecture Rese",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776046594-4390",
+      "id": "cmd-1776048534-6234",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh push 2>&1 | tail -20",
+      "command": "cd ~/Documents/Projects/Hyo && bash agents/nel/nel.sh 2>&1 | tail -20",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776046592-4368",
+      "id": "cmd-1776048490-6189",
       "status": "ok",
-      "command": "cp ~/Documents/Projects/Hyo/agents/nel/com.hyo.nel-qa.plist ~/Library/LaunchAgen",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh simulate 2>&1 | tail -30",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776046580-4341",
+      "id": "cmd-1776048437-6155",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'kai: Nel v2.0 QA eng",
+      "command": "cd ~/Documents/Projects/Hyo && bash agents/nel/nel-qa-cycle.sh 2>&1 | tail -30",
       "exit_code": 0
     }
   ],

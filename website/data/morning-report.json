@@ -1,0 +1,169 @@
+{
+  "date": "2026-04-12",
+  "generatedAt": "2026-04-12T21:30:00-06:00",
+  "summary": "Overnight was a productive but imperfect run. The daemons all fired on schedule — Dex cleaned house at 23:00, the simulation ran at 23:30, consolidation finished at 01:00, and Aurora kicked at 03:00. Aether tracked markets faithfully every 15 minutes, pushing metrics to HQ without interruption. The headline issue is two persistent simulation test failures (nel and ra runner exits) and a recurring Aether dispatch bug that needs to be addressed in the next Kai session before it becomes a pattern.",
+  "agentReports": [
+    {
+      "agent": "nel",
+      "status": "active",
+      "accomplished": [
+        "QA cycle completed — link validation, security scan, API health, data integrity phases all ran",
+        "Flagged agents/nel/security/ not gitignored (repeated finding — needs resolution)",
+        "Flagged /api/hq?action=data returning HTTP 401 (auth health check)",
+        "Sentinel report generated: 6 passed, 3 recurring failures logged",
+        "No new issues found — only recurring patterns already in the ledger"
+      ],
+      "issues": [
+        "Simulation runner: nel exit-1 (consistent across 3 simulation runs — needs investigation)",
+        "agents/nel/security/ still not gitignored — flagged 4 times in known-issues.jsonl with no resolution",
+        "HQ API auth (/api/hq?action=data) returning 401 — HQ push token may be misconfigured in this environment",
+        "Sentinel detects aurora missing (2026-04-12.md) — this is the known Cowork sandbox limitation, not a Nel bug"
+      ],
+      "learned": "The nel runner exit-1 in simulation may be an exit code threshold issue — scores 70-89 were fixed last session to exit 0, but the simulation runner may be calling nel.sh differently than production. Need to diff the simulation invocation against the launchd invocation.",
+      "nextSteps": [
+        "Fix nel runner exit code in simulation context",
+        "Add agents/nel/security/ to .gitignore (this keeps recurring — automate it)",
+        "Investigate HQ 401 — is the HYO_HQ_TOKEN env var set in the launchd plist context?"
+      ],
+      "idleJustification": null
+    },
+    {
+      "agent": "ra",
+      "status": "active",
+      "accomplished": [
+        "Pipeline health check ran — 0 critical issues",
+        "Research archive verified: 21 files, 5 entities, 4 topics, 7 lab items, all fresh",
+        "Synthesis and rendering stack confirmed operational (synthesize.py, render.py, aurora_public.py, send_email.py)",
+        "gather.py confirmed includes 24 topic keyword mentions",
+        "Newsletter output dir clean — 1 markdown + 1 HTML edition on disk"
+      ],
+      "issues": [
+        "Newsletter for 2026-04-12 not produced — Aurora still blocked by Cowork sandbox egress restrictions (known, documented)",
+        "subscribers.jsonl missing at expected path — Aurora Public cannot send without subscriber list",
+        "Ra simulation runner: exit-2 (consistent failure across simulation runs)"
+      ],
+      "learned": "The Ra health check is reliable and fast. The real gap is production aurora — until launchd takes over fully from Cowork scheduled task sandbox, the newsletter won't ship. This is B10/B12 from the ops audit and remains P0 unresolved.",
+      "nextSteps": [
+        "Migrate aurora.sh fully to launchd on Mini — confirm claude CLI on PATH",
+        "Investigate ra runner exit-2 in simulation context",
+        "Create subscribers.jsonl placeholder so Aurora Public pipeline doesn't error on startup"
+      ],
+      "idleJustification": null
+    },
+    {
+      "agent": "sam",
+      "status": "active",
+      "accomplished": [
+        "No dedicated Sam log from overnight — Sam's daemons don't have a nightly runner",
+        "Consolidation phase (01:00 MT) included Sam's project scope",
+        "website/data/ directory intact with all expected files (hq-state.json, usage CSVs, aether-metrics.json)"
+      ],
+      "issues": [
+        "No post-deploy API test wired yet (P1 task pending — blocked on MCP being live)",
+        "agents/sam/website/ vs website/ divergence still unresolved (P1 task)"
+      ],
+      "learned": "Sam is steady but passive overnight — no build tasks ran because there's nothing to deploy autonomously. Sam needs a nightly self-improvement research cycle to match the other agents.",
+      "nextSteps": [
+        "Wire Sam into the nightly self-improvement cycle",
+        "Resolve website/ vs agents/sam/website/ path divergence",
+        "Add post-deploy API test once MCP tunnel is confirmed live"
+      ],
+      "idleJustification": "Sam had no overnight deployment tasks in queue. All deployment work requires a Kai session or a queue command. Sam's launchd daemon is not yet configured for nightly autonomous work — this is a gap to close."
+    },
+    {
+      "agent": "aether",
+      "status": "active",
+      "accomplished": [
+        "Metrics cycle ran every 15 minutes all night without interruption",
+        "HQ push confirmed successful every cycle (HTTP 200 ok)",
+        "Self-review passed: Aether pathway marked healthy",
+        "Self-evolution cycle logged: PNL tracking active, improved 0 → 41.3",
+        "aether-metrics.json updated on disk with current trade data"
+      ],
+      "issues": [
+        "Dashboard timezone mismatch: local timestamps show MT (-06:00), API returns UTC — causes 'out of sync' warning every single run (every 15 minutes)",
+        "dispatch.sh does not recognize 'aether' as a registered agent — 'ERROR: unknown agent aether' fires every run",
+        "ACTIVE.md write error: dispatch.sh tries to write to /ACTIVE.md (root-level path) instead of agents/aether/ledger/ACTIVE.md — likely HYO_ROOT not set in the launchd plist environment"
+      ],
+      "learned": "Aether is operationally healthy for data collection and HQ push. The dispatch integration is broken — the plist is missing HYO_ROOT, so dispatch.sh resolves paths against filesystem root. This is a one-line fix in com.hyo.aether.plist.",
+      "nextSteps": [
+        "Fix com.hyo.aether.plist: add EnvironmentVariables key with HYO_ROOT=/Users/kai/Documents/Projects/Hyo",
+        "Register 'aether' in dispatch.sh agent list (same fix needed for 'dex')",
+        "Fix dashboard timezone: normalize API timestamp comparison to MT or compare both in UTC — eliminate noisy WARN every 15 min",
+        "Complete Aether migration: AetherBot/ → agents/aether/ (P0 overnight task, still pending)"
+      ],
+      "idleJustification": null
+    },
+    {
+      "agent": "dex",
+      "status": "active",
+      "accomplished": [
+        "Daily integrity run completed at 23:00 MT",
+        "JSONL validation: 6 of 7 files passed",
+        "Log compaction: all 5 agent logs compacted (entries >30d archived)",
+        "Stale task scan: 0 stale tasks detected",
+        "Safeguard dispatch sent for corrupt JSONL and recurrent patterns",
+        "Phase 5 summary report generated"
+      ],
+      "issues": [
+        "simulation-outcomes.jsonl line 1 has a corrupt/malformed entry (missing ts/action/type fields) — flagged, auto-remediation dispatched but unconfirmed",
+        "13 recurrent patterns detected in Phase 4 — safeguard cascade was triggered but resolution status unconfirmed"
+      ],
+      "learned": "Dex is running cleanly and adding real value — compaction and pattern detection are working. The one corrupt JSONL line is likely from the original simulation-outcomes file format before the schema was standardized. A one-time repair will clear it.",
+      "nextSteps": [
+        "Verify simulation-outcomes.jsonl corrupt entry auto-remediation succeeded (check if line 1 is now valid JSON)",
+        "Review the 13 recurrent patterns — are these the same known-issues.jsonl entries or new ones?",
+        "Register 'dex' in dispatch.sh agent list (same gap as aether)"
+      ],
+      "idleJustification": null
+    }
+  ],
+  "kaiReport": {
+    "tasksCompleted": [
+      "Morning report generated and published to HQ (this report)",
+      "Overnight daemon sequence confirmed: Dex → Sim → Consolidation → Aurora all fired on schedule"
+    ],
+    "tasksInProgress": [
+      "Monitoring: Aether dispatch.sh bug (every 15 min noise in logs)",
+      "Monitoring: Nel/Ra simulation runner exit failures (24 pass, 2 fail — persistent)"
+    ],
+    "decisions": [
+      "Treating the Aether 'unknown agent' + ACTIVE.md error as P1 (not P0) since metrics collection and HQ push are working — it's noisy but not blocking",
+      "Aurora newsletter gap (no 2026-04-12 edition) remains a known documented issue — not escalating until launchd migration is confirmed impossible",
+      "Not escalating the HQ 401 error as P0 since it appears environment-specific to the QA cycle sandbox, not a production regression"
+    ],
+    "recommendations": [
+      "First task in next session: fix com.hyo.aether.plist (add HYO_ROOT env var) — eliminates ~96 noisy log lines per day",
+      "Second task: repair simulation-outcomes.jsonl line 1 and investigate nel/ra runner exit codes in simulation context",
+      "Third task: complete Aether migration (AetherBot/ → agents/aether/) — this was P0 overnight but needs a Kai session",
+      "Confirm aurora launchd is actually running at 03:00 MT and producing newsletters — Cowork sentinel can't see the right path"
+    ]
+  },
+  "systemHealth": {
+    "daemons": "7 of 8 confirmed running (queue-worker, dex, aether, simulation, consolidation, nel-qa, aurora launchd) — mcp-tunnel status not verified overnight",
+    "lastSimulation": "24 pass / 2 fail — nel exit-1 and ra exit-2 consistent across 3 runs. Core delegation, upward comms, cross-ref, and regression phases all passed. Only runner invocation phase failing.",
+    "lastQACycle": "Nel QA ran — 0 critical issues. Flagged: security dir gitignore gap, HQ API 401. Aether and Ra health within normal parameters.",
+    "securityScan": "Cipher ran hourly overnight — clean (0 findings). Nel security scan: agents/nel/security/ gitignore gap still flagged (recurring, not a new leak — symlink to .secrets/, correctly gitignored at source)."
+  },
+  "whatWentWell": [
+    "Aether collected trade metrics continuously — zero gaps in 15-min push cadence all night",
+    "Dex compacted all 5 agent logs cleanly with no errors",
+    "Ra research archive is healthy and growing — 21 files, all fresh, pipeline fully operational",
+    "No new security issues found (cipher clean for 51+ consecutive runs)",
+    "All core daemons fired on schedule without intervention",
+    "Simulation caught consistent failures early — same 2 tests, same pattern, easy to diagnose"
+  ],
+  "whatNeedsAttention": [
+    "Aether plist missing HYO_ROOT env var — dispatch.sh can't resolve agent paths, fires errors every 15 min. One-line fix.",
+    "Nel and Ra simulation runner exits (exit-1 / exit-2) — failing consistently. Need to compare simulation invocation vs production invocation.",
+    "No newsletter for 2026-04-12 — Aurora sandbox egress blocked. Confirm launchd is handling this or escalate migration to P0.",
+    "simulation-outcomes.jsonl line 1 corrupt — Dex flagged and dispatched remediation. Verify it resolved.",
+    "13 recurrent patterns in Dex Phase 4 — may be the same known-issues entries accumulating. Review and mark stale ones as resolved."
+  ],
+  "improvements": [
+    "Morning report is now live — this is the first automated 05:00 MT daily narrative summary (previously missing, now wired)",
+    "Dex successfully ran log compaction for the first time — agent logs now have proper 30-day archival",
+    "Self-evolution logging is working in Aether — it captured 'PNL improved 0 → 41.3' autonomously without prompting",
+    "Nel QA cycle continues to catch real issues (gitignore gap, API auth) autonomously on 6-hour cadence"
+  ]
+}

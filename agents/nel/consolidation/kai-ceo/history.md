@@ -82,3 +82,11 @@
 1. **Propose Aetherbot scope to Hyo** — don't wait to be asked. Draft a 3-option brief (strategic market analysis / competitor tracking / project-evaluation engine) with a recommendation, and put it in front of Hyo. One yes/no and Kai can move immediately.
 2. **Draft the aurora launchd plist** — write it, put the one-line `launchctl` command in the brief, remove every friction point. The only thing left is Hyo's 30 seconds.
 3. **Add sandbox-exempt logic to sentinel_hyo** — mark API health as skipped (not failed) when running in Cowork's environment. Eliminates the chronic false positive and makes the hyo sentinel result meaningful again.
+
+## 2026-04-13 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in kai/
+**Open tasks across all projects:** 82
+**Completed tasks across all projects:** 29
+**Session continuity files current:** KAI_BRIEF.md + KAI_TASKS.md ✓

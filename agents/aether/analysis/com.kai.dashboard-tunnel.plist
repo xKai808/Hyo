@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.kai.dashboard-tunnel</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/homebrew/bin/cloudflared</string>
+		<string>tunnel</string>
+		<string>--url</string>
+		<string>http://localhost:8420</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<dict>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>StandardOutPath</key>
+	<string>/Users/kai/Documents/Projects/Kai/logs/tunnel.log</string>
+	<key>StandardErrorPath</key>
+	<string>/Users/kai/Documents/Projects/Kai/logs/tunnel.log</string>
+	<key>WorkingDirectory</key>
+	<string>/Users/kai</string>
+	<key>UserName</key>
+	<string>kai</string>
+	<key>ProcessType</key>
+	<string>Standard</string>
+</dict>
+</plist>

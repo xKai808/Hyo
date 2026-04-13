@@ -62,3 +62,10 @@
 - ~~Should Aether consume Ra's research?~~ → Yes, weekly research briefs
 - ~~What cadence?~~ → 15-min cycle (metrics), weekly (intelligence/research)
 - ~~What format?~~ → Metrics JSON for dashboard, JSONL for ledger, dispatch reports for Kai
+
+## 2026-04-13 — nightly consolidation
+
+**Sentinel:** passed=1 failed=1
+findings:
+- FAIL: kai/aether.sh runner missing
+**Status:** awaiting scope definition

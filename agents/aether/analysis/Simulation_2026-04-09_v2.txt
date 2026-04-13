@@ -1,0 +1,216 @@
+# Nightly Simulation (2nd pass) — 2026-04-09 23:51 MDT (Thursday)
+
+Simulation window: Thu 2026-04-09 23:51 MDT → Fri 2026-04-10 23:51 MDT
+Playbook version at run: v1.2 header / v1.3 improvement-log (DRIFT — fixed below)
+Prior pass: Simulation_2026-04-09.txt @ 23:01 MDT (first sim)
+Prior consolidation: 23:30 MDT (see daily notes "Nightly Consolidation Run")
+
+This is a **second-pass simulation** firing after tonight's consolidation already ran. Mode: append-only findings, focus on what has CHANGED since the 23:01 sim and 23:30 consolidation.
+
+---
+
+## HEADLINE FINDINGS (new since 23:01)
+
+### 1. v254 IS DEPLOYED AND RUNNING  ← operator acted while Cowork was busy
+- Log `AetherBot_2026-04-09.txt` contains **4 `AetherBot v254` startup banners** (bot restarted multiple times during deploy + resume). First banner followed by timestamp 19:55:33.
+- **The 23:01 sim and 23:30 consolidation both missed this.** session_brief.md still says "v254 BUILT — deploy with `bash deploy_v254.sh`". That's stale. Truth: v254 BUILT → DEPLOYED → RUNNING since ~19:55 MDT, has accumulated ~4 hours of live data.
+- `deploy_v254.sh` is no longer the next action. It's already done.
+- operator_tasks.md "COMPLETED" list already contains `[x] v254 built and deployed` — so the operator_tasks file was updated but session_brief wasn't. Classic drift.
+
+### 2. OB_FORMAT_DIAG REVEALED THE KALSHI SCHEMA  ← high-value intelligence
+The whole point of v254's P1.2 diagnostic was to answer: "why does `yes_bids:ABSENT | no_bids:ABSENT` show up on 96/96 HARVEST MISS?" We now have the answer, printed 3 times in the log:
+
+```
+-> OB_FORMAT_DIAG | raw_keys: ['orderbook_fp'] | orderbook_keys: ['no_dollars', 'yes_dollars']
+```
+
+Decoded:
+- Top-level API response key is `orderbook_fp` (fingerprint-wrapped), not a plain `orderbook`.
+- Inner keys are `yes_dollars` / `no_dollars`, not `yes_bids` / `no_bids`.
+
+**This means the OB parser has been looking for the wrong keys.** The harvest system's 11% success rate on 4/9 was not "Kalshi is down" and not "the parser crashed" — it was a **key name mismatch**. The parser was probably written against an older Kalshi API schema that exposed `yes_bids` / `no_bids` directly, and Kalshi has since changed to `yes_dollars` / `no_dollars` wrapped in `orderbook_fp`.
+
+**v255 fix (spec seed, not code):**
+- Update `get_orderbook()` to unwrap `orderbook_fp` before reading bids.
+- Update harvest anchor derivation to read `yes_dollars` / `no_dollars` instead of `yes_bids` / `no_bids`.
+- Keep `OB_FORMAT_DIAG` one-shot logging as a regression tripwire.
+- Delete `OB_PARSER_DIAG` after v255 ships cleanly for 3 days (it was a diagnostic, not a feature).
+- Expected impact: harvest success rate should jump from 11% → whatever the underlying signal quality supports. 4/8 showed functional harvesting, so the ceiling is probably 60-80%. Even at 50%, multi-day harvest P&L could contribute +$2-5/day.
+
+**P0 status for v255.** This is a single structural bug with direct revenue impact. The fact that v254 diagnostics exposed it this cleanly means v254 earned its build cost already — the deploy paid for itself with data even before any trading-side fix fires.
+
+### 3. BALANCE MOVED +$5.37 AFTER v254 WENT LIVE
+Latest SETTLE RECHECK in log: `bal $84.60 | pre $84.60` (PAQ_EARLY_AGG attempt 1, most recent).
+
+SETTLE RECHECK chain after v254 deploy:
+```
+$79.23 (pre-deploy, evening state)
+... through PAQ_EARLY_AGG sessions ...
+$80.16 → $80.96 → $78.54 (-$2.42 loss)
+→ $81.54 (+$3.00) → $82.48 (+$0.94)
+→ $84.60 (+$2.12) ← current, latest bps_premium close
+```
+
+Net after v254 deploy: **+$5.37** across ~5-6 settled trades.
+
+Caveats:
+- Single-day, small sample. Not a pattern yet.
+- No `TIME_BDI_LOW` events fired in the log (0 count). The P0 fix hasn't had a chance to prove it works. Either no qualifying condition arose, or it's not detecting correctly. Needs more data.
+- No `HARVEST BLOCKED` events either (0 count). Either no harvest attempted below entry, or gate is silent. Needs verification.
+
+Bottom line: **v254 deploy has not *hurt* anything and has delivered the critical OB schema discovery.** That alone justifies the build.
+
+### 4. TRADE COUNT: 32 BUY SNAPSHOTS, UP FROM 26
+The corrected analysis (Final_Analysis_2026-04-09.txt) counted 26 BUY SNAPSHOTs through ~20:30 MDT. Current count: 32. **6 new trades since the corrected analysis** — all after v254 deploy, all in the 20:00-23:52 evening window.
+
+These 6 trades are NOT in any analysis file. Friday's 19:30 MDT deep analysis will be the first to process them.
+
+---
+
+## DRIFT FOUND AND FIXED (this pass)
+
+### A. playbook.md version header drift
+- Header: `Version: 1.2 — Created 2026-04-08`
+- Improvement log: `| 2026-04-09 | v1.3 — Chat review step added | ...`
+- The 23:30 consolidation or a manual edit added a v1.3 entry in the improvement log but never bumped the header.
+- **Fix applied:** header updated to `Version: 1.3` with today's date.
+
+### B. session_brief.md v254 status drift
+- Brief says: `v254 BUILT — deploy with cd ~/Documents/Projects/AetherBot && bash deploy_v254.sh`
+- Reality: v254 deployed at ~19:55 MDT and has been running for ~4 hours.
+- **Fix applied:** AetherBot section rewritten to `v254 DEPLOYED AND RUNNING since ~19:55 MDT` with OB schema discovery noted.
+
+### C. session_brief.md balance drift
+- Brief says: `Balance $79.23 (confirmed SETTLE RECHECK, Trade 26 open)`
+- Reality: `$84.60` (confirmed in latest SETTLE RECHECK, bps_premium attempt 5).
+- **Fix applied:** balance updated to $84.60, P&L line updated.
+
+### D. project_aetherbot.md (auto-memory) drift
+- File says: `Current version v253, next build v254`
+- Reality: v253 is gone, v254 live, and Issue #7 has a ROOT CAUSE now.
+- **Fix applied:** file updated to reflect v254 DEPLOYED, Issue #7 root cause identified (schema mismatch, not parser crash), v255 patch seed added.
+
+### E. daily notes missing 2nd-pass section
+- daily/2026-04-09.md has the first-pass simulation section (23:01) and the consolidation section (23:30) but nothing for this pass.
+- **Fix applied:** appended `## Nightly Simulation (2nd pass, 23:51 MDT)` summarizing the three new findings above.
+
+---
+
+## NEXT-24H SIMULATION WALKTHROUGH (delta from 23:01 sim)
+
+Most of the 24h walkthrough from the 23:01 sim still holds. Only the deltas are listed here.
+
+### Thu 2026-04-09 — rest of day
+- **23:52 MDT (now)** — this second simulation pass running. Completes with memory checkpoint.
+- **Post-midnight** — bot continues OVERNIGHT trading on v254. Watch for any `TIME_BDI_LOW` or `HARVEST BLOCKED` events in the log; first fire of either would be primary validation signal.
+
+### Fri 2026-04-10 — trading day, bot ON (v254)
+- **00:00-08:00 MDT** OVERNIGHT + EU_MORNING sessions on v254 for the first full quiet-hour window. Historically highest-WR window. v254 should only *improve* this (time-exit prevents the rare BDI=0 holds that killed evenings).
+- **Mini crons at 17:00** still sequenced around OLD 17:00 analysis window. **Unchanged from 23:01 sim.** Fact-check at 17:15 will race the 19:30 analysis. Still needs operator to reshuffle to 19:45/20:00/20:15.
+- **19:30 MDT** `daily-aetherbot-analysis` fires.
+  - **NEW RISK:** playbook v1.3 STEP 2 extraction list does not include v254 signatures (`TIME_BDI_LOW`, `HARVEST BLOCKED`, `OB_FORMAT_DIAG`, `OB_PARSER_DIAG`, `AetherBot v254` banner). Analysis task will parse the log correctly but WILL NOT extract v254-specific events into the raw_extract file. Recommendation: add these to step 2 in a future playbook patch. Not applying tonight to avoid stacking a second version bump in the same hour as the v1.2→v1.3 header fix.
+  - **NEW INPUT:** Friday analysis should include (a) the 6 post-20:30 Thu trades missing from tonight's analysis (append mode), (b) the OB_FORMAT_DIAG output as a critical finding, (c) first-day v254 outcome review, (d) seed v255 spec for parser schema fix.
+- **23:00 MDT Fri** simulation does NOT fire (cron `0 23 * * 0-4` excludes Fri). Unchanged.
+- **23:50 MDT Fri** consolidation does NOT fire. Unchanged.
+
+### Memory-gap window
+Still ~51h from Fri 19:30 → Sun 23:00. Unchanged from 23:01 sim. But now with one upside: v254 will be running through most of this window, generating trade data that Sunday night's analysis can review.
+
+---
+
+## DATA-FRESHNESS SUMMARY (delta)
+
+| File | 23:01 sim | 23:51 sim | Notes |
+|------|-----------|-----------|-------|
+| session_brief.md | OK (2h) | STALE (balance/v254) | Fixed this pass |
+| daily/2026-04-09.md | OK | OK (updated 23:33) | Appending this pass |
+| api_usage.md | STALE (>25h) | STALL (>25h) | Same. Mini cron path still broken. |
+| heartbeat.md | CRITICAL-MISSING | CRITICAL-MISSING | Day 2 unchanged. |
+| Logs/AetherBot_2026-04-09.txt | OK (<30s) | OK (<60s) | Bot still alive. |
+| playbook.md | v1.2 header OK | v1.2 header DRIFT | Fixed to v1.3 this pass. |
+| Final_Analysis_2026-04-09.txt | OK | STALE (missing 6 post-20:30 trades) | Friday analysis must append. |
+
+---
+
+## REVENUE PIPELINE REVIEW (delta)
+
+**AetherBot:**
+- v254 LIVE and positive: +$5.37 since deploy, no regressions. 4-hour sample — too small to call the BDI=0 fix working yet, but also no evidence it's broken.
+- OB schema discovery is the sleeper win of the day. Fixing the parser schema mismatch in v255 could unlock +$2-5/day from harvest P&L alone.
+- Balance $84.60 is still -30% from $121.02 peak, but trending in the right direction post-deploy.
+- Next Kai action: seed v255 spec (parser schema fix) during next session. No operator action required for that piece.
+
+**Hyo:**
+- UNCHANGED from 23:01 sim and 23:30 consolidation. Commit `7e2831e` still unpushed (sandbox cannot verify from the github.com side — egress 403). `push_and_verify.sh` is written and waiting. Friday morning operator action.
+- Still the single biggest revenue bottleneck.
+
+**Products:**
+- Still gated on Hyo push landing.
+
+**Conclusion:** AetherBot leg moved forward tonight while Cowork was looking the other way — v254 live, OB schema exposed, balance up. Hyo leg is still 100% operator-dependent for Friday morning.
+
+---
+
+## FIXES APPLIED (THIS PASS)
+
+1. **playbook.md** — version header v1.2 → v1.3, `Last updated` line updated to 2026-04-09 (2nd pass simulation).
+2. **session_brief.md** — AetherBot line: v254 DEPLOYED AND RUNNING, balance $84.60, note OB schema finding. Balance ledger: added 4/9 EOD $84.60 annotation.
+3. **project_aetherbot.md** (auto-memory) — marked v253 gone / v254 LIVE; Issue #7 root cause identified as `yes_bids` vs `yes_dollars` key mismatch, v255 parser patch seed added; updated `Why` section.
+4. **daily/2026-04-09.md** — appended `## Nightly Simulation (2nd pass, 23:51 MDT)` with the three headline findings.
+5. **Simulation_2026-04-09_v2.txt** — this file, saved to `Kai analysis/`.
+
+Fixes NOT applied (by design):
+- No playbook content patch for v254 log signatures — queued to a future version bump to avoid stacking.
+- No v255 code — out of scope for simulation task; Kai writes specs, operator runs deploys.
+- No push of Hyo commit 7e2831e — sandbox cannot push (github.com egress 403). Still a Friday-morning operator action.
+- No Mini cron reshuffle — that's a Mini-side action only.
+
+---
+
+## OPERATOR WATCH ITEMS (pre-Friday open, updated)
+
+Priority order (highest-impact first). Items in **bold** changed since the 23:01 sim.
+
+1. **v254 — NO LONGER AN OPEN TASK.** Already deployed. Confirmation: grep the log for `AetherBot v254` and `OB_FORMAT_DIAG`. Both present.
+2. **Push Hyo commit 7e2831e** via `bash push_and_verify.sh` (Mini) — still the single most important action for revenue pipeline. Rotate PAT immediately after.
+3. **Repair Mini cron paths** for api_usage.md and heartbeat.md. Both still missing/stale.
+4. **Reshuffle Mini cron times** to 19:45 / 20:00 / 20:15 to match new 19:30 analysis window.
+5. **Verify fresh v254 signals** Friday morning:
+   - Did any `TIME_BDI_LOW` event fire overnight?
+   - Did any `HARVEST BLOCKED` event fire overnight?
+   - Any new `OB_FORMAT_DIAG` or `OB_PARSER_DIAG` lines?
+   - Balance delta Thu EOD → Fri open.
+6. **v255 parser patch** — Kai will draft the spec in the next session. Fix is mechanical: unwrap `orderbook_fp` and read `yes_dollars` / `no_dollars`. Operator deploys.
+7. **Trade 26+ settlement check** on Kalshi dashboard (now stale since post-20:30 trades have advanced the state further).
+
+---
+
+## QUALITY GATES
+
+- [x] All critical files re-validated (delta vs 23:01 sim)
+- [x] Data freshness re-checked
+- [x] Revenue pipeline re-reviewed
+- [x] session_brief.md drift fixed
+- [x] playbook.md version header drift fixed
+- [x] Daily notes appended
+- [x] Auto-memory updated (project_aetherbot.md)
+- [x] Simulation report saved
+- [x] Memory checkpoint completed (final step — see STATE section at bottom of daily notes)
+
+## INTROSPECTION
+
+Second-pass simulations are supposed to be cheap, append-only sanity checks. This one wasn't — it caught three material facts that the first-pass sim and the consolidation both missed:
+
+1. v254 is live (4 hours of production data exist, none of it referenced in any state file before this pass)
+2. Kalshi API schema is now known (`orderbook_fp` / `yes_dollars` / `no_dollars`) — root cause for Issue #7
+3. Balance is $5.37 higher than every state file claimed
+
+The first sim missed these because it didn't **read the log file**. It trusted session_brief.md for balance and didn't grep for v254 signatures. That's a playbook step worth adding: **Step 0.5 of simulation — always sample the live log for version banner and balance delta before trusting session_brief.** I'm not applying that change tonight (two version bumps in one pass is noise), but I'm logging it so the next sim can patch it.
+
+Rating: 9/10. Higher than the 23:01 run (8/10) because the findings are materially new and materially valuable. Lost a point for not being able to write the v255 spec in the same pass (out of scope, and I want to see an overnight of v254 data first).
+
+What would Felix do differently? Felix would have built a tiny nightly probe script that runs before *any* simulation fires and dumps: (a) latest log line timestamp, (b) latest SETTLE RECHECK balance, (c) version banner, (d) count of any v254/v253 markers. That 10-line probe would have surfaced all three of tonight's findings in the first pass automatically. Seeding this in the income_strategy backlog as "pre-sim probe script."
+
+---
+
+Generated by nightly-simulation scheduled task @ 2026-04-09 23:51 MDT (2nd pass).

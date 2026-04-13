@@ -1,0 +1,1159 @@
+================================================================================
+AETHERBOT TRADING EXTRACTION - 2026-04-09
+================================================================================
+Extraction Date: 2026-04-09
+Source File: Logs/AetherBot_2026-04-09.txt
+Total Log Lines: 3,319
+Trading-Relevant Lines Extracted: 498
+
+EXTRACTION MANIFEST:
+  ✓ BUY SNAPSHOT lines (trade entries with strategy, conviction, BDI, sizing)
+  ✓ STOP lines (where trades were stopped out)
+  ✓ HARVEST lines (profit taking events with type: SPHI_DECAY, AGGRESSIVE, BOOST)
+  ✓ TICKER CLOSE lines (confirmed P&L per ticker/session)
+  ✓ SETTLE RECHECK lines (balance confirmations)
+  ✓ BPS_SESSION lines (ALIGNED/COUNTER flags)
+  ✓ BDI references (Breakout Directional Index values)
+  ✓ HARVEST MISS events (failed profit takes with diagnostics)
+  ✓ ERROR/EXCEPTION/WARN/FAIL lines (all exceptions)
+
+ORGANIZATION: By category, chronological within each section
+NOTE: Raw extracted data - no summarization or interpretation
+
+================================================================================
+SECTION 1: BUY SNAPSHOT EVENTS (Trade Entries)
+================================================================================
+Complete entries with strategy, conviction, risk sizing, BDI, position sizing
+
+===== COMPLETE TRADING EXTRACTION - 2026-04-09 =====
+Extracted: Thu Apr  9 19:12:32 MDT 2026
+Source: Logs/AetherBot_2026-04-09.txt
+
+Total lines in log: 3319
+Total trading-relevant lines: 498
+
+===============================================================================
+SECTION 1: BUY SNAPSHOT EVENTS (Trade Entries)
+===============================================================================
+
+03:12:41 | YES 0.9000 | NO 0.1300 | 141s left | ABS 0.139 | BPS +6.0 | PAQ 6 | CTX 2 STATE 2 EXP 2 | BCDP 6C | READY | → PAQ_AGG_BCDP | YES | BCDP 5D | BLOCK
+          → BUY SNAPSHOT
+             Side:      YES @ 0.9000
+             Reason:    bps_late
+             Seconds:   141s
+             Contracts: 5 | Total: $4.50
+             BTC:       71339.15 | beat 71239.87
+             Signed:    +0.139%
+--
+03:25:37 | YES 0.2300 | NO 0.7800 | 264s left | ABS 0.096 | BPS -4.0 | PAQ 0 | CTX 0 STATE 0 EXP 0 | BCDP 8C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.7800
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   264s
+             Contracts: 6 | Total: $4.68
+             BTC:       71278.93 | beat 71347.51
+             Signed:    -0.096%
+--
+04:05:58 | YES 0.2500 | NO 0.7600 | 544s left | ABS 0.090 | BPS -4.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | READY | → ABS_TOO_LOW
+          → BUY SNAPSHOT
+             Side:      NO @ 0.7600
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   544s
+             Contracts: 9 | Total: $6.84
+             BTC:       71482.34 | beat 71546.43
+             Signed:    -0.090%
+--
+09:06:07 | YES 0.2100 | NO 0.8000 | 534s left | ABS 0.125 | BPS -4.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.8000
+             Reason:    bps_premium
+             Seconds:   534s
+             Contracts: 6 | Total: $4.80
+             BTC:       71041.77 | beat 71130.89
+             Signed:    -0.125%
+--
+09:48:29 | YES 0.5300 | NO 0.4900 | 693s left | ABS 0.135 | BPS +4.0 | PAQ 6 | CTX 2 STATE 2 EXP 2 | BCDP 4C | READY | → ABS_TOO_LOW
+          → BUY SNAPSHOT
+             Side:      YES @ 0.5300
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   693s
+             Contracts: 9 | Total: $4.77
+             BTC:       72180.10 | beat 72082.46
+             Signed:    +0.135%
+--
+10:03:44 | YES 0.8400 | NO 0.1800 | 678s left | ABS 0.166 | BPS +4.0 | PAQ 6 | CTX 2 STATE 2 EXP 2 | BCDP 4C
+          → BUY SNAPSHOT
+             Side:      YES @ 0.8400
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   678s
+             Contracts: 3 | Total: $2.52
+             BTC:       72392.12 | beat 72272.05
+             Signed:    +0.166%
+--
+10:18:02 | YES 0.7300 | NO 0.2900 | 719s left | ABS 0.226 | BPS +3.0 | PAQ 4 | CTX 2 STATE 1 EXP 1 | BCDP 4C | READY | → PAQ_AGG_BCDP | YES | BCDP 3C | BLOCK
+          → BUY SNAPSHOT
+             Side:      YES @ 0.7300
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   719s
+             Contracts: 5 | Total: $3.65
+             BTC:       72335.19 | beat 72172.01
+             Signed:    +0.226%
+--
+10:35:34 | YES 0.1400 | NO 0.8700 | 567s left | ABS 0.188 | BPS -6.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 6C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.8700
+             Reason:    bps_premium
+             Seconds:   567s
+             Contracts: 5 | Total: $4.35
+             BTC:       71944.21 | beat 72079.84
+             Signed:    -0.188%
+--
+10:53:42 | YES 0.3600 | NO 0.6600 | 380s left | ABS 0.112 | BPS -2.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 7C | READY | → BPS_TOO_LOW_-1.0_need_2
+          → BUY SNAPSHOT
+             Side:      NO @ 0.6600
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   380s
+             Contracts: 7 | Total: $4.62
+             BTC:       71909.85 | beat 71990.45
+             Signed:    -0.112%
+--
+11:02:58 | YES 0.8600 | NO 0.1500 | 723s left | ABS 0.261 | BPS +5.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 4C | READY | → PAQ_AGG_BCDP | YES | BCDP 3C | BLOCK
+          → BUY SNAPSHOT
+             Side:      YES @ 0.8600
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   723s
+             Contracts: 5 | Total: $4.30
+             BTC:       72280.12 | beat 72091.96
+             Signed:    +0.261%
+--
+          → PAQ_STRUCT_GATE | YES | PAQ 4 | BPS +2.0 | abs 0.048% | px 0.46 | 639s | BCDP 6C | ACTIVE(NY_PRIME)|PAQ_MIN=4
+          → BUY SNAPSHOT
+             Side:      YES @ 0.4600
+             Reason:    PAQ_STRUCT_GATE
+             Seconds:   639s
+             Contracts: 10 | Total: $4.60
+             BTC:       72514.18 | beat 72479.24
+             Signed:    +0.048%
+--
+11:25:23 | YES 0.2100 | NO 0.8000 | 278s left | ABS 0.107 | BPS -3.0 | PAQ 3 | CTX 1 STATE 1 EXP 1 | BCDP 6C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.8000
+             Reason:    bps_premium
+             Seconds:   278s
+             Contracts: 8 | Total: $6.40
+             BTC:       72402.01 | beat 72479.24
+             Signed:    -0.107%
+--
+11:42:15 | YES 0.8500 | NO 0.1800 | 166s left | ABS 0.281 | BPS +3.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 8C | READY | → PAQ_AGG_BCDP | YES | BCDP 8C | PASS
+          → BUY SNAPSHOT
+             Side:      YES @ 0.8500
+             Reason:    bps_late
+             Seconds:   166s
+             Contracts: 5 | Total: $4.25
+             BTC:       72453.96 | beat 72250.99
+             Signed:    +0.281%
+--
+11:53:54 | YES 0.2300 | NO 0.7800 | 368s left | ABS 0.133 | BPS -3.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.7800
+             Reason:    bps_premium
+             Seconds:   368s
+             Contracts: 12 | Total: $9.36
+             BTC:       72358.29 | beat 72454.91
+             Signed:    -0.133%
+--
+12:27:52 | YES 0.2800 | NO 0.7300 | 129s left | ABS 0.103 | BPS -2.0 | PAQ 4 | CTX 2 STATE 1 EXP 1 | BCDP 8C | READY | → ABS_TOO_LOW
+          → BUY SNAPSHOT
+             Side:      NO @ 0.7300
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   129s
+             Contracts: 3 | Total: $2.19
+             BTC:       71845.82 | beat 71919.82
+             Signed:    -0.103%
+--
+12:56:48 | YES 0.7200 | NO 0.2900 | 194s left | ABS 0.084 | BPS +3.0 | PAQ 3 | CTX 1 STATE 2 EXP 0 | BCDP 8C
+          → BUY SNAPSHOT
+             Side:      YES @ 0.7200
+             Reason:    bps_premium
+             Seconds:   194s
+             Contracts: 9 | Total: $6.48
+             BTC:       71907.96 | beat 71847.51
+             Signed:    +0.084%
+--
+13:03:02 | YES 0.6100 | NO 0.4000 | 719s left | ABS 0.113 | BPS +2.0 | PAQ 4 | CTX 2 STATE 1 EXP 1 | BCDP 4C
+          → BUY SNAPSHOT
+             Side:      YES @ 0.6100
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   719s
+             Contracts: 5 | Total: $3.05
+             BTC:       71945.32 | beat 71864.31
+             Signed:    +0.113%
+--
+13:20:19 | YES 0.2400 | NO 0.7700 | 583s left | ABS 0.179 | BPS -5.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 6C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.7700
+             Reason:    bps_premium
+             Seconds:   583s
+             Contracts: 9 | Total: $6.93
+             BTC:       71950.18 | beat 72079.38
+             Signed:    -0.179%
+--
+17:05:18 | YES 0.2700 | NO 0.7400 | 584s left | ABS 0.094 | BPS -4.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 6C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.7400
+             Reason:    bps_premium
+             Seconds:   584s
+             Contracts: 10 | Total: $7.40
+             BTC:       71889.83 | beat 71957.18
+             Signed:    -0.094%
+--
+          → WES_SIGNAL | YES@0.530 | PAQ:5 ABS:0.063% BPS:+3.0 BDI:233 595s
+          → BUY SNAPSHOT
+             Side:      YES @ 0.5300
+             Reason:    WES_EARLY
+             Seconds:   595s
+             Contracts: 4 | Total: $2.12
+             BTC:       71830.54 | beat 71785.01
+             Signed:    +0.063%
+--
+17:27:55 | YES 0.5400 | NO 0.4700 | 127s left | ABS 0.087 | BPS +4.0 | PAQ 4 | CTX 2 STATE 2 EXP 0 | BCDP 7C | READY | → ABS_TOO_LOW
+          → BUY SNAPSHOT
+             Side:      YES @ 0.5400
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   127s
+             Contracts: 4 | Total: $2.16
+             BTC:       71847.79 | beat 71785.01
+             Signed:    +0.087%
+--
+          → WES_SIGNAL | YES@0.570 | PAQ:6 ABS:0.118% BPS:+3.0 BDI:369 765s
+          → BUY SNAPSHOT
+             Side:      YES @ 0.5700
+             Reason:    WES_EARLY
+             Seconds:   765s
+             Contracts: 4 | Total: $2.28
+             BTC:       71839.40 | beat 71755.01
+             Signed:    +0.118%
+--
+18:03:52 | YES 0.5300 | NO 0.4800 | 670s left | ABS 0.110 | BPS +4.0 | PAQ 6 | CTX 2 STATE 2 EXP 2 | BCDP 6C
+          → BUY SNAPSHOT
+             Side:      YES @ 0.5300
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   670s
+             Contracts: 9 | Total: $4.77
+             BTC:       71833.79 | beat 71755.01
+             Signed:    +0.110%
+--
+18:20:35 | YES 0.2000 | NO 0.8200 | 567s left | ABS 0.249 | BPS -4.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.8200
+             Reason:    bps_premium
+             Seconds:   567s
+             Contracts: 13 | Total: $10.66
+             BTC:       71622.59 | beat 71801.46
+             Signed:    -0.249%
+--
+19:06:13 | YES 0.4900 | NO 0.5300 | 528s left | ABS 0.047 | BPS -2.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 6C
+          → BUY SNAPSHOT
+             Side:      NO @ 0.5300
+             Reason:    PAQ_EARLY_AGG
+             Seconds:   528s
+             Contracts: 9 | Total: $4.77
+             BTC:       71899.90 | beat 71934.04
+             Signed:    -0.047%
+
+===============================================================================
+SECTION 2: TICKER CLOSE EVENTS (Confirmed P&L per Session)
+===============================================================================
+
+TICKER CLOSE | 23:15 MTN | 1 trade | NET WIN +2.03 | PAQ_EARLY_AGG +2.03
+TICKER CLOSE | 23:30 MTN | 1 trade | NET WIN +0.78 | bps_premium +0.78
+TICKER CLOSE | 23:45 MTN | 1 trade | NET WIN +1.38 | bps_premium +1.38
+TICKER CLOSE | 00:00 MTN | 1 trade | NET WIN +0.50 | PAQ_EARLY_AGG +0.50
+TICKER CLOSE | 03:15 MTN | 1 trade | NET WIN +0.50 | bps_late +0.50
+TICKER CLOSE | 03:30 MTN | 1 trade | NET WIN +1.32 | PAQ_EARLY_AGG +1.32
+TICKER CLOSE | 04:15 MTN | 1 trade | NET WIN +2.16 | PAQ_EARLY_AGG +2.16
+TICKER CLOSE | 09:15 MTN | 1 trade | NET LOSS -1.96 | bps_premium -1.96
+TICKER CLOSE | 10:15 MTN | 1 trade | NET LOSS -0.34 | PAQ_EARLY_AGG -0.34
+TICKER CLOSE | 10:00 MTN | 1 trade | NET WIN +4.23 | PAQ_EARLY_AGG +4.23
+TICKER CLOSE | 10:30 MTN | 1 trade | NET LOSS -3.65 | PAQ_EARLY_AGG -3.65
+TICKER CLOSE | 11:00 MTN | 1 trade | NET LOSS -2.45 | PAQ_EARLY_AGG -2.45
+TICKER CLOSE | 10:45 MTN | 1 trade | NET WIN +0.11 | bps_premium +0.11
+TICKER CLOSE | 11:30 MTN | 1 trade | NET LOSS -2.60 | PAQ_STRUCT_GATE -2.60
+TICKER CLOSE | 11:15 MTN | 1 trade | NET WIN +0.70 | PAQ_EARLY_AGG +0.70
+TICKER CLOSE | 11:30 MTN | 1 trade | NET WIN +1.60 | bps_premium +1.60
+TICKER CLOSE | 11:45 MTN | 1 trade | NET WIN +0.75 | bps_late +0.75
+TICKER CLOSE | 12:00 MTN | 1 trade | NET WIN +2.64 | bps_premium +2.64
+TICKER CLOSE | 13:00 MTN | 1 trade | NET WIN +2.52 | bps_premium +2.52
+TICKER CLOSE | 13:15 MTN | 1 trade | NET WIN +1.95 | PAQ_EARLY_AGG +1.95
+TICKER CLOSE | 13:30 MTN | 1 trade | NET WIN +1.27 | bps_premium +1.27
+TICKER CLOSE | 17:30 MTN | 1 trade | NET LOSS -0.64 | WES_EARLY -0.64
+TICKER CLOSE | 17:15 MTN | 1 trade | NET WIN +2.60 | bps_premium +2.60
+TICKER CLOSE | 17:30 MTN | 1 trade | NET WIN +1.84 | PAQ_EARLY_AGG +1.84
+TICKER CLOSE | 18:15 MTN | 1 trade | NET LOSS -2.93 | PAQ_EARLY_AGG -2.93
+
+===============================================================================
+SECTION 3: HARVEST EVENTS (Profit Taking)
+===============================================================================
+
+             Conv:      5.7 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 343 | sized 6→6c
+03:26:18 | YES 0.1100 | NO 0.9000 | 224s left | ABS 0.122 | BPS -5.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 31 | READY | → PAQ_AGG_BCDP | NO | BCDP 8C | PASS
+          → PHI HARVEST BOOST | PHI31 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8900 | AGGRESSIVE | BDI 84
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9000 | anchor 0.8900 | mkt_bid 0.8900
+          → HARVEST MISS DIAG | int_bdi 84 | near_bdi(±0.05held) 84 | anchor_depth(±0.02) 45 | raw_levels 72 | parsed_levels(>0.05) 49
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.92, 2), (0.912, 5), (0.91, 24), (0.9, 37), (0.89, 4), (0.88, 4), (0.87, 8), (0.82, 15), (0.81, 1), (0.8, 65), (0.78, 3), (0.77, 20)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.89, 4), (0.9, 37), (0.88, 4), (0.91, 29), (0.87, 8), (0.86, 0), (0.85, 0), (0.84, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:26:37 | YES 0.0700 | NO 0.9310 | 205s left | ABS 0.120 | BPS -4.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 45
+03:26:54 | YES 0.0700 | NO 0.9310 | 187s left | ABS 0.109 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 10
+          → PHI HARVEST BOOST | PHI10 | NO | boosted tranche 2c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.93
+03:27:12 | YES 0.1200 | NO 0.9000 | 170s left | ABS 0.092 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C | PHI 46
+03:27:29 | YES 0.1200 | NO 0.9000 | 152s left | ABS 0.081 | BPS -1.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C | PHI 26
+          → PHI HARVEST BOOST | PHI26 | NO | boosted tranche 2c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.90
+03:27:47 | YES 0.1500 | NO 0.8800 | 134s left | ABS 0.074 | BPS +0.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 39
+03:28:04 | YES 0.1500 | NO 0.8800 | 117s left | ABS 0.072 | BPS +0.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8500 | AGGRESSIVE | BDI 229
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.8800 | anchor 0.8500 | mkt_bid 0.8500
+          → HARVEST MISS DIAG | int_bdi 229 | near_bdi(±0.05held) 185 | anchor_depth(±0.02) 52 | raw_levels 72 | parsed_levels(>0.05) 49
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.93, 28), (0.92, 56), (0.903, 4), (0.902, 5), (0.9, 7), (0.88, 60), (0.87, 1), (0.86, 24), (0.85, 14), (0.84, 14), (0.83, 16), (0.78, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.85, 14), (0.86, 24), (0.84, 14), (0.87, 1), (0.83, 16), (0.82, 0), (0.81, 0), (0.8, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:28:24 | YES 0.1400 | NO 0.8800 | 98s left | ABS 0.080 | BPS -1.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8600 | AGGRESSIVE | BDI 273
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.8800 | anchor 0.8600 | mkt_bid 0.8600
+          → HARVEST MISS DIAG | int_bdi 273 | near_bdi(±0.05held) 122 | anchor_depth(±0.02) 21 | raw_levels 79 | parsed_levels(>0.05) 56
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.97, 11), (0.961, 26), (0.96, 33), (0.959, 1), (0.95, 9), (0.942, 9), (0.94, 4), (0.939, 4), (0.934, 50), (0.92, 3), (0.91, 8), (0.904, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.86, 6), (0.87, 1), (0.85, 14), (0.88, 73), (0.84, 14), (0.83, 4), (0.82, 0), (0.81, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:28:43 | YES 0.0400 | NO 0.9700 | 78s left | ABS 0.086 | BPS -2.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9600 | AGGRESSIVE | BDI 265
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9700 | anchor 0.9600 | mkt_bid 0.9600
+          → HARVEST MISS DIAG | int_bdi 265 | near_bdi(±0.05held) 265 | anchor_depth(±0.02) 179 | raw_levels 82 | parsed_levels(>0.05) 59
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.983, 55), (0.98, 1), (0.972, 45), (0.971, 58), (0.97, 8), (0.965, 50), (0.962, 4), (0.96, 7), (0.959, 5), (0.95, 2), (0.94, 5), (0.921, 25)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.96, 66), (0.97, 165), (0.95, 7), (0.98, 159), (0.94, 5), (0.93, 30), (0.92, 25), (0.91, 3)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:29:02 | YES 0.0400 | NO 0.9700 | 59s left | ABS 0.089 | BPS -3.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.96 unchanged
+03:29:19 | YES 0.0290 | NO 0.9850 | 42s left | ABS 0.089 | BPS -3.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.97 unchanged
+03:29:37 | YES 0.0290 | NO 0.9850 | 25s left | ABS 0.082 | BPS -3.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.97 unchanged
+             Conv:      7.3 (HIGH) → 1.40× risk $7.00 (STABLE) | BDI 208 | sized 9→9c
+04:06:38 | YES 0.1700 | NO 0.8400 | 504s left | ABS 0.112 | BPS -5.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 9 | READY | → PAQ_AGG_BCDP | NO | BCDP 8C | PASS
+          → PHI HARVEST BOOST | PHI9 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 4c | ob_bid 0.8300 | AGGRESSIVE | BDI 126
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.8400 | anchor 0.8300 | mkt_bid 0.8300
+          → HARVEST MISS DIAG | int_bdi 126 | near_bdi(±0.05held) 92 | anchor_depth(±0.02) 15 | raw_levels 70 | parsed_levels(>0.05) 61
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.89, 34), (0.88, 5), (0.87, 2), (0.86, 6), (0.85, 55), (0.84, 11), (0.83, 1), (0.82, 3), (0.8, 9), (0.77, 18), (0.76, 9), (0.71, 5)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.83, 1), (0.84, 11), (0.82, 3), (0.85, 55), (0.81, 3), (0.8, 9), (0.79, 0), (0.78, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:07:17 | YES 0.1000 | NO 0.9030 | 464s left | ABS 0.148 | BPS -5.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9000 | AGGRESSIVE | BDI 124
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9030 | anchor 0.9000 | mkt_bid 0.9000
+          → HARVEST MISS DIAG | int_bdi 124 | near_bdi(±0.05held) 124 | anchor_depth(±0.02) 105 | raw_levels 71 | parsed_levels(>0.05) 62
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.91, 1), (0.908, 3), (0.902, 5), (0.9, 1), (0.89, 95), (0.88, 13), (0.87, 4), (0.86, 2), (0.85, 4), (0.84, 1), (0.83, 8), (0.8, 2)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.9, 9), (0.91, 9), (0.89, 95), (0.92, 0), (0.88, 13), (0.87, 4), (0.86, 2), (0.85, 4)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:07:56 | YES 0.0690 | NO 0.9400 | 425s left | ABS 0.175 | BPS -5.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 119
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9400 | anchor 0.9300 | mkt_bid 0.9310
+          → HARVEST MISS DIAG | int_bdi 119 | near_bdi(±0.05held) 119 | anchor_depth(±0.02) 6 | raw_levels 82 | parsed_levels(>0.05) 59
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.912, 6), (0.91, 95), (0.9, 1), (0.89, 17), (0.88, 1), (0.86, 100), (0.84, 3), (0.82, 8), (0.8, 2), (0.76, 9), (0.66, 35), (0.65, 10)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.93, 0), (0.94, 0), (0.92, 6), (0.95, 0), (0.91, 101), (0.9, 1), (0.89, 17), (0.88, 1)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:08:36 | YES 0.0870 | NO 0.9290 | 386s left | ABS 0.174 | BPS -4.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 146
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9290 | anchor 0.9100 | mkt_bid 0.9130
+          → HARVEST MISS DIAG | int_bdi 146 | near_bdi(±0.05held) 146 | anchor_depth(±0.02) 70 | raw_levels 90 | parsed_levels(>0.05) 67
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.949, 1), (0.942, 5), (0.94, 1), (0.937, 55), (0.93, 6), (0.92, 6), (0.919, 50), (0.911, 4), (0.91, 7), (0.9, 3), (0.89, 8), (0.84, 1)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.91, 61), (0.92, 60), (0.9, 3), (0.93, 62), (0.89, 8), (0.88, 0), (0.87, 0), (0.86, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:09:15 | YES 0.0560 | NO 0.9530 | 346s left | ABS 0.158 | BPS -3.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9400 | AGGRESSIVE | BDI 330
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9530 | anchor 0.9400 | mkt_bid 0.9440
+          → HARVEST MISS DIAG | int_bdi 330 | near_bdi(±0.05held) 330 | anchor_depth(±0.02) 224 | raw_levels 93 | parsed_levels(>0.05) 70
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.968, 1), (0.96, 93), (0.959, 45), (0.958, 52), (0.952, 5), (0.95, 13), (0.945, 38), (0.944, 50), (0.94, 3), (0.939, 4), (0.93, 8), (0.92, 6)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.94, 103), (0.95, 203), (0.93, 15), (0.96, 196), (0.92, 6), (0.91, 12), (0.9, 0), (0.89, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:09:55 | YES 0.0200 | NO 0.9860 | 307s left | ABS 0.202 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 405
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9860 | anchor 0.9800 | mkt_bid 0.9800
+          → HARVEST MISS DIAG | int_bdi 405 | near_bdi(±0.05held) 405 | anchor_depth(±0.02) 222 | raw_levels 96 | parsed_levels(>0.05) 73
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.981, 100), (0.98, 1), (0.979, 29), (0.976, 45), (0.972, 5), (0.971, 13), (0.97, 25), (0.961, 4), (0.96, 91), (0.958, 52), (0.95, 1), (0.945, 38)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 193), (0.97, 121), (0.96, 147), (0.95, 91), (0.94, 41), (0.93, 3)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:10:34 | YES 0.0090 | NO 0.9960 | 268s left | ABS 0.206 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:11:11 | YES 0.0090 | NO 0.9960 | 231s left | ABS 0.182 | BPS -2.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:11:28 | YES 0.0080 | NO 0.9970 | 214s left | ABS 0.243 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:11:45 | YES 0.0080 | NO 0.9970 | 196s left | ABS 0.247 | BPS -4.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:12:03 | YES 0.0060 | NO 0.9950 | 178s left | ABS 0.242 | BPS -3.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:12:20 | YES 0.0040 | NO 0.9970 | 161s left | ABS 0.242 | BPS -2.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:12:37 | YES 0.0040 | NO 0.9970 | 144s left | ABS 0.242 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:12:55 | YES 0.0040 | NO 0.9990 | 127s left | ABS 0.242 | BPS -1.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:13:12 | YES 0.0040 | NO 0.9990 | 109s left | ABS 0.230 | BPS +0.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 7C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:13:30 | YES 0.0020 | NO 0.9990 | 92s left | ABS 0.239 | BPS -1.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:13:48 | YES 0.0050 | NO 0.9990 | 74s left | ABS 0.239 | BPS -1.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:14:06 | YES 0.0050 | NO 0.9990 | 56s left | ABS 0.240 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:14:23 | YES 0.0050 | NO 0.9990 | 38s left | ABS 0.235 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:14:40 | YES 0.0010 | NO 1.0000 | 21s left | ABS 0.219 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+04:14:58 | YES 0.0010 | NO 1.0000 | 3s left | ABS 0.220 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 7C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+09:08:02 | YES 0.1100 | NO 0.9000 | 419s left | ABS 0.168 | BPS -2.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 51
+09:08:39 | YES 0.0690 | NO 0.9380 | 382s left | ABS 0.204 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 175
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9300 | +$0.13
+09:09:17 | YES 0.0680 | NO 0.9400 | 345s left | ABS 0.192 | BPS -2.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 60
+09:09:54 | YES 0.0420 | NO 0.9600 | 308s left | ABS 0.235 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9500 | AGGRESSIVE | BDI 212
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9500 | +$0.15
+09:10:32 | YES 0.0280 | NO 0.9760 | 270s left | ABS 0.221 | BPS -2.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 45
+09:11:09 | YES 0.0210 | NO 0.9840 | 233s left | ABS 0.207 | BPS -2.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9700 | AGGRESSIVE | BDI 133
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9600 | +$0.16
+          → STOP | NO | FORCED_EXIT_AFTER_HOLD1 | FULL | 3/3c
+          → STOP ANCHOR | 0.7500 [snap_bid]
+          → PHI HARVEST BOOST | PHI32 | NO | boosted tranche 1c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.77
+09:51:01 | YES 0.6300 | NO 0.3900 | 541s left | ABS 0.096 | BPS +2.0 | PAQ 5 | CTX 2 STATE 1 EXP 2 | BCDP 8C | PHI 85
+09:51:38 | YES 0.6900 | NO 0.3200 | 504s left | ABS 0.079 | BPS +1.0 | PAQ 3 | CTX 1 STATE 1 EXP 1 | BCDP 8C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | YES | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.69
+09:57:30 | YES 0.9860 | NO 0.0300 | 151s left | ABS 0.307 | BPS +4.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 55
+09:57:48 | YES 0.9860 | NO 0.0300 | 133s left | ABS 0.192 | BPS +3.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | YES | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.99
+09:58:05 | YES 0.9400 | NO 0.0780 | 116s left | ABS 0.137 | BPS +2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | YES | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.94
+09:58:23 | YES 0.9400 | NO 0.0780 | 99s left | ABS 0.083 | BPS +1.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 8C | PHI 40
+09:58:40 | YES 0.9090 | NO 0.1100 | 81s left | ABS 0.069 | BPS +0.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 7C | PHI 20
+          → PHI HARVEST BOOST | PHI20 | YES | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.91
+10:04:24 | YES 0.7900 | NO 0.2200 | 637s left | ABS 0.108 | BPS +1.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 5C | PHI 76 | READY | → PAQ_AGG_BCDP | YES | BCDP 4C | PASS
+10:05:01 | YES 0.8000 | NO 0.2100 | 600s left | ABS 0.054 | BPS +3.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 6C | PHI 37
+          → PHI HARVEST BOOST | PHI36 | YES | boosted tranche 1c
+          → HARVEST SPHI_DECAY | YES 1c | ob_bid 0.7900 | STANDARD | BDI 31
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.7800 | +$-0.06
+10:36:14 | YES 0.1600 | NO 0.8500 | 528s left | ABS 0.151 | BPS -4.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 7C | PHI 40
+10:36:51 | YES 0.1900 | NO 0.8200 | 490s left | ABS 0.168 | BPS -4.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 7C | PHI 25
+          → PHI HARVEST BOOST | PHI25 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 2c | ob_bid 0.8100 | AGGRESSIVE | BDI 192
+          → HARVEST DONE | SPHI_DECAY | 2c @ 0.8100 | +$-0.12
+10:37:28 | YES 0.2000 | NO 0.8100 | 453s left | ABS 0.100 | BPS -3.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 55
+10:38:06 | YES 0.1100 | NO 0.9000 | 416s left | ABS 0.197 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 19
+          → PHI HARVEST BOOST | PHI19 | NO | boosted tranche 1c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8900 | AGGRESSIVE | BDI 185
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.8900 | +$0.02
+10:38:43 | YES 0.0500 | NO 0.9510 | 378s left | ABS 0.237 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 11
+          → PHI HARVEST BOOST | PHI11 | NO | boosted tranche 1c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9500 | AGGRESSIVE | BDI 205
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9500 | +$0.08
+13:20:59 | YES 0.2300 | NO 0.7800 | 542s left | ABS 0.179 | BPS -4.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 7C | PHI 68
+13:21:37 | YES 0.1600 | NO 0.8500 | 505s left | ABS 0.220 | BPS -4.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 24
+          → PHI HARVEST BOOST | PHI24 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8400 | AGGRESSIVE | BDI 67
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.8400 | +$0.07
+13:22:14 | YES 0.1400 | NO 0.8700 | 467s left | ABS 0.213 | BPS -3.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | NO | boosted tranche 3c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8600 | AGGRESSIVE | BDI 69
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.8600 | +$0.09
+13:22:51 | YES 0.1200 | NO 0.8900 | 430s left | ABS 0.239 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 16
+          → PHI HARVEST BOOST | PHI16 | NO | boosted tranche 3c
+          → HARVEST SPHI_DECAY | NO 3c | ob_bid 0.8800 | AGGRESSIVE | BDI 210
+          → HARVEST DONE | SPHI_DECAY | 3c @ 0.8800 | +$0.33
+13:23:29 | YES 0.0930 | NO 0.9140 | 392s left | ABS 0.312 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9000 | AGGRESSIVE | BDI 670
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9000 | +$0.13
+13:24:07 | YES 0.0190 | NO 0.9850 | 355s left | ABS 0.366 | BPS -4.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 1c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 167
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9800 | +$0.21
+13:24:44 | YES 0.0100 | NO 0.9940 | 318s left | ABS 0.399 | BPS -4.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 1c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 276
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9800 | +$0.21
+17:12:14 | YES 0.3800 | NO 0.6500 | 167s left | ABS 0.008 | BPS +0.0 | PAQ 1 | CTX 1 STATE 0 EXP 0 | BCDP 2 | PHI 40
+17:12:31 | YES 0.0900 | NO 0.9190 | 151s left | ABS 0.070 | BPS +0.0 | PAQ 1 | CTX 1 STATE 0 EXP 0 | BCDP 2 | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 375
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9190 | anchor 0.9100 | mkt_bid 0.9100
+          → HARVEST MISS DIAG | int_bdi 375 | near_bdi(±0.05held) 359 | anchor_depth(±0.02) 93 | raw_levels 104 | parsed_levels(>0.05) 80
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.976, 10), (0.97, 6), (0.969, 5), (0.968, 4), (0.962, 35), (0.961, 23), (0.96, 19), (0.958, 60), (0.952, 5), (0.951, 4), (0.95, 3), (0.94, 30)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.91, 20), (0.92, 72), (0.9, 1), (0.93, 62), (0.89, 20), (0.88, 30), (0.87, 1), (0.86, 10)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:12:49 | YES 0.0900 | NO 0.9190 | 132s left | ABS 0.104 | BPS -1.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 3 | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 498
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9190 | anchor 0.9100 | mkt_bid 0.9100
+          → HARVEST MISS DIAG | int_bdi 498 | near_bdi(±0.05held) 262 | anchor_depth(±0.02) 113 | raw_levels 103 | parsed_levels(>0.05) 80
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.986, 18), (0.985, 80), (0.984, 4), (0.983, 18), (0.981, 17), (0.98, 30), (0.972, 5), (0.971, 60), (0.97, 4), (0.96, 3), (0.95, 1), (0.949, 25)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.91, 30), (0.92, 82), (0.9, 1), (0.93, 97), (0.89, 20), (0.88, 10), (0.87, 5), (0.86, 12)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:13:08 | YES 0.0170 | NO 0.9880 | 113s left | ABS 0.137 | BPS -4.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 360
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9880 | anchor 0.9800 | mkt_bid 0.9830
+          → HARVEST MISS DIAG | int_bdi 360 | near_bdi(±0.05held) 360 | anchor_depth(±0.02) 265 | raw_levels 100 | parsed_levels(>0.05) 77
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.995, 10), (0.994, 2), (0.993, 4), (0.992, 2), (0.991, 51), (0.99, 42), (0.985, 85), (0.984, 3), (0.983, 3), (0.982, 7), (0.981, 3), (0.98, 46)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 152), (0.97, 7), (0.96, 33), (0.95, 1), (0.94, 82), (0.93, 97)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:13:26 | YES 0.0040 | NO 0.9990 | 95s left | ABS 0.143 | BPS -5.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 481
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9990 | anchor 0.9900 | mkt_bid 0.9960
+          → HARVEST MISS DIAG | int_bdi 481 | near_bdi(±0.05held) 481 | anchor_depth(±0.02) 454 | raw_levels 100 | parsed_levels(>0.05) 77
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.999, 111), (0.997, 48), (0.996, 40), (0.995, 63), (0.993, 2), (0.992, 2), (0.991, 20), (0.99, 84), (0.988, 60), (0.987, 2), (0.986, 3), (0.985, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 84), (0.97, 8), (0.96, 23), (0.95, 1), (0.94, 72)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:13:44 | YES 0.0040 | NO 0.9990 | 77s left | ABS 0.149 | BPS -6.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 380
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9990 | anchor 0.9900 | mkt_bid 0.9960
+          → HARVEST MISS DIAG | int_bdi 380 | near_bdi(±0.05held) 380 | anchor_depth(±0.02) 352 | raw_levels 102 | parsed_levels(>0.05) 79
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.999, 133), (0.997, 48), (0.996, 55), (0.995, 10), (0.993, 2), (0.992, 2), (0.991, 20), (0.99, 61), (0.989, 2), (0.988, 3), (0.987, 3), (0.986, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 21), (0.97, 8), (0.96, 24), (0.95, 1), (0.94, 2)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:14:03 | YES 0.0010 | NO 1.0000 | 59s left | ABS 0.197 | BPS -5.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 5C | PHI 45
+17:14:20 | YES 0.0010 | NO 1.0000 | 41s left | ABS 0.231 | BPS -5.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 518
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 1.0000 | anchor 0.9900 | mkt_bid 0.9990
+          → HARVEST MISS DIAG | int_bdi 518 | near_bdi(±0.05held) 514 | anchor_depth(±0.02) 470 | raw_levels 103 | parsed_levels(>0.05) 80
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.999, 131), (0.998, 30), (0.997, 51), (0.995, 12), (0.994, 30), (0.993, 2), (0.992, 9), (0.991, 20), (0.99, 72), (0.989, 2), (0.988, 3), (0.987, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 113), (0.97, 9), (0.96, 35), (0.95, 4), (0.94, 2)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:23:00 | YES 0.5700 | NO 0.4400 | 422s left | ABS 0.061 | BPS +3.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 6 | PHI 55
+17:23:37 | YES 0.6000 | NO 0.4100 | 385s left | ABS 0.053 | BPS +2.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 7 | PHI 35
+          → PHI HARVEST BOOST | PHI35 | YES | boosted tranche 2c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.60
+18:07:39 | YES 0.5400 | NO 0.4700 | 443s left | ABS 0.087 | BPS +3.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 55
+18:08:17 | YES 0.6100 | NO 0.4100 | 405s left | ABS 0.092 | BPS +3.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | YES | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.61
+18:08:55 | YES 0.5200 | NO 0.4900 | 367s left | ABS 0.015 | BPS +0.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 7C | PHI 17
+          → PHI HARVEST BOOST | PHI17 | YES | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.52
+18:10:10 | YES 0.5200 | NO 0.5000 | 292s left | ABS 0.111 | BPS +2.0 | PAQ 4 | CTX 1 STATE 1 EXP 2 | BCDP 7C | PHI 62
+18:10:47 | YES 0.4900 | NO 0.5400 | 254s left | ABS 0.042 | BPS +2.0 | PAQ 2 | CTX 1 STATE 1 EXP 0 | BCDP 7C | PHI 28
+          → PHI HARVEST BOOST | PHI28 | YES | boosted tranche 4c
+          → HARVEST SPHI_DECAY | YES 4c | ob_bid 0.4600 | AGGRESSIVE | BDI 364
+          → HARVEST DONE | SPHI_DECAY | 4c @ 0.4600 | +$-0.28
+18:12:35 | YES 0.9200 | NO 0.0900 | 146s left | ABS 0.156 | BPS +5.0 | PAQ 6 | CTX 2 STATE 2 EXP 2 | BCDP 8C | PHI 100
+18:12:53 | YES 0.9200 | NO 0.0900 | 129s left | ABS 0.086 | BPS +4.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 8C | PHI 20
+          → PHI HARVEST BOOST | PHI20 | YES | boosted tranche 2c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.92
+18:13:10 | YES 0.7200 | NO 0.3000 | 111s left | ABS 0.076 | BPS +3.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 8C | PHI 20
+          → PHI HARVEST BOOST | PHI20 | YES | boosted tranche 2c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.72
+18:13:28 | YES 0.6100 | NO 0.4100 | 94s left | ABS 0.069 | BPS +2.0 | PAQ 2 | CTX 2 STATE 0 EXP 0 | BCDP 8C | PHI 20
+          → PHI HARVEST BOOST | PHI20 | YES | boosted tranche 2c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.61
+18:21:51 | YES 0.2000 | NO 0.8100 | 490s left | ABS 0.213 | BPS -2.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 55
+18:22:28 | YES 0.1600 | NO 0.8500 | 453s left | ABS 0.255 | BPS -2.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 19
+          → PHI HARVEST BOOST | PHI19 | NO | boosted tranche 5c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8400 | AGGRESSIVE | BDI 41
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.8200 | +$0.00
+18:23:07 | YES 0.1600 | NO 0.8500 | 414s left | ABS 0.210 | BPS -2.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C | PHI 14
+          → PHI HARVEST BOOST | PHI14 | NO | boosted tranche 5c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.85
+18:25:37 | YES 0.1600 | NO 0.8700 | 265s left | ABS 0.242 | BPS -2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 45
+18:26:14 | YES 0.0770 | NO 0.9340 | 227s left | ABS 0.234 | BPS -2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 34
+          → PHI HARVEST BOOST | PHI34 | NO | boosted tranche 5c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9200 | AGGRESSIVE | BDI 358
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9200 | +$0.10
+18:26:32 | YES 0.0770 | NO 0.9340 | 209s left | ABS 0.217 | BPS -2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 34
+          → PHI HARVEST BOOST | PHI34 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9200 | AGGRESSIVE | BDI 86
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9200 | +$0.10
+18:26:50 | YES 0.0700 | NO 0.9390 | 192s left | ABS 0.194 | BPS -2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 33
+          → PHI HARVEST BOOST | PHI33 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 476
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9300 | +$0.11
+18:27:07 | YES 0.0700 | NO 0.9390 | 174s left | ABS 0.230 | BPS -2.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 8C | PHI 14
+          → PHI HARVEST BOOST | PHI16 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 95
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9200 | +$0.10
+18:27:25 | YES 0.0290 | NO 0.9750 | 156s left | ABS 0.155 | BPS -1.0 | PAQ 4 | CTX 1 STATE 1 EXP 2 | BCDP 8C | PHI 25
+          → PHI HARVEST BOOST | PHI25 | NO | boosted tranche 3c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.97
+18:28:00 | YES 0.1400 | NO 0.8800 | 121s left | ABS 0.156 | BPS -2.0 | PAQ 3 | CTX 1 STATE 1 EXP 1 | BCDP 8C | PHI 44
+18:28:17 | YES 0.0460 | NO 0.9590 | 104s left | ABS 0.166 | BPS -3.0 | PAQ 3 | CTX 1 STATE 1 EXP 1 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 3c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9500 | AGGRESSIVE | BDI 285
+          → HARVEST DONE | SPHI_DECAY | 1c @ 0.9500 | +$0.13
+18:28:35 | YES 0.0460 | NO 0.9590 | 86s left | ABS 0.165 | BPS -2.0 | PAQ 4 | CTX 1 STATE 1 EXP 2 | BCDP 8C | PHI 25
+          → PHI HARVEST BOOST | PHI25 | NO | boosted tranche 3c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.96
+19:08:08 | YES 0.3400 | NO 0.6700 | 414s left | ABS 0.090 | BPS -2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 45
+19:08:45 | YES 0.3400 | NO 0.6700 | 377s left | ABS 0.079 | BPS -2.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 8C | PHI 25
+          → PHI HARVEST BOOST | PHI25 | NO | boosted tranche 4c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.67
+
+===============================================================================
+SECTION 4: HARVEST MISS EVENTS (Failed Profit Takes)
+===============================================================================
+
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8900 | AGGRESSIVE | BDI 84
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9000 | anchor 0.8900 | mkt_bid 0.8900
+          → HARVEST MISS DIAG | int_bdi 84 | near_bdi(±0.05held) 84 | anchor_depth(±0.02) 45 | raw_levels 72 | parsed_levels(>0.05) 49
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.92, 2), (0.912, 5), (0.91, 24), (0.9, 37), (0.89, 4), (0.88, 4), (0.87, 8), (0.82, 15), (0.81, 1), (0.8, 65), (0.78, 3), (0.77, 20)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.89, 4), (0.9, 37), (0.88, 4), (0.91, 29), (0.87, 8), (0.86, 0), (0.85, 0), (0.84, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:26:37 | YES 0.0700 | NO 0.9310 | 205s left | ABS 0.120 | BPS -4.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 45
+03:26:54 | YES 0.0700 | NO 0.9310 | 187s left | ABS 0.109 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 10
+          → PHI HARVEST BOOST | PHI10 | NO | boosted tranche 2c
+--
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8500 | AGGRESSIVE | BDI 229
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.8800 | anchor 0.8500 | mkt_bid 0.8500
+          → HARVEST MISS DIAG | int_bdi 229 | near_bdi(±0.05held) 185 | anchor_depth(±0.02) 52 | raw_levels 72 | parsed_levels(>0.05) 49
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.93, 28), (0.92, 56), (0.903, 4), (0.902, 5), (0.9, 7), (0.88, 60), (0.87, 1), (0.86, 24), (0.85, 14), (0.84, 14), (0.83, 16), (0.78, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.85, 14), (0.86, 24), (0.84, 14), (0.87, 1), (0.83, 16), (0.82, 0), (0.81, 0), (0.8, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:28:24 | YES 0.1400 | NO 0.8800 | 98s left | ABS 0.080 | BPS -1.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 35
+          → PHI HARVEST BOOST | PHI35 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8600 | AGGRESSIVE | BDI 273
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.8800 | anchor 0.8600 | mkt_bid 0.8600
+          → HARVEST MISS DIAG | int_bdi 273 | near_bdi(±0.05held) 122 | anchor_depth(±0.02) 21 | raw_levels 79 | parsed_levels(>0.05) 56
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.97, 11), (0.961, 26), (0.96, 33), (0.959, 1), (0.95, 9), (0.942, 9), (0.94, 4), (0.939, 4), (0.934, 50), (0.92, 3), (0.91, 8), (0.904, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.86, 6), (0.87, 1), (0.85, 14), (0.88, 73), (0.84, 14), (0.83, 4), (0.82, 0), (0.81, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:28:43 | YES 0.0400 | NO 0.9700 | 78s left | ABS 0.086 | BPS -2.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9600 | AGGRESSIVE | BDI 265
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9700 | anchor 0.9600 | mkt_bid 0.9600
+          → HARVEST MISS DIAG | int_bdi 265 | near_bdi(±0.05held) 265 | anchor_depth(±0.02) 179 | raw_levels 82 | parsed_levels(>0.05) 59
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.983, 55), (0.98, 1), (0.972, 45), (0.971, 58), (0.97, 8), (0.965, 50), (0.962, 4), (0.96, 7), (0.959, 5), (0.95, 2), (0.94, 5), (0.921, 25)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.96, 66), (0.97, 165), (0.95, 7), (0.98, 159), (0.94, 5), (0.93, 30), (0.92, 25), (0.91, 3)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+03:29:02 | YES 0.0400 | NO 0.9700 | 59s left | ABS 0.089 | BPS -3.0 | PAQ 1 | CTX 0 STATE 1 EXP 0 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 2c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.96 unchanged
+--
+          → HARVEST SPHI_DECAY | NO 4c | ob_bid 0.8300 | AGGRESSIVE | BDI 126
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.8400 | anchor 0.8300 | mkt_bid 0.8300
+          → HARVEST MISS DIAG | int_bdi 126 | near_bdi(±0.05held) 92 | anchor_depth(±0.02) 15 | raw_levels 70 | parsed_levels(>0.05) 61
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.89, 34), (0.88, 5), (0.87, 2), (0.86, 6), (0.85, 55), (0.84, 11), (0.83, 1), (0.82, 3), (0.8, 9), (0.77, 18), (0.76, 9), (0.71, 5)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.83, 1), (0.84, 11), (0.82, 3), (0.85, 55), (0.81, 3), (0.8, 9), (0.79, 0), (0.78, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:07:17 | YES 0.1000 | NO 0.9030 | 464s left | ABS 0.148 | BPS -5.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9000 | AGGRESSIVE | BDI 124
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9030 | anchor 0.9000 | mkt_bid 0.9000
+          → HARVEST MISS DIAG | int_bdi 124 | near_bdi(±0.05held) 124 | anchor_depth(±0.02) 105 | raw_levels 71 | parsed_levels(>0.05) 62
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.91, 1), (0.908, 3), (0.902, 5), (0.9, 1), (0.89, 95), (0.88, 13), (0.87, 4), (0.86, 2), (0.85, 4), (0.84, 1), (0.83, 8), (0.8, 2)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.9, 9), (0.91, 9), (0.89, 95), (0.92, 0), (0.88, 13), (0.87, 4), (0.86, 2), (0.85, 4)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:07:56 | YES 0.0690 | NO 0.9400 | 425s left | ABS 0.175 | BPS -5.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 119
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9400 | anchor 0.9300 | mkt_bid 0.9310
+          → HARVEST MISS DIAG | int_bdi 119 | near_bdi(±0.05held) 119 | anchor_depth(±0.02) 6 | raw_levels 82 | parsed_levels(>0.05) 59
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.912, 6), (0.91, 95), (0.9, 1), (0.89, 17), (0.88, 1), (0.86, 100), (0.84, 3), (0.82, 8), (0.8, 2), (0.76, 9), (0.66, 35), (0.65, 10)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.93, 0), (0.94, 0), (0.92, 6), (0.95, 0), (0.91, 101), (0.9, 1), (0.89, 17), (0.88, 1)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:08:36 | YES 0.0870 | NO 0.9290 | 386s left | ABS 0.174 | BPS -4.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 8C | PHI 15
+          → PHI HARVEST BOOST | PHI15 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 146
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9290 | anchor 0.9100 | mkt_bid 0.9130
+          → HARVEST MISS DIAG | int_bdi 146 | near_bdi(±0.05held) 146 | anchor_depth(±0.02) 70 | raw_levels 90 | parsed_levels(>0.05) 67
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.949, 1), (0.942, 5), (0.94, 1), (0.937, 55), (0.93, 6), (0.92, 6), (0.919, 50), (0.911, 4), (0.91, 7), (0.9, 3), (0.89, 8), (0.84, 1)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.91, 61), (0.92, 60), (0.9, 3), (0.93, 62), (0.89, 8), (0.88, 0), (0.87, 0), (0.86, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:09:15 | YES 0.0560 | NO 0.9530 | 346s left | ABS 0.158 | BPS -3.0 | PAQ 3 | CTX 0 STATE 1 EXP 2 | BCDP 8C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9400 | AGGRESSIVE | BDI 330
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9530 | anchor 0.9400 | mkt_bid 0.9440
+          → HARVEST MISS DIAG | int_bdi 330 | near_bdi(±0.05held) 330 | anchor_depth(±0.02) 224 | raw_levels 93 | parsed_levels(>0.05) 70
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.968, 1), (0.96, 93), (0.959, 45), (0.958, 52), (0.952, 5), (0.95, 13), (0.945, 38), (0.944, 50), (0.94, 3), (0.939, 4), (0.93, 8), (0.92, 6)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.94, 103), (0.95, 203), (0.93, 15), (0.96, 196), (0.92, 6), (0.91, 12), (0.9, 0), (0.89, 0)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:09:55 | YES 0.0200 | NO 0.9860 | 307s left | ABS 0.202 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 405
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9860 | anchor 0.9800 | mkt_bid 0.9800
+          → HARVEST MISS DIAG | int_bdi 405 | near_bdi(±0.05held) 405 | anchor_depth(±0.02) 222 | raw_levels 96 | parsed_levels(>0.05) 73
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.981, 100), (0.98, 1), (0.979, 29), (0.976, 45), (0.972, 5), (0.971, 13), (0.97, 25), (0.961, 4), (0.96, 91), (0.958, 52), (0.95, 1), (0.945, 38)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 193), (0.97, 121), (0.96, 147), (0.95, 91), (0.94, 41), (0.93, 3)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+04:10:34 | YES 0.0090 | NO 0.9960 | 268s left | ABS 0.206 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 8C | PHI 0
+          → PHI HARVEST BOOST | PHI0 | NO | boosted tranche 4c
+          → HARVEST COOL | SPHI_DECAY | streak 3 | anchor 0.99 unchanged
+--
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 375
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9190 | anchor 0.9100 | mkt_bid 0.9100
+          → HARVEST MISS DIAG | int_bdi 375 | near_bdi(±0.05held) 359 | anchor_depth(±0.02) 93 | raw_levels 104 | parsed_levels(>0.05) 80
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.976, 10), (0.97, 6), (0.969, 5), (0.968, 4), (0.962, 35), (0.961, 23), (0.96, 19), (0.958, 60), (0.952, 5), (0.951, 4), (0.95, 3), (0.94, 30)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.91, 20), (0.92, 72), (0.9, 1), (0.93, 62), (0.89, 20), (0.88, 30), (0.87, 1), (0.86, 10)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:12:49 | YES 0.0900 | NO 0.9190 | 132s left | ABS 0.104 | BPS -1.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 3 | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 498
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9190 | anchor 0.9100 | mkt_bid 0.9100
+          → HARVEST MISS DIAG | int_bdi 498 | near_bdi(±0.05held) 262 | anchor_depth(±0.02) 113 | raw_levels 103 | parsed_levels(>0.05) 80
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.986, 18), (0.985, 80), (0.984, 4), (0.983, 18), (0.981, 17), (0.98, 30), (0.972, 5), (0.971, 60), (0.97, 4), (0.96, 3), (0.95, 1), (0.949, 25)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.91, 30), (0.92, 82), (0.9, 1), (0.93, 97), (0.89, 20), (0.88, 10), (0.87, 5), (0.86, 12)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:13:08 | YES 0.0170 | NO 0.9880 | 113s left | ABS 0.137 | BPS -4.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 360
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9880 | anchor 0.9800 | mkt_bid 0.9830
+          → HARVEST MISS DIAG | int_bdi 360 | near_bdi(±0.05held) 360 | anchor_depth(±0.02) 265 | raw_levels 100 | parsed_levels(>0.05) 77
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.995, 10), (0.994, 2), (0.993, 4), (0.992, 2), (0.991, 51), (0.99, 42), (0.985, 85), (0.984, 3), (0.983, 3), (0.982, 7), (0.981, 3), (0.98, 46)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 152), (0.97, 7), (0.96, 33), (0.95, 1), (0.94, 82), (0.93, 97)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:13:26 | YES 0.0040 | NO 0.9990 | 95s left | ABS 0.143 | BPS -5.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 481
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9990 | anchor 0.9900 | mkt_bid 0.9960
+          → HARVEST MISS DIAG | int_bdi 481 | near_bdi(±0.05held) 481 | anchor_depth(±0.02) 454 | raw_levels 100 | parsed_levels(>0.05) 77
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.999, 111), (0.997, 48), (0.996, 40), (0.995, 63), (0.993, 2), (0.992, 2), (0.991, 20), (0.99, 84), (0.988, 60), (0.987, 2), (0.986, 3), (0.985, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 84), (0.97, 8), (0.96, 23), (0.95, 1), (0.94, 72)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:13:44 | YES 0.0040 | NO 0.9990 | 77s left | ABS 0.149 | BPS -6.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 380
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 0.9990 | anchor 0.9900 | mkt_bid 0.9960
+          → HARVEST MISS DIAG | int_bdi 380 | near_bdi(±0.05held) 380 | anchor_depth(±0.02) 352 | raw_levels 102 | parsed_levels(>0.05) 79
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.999, 133), (0.997, 48), (0.996, 55), (0.995, 10), (0.993, 2), (0.992, 2), (0.991, 20), (0.99, 61), (0.989, 2), (0.988, 3), (0.987, 3), (0.986, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 21), (0.97, 8), (0.96, 24), (0.95, 1), (0.94, 2)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:14:03 | YES 0.0010 | NO 1.0000 | 59s left | ABS 0.197 | BPS -5.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 5C | PHI 45
+17:14:20 | YES 0.0010 | NO 1.0000 | 41s left | ABS 0.231 | BPS -5.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 6C | PHI 30
+          → PHI HARVEST BOOST | PHI30 | NO | boosted tranche 4c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 518
+          → HARVEST MISS | SPHI_DECAY
+          → HARVEST MISS DIAG | SPHI_DECAY NO | held 1.0000 | anchor 0.9900 | mkt_bid 0.9990
+          → HARVEST MISS DIAG | int_bdi 518 | near_bdi(±0.05held) 514 | anchor_depth(±0.02) 470 | raw_levels 103 | parsed_levels(>0.05) 80
+          → HARVEST MISS DIAG | parsed_ob(top12): [(0.999, 131), (0.998, 30), (0.997, 51), (0.995, 12), (0.994, 30), (0.993, 2), (0.992, 9), (0.991, 20), (0.99, 72), (0.989, 2), (0.988, 3), (0.987, 3)]
+          → HARVEST MISS DIAG | rung_depth(±0.01): [(0.98, 113), (0.97, 9), (0.96, 35), (0.95, 4), (0.94, 2)]
+          → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+17:14:38 | YES 0.0010 | NO 1.0000 | 24s left | ABS 0.211 | BPS -4.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 7C | PHI 45
+17:14:56 | YES 0.0010 | NO 1.0000 | 6s left | ABS 0.201 | BPS -3.0 | PAQ 3 | CTX 1 STATE 0 EXP 2 | BCDP 8C | PHI 45
+17:15:13 | YES 0.0010 | NO 1.0000 | -10s left | ABS 0.227 | BPS -3.0 | PAQ 2 | CTX 0 STATE 1 EXP 1 | BCDP 8C | PHI 10
+
+===============================================================================
+SECTION 5: STOP EVENTS (Trade Stops/Exits)
+===============================================================================
+
+09:13:10 | YES 0.2500 | NO 0.7700 | 111s left | ABS 0.023 | BPS +0.0 | PAQ 4 | CTX 2 STATE 2 EXP 0 | BCDP 3C | PHI 80
+          → CONTRACT VELOCITY | NO | PRICE_VEL_1P | drop 0.178 in 1 poll | held 0.7700 | pre-drop 0.9500 | PAQ 4 | 111s
+          → STOP TRIGGER | CONTRACT_VELOCITY | NO | PAQ 4 | BPS +0.0 | abs 0.023% | 111s | harvested 100%
+          → POS WARNING | API 0 local 3
+          → STOP HOLD | CONTRACT_VELOCITY | NO | BDI 0 ’0.7700 3c held | EXIT_PENDING_BDI0_HOLD1
+09:13:28 | YES 0.2500 | NO 0.7700 | 94s left | ABS 0.074 | BPS +2.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 1 | PHI 32
+          → FORCED_EXIT_AFTER_HOLD1 | NO | 3c | hold_px 0.7700 → now 0.7700 (+0.0000) | 94s
+          → POS WARNING | API 0 local 3
+          → EXIT_ESCALATED_AFTER_BDI0 | FORCED_EXIT_AFTER_HOLD1 | NO | 3c | hold_px 0.7700 → now 0.7700 (+0.0000) | forcing full ladder
+          → STOP | NO | FORCED_EXIT_AFTER_HOLD1 | FULL | 3/3c
+          → STOP ANCHOR | 0.7500 [snap_bid]
+          → PHI HARVEST BOOST | PHI32 | NO | boosted tranche 1c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.77
+--
+10:06:54 | YES 0.7200 | NO 0.3000 | 488s left | ABS 0.072 | BPS -2.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 1 | PHI 0
+10:07:31 | YES 0.6900 | NO 0.3200 | 450s left | ABS 0.086 | BPS -3.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 2 | PHI 0 | → REVERSAL_STRONG [B] BPS -2.0 PAQ 1
+          → STOP TRIGGER | PAQ_AGG_OPP_BPS | YES | PAQ 1 | BPS -3.0 | abs 0.086% | 450s
+          → POS WARNING | API 0 local 2
+          → STOP | YES | PAQ_AGG_OPP_BPS | FULL | 2/2c
+          → STOP ANCHOR | 0.6800 [snap_bid]
+          → STOP FILL | attempt 1 | 0.7000
+          → STOP FILLED | YES | PAQ_AGG_OPP_BPS | 2c @ 0.7000 | -$0.28
+LOSS SETTLED | PAQ_EARLY_AGG | YES @ 0.84 (3c) | harvested 1c -0.06 | stopped 2c -0.28 | NET -$0.34 | bal $88.39
+10:07:51 | YES 0.7500 | NO 0.2800 | 431s left | ABS 0.036 | BPS -3.0 | PAQ 0 | CTX 0 STATE 0 EXP 0 | BCDP 3 | → REVERSAL_STRONG [A] BPS -3.0 PAQ 1
+--
+          → FLIP | YES @ 0.7300 | 589s
+          → FLIP SUPPRESSED | abs 0.017% < 0.02% | 127s
+          → STOP TRIGGER | PAQ1_BPS_SOFT | YES | PAQ 1 | BPS -1.0 | abs 0.017% | 127s
+          → POS WARNING | API 0 local 5
+          → STOP HOLD | PAQ1_BPS_SOFT | YES | BDI 0 ’0.2200 5c held | EXIT_PENDING_BDI0_HOLD1
+10:28:12 | YES 0.2200 | NO 0.8000 | 110s left | ABS 0.075 | BPS -2.0 | PAQ 1 | CTX 1 STATE 0 EXP 0 | BCDP 2 | PHI 0
+          → FORCED_EXIT_AFTER_HOLD1 | YES | 5c | hold_px 0.2200 → now 0.2200 (+0.0000) | 110s
+          → POS WARNING | API 0 local 5
+          → EXIT_ESCALATED_AFTER_BDI0 | FORCED_EXIT_AFTER_HOLD1 | YES | 5c | hold_px 0.2200 → now 0.2200 (+0.0000) | forcing full ladder
+          → STOP | YES | FORCED_EXIT_AFTER_HOLD1 | FULL | 5/5c
+          → STOP ANCHOR | 0.2000 [snap_bid]
+10:28:36 | YES 0.0370 | NO 0.9690 | 86s left | ABS 0.091 | BPS -3.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 3 | PHI 0
+10:28:53 | YES 0.0160 | NO 0.9900 | 68s left | ABS 0.105 | BPS -5.0 | PAQ 2 | CTX 1 STATE 0 EXP 1 | BCDP 4 | PHI 0
+--
+10:56:15 | YES 0.5100 | NO 0.5100 | 227s left | ABS 0.037 | BPS +0.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 6C | PHI 80
+          → CONTRACT VELOCITY | NO | PRICE_VEL_1P | drop 0.260 in 1 poll | held 0.5100 | pre-drop 0.7700 | PAQ 5 | 227s
+          → STOP TRIGGER | CONTRACT_VELOCITY_PARTIAL | NO | PAQ 5 | BPS +0.0 | abs 0.037% | 227s | harvested 0%
+          → POS WARNING | API 0 local 7
+          → STOP PARTIAL_VEL | INTACT | BCDP 6 | BPS +0.0 | harvested 0% | cap 2c
+          → POS WARNING | API 0 local 7
+          → STOP HOLD | CONTRACT_VELOCITY_PARTIAL | NO | BDI 0 ’0.5100 7c held | EXIT_PENDING_BDI0_HOLD1
+10:56:32 | YES 0.7100 | NO 0.3100 | 209s left | ABS 0.011 | BPS +1.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 1 | PHI 76
+          → FORCED_EXIT_AFTER_HOLD1 | NO | 7c | hold_px 0.5100 → now 0.3100 (-0.2000) | 209s
+          → POS WARNING | API 0 local 7
+          → STOP | NO | FORCED_EXIT_AFTER_HOLD1 | FULL | 7/7c
+          → STOP ANCHOR | 0.2900 [snap_bid]
+          → STOP FILL | attempt 1 | 0.3100
+          → FORCED_EXIT_FILLED | NO | 7c @ 0.3100 | -$2.45
+LOSS SETTLED | PAQ_EARLY_AGG | NO @ 0.66 (7c) | stopped 7c -2.45 | NET -$2.45 | bal $82.55
+--
+11:20:40 | YES 0.5500 | NO 0.4700 | 562s left | ABS 0.010 | BPS +1.0 | PAQ 3 | CTX 2 STATE 0 EXP 1 | BCDP 7C | PHI 65
+11:21:17 | YES 0.3900 | NO 0.6200 | 524s left | ABS 0.184 | BPS -2.0 | PAQ 1 | CTX 0 STATE 0 EXP 1 | BCDP 1 | PHI 0
+          → STOP TRIGGER | PAQ_HARD_BPS_FLIP | YES | PAQ 1 | BPS -2.0 | abs 0.184% | 524s
+          → POS WARNING | API 0 local 10
+          → STOP HOLD | PAQ_HARD_BPS_FLIP | YES | BDI 0 ’0.3900 10c held | EXIT_PENDING_BDI0_HOLD1
+11:21:55 | YES 0.1900 | NO 0.8200 | 486s left | ABS 0.167 | BPS +0.0 | PAQ 2 | CTX 0 STATE 0 EXP 2 | BCDP 1 | PHI 45 | → REVERSAL_STRONG [B] BPS -2.0 PAQ 1
+          → FLIP | YES @ 0.4600 | 150s
+          → FORCED_EXIT_AFTER_HOLD1 | YES | 10c | hold_px 0.3900 → now 0.1900 (-0.2000) | 486s
+          → POS WARNING | API 0 local 10
+          → STOP | YES | FORCED_EXIT_AFTER_HOLD1 | FULL | 10/10c
+          → STOP ANCHOR | 0.1800 [snap_bid]
+          → STOP FILL | attempt 1 | 0.2000
+          → FORCED_EXIT_FILLED | YES | 10c @ 0.2000 | -$2.60
+LOSS SETTLED | PAQ_STRUCT_GATE | YES @ 0.46 (10c) | stopped 10c -2.60 | NET -$2.60 | bal $80.78
+--
+12:28:29 | YES 0.5400 | NO 0.4700 | 92s left | ABS 0.031 | BPS -1.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 8C | PHI 100
+          → CONTRACT VELOCITY | NO | PRICE_VEL_1P | drop 0.260 in 1 poll | held 0.4700 | pre-drop 0.7300 | PAQ 5 | 92s
+          → STOP TRIGGER | CONTRACT_VELOCITY_PARTIAL | NO | PAQ 5 | BPS -1.0 | abs 0.031% | 92s | harvested 0%
+          → POS WARNING | API 0 local 3
+          → STOP PARTIAL_VEL | INTACT | BCDP 8 | BPS -1.0 | harvested 0% | cap 1c
+          → POS WARNING | API 0 local 3
+          → STOP | NO | CONTRACT_VELOCITY_PARTIAL | PARTIAL 1/3 | 1/3c
+          → STOP SEVERITY | pre_drop 0.7300 | current 0.4700 | snap 0.2600
+          → STOP ANCHOR | 0.4600 [snap_bid]
+          → STOP FILL | attempt 1 | 0.4600
+          → STOP FILLED | NO | CONTRACT_VELOCITY_PARTIAL | 1c @ 0.4600 | -$0.27
+12:28:47 | YES 0.5400 | NO 0.4700 | 74s left | ABS 0.024 | BPS -1.0 | PAQ 4 | CTX 2 STATE 2 EXP 0 | BCDP 8C
+12:29:06 | YES 0.4000 | NO 0.6200 | 56s left | ABS 0.033 | BPS +1.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 1 | READY | → ABS_TOO_LOW
+--
+17:06:34 | YES 0.4600 | NO 0.5500 | 507s left | ABS 0.005 | BPS +1.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 1 | PHI 60
+          → CONTRACT VELOCITY | NO | PRICE_VEL_1P | drop 0.200 in 1 poll | held 0.5500 | pre-drop 0.7500 | PAQ 5 | 507s
+          → STOP TRIGGER | CONTRACT_VELOCITY | NO | PAQ 5 | BPS +1.0 | abs 0.005% | 507s | harvested 0%
+          → POS WARNING | API 0 local 10
+          → STOP | NO | CONTRACT_VELOCITY | FULL | 10/10c
+          → STOP SEVERITY | pre_drop 0.7500 | current 0.5500 | snap 0.2000
+          → STOP ANCHOR | 0.5400 [snap_bid]
+          → STOP UNFILLED | NO | CONTRACT_VELOCITY | book thin
+17:07:20 | YES 0.4200 | NO 0.6000 | 462s left | ABS 0.032 | BPS +2.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 2 | PHI 52
+17:07:58 | YES 0.4400 | NO 0.5700 | 424s left | ABS 0.040 | BPS +3.0 | PAQ 5 | CTX 2 STATE 2 EXP 1 | BCDP 3 | PHI 24
+--
+          → WES_S1_EXIT | YES | held 0.6800 >= target 0.6800 | 4c | entry 0.5300
+          → POS WARNING | API 0 local 4
+          → STOP | YES | WES_S1_EXIT | FULL | 4/4c
+          → STOP ANCHOR | 0.6700 [snap_bid]
+17:21:31 | YES 0.6900 | NO 0.3200 | 511s left | ABS 0.134 | BPS +5.0 | PAQ 6 | CTX 2 STATE 2 EXP 2 | BCDP 4 | PHI 100
+
+===============================================================================
+SECTION 6: BPS_SESSION FLAGS (ALIGNED/COUNTER)
+===============================================================================
+
+             [BPS_SESSION] EU_MORNING BPS+6.0 → ALIGNED
+             [BPS_SESSION] EU_MORNING BPS-4.0 → ALIGNED
+             [BPS_SESSION] EU_MORNING BPS-4.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS-4.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS+4.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS+4.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS+3.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS-6.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS-2.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS+5.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS+2.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS-3.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS+3.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS-3.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS-2.0 → ALIGNED
+             [BPS_SESSION] NY_PRIME BPS+3.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS+2.0 → COUNTER
+             [BPS_SESSION] NY_PRIME BPS-5.0 → ALIGNED
+
+===============================================================================
+SECTION 7: SETTLE RECHECK EVENTS (Balance Confirmations)
+===============================================================================
+
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $80.97 | pre $80.97
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $83.20 | pre $83.20
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $84.71 | pre $84.71
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $85.34 | pre $85.34
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $85.93 | pre $85.93
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 1 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $80.97 | pre $80.97
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $83.20 | pre $83.20
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $84.84 | pre $84.71
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $85.34 | pre $85.34
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $85.93 | pre $85.93
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 2 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 3 | bal $82.38 | pre $83.20
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 3 | bal $82.91 | pre $80.97
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 3 | bal $85.34 | pre $85.34
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 3 | bal $87.32 | pre $85.93
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 3 | bal $88.39 | pre $88.62
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 3 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 4 | bal $85.34 | pre $85.34
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 4 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 5 | bal $80.97 | pre $85.34
+          → SETTLE RECHECK | PAQ_EARLY_AGG | attempt 5 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_late | attempt 1 | bal $83.13 | pre $83.13
+          → SETTLE RECHECK | bps_late | attempt 1 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_late | attempt 2 | bal $83.13 | pre $83.13
+          → SETTLE RECHECK | bps_late | attempt 2 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_late | attempt 3 | bal $85.77 | pre $83.13
+          → SETTLE RECHECK | bps_late | attempt 3 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_late | attempt 4 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_late | attempt 5 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $82.38 | pre $82.38
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $82.91 | pre $82.91
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $84.02 | pre $84.02
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $84.84 | pre $84.84
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $85.65 | pre $85.65
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $85.77 | pre $85.77
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $87.32 | pre $87.32
+          → SETTLE RECHECK | bps_premium | attempt 1 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $82.38 | pre $82.38
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $82.55 | pre $84.84
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $82.91 | pre $82.91
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $84.02 | pre $84.02
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $85.65 | pre $85.65
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $85.77 | pre $85.77
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $87.32 | pre $87.32
+          → SETTLE RECHECK | bps_premium | attempt 2 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $82.91 | pre $82.91
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $83.13 | pre $82.38
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $85.34 | pre $85.65
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $85.77 | pre $85.77
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $85.93 | pre $84.02
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $87.32 | pre $87.32
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | bps_premium | attempt 3 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_premium | attempt 4 | bal $82.91 | pre $82.91
+          → SETTLE RECHECK | bps_premium | attempt 4 | bal $84.02 | pre $85.77
+          → SETTLE RECHECK | bps_premium | attempt 4 | bal $87.32 | pre $87.32
+          → SETTLE RECHECK | bps_premium | attempt 4 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | bps_premium | attempt 4 | bal $90.56 | pre $90.56
+          → SETTLE RECHECK | bps_premium | attempt 5 | bal $87.32 | pre $87.32
+          → SETTLE RECHECK | bps_premium | attempt 5 | bal $88.62 | pre $88.62
+          → SETTLE RECHECK | bps_premium | attempt 5 | bal $90.56 | pre $90.56
+
+===============================================================================
+SECTION 8: BDI REFERENCES (Breakout Directional Index)
+===============================================================================
+
+             Conv:      6.7 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 113 | sized 5→5c
+             Conv:      5.7 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 343 | sized 6→6c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8900 | AGGRESSIVE | BDI 84
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.93
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.90
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8500 | AGGRESSIVE | BDI 229
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8600 | AGGRESSIVE | BDI 273
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9600 | AGGRESSIVE | BDI 265
+             Conv:      7.3 (HIGH) → 1.40× risk $7.00 (STABLE) | BDI 208 | sized 9→9c
+          → HARVEST SPHI_DECAY | NO 4c | ob_bid 0.8300 | AGGRESSIVE | BDI 126
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9000 | AGGRESSIVE | BDI 124
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 119
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 146
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9400 | AGGRESSIVE | BDI 330
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 405
+             Conv:      6.1 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 110 | sized 6→6c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 175
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9500 | AGGRESSIVE | BDI 212
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9700 | AGGRESSIVE | BDI 133
+          → STOP HOLD | CONTRACT_VELOCITY | NO | BDI 0 ’0.7700 3c held | EXIT_PENDING_BDI0_HOLD1
+          → EXIT_ESCALATED_AFTER_BDI0 | FORCED_EXIT_AFTER_HOLD1 | NO | 3c | hold_px 0.7700 → now 0.7700 (+0.0000) | forcing full ladder
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.77
+             Conv:      7.4 (MID(OVERNIGHT_CAP)) → 1.00× risk $5.00 (VOLATILE) | BDI 471 | sized 9→9c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.69
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.99
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.94
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.91
+             Conv:      7.6 (MID(OVERNIGHT_CAP)+BDI_CLAMP3) → 1.00× risk $5.00 (VOLATILE) | BDI 3 | sized 3→3c
+          → HARVEST SPHI_DECAY | YES 1c | ob_bid 0.7900 | STANDARD | BDI 31
+             Conv:      6.8 (MID+BDI_CLAMP5) → 1.00× risk $20.00 (MODERATE) | BDI 37 | sized 5→5c
+          → STOP HOLD | PAQ1_BPS_SOFT | YES | BDI 0 ’0.2200 5c held | EXIT_PENDING_BDI0_HOLD1
+          → EXIT_ESCALATED_AFTER_BDI0 | FORCED_EXIT_AFTER_HOLD1 | YES | 5c | hold_px 0.2200 → now 0.2200 (+0.0000) | forcing full ladder
+             Conv:      7.7 (LOW(BDI_CLAMP5)) → 0.70× risk $14.00 (MODERATE) | BDI 49 | sized 5→5c
+          → HARVEST SPHI_DECAY | NO 2c | ob_bid 0.8100 | AGGRESSIVE | BDI 192
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8900 | AGGRESSIVE | BDI 185
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9500 | AGGRESSIVE | BDI 205
+             Conv:      6.6 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 142 | sized 7→7c
+          → STOP HOLD | CONTRACT_VELOCITY_PARTIAL | NO | BDI 0 ’0.5100 7c held | EXIT_PENDING_BDI0_HOLD1
+             Conv:      7.7 (MID(OVERNIGHT_CAP)) → 1.00× risk $5.00 (VOLATILE) | BDI 56 | sized 5→5c
+             Conv:      5.2 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 78 | sized 10→10c
+          → STOP HOLD | PAQ_HARD_BPS_FLIP | YES | BDI 0 ’0.3900 10c held | EXIT_PENDING_BDI0_HOLD1
+             Conv:      4.9 (LOW) → 0.70× risk $7.00 (MODERATE) | BDI 79 | sized 8→8c
+             Conv:      5.9 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 290 | sized 5→5c
+             Conv:      5.3 (MID) → 1.00× risk $10.00 (MODERATE) | BDI 73 | sized 12→12c
+             Conv:      5.5 (MID) → 1.00× risk $5.00 (VOLATILE) | BDI 405 | sized 3→3c
+             Conv:      3.5 (LOW) → 0.70× risk $7.00 (MODERATE) | BDI 145 | sized 9→9c
+             Conv:      6.1 (MID+BDI_CLAMP5) → 1.00× risk $5.00 (STABLE) | BDI 47 | sized 5→5c
+             Conv:      7.1 (HIGH) → 1.40× risk $7.00 (VOLATILE) | BDI 76 | sized 9→9c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8400 | AGGRESSIVE | BDI 67
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8600 | AGGRESSIVE | BDI 69
+          → HARVEST SPHI_DECAY | NO 3c | ob_bid 0.8800 | AGGRESSIVE | BDI 210
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9000 | AGGRESSIVE | BDI 670
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 167
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 276
+             Conv:      6.5 (MID) → 1.00× risk $8.00 (MODERATE) | BDI 82 | sized 10→10c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 375
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9100 | AGGRESSIVE | BDI 498
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9800 | AGGRESSIVE | BDI 360
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 481
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 380
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9900 | AGGRESSIVE | BDI 518
+          → WES_SIGNAL | YES@0.530 | PAQ:5 ABS:0.063% BPS:+3.0 BDI:233 595s
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.60
+             Conv:      5.4 (MID) → 1.00× risk $5.00 (MODERATE) | BDI 409 | sized 4→4c
+          → WES_SIGNAL | YES@0.570 | PAQ:6 ABS:0.118% BPS:+3.0 BDI:369 765s
+             Conv:      7.5 (MID(OVERNIGHT_CAP)) → 1.00× risk $5.00 (MODERATE) | BDI 117 | sized 9→9c
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.61
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.52
+          → HARVEST SPHI_DECAY | YES 4c | ob_bid 0.4600 | AGGRESSIVE | BDI 364
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.92
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.72
+          → HARVEST SKIP | SPHI_DECAY | YES | BDI 0 near 0.61
+          → STOP HOLD | TRAIL_EXIT_STAGE2 | YES | BDI 0 ’0.6100 5c held | EXIT_PENDING_BDI0_HOLD1
+          → EXIT_ESCALATED_AFTER_BDI0 | FORCED_EXIT_AFTER_HOLD1 | YES | 5c | hold_px 0.6100 → now 0.3200 (-0.2900) | forcing full ladder
+             Conv:      8.1 (HIGH) → 1.40× risk $11.20 (MODERATE) | BDI 34 | sized 13→13c
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.8400 | AGGRESSIVE | BDI 41
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.85
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9200 | AGGRESSIVE | BDI 358
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9200 | AGGRESSIVE | BDI 86
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 476
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9300 | AGGRESSIVE | BDI 95
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.97
+          → HARVEST SPHI_DECAY | NO 1c | ob_bid 0.9500 | AGGRESSIVE | BDI 285
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.96
+18:54:26 | YES 0.6500 | NO 0.3700 | 335s left | ABS 0.067 | BPS +1.0 | PAQ 1 | CTX 1 STATE 0 EXP 0 | BCDP 8C | READY | → BLOCK | YES | BDI_EMPTY
+             Conv:      5.9 (MID) → 1.00× risk $5.00 (MODERATE) | BDI 258 | sized 9→9c
+          → HARVEST SKIP | SPHI_DECAY | NO | BDI 0 near 0.67
+
+===============================================================================
+SECTION 9: BDI DIAGNOSTIC LINES
+===============================================================================
+
+
+===============================================================================
+SECTION 10: ERROR AND UNUSUAL LINES
+===============================================================================
+
+Market fetch failed: 500 {"error":{"code":"internal_server_error","message":"internal_server_error","service":"query-exchange"}}
+Market fetch failed: 500 {"error":{"code":"internal_server_error","message":"internal_server_error","service":"query-exchange"}}
+Market fetch failed: 500 {"error":{"code":"internal_server_error","message":"internal_server_error","service":"query-exchange"}}
+Market fetch failed: 500 {"error":{"code":"internal_server_error","message":"internal_server_error","service":"query-exchange"}}
+Market fetch failed: 500 {"error":{"code":"internal_server_error","message":"internal_server_error","service":"query-exchange"}}
+Market fetch failed: 500 {"error":{"code":"internal_server_error","message":"internal_server_error","service":"query-exchange"}}
+          → POS WARNING | API 0 local 3
+          → POS WARNING | API 0 local 3
+          → POS WARNING | API 0 local 2
+          → POS WARNING | API 0 local 5
+          → POS WARNING | API 0 local 5
+          → POS WARNING | API 0 local 7
+          → POS WARNING | API 0 local 7
+          → POS WARNING | API 0 local 7
+          → POS WARNING | API 0 local 10
+          → POS WARNING | API 0 local 10
+          → POS WARNING | API 0 local 3
+          → POS WARNING | API 0 local 3
+          → POS WARNING | API 0 local 10
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 4
+          → POS WARNING | API 0 local 5
+          → POS WARNING | API 0 local 5
+          → POS WARNING | API 0 local 9
+
+===============================================================================
+EXTRACTION STATISTICS
+===============================================================================
+
+BUY SNAPSHOT entries: 25
+STOP events: 67
+HARVEST events: 187
+HARVEST MISS events: 96
+TICKER CLOSE lines: 25
+SETTLE RECHECK events: 74
+BPS_SESSION flags: 18
+BDI references: 87
+BDI=0 events: 22
+Error/Warning events: 30
+Market fetch failures: 6
+
+===============================================================================
+TOP TICKERS BY BUY SNAPSHOT COUNT
+===============================================================================
+

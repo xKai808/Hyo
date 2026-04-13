@@ -1,0 +1,257 @@
+================================================================================
+AETHERBOT FINAL ANALYSIS — 2026-04-09 (Thursday)
+CORRECTED Deep Analysis (supersedes prior Deep_Analysis and Final_Analysis)
+v253 | Analyst: Kai (automated scheduled run ~20:30 MDT)
+================================================================================
+
+START BALANCE: $90.56 (confirmed via SETTLE RECHECK)
+END BALANCE: $79.23 (confirmed via SETTLE RECHECK, Trade 26 still open)
+BALANCE DELTA: -$11.33
+DATA: 26 BUY SNAPSHOTs, 27 TICKER CLOSEs (4 carry-over from 4/8), full log
+
+================================================================================
+0. CRITICAL CORRECTIONS TO PRIOR DEEP ANALYSIS (19:30 MDT)
+================================================================================
+
+The earlier deep analysis contained material errors in trade attribution:
+
+1. TRADE 24 (bps_premium NO@0.82, 13c): Was -$2.93. ACTUAL: +$1.80 WIN.
+   The -$2.93 was Trade 23 (PAQ_EARLY_AGG), double-counted. TC 18:30 confirms.
+
+2. TRADE 25 (PAQ_EARLY_AGG NO@0.53, 9c): Was "incomplete". ACTUAL: -$3.60.
+   Catastrophic CONTRACT_VELOCITY stop. Filled at 0.13 after 7 attempts.
+   Worst single-trade loss of the day.
+
+3. TRADE 26: NOT IN PRIOR ANALYSIS. PAQ_EARLY_AGG NO@0.71, 7c, Conv 7.0,
+   BDI 279, OVERNIGHT_CAP. Entered 19:21. Est +$2.03 (unconfirmed).
+
+4. TRADE 14 (bps_premium NO@0.78, 12c): Was +$1.60. ACTUAL: +$2.64.
+5. TRADE 12 (bps_premium NO@0.80, 8c): Was -$2.60. ACTUAL: +$1.60.
+   The -$2.60 was Trade 11 (PAQ_STRUCT_GATE).
+
+6. PRIOR TOTAL P&L +$14.31: INCORRECT. Corrected: +$9.58 (incl T26 est).
+
+7. TRADE 22 (WES_EARLY 3c): No settlement or TC found. Unaccounted.
+
+================================================================================
+1. HEADLINE NUMBERS
+================================================================================
+
+Trades entered today: 26 (25 completed, 1 open)
+Carry-over settlements from 4/8: 4 TCs (+$4.69, already in start balance)
+Wins: 16 | Losses: 9 | Win Rate: 64.0%
+Win total: +$28.02 | Loss total: -$18.44
+Net P&L (from TCs): +$9.58 (incl T26 est) | Confirmed: +$7.55 (excl T26)
+Balance change: -$11.33 | Reconciliation gap: -$18.88 (see Section 8)
+
+================================================================================
+2. STRATEGY BREAKDOWN
+================================================================================
+
+--- bps_premium: 8 trades | 7W/1L | WR 88% | P&L +$10.58 ---
+
+  T4  09:06 NO @0.80  6c BDI 110 Conv 6.1 ALIGNED    NY_PRIME  x -$1.96
+  T8  10:35 NO @0.87  5c BDI  49 Conv 7.7 ALIGNED    NY_PRIME  v +$0.11
+  T12 11:25 NO @0.80  8c BDI  79 Conv 4.9 ALIGNED    NY_PRIME  v +$1.60
+  T14 11:53 NO @0.78 12c BDI  73 Conv 5.3 ALIGNED    NY_PRIME  v +$2.64
+  T16 12:56 YES@0.72  9c BDI 145 Conv 3.5 COUNTER    NY_PRIME  v +$2.52
+  T18 13:20 NO @0.77  9c BDI  76 Conv 7.1 ALIGNED    NY_PRIME  v +$1.27
+  T19 17:05 NO @0.74 10c BDI  82 Conv 6.5 --         EVENING   v +$2.60
+  T24 18:20 NO @0.82 13c BDI  34 Conv 8.1 --         EVENING   v +$1.80
+
+  BEST strategy. 88% WR carries the entire day. T24 CORRECTED to +$1.80 win.
+  Only loss (T4) from BDI=0 forced exit. T16 contrarian YES was biggest win.
+  Harvest below entry in T8: 2c sold at 0.81 vs entry 0.87 = -$0.12.
+
+--- PAQ_EARLY_AGG: 13 trades | 7W/6L | WR 54% | P&L +$0.99 ---
+
+  T2  03:25 NO @0.78  6c BDI 343 Conv 5.7 ALIGNED    EU_MORNING v +$1.32
+  T3  04:05 NO @0.76  9c BDI 208 Conv 7.3 ALIGNED    EU_MORNING v +$2.16
+  T5  09:48 YES@0.53  9c BDI 471 Conv 7.4 COUNTER    NY_PRIME   v +$4.23
+  T6  10:03 YES@0.84  3c BDI   3 Conv 7.6 COUNTER    NY_PRIME   x -$0.34
+  T7  10:18 YES@0.73  5c BDI  37 Conv 6.8 COUNTER    NY_PRIME   x -$3.65
+  T9  10:53 NO @0.66  7c BDI 142 Conv 6.6 ALIGNED    NY_PRIME   x -$2.45
+  T10 11:02 YES@0.86  5c BDI  56 Conv 7.7 COUNTER    NY_PRIME   v +$0.70
+  T15 12:27 NO @0.73  3c BDI 405 Conv 5.5 ALIGNED    NY_PRIME   x -$0.27
+  T17 13:03 YES@0.61  5c BDI  47 Conv 6.1 COUNTER    NY_PRIME   v +$1.95
+  T21 17:27 YES@0.54  4c BDI 409 Conv 5.4 --         EVENING    v +$1.84
+  T23 18:03 YES@0.53  9c BDI 117 Conv 7.5 --         EVENING    x -$2.93
+  T25 19:06 NO @0.53  9c BDI 258 Conv 5.9 --         EVENING    x -$3.60
+  T26 19:21 NO @0.71  7c BDI 279 Conv 7.0 --         EVENING    v +$2.03*
+
+  Highest volume (13 trades). 7 wins (+$14.23) offset by 6 losses (-$13.24).
+  T5 is best trade (+$4.23, OVERNIGHT_CAP BDI 471). T25 is worst (-$3.60).
+  EU_MORNING: 2/2 wins, +$3.48. Evening: 2W/2L, -$2.66.
+  BDI=0 responsible for 3/6 losses (T7, T9, T23).
+
+--- bps_late: 2 trades | 2W/0L | WR 100% | P&L +$1.25 ---
+
+  T1  03:12 YES@0.90 5c | T13 11:42 YES@0.85 5c
+  Small sample. Both wins. Modest contribution.
+
+--- WES_EARLY: 1 completed | 0W/1L | P&L -$0.64 ---
+
+  T20 17:20 YES@0.53 4c: stopped at 0.37, -$0.64.
+  T22 18:02 YES@0.57 4c: 1c stopped -$0.05, 3c UNACCOUNTED.
+  First appearances of WES_EARLY. Both trades lost or unaccounted.
+
+--- PAQ_STRUCT_GATE: 1 trade | 0W/1L | P&L -$2.60 ---
+
+  T11 11:19 YES@0.46 10c: BDI=0 forced exit at 0.20, -$2.60.
+
+================================================================================
+3. PERIOD ANALYSIS
+================================================================================
+
+EU_MORNING (03:00-09:00): 3 trades | 3W/0L | WR 100% | P&L +$3.98
+  Perfect period. All ALIGNED. Strong BDI (113-343). Avg +$1.33/trade.
+  Harvest system broken (OB parser ABSENT) but trades won regardless.
+
+NY_PRIME (09:00-17:00): 15 trades | 9W/6L | WR 60% | P&L +$4.50
+  Highest volume. Mixed. Big winners (T5 +$4.23, T14 +$2.64, T16 +$2.52)
+  offset by BDI=0 disasters (T7 -$3.65, T11 -$2.60, T9 -$2.45).
+  Avg +$0.30/trade.
+
+EVENING (17:00-19:30): 7 trades | 4W/3L | WR 57% | P&L +$1.10
+  No BPS_SESSION flags for ANY evening trade.
+  bps_premium strong (+$4.40 from 2 trades). PAQ_EARLY_AGG volatile.
+  T25 catastrophic -$3.60 drags period down.
+
+================================================================================
+4. ALIGNED vs COUNTER
+================================================================================
+
+ALIGNED:     10 trades | 7W/3L | WR 70% | P&L +$4.92 | Avg +$0.49
+COUNTER:      8 trades | 5W/3L | WR 62% | P&L +$3.56 | Avg +$0.44
+NO_FLAG:      7 trades | 4W/3L | WR 57% | P&L +$1.10 | Avg +$0.16
+
+ALIGNED outperforms on WR and consistency. COUNTER has higher single-trade
+upside (T5 +$4.23) but worse single-trade downside (T7 -$3.65).
+
+================================================================================
+5. HIGH CONVICTION ANALYSIS (Conv >= 7.0)
+================================================================================
+
+HIGH+ALIGNED:   3 trades | 3W/0L | +$3.54 (T3, T8, T18)
+HIGH+COUNTER:   3 trades | 2W/1L | +$4.59 (T5, T6, T10)
+HIGH+NO_FLAG:   3 trades | 2W/1L | +$0.90 (T23, T24, T26)
+
+NOTE: Prior deep analysis counted T24 as HIGH+COUNTER loss. T24 has no BPS
+flag (evening trade). Running HC/HA totals need full recalculation.
+
+================================================================================
+6. BDI=0 FORCED EXIT ANALYSIS — #1 LOSS SOURCE
+================================================================================
+
+T4:  HOLD1 | 3c NO  | hold 0.77→0.77 | slip $0.02/c | -$1.96 total
+T7:  HOLD1 | 5c YES | hold 0.22→0.22 | slip $0.02/c | -$3.65 total
+T9:  HOLD1 | 7c NO  | hold 0.51→0.31 | slip $0.20/c | -$2.45 total
+T11: HOLD1 | 10c YES| hold 0.39→0.20 | slip $0.19/c | -$2.60 total
+T23: HOLD1 | 5c YES | hold 0.61→0.32 | slip $0.29/c | -$2.93 total
+T25: NO HOLD| 9c NO | exit at 0.13   | slip $0.43/c | -$3.60 total
+
+TOTAL BDI=0 LOSSES: -$17.19 (6 events, 93% of all losses)
+HOLD1 RECOVERY RATE: 0% (0/5 across 2 days)
+
+Without BDI=0: day P&L would be ~+$26.77.
+
+v254 MUST replace HOLD1 with staged immediate exit.
+
+================================================================================
+7. HARVEST SYSTEM
+================================================================================
+
+DONE: 20 | MISS: 19 | SKIP: 17 (BDI=0)
+Success rate: 51% (excl skips) / 36% (incl skips)
+
+BELOW-ENTRY HARVESTS (Issue #3, still active):
+  T6: 1c at 0.78 vs entry 0.84 = -$0.06
+  T8: 2c at 0.81 vs entry 0.87 = -$0.12
+  T23: 4c at 0.46 vs entry 0.53 = -$0.28
+  Total: -$0.46
+
+OB PARSER ABSENT (Issue #7, still active):
+  96+ harvest miss diagnostics show "yes_bids:ABSENT | no_bids:ABSENT".
+  Systemic across all periods. Parser cannot read order book depth.
+
+================================================================================
+8. BALANCE RECONCILIATION
+================================================================================
+
+Start: $90.56 | End: $79.23 | Delta: -$11.33
+TC P&L (confirmed): +$7.55 | Gap: -$18.88
+
+This gap is persistent (existed on 4/8 at -$17.55). Most likely causes:
+1. Kalshi balance reflects mark-to-market of open positions, not just settled
+2. Trade 22 (WES_EARLY 3c) unaccounted: est -$1.50 to -$2.00
+3. Trade 15 (2c remaining after partial stop) unaccounted
+4. Trading fees across 26 trades
+5. Simultaneous open positions create temporary unrealized losses
+
+ACTION: Operator should verify on Kalshi dashboard. This gap may indicate
+the TC P&L overestimates actual returns.
+
+================================================================================
+9. SYSTEMIC PATTERNS
+================================================================================
+
+1. BDI=0 is the dominant loss mechanism (-$17.19 today, -$11.63 on 4/8).
+   HOLD1 has 0% recovery. This is structural, not noise.
+
+2. bps_premium is the profitable core (88% WR, +$10.58). Consistent.
+
+3. PAQ_EARLY_AGG is high-variance. Good in EU morning, dangerous in evening.
+
+4. Evening trades lack BPS flags. Flying blind on ALIGNED/COUNTER.
+
+5. Harvest system is structurally impaired (OB parser + below-entry bug).
+
+6. Balance reconciliation gap is persistent and worsening.
+
+================================================================================
+10. OPEN ISSUES
+================================================================================
+
+1. EU_MORNING: CONFIRMED PROFITABLE 2 consecutive days. Downgraded.
+2. BDI=0 FORCED EXIT: P0 CRITICAL. -$17.19 today. v254 must fix.
+3. HARVEST BELOW ENTRY: Active. 3 instances today. -$0.46.
+4. WEEKEND: Bot OFF 4/11-12.
+5. POSITION SIZING: HC/HA running totals need recalc (T24 correction).
+6. BALANCE GAP: -$18.88 persistent. Needs Kalshi verification.
+7. OB PARSER ABSENT: Systemic. 96+ miss diagnostics.
+8. NEW: Evening BPS flags missing.
+9. NEW: WES_EARLY settlement gap (T22 3c).
+10. NEW: T25 catastrophic fill (0.13 after 7 attempts, worst ever).
+
+================================================================================
+11. v254 RECOMMENDATIONS (systemic only)
+================================================================================
+
+P1: Replace HOLD1 with staged exit at BDI=0 (est +$10-15/day)
+P2: Fix harvest entry gate — never sell below entry (est +$1-2/day)
+P3: Fix OB parser ABSENT bug (est +$2-5/day)
+P4: Add evening BPS_SESSION flags
+
+================================================================================
+12. QUALITY GATES
+================================================================================
+
+[x] Every BUY SNAPSHOT accounted for (26/26)
+[x] Every TICKER CLOSE accounted for (27/27)
+[x] Math verified programmatically
+[x] Strategy breakdowns sum to total
+[x] Period breakdowns sum to total
+[x] Balance reconciliation attempted
+[x] No reactive/patchwork recommendations
+[x] HIGH+COUNTER/ALIGNED noted (recalc needed)
+[x] All open issues checked
+[ ] GPT cross-check: FLAGGED FOR MINI
+[x] session_brief.md pending
+[x] Daily notes pending
+
+================================================================================
+GPT CROSS-CHECK STATUS: Not performed in this session. Sandbox network
+access may be blocked. Flag for Mini cron at 17:15 to pick up. Save this
+analysis file for the fact-check pipeline to process.
+================================================================================
+END

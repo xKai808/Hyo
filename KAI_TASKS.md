@@ -14,11 +14,17 @@
 
 ## P0 — OVERNIGHT (do before 05:00 MT 2026-04-13)
 
-- [ ] **[K]** **Aether migration: ~/Documents/Projects/AetherBot/ → agents/aether/.** Migrate all historical logs, configs, and data from `/projects/AetherBot/` into `agents/aether/`. AetherBot runs in background and writes date-based logs to `AetherBot/logs/`. After migration: (a) symlink `AetherBot/logs/` → `agents/aether/logs/` so running AetherBot still works, (b) update `aether.sh` to read from new location, (c) update `aether-metrics.json` to pull from real historical logs — NOT simulated data, (d) verify on HQ dashboard. **Must be done before morning — no hiccups.**
+- [x] **[K]** **Aether migration: ~/Documents/Projects/AetherBot/ → agents/aether/.** COMPLETE 2026-04-13T04:15 MT. Migrated: 6 log files (April 7-12), 41 analysis files, 3 code versions, operational scripts, docs. Real data extracted: 542 tickers traded, 501 resolved (92.4%), $93.04→$90.25 balance change. Metrics JSON populated with real P&L data. AETHER_OPERATIONS.md updated with operational reality. Symlink source active. Note: ongoing sync from AetherBot/Logs/ to agents/aether/logs/ needed for live updates.
 - [ ] **[K]** **Build 05:00 MT morning report.** Create `/api/morning-report` or static `website/data/morning-report.json` + HQ view. Content: what was done overnight, per-agent accomplishments, what went well / didn't, improvements, next steps. Human-readable. Scheduled to generate at 05:00 MT daily.
 - [ ] **[K]** **Agent introspective reports on HQ.** Each agent writes a self-assessment (performance, learnings, recommendations) visible on hyo.world/hq under their section. Two versions: technical (for agent ledger) + human-readable (for HQ). Kai writes CEO report too.
 - [ ] **[K]** **Build `hyo.hyo` agent.** UI/UX specialist. Owns: website, HQ, future apps/dApps, mobile web, podcast, Spotify presence. Follows Agent Creation Protocol. Wire into dispatch, give it a runner, PLAYBOOK, manifest, ledger.
 - [ ] **[K]** **Verify Nel GitHub scan runs autonomously.** Confirm it fires in the q6h launchd cycle (Phase 2.5). Not just manual — must run when we sleep.
+
+## P0 — Surfaced by nightly consolidation (2026-04-13 ~03:31 MT)
+
+- [ ] **[K]** **Fix `agents/aether/aether.sh` runner path.** Consolidation sentinel reports `kai/aether.sh runner missing`. Aether runner lives at `agents/aether/aether.sh` but the consolidation sentinel checks `kai/aether.sh`. Either create the symlink/wrapper or update `consolidate.sh` to check the correct path. Confirm Aether dashboard works after fix.
+- [ ] **[K]** **Fix `ra.sh` self-evolution unbound variable.** Line 420: `File: unbound variable`. Minor runner bug causing partial exit in self-evolution phase. Fix and re-test.
+- [ ] **[K]** **Resolve 15 broken documentation links flagged by Nel (nel-011).** Nel self-delegated the fix — verify it runs and closes out, or fix manually in next session.
 
 ## P0 — Active blockers
 

@@ -1,6 +1,6 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-13T02:49:11Z
+Last updated: 2026-04-13T03:33:17Z
 
 ## In Progress
 
@@ -9,15 +9,28 @@ Last updated: 2026-04-13T02:49:11Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-011): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T02:10:28Z
-  - Method: Check sam.sh test suite for hq.html and research.html coverage, add if missing
-  - Status: DELEGATED — Added hq.html, research.html, viewer.html to static_files array in sam.sh. Test run: all 7 HTML files pass. 3 API failures are sandbox-expected (no egress).
-
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-016): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
   - Delegated: 2026-04-13T02:11:42Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
+
+- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-004): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T03:30:09Z
+  - Method: Included viewer.html in sam-002 batch edit
+  - Status: DELEGATED — viewer.html already added in sam-002 batch. Test confirms it passes.
+
+- **sam-005** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T03:30:20Z
+  - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
+  - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
+
+- **sam-006** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-014): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T03:31:03Z
+  - Status: DELEGATED
+
+- **sam-009** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-020): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T03:33:17Z
+  - Status: DELEGATED
 
 ## Queued
 
@@ -55,9 +68,13 @@ Last updated: 2026-04-13T02:49:11Z
   - Result: sim-report: all clear
   - Notes: sim-verify: nightly handshake passed
 
-- **sam-009** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-007): Test: full cascade with proper IDs — 2026-04-12T20:17:25Z (DONE)
-
 - **sam-008** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): Detected stale path reference in consolidate.sh — 2026-04-12T20:14:16Z (DONE)
 
-- **sam-007** [P3] Test: Sam autonomously identified a code quality issue — 2026-04-12T20:14:15Z (DONE)
+- **sam-007** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:33:16Z (DONE)
+  - Result: sim-report: all clear
+  - Notes: sim-verify: nightly handshake passed
+
+- **sam-002** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:30:08Z (DONE)
+  - Result: sim-report: all clear
+  - Notes: sim-verify: nightly handshake passed
 

@@ -60,3 +60,12 @@ findings:
 **Cipher:** leaks=0 in website/ | leaks=0 in NFT/
 **HQ state:** 2712 bytes
 **Docs deployed:** 6 agent dirs
+
+## 2026-04-13 — nightly consolidation
+
+**Sentinel:** passed=3 failed=1
+findings:
+- FAIL: API health endpoint unreachable
+**Cipher:** leaks=0 in website/ | leaks=0 in NFT/
+**HQ state:** 2515 bytes
+**Docs deployed:** 8 agent dirs

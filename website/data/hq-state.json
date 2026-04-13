@@ -1,6 +1,38 @@
 {
-  "updatedAt": "2026-04-12T13:35:34-06:00",
+  "updatedAt": "2026-04-12T21:30:00-06:00",
+  "morningReport": {
+    "date": "2026-04-12",
+    "generatedAt": "2026-04-12T21:30:00-06:00",
+    "dataUrl": "/data/morning-report.json",
+    "summary": "Overnight was a productive but imperfect run. All 7 daemons fired on schedule. Aether pushed metrics every 15 min with zero gaps. Two persistent simulation failures (nel/ra runner exits) and an Aether dispatch.sh config bug are the top items for the next Kai session.",
+    "systemStatus": "warnings",
+    "agentStatuses": {
+      "nel": "active",
+      "ra": "active",
+      "sam": "active",
+      "aether": "active",
+      "dex": "active"
+    },
+    "topIssues": [
+      "Aether plist missing HYO_ROOT — dispatch errors every 15 min",
+      "Nel/Ra simulation runner exits (exit-1 / exit-2) — consistent, needs investigation",
+      "No newsletter for 2026-04-12 — Aurora still sandbox-blocked",
+      "simulation-outcomes.jsonl line 1 corrupt — remediation unconfirmed"
+    ]
+  },
   "events": [
+    {
+      "ts": "2026-04-13T03:30:56Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-04-13"
+    },
+    {
+      "ts": "2026-04-13T03:30:56Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-04-13",
+      "doc": "/viewer?agent=simulation&file=2026-04-13"
+    },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "consolidation",
@@ -71,7 +103,7 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-04-12T13:35:34-06:00"
+    "lastRun": "2026-04-13T03:30:56Z"
   },
   "aether": {},
   "nel": {

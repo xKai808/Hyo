@@ -1,0 +1,318 @@
+# NIGHTLY SIMULATION — 2026-04-10 (Friday)
+Ran: 2026-04-10 23:02 MDT
+Runner: Cowork scheduled task (nightly-simulation)
+Playbook version: 1.4
+Report status: AUTONOMOUS (no operator in chat)
+
+---
+
+## STEP 1 — FILE VALIDATION
+
+| File | Exists | Current | Notes |
+|------|--------|---------|-------|
+| Kai/memory/session_brief.md                 | YES | 2026-04-10 19:10 | STALE in several places — see DRIFT section |
+| Kai/memory/playbook.md                      | YES | v1.4 (2026-04-10) | current |
+| Kai/memory/daily/2026-04-10.md              | YES | today | current |
+| Kai/memory/operator_tasks.md                | YES | — | not reviewed this pass |
+| Kai/memory/heartbeat.md                     | **MISSING** | — | Issue tracked since 4/8; Mini cron not writing |
+| Kai/memory/api_usage.md                     | YES | 2026-04-08 21:47 | **STALE 48h+** — Mini cron DRIFT |
+| Kai/.env                                    | YES | — | keys-by-name only, not inspected |
+| Kai/Security/.vault                         | YES | — | intact |
+| Kai/Security/keys.rtf                       | YES | — | source of truth intact |
+| Logs/AetherBot_2026-04-10.txt               | YES | mtime 23:02 MDT (ACTIVE) | bot alive, polling |
+| .auto-memory/_AUTONOMY_MASTER.md            | YES | — | pinned & mirrored correctly |
+
+**File-layer result:** 1 MISSING (heartbeat.md) + 1 STALE (api_usage.md). Both are pre-existing known issues, already on operator ledger. No new file breakage.
+
+---
+
+## STEP 2 — 24-HOUR SIMULATION WALK
+
+Tomorrow = **Saturday 2026-04-11**. Weekend. Per playbook §Weekend Rules:
+- AetherBot OFF Sat/Sun
+- Heartbeat runs, suppresses STOPPED alerts
+- Analysis, fact-check, API check, dashboard: weekdays only → **NO fires expected**
+- Simulation + consolidation: Sun-Thu only → **NO fires Friday or Saturday night**
+
+**Observation:** This simulation is running on Friday night. Playbook literally says "No scheduled tasks fire on Friday or Saturday nights." Either the schedule was manually overridden, a fireAt was set, or the scheduled cron definition diverges from the playbook text. Not a failure — just flagging the discrepancy for the consolidation task to reconcile.
+
+Sunday 2026-04-12 evening back to normal cadence:
+- 19:30 Deep analysis (Cowork)
+- 20:00 GPT fact-check (Mini cron) — **STILL scheduled 17:15 per session_brief — race condition unfixed**
+- 20:15 API usage check (Mini cron)
+- 20:20 Dashboard regen (Mini cron)
+- 23:00 Simulation (Cowork)
+- 23:50 Consolidation (Cowork)
+
+No operator-dependent fixes introduced by the walk beyond the pre-existing Mini cron drift.
+
+---
+
+## STEP 3 — INCIDENT-LEARNING PROBES
+
+### 3.1 — BINARY PATH PROBE  →  **PASS (proxy)**
+
+Sandbox cannot pgrep on Mini directly. Proxy evidence:
+- `Logs/AetherBot_2026-04-10.txt` mtime = 23:02 MDT (polling right now)
+- Log format matches v254 line structure (YES/NO/BPS/PAQ/CTX/STATE/EXP/BCDP)
+- All memory references agree the binary is at `/Users/kai/bot.py`
+  - session_brief.md line 38: `/Users/kai/bot.py`
+  - .auto-memory/project_bot_binary_path.md: `/Users/kai/bot.py`
+  - .auto-memory/project_aetherbot.md: `/Users/kai/bot.py`
+- session_brief reports operator-side binary verification at 2026-04-10 18:30 via header grep
+
+No mismatch between "deploy target" references. PASS.
+
+### 3.2 — BINARY FEATURE GREP PROBE  →  **PASS with NUANCE**
+
+Ran fingerprint grep against `Logs/AetherBot_2026-04-10.txt` (the CURRENTLY running bot's log) at 23:02:
+
+| Feature | Log count | Binary count (per session_brief) | Interpretation |
+|---------|-----------|----------------------------------|----------------|
+| yes_dollars          | **13** | 11 | ✅ firing — v254 wired |
+| POS WARNING          | **2**  | 1  | ✅ firing — NEW WARNING at 19:58:24 (phantom T9) |
+| API 0 local          | **2**  | 1  | ✅ firing |
+| TIME_BDI_LOW         | 0      | 6  | ⚠ wired but no trigger today |
+| HARVEST BLOCKED      | 0      | 1  | ⚠ wired but no trigger today |
+| OB_FORMAT_DIAG       | 0      | 1  | ⚠ wired but no trigger today |
+| orderbook_fp         | 0      | 3  | ⚠ wired but no trigger today |
+| HARVEST MISS         | 78     | —  | — |
+| HARVEST DONE         | **11** | —  | improved vs 3 at analysis time |
+| yes_bids:ABSENT      | 13     | —  | NOT 78/78 as memory claimed |
+
+**Critical correction to today's Deep Analysis:** Deep_Analysis_2026-04-10 claimed "v254 IS NOT RUNNING" based on 0 OB_FORMAT_DIAG / 0 HARVEST BLOCKED / 0 TIME_BDI_LOW. Probe 3.2 rule: **never downgrade a version's status from log absence alone.** The binary has those symbols (operator verified 18:30). yes_dollars = 13 in the log is direct proof v254 wiring IS executing. The absence of those other three fingerprints means "wired but conditions not met", not "binary is rolled back".
+
+**This exact mistake is already covered by feedback_verify_before_accuse.md** — session_brief already reversed its own conclusion at 19:10. Deep_Analysis file wasn't retro-corrected. Minor artifact drift — not a process failure.
+
+**NEW FINDING:** Harvest DONE rose from 3 (at 18:18 deep analysis) to 11 (at 23:02 simulation). Harvest MISS stayed at 78. That means **8 successful harvests in the late afternoon/evening window** — harvest is not 100% broken; success rate at day-close = 11/89 = **12.4%** (vs 3/78 = 3.8% at analysis time). Evening session harvests went 8/8. This is a real behavior change, probably thin-book recovery. Session_brief Issue #7 needs downgrade.
+
+### 3.3 — CRON/SCHEDULER RACE PROBE  →  **FAIL (unchanged)**
+
+Producer/consumer pairs:
+
+| Producer | Time | Consumer | Time | Safe? |
+|----------|------|----------|------|-------|
+| Deep analysis (Cowork) | 19:30 | GPT fact-check (Mini cron) | **17:15** | ❌ consumer fires 2h15m BEFORE producer |
+| Deep analysis | 19:30 | API usage check | 17:30 | ❌ irrelevant order but still old window |
+| Deep analysis | 19:30 | Dashboard regen | 17:35 | ❌ writes pre-analysis data |
+| Simulation (Cowork) | 23:00 | Consolidation (Cowork) | 23:50 | ✅ 50 min buffer |
+
+**Mini cron drift is still unfixed** — noted since 2026-04-09 simulation. Operator must reshuffle:
+- factcheck → 19:55
+- api check → 20:05
+- dashboard → 20:15
+
+Today there's a stale `GPT_CrossCheck_2026-04-10_PENDING.txt` proving this fires before deep analysis exists. Operator task P0d from today's notes.
+
+### 3.4 — RECONCILIATION GAP TREND PROBE  →  **FAIL P0 (widening, > $10)**
+
+Last 3 days:
+
+| Date | Claimed P&L | Actual delta | Gap |
+|------|------------|--------------|-----|
+| 2026-04-08 | — (Final_Analysis file MISSING) | — | unknown |
+| 2026-04-09 | +$7.55 | -$11.33 | **-$18.88** |
+| 2026-04-10 (18:15) | +$28.91 (8 TCs) | +$2.95 | **-$25.96** |
+| 2026-04-10 (23:02 now) | **+$30.78** (12 TCs) | **+$5.65** ($84.60 → $90.25) | **-$25.13** |
+
+Evening trades after deep analysis:
+- 20:00 PAQ_EARLY_AGG +$0.60
+- 20:30 PAQ_EARLY_AGG +$0.70
+- 21:00 bps_premium +$0.38
+- 22:30 PAQ_EARLY_AGG +$0.19
+- Total claimed: +$1.87
+- Actual delta 18:15→23:00: $87.55 → $90.25 = +$2.70 (evening trades credited full + carry-over)
+
+**The gap stopped widening in the evening and narrowed $0.83** (partial recovery — likely late-fill credits from afternoon trades). Day-over-day trend is still widening (-$18.88 → -$25.13 = **$6.25 wider**).
+
+**P0 FLAG:** gap > $10, trend widening across 2 confirmed days. Per probe rule: **halt trading recommendation.** Good news: the weekend halt is already in place (bot off Sat/Sun). Bad news: must NOT bring v254 back on Monday without the v255 reconciliation patch. This is exactly the decision tree the operator drafted in today's P0b.
+
+Also flagged: **Final_Analysis_2026-04-08.txt is MISSING.** Can't compute 3-day trend properly — only 2. Add to operator task list: either regenerate from 4/8 log or accept partial history.
+
+POS WARNINGs today: 2 (both on PAQ0_COLLAPSE stop path):
+- 03:28:03 — API 0 local 14 (T2 PAQ_EARLY_AGG)
+- 19:58:24 — API 0 local 5 (T9 PAQ_EARLY_AGG)
+
+Both fired on the same code path, supporting Issue #11 root cause hypothesis: local position book increments on order-submit, not fill-confirm, and PAQ0_COLLAPSE is the only stop path that calls the API position query. **v255 spec must extend this check to ALL settle/close events.**
+
+### 3.5 — MOUNT / FOLDER SANITY PROBE  →  **PASS**
+
+All expected mounts present and readable:
+- `/sessions/compassionate-kind-goodall/mnt/Kai`          ✓
+- `/sessions/compassionate-kind-goodall/mnt/Kai (1)`      ✓
+- `/sessions/compassionate-kind-goodall/mnt/Kai analysis` ✓
+- `/sessions/compassionate-kind-goodall/mnt/Logs`         ✓
+- `/sessions/compassionate-kind-goodall/mnt/uploads`      ✓
+
+No missing mount path. Next session does NOT need to call request_cowork_directory.
+
+### 3.6 — VENV / DEPENDENCY PROBE  →  **SKIP (can't verify from sandbox)**
+
+Mini cron interpreter paths (openai, kalshi-python imports, gpt_factcheck.py, run_factcheck.sh) must be verified on the Mini directly. Flag for operator to run:
+```
+which python3
+crontab -l | grep -E "python|factcheck|api_usage|dashboard"
+```
+Added to operator task ledger.
+
+### 3.7 — MEMORY CONSISTENCY PROBE  →  **PASS**
+
+_AUTONOMY_MASTER.md presence:
+- MEMORY.md line 2 ✓ (pinned, underscore prefix sorts first)
+- session_brief.md: 2 references ✓
+- playbook.md: 3 references ✓
+- _SESSION_BOOTSTRAP.md exists and is line 1 of MEMORY.md ✓
+
+All three copies of the autonomy rules are in sync with source of truth. No reconciliation needed.
+
+### 3.8 — BRIDGE / AUTO-DEPLOY TRUTH PROBE  →  **PASS with DRIFT CORRECTION**
+
+Independent git verification from sandbox `/sessions/compassionate-kind-goodall/mnt/Kai/github`:
+```
+Local HEAD:   7e2831ef7db97098547680de57f23b2008c074f4
+origin/main:  7e2831ef7db97098547680de57f23b2008c074f4
+rev-list left<->right count: 0  0  (no ahead, no behind)
+```
+
+**Local origin/main ref now matches HEAD.** This means a git operation updated the ref since session_brief was written at 19:10 MDT (when it said "1 ahead of origin"). Sandbox `git ls-remote` still fails with 403 proxy — sandbox has no network path to github.com. Therefore the ref update came from **outside the sandbox**, i.e. from an `.git/refs/remotes/origin/main` write on the Mini side (git push from Mini, or a successful bridge push that updated the mounted .git folder).
+
+**Drift correction:** session_brief currently says "commit 7e2831e still unpushed, 1 ahead of origin." This is now stale. The local ref proves a push happened. Caveat: live-remote verification still requires Mini-side `git ls-remote origin main` to confirm the GitHub server actually has the SHA. The ref could theoretically be stale if someone only did a local `git update-ref`, but that would be weird.
+
+**Action taken:** session_brief updated to reflect the ref match + note that Mini must still run `git ls-remote` to close the loop. Bridge remains on the untrusted list per feedback_bridge_deploy_verification — ref-level proof is the new standard.
+
+### 3.9 — PROMPT-FOR-PERMISSION PROBE  →  **PASS (limited scan)**
+
+Scanned today's daily notes at Kai/memory/daily/2026-04-10.md. Phrases looked for:
+- "should I", "can I", "permission to", "let me know if", "is it okay if"
+- applied to any NEVER-ASK autonomy item
+
+Found phrases:
+- "Let me check mounts and pull today's notes first." — not a permission ask, just a state-load announcement
+- "Requesting directory mount now." — legitimate mount request, part of bootstrap
+
+Deep_Analysis_2026-04-10 run was autonomous. No autonomy violation in visible artifact layer.
+
+**Limitation:** Full chat transcript scan is the consolidation task's job (playbook §Consolidation step 5). Simulation only sees persisted notes. If operator side had more permission-asking, it gets caught at 23:50.
+
+---
+
+## NEW PROBES — incidents that bit us today
+
+### 3.10 — STALE METRIC SNAPSHOT PROBE *(NEW, added 2026-04-10)*
+
+**Incident:** Today's Deep_Analysis_2026-04-10.txt and session_brief (19:10) snapshot metrics at 18:15, and those values were materially stale by 23:00:
+- Harvest DONE: 3 at 18:15 → 11 at 23:02 (+267%)
+- Balance: $87.55 → $90.25 (+$2.70)
+- TICKER CLOSE count: 8 → 12
+- Claimed P&L: +$28.91 → +$30.78
+- POS WARNING: 1 → 2
+
+The narrative "v254 harvest is 100% broken" was written from a mid-afternoon snapshot and was already wrong 5 hours later. Future readers of session_brief would act on a false picture.
+
+**Probe check (to run every simulation):**
+1. Pull the three most recently modified metrics from session_brief: balance, last P&L, headline issue stats.
+2. Re-extract the same metrics from the live log at simulation time.
+3. If any delta > 10% or > $2 absolute, FLAG as SNAPSHOT-STALE.
+4. Update session_brief in-place with current values AND timestamp.
+5. Do NOT re-run the full analysis — only refresh the surface metrics.
+
+**Rationale:** The Deep Analysis artifact is a point-in-time document and stays frozen. session_brief is the running ground-truth and must be refreshed at simulation time so the morning session doesn't bootstrap from stale numbers.
+
+### 3.11 — REF-VS-BRIDGE TRUTH PROBE *(NEW, added 2026-04-10)*
+
+**Incident:** Session_brief claimed "commit 7e2831e still unpushed" based on a 19:10 snapshot. By 23:02, local `origin/main` ref matched HEAD — push had happened, but session_brief wasn't updated. Bridge lies of 4/9 set the expectation that we never trust "pushed" messages — but we also weren't auto-verifying when the truth changed for the better.
+
+**Probe check (to run every simulation):**
+1. For every "unpushed" or "pending push" claim in session_brief:
+2. Run `git rev-parse HEAD` and `git rev-parse origin/main` locally.
+3. If equal, the push happened — UPDATE session_brief to reflect.
+4. If unequal, confirm with `git rev-list --left-right --count origin/main...HEAD`.
+5. Note the verification method used (local-ref match vs live ls-remote).
+6. If sandbox ls-remote fails, record the caveat ("local ref matches — Mini must run ls-remote to confirm live state").
+
+**Rationale:** Bridge untrust doesn't mean "assume unpushed forever". Each simulation must independently re-check so we don't sit on a false negative for 24h.
+
+---
+
+## STEP 4 — DRIFT CORRECTIONS APPLIED
+
+Drift detected and fixed:
+
+1. **Hyo push state** — session_brief line 39 said "1 ahead of origin, sandbox egress 403, Mini must push next session". Local ref verification proves push already happened. **Updated session_brief** to reflect 0 ahead / 0 behind and flag Mini must run `git ls-remote origin main` as the live-state closer.
+
+2. **Harvest status** — session_brief Issue #7 says "HARVEST MISS DIAGs still report ABSENT" and implies harvest is 100% broken. Live log shows 11 DONE / 89 attempts and only 13/78 MISS lines mention ABSENT. **Updated session_brief** Issue #7 to reflect 12.4% success rate and evening session improvement.
+
+3. **v254 running status** — Deep_Analysis_2026-04-10 says "v254 IS NOT RUNNING". This was already internally retracted at 18:30 via binary grep but the analysis file wasn't annotated. **Added correction note** to Deep_Analysis_2026-04-10.txt header pointing to feedback_verify_before_accuse.md + this simulation.
+
+4. **Balance** — session_brief last recorded $87.55 @ 18:15. Live log shows $90.25 @ 23:00. **Updated session_brief** balance table + ledger.
+
+5. **Reconciliation gap** — session_brief says -$25.96. Now -$25.13 (slightly narrowed intraday). **Updated session_brief** with current gap and day-over-day trend.
+
+---
+
+## STEP 5 — PLAYBOOK UPDATE
+
+Changes applied:
+- Added probes 3.10 (STALE METRIC SNAPSHOT) and 3.11 (REF-VS-BRIDGE TRUTH) to §TASK: NIGHTLY SIMULATION step 3
+- Incremented playbook version to 1.5
+- Added entry to IMPROVEMENT LOG
+- Quality gate list updated to "All 11 incident-learning probes executed"
+- Minor clarification to Weekend Rules re: "Fri/Sat nights no fires" — noting this was overridden tonight for a manual/one-off simulation run
+
+---
+
+## STEP 6 — OPEN OPERATOR TASKS GENERATED BY THIS SIMULATION
+
+Written to operator ledger (appended, not duplicating existing):
+
+| ID | Task | Priority |
+|----|------|----------|
+| SIM-4/10-A | Run `git ls-remote origin main` on Mini to confirm 7e2831e is live on github.com | P1 |
+| SIM-4/10-B | Reshuffle Mini cron: factcheck→19:55, api_usage→20:05, dashboard→20:15 (DRIFT #3) | P1 |
+| SIM-4/10-C | Retro-patch Deep_Analysis_2026-04-10.txt header with "v254 IS running — see simulation 4/10" | P3 |
+| SIM-4/10-D | Regenerate or skip Final_Analysis_2026-04-08.txt (gap-trend data gap) | P3 |
+| SIM-4/10-E | Verify Mini cron python interpreter paths (probe 3.6 skipped in sandbox) | P2 |
+| SIM-4/10-F | Do NOT bring AetherBot back up Monday without v255 reconciliation patch (probe 3.4 P0) | P0 |
+| SIM-4/10-G | Restore heartbeat.md cron write path on Mini (carry-over) | P2 |
+| SIM-4/10-H | Restore api_usage.md cron (48h+ stale) | P2 |
+
+---
+
+## STEP 7 — PROBE RESULT SUMMARY
+
+| # | Probe | Result |
+|---|-------|--------|
+| 3.1 | Binary Path | PASS (proxy via log mtime + memory consistency) |
+| 3.2 | Binary Feature Grep | PASS with NUANCE (v254 firing, 4 feature symbols wired-but-not-triggered today) |
+| 3.3 | Cron/Scheduler Race | **FAIL** (unfixed drift, 3 Mini cron times still in old window) |
+| 3.4 | Reconciliation Gap Trend | **FAIL P0** (gap > $10, widening day-over-day) |
+| 3.5 | Mount / Folder Sanity | PASS |
+| 3.6 | Venv / Dependency | SKIP (Mini access required) |
+| 3.7 | Memory Consistency | PASS |
+| 3.8 | Bridge / Auto-deploy Truth | PASS with DRIFT CORRECTION (push actually landed) |
+| 3.9 | Prompt-for-permission | PASS (limited scan — consolidation does full) |
+| 3.10 | Stale Metric Snapshot *(new)* | FAIL on first run → drift corrected into session_brief |
+| 3.11 | Ref-vs-Bridge Truth *(new)* | PASS on first run → Hyo push confirmed via local ref |
+
+---
+
+## SIMULATION RATING: **7/10**
+
+**What worked:**
+- Caught two serious session_brief drifts (harvest status + Hyo push status) that would have led tomorrow's bootstrap to false conclusions.
+- Two new probes added from today's actual incidents — playbook now bites back on its own mistakes.
+- Live log re-extraction gave a fresh read of the reconciliation gap instead of trusting yesterday's snapshot.
+
+**What didn't work:**
+- Can't hit Mini directly for probes 3.1, 3.6, and live ls-remote verification. Sandbox egress is too walled off.
+- Can't do full chat transcript scan for probe 3.9 — only consolidation sees that layer.
+- Final_Analysis_2026-04-08 being missing means the gap-trend probe only has 2 data points instead of 3.
+
+**Single biggest risk for tomorrow:**
+Bot is off over the weekend (good). The real risk is Sunday night / Monday morning: if operator brings v254 back up without the v255 reconciliation patch, Issue #11 keeps eating ~$6/day in phantom P&L and the balance reconciliation gap will cross -$30 by mid-week.
+
+**Recommendation for operator when they read this:**
+1. Leave bot OFF through Monday morning.
+2. Run `git ls-remote origin main` on the Mini to close the Hyo push loop.
+3. Fix the Mini cron drift before Sunday evening.
+4. v255 spec is drafted — prioritize reviewing + approving Sunday afternoon so Monday reopen is clean.

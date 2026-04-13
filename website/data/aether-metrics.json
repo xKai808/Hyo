@@ -1,238 +1,131 @@
 {
-  "currentWeek": {
-    "start": "2026-04-06",
-    "end": "2026-04-10",
-    "startingBalance": 1000.0,
-    "currentBalance": 1087.45,
-    "pnl": 87.45,
-    "pnlPercent": 8.745,
-    "trades": 12,
-    "wins": 9,
-    "losses": 3,
-    "winRate": 75.0,
-    "stoplossTriggers": 2,
-    "harvestEvents": 3,
-    "strategies": [
-      {
-        "name": "Grid Bot",
-        "status": "active",
-        "pnl": 52.3,
-        "trades": 8,
-        "winRate": 87.5,
-        "lastAction": "2026-04-10T14:32:08-06:00"
-      },
-      {
-        "name": "Trend Follower",
-        "status": "active",
-        "pnl": 35.15,
-        "trades": 4,
-        "winRate": 50.0,
-        "lastAction": "2026-04-10T13:45:22-06:00"
-      }
-    ],
-    "dailyPnl": [
-      {
-        "date": "2026-04-06",
-        "pnl": 18.5,
-        "balance": 1018.5,
-        "trades": 2
-      },
-      {
-        "date": "2026-04-07",
-        "pnl": 22.8,
-        "balance": 1041.3,
-        "trades": 3
-      },
-      {
-        "date": "2026-04-08",
-        "pnl": 15.25,
-        "balance": 1056.55,
-        "trades": 2
-      },
-      {
-        "date": "2026-04-09",
-        "pnl": 19.9,
-        "balance": 1076.45,
-        "trades": 3
-      },
-      {
-        "date": "2026-04-10",
-        "pnl": 11.0,
-        "balance": 1087.45,
-        "trades": 2
-      }
-    ],
-    "recentTrades": [
-      {
-        "ts": "2026-04-10T14:32:08-06:00",
-        "side": "sell",
-        "pair": "ETH/USD",
-        "price": 3285,
-        "qty": 0.08,
-        "pnl": 8.5,
-        "strategy": "Grid Bot",
-        "type": "harvest"
-      },
-      {
-        "ts": "2026-04-10T13:45:22-06:00",
-        "side": "buy",
-        "pair": "SOL/USD",
-        "price": 149.25,
-        "qty": 1.5,
-        "pnl": 2.5,
-        "strategy": "Trend Follower",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-09T16:18:45-06:00",
-        "side": "buy",
-        "pair": "BTC/USD",
-        "price": 67250,
-        "qty": 0.02,
-        "pnl": 16.6,
-        "strategy": "Grid Bot",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-09T14:22:11-06:00",
-        "side": "sell",
-        "pair": "BTC/USD",
-        "price": 67850,
-        "qty": 0.015,
-        "pnl": 7.5,
-        "strategy": "Trend Follower",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-08T15:08:33-06:00",
-        "side": "buy",
-        "pair": "XRP/USD",
-        "price": 2.48,
-        "qty": 25,
-        "pnl": -3.75,
-        "strategy": "Grid Bot",
-        "type": "stoploss"
-      },
-      {
-        "ts": "2026-04-08T12:45:19-06:00",
-        "side": "sell",
-        "pair": "ETH/USD",
-        "price": 3240,
-        "qty": 0.12,
-        "pnl": 19.0,
-        "strategy": "Grid Bot",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-07T18:30:44-06:00",
-        "side": "buy",
-        "pair": "BTC/USD",
-        "price": 67100,
-        "qty": 0.025,
-        "pnl": 18.75,
-        "strategy": "Trend Follower",
-        "type": "harvest"
-      },
-      {
-        "ts": "2026-04-07T14:15:22-06:00",
-        "side": "sell",
-        "pair": "SOL/USD",
-        "price": 148.5,
-        "qty": 2,
-        "pnl": 4.05,
-        "strategy": "Grid Bot",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-06T16:42:58-06:00",
-        "side": "buy",
-        "pair": "BTC/USD",
-        "price": 67500,
-        "qty": 0.01,
-        "pnl": 12.5,
-        "strategy": "Grid Bot",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-06T13:20:05-06:00",
-        "side": "sell",
-        "pair": "ETH/USD",
-        "price": 3275,
-        "qty": 0.06,
-        "pnl": 6.0,
-        "strategy": "Trend Follower",
-        "type": "market"
-      },
-      {
-        "ts": "2026-04-07T11:25:33-06:00",
-        "side": "buy",
-        "pair": "ADA/USD",
-        "price": 1.08,
-        "qty": 50,
-        "pnl": -2.4,
-        "strategy": "Trend Follower",
-        "type": "stoploss"
-      },
-      {
-        "ts": "2026-04-08T09:15:44-06:00",
-        "side": "sell",
-        "pair": "SOL/USD",
-        "price": 147.8,
-        "qty": 1.2,
-        "pnl": -1.8,
-        "strategy": "Grid Bot",
-        "type": "market"
-      }
-    ],
-    "_metadata": {
-      "dataSource": "SIMULATED",
-      "note": "Last week M-F (April 6-10, 2026) trading metrics. Simulated pending real exchange API integration.",
-      "strategies": {
-        "Grid Bot": {
-          "description": "Systematic grid-based entry across price levels with trailing profit targets",
-          "entryMethod": "Multi-level grid at 50bp intervals",
-          "harvestTarget": "0.5-1.5% per level",
-          "stopLevel": "3% from entry"
-        },
-        "Trend Follower": {
-          "description": "Momentum-based entries on confirmed trend breaks with time-based exits",
-          "entryMethod": "Breakout on 30min close above resistance",
-          "harvestTarget": "1-2% per trade",
-          "stopLevel": "2% from entry"
-        }
-      }
+  "agent": "aether.hyo",
+  "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
+  "strategy": "Kalshi BTC 15M Binary (KXBTC15M). Automated YES/NO strike price prediction. 15-minute expiry cycles. Price action quality (PAQ), context state (CTX), and confidence (BCDP) signals drive entry/exit.",
+  "status": "active",
+  "lastUpdated": "2026-04-12T21:35:00-06:00",
+  "currentPeriod": {
+    "start": "2026-04-07",
+    "end": "2026-04-12",
+    "startingBalance": 93.04,
+    "currentBalance": 90.25,
+    "pnl": -2.79,
+    "pnlPercent": -3.0,
+    "daysActive": 6,
+    "totalTickersTraded": 542,
+    "totalTickersResolved": 501,
+    "resolutionRate": 92.4,
+    "averageTickersPerDay": 90
+  },
+  "btcMarketContext": {
+    "period": "2026-04-07 to 2026-04-12",
+    "lowPrice": 67835.49,
+    "highPrice": 73675.7,
+    "priceRange": 5840.21,
+    "volatility": "moderate-high"
+  },
+  "dailyMetrics": [
+    {
+      "date": "2026-04-07",
+      "openingBalance": 93.04,
+      "closingBalance": 98.47,
+      "dailyPnl": 5.43,
+      "dailyPnlPercent": 5.84,
+      "tickersTraded": 82,
+      "tickersResolved": 79,
+      "resolutionRate": 96.3,
+      "btcLow": 67835.49,
+      "btcHigh": 72532.02,
+      "btcAvg": 69235.07,
+      "performanceRating": "positive"
+    },
+    {
+      "date": "2026-04-08",
+      "openingBalance": 98.47,
+      "closingBalance": 90.56,
+      "dailyPnl": -7.91,
+      "dailyPnlPercent": -8.04,
+      "tickersTraded": 96,
+      "tickersResolved": 95,
+      "resolutionRate": 98.96,
+      "btcLow": 70598.13,
+      "btcHigh": 72614.52,
+      "btcAvg": 71388.49,
+      "performanceRating": "negative"
+    },
+    {
+      "date": "2026-04-09",
+      "openingBalance": 90.56,
+      "closingBalance": 84.6,
+      "dailyPnl": -5.96,
+      "dailyPnlPercent": -6.58,
+      "tickersTraded": 85,
+      "tickersResolved": 82,
+      "resolutionRate": 96.47,
+      "btcLow": 70653.96,
+      "btcHigh": 72573.85,
+      "btcAvg": 71805.58,
+      "performanceRating": "negative"
+    },
+    {
+      "date": "2026-04-10",
+      "openingBalance": 84.6,
+      "closingBalance": 90.25,
+      "dailyPnl": 5.65,
+      "dailyPnlPercent": 6.68,
+      "tickersTraded": 96,
+      "tickersResolved": 70,
+      "resolutionRate": 72.92,
+      "btcLow": 71477.84,
+      "btcHigh": 73364.46,
+      "btcAvg": 72594.56,
+      "performanceRating": "positive"
+    },
+    {
+      "date": "2026-04-11",
+      "openingBalance": 90.25,
+      "closingBalance": 90.25,
+      "dailyPnl": 0.0,
+      "dailyPnlPercent": 0.0,
+      "tickersTraded": 96,
+      "tickersResolved": 91,
+      "resolutionRate": 94.79,
+      "btcLow": 71440.69,
+      "btcHigh": 73675.7,
+      "btcAvg": 72762.95,
+      "performanceRating": "neutral"
+    },
+    {
+      "date": "2026-04-12",
+      "openingBalance": 90.25,
+      "closingBalance": 90.25,
+      "dailyPnl": 0.0,
+      "dailyPnlPercent": 0.0,
+      "tickersTraded": 87,
+      "tickersResolved": 84,
+      "resolutionRate": 96.55,
+      "btcLow": 70641.71,
+      "btcHigh": 71739.14,
+      "btcAvg": 71193.7,
+      "performanceRating": "neutral"
     }
+  ],
+  "operationalMetadata": {
+    "dataSource": "REAL \u2014 AetherBot v254 live trading logs",
+    "logsLocation": "agents/aether/logs/",
+    "originalSource": "/Users/kai/Documents/Projects/AetherBot/",
+    "dataVerified": true,
+    "verificationDate": "2026-04-12T21:35:00-06:00",
+    "logFilesPresent": 6,
+    "capital": "real",
+    "note": "Real trading capital on Kalshi. Balance reflects actual wins and losses from binary options trading. P&L is not simulated."
   },
-  "lastWeek": {
-    "start": "2026-03-30",
-    "end": "2026-04-05",
-    "startingBalance": 1000.0,
-    "endingBalance": 1000.0,
-    "pnl": 0.0,
-    "pnlPercent": 0.0,
-    "trades": 0,
-    "wins": 0,
-    "losses": 0,
-    "winRate": 0.0,
-    "stoplossTriggers": 0,
-    "harvestEvents": 0,
-    "bestStrategy": "\u2014",
-    "worstStrategy": "\u2014",
-    "_note": "Previous week had no trading activity (preparation phase)"
+  "strategySummary": {
+    "product": "Kalshi BTC 15M Binary Options (KXBTC15M)",
+    "timeframe": "15-minute expiry cycles",
+    "signalType": "Price action quality (PAQ), context (CTX), confidence (BCDP)",
+    "executionMethod": "Automated YES/NO predictions with real-time strike locking",
+    "riskManagement": "Position size: 1 contract per ticker. No leverage."
   },
-  "allTimeStats": {
-    "totalPnl": 87.45,
-    "totalTrades": 12,
-    "weeklyHistory": [
-      {
-        "start": "2026-04-06",
-        "end": "2026-04-10",
-        "pnl": 87.45,
-        "trades": 12,
-        "winRate": 75.0
-      }
-    ]
-  },
-  "updatedAt": "2026-04-12T20:46:26-06:00",
-  "_systemNote": "SIMULATED DATA \u2014 Pending real exchange API keys (Hyo task: provide read-only CCXT credentials). Data structure validates dashboard integration. Use as reference for metric format and dashboard rendering until live trading API is configured."
+  "updatedAt": "2026-04-12T21:46:41-06:00"
 }

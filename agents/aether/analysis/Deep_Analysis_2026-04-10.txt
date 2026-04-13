@@ -1,0 +1,409 @@
+DEEP ANALYSIS — AetherBot 2026-04-10 (Friday)
+Generated: 2026-04-10 18:18 MDT by Kai (Cowork scheduled task, autonomous)
+Source log: Logs/AetherBot_2026-04-10.txt (1891 lines, mtime 18:15:01 MDT — bot live)
+Playbook: v1.3 / 12-step protocol
+Bot: ALIVE (currently polling KXBTC15M-26APR102030-30 at 18:17, balance reads $87.55)
+
+================================================================================
+HEADLINE — READ THIS FIRST
+================================================================================
+1. v254 IS NOT RUNNING. Zero OB_FORMAT_DIAG, zero HARVEST BLOCKED, zero
+   TIME_BDI_LOW, harvest diagnostics still report `yes_bids:ABSENT |
+   no_bids:ABSENT`. The deploy from 4/9 19:55 MDT is either rolled back, lost
+   on restart, or never persisted. **Issue #7 (OB Parser ABSENT) and Issues
+   #2/#3 (BDI=0 / Harvest below entry) cannot be validated until v254 actually
+   runs. The bot has reverted to pre-v254 behavior.**
+
+2. BALANCE RECONCILIATION GAP HAS WORSENED. Claimed P&L from 8 ticker closes =
+   +$28.91. Actual balance change $84.60 → $87.55 = +$2.95. **GAP = -$25.96**
+   (vs -$18.88 yesterday). 6 of 8 trades produced ZERO real credit. Trade-level
+   "NET WIN" labels are hallucinated for the majority of fills.
+
+3. SMOKING GUN — POS WARNING at 03:28:03: `API 0 local 14`. Kalshi reports
+   ZERO open contracts; bot's local state thinks it has 14. STOP UNFILLED ("book
+   thin") followed. The 14c PAQ_EARLY_AGG entry at 03:19 was logged as a
+   +$6.44 win — but the position likely never filled or filled tiny. This is
+   the structural cause of the reconciliation gap. Phantom positions →
+   hallucinated P&L.
+
+4. HARVEST STILL 100% BROKEN. 78 MISS / 81 attempts = 3.7% success rate. All
+   diagnostics still print `yes_bids:ABSENT | no_bids:ABSENT` — confirming the
+   parser fix from v254 is NOT in the running binary.
+
+5. ALL 6 NATIVE TRADES + 2 CARRYOVERS WERE LOGGED AS WINS. Surface-level this
+   looks like a perfect day. It is not. Surface metrics are decoupled from
+   reality and must not be trusted until #1 and #3 are fixed.
+
+================================================================================
+STEP 1: LOCATE & VALIDATE
+================================================================================
+- Log file: PRESENT, fresh (mtime 18:15:01 MDT, currently being written).
+- Heartbeat.md: STILL MISSING in Kai/memory/ (Operator task #5 unresolved).
+  Sandbox proxy: Logs/ mtime confirms bot is alive.
+- Date: 2026-04-10 Friday — weekday, analysis required.
+- Prior analyses present: Deep_Analysis_2026-04-09.txt, Final_Analysis_2026-04-09.txt,
+  GPT_CrossCheck_2026-04-09.txt, raw_extract_2026-04-09.txt.
+
+================================================================================
+STEP 2: FULL LOG EXTRACTION (raw_extract_2026-04-10.txt)
+================================================================================
+Event-type counts (4/10 log):
+  BUY SNAPSHOT          6   (native 4/10 entries)
+  TICKER CLOSE          8   (6 native + 2 carryover from 4/9 evening tickers)
+  STOP lines            4   (1 STOP TRIGGER + STOP + STOP ANCHOR + STOP UNFILLED, all on T2)
+  HARVEST DONE          3   (all SPHI_DECAY, all 1c, all on bps_premium T3)
+  HARVEST MISS          78  (HARVEST MISS DIAG blocks attached to 13 distinct attempts)
+  HARVEST BLOCKED       0   (v254 entry-gate would emit this; ABSENT confirms v254 not live)
+  SETTLE RECHECK        33  (≤5 attempts per close, multiple per trade)
+  SETTLE CONFIRMED      6   (always with "bal delta unavailable" flag — bot self-flags gap)
+  BPS_SESSION flags     6   (all ALIGNED, 0 COUNTER)
+  BDI=0 events          0
+  TIME_BDI_LOW          0   (v254 pre-emptive exit ABSENT — confirms not live)
+  OB_FORMAT_DIAG        0   (v254 schema diagnostic ABSENT — confirms not live)
+  POS WARNING           1   (line 272: API 0 vs local 14 on T2)
+  Loop errors           ≥2  ("Connection reset by peer" at 01:12 and 01:43)
+  Other warnings        1   (the POS WARNING)
+
+================================================================================
+STEP 3: TRADE-BY-TRADE ANALYSIS
+================================================================================
+Two carryover closes (entries fired in 4/9 file) and six native 4/10 entries.
+
+# CARRYOVERS (entries in 4/9 log, settlements landed in 4/10 file)
+C1  TICKER CLOSE 23:00 MTN  bps_premium     +$1.54   (logged at 00:00:30 4/10)
+C2  TICKER CLOSE 23:45 MTN  PAQ_EARLY_AGG   +$2.10   (logged at 01:09 4/10)
+    Carryover total: +$3.64 (no balance ledger update visible — both these were
+    presumably already baked into the 4/9 23:52 SETTLE RECHECK of $84.60, so
+    they should NOT credit again on 4/10. They are reported here only because
+    the settlement events appear in this log file.)
+
+# NATIVE 4/10 TRADES
+T1  Entry: 00:20:14  bps_premium       NO @ 0.84   13c  $10.92
+    Window: ASIA_OPEN  BPS_SESSION: -5.0 ALIGNED
+    Conv: 7.4 (HIGH)  BDI: 340  Sized: 13→13c (no shrink)
+    Risk band: MODERATE 1.40× → $11.20
+    Time-in-window: T-589s (entered ~10 min into 15-min window)
+    Management: PHI HARVEST BOOST (PHI 43, NO 5c boosted), no STOPs, no harvest fills
+    Exit: 00:30 MTN settle, NO settled in @ 1.00 (NO won)
+    P&L claimed: +$2.08
+    BPS flag: ALIGNED ✓
+    HC/HA bucket: HIGH+ALIGNED  (Conv 7.4 ≥ 7.0)
+    Issues touched: #7 (harvest absent — confirmed)
+    Real credit?  Likely YES — first real balance bump $84.60 → $86.95
+                  arrived at line 802 (~10:42), but the +$2.35 magnitude is
+                  larger than +$2.08, so this credit may pool T1 and a piece
+                  of another trade. T1 is the only HIGH-conviction trade today
+                  and the math is closest to a real fill.
+
+T2  Entry: 03:19:18  PAQ_EARLY_AGG     YES @ 0.54  14c  $7.56
+    Window: EU_MORNING  BPS_SESSION: +2.0 ALIGNED
+    Conv: 6.7 (MID)  BDI: 355  Sized: 14→14c
+    Risk band: MODERATE 1.00× → $8.00
+    Management: PRICE rallied to 0.999 in 9 min; STOP TRIGGER PAQ0_COLLAPSE
+                fired at 03:28:03 (PAQ 0, abs 0.103%, 119s). Then:
+                  → POS WARNING | API 0 local 14    ← SMOKING GUN
+                  → STOP | YES | PAQ0_COLLAPSE | FULL | 14/14c
+                  → STOP ANCHOR 0.9710 [snap_bid]
+                  → STOP UNFILLED | book thin
+                Position rode to settlement; YES @ 0.999 → settled @ 1.00.
+    Exit: 03:30 MTN settle, "settled 14c +6.44 | bal $84.60 (unconfirmed)"
+    P&L claimed: +$6.44
+    BPS flag: ALIGNED ✓
+    HC/HA bucket: MID-conviction → not HC/HA tracked
+    Issues touched: NEW ISSUE #11 — phantom position. POS WARNING reveals
+                    API 0 vs local 14 at stop time. Either fill never
+                    happened or position drifted from local book.
+    Real credit?  NO — balance remained at $84.60 for hours after this close.
+                  This trade did not credit any real $ to the account, despite
+                  bot logging +$6.44.
+
+T3  Entry: 10:41:23  bps_premium       NO @ 0.80   12c  $9.60
+    Window: NY_PRIME  BPS_SESSION: -5.0 ALIGNED
+    Conv: 6.6 (MID)  BDI: 430  Sized: 12→12c
+    Risk band: MODERATE 1.00× → $10.00
+    Management: PHI HARVEST BOOST (PHI 17, 5c boost), one HARVEST SPHI_DECAY
+                attempted (NO 1c @ ob_bid 0.91 AGGRESSIVE BDI 264) → MISS,
+                yes_bids:ABSENT.
+    Exit: 10:45 MTN settle, NO @ 1.00 (NO won)
+    P&L claimed: +$2.26
+    BPS flag: ALIGNED ✓
+    HC/HA bucket: MID
+    Issues touched: #7 (harvest absent — confirmed yet again)
+    Real credit?  Possible (this is the trade that triggers the $84.60 → $86.95
+                  bump if the timing maps; T3 closes at line 922, balance bump
+                  observed at line 802 which is *before* this close so timing
+                  is suspect). The +$2.35 net delta covers either T1 or T3 but
+                  not both.
+
+T4  Entry: 11:40:21  PAQ_EARLY_AGG     NO @ 0.82   24c  $19.68
+    Window: NY_PRIME  BPS_SESSION: -2.0 ALIGNED
+    Conv: 5.7 (MID)  BDI: 275  Sized: 24→24c
+    Risk band: MODERATE 1.00× → $20.00
+    Management: PAQ_AGG_BCDP PASS at 11:41 PHI 60 BCDP 8C; no STOPs, no
+                harvest fills (multiple HARVEST MISS in this trade window —
+                see lines 740-778).
+    Exit: 11:45 MTN settle, NO @ 1.00
+    P&L claimed: +$4.32
+    BPS flag: ALIGNED ✓
+    HC/HA bucket: MID
+    Real credit?  NO — balance was $87.55 *before* this close (line 1119) and
+                  remained $87.55 after. Zero credit from this trade.
+
+T5  Entry: 12:09:58  PAQ_EARLY_AGG     NO @ 0.88   5c   $4.40
+    Window: NY_PRIME  BPS_SESSION: -3.0 ALIGNED
+    Conv: 6.2 (MID)  BDI: 164  Sized: 5→5c
+    Risk band: VOLATILE 1.00× → $5.00 (BDI 164 = volatile band)
+    Management: PAQ_AGG_BCDP PASS, no STOPs; HARVEST MISS series at lines
+                1031-1092 attached to this trade and possibly T4 tail.
+    Exit: 12:15 MTN settle, NO @ 1.00
+    P&L claimed: +$0.60
+    BPS flag: ALIGNED ✓
+    HC/HA bucket: MID
+    Real credit?  Possibly YES — there is a single $86.95 → $87.55 (+$0.60)
+                  bump in the SETTLE RECHECK stream at line 1005, magnitude
+                  exactly matches T5. But timing is again suspect (line 1005
+                  occurs *before* T5's actual close at line 1228), so the
+                  mapping may be Kalshi-side delayed credit from T3.
+
+T6  Entry: 12:22:08  PAQ_EARLY_AGG     NO @ 0.67   29c  $19.43
+    Window: NY_PRIME  BPS_SESSION: -2.0 ALIGNED
+    Conv: 6.8 (MID)  BDI: 230  Sized: 29→29c
+    Risk band: MODERATE 1.00× → $20.00
+    Management: PAQ_AGG_BCDP PASS PHI 24, PHI HARVEST BOOST 12c, one HARVEST
+                SPHI_DECAY attempted (NO 12c @ 0.73 STANDARD BDI 73) → MISS.
+    Exit: 12:30 MTN settle, NO @ 1.00
+    P&L claimed: +$9.57   (the largest claimed win of the day)
+    BPS flag: ALIGNED ✓
+    HC/HA bucket: MID
+    Real credit?  NO — balance remained $87.55 from line 1232 through current
+                  (18:17). Zero credit despite the +$9.57 claim. This is the
+                  single largest hallucinated trade of the day.
+
+================================================================================
+STEP 4: STRATEGY FAMILY CATEGORIZATION (native 4/10 only)
+================================================================================
+| Family          | Trades | W-L | WR%  | Claimed P&L | ALIGNED | COUNTER | Avg/trade |
+|-----------------|--------|-----|------|-------------|---------|---------|-----------|
+| bps_premium     |   2    | 2-0 | 100% |   +$4.34    |   2     |   0     |  +$2.17   |
+| PAQ_EARLY_AGG   |   4    | 4-0 | 100% |  +$20.93    |   4     |   0     |  +$5.23   |
+| TOTAL native    |   6    | 6-0 | 100% |  +$25.27    |   6     |   0     |  +$4.21   |
+
+Strategy notes:
+- PAQ_EARLY_AGG dominates: 67% of native trades, 83% of claimed native P&L.
+  Heavy concentration in NY_PRIME afternoon (T4/T5/T6 all NY_PRIME).
+- Two largest claimed wins (T2 +$6.44 EU_MORNING, T6 +$9.57 NY_PRIME) are
+  the two with the strongest evidence of being phantom (no real credit).
+  ⚠ Strategy P&L tables are unsafe to use for tuning until reconciliation
+  fix lands. PAQ_EARLY_AGG may look fantastic and actually be losing money.
+- Entry side bias: 5 of 6 native entries went NO. Only T2 went YES.
+- Contract sizing: range 5-29c, mean 16c. T6 (29c, $19.43) and T4 (24c,
+  $19.68) are the largest exposures and both produced zero real credit.
+
+Carryover (4/9 entries): bps_premium +$1.54 + PAQ_EARLY_AGG +$2.10 = +$3.64
+(do not double-count in 4/10 reconciliation; these were 4/9 trades).
+
+================================================================================
+STEP 5: SYSTEMATIC PATTERN ANALYSIS
+================================================================================
+A. v254 ABSENCE (P0)
+   v254 was supposed to add: OB_FORMAT_DIAG every harvest attempt, HARVEST
+   BLOCKED on entry-gate trips, TIME_BDI_LOW pre-emptive exit, staged 50/50
+   exit, BDI recovery detection. Counts in today's log:
+     OB_FORMAT_DIAG:   0   (expected: ≥81, one per harvest attempt)
+     HARVEST BLOCKED:  0
+     TIME_BDI_LOW:     0
+     Banner "v254":    0   (no startup banner because no restart in this file)
+   Conclusion: Bot is running pre-v254 (presumably v253). The 4/9 19:55 deploy
+   either rolled back, was overwritten on restart, or the deploy command never
+   actually replaced bot.py. Operator must verify on Mini:
+     `head -40 ~/bot.py | grep -i version`
+     `ls -la ~/bot.py ~/bot_v253_backup.py`
+
+B. BALANCE RECONCILIATION (P0 — STRUCTURAL)
+   Day total claimed (native + carryover settlements): +$28.91
+   Actual balance change (4/10 00:00 → 18:17): $84.60 → $87.55 = +$2.95
+   GAP: -$25.96  (worsened from -$18.88 on 4/9)
+   Real-credit attribution (best-effort):
+     +$2.35 bump at line 802 (~10:42) — covers T1 OR T3 (one of the two)
+     +$0.60 bump at line 1005 (~12:00) — covers T5 OR carryover delayed
+     Everything else: ZERO real credit.
+   Of the 6 native trades, at most 2 actually credited cash. The other 4
+   (T2, T4, T5 or T3, T6) are phantom or short-fill ghosts.
+
+C. POS WARNING — THE SMOKING GUN
+   Single occurrence at 03:28:03 (T2 stop attempt):
+     → STOP TRIGGER | PAQ0_COLLAPSE | YES | PAQ 0 | BPS +1.0 | abs 0.103% | 119s
+     → POS WARNING | API 0 local 14
+     → STOP | YES | PAQ0_COLLAPSE | FULL | 14/14c
+     → STOP ANCHOR | 0.9710 [snap_bid]
+     → STOP UNFILLED | YES | PAQ0_COLLAPSE | book thin
+   The Kalshi API reports zero open YES contracts on this ticker, while the
+   bot's local position book asserts 14. The stop tries to flatten 14c and
+   gets STOP UNFILLED ("book thin"). The bot then logs the trade as a
+   +$6.44 settlement win because its internal state believes 14c rode to
+   YES @ 1.00. Reality: there were never 14 contracts. The fill almost
+   certainly never happened (or was a tiny sliver).
+   This is the only POS WARNING in 1891 lines, but it is highly likely
+   that the same divergence is happening *silently* on the other 5 trades.
+   Why only one warning? POS WARNING is probably emitted only on
+   stop-attempt code paths, not on normal settle paths. So we're seeing the
+   tip of the iceberg.
+
+D. HARVEST SYSTEM (Issue #7)
+   78 MISS / 3 DONE / 0 BLOCKED = 3.7% success.
+   All 13 MISS DIAG blocks report `yes_bids:ABSENT | no_bids:ABSENT`.
+   This is the EXACT signature the v254 OB parser fix was meant to clear.
+   The fix is not present in the running binary → Issue #7 unresolved.
+   The 3 HARVEST DONE events (lines 788/792/796) all came from a single
+   trade (T3 bps_premium NO @ 0.80, harvest @ 0.94/0.98) and are all 1c
+   trickle fills totaling +$0.46 — they crept through the broken parser
+   somehow, probably via a fallback code path. Not a fix, just luck.
+
+E. SESSION-BOUNDARY / TIMING
+   All 6 native entries fired between T-219s and T-644s (in the 4-11 minute
+   range of a 15-min window). No edge-of-window entries, no late entries.
+   Entry timing is healthy.
+
+F. NETWORK INSTABILITY
+   Two `Loop error: ConnectionError ('Connection aborted.', ConnectionResetError(54,
+   'Connection reset by peer'))` events at 01:12 and 01:43 MTN. Bot recovered
+   each time. Not crisis-level but worth noting as background friction that
+   may correlate with delayed Kalshi sync (and therefore POS WARNING risk).
+
+G. AFTERNOON IDLE STRETCH
+   No native trades from 12:30 MTN through 18:15 MTN (5h 45m). Cause is
+   *not* a stuck bot — log shows continuous polling, BCDP cycling, and
+   repeated `READY → PRICE_ABOVE_CEIL` rejections. The bot's price-ceiling
+   filter is rejecting most NY-afternoon setups because BTC is grinding up
+   into the strike. This is gate behavior, not failure.
+   Side effect: Issue #8 (Evening BPS flags missing) — last BPS_SESSION flag
+   was at line 1026 (~12:22 MTN, NY_PRIME -2.0 ALIGNED). Five-and-a-half
+   hours of BCDP cycling with no BPS_SESSION emission. Same pattern as
+   yesterday. Likely structural: BPS_SESSION emits only at BUY SNAPSHOT
+   construction time, not on every poll.
+
+H. WEEKEND HANDOFF
+   Bot will trade through tonight's Asia open and then needs to be OFF
+   Sat 4/11 and Sun 4/12 per playbook. Operator must verify weekend cron
+   gating still works given v253 vs v254 mismatch.
+
+================================================================================
+STEP 6: CROSS-SESSION TRACKING
+================================================================================
+HC running total (HIGH+COUNTER, conviction ≥7.0, BPS_SESSION COUNTER):
+   Pre-4/10:  -$47.37  (6 trades, 6 sessions)
+   4/10 new:  0 trades  (no COUNTER flags today)
+   Post-4/10: -$47.37  (unchanged — 6 trades, 6 sessions)
+
+HA running total (HIGH+ALIGNED, conviction ≥7.0, BPS_SESSION ALIGNED):
+   Pre-4/10:  +$17.48  (10 trades, 8 sessions, 100% WR)
+   4/10 new:  +1 trade — T1 (bps_premium NO 0.84, Conv 7.4 HIGH, ASIA_OPEN
+              ALIGNED, claimed +$2.08). HOWEVER: today's reconciliation gap
+              means this "win" may not reflect real credit. For tracking
+              continuity I add it at the *claimed* number with a caveat.
+   Post-4/10 (claimed):    +$19.56  (11 trades, 9 sessions, 100% WR claimed)
+   Post-4/10 (real):       AMBIGUOUS — depends on which of T1/T3 owns the
+                           +$2.35 bump.
+
+⚠ HC/HA totals are now structurally compromised by the reconciliation gap.
+  Until v254 lands and POS WARNING root cause is fixed, these running
+  totals must be treated as upper bounds, not facts.
+
+Open issue status changes (10 issues from 4/9 brief):
+  #1  EU_MORNING                     UNCHANGED (1 trade today, T2, claimed win — phantom?)
+  #2  BDI=0 forced exit               UNVALIDATED (v254 not running)
+  #3  Harvest below entry             UNVALIDATED (v254 not running)
+  #4  Weekend                         N/A (Friday — bot ON)
+  #5  Position sizing HC recalc       UNCHANGED (no HC trades today)
+  #6  Balance reconciliation gap      ⚠ WORSENED (-$18.88 → -$25.96)
+  #7  OB Parser ABSENT                ⚠ STILL ABSENT (78/78 MISS DIAGs confirm)
+  #8  Evening BPS flags missing       ⚠ CONFIRMED AGAIN (silent after 12:22)
+  #9  WES_EARLY settlement gap        N/A (no WES_EARLY trades today)
+  #10 T25 catastrophic fill           N/A (one-off)
+  #11 (NEW) Phantom positions /       ⚠ NEW — POS WARNING + reconciliation
+       POS WARNING divergence          gap evidence; root cause for #6
+
+================================================================================
+STEP 11 (preview): UPDATED STATE FOR BRIEF
+================================================================================
+- Balance: $87.55 (latest stabilization 18:15:16, line 1880-ish)
+- Day delta: +$2.95 actual / +$28.91 claimed (gap -$25.96)
+- HA running: +$19.56 claimed / ambiguous real
+- HC running: -$47.37 unchanged
+- Active issues escalated to P0: #1 (v254 not running), #6 (gap worsened),
+  #7 (parser still absent), #11 (phantom positions, NEW)
+- Bot status: ALIVE, polling, no trades since 12:30 (price-ceiling filter)
+- Heartbeat.md: STILL MISSING in shared mount
+
+================================================================================
+QUALITY GATES
+================================================================================
+[x] EVERY trade in the log accounted for (8 closes — 2 carryover + 6 native, all listed)
+[x] Strategy family totals sum to overall claimed P&L (+$4.34 + $20.93 = $25.27 native; +$3.64 carryover = $28.91 ✓)
+[x] Balance change calculated and explained (+$2.95 actual vs +$28.91 claimed, gap -$25.96)
+[x] Balance reconciliation gap quantified (-$25.96, attributed to phantom positions)
+[x] No reactive/patchwork recommendations from single-session data — fixes recommended are multi-day evidenced (Issue #6 multi-day, Issue #7 multi-day, v254 deploy verification is operational not strategy)
+[x] HC and HA running totals updated with caveats
+[x] All 10 open issues checked + 1 new issue raised (#11 phantom positions)
+[ ] GPT cross-check completed — PENDING (Mini cron at 17:15 will have already fired against an empty file; needs manual rerun after this analysis lands)
+[ ] Final analysis includes cross-check synthesis — DEFERRED to Final_Analysis once GPT file lands
+[x] Harvest system diagnostics reviewed (ABSENT confirmed)
+
+================================================================================
+RECOMMENDED OPERATOR ACTIONS (priority order)
+================================================================================
+P0a — VERIFY v254 IS ACTUALLY RUNNING ON MINI
+       On Mini: `head -40 ~/bot.py | grep -E "(VERSION|v254)"`
+       And:    `ls -la ~/bot.py ~/bot_v253_backup.py ~/Documents/Projects/AetherBot/Code\ versions/AetherBot_MASTER_v254.py`
+       If running v253: re-run the deploy command from the 4/9 brief and
+       confirm by tailing the log for OB_FORMAT_DIAG within 1 ticker cycle.
+
+P0b — DECISION: HALT vs CONTINUE through weekend
+       The bot is producing fictional P&L. Every trade may be costing real
+       slippage/fees on partial fills while logging full wins. Two options:
+       (1) Halt bot immediately until v254 + position sync fix → safest,
+           sacrifices any real wins through Friday close.
+       (2) Let it run through Friday close and halt over weekend → captures
+           any real upside but accumulates more divergence.
+       Recommendation: option (2) — bot already idle until next setup,
+       window for real damage is small, Mon morning will benefit from a
+       full v254 + reconciliation rebuild. **Operator decision required.**
+
+P0c — POS WARNING ROOT CAUSE
+       Need a v255 spec that adds:
+       (a) POS WARNING emitted on EVERY settle, not just stop attempts
+       (b) Settlement P&L computed from API position size, not local book
+       (c) Hard fail-safe: if API position size diverges from local by >1c,
+           do NOT log a settlement P&L; log "RECONCILE FAIL" and skip the
+           trade in cumulative totals
+       Spec to be drafted in v255_Build_Spec.md (deferred to next session
+       since v254 itself isn't running yet — fix that first).
+
+P1  — Heartbeat.md still missing (Operator task #5 unresolved)
+P1  — Hyo unpushed commit 7e2831e (per session brief — must push from Mini)
+P2  — Reshuffle Mini cron times (factcheck 19:45, api 20:00, dashboard 20:15)
+       per 4/9 simulation finding
+
+================================================================================
+INTROSPECTION
+================================================================================
+Quality rating: 8/10
+What deep process revealed that surface would have missed:
+  - Surface analysis would have written "Friday +$28.91, 8/8 wins, 100% WR,
+    great day, PAQ_EARLY_AGG dominant strategy". That report would have
+    been actively misleading and would have driven future tuning toward an
+    increasingly phantom strategy.
+  - Cross-referencing TICKER CLOSE P&L against SETTLE RECHECK balance
+    deltas exposed the hallucination. The single POS WARNING line at 03:28
+    is the smoking gun — easy to miss in 1891 lines if you're scanning
+    only for known-bad patterns.
+  - Counting v254-specific event types (OB_FORMAT_DIAG, HARVEST BLOCKED,
+    TIME_BDI_LOW) revealed v254 isn't actually running, which the brief
+    asserted as deployed. Trust-but-verify caught a stale assumption.
+What I didn't do well:
+  - Didn't verify on Mini that bot.py actually has v254 source (would
+    require ssh, sandbox can't reach Mini directly). Flagged as P0a for
+    operator verification instead.
+  - Didn't run GPT cross-check yet (Mini cron drift; needs reschedule).
+================================================================================
+END Deep_Analysis_2026-04-10.txt

@@ -416,7 +416,7 @@ fi
 PLAYBOOK_UPDATED="False"
 STALENESS_FLAG="False"
 if [[ -f "$PLAYBOOK" ]]; then
-  PLAYBOOK_MTIME=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+  PLAYBOOK_MTIME=$(stat -c %Y "$PLAYBOOK" 2>/dev/null || stat -f %m "$PLAYBOOK" 2>/dev/null || echo "0")
   PLAYBOOK_AGE=$(( ($(date +%s) - PLAYBOOK_MTIME) / 86400 ))
   if [[ $PLAYBOOK_AGE -lt 7 ]]; then
     PLAYBOOK_UPDATED="True"

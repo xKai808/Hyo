@@ -1,0 +1,32 @@
+GPT CROSS-CHECK 2026-04-10 — PENDING
+=====================================
+
+Status: Cowork sandbox cannot reach OpenAI API directly. Mini cron at 17:15
+already fired (DRIFT — fired before this analysis was written, so its
+cross-check will be against an empty / yesterday file). A fresh fact-check
+must be run on the Mini against today's deep analysis.
+
+Mini trigger command (paste-ready):
+  cd ~/Documents/Projects/AetherBot/Kai\ analysis && python3 gpt_factcheck.py 2026-04-10
+
+What GPT-4o should be asked to verify (mirror of operator standing prompt):
+  1. Does the claimed +$28.91 vs actual +$2.95 reconciliation gap math
+     check out from the SETTLE RECHECK stream alone?
+  2. Is the v254-not-running conclusion correct given:
+     - 0 OB_FORMAT_DIAG events
+     - 0 HARVEST BLOCKED events
+     - 0 TIME_BDI_LOW events
+     - 78/78 HARVEST MISS DIAGs still showing yes_bids:ABSENT|no_bids:ABSENT?
+  3. Does the POS WARNING (API 0 local 14) at 03:28:03 actually imply phantom
+     positions, or is it more likely an API-lag race where the position
+     cleared between the prior poll and the stop attempt?
+  4. Are there any systemic patterns Kai missed in the BPS_SESSION /
+     BUY SNAPSHOT distribution that suggest entry-side bias (5/6 NO)?
+  5. Is the recommendation to run through Friday close and halt over
+     weekend (vs immediate halt) the right call given the gap evidence?
+  6. Are there any non-reactive multi-day-evidenced fixes Kai should be
+     building specs for that this analysis missed?
+
+Once GPT_CrossCheck_2026-04-10.txt lands in this folder, Final_Analysis_2026-04-10.txt
+should synthesize it against this Deep_Analysis. Until then, the deep
+analysis is the authoritative read.

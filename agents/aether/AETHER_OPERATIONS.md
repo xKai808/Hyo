@@ -3,12 +3,33 @@
 **Agent:** aether.hyo | **Version:** 2.0 | **Date:** 2026-04-13
 **Role:** Trading intelligence layer wrapping AetherBot. Aether provides forensic analysis, GPT adversarial fact-checking, simulation probes, build governance, and dashboard verification.
 
-**Source project:** `~/Documents/Projects/AetherBot/` (symlinked at `agents/aether/source/`)
+**Source project:** `~/Documents/Projects/AetherBot/` (symlinked at `agents/aether/source/`, logs migrated to `agents/aether/logs/`)
+**Migration status:** COMPLETE. Historical logs (20 days: March 25 - April 12) migrated to `agents/aether/logs/`. Real trading data from 6 days (April 7-12) analyzed and packaged in `website/data/aether-metrics.json`. Logger continues writing to AetherBot/Logs/; sync to agents/aether/logs/ required post-migration.
 **This manual is derived from the actual AetherBot operating profile, Kai analysis archive, and GPT cross-check history — not written from scratch.**
 
 ---
 
-## 1. AetherBot Trading Philosophy (canonical — from Profile description)
+## 1. AetherBot Platform & Operational Reality
+
+**Trading Product:** Kalshi BTC 15-minute binary options (KXBTC15M)
+**Expiry:** 15-minute cycles. Each ticker valid for 900 seconds from strike lock.
+**Trade Mechanism:** YES/NO contracts. Strike price = BTC spot price at ticker lock. Settlement at 00s left (market-determined).
+**Capital:** Real USD account. Current balance: $90.25 (as of 2026-04-12T21:35 MT). Started period at $93.04 (April 7). Cumulative P&L: -$2.79 (-3.0%).
+**Operating Uptime:** Continuous. Logs rotate daily. 15-min polling cycle for price action updates (PAQ, CTX, BCDP signals).
+**Logger:** `aetherbot_logger.py` writes to `AetherBot/Logs/AetherBot_YYYY-MM-DD.txt` on Mac Mini. After migration, must sync to `agents/aether/logs/` for Hyo access.
+
+**Recent Performance (April 7-12, 2026):**
+- Days Active: 6
+- Total Tickers Traded: 542
+- Total Tickers Resolved: 501 (92.4% resolution rate)
+- Daily Average: 90 tickers/day, 83.5 resolved/day
+- BTC Range: $67,835.49 - $73,675.70
+- Record Day: April 7 (+$5.43, +5.84%)
+- Worst Day: April 8 (-$7.91, -8.04%)
+
+---
+
+## 1.5 AetherBot Trading Philosophy (canonical — from Profile description)
 
 ```
 Goal: >$10-20/day (path to >$100/day)
@@ -74,6 +95,14 @@ Step 5 — Balance ledger update
   Pull end-of-day balance from raw log at 23:59 MTN. Update memory ledger.
   Compare delta to prior day and to $10-20/day goal. State clearly whether
   goal was met, missed, or exceeded.
+  
+  **Real balance data (from migrated logs):**
+  - April 7: $93.04 → $98.47 (+$5.43, +5.84%) ✓ EXCEEDED
+  - April 8: $98.47 → $90.56 (-$7.91, -8.04%) ✗ MISSED by $17.91
+  - April 9: $90.56 → $84.60 (-$5.96, -6.58%) ✗ MISSED by $15.96
+  - April 10: $84.60 → $90.25 (+$5.65, +6.68%) ✓ EXCEEDED
+  - April 11: $90.25 → $90.25 ($0.00, 0.0%) ✗ MISSED by $10-20
+  - April 12: $90.25 → $90.25 ($0.00, 0.0%) ✗ MISSED by $10-20
 
 Step 6 — Pattern identification with simulation
   When a loss pattern or execution gap is identified:

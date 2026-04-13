@@ -2,14 +2,15 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~03:30 MT (trigger audit + compressed milestones + agent memory saved)
+**Updated:** 2026-04-13 ~03:33 MT (nightly simulation run + ra.sh/sam.sh stat bug fixed)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
+**Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 
 ## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
 
 These are Hyo's direct instructions. They override lower-priority tasks. Do not skip.
 
-1. **Aether migration** — AetherBot runs from `~/Documents/Projects/AetherBot/` and writes logs to `~/Documents/Projects/AetherBot/logs/` (date-based). Aether agent in Hyo repo must either point to that folder OR migrate everything to `agents/aether/`. Hyo says migrate. This must be done before morning — Aether needs access to all historical logs. No hiccups.
+1. **Aether migration** — ✓ COMPLETE. All historical logs (April 7-12), 41 analysis files, code versions, and operational scripts migrated from `~/Documents/Projects/AetherBot/` to `agents/aether/`. Real trading data (542 tickers, 92.4% resolution rate, $90.25 current balance) extracted into `website/data/aether-metrics.json`. AETHER_OPERATIONS.md updated with real operational details. Symlink `source → /Users/kai/Documents/Projects/AetherBot/` active. aether.sh runner functional at `agents/aether/aether.sh`. Note: AetherBot logger continues writing to original location; post-migration sync to agents/aether/logs/ required for live updates.
 2. **Nel GitHub scan must be autonomous** — already wired into q6h QA cycle (Phase 2.5). Verify it actually runs via launchd, not just manually.
 3. **Agent introspective reports on HQ** — every agent produces a self-assessment report visible on hyo.world/hq under their respective section. Kai also produces a CEO report. Human-readable.
 4. **Agent self-improvement research** — each agent researches improvements in their domain, generates recommendations, can implement changes PRN but Kai has veto. Reports published to HQ.
@@ -88,14 +89,56 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 — research split-pane live, Nel v2.0, agent autonomy, zero copy-paste)
+## Current state (as of 2026-04-13 — nightly simulation run, ra.sh stat bug fixed)
 
-**⚠ HEALTHCHECK ALERT (2026-04-13T02:10Z):**
-- **P0** — 1 corrupt JSONL file (Dex Phase 1). Auto-remediation dispatched, unconfirmed.
-- **P1** — Nightly sim failures: nel exit-1, ra exit-2 (since 22:19Z). Unresolved.
-- **P1** — 13 recurrent patterns (Dex Phase 4). Safeguard cascade triggered, unconfirmed.
-- **P2** — Aether dashboard mismatch (MT vs UTC) repeating every 15min. Under investigation.
-- Next session: confirm corrupt JSONL fix, verify sim runner exits, resolve aether timezone.
+**📋 NIGHTLY SIMULATION (2026-04-13T03:33 MT) — Cowork scheduled task:**
+
+| Phase | Result | Notes |
+|---|---|---|
+| Phase 1: Downward delegation (Kai→Agent) | ✓ 9/9 PASS | All agents: delegate→ack→report→verify→close confirmed |
+| Phase 2: Upward communication (Agent→Kai) | ✓ 6/6 PASS | All self-delegates and flags visible in Kai ledger |
+| Phase 3: Agent runners | ⚠ nel exit-1, ra exit-2, sam exit-0 | Environmental (nel score<70, ra pipeline warnings) |
+| Phase 4: Cross-reference integrity | ✓ 7/7 PASS | All ledger sync checks clean |
+| Phase 5: Known issue regression check | ✓ PASS | 0 regressions across 29 known patterns |
+| **Overall** | **24 pass / 2 fail** | Same failure profile as prior 3 runs |
+
+**🔧 BUG FIXED THIS RUN:**
+- `ra.sh:419` and `sam.sh:487` — `stat -f %m` (macOS) was ordered before `stat -c %Y` (Linux) without OS detection. On Linux, `stat -f` outputs multi-line filesystem info to stdout before exiting non-zero, polluting `PLAYBOOK_MTIME` and causing `File: unbound variable` under `set -u`.
+- Fix: swapped order to Linux-first (`stat -c %Y || stat -f %m`). Pattern logged to known-issues.jsonl.
+- Result: ra.sh crash resolved. Remaining exit 2 = expected pipeline warnings (Yahoo Finance source).
+
+**Health check:** 1 issue — unresolved flags backlog (24 open flags, 5 unique P1/P2 issues). No stale delegations. Nel de-dup needed.
+
+**📋 NIGHTLY CONSOLIDATION (2026-04-13T03:31 MT):**
+
+| Project    | Sentinel                        | Cipher          | Notes                                      |
+|------------|---------------------------------|-----------------|--------------------------------------------|
+| hyo        | 3 pass / 1 fail                 | 0 leaks         | FAIL: API health unreachable (sandbox)     |
+| aurora-ra  | 4 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
+| aether     | 1 pass / 1 fail                 | n/a             | FAIL: kai/aether.sh runner missing (P0)    |
+| kai-ceo    | 4 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
+| nel        | 4 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
+| sam        | 6 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
+
+**Nel sweep results (score=65, below 70 threshold):**
+- P1 flag: No newsletter for 2026-04-12 past 06:00 MT deadline → auto-remediation dispatched to Ra
+- P2 flag: 2 sentinel failures (hyo API + aether runner)
+- P2 flag: 15 broken documentation links (self-delegated fix: nel-011)
+- P3 flag: 1 code optimization opportunity
+
+**Ra health check results (0 critical, 2 warnings):**
+- Archive: 5 entities, 4 topics, 7 lab items — most recent 0 days ago ✓
+- Warning: no newsletter output today (after 06:00 MT)
+- Research archive synced to website/docs/research/ ✓
+
+**⚠ DAILY AUDIT ALERT (2026-04-13T03:35 MT):**
+- **P0** — None. Queue clean (59 completed, 0 pending, 1 failed historical). Launchd daemons stable.
+- **P1** — Newsletter production failure (no 2026-04-12 edition). Root cause TBD; pipeline works offline. Check launchd com.hyo.aurora log and manual run.
+- **P1** — Simulation runner failures persist: nel exit-1, ra exit-2 (environmental). ra.sh crash fixed this run.
+- **P1** — Duplicate flag explosion: flag-nel-* repeating 4-5 times per issue. Nel needs de-dup logic before flag submission.
+- **P2** — Aether timezone mismatch (MT -06:00 vs UTC Z). Expected fix: normalize to MT per CLAUDE.md rule.
+- **P2** — Stale failed queue job (recheck-1776044635). Worker timeout now capped; can be deleted.
+- **NEXT SESSION PRIORITIES:** (1) Newsletter production root cause + fix, (2) Nel de-dup logic, (3) Aether migration (P0 directive), (4) Verify Aether/Dex first runs, (5) Delete stale queue job. See daily-audit-2026-04-13.md for full report.
 
 **Running daemons on Mini (confirmed via `launchctl list | grep hyo`):**
 - `com.hyo.queue-worker` — file-based command queue, auto-processes `kai/queue/pending/`

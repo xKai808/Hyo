@@ -118,6 +118,141 @@ PYEOF
   fi
 }
 
+# ─── Extract Metrics from AetherBot Logs ──────────────────────────────────
+extract_aether_metrics_from_logs() {
+  # Find latest AetherBot log file
+  # Primary: agents/aether/logs/AetherBot_YYYY-MM-DD.txt (post-migration)
+  # Fallback: ~/Documents/Projects/AetherBot/Logs/AetherBot_YYYY-MM-DD.txt
+
+  local log_file=""
+  local agents_log="$LOGS/AetherBot_$(date +%Y-%m-%d).txt"
+  local aetherbot_log="$HOME/Documents/Projects/AetherBot/Logs/AetherBot_$(date +%Y-%m-%d).txt"
+
+  if [[ -f "$agents_log" ]]; then
+    log_file="$agents_log"
+  elif [[ -f "$aetherbot_log" ]]; then
+    log_file="$aetherbot_log"
+  fi
+
+  if [[ -z "$log_file" ]]; then
+    log "WARN: No AetherBot log found for today. Using last metrics."
+    return 0
+  fi
+
+  # Extract balance from the last "bal $X.XX" occurrence in the log
+  # Format: "bal $90.25" or similar
+  local extracted_balance=""
+  extracted_balance=$(grep -oE "bal \\\$[0-9]+\.[0-9]{2}" "$log_file" 2>/dev/null | tail -1 | sed 's/bal \$//g')
+
+  if [[ -n "$extracted_balance" ]]; then
+    log "Extracted balance from log: \$$extracted_balance"
+
+    # Update metrics file with real balance
+    python3 - "$METRICS" "$extracted_balance" <<'PYEOF'
+import json
+import sys
+from datetime import datetime
+
+metrics_file = sys.argv[1]
+new_balance = float(sys.argv[2])
+
+try:
+  with open(metrics_file) as f:
+    data = json.load(f)
+
+  cw = data["currentWeek"]
+  old_balance = cw["currentBalance"]
+  cw["currentBalance"] = round(new_balance, 2)
+
+  # Recalculate PnL from starting balance
+  cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
+  cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw["startingBalance"] else 0
+
+  data["updatedAt"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+
+  with open(metrics_file, "w") as f:
+    json.dump(data, f, indent=2)
+    f.write("\n")
+
+  print(f"Balance updated: ${old_balance} → ${new_balance}, PnL: ${cw['pnl']} ({cw['pnlPercent']}%)")
+except Exception as e:
+  print(f"Error updating metrics: {e}")
+PYEOF
+  fi
+
+  # Extract ticker count from the log (count "TICKER CLOSE" lines for today)
+  local ticker_closes=""
+  ticker_closes=$(grep -c "TICKER CLOSE" "$log_file" 2>/dev/null || echo "0")
+  log "Tickers closed today: $ticker_closes"
+}
+
+# ─── GPT Daily Log Review ────────────────────────────────────────────────────
+# Sends today's AetherBot raw log to GPT-4o for independent analysis,
+# pattern detection, and fact-checking of trading decisions.
+# Runs once per day — skips if GPT_CrossCheck already exists for today.
+# Output: agents/aether/analysis/GPT_CrossCheck_YYYY-MM-DD.txt
+#
+gpt_daily_log_review() {
+  local today
+  today=$(TZ="America/Denver" date +%Y-%m-%d)
+  local crosscheck_file="$ROOT/agents/aether/analysis/GPT_CrossCheck_${today}.txt"
+  local factcheck_script="$ROOT/agents/aether/analysis/gpt_factcheck.py"
+
+  # Skip if already reviewed today
+  if [[ -f "$crosscheck_file" ]] && ! grep -q "PENDING" "$crosscheck_file" 2>/dev/null; then
+    log "GPT daily log review: already exists for $today, skipping"
+    return 0
+  fi
+
+  # Verify factcheck script exists
+  if [[ ! -f "$factcheck_script" ]]; then
+    log "WARN: gpt_factcheck.py not found at $factcheck_script"
+    return 0
+  fi
+
+  # Find today's log (same logic as extract_aether_metrics_from_logs)
+  local log_file=""
+  local agents_log="$LOGS/AetherBot_${today}.txt"
+  local aetherbot_log="$HOME/Documents/Projects/AetherBot/Logs/AetherBot_${today}.txt"
+
+  if [[ -f "$agents_log" ]]; then
+    log_file="$agents_log"
+  elif [[ -f "$aetherbot_log" ]]; then
+    log_file="$aetherbot_log"
+  fi
+
+  if [[ -z "$log_file" ]]; then
+    log "GPT daily log review: no AetherBot log found for $today, skipping"
+    return 0
+  fi
+
+  # Only run after enough data accumulates (at least 500 lines = ~2 hours of tickers)
+  local line_count
+  line_count=$(wc -l < "$log_file" 2>/dev/null || echo "0")
+  if [[ "$line_count" -lt 500 ]]; then
+    log "GPT daily log review: log only has $line_count lines, waiting for more data (need 500+)"
+    return 0
+  fi
+
+  log "GPT daily log review: sending $log_file ($line_count lines) to GPT-4o..."
+
+  # Run the factcheck script in --log mode
+  local result
+  if result=$(HYO_ROOT="$ROOT" python3 "$factcheck_script" --log "$today" 2>&1); then
+    log "GPT daily log review: complete — saved to $crosscheck_file"
+
+    # Report to Kai via dispatch
+    local dispatch_bin="$ROOT/bin/dispatch.sh"
+    if [[ -x "$dispatch_bin" ]]; then
+      bash "$dispatch_bin" report aether "GPT daily log review complete for $today — see GPT_CrossCheck_${today}.txt" 2>> "$LOG" || true
+    fi
+  else
+    log "GPT daily log review: FAILED — $result"
+    # Write a PENDING marker so we retry next cycle
+    echo "PENDING — GPT review failed at $(TZ='America/Denver' date). Will retry next cycle." > "$crosscheck_file"
+  fi
+}
+
 # ─── Record Trade ─────────────────────────────────────────────────────────────
 record_trade() {
   local trade_json="$1"
@@ -421,6 +556,17 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     push_to_hq
     return 0
   fi
+
+  # Extract real data from AetherBot logs
+  extract_aether_metrics_from_logs
+
+  # ─── GPT Daily Log Review ─────────────────────────────────────────────────
+  # Send today's raw log to GPT-4o for independent analysis + fact-checking.
+  # Runs once per day (checks if GPT_CrossCheck already exists for today).
+  # Hyo directive: "Aether needs to send GPT the day's log so that it can come
+  # up with its own analysis and actually factcheck anything that Aether
+  # recognizes, wants to change, etc"
+  gpt_daily_log_review
 
   # Normal run: update timestamp + push to HQ
   python3 -c "

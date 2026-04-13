@@ -1,53 +1,59 @@
 {
-  "updatedAt": "2026-04-12T20:11:42-06:00",
+  "updatedAt": "2026-04-12T21:30:00-06:00",
+  "morningReport": {
+    "date": "2026-04-12",
+    "generatedAt": "2026-04-12T21:30:00-06:00",
+    "dataUrl": "/data/morning-report.json",
+    "summary": "Overnight was a productive but imperfect run. All 7 daemons fired on schedule. Aether pushed metrics every 15 min with zero gaps. Two persistent simulation failures (nel/ra runner exits) and an Aether dispatch.sh config bug are the top items for the next Kai session.",
+    "systemStatus": "warnings",
+    "agentStatuses": {
+      "nel": "active",
+      "ra": "active",
+      "sam": "active",
+      "aether": "active",
+      "dex": "active"
+    },
+    "topIssues": [
+      "Aether plist missing HYO_ROOT \u2014 dispatch errors every 15 min",
+      "Nel/Ra simulation runner exits (exit-1 / exit-2) \u2014 consistent, needs investigation",
+      "No newsletter for 2026-04-12 \u2014 Aurora still sandbox-blocked",
+      "simulation-outcomes.jsonl line 1 corrupt \u2014 remediation unconfirmed"
+    ]
+  },
   "events": [
     {
-      "ts": "2026-04-12T20:11:42-06:00",
-      "agent": "nel",
-      "msg": "System audit \u2014 score 65, 15 broken links, 5 audit issues. nel.sh stat bug fixed.",
-      "doc": "/viewer?agent=nel&file=2026-04-12"
+      "ts": "2026-04-13T03:30:56Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-04-13"
     },
     {
-      "ts": "2026-04-12T20:10:14-06:00",
-      "agent": "cipher",
-      "msg": "Security scan \u2014 secrets 700/600, 0 leaks. gitleaks/trufflehog pending install.",
-      "doc": "/viewer?agent=cipher&file=2026-04-12T20"
-    },
-    {
-      "ts": "2026-04-12T20:10:00-06:00",
-      "agent": "sentinel",
-      "msg": "QA sweep \u2014 6 passed, 3 failed (sandbox-expected). Escalations: aurora day 3, API day 8.",
-      "doc": "/viewer?agent=sentinel&file=2026-04-12"
-    },
-    {
-      "ts": "2026-04-12T16:11:50-06:00",
-      "agent": "sentinel",
-      "msg": "QA sweep \u2014 6 passed, 3 failed (sandbox-expected)",
-      "doc": "/viewer?agent=sentinel&file=2026-04-12"
-    },
-    {
-      "ts": "2026-04-12T16:11:50-06:00",
-      "agent": "cipher",
-      "msg": "Security scan \u2014 secrets 700/600, 0 leaks",
-      "doc": "/viewer?agent=cipher&file=2026-04-12T22"
-    },
-    {
-      "ts": "2026-04-12T16:11:50-06:00",
-      "agent": "nel",
-      "msg": "System audit \u2014 score 65, 15 broken links, 2 sentinel issues",
-      "doc": "/viewer?agent=nel&file=2026-04-12"
+      "ts": "2026-04-13T03:30:56Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-04-13",
+      "doc": "/viewer?agent=simulation&file=2026-04-13"
     },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
-      "doc": "/viewer?agent=consolidation&file=2026-04-12"
+      "msg": "Nightly consolidation \u2014 sam"
     },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "simulation",
       "msg": "24h action plan \u2014 2026-04-12",
-      "doc": "/viewer?agent=simulation&file=2026-04-12"
+      "doc": "/viewer?agent=sim&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T12:07:28-06:00",
+      "agent": "sentinel",
+      "msg": "QA sweep \u2014 7 passed, 0 failed",
+      "doc": "/viewer?agent=sentinel&file=2026-04-11"
+    },
+    {
+      "ts": "2026-04-12T12:07:28-06:00",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
@@ -59,6 +65,12 @@
       "ts": "2026-04-11T17:50:00-06:00",
       "agent": "consolidation",
       "msg": "Nightly consolidation \u2014 KAI_BRIEF + KAI_TASKS synced"
+    },
+    {
+      "ts": "2026-04-11T16:14:00-06:00",
+      "agent": "sim",
+      "msg": "Nightly simulation \u2014 overnight scenario mapped",
+      "doc": "/viewer?agent=sim&file=2026-04-10"
     }
   ],
   "ra": {
@@ -72,20 +84,18 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-12T20:10:00-06:00",
-    "passed": 6,
-    "failed": 3,
-    "escalations": 3,
-    "notes": "P0: aurora not run today (day 3), API health unreachable from sandbox (day 8). P1: no aurora logs (day 3). All expected sandbox limitations \u2014 aurora and API run on Mini, not in Cowork.",
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
+    "lastRun": "2026-04-12T12:07:28-06:00",
+    "passed": 7,
+    "failed": 0,
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-11"
   },
   "cipher": {
-    "lastRun": "2026-04-12T20:10:14-06:00",
+    "lastRun": "2026-04-12T12:07:28-06:00",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan. Permissions verified: .secrets/ 700, founder.token 600. gitleaks/trufflehog not installed (pending [H] task).",
-    "latestDoc": "/viewer?agent=cipher&file=2026-04-12T20"
+    "notes": "Clean scan \u2014 6 grep hits all false positives (regex patterns in cipher.hyo.json, cipher.algorithm.md, consolidate.sh, and prior cipher logs)",
+    "latestDoc": null
   },
   "sim": {
     "lastRun": "2026-04-10T16:14:00-06:00",
@@ -93,27 +103,20 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-04-12T13:35:34-06:00"
+    "lastRun": "2026-04-13T03:30:56Z"
   },
   "aether": {},
-  "credits": {
-    "used": 0,
-    "available": 0,
-    "calls": 0,
-    "cost": 0,
-    "byAgent": {}
-  },
   "nel": {
-    "lastRun": "2026-04-13T02:49:11Z",
-    "improvementScore": 85,
-    "findingsCount": 1,
+    "lastRun": "2026-04-13T03:33:17Z",
+    "improvementScore": 65,
+    "findingsCount": 2,
     "staleFiles": 0,
     "brokenLinks": 15,
     "untested": 2,
     "inefficient": 1,
     "sentinel": {
-      "pass": 3,
-      "fail": 0
+      "pass": 2,
+      "fail": 2
     },
     "cipher": {
       "leaks": 0

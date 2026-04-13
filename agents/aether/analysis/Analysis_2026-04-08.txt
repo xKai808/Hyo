@@ -1,0 +1,303 @@
+AETHERBOT DAILY ANALYSIS — 2026-04-08
+Analyst: Kai | Version: v253 | Market: KXBTC15M
+Analysis window: 4/7 17:00 MTN → 4/9 00:00 MTN (FULL DAY — FINAL)
+This file supersedes the 17:00 draft. Extended to capture full EVENING session.
+
+==============================================================================
+1. BALANCE LEDGER
+==============================================================================
+
+Opening balance (4/7 17:00):      $104.02
+Balance at 4/8 00:00 (log open):   $98.47
+Balance at 4/8 17:00 (prior end):  $97.21
+Balance at 4/8 19:00 (prior ext):  $92.28
+Balance at 4/8 21:45 (confirmed):  $89.26
+Pending settlement (est):          +$1.56 (PAQ_EARLY_AGG unconfirmed as of log end)
+Estimated EOD balance:             ~$90.82
+
+24h standard net P&L (17:00→17:00):    -$6.81
+Full log P&L (00:00→21:45):            -$9.21
+From prior analysis end (19:00→21:45): -$3.02
+
+Balance ledger (updated):
+  4/3   $111.55   4/4   $107.30   4/5   $76.18
+  4/6   $93.04    4/7   $104.02   4/8   $89.26 (confirmed) / ~$90.82 (est w/ pending)
+
+TRAJECTORY: 6-day cumulative from peak $121.02 (4/2) to $89.26 = -$31.76 (-26.2% drawdown)
+
+==============================================================================
+2. TRADE-BY-TRADE LEDGER BY STRATEGY FAMILY
+==============================================================================
+
+--- PAQ_EARLY_AGG (22 trades for full 4/8 session) ---
+#   Time      Side  Entry  Contracts  Result   Notes
+1   4/7 17:45  NO   0.89    5c      +$0.47   Harvested 4c, settled 1c
+2   4/7 18:00  YES  0.82    5c      -$3.25   Loss
+3   00:15   NO   0.85    5c      -$2.43   Flipped, CV stop, BDI=0 hold→forced exit
+4   00:30   YES  0.84    3c      -$0.45   PAQ0_COLLAPSE stop
+5   01:15   NO   0.83    6c      -$4.02   CV stop + trail stop loss
+6   02:15   YES  0.88    5c      +$0.57   Harvested 1c, settled 4c
+7   10:00   YES  0.78    2c      -$0.30   PAQ1_BPS_SOFT stop
+8   10:45   YES  0.58   17c      +$7.14   Big win, CV_PARTIAL stop 6/17, YES settled
+9   11:30   NO   0.89   31c      +$3.41   Settled, harvest misses (stale anchor)
+10  12:00   YES  0.62   32c      +$7.36   Trail stop stage 3 win (held→0.84)
+11  12:45   YES  0.76    6c      -$2.10   PAQ1_BPS_SOFT stop
+12  13:00   YES  0.65   43c     -$26.75   *** CATASTROPHIC *** (see Section 5)
+13  13:30   NO   0.72   27c      +$7.26   Harvested 8c (+$1.94), settled 19c
+14  14:00   YES  0.65    7c      +$2.45   PAQ1_BPS_SOFT stop but settled win
+15  17:06   NO   0.71    7c      ~-$3.67  CV_PARTIAL 2/7, rest expired (untracked)
+16  18:22   NO   0.88    5c      ~-$0.10  CV_PARTIAL 2/5, NO settled small win
+17  18:50   NO   0.69    7c      -$4.83   Flipped, PAQ_AGG_OPP_BPS full stop
+18  19:15   NO   0.75    3c      +$0.75   WIN — EVENING
+19  20:22   YES  0.88    3c      +$0.36   WIN — TRAIL_EXIT_STAGE3 (EVENING)
+20  20:30   YES  0.87    7c      -$3.08   PAQ1_BPS_SOFT stop, filled @ 0.22 (-$0.70 slippage)
+21  21:00   YES  0.74    5c      +$0.37   WIN — EVENING
+22  ~22:00  YES  0.74    6c      +$1.56   PENDING (unconfirmed at log end)
+
+PAQ_EARLY_AGG total: ~-$18.61 (excl. pending)
+
+--- bps_premium (9 trades for full period) ---
+#   Time      Side  Entry  Contracts  Result
+1   4/7 22:45  YES  0.88    6c      +$0.72
+2   4/7 23:00  NO   0.75    4c      -$2.00
+3   01:00   NO   0.86    9c      +$1.01   Harvested 4c (+$0.31)
+4   02:00   NO   0.75   14c      +$0.12   CV stop + trail stop
+5   09:15   YES  0.81    8c      -$0.80   BPS_-1.0 stop
+6   09:45   YES  0.84   11c      +$1.76
+7   10:15   YES  0.83    8c      +$1.36
+8   10:30   YES  0.88    7c      +$0.84
+9   21:45   NO   0.88    5c      -$0.68   ASIA_OPEN ALIGNED — LOSS
+
+bps_premium total: +$2.33
+
+--- PAQ_STRUCT_GATE (1 trade) ---
+1   13:15   YES  0.41   17c     +$10.03   Recovery trade after the -$26.75
+PAQ_STRUCT_GATE total: +$10.03
+
+--- BCDP_FAST_COMMIT (1 trade) ---
+1   03:15   YES  0.82    5c      +$0.71   Trail stop stage 3 win
+BCDP_FAST_COMMIT total: +$0.71
+
+--- WES_EARLY (1 trade, 4/7 evening) ---
+1   4/7 18:15  YES  0.46    4c      -$1.00
+WES_EARLY total: -$1.00
+
+==============================================================================
+3. STOP & HARVEST EVENT LOG
+==============================================================================
+
+STOPS (17 total for full day):
+  CONTRACT_VELOCITY (full):       3
+  CONTRACT_VELOCITY_PARTIAL:      5 (partial exits, 2-6c shed each)
+  PAQ0_COLLAPSE:                  1
+  PAQ1_BPS_SOFT:                  4 (one at 0.22, 7 fill attempts — major slippage)
+  PAQ_AGG_OPP_BPS:                2 (both preceded flips)
+  BPS soft thresholds:            2
+  TRAIL_EXIT_STAGE2/3:            2 (both wins)
+  FORCED_EXIT_AFTER_HOLD1:        1 (BDI=0 hold outcome)
+
+NEW STOP ISSUE — 20:45 slippage:
+  PAQ1_BPS_SOFT | YES | 7c @ anchor 0.3200 | filled 0.2200 (attempt 7)
+  Slippage: 0.10/contract × 7c = -$0.70 additional loss beyond expected
+  This is stop slippage from a thin book during EVENING. Noted but single event.
+
+FLIPS: 3
+  00:15  NO @ 0.85 → YES won | loss -$2.43
+  13:00  YES @ 0.65 → NO won | loss -$26.75  ← CATASTROPHIC
+  18:50  NO @ 0.69 → YES won | loss -$4.83
+
+HARVESTS:
+  Profitable: 14+ (typical +$0.04 to +$0.26)
+  Negative:   1 (SPHI_DECAY sold 2c @ 0.60, entry 0.65 → -$0.10) — Issue #3 confirmed
+  HARVEST MISS streak: 6 consecutive at 11:30 trade, HARVEST COOL 11+ cycles
+    → Stale anchor at 0.99 blocked all harvest exits. Trade settled naturally.
+
+BDI=0 HOLD: 1 event (00:15) — hold held at same price, forced exit = net zero value from hold
+
+==============================================================================
+4. SESSION WINDOW P&L
+==============================================================================
+
+Window              Time (MTN)        Trades   Net P&L
+─────────────────────────────────────────────────────────
+EVENING (4/7)       17:00–23:59       5        -$5.06
+OVERNIGHT           00:00–03:15       7        -$4.49
+EU_MORNING          03:15–09:00       1        +$0.71  (BCDP only, PAQ dark)
+NY_OPEN             09:00–09:30       1        -$0.80
+NY_PRIME            09:30–12:00       6       +$14.21
+NY_CLOSE            12:00–14:00       6        -$1.75  (incl. 13:00 catastrophe)
+NY_CLOSE (untrk)    14:00–17:00       2        ~-$3.77 (partial stop residuals, unlogged)
+EVENING (4/8)       17:00–21:00       7        -$9.71  (includes post-19:00 continuation)
+ASIA_OPEN (4/9)     21:00+            2*       -$0.31  (21:45 loss + pending +1.56 unconfirmed)
+─────────────────────────────────────────────────────────
+FULL DAY (24h std):                  25        -$6.81
+FULL LOG (00:00→21:45):              32       -$10.49 (tracked only, ~-$9.21 by balance)
+
+* EVENING post-19:00 breakdown:
+  19:30  +$0.75 | 20:30 +$0.36 | 20:45 -$3.08 | 21:00 +$0.37 = -$1.60
+  EVENING total (17:00→21:00): -$8.60 (prior) + (-$1.60) update = -$10.20 (NOTE:
+  prior analysis had 17:00-19:00 = -$8.60 for 3 trades; added 4 more: net -$10.20)
+
+Best window:  NY_PRIME (+$14.21) — 6 trades, 5 wins, bot's edge is visible
+Worst window: EVENING (-$10.20 combined) — 7 trades, 2 wins, no BPS classification
+
+KEY NOTE: Without the 13:00 sizing event (-$26.75), the full day is NET +$16.27.
+The single uncapped position continues to define the day.
+
+==============================================================================
+5. THE 13:00 CATASTROPHE (unchanged from prior analysis)
+==============================================================================
+
+WHAT HAPPENED:
+12:48  BUY YES @ 0.65 | PAQ_EARLY_AGG | 43 contracts | $27.95 cost
+       Conv: 7.2 (HIGH) → 1.40× risk → $28.00 (MODERATE)
+       BDI: 173 | sized 43→43c
+       BPS_SESSION: NY_PRIME BPS+4.0 → COUNTER
+12:48  PHI HARVEST BOOST sold 2c at 0.60 (BELOW entry 0.65) — Issue #3
+12:49  Rapid collapse: YES 0.63→0.54→0.29
+12:53  PAQ 6→1, BPS reversed +4→-4. PAQ_AGG_OPP_BPS partial stop: 24/41c
+       STOP UNFILLED — "book thin" — 24c sold, 17c stranded
+12:59  YES→0.001, NO settles 1.00
+13:00  SETTLEMENT: -$26.75
+
+ROOT CAUSES (unchanged — this is systemic, not today-specific):
+1. No per-trade position cap. Conv 7.2 → 28% of balance on one trade.
+2. Exit liquidity not modeled. 43c entry, thin book at exit = 17c unfillable.
+3. COUNTER flag does not modify sizing. Should reduce, not ignore.
+4. Harvest gate allows below-entry sale (Issue #3 confirmed again).
+
+==============================================================================
+6. OPEN ISSUE MONITORING
+==============================================================================
+
+ISSUE #1: EU_MORNING negative EV
+  Status: BCDP traded at 03:15, PAQ inactive 03:15-09:00. No new EU_MORNING data.
+  Observation: BCDP_FAST_COMMIT active during EU_MORNING → +$0.71. Positive signal
+  but insufficient sample. PAQ abstention during EU_MORNING may be correct behavior.
+
+ISSUE #2: BDI=0 stop hold
+  Status: CONFIRMED ACTIVE (00:15 event). Hold yielded no price improvement.
+  BDI=0 → exit held → forced after 1 poll → same price. Net impact: zero value, added latency.
+  Fix confirmed for v254: remove BDI=0 hold, exit cleanly on stop trigger.
+
+ISSUE #3: Harvest gate (SPHI_DECAY below entry)
+  Status: CONFIRMED (13:00 trade, 2c @ 0.60 vs entry 0.65).
+  Also noted: HARVEST MISS streak at 11:30 (stale anchor 0.99, 11+ COOL cycles).
+  HARVEST MISS DIAG shows anchor_depth(±0.02) = 0 → no liquidity at anchor level.
+  Fix: gate harvest on anchor ±0.02 (not held_px ±0.05). Also need anchor refresh on COOL streak.
+  Both fixes in v254.
+
+ISSUE #4: Weekend risk profile
+  Status: N/A (weekday). No new data.
+
+ISSUE #5: Position sizing (uncapped HIGH COUNTER)
+  Status: CRITICAL — ACTIVE. -$26.75 loss is the second occurrence of this pattern.
+  (First occurrence: 4/7 based on HIGH+COUNTER tracking showing 2 trades pre-4/8)
+  Conv 7.2 + COUNTER = full 1.40× multiplier fires. No constraint.
+  Action required: v254 must include either:
+    a) MAX_CONTRACTS = 15 hard cap (simple, operator previously reviewed), OR
+    b) COUNTER session → 0.70× override (COUNTER-aware sizing)
+  Both are acceptable. Without one of these, risk remains unlimited.
+
+NEW OBSERVATION — EVENING stop slippage (20:45):
+  PAQ1_BPS_SOFT stop filled at 0.22 after 7 attempts (anchor was 0.32).
+  Slippage = 0.10/c on 7c = -$0.70 beyond expected loss.
+  EVENING book is thin — stop slippage during low-liquidity windows is
+  structurally worse than during NY_PRIME. Not yet a pattern (1 event).
+  Monitor across 3+ EVENING sessions before recommending action.
+
+==============================================================================
+7. HIGH+COUNTER vs HIGH+ALIGNED TRACKING
+==============================================================================
+
+Definition: HIGH = Conv >= 7.0 (triggers 1.40× risk multiplier)
+COUNTER = BPS_SESSION tagged COUNTER at entry
+
+Prior cumulative (through 4/7 sessions):
+  HIGH+COUNTER:  -$25.55 (2 trades)    WIN RATE 50% (1/2)
+  HIGH+ALIGNED:  +$13.51 (4 trades)    WIN RATE 100% (4/4)
+
+4/8 HIGH trades:
+  HIGH+COUNTER trades (NY_PRIME COUNTER, Conv ≥ 7.0):
+    13:00  YES @ 0.65  43c  -$26.75   Conv 7.2  BPS+4 COUNTER  ← CATASTROPHIC
+    (PAQ_STRUCT_GATE 13:15 recovery is Conv-agnostic, not a HIGH COUNTER entry)
+  HIGH+COUNTER net today: -$26.75 (1 trade)
+
+  HIGH+ALIGNED trades today (Conv ≥ 7.0, ALIGNED context):
+    None identified (EVENING PAQ trades were Conv 6-7 range, no explicit ALIGNED tag)
+  HIGH+ALIGNED net today: $0.00
+
+Updated cumulative:
+  HIGH+COUNTER:  -$52.30 (3 trades)    WIN RATE 33% (1/3)
+  HIGH+ALIGNED:  +$13.51 (4 trades)    WIN RATE 100% (4/4)
+
+ASSESSMENT: 3 sessions is approaching the 5-session threshold. Signal is clear:
+HIGH COUNTER trades are negative EV at the 1.40× multiplier. The 1 win
+(likely the recovery trade) was a Conv 7.x that happened to be COUNTER and win.
+The 2 catastrophic losses at ~$26-27 each define the distribution: fat left tail,
+small right tail. This is not an edge. This is ruin risk.
+
+==============================================================================
+8. CONCLUSION & RECOMMENDATION (UPDATED — FULL DAY)
+==============================================================================
+
+CONCLUSION:
+Today's full-day result: -$9.21 (confirmed balance), potentially -$7.65 if
+the pending +$1.56 confirms. Without the 13:00 sizing event, the day closes
++$17.54 — the strategy generates real edge. NY_PRIME wins across multiple
+strategies. BCDP_FAST_COMMIT contributed a clean +$0.71. bps_premium won 3
+of 4 trades in NY_PRIME. The EVENING session was weak (-$10.20 combined with
+prior extension), suggesting the bot should be less aggressive after NY_CLOSE.
+
+The HIGH+COUNTER pattern is now at 3 sessions. Cumulative: -$52.30 on 3 trades
+vs HIGH+ALIGNED at +$13.51 on 4 trades. The divergence is not statistical noise
+— it's a structural asymmetry. COUNTER entries at high conviction take larger
+positions into a trend-opposing setup. When wrong, the exit is thin and the
+loss is amplified. The multiplier fires in exactly the wrong direction.
+
+ONE RECOMMENDED ACTION:
+v254 build must include the COUNTER-aware sizing constraint before the next
+trading week. Suggested implementation (operator to review):
+
+  if session_context == COUNTER:
+      risk_multiplier = min(risk_multiplier, 1.00)   # override 1.40× to 1.00×
+
+  AND separately:
+      MAX_CONTRACTS = 15  (hard cap, absolute floor regardless of all other logic)
+
+These two changes together would have turned the 13:00 trade from -$26.75
+to approximately -$8-10. The day would be green.
+
+Secondary actions (v254 bundle):
+  - Fix harvest gate: SPHI_DECAY gate on anchor ±0.02, not held_px ±0.05
+  - Fix BDI=0 hold: remove hold on stop trigger, exit cleanly
+  - Anchor refresh: if HARVEST COOL streak ≥ 3, refresh anchor from current OB
+  - Monitor EVENING stop slippage for 2 more sessions before adding guard
+
+NOTE: GPT-4o fact-check is scheduled for 17:15 MTN (Mac Mini cron). This updated
+analysis supersedes the 17:00 draft. The cron job will run against the latest file.
+
+==============================================================================
+APPENDIX: EVENING SESSION CONTINUATION (19:00–21:45 MTN)
+Added to extend prior analysis. Key data points:
+==============================================================================
+
+19:00  TICKER CLOSE  PAQ_EARLY_AGG -$4.83   (flip, PAQ_AGG_OPP_BPS)
+19:15  BUY SNAPSHOT  NO @ 0.75  3c  (EVENING, no BPS tag)
+19:30  TICKER CLOSE  PAQ_EARLY_AGG +$0.75   (WIN — settled correctly)
+19:45  NEW TICKER    bal $92.28 (stable)
+20:22  BUY SNAPSHOT  YES  (TRAIL_EXIT_STAGE3 → +$0.36)
+20:30  TICKER CLOSE  PAQ_EARLY_AGG +$0.36   (WIN)
+20:30  BUY SNAPSHOT  YES @ 0.87  7c  (entered)
+20:45  TICKER CLOSE  PAQ_EARLY_AGG -$3.08   (PAQ1_BPS_SOFT, 7 attempts, fill @ 0.22)
+       NOTE: stop anchor was 0.32, filled 0.22 = -$0.70 slippage on thin EVENING book
+21:00  TICKER CLOSE  PAQ_EARLY_AGG +$0.37   (WIN)
+21:00  NEW TICKER    bal $89.92
+21:45  TICKER CLOSE  bps_premium -$0.68     (ASIA_OPEN ALIGNED BPS+4.0)
+21:45  NEW TICKER    bal $89.26  (CONFIRMED FINAL)
+22:00  SETTLEMENT PENDING  PAQ_EARLY_AGG +$1.56 (unconfirmed)
+
+Post-19:00 summary: 5 TICKER CLOSEs | 2 wins (+$1.48) | 3 losses (-$7.59) net -$1.60
+                    (Plus pending +$1.56 if confirms → effective net $0.00 post-19:00)
+
+Full EVENING 17:00→EOD: -$10.20 confirmed. EVENING continues to be weakest window.

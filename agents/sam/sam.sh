@@ -484,7 +484,7 @@ cmd_evolve() {
   local playbook_updated="False"
   local staleness_flag="False"
   if [[ -f "$PLAYBOOK" ]]; then
-    local playbook_mtime=$(stat -f %m "$PLAYBOOK" 2>/dev/null || stat -c %Y "$PLAYBOOK" 2>/dev/null || echo "0")
+    local playbook_mtime=$(stat -c %Y "$PLAYBOOK" 2>/dev/null || stat -f %m "$PLAYBOOK" 2>/dev/null || echo "0")
     local playbook_age=$(( ($(date +%s) - playbook_mtime) / 86400 ))
     if [[ $playbook_age -lt 7 ]]; then
       playbook_updated="True"
