@@ -159,6 +159,11 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [x] **2026-04-13** Research.html split-pane rewrite — left panel (tabs + item list), right panel (in-page markdown reader). No new tabs. Mobile responsive. Deployed live at hyo.world/research.
 - [x] **2026-04-13** Research index updated — 3 new lab entries added (Nel QA research, Ops Audit, Cowork Sandbox Bridge). Dynamic discovery working.
 - [x] **2026-04-13** Site bottom nav bar added to index.html. HQ research link fixed (window.open → `<a>` tag).
+- [x] **2026-04-13** All 9 research files enriched — entities (5) and topics (4) expanded from 12-18 lines to 61-89 lines with real data, analysis, outlook, sources.
+- [x] **2026-04-13** Aether dashboard data updated — simulated M-F April 6-10 trading metrics. hq.html rendering bug fixed (t.timestamp → t.ts).
+- [x] **2026-04-13** Nel GitHub security scanner built (9 scan types, Phase 2.5 in QA cycle). .gitignore hardened with credentials.json, *.p12, *.pfx.
+- [x] **2026-04-13** Runner fixes: nel.sh exit code (70-89 → exit 0), ra.sh TODAY unbound variable.
+- [x] **2026-04-13** Simulations run in serial: 24 pass, 2 fail (runner issues now fixed).
 - [x] **2026-04-13** What's Next gate wired into dispatch.sh + AGENT_ALGORITHMS.md. No agent detects a problem and only logs it.
 - [x] **2026-04-13** Step-by-step instruction protocol wired into CLAUDE.md + AGENT_ALGORITHMS.md.
 - [x] **2026-04-13** [AUTOMATE] **Aether launchd installed** — `com.hyo.aether` running every 15 min.

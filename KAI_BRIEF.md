@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~02:30 MT (research split-pane live, index updated, 8 commits pushed this session)
+**Updated:** 2026-04-13 ~02:55 MT (enriched research, aether dashboard, nel security scanner, simulations run)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 
 ---
@@ -122,6 +122,12 @@
 - **Auto-publish rule** — wired for ALL agents, not just Ra. Every agent saves, syncs, pushes to HQ autonomously.
 - **MTN timezone rule** — all user-facing timestamps use America/Denver. Wired into CLAUDE.md.
 - **Agent self-improvement autonomy** — agents research and improve their own domain, make changes PRN, communicate back to Kai.
+- **Research files enriched** — all 9 entity/topic files expanded from 12-18 lines to 61-89 lines with real April 2026 data, analysis, outlook, and sources. Research page now shows full articles, not just briefs.
+- **Aether dashboard data** — simulated M-F (April 6-10) trading metrics. W/R 75%, +$87.45, 12 trades across Grid Bot and Trend Follower. hq.html rendering bug fixed.
+- **Nel GitHub security scanner** — `github-security-scan.sh` (9 scan types). Wired into QA cycle as Phase 2.5. 0 P0/P1 findings on clean scan.
+- **Runner fixes** — nel.sh exit code (score 70-89 now exit 0), ra.sh TODAY variable (was unbound).
+- **Gitignore hardened** — credentials.json, service-account*.json, *.p12, *.pfx added.
+- **Simulations run** — 24 pass, 2 fail (nel/ra runner issues now fixed for next run).
 
 **Shipped previous session (seventh pass — agent formalization + research architecture):**
 - Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename
