@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776046795-4579",
+  "ts": "2026-04-13T02:20:02Z",
+  "command": "for f in docs/research/index.md docs/research/trends.md docs/research/entities/bitcoin.md docs/research/entities/fed.md docs/research/topics/crypto-flow.md docs/research/topics/macro-rates.md docs/research/lab/agent-runtime-hybrid.md docs/research/lab/ops-audit-2026-04-12.md docs/research/lab/nel-qa-architecture-research.md; do status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 \"https://www.hyo.world/$f\"); echo \"$status /$f\"; done",
+  "exit_code": 0,
+  "stdout": "200 /docs/research/index.md\n200 /docs/research/trends.md\n200 /docs/research/entities/bitcoin.md\n200 /docs/research/entities/fed.md\n200 /docs/research/topics/crypto-flow.md\n200 /docs/research/topics/macro-rates.md\n200 /docs/research/lab/agent-runtime-hybrid.md\n200 /docs/research/lab/ops-audit-2026-04-12.md\n200 /docs/research/lab/nel-qa-architecture-research.md\n",
+  "stderr": "",
+  "duration_s": 6
+}

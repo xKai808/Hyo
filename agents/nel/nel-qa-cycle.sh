@@ -77,7 +77,8 @@ P1_OUTPUT=""
 
 if [[ -f "$ROOT/agents/nel/link-check.sh" ]]; then
   P1_OUTPUT=$(bash "$ROOT/agents/nel/link-check.sh" --full 2>&1) || true
-  P1_ERRORS=$(echo "$P1_OUTPUT" | grep -c "^  ✗" || echo 0)
+  P1_ERRORS=$(echo "$P1_OUTPUT" | grep -c "^  ✗" 2>/dev/null || true)
+  P1_ERRORS=${P1_ERRORS:-0}
 
   if [[ $P1_ERRORS -gt 0 ]]; then
     echo "**$P1_ERRORS broken links found:**" >> "$REPORT"

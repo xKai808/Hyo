@@ -1,26 +1,52 @@
 {
-  "ts": "2026-04-13T02:13:56Z",
+  "ts": "2026-04-13T02:17:20Z",
   "status": "ISSUES",
   "issues": 1,
-  "warnings": 2,
+  "warnings": 1,
   "findings": [
     {
       "severity": "P1",
       "area": "flags",
-      "detail": "4 unaddressed P0/P1 flags in last 2h"
+      "detail": "6 unaddressed P0/P1 flags in last 2h"
     },
     {
       "severity": "P2",
       "area": "queue-worker",
       "detail": "Worker last active 493346h ago \u2014 may be dead"
-    },
-    {
-      "severity": "P2",
-      "area": "queue",
-      "detail": "2 commands pending \u2014 worker may be stalled"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 1 P0/P1 issues; Kicked queue worker for 2 stalled commands",
-  "recent_queue_results": [],
+  "actions_taken": "Dispatched auto-remediation for 1 P0/P1 issues",
+  "recent_queue_results": [
+    {
+      "id": "cmd-1776046618-4444",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && bash agents/nel/nel-qa-cycle.sh 2>&1 | tail -40",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776046610-4420",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh push ra 'Nel QA Architecture Rese",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776046594-4390",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh push 2>&1 | tail -20",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776046592-4368",
+      "status": "ok",
+      "command": "cp ~/Documents/Projects/Hyo/agents/nel/com.hyo.nel-qa.plist ~/Library/LaunchAgen",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776046580-4341",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'kai: Nel v2.0 QA eng",
+      "exit_code": 0
+    }
+  ],
   "next_check": "in 2 hours (30min if P0 found)"
 }

@@ -61,6 +61,12 @@
 - [ ] **[K]** Add `kai overnight` subcommand that prints OVERNIGHT_QUEUE.md status
 - [ ] **[K]** Add `kai postmortem` subcommand that compiles sentinel + cipher reports from the last 24h
 
+## P2 — Near-term (continued)
+
+- [ ] **[K]** **Create `hyo.hyo` agent** — the website/UI/UX agent. Owns: hq.html, all public pages, HQ ops sync, mobile responsiveness, visual design. Takes over `hq-ops-sync` scheduled task. Future: becomes the design authority for all user-facing output.
+- [ ] **[K]** **Agent nightly self-improvement cycle** — each agent runs research + improvement during overnight hours. Nel: QA/security patterns. Sam: infra/deploy best practices. Ra: content sources + formats. Aether: trading algorithms. Dex: data integrity patterns. Results published to HQ automatically.
+- [ ] **[K]** **Clean up disabled Cowork scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aether-analysis.
+
 ## P3 — Strategic
 
 - [ ] **[K]** Research Base L2 gas sponsoring patterns (Coinbase Paymaster) so founder mints actually stay free when on-chain.
@@ -125,6 +131,18 @@ _(2026-04-12 cleanup: removed 4 stale sentinel auto-filed items referencing old 
 - [x] **2026-04-12** HQ v8.1 deployed and verified live — lowercase title, OpenAI/Claude usage pages with real CSV data + budget bars, all dead links purged, Ra/Nel/Sim/Aetherbot views rebuilt, MTN timestamps, research sorted with NEW badges.
 - [x] **2026-04-12** Pre-deploy validation script (`bin/predeploy-validate.py`) — 6 automated checks wired into `kai deploy` and `kai gitpush`. Prevents dead links, orphaned IDs, UTC timestamps, and dead handlers from reaching production.
 - [x] **2026-04-12** Delegation checklist added to `kai/AGENT_ALGORITHMS.md` and wired into CLAUDE.md operating rules.
+- [x] **2026-04-13** Zero copy-paste achieved — queue round-trip proven (git, launchctl, all commands). `kai exec` helper built. NEVER-COPY-PASTE rule wired into CLAUDE.md and AGENT_ALGORITHMS.md.
+- [x] **2026-04-13** Nel v2.0 shipped — 8-phase autonomous QA cycle (link validation, security scan, API health, data integrity, agent health, deployment verification, research sync, report+dispatch). Research report: `agents/ra/research/lab/nel-qa-architecture-research.md`.
+- [x] **2026-04-13** Nel QA daemon installed (com.hyo.nel-qa, q6h via launchd). First cycle ran: 16s, found real issues (gitignore + API auth).
+- [x] **2026-04-13** Link checker built (`agents/nel/link-check.sh`) — checks HTML links, JS fetch paths, markdown refs, and live HTTP responses.
+- [x] **2026-04-13** Queue worker hardened: 5-min max timeout cap (was unlimited — sleep 1800 blocked worker). Healthcheck recheck fixed to not use sleep in queue.
+- [x] **2026-04-13** All 5 agent runners fixed: Python `true`/`false` → `True`/`False`, Dex `local` outside function.
+- [x] **2026-04-13** Index.html mobile fixed — touch-friendly, no hover dependency, stacked layout, hidden decorations on small screens.
+- [x] **2026-04-13** Research.html made dynamic — reads file lists from index.md instead of hardcoded arrays.
+- [x] **2026-04-13** Research sync script + auto-sync in Nel QA cycle. Missing research files synced to website/docs/research/.
+- [x] **2026-04-13** Auto-publish rule wired — research must be saved, synced, AND pushed to HQ every time. All agents.
+- [x] **2026-04-13** MTN timezone rule wired into CLAUDE.md — all user-facing output uses America/Denver.
+- [x] **2026-04-13** Agent self-improvement autonomy wired — agents CAN make changes PRN, MUST communicate via dispatch. Nightly research cycle.
 - [x] **2026-04-12** 4 recurrence patterns logged to `kai/ledger/known-issues.jsonl` with mitigations.
 - [x] **2026-04-12** All 15 broken research .md links fixed (newsletters/ → ra/ paths). website/ converted from symlink to real directory for git tracking.
 

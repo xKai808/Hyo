@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776046773-4552",
+  "ts": "2026-04-13T02:19:44Z",
+  "command": "cd ~/Documents/Projects/Hyo && for page in '' cafe register founder-register marketplace passport payment compensate viewer aurora hq research; do url='https://www.hyo.world'; [[ -n \"$page\" ]] && url=\"$url/$page\"; status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 \"$url\"); echo \"$status $url\"; done",
+  "exit_code": 0,
+  "stdout": "200 https://www.hyo.world\n200 https://www.hyo.world/cafe\n200 https://www.hyo.world/register\n200 https://www.hyo.world/founder-register\n200 https://www.hyo.world/marketplace\n200 https://www.hyo.world/passport\n200 https://www.hyo.world/payment\n200 https://www.hyo.world/compensate\n200 https://www.hyo.world/viewer\n200 https://www.hyo.world/aurora\n200 https://www.hyo.world/hq\n200 https://www.hyo.world/research\n",
+  "stderr": "",
+  "duration_s": 9
+}

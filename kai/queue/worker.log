@@ -127,3 +127,35 @@
 [2026-04-13T02:16:53Z] BATCH: processed 1 commands
 [2026-04-13T02:16:53Z] IDLE: no pending commands
 [2026-04-13T02:16:59Z] EXEC: [cmd-1776046618-4444] cd ~/Documents/Projects/Hyo && bash agents/nel/nel-qa-cycle.sh 2>&1 | tail -40 (timeout: 240s)
+[2026-04-13T02:17:19Z] DONE: [cmd-1776046618-4444] exit=0 (20s)
+[2026-04-13T02:17:19Z] BATCH: processed 1 commands
+[2026-04-13T02:17:20Z] EXEC: [recheck-flag-nel-001] bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh (timeout: 120s)
+[2026-04-13T02:17:21Z] DONE: [recheck-flag-nel-001] exit=0 (1s)
+[2026-04-13T02:17:21Z] BATCH: processed 1 commands
+[2026-04-13T02:17:21Z] IDLE: no pending commands
+[2026-04-13T02:17:22Z] IDLE: no pending commands
+[2026-04-13T02:19:35Z] EXEC: [cmd-1776046773-4552] cd ~/Documents/Projects/Hyo && for page in '' cafe register founder-register marketplace passport payment compensate viewer aurora hq research; do url='https://www.hyo.world'; [[ -n "$page" ]] && url="$url/$page"; status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$url"); echo "$status $url"; done (timeout: 60s)
+[2026-04-13T02:19:44Z] DONE: [cmd-1776046773-4552] exit=0 (9s)
+[2026-04-13T02:19:44Z] BATCH: processed 1 commands
+[2026-04-13T02:19:44Z] IDLE: no pending commands
+[2026-04-13T02:19:56Z] EXEC: [cmd-1776046795-4579] for f in docs/research/index.md docs/research/trends.md docs/research/entities/bitcoin.md docs/research/entities/fed.md docs/research/topics/crypto-flow.md docs/research/topics/macro-rates.md docs/research/lab/agent-runtime-hybrid.md docs/research/lab/ops-audit-2026-04-12.md docs/research/lab/nel-qa-architecture-research.md; do status=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "https://www.hyo.world/$f"); echo "$status /$f"; done (timeout: 60s)
+[2026-04-13T02:20:02Z] DONE: [cmd-1776046795-4579] exit=0 (6s)
+[2026-04-13T02:20:02Z] BATCH: processed 1 commands
+[2026-04-13T02:20:03Z] IDLE: no pending commands
+[2026-04-13T02:20:09Z] EXEC: [cmd-1776046809-4604] curl -s https://www.hyo.world/research | grep -oP 'href="[^"]*"' | head -20 (timeout: 60s)
+[2026-04-13T02:20:10Z] DONE: [cmd-1776046809-4604] exit=0 (1s)
+[2026-04-13T02:20:10Z] BATCH: processed 1 commands
+[2026-04-13T02:20:10Z] IDLE: no pending commands
+[2026-04-13T02:20:16Z] EXEC: [cmd-1776046815-4628] curl -s https://www.hyo.world/research | grep -o 'href="[^"]*"' | head -20 (timeout: 60s)
+[2026-04-13T02:20:17Z] DONE: [cmd-1776046815-4628] exit=0 (1s)
+[2026-04-13T02:20:17Z] BATCH: processed 1 commands
+[2026-04-13T02:20:17Z] IDLE: no pending commands
+[2026-04-13T02:20:25Z] EXEC: [cmd-1776046824-4653] curl -s https://www.hyo.world | grep -o 'href="[^"]*"' (timeout: 60s)
+[2026-04-13T02:20:25Z] DONE: [cmd-1776046824-4653] exit=0 (0s)
+[2026-04-13T02:20:25Z] BATCH: processed 1 commands
+[2026-04-13T02:20:26Z] IDLE: no pending commands
+[2026-04-13T02:20:32Z] EXEC: [cmd-1776046832-4677] curl -s https://www.hyo.world/hq | grep -o 'href="[^"]*"' | head -20 (timeout: 60s)
+[2026-04-13T02:20:34Z] DONE: [cmd-1776046832-4677] exit=0 (1s)
+[2026-04-13T02:20:34Z] BATCH: processed 1 commands
+[2026-04-13T02:20:34Z] IDLE: no pending commands
+[2026-04-13T02:22:15Z] EXEC: [cmd-1776046933-4740] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'kai: site nav, research links, gitignore fix, auto-publish all agents, MTN timezone rule' && git push origin main 2>&1 (timeout: 120s)
