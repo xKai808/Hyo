@@ -96,9 +96,23 @@ with open('$FAILED/$basename', 'w') as f:
   local stdout_file=$(mktemp)
   local stderr_file=$(mktemp)
 
-  # Run in project root
+  # Run in project root with timeout (macOS-compatible)
   cd "$ROOT"
-  timeout "${timeout}s" bash -c "$command" > "$stdout_file" 2> "$stderr_file"
+  if command -v gtimeout >/dev/null 2>&1; then
+    # GNU coreutils via homebrew (brew install coreutils)
+    gtimeout "${timeout}s" bash -c "$command" > "$stdout_file" 2> "$stderr_file"
+  elif command -v timeout >/dev/null 2>&1; then
+    timeout "${timeout}s" bash -c "$command" > "$stdout_file" 2> "$stderr_file"
+  else
+    # Fallback: no timeout, just run with a background kill timer
+    bash -c "$command" > "$stdout_file" 2> "$stderr_file" &
+    local cmd_pid=$!
+    ( sleep "$timeout" && kill "$cmd_pid" 2>/dev/null ) &
+    local timer_pid=$!
+    wait "$cmd_pid" 2>/dev/null
+    kill "$timer_pid" 2>/dev/null || true
+    wait "$timer_pid" 2>/dev/null || true
+  fi
   local exit_code=$?
   cd - > /dev/null
 
