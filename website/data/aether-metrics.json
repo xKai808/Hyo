@@ -41,7 +41,7 @@
         "losses": 17,
         "winRate": 51.4,
         "pnl": -17.62,
-        "avgPnlPerTrade": -0.50,
+        "avgPnlPerTrade": -0.5,
         "lastAction": "2026-04-12T20:15:00-06:00",
         "bestDay": "2026-04-09 (+$0.99, 54% WR)",
         "notes": "Highest volume. Catastrophic Apr 8 loss (-$26.75 single HIGH+COUNTER trade). EU_MORNING subset: 100% WR."
@@ -54,7 +54,7 @@
         "wins": 4,
         "losses": 0,
         "winRate": 100.0,
-        "pnl": 2.50,
+        "pnl": 2.5,
         "avgPnlPerTrade": 0.63,
         "lastAction": "2026-04-11T15:30:00-06:00",
         "bestDay": "2026-04-09 (+$1.25, 100% WR)",
@@ -106,7 +106,7 @@
     "convictionBuckets": [
       {
         "name": "HIGH+ALIGNED",
-        "description": "Conviction ≥7.0 + safe directional bias (BPS -5 to -3)",
+        "description": "Conviction \u22657.0 + safe directional bias (BPS -5 to -3)",
         "trades": 7,
         "wins": 7,
         "losses": 0,
@@ -118,7 +118,7 @@
       },
       {
         "name": "HIGH+COUNTER",
-        "description": "Conviction ≥7.0 + risky contrarian (BPS +3 to +5)",
+        "description": "Conviction \u22657.0 + risky contrarian (BPS +3 to +5)",
         "trades": 6,
         "wins": 2,
         "losses": 4,
@@ -147,7 +147,7 @@
         "wins": 10,
         "losses": 8,
         "winRate": 55.6,
-        "pnl": -1.20,
+        "pnl": -1.2,
         "avgPnlPerTrade": -0.07,
         "risk": "moderate",
         "notes": "Marginal edge without BPS signal. Evening trades mostly here."
@@ -173,7 +173,7 @@
         "wins": 18,
         "losses": 10,
         "winRate": 64.3,
-        "pnl": 8.50,
+        "pnl": 8.5,
         "notes": "Strong open. bps_premium strongest here."
       },
       {
@@ -184,7 +184,7 @@
         "wins": 49,
         "losses": 33,
         "winRate": 59.8,
-        "pnl": 4.50,
+        "pnl": 4.5,
         "notes": "Highest volume period. Mixed: strong bps_premium offset by HIGH+COUNTER disasters."
       },
       {
@@ -195,7 +195,7 @@
         "wins": 10,
         "losses": 8,
         "winRate": 55.6,
-        "pnl": -1.80,
+        "pnl": -1.8,
         "notes": "Marginal. Liquidity thins toward close."
       },
       {
@@ -206,7 +206,7 @@
         "wins": 13,
         "losses": 11,
         "winRate": 54.2,
-        "pnl": -10.20,
+        "pnl": -10.2,
         "notes": "Thin book, slippage risk. No BPS flags. PAQ_EARLY_AGG volatile here."
       },
       {
@@ -237,12 +237,42 @@
       "posWarnings": 2
     },
     "dailyPnl": [
-      { "date": "2026-04-07", "pnl": 5.43, "balance": 98.47, "trades": 82 },
-      { "date": "2026-04-08", "pnl": -7.91, "balance": 90.56, "trades": 96 },
-      { "date": "2026-04-09", "pnl": -5.96, "balance": 84.60, "trades": 85 },
-      { "date": "2026-04-10", "pnl": 5.65, "balance": 90.25, "trades": 96 },
-      { "date": "2026-04-11", "pnl": 0.00, "balance": 90.25, "trades": 96 },
-      { "date": "2026-04-12", "pnl": 0.00, "balance": 90.25, "trades": 87 }
+      {
+        "date": "2026-04-07",
+        "pnl": 5.43,
+        "balance": 98.47,
+        "trades": 82
+      },
+      {
+        "date": "2026-04-08",
+        "pnl": -7.91,
+        "balance": 90.56,
+        "trades": 96
+      },
+      {
+        "date": "2026-04-09",
+        "pnl": -5.96,
+        "balance": 84.6,
+        "trades": 85
+      },
+      {
+        "date": "2026-04-10",
+        "pnl": 5.65,
+        "balance": 90.25,
+        "trades": 96
+      },
+      {
+        "date": "2026-04-11",
+        "pnl": 0.0,
+        "balance": 90.25,
+        "trades": 96
+      },
+      {
+        "date": "2026-04-12",
+        "pnl": 0.0,
+        "balance": 90.25,
+        "trades": 87
+      }
     ],
     "recentTrades": []
   },
@@ -259,8 +289,8 @@
     "winRate": 0,
     "stoplossTriggers": 0,
     "harvestEvents": 0,
-    "bestStrategy": "—",
-    "worstStrategy": "—"
+    "bestStrategy": "\u2014",
+    "worstStrategy": "\u2014"
   },
   "allTimeStats": {
     "totalPnl": -2.79,
@@ -270,15 +300,15 @@
   "btcMarketContext": {
     "period": "2026-04-07 to 2026-04-12",
     "lowPrice": 67835.49,
-    "highPrice": 73675.70,
+    "highPrice": 73675.7,
     "priceRange": 5840.21,
     "volatility": "moderate-high"
   },
   "operationalMetadata": {
-    "dataSource": "REAL — AetherBot v254 live trading logs + analysis files",
+    "dataSource": "REAL \u2014 AetherBot v254 live trading logs + analysis files",
     "logsLocation": "agents/aether/logs/",
     "capital": "real",
     "note": "Strategy data extracted from 6 days of trading logs + 41 analysis files. All P&L numbers are real USD from Kalshi binary options."
   },
-  "updatedAt": "2026-04-13T00:45:00-06:00"
+  "updatedAt": "2026-04-12T22:14:18-06:00"
 }

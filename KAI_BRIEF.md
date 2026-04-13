@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~00:15 MT (Aether GPT daily log review integration + full migration committed + pushed)
+**Updated:** 2026-04-13 ~01:20 MT (strategy dashboard live, aether.sh verified post-migration, simulation 25/1)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 
@@ -218,6 +218,10 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **GPT daily log review** — `gpt_factcheck.py` rewritten with dual-mode: `--log` sends raw AetherBot log to GPT-4o for session summary, pattern detection, decision fact-checking, risk flags, and structural recommendations. Wired into aether.sh main cycle (auto-triggers once/day after 500+ lines). `run_factcheck.sh` updated for post-migration paths.
 - **Aether dashboard — real data live** — `aether-metrics.json` now serves real trading data ($90.25 balance, -$2.79 P&L, 542 tickers). Verified live on hyo.world.
 - **Session 8 continuation commit** — 127 files, 55k insertions. Pushed to GitHub (c2a88fb).
+- **Aether strategy dashboard** — 6 real strategies (bps_premium, PAQ_EARLY_AGG, bps_late, BCDP_FAST_COMMIT, PAQ_STRUCT_GATE, WES_EARLY) with W/R, PNL, $/trade. 4 conviction buckets (HIGH+ALIGNED 100% WR vs HIGH+COUNTER -$47.37). 6 trading zones ranked by W/R. Expanded risk events (BDI=0, harvest, phantom positions). All live on hyo.world.
+- **aether.sh verified post-migration** — ran successfully on Mini. Found log, extracted balance, updated metrics, pushed to HQ, self-review healthy. GPT review blocked by placeholder API key (P1 — Hyo action needed).
+- **JSON schema mismatch fixed** — currentPeriod→currentWeek, all consumers made resilient to both structures. Pattern logged.
+- **Simulation improved** — 25 pass / 1 fail (from 24/2). nel.sh now exits 0.
 
 **Shipped previous session (seventh pass — agent formalization + research architecture):**
 - Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename
