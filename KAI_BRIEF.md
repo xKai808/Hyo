@@ -2,8 +2,23 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~02:55 MT (enriched research, aether dashboard, nel security scanner, simulations run)
+**Updated:** 2026-04-13 ~03:10 MT (end of 9-hour session 8 — comprehensive memory save before overnight)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
+
+## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
+
+These are Hyo's direct instructions. They override lower-priority tasks. Do not skip.
+
+1. **Aether migration** — AetherBot runs from `~/Documents/Projects/AetherBot/` and writes logs to `~/Documents/Projects/AetherBot/logs/` (date-based). Aether agent in Hyo repo must either point to that folder OR migrate everything to `agents/aether/`. Hyo says migrate. This must be done before morning — Aether needs access to all historical logs. No hiccups.
+2. **Nel GitHub scan must be autonomous** — already wired into q6h QA cycle (Phase 2.5). Verify it actually runs via launchd, not just manually.
+3. **Agent introspective reports on HQ** — every agent produces a self-assessment report visible on hyo.world/hq under their respective section. Kai also produces a CEO report. Human-readable.
+4. **Agent self-improvement research** — each agent researches improvements in their domain, generates recommendations, can implement changes PRN but Kai has veto. Reports published to HQ.
+5. **Build `hyo.hyo` agent** — UI/UX specialist. Owns: website, future apps, dApps, mobile, podcasts, Spotify. Manages HQ ops sync.
+6. **Two-version reports** — technical version (for agents/Kai) AND human-readable version (for HQ/Hyo). Consolidations, simulations, everything.
+7. **05:00 MT morning report on HQ dashboard** — what got done overnight, per-agent accomplishments, what went well/didn't, improvements, next steps. Must read like a human wrote it. If an agent was idle, explain why. Idle ≠ acceptable if there's work to do.
+8. **CEO mode is ON** — Kai builds autonomously when Hyo is not present. Long-term goals: blockchain integration, podcast, mobile APP, hyo.world expansion. Create milestones, short-term goals, ongoing checklists. Don't wait for permission.
+9. **Memory is sacred** — 9 hours of work today. Never repeat failed approaches. Never lose context. Every session reads and writes memory. Every pattern is logged.
+10. **Hyo is the operator AND Kai's partner** — Kai is CEO but also Hyo's assistant on this journey. Build, grow, ship.
 
 ---
 

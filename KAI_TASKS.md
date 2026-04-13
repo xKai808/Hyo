@@ -12,6 +12,14 @@
 
 ---
 
+## P0 — OVERNIGHT (do before 05:00 MT 2026-04-13)
+
+- [ ] **[K]** **Aether migration: ~/Documents/Projects/AetherBot/ → agents/aether/.** Migrate all historical logs, configs, and data from `/projects/AetherBot/` into `agents/aether/`. AetherBot runs in background and writes date-based logs to `AetherBot/logs/`. After migration: (a) symlink `AetherBot/logs/` → `agents/aether/logs/` so running AetherBot still works, (b) update `aether.sh` to read from new location, (c) update `aether-metrics.json` to pull from real historical logs — NOT simulated data, (d) verify on HQ dashboard. **Must be done before morning — no hiccups.**
+- [ ] **[K]** **Build 05:00 MT morning report.** Create `/api/morning-report` or static `website/data/morning-report.json` + HQ view. Content: what was done overnight, per-agent accomplishments, what went well / didn't, improvements, next steps. Human-readable. Scheduled to generate at 05:00 MT daily.
+- [ ] **[K]** **Agent introspective reports on HQ.** Each agent writes a self-assessment (performance, learnings, recommendations) visible on hyo.world/hq under their section. Two versions: technical (for agent ledger) + human-readable (for HQ). Kai writes CEO report too.
+- [ ] **[K]** **Build `hyo.hyo` agent.** UI/UX specialist. Owns: website, HQ, future apps/dApps, mobile web, podcast, Spotify presence. Follows Agent Creation Protocol. Wire into dispatch, give it a runner, PLAYBOOK, manifest, ledger.
+- [ ] **[K]** **Verify Nel GitHub scan runs autonomously.** Confirm it fires in the q6h launchd cycle (Phase 2.5). Not just manual — must run when we sleep.
+
 ## P0 — Active blockers
 
 - [ ] **[B]** **Migrate aurora off Cowork scheduled-task sandbox onto Mini launchd.** Cowork's sandbox blocks egress to aurora's sources (all 403). Fix: create launchd plist for `newsletter.sh` at 03:00 MT daily. _(Audit B10, B12)_
@@ -67,13 +75,49 @@
 - [ ] **[K]** **Agent nightly self-improvement cycle** — each agent runs research + improvement during overnight hours. Nel: QA/security patterns. Sam: infra/deploy best practices. Ra: content sources + formats. Aether: trading algorithms. Dex: data integrity patterns. Results published to HQ automatically.
 - [ ] **[K]** **Clean up disabled Cowork scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aether-analysis.
 
-## P3 — Strategic
+## P2 — Autonomous CEO Work (Kai builds without prompting)
 
-- [ ] **[K]** Research Base L2 gas sponsoring patterns (Coinbase Paymaster) so founder mints actually stay free when on-chain.
-- [ ] **[K]** Design the review-to-credit-score weight curve: recency-weighted quality factor × reviewer reputation weighting.
-- [ ] **[K]** Think through agent-to-agent handoff protocol — when sentinel flags an issue, how does it hand off to cipher or back to the agent owner?
-- [ ] **[B]** Pricing: formalize per-job vs retainer declaration at registration time, add to the registration form.
-- [ ] **[H]** Consider cancelling X Premium ($8/mo) since it doesn't grant API access per `docs/x-api-access.md`. Save: $96/yr.
+- [ ] **[K]** **Two-version report system.** Every consolidation, simulation, and agent report produces: (a) technical version in agent ledger/logs, (b) human-readable version on HQ. Wired into all runners.
+- [ ] **[K]** **Agent nightly research cycle.** Each agent spends overnight hours researching their domain: Nel (QA/security patterns), Sam (infra/deploy), Ra (content/sources), Aether (trading algorithms), Dex (data integrity). Results → recommendations → changes PRN → published to HQ.
+- [ ] **[K]** **Memory dedup system.** Before any task starts, check `known-issues.jsonl` and `evolution.jsonl` for prior attempts. Never repeat a failed approach. Log what worked and what didn't.
+- [ ] **[K]** **Human-readable morning dashboard widget.** Not just raw data — a narrative summary that reads like a person wrote it. "Last night, Nel caught 3 broken links and auto-fixed them. Ra's research archive grew by 2 entries. Aether tracked 8 trades with 75% W/R."
+
+## P3 — Strategic / Long-term Milestones
+
+### Milestone 1: Foundation Complete (target: end of April 2026)
+- [ ] All agents operational, self-improving, producing daily reports
+- [ ] HQ dashboard shows real-time agent health + morning narrative report
+- [ ] Research archive growing daily with enriched content
+- [ ] Zero dead links, zero broken pages (Nel enforces)
+- [ ] Aether pulling real trading data from exchange APIs
+
+### Milestone 2: Blockchain Integration (target: May 2026)
+- [ ] **[K]** Research Base L2 gas sponsoring patterns (Coinbase Paymaster) so founder mints stay free
+- [ ] **[K]** Deploy HyoRegistry.sol to Base Sepolia testnet
+- [ ] **[K]** Implement `mintReserved` admin function
+- [ ] **[K]** Add Merkle root of reserved 48,988 handles to contract constructor
+- [ ] **[K]** Design review-to-credit-score weight curve
+
+### Milestone 3: Mobile APP (target: June 2026)
+- [ ] **[K]** Research: React Native vs Flutter vs PWA for hyo.world mobile app
+- [ ] **[K]** Design app architecture: HQ dashboard, agent status, push notifications, research reader
+- [ ] **[K]** MVP: PWA wrapper around hyo.world with offline support + push notifications
+- [ ] **[B]** App Store / Play Store submission pipeline
+
+### Milestone 4: Content & Distribution (target: Q3 2026)
+- [ ] **[K]** Podcast infrastructure: automated audio generation from Ra's daily brief
+- [ ] **[K]** Spotify integration: publish aurora briefs as podcast episodes
+- [ ] **[K]** Social distribution: automated X/LinkedIn posts from key research findings
+
+### Milestone 5: Platform Scale (target: Q4 2026)
+- [ ] **[B]** Agent marketplace live on-chain
+- [ ] **[B]** Third-party agent onboarding pipeline
+- [ ] **[K]** Agent-to-agent handoff protocol
+- [ ] **[B]** Pricing: per-job vs retainer declaration at registration
+
+### Ongoing
+- [ ] **[K]** Think through agent-to-agent handoff protocol
+- [ ] **[H]** Consider cancelling X Premium ($8/mo) — no API access per `docs/x-api-access.md`. Save: $96/yr.
 
 ## Done
 
