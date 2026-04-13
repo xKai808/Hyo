@@ -1,11 +1,16 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-13T03:33:20Z
+Last updated: 2026-04-13T09:12:30Z
 
 ## In Progress
 
-- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
-  - Delegated: 2026-04-13T02:49:16Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
+  - Delegated: 2026-04-13T09:12:30Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
+
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T05:10:26Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

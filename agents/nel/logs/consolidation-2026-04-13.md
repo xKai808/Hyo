@@ -1,63 +1,54 @@
 # Nightly consolidation — 2026-04-13
 
-**Started:** 2026-04-13T03:30:56Z
+**Started:** 2026-04-13T08:00:04Z
 
 ## hyo
 
-[03:30:56] Starting hyo consolidation
-[03:30:56] Sentinel [hyo]: passed=3 failed=1
+[08:00:04] Starting hyo consolidation
+[08:00:06] Sentinel [hyo]: passed=2 failed=2
 findings:
-- FAIL: API health endpoint unreachable
-[03:30:56] Cipher [hyo]: leaks=0 in website/ | leaks=0 in NFT/
-[03:30:56] Finished hyo consolidation
+- FAIL: .secrets dir mode=0700 (want 700)
+- FAIL: founder.token mode=0600 (want 600)
+[08:00:06] Cipher [hyo]: leaks=0 in website/ | leaks=0 in NFT/
+[08:00:06] Finished hyo consolidation
 
 ## aurora-ra
 
-[03:30:56] Starting aurora-ra consolidation
-[03:30:56] Sentinel [aurora-ra]: passed=4 failed=0
-[03:30:56] Cipher [aurora-ra]: leaks=0 in agents/ra/pipeline/
-[03:30:56] Finished aurora-ra consolidation
+[08:00:06] Starting aurora-ra consolidation
+[08:00:06] Sentinel [aurora-ra]: passed=4 failed=0
+[08:00:06] Cipher [aurora-ra]: leaks=0 in agents/ra/pipeline/
+[08:00:06] Finished aurora-ra consolidation
 
 ## aether
 
-[03:30:56] Starting aether consolidation
-[03:30:56] Sentinel [aether]: passed=1 failed=1
+[08:00:06] Starting aether consolidation
+[08:00:06] Sentinel [aether]: passed=1 failed=1
 findings:
 - FAIL: kai/aether.sh runner missing
-[03:30:56] Finished aether consolidation
+[08:00:06] Finished aether consolidation
 
 ## kai-ceo
 
-[03:30:56] Starting kai-ceo consolidation
-[03:30:56] Sentinel [kai-ceo]: passed=4 failed=0
-[03:30:56] Cipher [kai-ceo]: leaks=0 in kai/
-[03:30:56] Finished kai-ceo consolidation
+[08:00:06] Starting kai-ceo consolidation
+[08:00:06] Sentinel [kai-ceo]: passed=4 failed=0
+[08:00:06] Cipher [kai-ceo]: leaks=0 in kai/
+[08:00:06] Finished kai-ceo consolidation
 
 ## nel
 
-[03:30:56] Starting nel consolidation
-[03:30:56] Sentinel [nel]: passed=4 failed=0
-[03:30:56] Cipher [nel]: leaks=0 in agents/nel/nel.sh
-[03:30:56] Finished nel consolidation
+[08:00:06] Starting nel consolidation
+[08:00:06] Sentinel [nel]: passed=4 failed=0
+[08:00:06] Cipher [nel]: leaks=0 in agents/nel/nel.sh
+[08:00:06] Finished nel consolidation
 
 ## sam
 
-[03:30:56] Starting sam consolidation
-[03:30:56] Sentinel [sam]: passed=6 failed=0
-[03:30:56] Cipher [sam]: leaks=0 in agents/sam/sam.sh
-[03:30:56] Finished sam consolidation
+[08:00:06] Starting sam consolidation
+[08:00:06] Sentinel [sam]: passed=6 failed=0
+[08:00:06] Cipher [sam]: leaks=0 in agents/sam/sam.sh
+[08:00:06] Finished sam consolidation
 
-**Completed:** 2026-04-13T03:30:56Z
-[03:30:56] Consolidation complete. Log at /sessions/zealous-beautiful-lovelace/mnt/Hyo/agents/nel/logs/consolidation-2026-04-13.md
-[03:30:57] Simulation report written to /sessions/zealous-beautiful-lovelace/mnt/Hyo/agents/nel/logs/simulation-2026-04-13.md and synced to website/docs/sim/
-[03:30:57] Synced to website/docs/consolidation/
-
-## Cowork Scheduled Task Note (2026-04-13 ~03:31 MT)
-
-Consolidation run completed via Cowork scheduled task. All file edits written to FUSE mount.
-Git changes staged (`git add -A` succeeded) but `git commit` blocked by stale `.git/index.lock`
-(FUSE sandbox permission — cannot unlink). 
-
-**Action required on Mini:** `cd ~/Documents/Projects/Hyo && rm .git/index.lock && git commit -m "nightly consolidation 2026-04-13"`
-
-Or via queue: `kai exec "cd ~/Documents/Projects/Hyo && rm .git/index.lock && git commit -m 'nightly consolidation 2026-04-13'"`
+**Completed:** 2026-04-13T08:00:06Z
+[08:00:06] Consolidation complete. Log at /Users/kai/Documents/Projects/Hyo/agents/nel/logs/consolidation-2026-04-13.md
+[08:00:06] Simulation report written to /Users/kai/Documents/Projects/Hyo/agents/nel/logs/simulation-2026-04-13.md and synced to website/docs/sim/
+[08:00:06] Synced to website/docs/consolidation/

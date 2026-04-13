@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-12T21:30:00-06:00",
+  "updatedAt": "2026-04-12T23:10:26-06:00",
   "morningReport": {
     "date": "2026-04-12",
     "generatedAt": "2026-04-12T21:30:00-06:00",
@@ -14,63 +14,70 @@
       "dex": "active"
     },
     "topIssues": [
-      "Aether plist missing HYO_ROOT \u2014 dispatch errors every 15 min",
-      "Nel/Ra simulation runner exits (exit-1 / exit-2) \u2014 consistent, needs investigation",
-      "No newsletter for 2026-04-12 \u2014 Aurora still sandbox-blocked",
-      "simulation-outcomes.jsonl line 1 corrupt \u2014 remediation unconfirmed"
+      "API health endpoint failing — 11 consecutive sentinel runs",
+      "No newsletter for 2026-04-12 — Aurora still sandbox-blocked",
+      "Nel/Ra simulation runner exits (exit-1 / exit-2) — consistent",
+      "15 broken documentation links flagged by Nel",
+      "10 P0 tasks in queue (overload threshold is 5)"
     ]
   },
   "events": [
     {
+      "ts": "2026-04-12T23:10:26-06:00",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
+      "doc": "/viewer?agent=nel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T23:10:26-06:00",
+      "agent": "sentinel",
+      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health down, task overload)",
+      "doc": "/viewer?agent=sentinel&file=2026-04-12"
+    },
+    {
+      "ts": "2026-04-12T23:10:26-06:00",
+      "agent": "cipher",
+      "msg": "Security scan — 0 verified leaks, clean"
+    },
+    {
       "ts": "2026-04-13T03:30:56Z",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
+      "msg": "Nightly consolidation — sam",
       "doc": "/viewer?agent=consolidation&file=2026-04-13"
     },
     {
       "ts": "2026-04-13T03:30:56Z",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-13",
+      "msg": "24h action plan — 2026-04-13",
       "doc": "/viewer?agent=simulation&file=2026-04-13"
     },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam"
+      "msg": "Nightly consolidation — sam"
     },
     {
       "ts": "2026-04-12T13:35:34-06:00",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-12",
+      "msg": "24h action plan — 2026-04-12",
       "doc": "/viewer?agent=sim&file=2026-04-12"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep \u2014 7 passed, 0 failed",
+      "msg": "QA sweep — 7 passed, 0 failed",
       "doc": "/viewer?agent=sentinel&file=2026-04-11"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
       "agent": "cipher",
-      "msg": "Security scan \u2014 secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
+      "msg": "Security scan — secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
     },
     {
       "ts": "2026-04-12T12:07:28-06:00",
       "agent": "ra",
-      "msg": "Newsletter check \u2014 1 total, latest 2026-04-11 (2,254 words)",
+      "msg": "Newsletter check — 1 total, latest 2026-04-11 (2,254 words)",
       "doc": "/viewer?agent=ra&file=2026-04-11"
-    },
-    {
-      "ts": "2026-04-11T17:50:00-06:00",
-      "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 KAI_BRIEF + KAI_TASKS synced"
-    },
-    {
-      "ts": "2026-04-11T16:14:00-06:00",
-      "agent": "sim",
-      "msg": "Nightly simulation \u2014 overnight scenario mapped",
-      "doc": "/viewer?agent=sim&file=2026-04-10"
     }
   ],
   "ra": {
@@ -84,17 +91,26 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-12T12:07:28-06:00",
-    "passed": 7,
-    "failed": 0,
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-11"
+    "lastRun": "2026-04-12T23:10:26-06:00",
+    "passed": 5,
+    "failed": 4,
+    "findings": [
+      "P0: aurora-ran-today — no newsletter for 2026-04-12",
+      "P0: api-health-green — endpoint failing (day 11 recurring)",
+      "P1: scheduled-tasks-fired — no aurora logs detected",
+      "P2: task-queue-size — 10 P0 tasks (overload threshold 5)"
+    ],
+    "escalations": [
+      "P0 escalated: api-health-green failing 11 runs in a row"
+    ],
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-12"
   },
   "cipher": {
-    "lastRun": "2026-04-12T12:07:28-06:00",
+    "lastRun": "2026-04-12T23:10:26-06:00",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan \u2014 6 grep hits all false positives (regex patterns in cipher.hyo.json, cipher.algorithm.md, consolidate.sh, and prior cipher logs)",
+    "notes": "Clean scan — 0 verified leaks",
     "latestDoc": null
   },
   "sim": {
@@ -107,9 +123,9 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-13T03:33:17Z",
+    "lastRun": "2026-04-12T23:10:26-06:00",
     "improvementScore": 65,
-    "findingsCount": 2,
+    "findingsCount": 6,
     "staleFiles": 0,
     "brokenLinks": 15,
     "untested": 2,

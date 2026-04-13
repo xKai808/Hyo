@@ -83,6 +83,7 @@
 2. **Draft the aurora launchd plist** — write it, put the one-line `launchctl` command in the brief, remove every friction point. The only thing left is Hyo's 30 seconds.
 3. **Add sandbox-exempt logic to sentinel_hyo** — mark API health as skipped (not failed) when running in Cowork's environment. Eliminates the chronic false positive and makes the hyo sentinel result meaningful again.
 
+
 ## 2026-04-13 — nightly consolidation
 
 **Sentinel:** passed=4 failed=0

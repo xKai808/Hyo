@@ -107,7 +107,14 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - Fix: swapped order to Linux-first (`stat -c %Y || stat -f %m`). Pattern logged to known-issues.jsonl.
 - Result: ra.sh crash resolved. Remaining exit 2 = expected pipeline warnings (Yahoo Finance source).
 
-**Health check:** 1 issue — unresolved flags backlog (24 open flags, 5 unique P1/P2 issues). No stale delegations. Nel de-dup needed.
+**Health check (2026-04-13T06:15 MT):** 3 issues, 4 warnings.
+- **P0 OPEN:** `agents/nel/security` gitignore gap — delegated to nel, unconfirmed resolution. Verify .gitignore covers this path.
+- **P1 OPEN:** `/api/hq?action=data` returning HTTP 401 — HQ dashboard inaccessible for data reads.
+- **P1 OPEN:** No newsletter produced for 2026-04-12. Ra runner still exiting code 2. Pipeline blocked.
+- **P2:** Aether dashboard timestamp mismatch (local vs API) repeating every ~15min. Cosmetic but noisy.
+- **P2:** Healthcheck remediation loop created ~15 duplicate delegations for the same newsletter P1. Dedup logic in healthcheck.sh needs fix.
+- **P2:** 15 broken documentation links (nel audit).
+- **P3:** Sam, Ra, Aether have no logs yet for 2026-04-13. Only Nel + Dex active.
 
 **📋 NIGHTLY CONSOLIDATION (2026-04-13T03:31 MT):**
 

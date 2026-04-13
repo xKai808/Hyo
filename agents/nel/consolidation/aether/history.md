@@ -63,6 +63,7 @@
 - ~~What cadence?~~ → 15-min cycle (metrics), weekly (intelligence/research)
 - ~~What format?~~ → Metrics JSON for dashboard, JSONL for ledger, dispatch reports for Kai
 
+
 ## 2026-04-13 — nightly consolidation
 
 **Sentinel:** passed=1 failed=1

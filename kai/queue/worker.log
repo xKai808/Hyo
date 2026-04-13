@@ -270,3 +270,67 @@
 [2026-04-13T03:33:19Z] DONE: [recheck-flag-nel-020] exit=0 (0s)
 [2026-04-13T03:33:19Z] BATCH: processed 1 commands
 [2026-04-13T03:33:19Z] IDLE: no pending commands
+[2026-04-13T03:51:18Z] EXEC: [cmd-1776052276-1551] cd ~/Documents/Projects/Hyo && git push origin main 2>&1 (timeout: 180s)
+[2026-04-13T03:51:29Z] DONE: [cmd-1776052276-1551] exit=0 (11s)
+[2026-04-13T03:51:29Z] BATCH: processed 1 commands
+[2026-04-13T03:51:30Z] IDLE: no pending commands
+[2026-04-13T03:51:43Z] EXEC: [cmd-1776052302-1578] curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c "import json,sys; d=json.load(sys.stdin); print(f'Balance: ${ d.get(\"currentPeriod\",{}).get(\"currentBalance\", d.get(\"currentWeek\",{}).get(\"currentBalance\",\"?\"))}'); print(f'Updated: {d.get(\"updatedAt\",\"?\")}')" 2>&1 (timeout: 60s)
+[2026-04-13T03:51:44Z] DONE: [cmd-1776052302-1578] exit=0 (0s)
+[2026-04-13T03:51:44Z] BATCH: processed 1 commands
+[2026-04-13T03:51:45Z] IDLE: no pending commands
+[2026-04-13T03:51:49Z] EXEC: [cmd-1776052309-1601] curl -sf 'https://www.hyo.world/data/aether-metrics.json' | head -20 (timeout: 60s)
+[2026-04-13T03:51:50Z] DONE: [cmd-1776052309-1601] exit=0 (1s)
+[2026-04-13T03:51:50Z] BATCH: processed 1 commands
+[2026-04-13T03:51:51Z] IDLE: no pending commands
+[2026-04-13T03:51:57Z] EXEC: [cmd-1776052316-1624] curl -sf 'https://www.hyo.world/hq' | grep -o 'aether-metrics\|Aether\|Balance\|90.25' | head -10 (timeout: 60s)
+[2026-04-13T03:51:58Z] DONE: [cmd-1776052316-1624] exit=0 (1s)
+[2026-04-13T03:51:58Z] BATCH: processed 1 commands
+[2026-04-13T03:51:59Z] IDLE: no pending commands
+[2026-04-13T04:02:00Z] EXEC: [cmd-1776052919-574] cd ~/Documents/Projects/Hyo && git push origin main 2>&1 (timeout: 180s)
+[2026-04-13T04:02:04Z] DONE: [cmd-1776052919-574] exit=0 (4s)
+[2026-04-13T04:02:04Z] BATCH: processed 1 commands
+[2026-04-13T04:02:05Z] IDLE: no pending commands
+[2026-04-13T04:02:14Z] EXEC: [cmd-1776052933-599] curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); cw=d.get("currentWeek",{}); print("Balance:",cw.get("currentBalance")); print("PnL:",cw.get("pnl")); print("Trades:",cw.get("trades")); print("Strategies:",len(cw.get("strategies",[])))' (timeout: 60s)
+[2026-04-13T04:02:15Z] DONE: [cmd-1776052933-599] exit=0 (0s)
+[2026-04-13T04:02:15Z] BATCH: processed 1 commands
+[2026-04-13T04:02:15Z] IDLE: no pending commands
+[2026-04-13T04:02:53Z] EXEC: [cmd-1776052972-629] curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); cw=d.get("currentWeek",{}); print("Balance:",cw.get("currentBalance")); print("PnL:",cw.get("pnl")); print("Trades:",cw.get("trades")); print("Strategies:",len(cw.get("strategies",[])))' (timeout: 60s)
+[2026-04-13T04:02:54Z] DONE: [cmd-1776052972-629] exit=0 (1s)
+[2026-04-13T04:02:54Z] BATCH: processed 1 commands
+[2026-04-13T04:02:54Z] IDLE: no pending commands
+[2026-04-13T04:12:44Z] EXEC: [cmd-1776053563-223] cd ~/Documents/Projects/Hyo && git push origin main 2>&1 (timeout: 180s)
+[2026-04-13T04:12:48Z] DONE: [cmd-1776053563-223] exit=0 (4s)
+[2026-04-13T04:12:48Z] BATCH: processed 1 commands
+[2026-04-13T04:12:48Z] IDLE: no pending commands
+[2026-04-13T04:13:32Z] EXEC: [cmd-1776053610-254] curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); cw=d.get("currentWeek",{}); ss=cw.get("strategies",[]); zz=cw.get("tradingZones",[]); bb=cw.get("convictionBuckets",[]); print(f"Strategies: {len(ss)}"); [print(f"  {s[\"name\"]}: {s[\"winRate\"]}% WR, PNL {s[\"pnl\"]}") for s in ss]; print(f"Zones: {len(zz)}"); print(f"Buckets: {len(bb)}")' (timeout: 60s)
+[2026-04-13T04:13:33Z] DONE: [cmd-1776053610-254] exit=0 (1s)
+[2026-04-13T04:13:33Z] BATCH: processed 1 commands
+[2026-04-13T04:13:34Z] IDLE: no pending commands
+[2026-04-13T04:13:41Z] EXEC: [cmd-1776053620-277] curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); cw=d.get("currentWeek",{}); print("strategies:",len(cw.get("strategies",[]))); print("zones:",len(cw.get("tradingZones",[]))); print("buckets:",len(cw.get("convictionBuckets",[]))); print("balance:",cw.get("currentBalance"))' (timeout: 60s)
+[2026-04-13T04:13:41Z] DONE: [cmd-1776053620-277] exit=0 (0s)
+[2026-04-13T04:13:41Z] BATCH: processed 1 commands
+[2026-04-13T04:13:42Z] IDLE: no pending commands
+[2026-04-13T04:14:14Z] EXEC: [cmd-1776053652-306] cd ~/Documents/Projects/Hyo && bash agents/aether/aether.sh 2>&1 | tail -20 (timeout: 300s)
+[2026-04-13T04:14:22Z] DONE: [cmd-1776053652-306] exit=0 (8s)
+[2026-04-13T04:14:22Z] BATCH: processed 1 commands
+[2026-04-13T04:14:22Z] IDLE: no pending commands
+[2026-04-13T04:14:42Z] EXEC: [cmd-1776053680-356] cd ~/Documents/Projects/Hyo && bash bin/kai.sh simulate 2>&1 | tail -30 (timeout: 300s)
+[2026-04-13T04:14:48Z] DONE: [cmd-1776053680-356] exit=0 (6s)
+[2026-04-13T04:14:48Z] BATCH: processed 1 commands
+[2026-04-13T04:14:48Z] EXEC: [recheck-flag-nel-001] bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh (timeout: 120s)
+[2026-04-13T04:14:49Z] DONE: [recheck-flag-nel-001] exit=0 (1s)
+[2026-04-13T04:14:49Z] BATCH: processed 1 commands
+[2026-04-13T04:14:50Z] IDLE: no pending commands
+[2026-04-13T04:14:50Z] IDLE: no pending commands
+[2026-04-13T04:15:21Z] EXEC: [cmd-1776053719-413] cd ~/Documents/Projects/Hyo && git push origin main 2>&1 (timeout: 180s)
+[2026-04-13T04:15:25Z] DONE: [cmd-1776053719-413] exit=0 (4s)
+[2026-04-13T04:15:25Z] BATCH: processed 1 commands
+[2026-04-13T04:15:26Z] IDLE: no pending commands
+[2026-04-13T06:06:06Z] EXEC: [recheck-flag-nel-003] bash /sessions/fervent-sweet-newton/mnt/Hyo/kai/queue/healthcheck.sh (timeout: 120s)
+[2026-04-13T06:06:06Z] DONE: [recheck-flag-nel-003] exit=0 (0s)
+[2026-04-13T06:06:06Z] BATCH: processed 1 commands
+[2026-04-13T06:06:07Z] IDLE: no pending commands
+[2026-04-13T06:07:08Z] EXEC: [recheck-flag-dex-001] bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh (timeout: 120s)
+[2026-04-13T06:07:09Z] DONE: [recheck-flag-dex-001] exit=0 (0s)
+[2026-04-13T06:07:09Z] BATCH: processed 1 commands
+[2026-04-13T06:07:09Z] IDLE: no pending commands

@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-13T02:12:23Z",
-  "totalRuns": 10,
+  "lastRunAt": "2026-04-13T05:10:19Z",
+  "totalRuns": 11,
   "runHistory": [
     {
       "ts": "2026-04-11T10:04:55Z",
@@ -84,6 +84,14 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-13T05:10:19Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 3,
+      "recurringIssues": 1,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -102,8 +110,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-13T02:12:23Z",
-      "daysFailing": 10,
+      "lastSeen": "2026-04-13T05:10:19Z",
+      "daysFailing": 11,
       "status": "open"
     },
     "founder-token-integrity:2dffc5f6": {
@@ -183,7 +191,8 @@
       "firstSeen": "2026-04-13T02:09:34Z",
       "lastSeen": "2026-04-13T02:12:23Z",
       "daysFailing": 5,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T05:10:19Z"
     },
     "scheduled-tasks-fired:d986a828": {
       "severity": "P1",
@@ -192,6 +201,34 @@
       "firstSeen": "2026-04-13T02:09:34Z",
       "lastSeen": "2026-04-13T02:12:23Z",
       "daysFailing": 5,
+      "status": "resolved",
+      "resolvedAt": "2026-04-13T05:10:19Z"
+    },
+    "aurora-ran-today:c7767404": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/fervent-sweet-newton/mnt/Hyo/newsletters/2026-04-12.md",
+      "firstSeen": "2026-04-13T05:10:19Z",
+      "lastSeen": "2026-04-13T05:10:19Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:6688e451": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/fervent-sweet-newton/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-13T05:10:19Z",
+      "lastSeen": "2026-04-13T05:10:19Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "task-queue-size:d2598827": {
+      "severity": "P2",
+      "check_id": "task-queue-size",
+      "detail": "10 P0 tasks (overload threshold 5)",
+      "firstSeen": "2026-04-13T05:10:19Z",
+      "lastSeen": "2026-04-13T05:10:19Z",
+      "daysFailing": 1,
       "status": "open"
     }
   },

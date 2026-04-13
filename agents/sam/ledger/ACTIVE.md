@@ -1,11 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-13T03:33:17Z
+Last updated: 2026-04-13T09:12:30Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T02:49:11Z
+- **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-13T09:12:30Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
+
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
+  - Delegated: 2026-04-13T05:10:26Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -71,10 +76,6 @@ Last updated: 2026-04-13T03:33:17Z
 - **sam-008** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): Detected stale path reference in consolidate.sh — 2026-04-12T20:14:16Z (DONE)
 
 - **sam-007** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:33:16Z (DONE)
-  - Result: sim-report: all clear
-  - Notes: sim-verify: nightly handshake passed
-
-- **sam-002** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:30:08Z (DONE)
   - Result: sim-report: all clear
   - Notes: sim-verify: nightly handshake passed
 

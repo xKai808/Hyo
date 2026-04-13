@@ -251,3 +251,7 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/affectionate-relaxed-franklin/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:e98fd1df:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/affectionate-relaxed-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d986a828:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/fervent-sweet-newton/mnt/Hyo/newsletters/2026-04-12.md [sentinel:aurora-ran-today:c7767404] _(filed 2026-04-12)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/fervent-sweet-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6688e451] _(filed 2026-04-12)_
+- [ ] **[K]** [sentinel] 10 P0 tasks (overload threshold 5) [sentinel:task-queue-size:d2598827] _(filed 2026-04-12)_

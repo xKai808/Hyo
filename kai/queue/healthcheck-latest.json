@@ -1,52 +1,71 @@
 {
-  "ts": "2026-04-13T02:49:15Z",
+  "ts": "2026-04-13T08:13:00-06:00",
   "status": "ISSUES",
-  "issues": 1,
-  "warnings": 1,
+  "issues": 3,
+  "warnings": 4,
   "findings": [
     {
       "severity": "P1",
-      "area": "flags",
-      "detail": "11 unaddressed P0/P1 flags in last 2h"
+      "area": "safeguard-stale",
+      "detail": "18 P1 safeguard tasks (sam-002 thru nel-015, dex-001, kai-001) delegated 2-6h ago still show DELEGATED with no resolution. Root cause: 2026-04-12 newsletter was never produced. Cascades created audit work but did not fix the pipeline. Recommend closing completed audits and creating a single focused task to produce the missing newsletter or mark it skipped."
     },
     {
       "severity": "P2",
-      "area": "queue-worker",
-      "detail": "Worker last active 493346h ago \u2014 may be dead"
+      "area": "aether-dashboard-sync",
+      "detail": "Aether flagging dashboard data mismatch every 15 min since 06:43Z (API ts frozen at 06:06:41Z). 18+ duplicate P2 flags logged. API endpoint not refreshing data. Duplicate flag suppression needed."
+    },
+    {
+      "severity": "P2",
+      "area": "flag-deduplication",
+      "detail": "Nel generating identical flags across runs (broken doc links x3, no newsletter x4, system issues x3). No dedup logic — log.jsonl growing with noise. Queued flags in ACTIVE.md are duplicates of each other."
+    },
+    {
+      "severity": "P2",
+      "area": "security-gitignore",
+      "detail": "flag-nel-001: agents/nel/security reported as NOT gitignored. Secrets directory may be exposed in git. Needs immediate verification and fix."
+    },
+    {
+      "severity": "P2",
+      "area": "dex-jsonl-corrupt",
+      "detail": "flag-dex-001: Dex Phase 1 reports corrupt JSONL entries. Data integrity issue unresolved since 01:43Z."
+    },
+    {
+      "severity": "P3",
+      "area": "sam-no-logs",
+      "detail": "Sam agent has no log files for 2026-04-13. Other agents (nel, ra, aether, dex) all produced logs today."
+    },
+    {
+      "severity": "P3",
+      "area": "queue-idle",
+      "detail": "Queue has 0 pending, 0 running. Last command completed at 06:07Z. Worker appears idle but functional."
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 1 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776048548-6259",
+      "id": "recheck-flag-dex-001",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh simulate 2>&1 | grep -E '(Phase|\u2713",
-      "exit_code": 0
+      "exit_code": 0,
+      "summary": "Healthcheck dispatched auto-remediation for P0/P1 flags"
     },
     {
-      "id": "recheck-flag-nel-001",
+      "id": "cmd-1776053719-413",
       "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
-      "exit_code": 0
+      "exit_code": 0,
+      "summary": "git push origin main succeeded"
     },
     {
-      "id": "cmd-1776048534-6234",
+      "id": "recheck-flag-nel-003",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash agents/nel/nel.sh 2>&1 | tail -20",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776048490-6189",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh simulate 2>&1 | tail -30",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776048437-6155",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash agents/nel/nel-qa-cycle.sh 2>&1 | tail -30",
-      "exit_code": 0
+      "exit_code": 0,
+      "summary": "Attempted healthcheck from stale session path — no-op"
     }
   ],
-  "next_check": "in 2 hours (30min if P0 found)"
+  "agent_activity_today": {
+    "nel": ["nel-2026-04-13.md", "simulation-2026-04-13.md", "consolidation-2026-04-13.md", "cipher logs x3"],
+    "ra": ["ra-2026-04-13.md"],
+    "aether": ["aether-2026-04-13.log"],
+    "dex": ["dex-2026-04-13.md", "dex-activity-2026-04-13.jsonl"],
+    "sam": []
+  },
+  "next_check": "in 2 hours"
 }

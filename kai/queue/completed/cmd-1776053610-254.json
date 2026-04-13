@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776053610-254",
+  "ts": "2026-04-13T04:13:33Z",
+  "command": "curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); cw=d.get(\"currentWeek\",{}); ss=cw.get(\"strategies\",[]); zz=cw.get(\"tradingZones\",[]); bb=cw.get(\"convictionBuckets\",[]); print(f\"Strategies: {len(ss)}\"); [print(f\"  {s[\\\"name\\\"]}: {s[\\\"winRate\\\"]}% WR, PNL {s[\\\"pnl\\\"]}\") for s in ss]; print(f\"Zones: {len(zz)}\"); print(f\"Buckets: {len(bb)}\")'",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "  File \"<string>\", line 1\n    import json,sys; d=json.load(sys.stdin); cw=d.get(\"currentWeek\",{}); ss=cw.get(\"strategies\",[]); zz=cw.get(\"tradingZones\",[]); bb=cw.get(\"convictionBuckets\",[]); print(f\"Strategies: {len(ss)}\"); [print(f\"  {s[\\\"name\\\"]}: {s[\\\"winRate\\\"]}% WR, PNL {s[\\\"pnl\\\"]}\") for s in ss]; print(f\"Zones: {len(zz)}\"); print(f\"Buckets: {len(bb)}\")\n                                                                                                                                                                                                                      ^\nSyntaxError: unexpected character after line continuation character\n",
+  "duration_s": 1
+}
