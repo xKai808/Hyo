@@ -1,30 +1,26 @@
 {
   "date": "2026-04-13",
-  "generatedAt": "2026-04-13T19:19:29-0600",
+  "generatedAt": "2026-04-13T21:28:56-0600",
   "generatedBy": "bin/generate-morning-report.sh",
-  "executiveSummary": "Morning report for 2026-04-13. Simulation: 25 pass / 2 fail. Health: HEALTHY: 0 issues, 0 warnings. Trading: Balance: $83.6, Trades: ?, Win rate: 0.0, Strategies: 6.",
+  "executiveSummary": "Morning report for 2026-04-13. Simulation: 25 pass / 2 fail. Health: ISSUES: 0 issues, 5 warnings. Trading: Balance: $83.17, Trades: ?, Win rate: 0.0, Strategies: 6.",
   "agentReports": [
     {
       "agent": "nel",
-      "activeTasks": 41,
-      "score": 90,
-      "assessment": "major capability gap closed \u2014 Nel now tests rendered output, not just infrastructure",
+      "activeTasks": 42,
+      "score": 65,
+      "assessment": "regression detected: score dropped 90 \u2192 65",
       "topTasks": [
-        "nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged b",
-        "nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire cod",
-        "nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) \u2014 scan entire cod"
-      ]
-    },
-    {
-      "agent": "ra",
-      "activeTasks": 15,
-      "score": "?",
-      "assessment": "health check with 1 warning(s)",
-      "topTasks": [
-        "ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06:0",
-        "ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06:0",
-        "ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 \u2014 past 06:0"
-      ]
+        "**nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged",
+        "**nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire c",
+        "**nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) \u2014 scan entire c"
+      ],
+      "reflection": {
+        "bottleneck": "none",
+        "symptom_or_system": "system",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "sentinel=2p/2f, cipher_leaks=0, score=65"
+      }
     },
     {
       "agent": "sam",
@@ -32,41 +28,78 @@
       "score": "?",
       "assessment": "",
       "topTasks": [
-        "sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged b",
-        "sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newslet",
-        "sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-016): No newslet"
-      ]
+        "**sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged",
+        "**sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsl",
+        "**sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsl"
+      ],
+      "reflection": {}
+    },
+    {
+      "agent": "ra",
+      "activeTasks": 15,
+      "score": "?",
+      "assessment": "health check with 1 warning(s)",
+      "topTasks": [
+        "**ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
+        "**ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
+        "**ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06"
+      ],
+      "reflection": {}
     },
     {
       "agent": "aether",
-      "activeTasks": 1,
+      "activeTasks": 5,
       "score": "?",
       "assessment": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync",
       "topTasks": [
-        "flag-aether-001** [P2] Dashboard data mismatch: local ts != API ts"
-      ]
+        "Trades this period: 0",
+        "PNL: $-7.08",
+        "Assessment: standby mode: no trades this cycle; WARNING: dashboard out-of-sync"
+      ],
+      "reflection": {
+        "bottleneck": "dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cycle \u2014 may be blocked on exchange API or AetherBot logger",
+        "symptom_or_system": "system",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "trades=0, pnl=-7.08, dashboard=out-of-sync"
+      }
+    },
+    {
+      "agent": "dex",
+      "activeTasks": 8,
+      "score": "?",
+      "assessment": "",
+      "topTasks": [
+        "**dex-001** [P2] First daily intelligence scan (Phase 6A) \u2014 awaiting 23:00 MT ru",
+        "Autonomous operation: daily at 23:00 MT via com.hyo.dex launchd",
+        "Phase 6A daily intelligence scanning (7 rotating topics)"
+      ],
+      "reflection": {}
     }
   ],
   "kaiReport": {
     "simulation": "25 pass / 2 fail",
-    "healthcheck": "HEALTHY: 0 issues, 0 warnings",
+    "healthcheck": "ISSUES: 0 issues, 5 warnings",
     "knownIssues": 2,
     "newsletter": "produced"
   },
   "systemHealth": {
     "queueWorker": "check healthcheck-latest.json",
     "simulation": "25 pass / 2 fail",
-    "healthcheck": "HEALTHY: 0 issues, 0 warnings"
+    "healthcheck": "ISSUES: 0 issues, 5 warnings"
   },
   "trading": {
-    "summary": "Balance: $83.6, Trades: ?, Win rate: 0.0, Strategies: 6"
+    "summary": "Balance: $83.17, Trades: ?, Win rate: 0.0, Strategies: 6"
   },
   "wentWell": [
-    "System healthcheck passing clean",
-    "Newsletter produced on schedule"
+    "Newsletter produced on schedule",
+    "Nel showing active domain growth",
+    "Aether showing active domain growth"
   ],
   "needsAttention": [
-    "Simulation: 25 pass / 2 fail"
+    "Healthcheck: ISSUES: 0 issues, 5 warnings",
+    "Simulation has failures: 25 pass / 2 fail",
+    "Aether bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc"
   ],
   "improvements": [
     "Review and close stale known issues",
