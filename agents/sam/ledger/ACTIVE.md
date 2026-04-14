@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-13T22:10:49Z
+Last updated: 2026-04-14T03:39:04Z
 
 ## In Progress
 
-- **sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-13T21:36:47Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
+  - Delegated: 2026-04-14T03:39:04Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -14,8 +14,8 @@ Last updated: 2026-04-13T22:10:49Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-016): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T02:11:42Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
+  - Delegated: 2026-04-14T02:10:11Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 

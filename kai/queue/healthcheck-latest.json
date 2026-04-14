@@ -1,63 +1,66 @@
 {
-  "ts": "2026-04-14T00:10:00-06:00",
+  "ts": "2026-04-14T02:05:00-06:00",
   "status": "ISSUES",
-  "issues": 4,
-  "warnings": 4,
+  "issues": 0,
+  "warnings": 5,
   "findings": [
     {
-      "severity": "P0",
-      "area": "security",
-      "detail": "nel-001: agents/nel/security gitignore gap — persists across 6+ healthchecks. Zero real remediation. Sim-ack'd but never actually fixed."
-    },
-    {
-      "severity": "P1",
-      "area": "newsletter-pipeline",
-      "detail": "No newsletter produced for 2026-04-12 OR 2026-04-13. 48+ hours without output. flag-nel-003 raised at 22:10Z, auto-remediation delegated to ra-003, but Cowork sandbox cannot execute pipeline. Requires interactive Mini session."
-    },
-    {
-      "severity": "P1",
-      "area": "api",
-      "detail": "sam-001: /api/hq?action=data returning HTTP 401. Persists since 21:36Z on 04-13. HQ dashboard data reads broken. Sim-ack'd, not fixed."
-    },
-    {
-      "severity": "P1",
-      "area": "task-integrity",
-      "detail": "Sim-ack masking pattern: 20+ tasks in Kai ACTIVE.md show DELEGATED — sim-report: all clear but underlying issues remain open. False-green state persists."
+      "severity": "P2",
+      "area": "aether/dashboard",
+      "detail": "Persistent dashboard data mismatch (flag-aether-001) firing every 15 min since ~22:44Z. 3 duplicate flags per cycle (noise). Local ts consistently behind API ts. PNL drifting: -$11.8 to -$8.28. Dashboard sync mechanism broken."
     },
     {
       "severity": "P2",
-      "area": "flag-spam",
-      "detail": "flag-aether-001 logged 21+ times in last 2 hours (triple-logged every 15-min cycle). No dedup. Log pollution accelerating."
+      "area": "ra/newsletter",
+      "detail": "No newsletter produced for 2026-04-12 or 2026-04-13. Multiple flags and auto-remediate tasks delegated but none resolved root cause. Ra output dir still only has 2026-04-11 edition."
     },
     {
       "severity": "P2",
-      "area": "test-failures",
-      "detail": "flag-nel-002: Sentinel found 2 projects with test failures. Flagged at 22:10Z."
+      "area": "sam/activity",
+      "detail": "Sam produced no log output on 2026-04-13. 6 P1 tasks assigned but no evidence of autonomous work. Multiple tasks show bare DELEGATED status with no method or result."
     },
     {
       "severity": "P2",
-      "area": "documentation",
-      "detail": "flag-nel-004: 15 broken documentation links. Nel self-delegated fix (nel-003)."
+      "area": "delegation/stale",
+      "detail": "Many In Progress tasks show only sim-ack handshake as method — confirms communication but not actual remediation. nel-001 (P0: security dir gitignore) in this state 4+ hours."
     },
     {
-      "severity": "P2",
-      "area": "queue-paths",
-      "detail": "Queue completed jobs reference stale session paths that no longer resolve. Queue functional but remediation commands are no-ops."
+      "severity": "P3",
+      "area": "aether/flag-spam",
+      "detail": "Aether logs 3 identical P2 flags per 15-min cycle to log.jsonl. Likely loop bug in aether runner. Should deduplicate."
     }
   ],
-  "agent_activity_today": {
-    "nel": true,
-    "sam": true,
-    "ra": true,
-    "aether": true,
-    "dex": true
-  },
   "recent_queue_results": [
-    {"id": "recheck-flag-nel-003", "exit_code": 0, "note": "stale path — no real execution"},
-    {"id": "recheck-flag-nel-001", "exit_code": 0, "note": "dispatched auto-remediation"},
-    {"id": "recheck-flag-dex-001", "exit_code": 0, "note": "dispatched remediation"}
+    {
+      "id": "cmd-1776131654-195",
+      "status": "ok",
+      "command": "git pull && git push origin main",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776131145-499",
+      "status": "ok",
+      "command": "git pull && git push origin main",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776130802-276",
+      "status": "ok",
+      "command": "git pull && git push origin main",
+      "exit_code": 0
+    }
   ],
-  "consecutive_unhealthy_checks": 6,
-  "root_cause": "Cowork sandbox cannot execute on the Mini. All delegated tasks confirm agent reachability via sim-ack but never perform real remediation. Requires interactive Kai session on Mini with queue worker access.",
+  "queue_health": {
+    "pending": 0,
+    "running": 0,
+    "last_failed": "recheck-1776044635 (healthcheck sleep timeout, 2026-04-13T01:43:55Z)"
+  },
+  "agent_output_today": {
+    "nel": "yes",
+    "sam": "NO",
+    "ra": "yes",
+    "aether": "yes",
+    "dex": "yes"
+  },
   "next_check": "in 2 hours"
 }

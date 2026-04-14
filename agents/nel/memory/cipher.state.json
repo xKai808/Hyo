@@ -2,41 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-14T01:02:21Z",
-  "totalRuns": 103,
+  "lastRunAt": "2026-04-14T03:01:30Z",
+  "totalRuns": 107,
   "runHistory": [
-    {
-      "ts": "2026-04-13T10:10:25Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T11:01:52Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T13:01:51Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T13:01:55Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
     {
       "ts": "2026-04-13T13:01:59Z",
       "failed": 2,
@@ -249,6 +217,38 @@
       "resolved": 0,
       "autofixes": 0,
       "note": "Cowork sandbox \u2014 supplemental checks: .secrets symlink intact to agents/nel/security, permissions 700/600 correct on all 5 secret files, founder.token not leaked, .env.local gitignored, secret pattern regex hits are documentation only (github-security-scanning-best-practices.md), no .pem/.key outside .secrets"
+    },
+    {
+      "ts": "2026-04-14T02:01:25Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T02:10:11Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T03:01:19Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T03:01:30Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
     }
   ],
   "knownIssues": {
@@ -257,8 +257,8 @@
       "check_id": "gitleaks-not-installed",
       "detail": "brew install gitleaks",
       "firstSeen": "2026-04-11T06:02:09Z",
-      "lastSeen": "2026-04-14T01:02:21Z",
-      "runsFailing": 98,
+      "lastSeen": "2026-04-14T03:01:30Z",
+      "runsFailing": 102,
       "status": "open"
     },
     "trufflehog-not-installed:cc78f9e8": {
@@ -266,8 +266,8 @@
       "check_id": "trufflehog-not-installed",
       "detail": "brew install trufflesecurity/trufflehog/trufflehog",
       "firstSeen": "2026-04-11T06:02:09Z",
-      "lastSeen": "2026-04-14T01:02:21Z",
-      "runsFailing": 98,
+      "lastSeen": "2026-04-14T03:01:30Z",
+      "runsFailing": 102,
       "status": "open"
     },
     "founder-token-leak:ce83eed1": {
@@ -392,8 +392,8 @@
     }
   ],
   "trendCounters": {
-    "gitleaks_not_installed_runs_in_a_row": 98,
-    "trufflehog_not_installed_runs_in_a_row": 98,
+    "gitleaks_not_installed_runs_in_a_row": 102,
+    "trufflehog_not_installed_runs_in_a_row": 102,
     "perm_drift_events": 78
   },
   "escalationState": {

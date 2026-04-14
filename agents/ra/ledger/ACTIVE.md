@@ -1,6 +1,6 @@
 # Ra Active Tasks
 
-Last updated: 2026-04-13T22:10:49Z
+Last updated: 2026-04-14T02:10:11Z
 
 ## In Progress
 
@@ -14,8 +14,8 @@ Last updated: 2026-04-13T22:10:49Z
   - Method: ls + validate all files in agents/ra/output/
   - Status: DELEGATED — Output directory has 2 files: 2026-04-11.md + 2026-04-11.html. HTML is valid (15056B, has doctype and closing tag). No orphaned MD files without matching HTML. Directory is clean — only 1 edition so far (2026-04-11).
 
-- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-004)
-  - Delegated: 2026-04-13T03:30:09Z
+- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
+  - Delegated: 2026-04-14T02:10:11Z
   - Method: Diff section headers between synthesize.md and render.py
   - Status: DELEGATED — render.py is a generic markdown→HTML renderer — handles any section headers as h2/h3/h4. Not section-name-specific. synthesize.md defines 5 editorial sections (The Story, Also Moving, The Lab, Worth Sitting With, Kais Desk) which render correctly as h2 blocks. Frontmatter fields (title, date) are parsed by split_frontmatter() and placed in the header template. No mismatch between prompt output format and renderer expectations.
 
