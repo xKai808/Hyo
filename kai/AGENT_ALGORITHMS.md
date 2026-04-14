@@ -112,6 +112,60 @@ PROTOCOL STALENESS PREVENTION:
 
 ---
 
+## Resolution Algorithm — RA-1 (ALL AGENTS, MANDATORY)
+
+**Full specification:** `kai/protocols/RESOLUTION_ALGORITHM.md`
+**Executor:** `bash kai/protocols/resolve.sh`
+**Recall:** `python3 kai/protocols/recall.py "<keyword>"`
+**Reports:** `kai/ledger/resolutions/RES-<NNN>.md`
+
+Every issue, error, or concern — whether detected by an agent, healthcheck, simulation, or Hyo — MUST be resolved through the Resolution Algorithm. No exceptions. No patchwork.
+
+```
+THE LOOP (mandatory, in order):
+  0. RECALL    — search prior resolutions for this class of failure
+  1. IDENTIFY  — what, expected vs actual, impact, class of failure
+  2. ROOT CAUSE — why it happened, why it wasn't caught, pattern or one-off
+  3. TASKS     — immediate fix + systemic prevention (BOTH required)
+  4. EXECUTE   — do the work, log what was done
+  5. VERIFY    — confirm fix works, test the negative case (does it catch regression?)
+  6. SIMULATE  — run simulation, check for side effects
+  7. REPORT    — save full resolution to kai/ledger/resolutions/RES-<NNN>.md
+  8. MEMORY    — update known-issues, evolution.jsonl, PLAYBOOK, BRIEF, TASKS
+  9. CLOSE     — confirm, commit, push
+
+KEY RULES:
+  - STEP 3 requires BOTH immediate fix AND systemic prevention. Fixing
+    without prevention is patchwork. Prevention without fixing is theater.
+  - STEP 5 must test the NEGATIVE case: if the problem recurs, will the
+    system catch it? If not, the fix is incomplete.
+  - STEP 7 report must include WHAT FAILED (approaches that didn't work)
+    and WHY, not just what succeeded. Failures are data.
+  - Every report has a "process improvements" section that feeds back into
+    the algorithm itself. RA-1 evolves with every resolution.
+
+RECALL IS MANDATORY:
+  Before resolving ANY issue, search for prior art:
+    python3 kai/protocols/recall.py "<keywords>"
+  Also recall during: hydration, self-evolution, before modifying files
+  from prior resolutions, when healthcheck/Nel/simulation flags something.
+
+EVOLUTION:
+  RA-1 is self-evolving. Version tracked in RESOLUTION_ALGORITHM.md.
+  Agents propose changes via resolution reports → Kai approves → algorithm
+  updates. Over time, each agent builds domain-specific extensions in their
+  PLAYBOOK.md that INHERIT from RA-1 (add steps, never remove core loop).
+
+AUTO-REMEDIATION STANDARD:
+  Detection without remediation is half the job. Every system that detects
+  an issue MUST either:
+  a) Fix it automatically (preferred), OR
+  b) Have an escalation path that triggers an automated fix
+  Flagging alone is not acceptable. If you can detect it, build the fix.
+```
+
+---
+
 ## Continuous Learning Protocol (ALL AGENTS)
 
 Every agent — including Kai — must stay current with evolving methods, tools, and best practices in their domain. AI and agentic AI are moving fast. An agent that stops learning becomes a liability.
@@ -174,10 +228,11 @@ STARTUP:
   3. Read kai/ledger/ACTIVE.md (open delegations)
   4. Read kai/ledger/known-issues.jsonl (what to watch for)
   5. Read kai/ledger/simulation-outcomes.jsonl (last sim results)
-  6. Run: dispatch status (ledger health)
-  7. Run: dispatch health (closed-loop check)
-  8. IF health issues → address before any new work
-  9. Report 3-line status to Hyo
+  6. Recall recent resolutions: python3 kai/protocols/recall.py --recent 5
+  7. Run: dispatch status (ledger health)
+  8. Run: dispatch health (closed-loop check)
+  9. IF health issues → resolve via RA-1 (not patchwork)
+  10. Report 4-line status to Hyo
 
 DELEGATION CHECKLIST (run BEFORE responding to any task/prompt):
   1. Read the task/prompt fully
