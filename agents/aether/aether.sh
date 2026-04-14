@@ -656,13 +656,22 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
 
   # ─── DOMAIN RESEARCH (External Research — agent-research.sh) ────────────────
   # Aether researches trading algorithms, position sizing, market analysis tools.
+  # PUBLISH GATE: Only publish to HQ feed ONCE per day, not every 15-min cycle.
   local RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+  local AETHER_PUBLISH_MARKER="/tmp/aether-published-$(TZ=America/Denver date +%Y%m%d)"
   if [[ -x "$RESEARCH_SCRIPT" ]]; then
-    log "Running domain research: trading strategies, position sizing, market tools..."
-    if bash "$RESEARCH_SCRIPT" aether --publish 2>&1 | tail -5; then
-      log "Domain research complete — findings saved and published"
+    if [[ -f "$AETHER_PUBLISH_MARKER" ]]; then
+      log "Domain research: skipping publish (already published today). Metrics-only cycle."
+      # Still run research without --publish to update local findings
+      bash "$RESEARCH_SCRIPT" aether 2>&1 | tail -3 || true
     else
-      log "WARN: Domain research encountered issues — check agents/aether/research/"
+      log "Running domain research: trading strategies, position sizing, market tools..."
+      if bash "$RESEARCH_SCRIPT" aether --publish 2>&1 | tail -5; then
+        log "Domain research complete — findings saved and published"
+        touch "$AETHER_PUBLISH_MARKER"
+      else
+        log "WARN: Domain research encountered issues — check agents/aether/research/"
+      fi
     fi
   fi
 
@@ -888,14 +897,22 @@ with open(sf, "w") as f:
     json.dump(sections, f, indent=2)
 PYEOF
 
+  # PUBLISH GATE: Only publish reflection to HQ feed ONCE per day.
+  # The marker file is shared with the research publish gate above.
+  local REPORT_PUBLISH_MARKER="/tmp/aether-report-published-$(TZ=America/Denver date +%Y%m%d)"
   if [[ -f "$AETHER_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
-    bash "$PUBLISH_SCRIPT" "agent-reflection" "aether" "Aether — Trading Report" "$AETHER_REFLECTION" 2>/dev/null || true
-    log "Self-authored report published to HQ feed"
+    if [[ -f "$REPORT_PUBLISH_MARKER" ]]; then
+      log "Self-authored report: skipping publish (already published today)"
+    else
+      bash "$PUBLISH_SCRIPT" "agent-reflection" "aether" "Aether — Trading Report" "$AETHER_REFLECTION" 2>/dev/null || true
+      touch "$REPORT_PUBLISH_MARKER"
+      log "Self-authored report published to HQ feed"
+    fi
 
-    # Report to Kai — closed-loop upward communication
+    # Report to Kai — closed-loop upward communication (always, for metrics tracking)
     DISPATCH_BIN="$ROOT/bin/dispatch.sh"
     if [[ -x "$DISPATCH_BIN" ]]; then
-      bash "$DISPATCH_BIN" report aether "research+reflection published: trades=${trade_count}, pnl=${pnl_total}, dashboard=${dashboard_status}" 2>/dev/null || true
+      bash "$DISPATCH_BIN" report aether "cycle complete: ${trade_count} trades, PNL=\$${pnl_total}, dashboard: ${dashboard_status}" 2>/dev/null || true
     fi
   fi
 

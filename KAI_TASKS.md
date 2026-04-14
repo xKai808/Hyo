@@ -318,3 +318,18 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/gracious-tender-davinci/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:3964dca3:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gracious-tender-davinci/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fe3f475c:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/nifty-confident-bell/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:f658836f] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/nifty-confident-bell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e374955a] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/nifty-confident-bell/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:f658836f:escalated]
+- [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 17 P0 tasks (overload threshold 5) [sentinel:task-queue-size:8abe625d:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/nifty-confident-bell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e374955a:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/optimistic-beautiful-bell/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:d991b6d2] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/optimistic-beautiful-bell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fb9d8666] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/optimistic-beautiful-bell/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:d991b6d2:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-beautiful-bell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fb9d8666:escalated]
