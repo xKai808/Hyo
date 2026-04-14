@@ -16,7 +16,7 @@
 
 - [x] **[K]** **Aether migration + GPT integration.** COMPLETE 2026-04-13. Migrated all AetherBot data to `agents/aether/`. GPT daily log review wired into `aether.sh` — auto-sends raw log to GPT-4o for independent analysis + fact-checking (triggers once/day after 500+ lines). `gpt_factcheck.py` rewritten with dual-mode. PLAYBOOK rewritten (460 lines), PRIORITIES rewritten (204 lines). Real data live on HQ ($90.25 balance). All committed + pushed (c2a88fb).
 - [ ] **[K]** **Build 05:00 MT morning report.** Create `/api/morning-report` or static `website/data/morning-report.json` + HQ view. Content: what was done overnight, per-agent accomplishments, what went well / didn't, improvements, next steps. Human-readable. Scheduled to generate at 05:00 MT daily.
-- [ ] **[K]** **Agent introspective reports on HQ.** Each agent writes a self-assessment (performance, learnings, recommendations) visible on hyo.world/hq under their section. Two versions: technical (for agent ledger) + human-readable (for HQ). Kai writes CEO report too.
+- [x] **[K]** **Agent introspective reports on HQ.** ✓ DONE (session 8 cont 5). All agents self-author reflections (introspection, research, changes, follow-ups, forKai) published to HQ feed. Profiles synced from PLAYBOOKs. CEO report type exists.
 - [ ] **[K]** **Build `hyo.hyo` agent.** UI/UX specialist. Owns: website, HQ, future apps/dApps, mobile web, podcast, Spotify presence. Follows Agent Creation Protocol. Wire into dispatch, give it a runner, PLAYBOOK, manifest, ledger.
 - [ ] **[K]** **Verify Nel GitHub scan runs autonomously.** Confirm it fires in the q6h launchd cycle (Phase 2.5). Not just manual — must run when we sleep.
 
@@ -78,7 +78,7 @@
 ## P2 — Near-term (continued)
 
 - [ ] **[K]** **Create `hyo.hyo` agent** — the website/UI/UX agent. Owns: hq.html, all public pages, HQ ops sync, mobile responsiveness, visual design. Takes over `hq-ops-sync` scheduled task. Future: becomes the design authority for all user-facing output.
-- [ ] **[K]** **Agent nightly self-improvement cycle** — each agent runs research + improvement during overnight hours. Nel: QA/security patterns. Sam: infra/deploy best practices. Ra: content sources + formats. Aether: trading algorithms. Dex: data integrity patterns. Results published to HQ automatically.
+- [x] **[K]** **Agent nightly self-improvement cycle** — ✓ DONE (session 8 cont 5). All 5 runners wired with domain research (agent-research.sh) + self-authored reports (publish-to-feed.sh). research-sources.json created per agent. Accountability loop via update-followups.sh.
 - [ ] **[K]** **Clean up disabled Cowork scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aether-analysis.
 
 ## P1 — Session 8 follow-ups
@@ -90,10 +90,10 @@
 
 ## P2 — Autonomous CEO Work (Kai builds without prompting)
 
-- [ ] **[K]** **Two-version report system.** Every consolidation, simulation, and agent report produces: (a) technical version in agent ledger/logs, (b) human-readable version on HQ. Wired into all runners.
-- [ ] **[K]** **Agent nightly research cycle.** Each agent spends overnight hours researching their domain: Nel (QA/security patterns), Sam (infra/deploy), Ra (content/sources), Aether (trading algorithms), Dex (data integrity). Results → recommendations → changes PRN → published to HQ.
+- [x] **[K]** **Two-version report system.** ✓ DONE (session 8 cont 4-5). Morning report generates internal (morning-report.json) + feed (feed.json). All agent runners self-publish reflections to feed.
+- [x] **[K]** **Agent nightly research cycle.** ✓ DONE (session 8 cont 5). agent-research.sh framework + per-agent research-sources.json + wired into all runners.
 - [ ] **[K]** **Memory dedup system.** Before any task starts, check `known-issues.jsonl` and `evolution.jsonl` for prior attempts. Never repeat a failed approach. Log what worked and what didn't.
-- [ ] **[K]** **Human-readable morning dashboard widget.** Not just raw data — a narrative summary that reads like a person wrote it. "Last night, Nel caught 3 broken links and auto-fixed them. Ra's research archive grew by 2 entries. Aether tracked 8 trades with 75% W/R."
+- [x] **[K]** **Human-readable morning dashboard widget.** ✓ DONE (session 8 cont 4). Feed-centric HQ with conversational summaries.
 
 ## P3 — Strategic / Long-term Milestones
 

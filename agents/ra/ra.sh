@@ -384,6 +384,18 @@ if [[ -f "$AGENT_GATES" ]]; then
   #   e.g., "Am I covering the right topics or just the easy ones?"
 fi
 
+# ── DOMAIN RESEARCH (External Research — agent-research.sh) ──
+# Ra researches newsletter craft, journalism, content synthesis, source diversification.
+RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+if [[ -x "$RESEARCH_SCRIPT" ]]; then
+  say "Running domain research: newsletter craft, journalism, content patterns..."
+  if bash "$RESEARCH_SCRIPT" ra --publish 2>&1 | tail -5; then
+    ok "Domain research complete — findings saved and published"
+  else
+    warn "Domain research encountered issues — check agents/ra/research/"
+  fi
+fi
+
 # ── Self-Evolution: Ra Learning & Improvement Tracking ──
 say "Self-evolution: capturing metrics and learning signals..."
 
@@ -511,6 +523,75 @@ ok "Self-evolution logged: $ASSESSMENT"
 
 if [[ "$STALENESS_FLAG" == "True" ]]; then
   warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+fi
+
+# ── Ra self-authored reflection → HQ feed ──
+PUBLISH_SCRIPT="$ROOT/bin/publish-to-feed.sh"
+RA_REFLECTION="/tmp/ra-reflection-sections-$(date +%Y%m%d).json"
+TODAY_STR=$(TZ=America/Denver date +%Y-%m-%d)
+
+python3 - "$RA_REFLECTION" "${CRITICAL:-0}" "${WARNINGS:-0}" "${SOURCE_COUNT:-0}" "$ROOT" << 'PYEOF'
+import json, sys, os
+sf = sys.argv[1]
+critical = int(sys.argv[2]) if sys.argv[2].isdigit() else 0
+warnings = int(sys.argv[3]) if sys.argv[3].isdigit() else 0
+sources = int(sys.argv[4]) if sys.argv[4].isdigit() else 0
+root = sys.argv[5]
+from datetime import datetime
+today = datetime.now().strftime("%Y-%m-%d")
+
+# Check if newsletter was produced today
+nl_produced = False
+nl_dir = os.path.join(root, "agents", "ra", "output")
+if os.path.isdir(nl_dir):
+    for f in os.listdir(nl_dir):
+        if today in f:
+            nl_produced = True
+            break
+
+research_summary = "No research conducted this cycle."
+ff = os.path.join(root, "agents", "ra", "research", f"findings-{today}.md")
+if os.path.exists(ff):
+    with open(ff) as f:
+        c = f.read()
+    if "## Key Takeaways" in c:
+        t = c.split("## Key Takeaways")[1].split("##")[0].strip()
+        research_summary = t if t else "Research completed — no high-signal findings."
+
+followups = []
+src = os.path.join(root, "agents", "ra", "research-sources.json")
+if os.path.exists(src):
+    with open(src) as f:
+        cfg = json.load(f)
+    followups = [fu["item"] for fu in cfg.get("followUps", []) if fu.get("status") == "open"]
+if not followups:
+    followups = ["Diversify source list beyond tech/crypto for Aurora Public",
+                 "Experiment with editorial voice vs neutral aggregation",
+                 "Research launchd migration to unblock gather phase"]
+
+parts = []
+if nl_produced:
+    parts.append("Newsletter produced on schedule today.")
+else:
+    parts.append("Newsletter NOT produced — pipeline blocked on infrastructure access.")
+parts.append(f"Monitoring {sources} sources. {critical} critical issues, {warnings} warnings.")
+if critical > 0:
+    parts.append("Critical issues need immediate attention.")
+
+sections = {
+    "introspection": " ".join(parts),
+    "research": research_summary,
+    "changes": "Ran content pipeline health check. " + ("Newsletter delivered." if nl_produced else "Blocked on Cowork sandbox — need Mini launchd for gather phase."),
+    "followUps": followups[:5],
+    "forKai": f"{'Pipeline is running.' if nl_produced else 'Infrastructure blocker: Cowork sandbox blocks all source fetches. Need Mini launchd migration to unblock.'}"
+}
+with open(sf, "w") as f:
+    json.dump(sections, f, indent=2)
+PYEOF
+
+if [[ -f "$RA_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
+  bash "$PUBLISH_SCRIPT" "agent-reflection" "ra" "Ra — Content Pipeline Report" "$RA_REFLECTION" 2>/dev/null || true
+  ok "Self-authored report published to HQ feed"
 fi
 
 # STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md)

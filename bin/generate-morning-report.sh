@@ -30,6 +30,13 @@ log() { echo "$LOG_TAG $(TZ='America/Denver' date +%H:%M:%S) $*"; }
 
 log "Generating morning report for $TODAY"
 
+# ── Sync agent profiles from PLAYBOOKs before generating report ──
+SYNC_SCRIPT="$ROOT/bin/sync-agent-profiles.sh"
+if [[ -x "$SYNC_SCRIPT" ]]; then
+  bash "$SYNC_SCRIPT" 2>&1 | tail -2
+  log "Agent profiles synced from PLAYBOOKs"
+fi
+
 # ── Gather data ──
 
 # Simulation

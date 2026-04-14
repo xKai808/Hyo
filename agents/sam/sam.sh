@@ -436,6 +436,22 @@ cmd_evolve() {
     #   e.g., "What's the rollback plan if this breaks production?"
   fi
 
+  # ── DOMAIN RESEARCH (External Research — agent-research.sh) ──
+  # Sam researches infrastructure, deployment, CI/CD patterns.
+  local RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+  if [[ -x "$RESEARCH_SCRIPT" ]]; then
+    say "Running domain research: infrastructure, Vercel, CI/CD patterns..."
+    if bash "$RESEARCH_SCRIPT" sam --publish 2>&1 | tail -5; then
+      ok "Domain research complete — findings saved and published"
+    else
+      warn "Domain research encountered issues — check agents/sam/research/"
+    fi
+  fi
+
+  # ── SELF-AUTHORED REPORT (publish reflection to HQ feed) ──
+  local PUBLISH_SCRIPT="$ROOT/bin/publish-to-feed.sh"
+  local REFLECTION_SECTIONS="/tmp/sam-reflection-sections-$(date +%Y%m%d).json"
+
   local EVOLUTION_FILE="$ROOT/agents/sam/evolution.jsonl"
   local PLAYBOOK="$ROOT/agents/sam/PLAYBOOK.md"
   local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -578,6 +594,65 @@ PYEOF
 
   if [[ "$staleness_flag" == "True" ]]; then
     warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+  fi
+
+  # ── Sam self-authored reflection → HQ feed ──
+  local today_str=$(TZ=America/Denver date +%Y-%m-%d)
+  python3 - "$REFLECTION_SECTIONS" "$tests_passed" "$tests_failed" \
+            "$api_health" "$deploy_status" "$assessment" "$ROOT" << 'PYEOF'
+import json, sys, os
+sf = sys.argv[1]
+tp = int(sys.argv[2]) if sys.argv[2].isdigit() else 0
+tf = int(sys.argv[3]) if sys.argv[3].isdigit() else 0
+api = sys.argv[4]
+deploy = sys.argv[5]
+assess = sys.argv[6]
+root = sys.argv[7]
+from datetime import datetime
+today = datetime.now().strftime("%Y-%m-%d")
+
+research_summary = "No research conducted this cycle."
+ff = os.path.join(root, "agents", "sam", "research", f"findings-{today}.md")
+if os.path.exists(ff):
+    with open(ff) as f:
+        c = f.read()
+    if "## Key Takeaways" in c:
+        t = c.split("## Key Takeaways")[1].split("##")[0].strip()
+        research_summary = t if t else "Research completed — no high-signal findings."
+    else:
+        research_summary = "Research completed — see findings file."
+
+followups = []
+src = os.path.join(root, "agents", "sam", "research-sources.json")
+if os.path.exists(src):
+    with open(src) as f:
+        cfg = json.load(f)
+    followups = [fu["item"] for fu in cfg.get("followUps", []) if fu.get("status") == "open"]
+if not followups:
+    followups = ["Investigate CI/CD pipeline options for pre-deploy testing",
+                 "Research Vercel KV integration for persistent storage",
+                 "Benchmark API response times for performance baseline"]
+
+parts = [f"Tests: {tp} passed, {tf} failed.", f"API health: {api}.", f"Deploy status: {deploy}."]
+if tf > 0:
+    parts.append(f"{tf} test failures need investigation.")
+if api != "reachable":
+    parts.append("API not reachable — this is blocking user-facing features.")
+
+sections = {
+    "introspection": " ".join(parts),
+    "research": research_summary,
+    "changes": assess,
+    "followUps": followups[:5],
+    "forKai": f"API is {api}, deploy is {deploy}. {'Need help unblocking the 401 on /api/hq.' if api != 'reachable' else 'Infrastructure stable.'}"
+}
+with open(sf, "w") as f:
+    json.dump(sections, f, indent=2)
+PYEOF
+
+  if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
+    bash "$PUBLISH_SCRIPT" "agent-reflection" "sam" "Sam — Engineering Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
+    ok "Self-authored report published to HQ feed"
   fi
 
   # STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md)

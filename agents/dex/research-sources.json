@@ -1,0 +1,48 @@
+{
+  "sources": [
+    {
+      "name": "Hacker News Data Engineering",
+      "url": "https://hn.algolia.com/api/v1/search?tags=front_page&query=data+integrity+validation+JSONL+event+sourcing",
+      "type": "api",
+      "focus": "Data integrity patterns, event sourcing, JSONL alternatives for our agent memory system"
+    },
+    {
+      "name": "Martin Kleppmann Blog",
+      "url": "https://martin.kleppmann.com/",
+      "type": "html",
+      "focus": "Distributed systems data integrity, CRDT patterns, event log architectures"
+    },
+    {
+      "name": "JSONL Spec and Alternatives",
+      "url": "https://jsonlines.org/",
+      "type": "html",
+      "focus": "JSONL format best practices, corruption prevention, schema evolution"
+    },
+    {
+      "name": "Reddit Data Engineering",
+      "url": "https://www.reddit.com/r/dataengineering/.json?limit=10",
+      "type": "api",
+      "focus": "Data pipeline patterns, staleness detection, cross-system consistency approaches"
+    },
+    {
+      "name": "Event Sourcing Patterns",
+      "url": "https://microservices.io/patterns/data/event-sourcing.html",
+      "type": "html",
+      "focus": "Event sourcing architecture — could improve our JSONL ledger system"
+    },
+    {
+      "name": "GitHub Agent Memory",
+      "url": "https://api.github.com/search/repositories?q=agent+memory+architecture&sort=stars&per_page=5",
+      "type": "api",
+      "focus": "Agent memory architectures — how others solve the multi-agent state problem we have"
+    }
+  ],
+  "followUps": [
+    {
+      "date": "2026-04-13",
+      "item": "Evaluate auto-repair for corrupt JSONL entries vs just flagging",
+      "status": "open",
+      "outcome": ""
+    }
+  ]
+}

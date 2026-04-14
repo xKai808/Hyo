@@ -654,6 +654,18 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     #   e.g., "What market condition would invalidate my strategy?"
   fi
 
+  # ─── DOMAIN RESEARCH (External Research — agent-research.sh) ────────────────
+  # Aether researches trading algorithms, position sizing, market analysis tools.
+  local RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+  if [[ -x "$RESEARCH_SCRIPT" ]]; then
+    log "Running domain research: trading strategies, position sizing, market tools..."
+    if bash "$RESEARCH_SCRIPT" aether --publish 2>&1 | tail -5; then
+      log "Domain research complete — findings saved and published"
+    else
+      log "WARN: Domain research encountered issues — check agents/aether/research/"
+    fi
+  fi
+
   # ─── Self-Evolution: Aether Learning & Improvement Tracking ─────────────────
   log "Self-evolution: capturing metrics and learning signals..."
 
@@ -793,6 +805,66 @@ PYEOF
 
   if [[ "$staleness_flag" == "True" ]]; then
     log "WARN: PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+  fi
+
+  # ─── Aether self-authored reflection → HQ feed ─────────────────────────────
+  local PUBLISH_SCRIPT="$ROOT/bin/publish-to-feed.sh"
+  local AETHER_REFLECTION="/tmp/aether-reflection-sections-$(date +%Y%m%d).json"
+
+  python3 - "$AETHER_REFLECTION" "$trade_count" "$pnl_total" "$dashboard_status" "$assessment" "$ROOT" << 'PYEOF'
+import json, sys, os
+sf = sys.argv[1]
+trades = int(sys.argv[2]) if sys.argv[2].isdigit() else 0
+pnl = float(sys.argv[3]) if sys.argv[3].replace('.','',1).replace('-','',1).isdigit() else 0
+dash = sys.argv[4]
+assess = sys.argv[5]
+root = sys.argv[6]
+from datetime import datetime
+today = datetime.now().strftime("%Y-%m-%d")
+
+research_summary = "No research conducted this cycle."
+ff = os.path.join(root, "agents", "aether", "research", f"findings-{today}.md")
+if os.path.exists(ff):
+    with open(ff) as f:
+        c = f.read()
+    if "## Key Takeaways" in c:
+        t = c.split("## Key Takeaways")[1].split("##")[0].strip()
+        research_summary = t if t else "Research completed — no high-signal findings."
+
+followups = []
+src = os.path.join(root, "agents", "aether", "research-sources.json")
+if os.path.exists(src):
+    with open(src) as f:
+        cfg = json.load(f)
+    followups = [fu["item"] for fu in cfg.get("followUps", []) if fu.get("status") == "open"]
+if not followups:
+    followups = ["Model Kelly Criterion against historical trades",
+                 "Investigate phantom position tracking",
+                 "Fix dashboard data sync issue"]
+
+parts = []
+if trades > 0:
+    parts.append(f"Executed {trades} trades this cycle. PnL: ${pnl:.2f}.")
+else:
+    parts.append("No trades this cycle — in standby/analysis mode.")
+parts.append(f"Dashboard status: {dash}.")
+if dash == "out-of-sync":
+    parts.append("Data exists but renderer isn't picking it up.")
+
+sections = {
+    "introspection": " ".join(parts),
+    "research": research_summary,
+    "changes": assess,
+    "followUps": followups[:5],
+    "forKai": f"{'Active trading with {trades} trades.'.format(trades=trades) if trades > 0 else 'Standby mode — need exchange API keys (read-only) to move from replay to live tracking.'} Dashboard: {dash}."
+}
+with open(sf, "w") as f:
+    json.dump(sections, f, indent=2)
+PYEOF
+
+  if [[ -f "$AETHER_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
+    bash "$PUBLISH_SCRIPT" "agent-reflection" "aether" "Aether — Trading Report" "$AETHER_REFLECTION" 2>/dev/null || true
+    log "Self-authored report published to HQ feed"
   fi
 
   # ─── STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md) ────────

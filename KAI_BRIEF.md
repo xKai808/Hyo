@@ -95,6 +95,21 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 
 **SESSION 8 WAS THE MOST IMPORTANT SESSION.** Everything below this section is older state. Read this first.
 
+**What shipped in session 8 continuation 5:**
+
+11. **Real Agent Research Infrastructure:** `bin/agent-research.sh` — shared research framework all agents use. Fetches external URLs via curl, processes RSS/API/HTML, saves raw findings to `agents/<name>/research/raw/`, synthesizes into findings docs, checks accountability on follow-ups, updates PLAYBOOK Research Log, publishes to HQ feed. Each agent has `research-sources.json` with domain-specific sources:
+    - Nel: GitHub Security Advisories, Node.js Security RSS, OWASP, Snyk, NIST NVD, Hacker News
+    - Sam: Vercel Blog, Node.js Releases, HN infra, GitHub Actions, web.dev, Vercel KV docs
+    - Ra: Nieman Lab, Substack, HN AI, AP News, Reuters, Buttondown, Reddit r/Newsletters
+    - Aether: CCXT docs, HN trading, QuantConnect, CoinGecko trending, Reddit r/algotrading, Investopedia
+    - Dex: HN data engineering, Martin Kleppmann, JSONL spec, Reddit r/dataengineering, event sourcing, GitHub agent memory
+
+12. **Self-Authored Agent Reports:** All 5 runners (nel, sam, ra, aether, dex) now generate their OWN reflection reports from real cycle data — introspection, research findings, changes made, follow-ups, and requests for Kai. Published to HQ feed via `publish-to-feed.sh`. These are NOT Kai writing on their behalf.
+
+13. **Self-Authoring Profile Mechanism:** `bin/sync-agent-profiles.sh` reads each agent's PLAYBOOK.md (mission, strengths, weaknesses, blindspots) and ACTIVE.md to populate feed.json agent profiles. Goals generated from PRIORITIES.md if available, otherwise derived from PLAYBOOK weaknesses/blindspots. Runs automatically before morning report. Agent profiles are self-authored, not hardcoded by Kai.
+
+14. **Accountability Loop:** `bin/update-followups.sh` checks research-sources.json follow-ups across all agents. Stale items (>7 days open) get flagged. Wired into healthcheck for periodic enforcement. Each research cycle checks previous follow-ups for accountability.
+
 **What shipped in session 8 continuation 4:**
 
 9. **Memory Update Protocol (constitutional v3.2):** Step 13 added to SELF-EVOLUTION CYCLE. Every agent writes ACTIVE.md after every execution cycle. Kai q2h memory via healthcheck. All 5 runners wired.

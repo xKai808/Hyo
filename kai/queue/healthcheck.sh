@@ -427,6 +427,16 @@ if [[ $ISSUES -gt 0 ]]; then
 fi
 
 # ============================================================================
+# RESEARCH FOLLOW-UP ACCOUNTABILITY CHECK
+# Flags stale research follow-ups (>7 days open without resolution)
+# ============================================================================
+FOLLOWUP_SCRIPT="$ROOT/bin/update-followups.sh"
+if [[ -x "$FOLLOWUP_SCRIPT" ]]; then
+  log "Checking research follow-up accountability..."
+  bash "$FOLLOWUP_SCRIPT" 2>&1 | tail -10 || true
+fi
+
+# ============================================================================
 # KAI MEMORY UPDATE (constitutional step 13 — runs q2h with healthcheck)
 # Updates Kai's own memory files so next session/task reads fresh state.
 # ============================================================================

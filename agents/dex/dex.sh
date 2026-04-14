@@ -927,6 +927,20 @@ if [[ -f "$AGENT_GATES" ]]; then
 fi
 
 # ============================================================================
+# DOMAIN RESEARCH (External Research — agent-research.sh)
+# Dex researches data integrity patterns, event sourcing, agent memory architectures.
+# ============================================================================
+RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+if [[ -x "$RESEARCH_SCRIPT" ]]; then
+  log_info "Running domain research: data integrity, event sourcing, memory patterns..."
+  if bash "$RESEARCH_SCRIPT" dex --publish 2>&1 | tail -5; then
+    log_pass "Domain research complete — findings saved and published"
+  else
+    log_warn "Domain research encountered issues — check agents/dex/research/"
+  fi
+fi
+
+# ============================================================================
 # SELF-EVOLUTION: Dex Learning & Improvement Tracking
 # ============================================================================
 log_info "Self-evolution: capturing metrics and learning signals..."
@@ -1054,6 +1068,66 @@ log_pass "Self-evolution logged: $ASSESSMENT"
 
 if [[ "$STALENESS_FLAG" == "True" ]]; then
   log_warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
+fi
+
+# ── Dex self-authored reflection → HQ feed ──
+PUBLISH_SCRIPT="$ROOT/bin/publish-to-feed.sh"
+DEX_REFLECTION="/tmp/dex-reflection-sections-$(date +%Y%m%d).json"
+
+python3 - "$DEX_REFLECTION" "${INTEGRITY_PASS:-0}" "${INTEGRITY_FAIL:-0}" \
+          "${STALE_COUNT:-0}" "${PATTERN_COUNT:-0}" "$ASSESSMENT" "$ROOT" << 'PYEOF'
+import json, sys, os
+sf = sys.argv[1]
+i_pass = int(sys.argv[2]) if sys.argv[2].isdigit() else 0
+i_fail = int(sys.argv[3]) if sys.argv[3].isdigit() else 0
+stale = int(sys.argv[4]) if sys.argv[4].isdigit() else 0
+patterns = int(sys.argv[5]) if sys.argv[5].isdigit() else 0
+assess = sys.argv[6]
+root = sys.argv[7]
+from datetime import datetime
+today = datetime.now().strftime("%Y-%m-%d")
+
+research_summary = "No research conducted this cycle."
+ff = os.path.join(root, "agents", "dex", "research", f"findings-{today}.md")
+if os.path.exists(ff):
+    with open(ff) as f:
+        c = f.read()
+    if "## Key Takeaways" in c:
+        t = c.split("## Key Takeaways")[1].split("##")[0].strip()
+        research_summary = t if t else "Research completed — no high-signal findings."
+
+followups = []
+src = os.path.join(root, "agents", "dex", "research-sources.json")
+if os.path.exists(src):
+    with open(src) as f:
+        cfg = json.load(f)
+    followups = [fu["item"] for fu in cfg.get("followUps", []) if fu.get("status") == "open"]
+if not followups:
+    followups = ["Evaluate auto-repair for corrupt JSONL entries",
+                 "Research cross-agent dependency graph patterns",
+                 "Investigate predictive staleness detection"]
+
+parts = [f"Validated {i_pass} files, found {i_fail} integrity issues."]
+if stale > 0:
+    parts.append(f"{stale} stale tasks detected (>72h old).")
+if patterns > 0:
+    parts.append(f"Tracking {patterns} recurrent patterns — too many unresolved.")
+parts.append(assess)
+
+sections = {
+    "introspection": " ".join(parts),
+    "research": research_summary,
+    "changes": f"Integrity sweep complete. {i_fail} issues flagged for repair. {stale} stale tasks identified.",
+    "followUps": followups[:5],
+    "forKai": f"Data integrity: {i_pass} pass, {i_fail} fail. {'System clean.' if i_fail == 0 else f'{i_fail} issues need attention.'} {f'{patterns} recurrent patterns accumulating — need resolution strategy.' if patterns > 10 else ''}"
+}
+with open(sf, "w") as f:
+    json.dump(sections, f, indent=2)
+PYEOF
+
+if [[ -f "$DEX_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
+  bash "$PUBLISH_SCRIPT" "agent-reflection" "dex" "Dex — Data Integrity Report" "$DEX_REFLECTION" 2>/dev/null || true
+  log_pass "Self-authored report published to HQ feed"
 fi
 
 # ============================================================================
