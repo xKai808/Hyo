@@ -186,6 +186,34 @@ done
 # WHAT'S NEXT GATE — Don't just report. Act.
 # ============================================================================
 
+RESOLVE="$ROOT/kai/protocols/resolve.sh"
+
+# P0/P1 findings → open a resolution (RA-1) so it gets the full loop
+if [[ $ISSUES -gt 0 ]] && [[ -f "$RESOLVE" ]]; then
+  # Deduplicate: only init a resolution if no open resolution matches this issue
+  for finding_detail in $(python3 -c "
+import json
+findings_str = '''[${FINDINGS%,}]'''
+try:
+    findings = json.loads(findings_str)
+except: findings = []
+for f in findings:
+    if f['severity'] in ('P0','P1'):
+        # One-line summary for dedup
+        print(f['detail'][:80].replace(' ','_'))
+" 2>/dev/null); do
+    finding_clean=$(echo "$finding_detail" | tr '_' ' ')
+    # Check if there's already an open resolution for this
+    existing=$(grep -rl "IN-PROGRESS" "$ROOT/kai/ledger/resolutions/" 2>/dev/null | xargs grep -l "${finding_clean:0:40}" 2>/dev/null | head -1)
+    if [[ -z "$existing" ]]; then
+      RES_ID=$(HYO_ROOT="$ROOT" bash "$RESOLVE" init "$finding_clean" 2>/dev/null | tail -1)
+      if [[ -n "$RES_ID" ]]; then
+        log "Opened resolution $RES_ID for: $finding_clean"
+      fi
+    fi
+  done
+fi
+
 # P0/P1 flags → immediate dispatch to owning agent + queue re-check
 if [[ $ISSUES -gt 0 ]] && [[ -f "$ROOT/bin/dispatch.sh" ]]; then
   # Re-read the actual flags and dispatch remediation

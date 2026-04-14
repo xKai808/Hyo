@@ -949,13 +949,24 @@ print(json.dumps({
   echo "$outcome" >> "$sim_log"
   echo "Outcome logged to: kai/ledger/simulation-outcomes.jsonl"
 
-  # If failures, trigger safeguard for each unique failure class
+  # If failures → open resolutions via RA-1 for each unique failure
   if [[ $total_fail -gt 0 ]]; then
     echo ""
-    echo "⚠ Failures detected — checking if safeguard cascade needed..."
+    echo "⚠ Failures detected — opening resolutions via RA-1..."
+    local resolve_script="$ROOT/kai/protocols/resolve.sh"
     for fail in "${results[@]:-}"; do
       [[ -z "$fail" ]] && continue
       echo "  → Failure: $fail"
+      if [[ -f "$resolve_script" ]]; then
+        existing=$(grep -rl "IN-PROGRESS" "$ROOT/kai/ledger/resolutions/" 2>/dev/null | xargs grep -l "${fail}" 2>/dev/null | head -1)
+        if [[ -z "$existing" ]]; then
+          local res_id
+          res_id=$(HYO_ROOT="$ROOT" bash "$resolve_script" init "[Simulation] $fail" 2>/dev/null | tail -1)
+          [[ -n "$res_id" ]] && echo "  → Opened resolution $res_id"
+        else
+          echo "  → Existing resolution covers this: $(basename "$existing" .md)"
+        fi
+      fi
     done
   fi
 }

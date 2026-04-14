@@ -86,9 +86,17 @@ SELF-EVOLUTION CYCLE (runs every execution, after self-review):
   5. IF improvement detected → log it, consider making permanent
   6. IF new pattern discovered → add to improvement queue in PLAYBOOK.md
   7. Check PLAYBOOK.md staleness (>7 days without update → flag)
-  8. Append evolution entry to evolution.jsonl
-  9. IF improvements_proposed > 0 AND agent can fix it → fix it NOW
-     (apply What's Next Gate — don't just log and wait)
+  8. Run TRIGGER VALIDATION GATE on anything created this cycle:
+     - Any new file → who calls it? when would it be missed?
+     - Any new check → what triggers remediation?
+     - Any new protocol → what enforces compliance?
+     Chase until every artifact has a proven, running trigger.
+  9. Recall recent resolutions: check kai/ledger/resolutions/ for
+     open (IN-PROGRESS) resolutions relevant to this agent.
+     If found, advance the resolution (add verify/simulate results).
+  10. Append evolution entry to evolution.jsonl
+  11. IF improvements_proposed > 0 AND agent can fix it → fix it NOW
+      (apply What's Next Gate — don't just log and wait)
 
 PROTOCOL STALENESS PREVENTION:
   Dex enforces this across all agents:
@@ -305,6 +313,42 @@ AUTOMATION GATE (ask BEFORE and AFTER every task):
     → Create a task in KAI_TASKS.md tagged [AUTOMATE]
     → Include: what to automate, how, who owns it (Sam=script, Nel=monitor, Ra=pipeline)
     → Don't defer — if it takes <15 min, automate it in the same session.
+
+TRIGGER VALIDATION GATE (ask AFTER creating ANYTHING — file, script, protocol, check):
+  This gate is MANDATORY. A file without a trigger is a file that will never run.
+  Run these 3 questions for EVERY artifact you create:
+
+  1. "HOW is this triggered?"
+     - What event, schedule, or system calls this?
+     - Is the trigger wired (code exists) or theoretical (documented but not implemented)?
+     - If wired: where exactly? (file:line)
+     - If not wired: STOP. Wire it before moving on.
+
+  2. "WHEN would this be missed?"
+     - What failure mode causes the trigger to not fire?
+     - If the triggering system is down, what's the fallback?
+     - If no one is in a session, does it still run?
+     - Walk through the failure scenarios. Don't assume the happy path.
+
+  3. "WHAT ensures a miss doesn't occur?"
+     - Is there a second trigger (redundancy)?
+     - Does a health check verify this ran?
+     - If the answer to both is "no" → add them before moving on.
+
+  REPEAT until no misses exist. If you can find a scenario where
+  the artifact doesn't fire, the work is incomplete.
+
+  APPLY THIS TO:
+  - Scripts (who calls them? cron? launchd? another script?)
+  - Protocols (what enforces compliance? what checks for violations?)
+  - Detection checks (what triggers remediation? not just flagging?)
+  - Files (what reads them? when? are they referenced in code?)
+
+  THIS GATE IS RECURSIVE:
+  If you add a trigger, run the gate on THE TRIGGER. If you add a
+  health check, run the gate on THE HEALTH CHECK. Chase it until
+  you reach a system with a proven, running trigger (launchd, cron,
+  q6h daemon, Cowork scheduled task).
 
 TASK EXECUTION:
   1. Check KAI_TASKS.md for highest priority unblocked item

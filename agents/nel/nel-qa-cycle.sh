@@ -585,11 +585,20 @@ if [[ ${#FINDINGS[@]} -gt 0 ]]; then
   echo "" >> "$REPORT"
 fi
 
-# Dispatch flags for P0/P1 issues
+# Dispatch flags for P0/P1 issues AND open resolutions via RA-1
+RESOLVE="$ROOT/kai/protocols/resolve.sh"
 for finding in "${FINDINGS[@]}"; do
   IFS='|' read -r sev phase detail <<< "$finding"
   if [[ "$sev" == "P0" ]] || [[ "$sev" == "P1" ]]; then
     bash "$DISPATCH" flag nel "$sev" "$detail" 2>/dev/null || true
+    # Open a resolution if none exists for this issue
+    if [[ -f "$RESOLVE" ]]; then
+      existing=$(grep -rl "IN-PROGRESS" "$ROOT/kai/ledger/resolutions/" 2>/dev/null | xargs grep -l "${detail:0:40}" 2>/dev/null | head -1)
+      if [[ -z "$existing" ]]; then
+        RES_ID=$(HYO_ROOT="$ROOT" bash "$RESOLVE" init "[Nel/$sev] $detail" 2>/dev/null | tail -1)
+        [[ -n "$RES_ID" ]] && echo "Opened resolution $RES_ID for: $detail" >> "$REPORT"
+      fi
+    fi
   fi
 done
 
