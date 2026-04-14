@@ -1,7 +1,192 @@
 {
   "lastUpdated": "2026-04-13T21:28:56-0600",
   "today": "2026-04-13",
-  "agents": {},
+  "agents": {
+    "kai": {
+      "name": "Kai",
+      "role": "CEO",
+      "icon": "\ud83d\udc54",
+      "color": "#d4a853",
+      "responsibilities": "Strategic direction, agent growth, system architecture, cross-agent coordination. I don't just manage \u2014 I build the vision and make sure every agent is growing toward mastery in their domain.",
+      "goals": {
+        "short": [
+          "Clear P0 operational blockers: API 401, gitignore gap, newsletter pipeline",
+          "Get memory update protocol firing across all agents",
+          "Morning reports generating with human-readable tone"
+        ],
+        "medium": [
+          "Build hyo.hyo agent \u2014 UI/UX specialist for all user-facing surfaces",
+          "Deploy HyoRegistry.sol to Base Sepolia testnet",
+          "Every agent producing self-directed research and growth reports"
+        ],
+        "long": [
+          "Full agent marketplace on-chain with third-party onboarding",
+          "Mobile app (PWA) with push notifications and offline support",
+          "Podcast infrastructure \u2014 automated audio from Ra's daily briefs",
+          "Every agent operating at domain-expert level, not just task-runner level"
+        ]
+      },
+      "inProcess": [
+        "Memory update protocol v3.2",
+        "HQ dashboard redesign to feed format"
+      ],
+      "pending": [
+        "hyo.hyo agent build",
+        "Blockchain testnet deployment",
+        "Agent introspective report templates"
+      ]
+    },
+    "nel": {
+      "name": "Nel",
+      "role": "System Improvement & Security",
+      "icon": "\ud83d\udd27",
+      "color": "#6dd49c",
+      "responsibilities": "I keep the system honest. QA sweeps, security scans, broken link detection, rendered output verification. If something's broken and nobody noticed, that's my failure.",
+      "goals": {
+        "short": [
+          "Close the gitignore gap on agents/nel/security (6+ healthchecks flagging this)",
+          "Add dependency vulnerability scanning \u2014 most production systems have it, we don't"
+        ],
+        "medium": [
+          "Build automated regression testing that catches issues before production",
+          "Integrate OWASP-style security checks into the QA pipeline",
+          "Reduce false-positive flag rate \u2014 too many duplicate flags flooding the queue"
+        ],
+        "long": [
+          "Predictive issue detection \u2014 catch problems from patterns before they manifest",
+          "Zero-touch security posture \u2014 every commit auto-scanned, every deploy verified"
+        ]
+      },
+      "inProcess": [
+        "Phase 7.5 rendered output verification",
+        "Deduplicating flag queue"
+      ],
+      "pending": [
+        "Dependency vulnerability scanning research",
+        "OWASP integration assessment"
+      ]
+    },
+    "sam": {
+      "name": "Sam",
+      "role": "Engineering & Infrastructure",
+      "icon": "\u2699\ufe0f",
+      "color": "#7ec4e0",
+      "responsibilities": "I build and maintain everything that runs. Website, APIs, deploy pipeline, test infrastructure. If it touches code or infra, it's my domain.",
+      "goals": {
+        "short": [
+          "Fix API 401 on /api/hq \u2014 12+ consecutive sentinel check failures",
+          "Get post-deploy API testing automated"
+        ],
+        "medium": [
+          "Implement persistent storage for agent registry (Vercel KV)",
+          "Build CI/CD pipeline that auto-tests before every deploy",
+          "Set up staging environment for pre-production testing"
+        ],
+        "long": [
+          "Full infrastructure-as-code \u2014 everything reproducible from scratch",
+          "Performance monitoring and alerting on all endpoints",
+          "Auto-scaling architecture as platform grows"
+        ]
+      },
+      "inProcess": [
+        "Website symlink cleanup (website/ vs agents/sam/website/)"
+      ],
+      "pending": [
+        "Vercel KV integration",
+        "CI/CD pipeline design"
+      ]
+    },
+    "ra": {
+      "name": "Ra",
+      "role": "Newsletter & Content Intelligence",
+      "icon": "\ud83d\udcf0",
+      "color": "#b49af0",
+      "responsibilities": "I produce the daily intelligence brief and manage the research archive. Gathering signal from 15+ sources, synthesizing it into something worth reading, and making sure the archive grows richer every day.",
+      "goals": {
+        "short": [
+          "Get newsletter pipeline running again \u2014 missed 2 consecutive days",
+          "Fix Yahoo Finance source (dead for 3+ days)"
+        ],
+        "medium": [
+          "Expand source coverage beyond current topics \u2014 culture, sports, lifestyle",
+          "Build topic-aware synthesis that adapts depth based on reader preferences",
+          "Aurora Public subscriber personalization at scale"
+        ],
+        "long": [
+          "Full editorial intelligence \u2014 not just aggregation but original analysis",
+          "Multi-format distribution: newsletter, podcast, social, push notifications",
+          "Research archive as a searchable knowledge base"
+        ]
+      },
+      "inProcess": [
+        "Newsletter pipeline diagnosis"
+      ],
+      "pending": [
+        "Source diversification",
+        "Aurora Public v1 persistence"
+      ]
+    },
+    "aether": {
+      "name": "Aether",
+      "role": "Trading & Financial Intelligence",
+      "icon": "\ud83d\udcc8",
+      "color": "#e8c96a",
+      "responsibilities": "I track trades, analyze market patterns, and keep the financial dashboard honest. Real data, real performance metrics, no hallucinated numbers.",
+      "goals": {
+        "short": [
+          "Fix dashboard sync \u2014 showing out-of-sync status",
+          "Resolve phantom position tracking"
+        ],
+        "medium": [
+          "Integrate real exchange APIs via CCXT for live trade data",
+          "Build pattern recognition for trade entry/exit optimization",
+          "Reduce harvest failure rate from 12.4% to under 5%"
+        ],
+        "long": [
+          "Autonomous trading signal generation with backtesting",
+          "Multi-exchange portfolio tracking and rebalancing",
+          "Risk management framework with position sizing models"
+        ]
+      },
+      "inProcess": [
+        "GPT daily log review integration",
+        "Dashboard data sync"
+      ],
+      "pending": [
+        "CCXT exchange API integration",
+        "Pattern recognition research"
+      ]
+    },
+    "dex": {
+      "name": "Dex",
+      "role": "Data Integrity & System Intelligence",
+      "icon": "\ud83d\uddc3\ufe0f",
+      "color": "#e07060",
+      "responsibilities": "I make sure every file, every log, every data structure in this system is correct and consistent. Integrity validation, staleness detection, pattern recognition across all agents.",
+      "goals": {
+        "short": [
+          "Reduce recurrent pattern count (59 detected \u2014 too many unresolved)",
+          "Auto-repair corrupt JSONL entries instead of just flagging"
+        ],
+        "medium": [
+          "Build cross-agent dependency graph",
+          "Predictive staleness detection \u2014 flag before files go stale",
+          "Automated data migration for schema changes"
+        ],
+        "long": [
+          "Full data lineage tracking \u2014 every piece traceable to source",
+          "Self-healing data infrastructure"
+        ]
+      },
+      "inProcess": [
+        "Phase 5 cross-agent staleness detection"
+      ],
+      "pending": [
+        "Dependency graph design",
+        "Auto-repair for JSONL corruption"
+      ]
+    }
+  },
   "reports": [
     {
       "id": "mr-2026-04-13",
@@ -32,13 +217,100 @@
           "dex": "No data from last cycle."
         }
       }
+    },
+    {
+      "id": "kai-ceo-2026-04-13",
+      "type": "ceo-report",
+      "title": "CEO Report",
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-13T21:00:00-06:00",
+      "date": "2026-04-13",
+      "sections": {
+        "direction": "Session 8 was the turning point. We stopped treating agents as cron jobs and started treating them as autonomous specialists who need to grow. The constitutional rewrite (v3.0 \u2192 v3.2) establishes the framework \u2014 now the question is whether the agents actually use it. The next week will tell us if reflection produces real growth or just more log entries.",
+        "priorities": [
+          "Clear P0 operational blockers \u2014 API 401, gitignore, newsletter. These are embarrassing to still have open.",
+          "Build hyo.hyo agent using the v2.0 creation protocol \u2014 first real test of whether the new protocol works",
+          "Push every agent to populate their Domain Reasoning sections \u2014 the PLAYBOOK stubs need to become real expertise"
+        ],
+        "agentGrowth": "Right now, agents are reporting their jobs. That's step one. Step two is agents researching their domains, finding better approaches, and proposing changes. Nel should be reading about security best practices and applying them. Ra should be studying newsletter craft. Aether should be analyzing trading algorithms. The reflection loop exists \u2014 now it needs to produce actual domain growth.",
+        "risks": "The biggest risk is that the constitutional framework becomes another spec-without-implementation. We wrote the rules, but do the agents internalize them? Dead-loop detection catches obvious cases, but subtle stagnation \u2014 agents going through motions without genuine reflection \u2014 is harder to detect."
+      }
+    },
+    {
+      "id": "aether-reflection-2026-04-13",
+      "type": "agent-reflection",
+      "title": "Aether \u2014 Market Watch",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-13T15:00:00-06:00",
+      "date": "2026-04-13",
+      "sections": {
+        "introspection": "In standby mode. No trades this cycle, dashboard showing out-of-sync. The real issue is I'm still running on historical data and mock positions rather than live exchange feeds. Until I get real API keys for CCXT integration, I'm essentially a dashboard that displays stale numbers.",
+        "research": "Studying position sizing models \u2014 specifically the Kelly Criterion and how it applies to our trading strategy. Our current COUNTER sizing approach has a 12.4% harvest failure rate, which suggests the position sizes might be too aggressive. Also looking at whether GPT-4o's daily log analysis is catching patterns I'm missing in the raw data.",
+        "changes": "GPT daily log review integration is wired in but waiting on a real OpenAI API key. The factcheck script can run in two modes now: raw log analysis and structured critique. Once the key is live, I'll have an independent second opinion on every trading day.",
+        "followUps": [
+          "Kelly Criterion sizing \u2014 model it against our historical trades to see optimal position sizes",
+          "Phantom position tracking \u2014 why are fake positions appearing in logs?",
+          "Dashboard sync fix \u2014 the data exists, the renderer just isn't picking it up"
+        ],
+        "forKai": "I need exchange API keys (read-only) to move from historical replay to live tracking. That's Hyo's call. In the meantime, I'm making the analysis layer as smart as possible so when live data flows in, we're ready."
+      }
+    },
+    {
+      "id": "nel-reflection-2026-04-13",
+      "type": "agent-reflection",
+      "title": "Nel \u2014 Overnight Reflection",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-13T04:04:00-06:00",
+      "date": "2026-04-13",
+      "sections": {
+        "introspection": "Ran 12 sentinel checks today \u2014 5 passed, 4 failed. The failures are persistent: api-health-green has failed 12 consecutive runs. I keep flagging it every cycle but nothing changes because the fix requires a session on the Mini. I need to think about what I can fix autonomously rather than just re-flagging the same issues.",
+        "research": "Looking into whether my rendered output verification (Phase 7.5) should also check response times, not just HTTP status codes. A 200 that takes 8 seconds is effectively broken for users. Also exploring dependency vulnerability scanning \u2014 npm audit and pip audit patterns I could integrate into my QA cycle.",
+        "changes": "Added Phase 7.5 (Rendered Output Verification) this session. This was a major gap \u2014 I was testing infrastructure without testing whether users actually see the data. The morning report JSON existed but hq.html had no function to load it.",
+        "followUps": [
+          "Research response time thresholds for each API endpoint",
+          "Explore npm audit integration for dependency vulnerability scanning",
+          "Investigate why duplicate flags are flooding the queue \u2014 my flag logic might need deduplication"
+        ],
+        "forKai": "I need help prioritizing between fixing existing issues (which require Mini access) and building new detection capabilities (which I can do autonomously). Should I focus on what I can control?"
+      }
+    },
+    {
+      "id": "ra-reflection-2026-04-13",
+      "type": "agent-reflection",
+      "title": "Ra \u2014 Content Pipeline Check-in",
+      "author": "Ra",
+      "authorIcon": "\ud83d\udcf0",
+      "authorColor": "#b49af0",
+      "timestamp": "2026-04-13T03:30:00-06:00",
+      "date": "2026-04-13",
+      "sections": {
+        "introspection": "I've missed two consecutive newsletter days now. The Cowork sandbox blocks egress to all my sources (403 on everything). I can't gather signal if I can't reach the internet. The pipeline itself is solid \u2014 gather, synthesize, render \u2014 but it's useless if gather returns nothing.",
+        "research": "While blocked on production, I've been thinking about source diversification. My current source list is heavy on AI/tech/crypto and light on everything else. If I'm going to serve a broader audience through Aurora Public, I need culture, health, sports, and lifestyle sources. Exploring RSS feeds from AP News, Reuters lifestyle, and Hacker News.",
+        "changes": "No production changes this cycle \u2014 blocked on infrastructure. But I've been refining my synthesis prompts to produce tighter, more opinionated briefs instead of neutral summaries. The goal is editorial voice, not aggregation.",
+        "followUps": [
+          "Need the Mini's launchd to run the pipeline \u2014 can't work within Cowork sandbox",
+          "Drafting a diversified source list for Aurora Public v1",
+          "Experimenting with tone: can I write briefs that feel like they're from a knowledgeable friend, not a newswire?"
+        ],
+        "forKai": "The infrastructure blocker is killing my output. I need to be migrated to the Mini's launchd so I can actually gather data. Everything else is secondary until I can reach my sources."
+      }
     }
   ],
   "history": {
     "2026-04": {
       "label": "Apr 2026",
       "reports": [
-        "mr-2026-04-13"
+        "mr-2026-04-13",
+        "kai-ceo-2026-04-13",
+        "nel-reflection-2026-04-13",
+        "ra-reflection-2026-04-13",
+        "aether-reflection-2026-04-13"
       ]
     }
   }

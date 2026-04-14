@@ -1,0 +1,2159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>hq — hyo command center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --bg-secondary: #161822;
+      --bg-tertiary: #1c1f2e;
+      --text-primary: #f0ece4;
+      --text-secondary: rgba(240, 236, 228, 0.72);
+      --text-tertiary: rgba(240, 236, 228, 0.50);
+      --text-muted: rgba(240, 236, 228, 0.32);
+      --border-color: rgba(240, 236, 228, 0.08);
+      --border-color-hover: rgba(240, 236, 228, 0.14);
+      --accent: #d4a853;
+      --accent-light: #e8b877;
+      --accent-bg: rgba(212, 168, 83, 0.08);
+      --success: #6dd49c;
+      --warning: #e8c96a;
+      --error: #e07060;
+      --purple: #b49af0;
+      --cyan: #7ec4e0;
+      --font-display: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.16);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.24);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html[data-theme="light"] {
+      --bg: #faf9f6;
+      --bg-secondary: #f0ede6;
+      --bg-tertiary: #e8e4dc;
+      --text-primary: #1a1a2e;
+      --text-secondary: rgba(26, 26, 46, 0.72);
+      --text-tertiary: rgba(26, 26, 46, 0.50);
+      --text-muted: rgba(26, 26, 46, 0.32);
+      --border-color: rgba(26, 26, 46, 0.08);
+      --border-color-hover: rgba(26, 26, 46, 0.14);
+      --accent: #2d3560;
+      --accent-light: #3a4575;
+      --accent-bg: rgba(45, 53, 96, 0.08);
+      --success: #2d5a42;
+      --warning: #8b6d3f;
+      --error: #7d3a2a;
+      --purple: #6b5b95;
+      --cyan: #3a6b8f;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ═══ AUTH GATE ═══ */
+    .auth-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .auth-gate.hidden {
+      display: none;
+    }
+
+    .auth-box {
+      text-align: center;
+      max-width: 360px;
+      padding: 40px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+    }
+
+    .auth-box .logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 40px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-box .sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 40px;
+    }
+
+    .auth-box input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      text-align: center;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+    }
+
+    .auth-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-bg);
+    }
+
+    .auth-box input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .auth-err {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 16px;
+      min-height: 18px;
+    }
+
+    /* ═══ SHELL: sidebar + main ═══ */
+    .shell {
+      display: flex;
+      height: 100vh;
+      background: var(--bg);
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 210px;
+      min-width: 210px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: width 0.3s var(--ease);
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border-color-hover);
+      border-radius: 3px;
+    }
+
+    .sidebar-header {
+      padding: 24px 18px 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--accent);
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .logo-version {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 6px;
+    }
+
+    .nav-section {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 16px 18px 8px;
+      margin-top: 12px;
+    }
+
+    .nav-section:first-of-type {
+      margin-top: 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 18px;
+      margin: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s var(--ease);
+      user-select: none;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: var(--accent-bg);
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      font-size: 16px;
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .nav-dot.ok {
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    .nav-dot.err {
+      background: var(--error);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 18px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .clock {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .theme-toggle {
+      width: 100%;
+      padding: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--border-color-hover);
+      background: var(--bg-tertiary);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .status-dot.ok {
+      background: var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.err {
+      background: var(--error);
+      animation: pulse 1.5s infinite;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+      background: var(--bg);
+    }
+
+    .main-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .main-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .main-content::-webkit-scrollbar-thumb {
+      background: var(--border-color-hover);
+      border-radius: 4px;
+    }
+
+    .view {
+      display: none;
+      animation: fadeIn 0.3s var(--ease);
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .view-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .view-subtitle {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-bottom: 28px;
+    }
+
+    /* ═══ CARDS ═══ */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: all 0.3s var(--ease);
+    }
+
+    .card:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: var(--shadow-sm);
+    }
+
+    html[data-theme="light"] .card {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: var(--font-mono);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .badge.success {
+      background: rgba(109, 212, 156, 0.15);
+      color: var(--success);
+    }
+
+    .badge.error {
+      background: rgba(224, 112, 96, 0.15);
+      color: var(--error);
+    }
+
+    .badge.warning {
+      background: rgba(232, 201, 106, 0.15);
+      color: var(--warning);
+    }
+
+    /* ═══ METRICS ═══ */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: all 0.3s var(--ease);
+    }
+
+    .metric-card:hover {
+      border-color: var(--border-color-hover);
+    }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: var(--font-mono);
+    }
+
+    /* ═══ DATA ROWS ═══ */
+    .data-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .data-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .data-value {
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-weight: 500;
+    }
+
+    .data-value.success {
+      color: var(--success);
+    }
+
+    .data-value.error {
+      color: var(--error);
+    }
+
+    .data-value.warning {
+      color: var(--warning);
+    }
+
+    /* ═══ ACTIVITY LOG ═══ */
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      padding: 8px 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--border-color-hover);
+      color: var(--text-primary);
+    }
+
+    .filter-pill.active {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .event-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .event-row:last-child {
+      border-bottom: none;
+    }
+
+    .event-row:hover {
+      padding-left: 8px;
+      padding-right: -8px;
+    }
+
+    .event-time {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-tertiary);
+      min-width: 90px;
+    }
+
+    .event-agent {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .t-ra { background: rgba(212, 168, 83, 0.2); color: var(--accent); }
+    .t-aurora { background: rgba(123, 196, 224, 0.2); color: var(--cyan); }
+    .t-sentinel { background: rgba(109, 212, 156, 0.2); color: var(--success); }
+    .t-cipher { background: rgba(180, 154, 240, 0.2); color: var(--purple); }
+    .t-sim { background: rgba(232, 201, 106, 0.2); color: var(--warning); }
+    .t-nel { background: rgba(224, 112, 96, 0.2); color: var(--error); }
+    .t-sam { background: rgba(126, 196, 224, 0.2); color: var(--cyan); }
+    .t-aether { background: rgba(180, 154, 240, 0.2); color: var(--purple); }
+
+    .event-msg {
+      flex: 1;
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .event-arrow {
+      color: var(--text-muted);
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.2s ease;
+    }
+
+    .event-row:hover .event-arrow {
+      opacity: 1;
+    }
+
+    /* ═══ AGENT VIEWS ═══ */
+    .agent-section {
+      margin-bottom: 24px;
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .agent-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text-primary);
+    }
+
+    .agent-status {
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* ═══ BUTTONS ═══ */
+    .btn {
+      padding: 10px 18px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .btn:hover {
+      border-color: var(--border-color-hover);
+      background: var(--bg-tertiary);
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-light);
+    }
+
+    .btn.danger {
+      background: rgba(224, 112, 96, 0.15);
+      border-color: var(--error);
+      color: var(--error);
+    }
+
+    .btn.danger:hover {
+      background: rgba(224, 112, 96, 0.25);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border-color: var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .btn.secondary:hover {
+      border-color: var(--border-color-hover);
+      color: var(--text-primary);
+    }
+
+    /* ═══ TOAST ═══ */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s var(--ease);
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 56px;
+        align-items: center;
+      }
+
+      .sidebar-header {
+        padding: 16px 8px;
+      }
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .logo-version {
+        display: none;
+      }
+
+      .nav-section {
+        display: none;
+      }
+
+      .nav-item {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        margin: 4px auto;
+        justify-content: center;
+      }
+
+      .nav-item span:not(.nav-icon):not(.nav-dot) {
+        display: none;
+      }
+
+      .main-content {
+        padding: 20px;
+      }
+
+      .view-title {
+        font-size: 24px;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-pills {
+        flex-wrap: wrap;
+      }
+
+      .event-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AUTH GATE -->
+  <div class="auth-gate" id="authGate">
+    <div class="auth-box">
+      <div class="logo">hq</div>
+      <div class="sub">Command Center</div>
+      <input type="password" id="authInput" placeholder="password" />
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
+  <!-- SHELL -->
+  <div class="shell" id="shell" style="display: none;">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">hq</div>
+        <div class="logo-version">v8-0412</div>
+      </div>
+
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" data-view="dashboard"><span class="nav-icon">📊</span><span>Dashboard</span></div>
+      <div class="nav-item" data-view="activity"><span class="nav-icon">📜</span><span>Activity</span></div>
+
+      <div class="nav-section">API Usage</div>
+      <div class="nav-item" data-view="openai-usage"><span class="nav-icon">🟢</span><span>OpenAI</span></div>
+      <div class="nav-item" data-view="claude-usage"><span class="nav-icon">🟠</span><span>Claude</span></div>
+
+      <div class="nav-section">Products</div>
+      <div class="nav-item" data-view="ra"><span class="nav-icon">📰</span><span>Ra</span><div class="nav-dot ok" id="dot-ra"></div></div>
+      <div class="nav-item" data-view="aurora"><span class="nav-icon">✨</span><span>Aurora</span><div class="nav-dot ok" id="dot-aurora"></div></div>
+
+      <div class="nav-section">Agents</div>
+      <div class="nav-item" data-view="sentinel"><span class="nav-icon">🛡️</span><span>Sentinel</span><div class="nav-dot ok" id="dot-sentinel"></div></div>
+      <div class="nav-item" data-view="cipher"><span class="nav-icon">🔐</span><span>Cipher</span><div class="nav-dot ok" id="dot-cipher"></div></div>
+      <div class="nav-item" data-view="nel"><span class="nav-icon">🔧</span><span>Nel</span><div class="nav-dot ok" id="dot-nel"></div></div>
+      <div class="nav-item" data-view="sam"><span class="nav-icon">⚙️</span><span>Sam</span><div class="nav-dot ok" id="dot-sam"></div></div>
+
+      <div class="nav-section">Ops</div>
+      <div class="nav-item" data-view="sim"><span class="nav-icon">🎮</span><span>Simulations</span><div class="nav-dot ok" id="dot-sim"></div></div>
+      <div class="nav-item" data-view="consolidation"><span class="nav-icon">📦</span><span>Consolidation</span><div class="nav-dot ok" id="dot-consolidation"></div></div>
+      <div class="nav-item" data-view="aether"><span class="nav-icon">🤖</span><span>Aether</span><div class="nav-dot ok" id="dot-aether"></div></div>
+      <div class="nav-item" data-view="health"><span class="nav-icon">❤️</span><span>Health</span></div>
+
+      <div class="nav-section">Intelligence</div>
+      <div class="nav-item" onclick="window.open('/research.html','_blank')">
+        <span class="nav-icon">📚</span> Research
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="clock" id="clock">-- MT</div>
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeIcon">🌙</span>
+          <span style="font-size: 11px;">Mode</span>
+        </button>
+        <div class="clock" style="font-size: 10px; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 12px;">
+          <span class="status-dot ok" id="statusDot"></span><span id="statusText">online</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="main-content">
+
+        <!-- DASHBOARD -->
+        <div class="view active" id="v-dashboard">
+          <div class="view-title">Dashboard</div>
+          <div class="view-subtitle">Command center overview</div>
+
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" id="metricRa">0</div>
+              <div class="metric-label">Ra Briefs</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="metricAurora">0</div>
+              <div class="metric-label">Aurora Subs</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="metricEvents">0</div>
+              <div class="metric-label">Events</div>
+            </div>
+            <div class="metric-card" style="cursor: pointer;" onclick="goView('claude-usage')">
+              <div class="metric-value" style="font-size: 22px;">182k</div>
+              <div class="metric-label">API Tokens</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">System Status</span>
+              <span class="badge success"><span class="status-dot ok"></span>Operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">API Gateway</span>
+              <span class="data-value success" id="statusApi">ready</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Data Pipeline</span>
+              <span class="data-value success">flowing</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last sync</span>
+              <span class="data-value" id="lastSync">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Latest Events</span>
+            </div>
+            <div id="dashboardEvents">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Loading events...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY LOG -->
+        <div class="view" id="v-activity">
+          <div class="view-title">Activity Log</div>
+          <div class="view-subtitle">All system events</div>
+
+          <div class="card">
+            <div class="filter-pills" id="activityFilters">
+              <div class="filter-pill active" data-filter="all">All Events</div>
+              <div class="filter-pill" data-filter="ra">Ra</div>
+              <div class="filter-pill" data-filter="aurora">Aurora</div>
+              <div class="filter-pill" data-filter="sentinel">Sentinel</div>
+              <div class="filter-pill" data-filter="cipher">Cipher</div>
+              <div class="filter-pill" data-filter="nel">Nel</div>
+              <div class="filter-pill" data-filter="sam">Sam</div>
+              <div class="filter-pill" data-filter="sim">Simulations</div>
+              <div class="filter-pill" data-filter="consolidation">Consolidation</div>
+              <div class="filter-pill" data-filter="aether">Aether</div>
+            </div>
+            <div id="activityCard">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No events</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CREDITS -->
+        <!-- OPENAI USAGE -->
+        <div class="view" id="v-openai-usage">
+          <div class="view-title">OpenAI Usage</div>
+          <div class="view-subtitle">API consumption &mdash; platform.openai.com</div>
+
+          <!-- Summary metrics -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--success);">$0.05</div>
+              <div class="metric-label">April spend</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">11,889</div>
+              <div class="metric-label">Input tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">1,570</div>
+              <div class="metric-label">Output tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">3</div>
+              <div class="metric-label">Requests</div>
+            </div>
+          </div>
+
+          <!-- Budget bar -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">April Budget</span>
+              <span class="badge success">$0.05 / $100.00</span>
+            </div>
+            <div style="background: var(--bg-tertiary); border-radius: 6px; height: 12px; overflow: hidden; margin-bottom: 12px;">
+              <div style="background: var(--success); height: 100%; width: 0.05%; min-width: 3px; border-radius: 6px; transition: width 0.5s var(--ease);"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono);">
+              <span>0.05% used</span>
+              <span>$99.95 remaining</span>
+            </div>
+          </div>
+
+          <!-- Daily breakdown chart (bar chart via CSS) -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Daily Token Usage</span>
+              <span class="badge" style="background: rgba(126, 196, 224, 0.15); color: var(--cyan);">gpt-4o</span>
+            </div>
+            <div id="openaiChart" style="display: flex; align-items: flex-end; gap: 8px; height: 180px; padding: 0 4px;">
+            </div>
+            <div id="openaiChartLabels" style="display: flex; gap: 8px; padding: 8px 4px 0; font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);">
+            </div>
+          </div>
+
+          <!-- Detailed table -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Request Log</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Mar 13 – Apr 12, 2026</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Date</th>
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Model</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Input</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Output</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Requests</th>
+                  </tr>
+                </thead>
+                <tbody id="openaiTable">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Account info -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Account</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">User</span>
+              <span class="data-value">Hyo Park</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Project</span>
+              <span class="data-value" style="font-family: var(--font-mono); font-size: 12px;">proj_PIX0QSLBaKRDaHp6eP9bfk7a</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">API Key</span>
+              <span class="data-value" style="font-family: var(--font-mono); font-size: 12px;">key_WEtWjd...Ps8U</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Primary Model</span>
+              <span class="data-value">gpt-4o-2024-08-06</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Tier</span>
+              <span class="data-value">Default</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLAUDE USAGE -->
+        <div class="view" id="v-claude-usage">
+          <div class="view-title">Claude Usage</div>
+          <div class="view-subtitle">API consumption &mdash; platform.claude.com</div>
+
+          <!-- Summary metrics -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--purple);">124,419</div>
+              <div class="metric-label">Input tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--purple);">44,276</div>
+              <div class="metric-label">Output tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">168,695</div>
+              <div class="metric-label">Total tokens</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">0</div>
+              <div class="metric-label">Web searches</div>
+            </div>
+          </div>
+
+          <!-- Model breakdown -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Model Breakdown</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">April 2026</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 20px; text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;">claude-sonnet-4-6</div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--purple); margin-bottom: 4px;">117,356</div>
+                <div style="font-size: 11px; color: var(--text-muted);">in</div>
+                <div style="font-size: 20px; font-weight: 600; color: var(--purple); margin-top: 8px;">43,328</div>
+                <div style="font-size: 11px; color: var(--text-muted);">out</div>
+              </div>
+              <div style="background: var(--bg-tertiary); border-radius: var(--radius-sm); padding: 20px; text-align: center;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;">claude-haiku-4-5</div>
+                <div style="font-size: 24px; font-weight: 700; color: var(--cyan); margin-bottom: 4px;">7,063</div>
+                <div style="font-size: 11px; color: var(--text-muted);">in</div>
+                <div style="font-size: 20px; font-weight: 600; color: var(--cyan); margin-top: 8px;">948</div>
+                <div style="font-size: 11px; color: var(--text-muted);">out</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily breakdown chart -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Daily Token Usage</span>
+              <span class="badge" style="background: rgba(180, 154, 240, 0.15); color: var(--purple);">anthropic api</span>
+            </div>
+            <div id="claudeChart" style="display: flex; align-items: flex-end; gap: 8px; height: 180px; padding: 0 4px;">
+            </div>
+            <div id="claudeChartLabels" style="display: flex; gap: 8px; padding: 8px 4px 0; font-size: 10px; font-family: var(--font-mono); color: var(--text-muted);">
+            </div>
+          </div>
+
+          <!-- Detailed table -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Daily Breakdown</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">Apr 8 – Apr 11, 2026</span>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                <thead>
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Date</th>
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Model</th>
+                    <th style="text-align: left; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">API Key</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Input</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Cache Write</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Cache Read</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Output</th>
+                    <th style="text-align: right; padding: 10px 12px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-tertiary); font-weight: 600;">Searches</th>
+                  </tr>
+                </thead>
+                <tbody id="claudeTable">
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Account info -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Account</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Workspace</span>
+              <span class="data-value">Default</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">API Key</span>
+              <span class="data-value" style="font-family: var(--font-mono); font-size: 12px;">Kai2</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Primary Model</span>
+              <span class="data-value">claude-sonnet-4-6</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Fallback Model</span>
+              <span class="data-value">claude-haiku-4-5</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Context Window</span>
+              <span class="data-value">&le; 200k</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Inference</span>
+              <span class="data-value">Global</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RA -->
+        <div class="view" id="v-ra">
+          <div class="view-title">Ra</div>
+          <div class="view-subtitle">Research & analysis newsletter</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="raBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="raLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Briefs published</span>
+              <span class="data-value" id="raBriefs">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Pipeline state</span>
+              <span class="data-value" id="raState">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Latest Brief</span>
+            </div>
+            <div id="raLatestBrief" style="color: var(--text-muted); font-size: 13px; padding: 4px 0;">Loads from push data when Ra runs</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="raHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Ra runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AURORA -->
+        <div class="view" id="v-aurora">
+          <div class="view-title">Aurora</div>
+          <div class="view-subtitle">Consumer newsletter</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="auroraBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="auroraLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Subscribers</span>
+              <span class="data-value" id="auroraSubscribers">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Pipeline state</span>
+              <span class="data-value" id="auroraState">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="auroraHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Aurora runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SENTINEL -->
+        <div class="view" id="v-sentinel">
+          <div class="view-title">Sentinel</div>
+          <div class="view-subtitle">Quality assurance agent</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="sentinelBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="sentinelLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Result</span>
+              <span class="data-value success" id="sentinelResult">pass</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Tests executed</span>
+              <span class="data-value" id="sentinelTests">0</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="sentinelHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Sentinel runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CIPHER -->
+        <div class="view" id="v-cipher">
+          <div class="view-title">Cipher</div>
+          <div class="view-subtitle">Security & compliance agent</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="cipherBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="cipherLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Leaks found</span>
+              <span class="data-value" id="cipherLeaks">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Posture</span>
+              <span class="data-value success" id="cipherState">secure</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="cipherHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Cipher runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEL -->
+        <div class="view" id="v-nel">
+          <div class="view-title">Nel</div>
+          <div class="view-subtitle">System improvement & optimization</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="nelBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="nelLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Improvement score</span>
+              <span class="data-value" id="nelScore">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Findings</span>
+              <span class="data-value" id="nelFindings">0</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Analysis</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Stale files</span>
+              <span class="data-value warning" id="nelStale">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Broken links</span>
+              <span class="data-value error" id="nelBroken">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Untested code</span>
+              <span class="data-value warning" id="nelUntested">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Inefficient patterns</span>
+              <span class="data-value warning" id="nelInefficient">0</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="nelHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Nel runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SAM -->
+        <div class="view" id="v-sam">
+          <div class="view-title">Sam</div>
+          <div class="view-subtitle">Engineering & architecture oversight</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="samBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="samLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Recommendations</span>
+              <span class="data-value" id="samRecs">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">State</span>
+              <span class="data-value" id="samState">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="samHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Sam runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMULATIONS -->
+        <div class="view" id="v-sim">
+          <div class="view-title">Simulations</div>
+          <div class="view-subtitle">Nightly delegation lifecycle validation</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="simBadge">ready</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="simLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Total runs</span>
+              <span class="data-value" id="simRuns">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">State</span>
+              <span class="data-value" id="simState">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="simHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as simulations run</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONSOLIDATION -->
+        <div class="view" id="v-consolidation">
+          <div class="view-title">Consolidation</div>
+          <div class="view-subtitle">Nightly data sync & archival</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Status</span>
+              <span class="badge success" id="consolidationBadge">ready</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="consolidationLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Records synced</span>
+              <span class="data-value" id="consolidationRecords">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">State</span>
+              <span class="data-value" id="consolidationState">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="consolidationHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as consolidation runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AETHERBOT -->
+        <div class="view" id="v-aether">
+          <div class="view-title">Aether</div>
+          <div class="view-subtitle">Autonomous trading agent</div>
+
+          <!-- Portfolio overview -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-value" id="abBalance">--</div>
+              <div class="metric-label">Balance</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="abPnl" style="color: var(--success);">--</div>
+              <div class="metric-label">PNL (all time)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="abPnlToday">--</div>
+              <div class="metric-label">PNL (today)</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" id="abWinRate">--</div>
+              <div class="metric-label">Win rate</div>
+            </div>
+          </div>
+
+          <!-- Strategy performance -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Strategy Performance</span>
+              <span class="badge" id="abStratBadge" style="background: rgba(109, 212, 156, 0.15); color: var(--success);">active</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Active strategy</span>
+              <span class="data-value" id="abStrategy">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Total trades</span>
+              <span class="data-value" id="abTotalTrades">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Wins / Losses</span>
+              <span class="data-value"><span id="abWins" style="color: var(--success);">--</span> / <span id="abLosses" style="color: var(--error);">--</span></span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Avg win</span>
+              <span class="data-value success" id="abAvgWin">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Avg loss</span>
+              <span class="data-value error" id="abAvgLoss">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Sharpe ratio</span>
+              <span class="data-value" id="abSharpe">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Max drawdown</span>
+              <span class="data-value error" id="abDrawdown">--</span>
+            </div>
+          </div>
+
+          <!-- Risk management -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Risk Management</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Stop-loss</span>
+              <span class="data-value" id="abStoploss">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Take-profit</span>
+              <span class="data-value" id="abTakeprofit">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Position size</span>
+              <span class="data-value" id="abPosSize">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Leverage</span>
+              <span class="data-value" id="abLeverage">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Harvest threshold</span>
+              <span class="data-value" id="abHarvest">--</span>
+            </div>
+          </div>
+
+          <!-- PNL chart -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">PNL History</span>
+            </div>
+            <div id="abPnlChart" style="display: flex; align-items: flex-end; gap: 4px; height: 140px; padding: 0 4px;">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Populated when Aether pushes trade data</div>
+            </div>
+          </div>
+
+          <!-- Recent trades -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Recent Trades</span>
+            </div>
+            <div id="abTrades">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Trade log appears here as Aether executes</div>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Agent Status</span>
+              <span class="badge success" id="aetherBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last run</span>
+              <span class="data-value" id="aetherLastRun">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Decisions</span>
+              <span class="data-value" id="aetherDecisions">0</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">State</span>
+              <span class="data-value" id="aetherState">--</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">History</span>
+            </div>
+            <div id="aetherHistory">
+              <div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as Aether runs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HEALTH -->
+        <div class="view" id="v-health">
+          <div class="view-title">System Health</div>
+          <div class="view-subtitle">Infrastructure status</div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Live Checks</span>
+              <span class="badge success" id="healthBadge">operational</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">API Gateway</span>
+              <span class="data-value success" id="hApi">checking...</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Founder token</span>
+              <span class="data-value success">configured</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Deploy status</span>
+              <span class="data-value success">live</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last sentinel check</span>
+              <span class="data-value" id="hSentinel">--</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last cipher check</span>
+              <span class="data-value" id="hCipher">--</span>
+            </div>
+            <div class="btn-group">
+              <button class="btn primary" onclick="checkHealth()"><span>🔍</span> Check Now</button>
+            </div>
+          </div>
+
+          <div class="card" style="border-color: var(--error); border-width: 1px;">
+            <div class="card-header">
+              <span class="card-title" style="color: var(--error);">Emergency Controls</span>
+            </div>
+            <div class="btn-group">
+              <button class="btn danger" onclick="killSwitch()"><span>⚠️</span> Kill All Tasks</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ═══ THEME TOGGLE ═══
+  function initTheme() {
+    const saved = localStorage.getItem('hq-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    updateThemeIcon();
+  }
+
+  function updateThemeIcon() {
+    const theme = document.documentElement.getAttribute('data-theme');
+    const icon = document.getElementById('themeIcon');
+    icon.textContent = theme === 'light' ? '🌙' : '☀️';
+  }
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('hq-theme', next);
+    updateThemeIcon();
+  });
+
+  initTheme();
+
+  // ═══ AUTH ═══
+  let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
+  const authGate = document.getElementById('authGate');
+  const authInput = document.getElementById('authInput');
+
+  authInput.addEventListener('keydown', async e => {
+    if (e.key !== 'Enter') return;
+    const pw = authInput.value;
+    if (!pw) return;
+    try {
+      const r = await fetch('/api/hq?action=auth', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ password: pw }),
+      });
+      const j = await r.json();
+      if (j.ok && j.token) {
+        HQ_TOKEN = j.token;
+        sessionStorage.setItem('hq_token', HQ_TOKEN);
+        authGate.classList.add('hidden');
+        document.getElementById('shell').style.display = 'flex';
+        boot();
+      } else {
+        document.getElementById('authErr').textContent = j.error || 'wrong password';
+        authInput.value = '';
+      }
+    } catch {
+      document.getElementById('authErr').textContent = 'could not reach server';
+    }
+  });
+
+  if (HQ_TOKEN) {
+    authGate.classList.add('hidden');
+    document.getElementById('shell').style.display = 'flex';
+    boot();
+  }
+
+  // ═══ NAV ═══
+  function goView(name) {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.view === name);
+    });
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const view = document.getElementById('v-' + name);
+    if (view) {
+      view.classList.add('active');
+    }
+  }
+
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => goView(item.dataset.view));
+  });
+
+  // ═══ ACTIVITY FILTERS ═══
+  let activityFilter = 'all';
+  let allEvents = [];
+
+  document.querySelectorAll('#activityFilters .filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('#activityFilters .filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activityFilter = pill.dataset.filter;
+      renderActivity();
+    });
+  });
+
+  function renderActivity() {
+    const filtered = activityFilter === 'all' ? allEvents : allEvents.filter(e => e.agent === activityFilter);
+    const card = document.getElementById('activityCard');
+    if (filtered.length) {
+      card.innerHTML = filtered.map(e => evHTML(e, true)).join('');
+    } else {
+      card.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No events for this filter</div>';
+    }
+  }
+
+  // ═══ CLOCK ═══
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/Denver', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + ' MT';
+  }
+
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // ═══ TOAST ═══
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+
+  function act(msg) {
+    toast(msg);
+  }
+
+  // ═══ API ═══
+  async function hqFetchStatic() {
+    try {
+      const r = await fetch('/data/hq-state.json?t=' + Date.now());
+      if (r.ok) return await r.json();
+    } catch (e) {
+      console.warn('static fetch failed:', e);
+    }
+    return null;
+  }
+
+  async function hqFetchApi() {
+    try {
+      const headers = { 'Authorization': 'Bearer ' + HQ_TOKEN };
+      const r = await fetch('/api/hq?action=data', { headers });
+      if (r.status === 401) {
+        sessionStorage.removeItem('hq_token');
+        HQ_TOKEN = null;
+        authGate.classList.remove('hidden');
+        document.getElementById('shell').style.display = 'none';
+        return null;
+      }
+      if (r.ok) return await r.json();
+    } catch (e) {
+      console.warn('api fetch failed:', e);
+    }
+    return null;
+  }
+
+  function mergeData(staticD, apiD) {
+    if (!staticD) return apiD;
+    if (!apiD || !apiD.ok) return { ok: true, ...staticD };
+    const merged = { ok: true, ...staticD };
+
+    const allEvts = [...(apiD.events || []), ...(staticD.events || [])];
+    const seen = new Set();
+    merged.events = allEvts.filter(e => {
+      const key = e.ts + '|' + e.agent;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).sort((a, b) => new Date(b.ts) - new Date(a.ts)).slice(0, 100);
+
+    for (const sec of ['ra', 'aurora', 'sentinel', 'cipher', 'sim', 'consolidation', 'aether', 'nel', 'sam', 'credits']) {
+      const s = staticD[sec] || {};
+      const a = apiD[sec] || {};
+      if (a.lastRun && (!s.lastRun || new Date(a.lastRun) > new Date(s.lastRun))) {
+        merged[sec] = { ...s, ...a };
+      } else {
+        merged[sec] = { ...a, ...s };
+      }
+    }
+    return merged;
+  }
+
+  // ═══ BOOT ═══
+  function boot() {
+    checkHealth();
+    loadData();
+    setInterval(loadData, 30000);
+  }
+
+  // ═══ HELPERS ═══
+  const AGENT_CLASS = { ra: 't-ra', aurora: 't-aurora', sentinel: 't-sentinel', cipher: 't-cipher', nel: 't-nel', sam: 't-sam', sim: 't-sim', aether: 't-aether', consolidation: 't-aether' };
+
+  function fmtTime(ts) {
+    return new Date(ts).toLocaleTimeString('en-US', { timeZone: 'America/Denver', hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+
+  function fmtDate(ts) {
+    return new Date(ts).toLocaleDateString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+
+  function evHTML(e, showDate) {
+    const cls = AGENT_CLASS[e.agent] || 't-ra';
+    const time = showDate ? fmtDate(e.ts) : fmtTime(e.ts);
+    const action = e.doc ? `window.open('${e.doc}','_blank')` : `goView('${e.agent}')`;
+    return `<div class="event-row" onclick="${action}">
+      <span class="event-time">${time}</span>
+      <span class="event-agent ${cls}">${e.agent.toUpperCase()}</span>
+      <span class="event-msg">${e.msg || 'event'}</span>
+      <span class="event-arrow">→</span>
+    </div>`;
+  }
+
+  async function loadData() {
+    const staticD = await hqFetchStatic();
+    const apiD = await hqFetchApi();
+    const data = mergeData(staticD, apiD);
+
+    if (!data.ok) return;
+
+    allEvents = data.events || [];
+
+    // Update metrics
+    const ra = data.ra || {};
+    const aurora = data.aurora || {};
+    const credits = data.credits || {};
+
+    document.getElementById('metricRa').textContent = ra.briefs || 0;
+    document.getElementById('metricAurora').textContent = aurora.subscribers || 0;
+    document.getElementById('metricEvents').textContent = allEvents.length;
+    const metricCredits = document.getElementById('metricCredits');
+    if (metricCredits) metricCredits.textContent = credits.balance || 0;
+    document.getElementById('lastSync').textContent = new Date().toLocaleTimeString('en-US', { timeZone: 'America/Denver', hour: '2-digit', minute: '2-digit', hour12: false });
+
+    // Update dashboard events
+    const dashboardEvents = document.getElementById('dashboardEvents');
+    const recentEvents = allEvents.slice(0, 5);
+    if (recentEvents.length) {
+      dashboardEvents.innerHTML = recentEvents.map(e => evHTML(e, false)).join('');
+    } else {
+      dashboardEvents.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">No recent events</div>';
+    }
+
+    // Update agent data
+    const agents = ['ra', 'aurora', 'sentinel', 'cipher', 'nel', 'sam', 'sim', 'consolidation', 'aether'];
+    agents.forEach(ag => {
+      const agData = data[ag] || {};
+      const agId = ag === 'sim' ? 'sim' : ag === 'consolidation' ? 'consolidation' : ag === 'aether' ? 'aether' : ag;
+
+      const lastRunEl = document.getElementById(agId + 'LastRun');
+      if (lastRunEl && agData.lastRun) {
+        lastRunEl.textContent = fmtDate(agData.lastRun);
+      }
+
+      const dotEl = document.getElementById('dot-' + agId);
+      if (dotEl) {
+        const isOk = !agData.error && agData.lastRun;
+        dotEl.classList.toggle('ok', isOk);
+        dotEl.classList.toggle('err', !isOk);
+      }
+
+      // Agent-specific fields
+      if (ag === 'ra') {
+        document.getElementById('raBriefs').textContent = agData.briefs || 0;
+        document.getElementById('raState').textContent = agData.state || '--';
+      } else if (ag === 'aurora') {
+        document.getElementById('auroraSubscribers').textContent = agData.subscribers || 0;
+        document.getElementById('auroraState').textContent = agData.state || '--';
+      } else if (ag === 'sentinel') {
+        document.getElementById('sentinelTests').textContent = agData.tests || 0;
+        document.getElementById('sentinelResult').textContent = agData.result || 'pass';
+        document.getElementById('sentinelResult').className = 'data-value ' + (agData.result === 'pass' ? 'success' : 'error');
+      } else if (ag === 'cipher') {
+        document.getElementById('cipherLeaks').textContent = agData.leaks || 0;
+      } else if (ag === 'nel') {
+        document.getElementById('nelScore').textContent = agData.improvementScore || '--';
+        document.getElementById('nelFindings').textContent = agData.findingsCount || 0;
+        document.getElementById('nelStale').textContent = agData.staleFiles || 0;
+        document.getElementById('nelBroken').textContent = agData.brokenLinks || 0;
+        document.getElementById('nelUntested').textContent = agData.untested || 0;
+        document.getElementById('nelInefficient').textContent = agData.inefficient || 0;
+      } else if (ag === 'sam') {
+        document.getElementById('samRecs').textContent = agData.recommendations || 0;
+        document.getElementById('samState').textContent = agData.state || '--';
+      } else if (ag === 'sim') {
+        document.getElementById('simRuns').textContent = agData.runs || 0;
+        document.getElementById('simState').textContent = agData.state || '--';
+      } else if (ag === 'consolidation') {
+        document.getElementById('consolidationRecords').textContent = agData.records || 0;
+        document.getElementById('consolidationState').textContent = agData.state || '--';
+      } else if (ag === 'aether') {
+        document.getElementById('aetherDecisions').textContent = agData.decisions || 0;
+        document.getElementById('aetherState').textContent = agData.state || '--';
+        // Trading metrics (populated when aether pushes data)
+        if (agData.balance) document.getElementById('abBalance').textContent = agData.balance;
+        if (agData.pnl) { const el = document.getElementById('abPnl'); el.textContent = agData.pnl; el.style.color = String(agData.pnl).startsWith('-') ? 'var(--error)' : 'var(--success)'; }
+        if (agData.pnlToday) { const el = document.getElementById('abPnlToday'); el.textContent = agData.pnlToday; el.style.color = String(agData.pnlToday).startsWith('-') ? 'var(--error)' : 'var(--success)'; }
+        if (agData.winRate) document.getElementById('abWinRate').textContent = agData.winRate;
+        if (agData.strategy) document.getElementById('abStrategy').textContent = agData.strategy;
+        if (agData.totalTrades) document.getElementById('abTotalTrades').textContent = agData.totalTrades;
+        if (agData.wins) document.getElementById('abWins').textContent = agData.wins;
+        if (agData.losses) document.getElementById('abLosses').textContent = agData.losses;
+        if (agData.avgWin) document.getElementById('abAvgWin').textContent = agData.avgWin;
+        if (agData.avgLoss) document.getElementById('abAvgLoss').textContent = agData.avgLoss;
+        if (agData.sharpe) document.getElementById('abSharpe').textContent = agData.sharpe;
+        if (agData.drawdown) document.getElementById('abDrawdown').textContent = agData.drawdown;
+        if (agData.stoploss) document.getElementById('abStoploss').textContent = agData.stoploss;
+        if (agData.takeprofit) document.getElementById('abTakeprofit').textContent = agData.takeprofit;
+        if (agData.posSize) document.getElementById('abPosSize').textContent = agData.posSize;
+        if (agData.leverage) document.getElementById('abLeverage').textContent = agData.leverage;
+        if (agData.harvest) document.getElementById('abHarvest').textContent = agData.harvest;
+      }
+
+      // Populate history
+      const historyEl = document.getElementById(agId + 'History');
+      if (historyEl) {
+        const agentEvents = allEvents.filter(e => e.agent === agId);
+        if (agentEvents.length) {
+          historyEl.innerHTML = agentEvents.slice(0, 10).map(e => evHTML(e, false)).join('');
+        } else {
+          historyEl.innerHTML = `<div style="color: var(--text-muted); font-size: 13px; padding: 12px 0;">Events appear here as ${agId} runs</div>`;
+        }
+      }
+    });
+
+    // Credits data now shown on dedicated OpenAI/Claude usage pages
+
+    renderActivity();
+  }
+
+  async function checkHealth() {
+    try {
+      const r = await fetch('/api/health');
+      if (r.ok) {
+        document.getElementById('hApi').textContent = 'online';
+        document.getElementById('hApi').className = 'data-value success';
+        document.getElementById('healthBadge').textContent = 'operational';
+        document.getElementById('healthBadge').className = 'badge success';
+        document.getElementById('statusDot').className = 'status-dot ok';
+        document.getElementById('statusText').textContent = 'online';
+      } else {
+        document.getElementById('hApi').textContent = 'offline';
+        document.getElementById('hApi').className = 'data-value error';
+        document.getElementById('healthBadge').textContent = 'degraded';
+        document.getElementById('healthBadge').className = 'badge warning';
+        document.getElementById('statusDot').className = 'status-dot err';
+        document.getElementById('statusText').textContent = 'offline';
+      }
+    } catch (e) {
+      document.getElementById('hApi').textContent = 'error';
+      document.getElementById('hApi').className = 'data-value error';
+      document.getElementById('statusDot').className = 'status-dot err';
+      document.getElementById('statusText').textContent = 'error';
+    }
+  }
+
+  // viewDoc and runAgent removed — no dead links
+
+  function killSwitch() {
+    if (confirm('⚠️  Kill all scheduled tasks?')) {
+      toast('Kill switch activated — stopping all tasks');
+    }
+  }
+
+  // ═══ OPENAI USAGE DATA (from completions_usage CSV) ═══
+  const openaiData = [
+    { date: '2026-04-09', model: 'gpt-4o-2024-08-06', input: 3608, output: 564, requests: 1 },
+    { date: '2026-04-10', model: 'gpt-4o-2024-08-06', input: 6802, output: 545, requests: 1 },
+    { date: '2026-04-11', model: 'gpt-4o-2024-08-06', input: 1479, output: 461, requests: 1 },
+  ];
+
+  function renderOpenaiChart() {
+    const chart = document.getElementById('openaiChart');
+    const labels = document.getElementById('openaiChartLabels');
+    if (!chart) return;
+    const maxVal = Math.max(...openaiData.map(d => d.input + d.output));
+    chart.innerHTML = openaiData.map(d => {
+      const total = d.input + d.output;
+      const pct = Math.max((total / maxVal) * 100, 4);
+      const inPct = (d.input / total) * 100;
+      return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+        <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">${total.toLocaleString()}</div>
+        <div style="width: 100%; height: ${pct}%; border-radius: 6px 6px 4px 4px; overflow: hidden; display: flex; flex-direction: column; min-height: 8px;">
+          <div style="flex: ${inPct}; background: var(--cyan); opacity: 0.8;"></div>
+          <div style="flex: ${100 - inPct}; background: var(--success); opacity: 0.7;"></div>
+        </div>
+      </div>`;
+    }).join('');
+    labels.innerHTML = openaiData.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      return `<div style="flex: 1; text-align: center;">${dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>`;
+    }).join('');
+  }
+
+  function renderOpenaiTable() {
+    const tbody = document.getElementById('openaiTable');
+    if (!tbody) return;
+    const rowStyle = 'border-bottom: 1px solid var(--border-color);';
+    const cellL = 'padding: 12px; color: var(--text-primary);';
+    const cellR = 'padding: 12px; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 12px;';
+    tbody.innerHTML = openaiData.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      const fmtD = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return `<tr style="${rowStyle}">
+        <td style="${cellL}">${fmtD}</td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.model}</span></td>
+        <td style="${cellR}">${d.input.toLocaleString()}</td>
+        <td style="${cellR}">${d.output.toLocaleString()}</td>
+        <td style="${cellR}">${d.requests}</td>
+      </tr>`;
+    }).join('') + `<tr style="font-weight: 600;">
+      <td style="${cellL}">Total</td>
+      <td style="${cellL}"></td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.input, 0).toLocaleString()}</td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.output, 0).toLocaleString()}</td>
+      <td style="${cellR}">${openaiData.reduce((s,d) => s+d.requests, 0)}</td>
+    </tr>`;
+  }
+
+  // ═══ CLAUDE USAGE DATA (from claude_api_tokens CSV) ═══
+  const claudeData = [
+    { date: '2026-04-08', model: 'claude-haiku-4-5', key: 'Kai2', input: 622, cacheWrite: 0, cacheRead: 0, output: 423, searches: 0 },
+    { date: '2026-04-08', model: 'claude-sonnet-4-6', key: 'Kai2', input: 113115, cacheWrite: 0, cacheRead: 0, output: 42762, searches: 0 },
+    { date: '2026-04-09', model: 'claude-haiku-4-5', key: 'Kai2', input: 1356, cacheWrite: 0, cacheRead: 0, output: 364, searches: 0 },
+    { date: '2026-04-10', model: 'claude-haiku-4-5', key: 'Kai2', input: 5077, cacheWrite: 0, cacheRead: 0, output: 141, searches: 0 },
+    { date: '2026-04-10', model: 'claude-sonnet-4-6', key: 'Kai2', input: 1448, cacheWrite: 0, cacheRead: 0, output: 500, searches: 0 },
+    { date: '2026-04-11', model: 'claude-haiku-4-5', key: 'Kai2', input: 8, cacheWrite: 0, cacheRead: 0, output: 20, searches: 0 },
+    { date: '2026-04-11', model: 'claude-sonnet-4-6', key: 'Kai2', input: 2793, cacheWrite: 0, cacheRead: 0, output: 66, searches: 0 },
+  ];
+
+  function renderClaudeChart() {
+    const chart = document.getElementById('claudeChart');
+    const labels = document.getElementById('claudeChartLabels');
+    if (!chart) return;
+    // Aggregate by date
+    const byDate = {};
+    claudeData.forEach(d => {
+      if (!byDate[d.date]) byDate[d.date] = { input: 0, output: 0, sonnet: 0, haiku: 0 };
+      byDate[d.date].input += d.input;
+      byDate[d.date].output += d.output;
+      if (d.model.includes('sonnet')) byDate[d.date].sonnet += d.input + d.output;
+      else byDate[d.date].haiku += d.input + d.output;
+    });
+    const dates = Object.keys(byDate).sort();
+    const maxVal = Math.max(...dates.map(dt => byDate[dt].input + byDate[dt].output));
+
+    chart.innerHTML = dates.map(dt => {
+      const d = byDate[dt];
+      const total = d.input + d.output;
+      const pct = Math.max((total / maxVal) * 100, 4);
+      const sonnetPct = total > 0 ? (d.sonnet / total) * 100 : 50;
+      return `<div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+        <div style="font-family: var(--font-mono); font-size: 10px; color: var(--text-tertiary);">${total.toLocaleString()}</div>
+        <div style="width: 100%; height: ${pct}%; border-radius: 6px 6px 4px 4px; overflow: hidden; display: flex; flex-direction: column; min-height: 8px;">
+          <div style="flex: ${sonnetPct}; background: var(--purple); opacity: 0.8;"></div>
+          <div style="flex: ${100 - sonnetPct}; background: var(--cyan); opacity: 0.7;"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    labels.innerHTML = dates.map(dt => {
+      const d = new Date(dt + 'T00:00:00');
+      return `<div style="flex: 1; text-align: center;">${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>`;
+    }).join('');
+  }
+
+  function renderClaudeTable() {
+    const tbody = document.getElementById('claudeTable');
+    if (!tbody) return;
+    const rowStyle = 'border-bottom: 1px solid var(--border-color);';
+    const cellL = 'padding: 12px; color: var(--text-primary);';
+    const cellR = 'padding: 12px; color: var(--text-primary); text-align: right; font-family: var(--font-mono); font-size: 12px;';
+    const modelColor = m => m.includes('sonnet') ? 'var(--purple)' : 'var(--cyan)';
+    const modelShort = m => m.includes('sonnet') ? 'sonnet-4-6' : 'haiku-4-5';
+    tbody.innerHTML = claudeData.map(d => {
+      const dt = new Date(d.date + 'T00:00:00');
+      const fmtD = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return `<tr style="${rowStyle}">
+        <td style="${cellL}">${fmtD}</td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px; color: ${modelColor(d.model)};">${modelShort(d.model)}</span></td>
+        <td style="${cellL}"><span style="font-family: var(--font-mono); font-size: 12px;">${d.key}</span></td>
+        <td style="${cellR}">${d.input.toLocaleString()}</td>
+        <td style="${cellR}">${d.cacheWrite}</td>
+        <td style="${cellR}">${d.cacheRead}</td>
+        <td style="${cellR}">${d.output.toLocaleString()}</td>
+        <td style="${cellR}">${d.searches}</td>
+      </tr>`;
+    }).join('') + `<tr style="font-weight: 600;">
+      <td style="${cellL}">Total</td>
+      <td style="${cellL}"></td>
+      <td style="${cellL}"></td>
+      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.input, 0).toLocaleString()}</td>
+      <td style="${cellR}">0</td>
+      <td style="${cellR}">0</td>
+      <td style="${cellR}">${claudeData.reduce((s,d) => s+d.output, 0).toLocaleString()}</td>
+      <td style="${cellR}">0</td>
+    </tr>`;
+  }
+
+  // Render usage views on boot
+  renderOpenaiChart();
+  renderOpenaiTable();
+  renderClaudeChart();
+  renderClaudeTable();
+  </script>
+
+</body>
+</html>
