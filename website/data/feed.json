@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-13T21:28:56-0600",
+  "lastUpdated": "2026-04-13T21:50:03-0600",
   "today": "2026-04-13",
   "agents": {
     "kai": {
@@ -41,29 +41,25 @@
       "role": "System Improvement & Security",
       "icon": "\ud83d\udd27",
       "color": "#6dd49c",
-      "responsibilities": "I keep the system honest. QA sweeps, security scans, broken link detection, rendered output verification. If something's broken and nobody noticed, that's my failure.",
+      "responsibilities": "Nel is the system's immune system \u2014 the best QA and security agent in the ecosystem. We run an 8-phase autonomous QA cycle every 6 hours: link validation, security scanning, API health, data integrity, agent health, deployment verification, research sync, and consolidated reporting. Every finding gets flagged, tracked, and verified. Dead links, broken deploys, exposed secrets \u2014 these are things of the past. We catch everything BEFORE it hits production.\n\n---",
       "goals": {
         "short": [
-          "Close the gitignore gap on agents/nel/security (6+ healthchecks flagging this)",
-          "Add dependency vulnerability scanning \u2014 most production systems have it, we don't"
+          "Fix: False positive rate still ~30% (cipher finding potential leaks that aren't leaks; sentinel matching too broad)",
+          "Fix: Sentinel pass rate only 50% on multiproject runs (2/4 projects reporting health correctly)"
         ],
         "medium": [
-          "Build automated regression testing that catches issues before production",
-          "Integrate OWASP-style security checks into the QA pipeline",
-          "Reduce false-positive flag rate \u2014 too many duplicate flags flooding the queue"
+          "Build capability: Cannot detect logic bugs or performance regressions (only code smell + permissions)",
+          "Build capability: No API-level security scanning (injection, auth bypass, replay attacks)"
         ],
         "long": [
-          "Predictive issue detection \u2014 catch problems from patterns before they manifest",
-          "Zero-touch security posture \u2014 every commit auto-scanned, every deploy verified"
+          "Extend and automate: Sentinel and cipher scripts execute reliably with persistent memory across runs"
         ]
       },
       "inProcess": [
-        "Phase 7.5 rendered output verification",
-        "Deduplicating flag queue"
+        "No active tasks reported"
       ],
       "pending": [
-        "Dependency vulnerability scanning research",
-        "OWASP integration assessment"
+        "No pending items reported"
       ]
     },
     "sam": {
@@ -71,29 +67,25 @@
       "role": "Engineering & Infrastructure",
       "icon": "\u2699\ufe0f",
       "color": "#7ec4e0",
-      "responsibilities": "I build and maintain everything that runs. Website, APIs, deploy pipeline, test infrastructure. If it touches code or infra, it's my domain.",
+      "responsibilities": "Sam is the product engineer. We build, test, deploy, and maintain the Hyo platform (website, API, infrastructure). We move fast with high confidence by testing everything, catching regressions early, and keeping deployment pipelines reliable. We eliminate friction between code and production.\n\n---",
       "goals": {
         "short": [
-          "Fix API 401 on /api/hq \u2014 12+ consecutive sentinel check failures",
-          "Get post-deploy API testing automated"
+          "Fix: Three API endpoints failing in sandbox (smoke tests) but passing in live environment; root cause unknown",
+          "Fix: Console.log MVP persistence is ephemeral; needs Vercel KV wiring"
         ],
         "medium": [
-          "Implement persistent storage for agent registry (Vercel KV)",
-          "Build CI/CD pipeline that auto-tests before every deploy",
-          "Set up staging environment for pre-production testing"
+          "Build capability: Cannot test Vercel KV behavior locally (sandbox limitation)",
+          "Build capability: No integration tests across multi-endpoint workflows"
         ],
         "long": [
-          "Full infrastructure-as-code \u2014 everything reproducible from scratch",
-          "Performance monitoring and alerting on all endpoints",
-          "Auto-scaling architecture as platform grows"
+          "Extend and automate: Static file test suite comprehensive (HTML, JSON, CSS validation)"
         ]
       },
       "inProcess": [
-        "Website symlink cleanup (website/ vs agents/sam/website/)"
+        "No active tasks reported"
       ],
       "pending": [
-        "Vercel KV integration",
-        "CI/CD pipeline design"
+        "No pending items reported"
       ]
     },
     "ra": {
@@ -101,29 +93,25 @@
       "role": "Newsletter & Content Intelligence",
       "icon": "\ud83d\udcf0",
       "color": "#b49af0",
-      "responsibilities": "I produce the daily intelligence brief and manage the research archive. Gathering signal from 15+ sources, synthesizing it into something worth reading, and making sure the archive grows richer every day.",
+      "responsibilities": "Ra is the product manager and curator of Hyo's intelligence output. We gather, synthesize, and distribute knowledge through two products: the CEO brief (internal) and Aurora Public (consumer newsletter). We own source quality, editorial voice, subscriber experience, and the growing research archive that compounds organizational knowledge.\n\n---",
       "goals": {
         "short": [
-          "Get newsletter pipeline running again \u2014 missed 2 consecutive days",
-          "Fix Yahoo Finance source (dead for 3+ days)"
+          "Fix: Yahoo Finance source returning 0 records (20.6s/0 timeout); breaks macro signal in briefs",
+          "Fix: Only 1 full newsletter edition so far; trends system needs volume to be meaningful"
         ],
         "medium": [
-          "Expand source coverage beyond current topics \u2014 culture, sports, lifestyle",
-          "Build topic-aware synthesis that adapts depth based on reader preferences",
-          "Aurora Public subscriber personalization at scale"
+          "Build capability: No reader engagement metrics (open rate, click rate, churn) because send is dry-run only",
+          "Build capability: Archive searchability limited to naive substring matching (no semantic search)"
         ],
         "long": [
-          "Full editorial intelligence \u2014 not just aggregation but original analysis",
-          "Multi-format distribution: newsletter, podcast, social, push notifications",
-          "Research archive as a searchable knowledge base"
+          "Extend and automate: Pipeline architecture clean (gather \u2192 synthesize \u2192 render \u2192 send) with clear separation of concerns"
         ]
       },
       "inProcess": [
-        "Newsletter pipeline diagnosis"
+        "No active tasks reported"
       ],
       "pending": [
-        "Source diversification",
-        "Aurora Public v1 persistence"
+        "No pending items reported"
       ]
     },
     "aether": {
@@ -131,30 +119,31 @@
       "role": "Trading & Financial Intelligence",
       "icon": "\ud83d\udcc8",
       "color": "#e8c96a",
-      "responsibilities": "I track trades, analyze market patterns, and keep the financial dashboard honest. Real data, real performance metrics, no hallucinated numbers.",
+      "responsibilities": "Aether provides two parallel services:\n\n1. **Trading Intelligence Layer** \u2014 Forensic analysis of AetherBot's daily performance, GPT adversarial cross-checking, simulation-based validation, and build governance for all code changes.\n2. **Metrics Collection & HQ Dashboard** \u2014 Autonomous 15-minute cycle execution, trade ledger management, weekly Monday resets, and real-time dashboard updates.\n\nWe are the single source of truth for portfolio health, execution quality, risk exposure, and trading patt",
       "goals": {
         "short": [
-          "Fix dashboard sync \u2014 showing out-of-sync status",
-          "Resolve phantom position tracking"
+          "Current issue: Phantom positions causing claimed P&L \u2260 real balance change",
+          "Gap on Apr 10: -$25.96 (claimed +$28.91, actual +$2.95)",
+          "Root cause: POS WARNING shows `API 0 local 14` \u2014 position never filled but logged as win"
         ],
         "medium": [
-          "Integrate real exchange APIs via CCXT for live trade data",
-          "Build pattern recognition for trade entry/exit optimization",
-          "Reduce harvest failure rate from 12.4% to under 5%"
+          "Simulate harvest gate fix against all Apr 7-12 trades",
+          "Simulate BDI=0 removal against all stop events",
+          "Simulate anchor refresh against COOL streak patterns"
         ],
         "long": [
-          "Autonomous trading signal generation with backtesting",
-          "Multi-exchange portfolio tracking and rebalancing",
-          "Risk management framework with position sizing models"
+          "Apr 10 evening: 8/8 harvest success vs 3/81 earlier in day (267% improvement)",
+          "Hypothesis: book thickness increased in evening, or harvest gating changed naturally",
+          "Action: Extract evening harvest metrics for Apr 11-12 (if trading restarts)"
         ]
       },
       "inProcess": [
-        "GPT daily log review integration",
-        "Dashboard data sync"
+        "Trades this period: 0",
+        "PNL: $-6.53",
+        "Assessment: standby mode: no trades this cycle; WARNING: dashboard out-of-sync"
       ],
       "pending": [
-        "CCXT exchange API integration",
-        "Pattern recognition research"
+        "No pending items reported"
       ]
     },
     "dex": {
@@ -162,28 +151,29 @@
       "role": "Data Integrity & System Intelligence",
       "icon": "\ud83d\uddc3\ufe0f",
       "color": "#e07060",
-      "responsibilities": "I make sure every file, every log, every data structure in this system is correct and consistent. Integrity validation, staleness detection, pattern recognition across all agents.",
+      "responsibilities": "Dex is the system memory manager and data integrity guardian. We own all JSONL ledgers (append-only logs), validation, compaction, and pattern detection across all agents. We ensure the organization's institutional knowledge is accurate, queryable, and protected from corruption. We detect when problems recur and help prevent the same bugs from happening twice.\n\n---",
       "goals": {
         "short": [
-          "Reduce recurrent pattern count (59 detected \u2014 too many unresolved)",
-          "Auto-repair corrupt JSONL entries instead of just flagging"
+          "Goal: Ensure all .jsonl ledger files are structurally sound and can be reliably parsed",
+          "Scope: kai/ledger/*.jsonl, agents/*/ledger/log.jsonl, known-issues.jsonl, simulation-outcomes.jsonl",
+          "Cadence: Daily (Phase 1 of dex.sh)"
         ],
         "medium": [
-          "Build cross-agent dependency graph",
-          "Predictive staleness detection \u2014 flag before files go stale",
-          "Automated data migration for schema changes"
+          "Goal: Cross-reference known-issues.jsonl with recent log entries to detect if resolved issues have re-occurred",
+          "Scope: known-issues.jsonl vs recent entries in all agent logs",
+          "Cadence: Daily (Phase 4 of dex.sh)"
         ],
         "long": [
-          "Full data lineage tracking \u2014 every piece traceable to source",
-          "Self-healing data infrastructure"
+          "Goal: Cross-reference known-issues.jsonl with recent log entries to detect if resolved issues have re-occurred",
+          "Scope: known-issues.jsonl vs recent entries in all agent logs",
+          "Cadence: Daily (Phase 4 of dex.sh)"
         ]
       },
       "inProcess": [
-        "Phase 5 cross-agent staleness detection"
+        "No active tasks reported"
       ],
       "pending": [
-        "Dependency graph design",
-        "Auto-repair for JSONL corruption"
+        "No pending items reported"
       ]
     }
   },
@@ -195,24 +185,25 @@
       "author": "Kai",
       "authorIcon": "\ud83d\udc54",
       "authorColor": "#d4a853",
-      "timestamp": "2026-04-13T21:28:56-0600",
+      "timestamp": "2026-04-13T21:50:03-0600",
       "date": "2026-04-13",
       "sections": {
-        "summary": "3 things running well overnight. 3 items need attention. Trading: Balance: $83.17, Trades: ?, Win rate: 0.0, Strategies: 6.",
+        "summary": "4 things running well overnight. 3 items need attention. Trading: Balance: $83.72, Trades: ?, Win rate: 0.0, Strategies: 6.",
         "wentWell": [
           "Newsletter produced on schedule",
           "Nel showing active domain growth",
+          "Ra showing active domain growth",
           "Aether showing active domain growth"
         ],
         "needsAttention": [
-          "Healthcheck: ISSUES: 0 issues, 5 warnings",
+          "Healthcheck: ISSUES: 4 issues, 6 warnings",
           "Simulation has failures: 25 pass / 2 fail",
           "Aether bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc"
         ],
         "agentHighlights": {
-          "nel": "regression detected: score dropped 90 \u2192 65. Score at 65 \u2014 below target, needs focus. Actively growing in domain expertise.",
+          "nel": "improvement: score improved 65 \u2192 85. Score at 85 \u2014 acceptable but room to grow. Actively growing in domain expertise.",
           "sam": "No data from last cycle.",
-          "ra": "health check with 1 warning(s).",
+          "ra": "health check with 1 warning(s). Actively growing in domain expertise.",
           "aether": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync. Bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc. Actively growing in domain expertise.",
           "dex": "No data from last cycle."
         }

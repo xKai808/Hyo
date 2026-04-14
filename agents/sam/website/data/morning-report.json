@@ -1,14 +1,14 @@
 {
   "date": "2026-04-13",
-  "generatedAt": "2026-04-13T21:28:56-0600",
+  "generatedAt": "2026-04-13T21:50:03-0600",
   "generatedBy": "bin/generate-morning-report.sh",
-  "executiveSummary": "Morning report for 2026-04-13. Simulation: 25 pass / 2 fail. Health: ISSUES: 0 issues, 5 warnings. Trading: Balance: $83.17, Trades: ?, Win rate: 0.0, Strategies: 6.",
+  "executiveSummary": "Morning report for 2026-04-13. Simulation: 25 pass / 2 fail. Health: ISSUES: 4 issues, 6 warnings. Trading: Balance: $83.72, Trades: ?, Win rate: 0.0, Strategies: 6.",
   "agentReports": [
     {
       "agent": "nel",
       "activeTasks": 42,
-      "score": 65,
-      "assessment": "regression detected: score dropped 90 \u2192 65",
+      "score": 85,
+      "assessment": "improvement: score improved 65 \u2192 85",
       "topTasks": [
         "**nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged",
         "**nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire c",
@@ -19,7 +19,7 @@
         "symptom_or_system": "system",
         "artifact_alive": "yes",
         "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "sentinel=2p/2f, cipher_leaks=0, score=65"
+        "learning": "sentinel=4p/0f, cipher_leaks=0, score=85"
       }
     },
     {
@@ -28,7 +28,7 @@
       "score": "?",
       "assessment": "",
       "topTasks": [
-        "**sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged",
+        "**sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsl",
         "**sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsl",
         "**sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsl"
       ],
@@ -40,11 +40,17 @@
       "score": "?",
       "assessment": "health check with 1 warning(s)",
       "topTasks": [
+        "**ra-001** [P2] [GUIDANCE] Your domain growth has been stagnant for 3+ cycles. W",
         "**ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
-        "**ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
-        "**ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06"
+        "**ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06"
       ],
-      "reflection": {}
+      "reflection": {
+        "bottleneck": "none",
+        "symptom_or_system": "system",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "critical=0, warnings=1, sources=0, archive=       5"
+      }
     },
     {
       "agent": "aether",
@@ -53,7 +59,7 @@
       "assessment": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync",
       "topTasks": [
         "Trades this period: 0",
-        "PNL: $-7.08",
+        "PNL: $-6.53",
         "Assessment: standby mode: no trades this cycle; WARNING: dashboard out-of-sync"
       ],
       "reflection": {
@@ -61,7 +67,7 @@
         "symptom_or_system": "system",
         "artifact_alive": "yes",
         "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "trades=0, pnl=-7.08, dashboard=out-of-sync"
+        "learning": "trades=0, pnl=-6.53, dashboard=out-of-sync"
       }
     },
     {
@@ -79,25 +85,26 @@
   ],
   "kaiReport": {
     "simulation": "25 pass / 2 fail",
-    "healthcheck": "ISSUES: 0 issues, 5 warnings",
+    "healthcheck": "ISSUES: 4 issues, 6 warnings",
     "knownIssues": 2,
     "newsletter": "produced"
   },
   "systemHealth": {
     "queueWorker": "check healthcheck-latest.json",
     "simulation": "25 pass / 2 fail",
-    "healthcheck": "ISSUES: 0 issues, 5 warnings"
+    "healthcheck": "ISSUES: 4 issues, 6 warnings"
   },
   "trading": {
-    "summary": "Balance: $83.17, Trades: ?, Win rate: 0.0, Strategies: 6"
+    "summary": "Balance: $83.72, Trades: ?, Win rate: 0.0, Strategies: 6"
   },
   "wentWell": [
     "Newsletter produced on schedule",
     "Nel showing active domain growth",
+    "Ra showing active domain growth",
     "Aether showing active domain growth"
   ],
   "needsAttention": [
-    "Healthcheck: ISSUES: 0 issues, 5 warnings",
+    "Healthcheck: ISSUES: 4 issues, 6 warnings",
     "Simulation has failures: 25 pass / 2 fail",
     "Aether bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc"
   ],
