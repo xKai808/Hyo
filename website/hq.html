@@ -1193,6 +1193,9 @@
       <div class="nav-item active" data-view="dashboard"><span class="nav-icon">📊</span><span>Dashboard</span></div>
       <div class="nav-item" data-view="activity"><span class="nav-icon">📜</span><span>Activity</span></div>
 
+      <div class="nav-section">Daily</div>
+      <div class="nav-item active" data-view="morning-report"><span class="nav-icon">📋</span><span>Morning Report</span></div>
+
       <div class="nav-section">API Usage</div>
       <div class="nav-item" data-view="openai-usage"><span class="nav-icon">🟢</span><span>OpenAI</span></div>
       <div class="nav-item" data-view="claude-usage"><span class="nav-icon">🟠</span><span>Claude</span></div>
@@ -1233,6 +1236,57 @@
     <!-- MAIN CONTENT -->
     <div class="main">
       <div class="main-content">
+
+        <!-- MORNING REPORT -->
+        <div class="view" id="v-morning-report">
+          <div class="view-title">Morning Report</div>
+          <div class="view-subtitle" id="mrDate">Loading...</div>
+
+          <!-- Executive Summary -->
+          <div class="card" id="mrSummaryCard">
+            <div class="card-header">
+              <span class="card-title">Executive Summary</span>
+              <span style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);" id="mrGeneratedAt"></span>
+            </div>
+            <div id="mrSummary" style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; padding: 8px 0;"></div>
+          </div>
+
+          <!-- What Went Well / Needs Attention -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="card">
+              <div class="card-header"><span class="card-title" style="color: var(--success);">What Went Well</span></div>
+              <div id="mrWentWell" style="padding: 4px 0;"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><span class="card-title" style="color: var(--error);">Needs Attention</span></div>
+              <div id="mrNeedsAttention" style="padding: 4px 0;"></div>
+            </div>
+          </div>
+
+          <!-- Agent Reports -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Agent Reports</span></div>
+            <div id="mrAgentReports"></div>
+          </div>
+
+          <!-- Kai / CEO Report -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Kai (CEO) Report</span></div>
+            <div id="mrKaiReport"></div>
+          </div>
+
+          <!-- System Health -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">System Health</span></div>
+            <div id="mrSystemHealth"></div>
+          </div>
+
+          <!-- Improvements -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Improvements Shipped</span></div>
+            <div id="mrImprovements"></div>
+          </div>
+        </div>
 
         <!-- DASHBOARD -->
         <div class="view active" id="v-dashboard">
@@ -2313,11 +2367,87 @@
     return merged;
   }
 
+  // ═══ MORNING REPORT ═══
+  async function loadMorningReport() {
+    try {
+      const r = await fetch('/data/morning-report.json');
+      if (!r.ok) return;
+      const data = await r.json();
+
+      // Header
+      document.getElementById('mrDate').textContent = data.date ? `Report for ${data.date}` : '';
+      document.getElementById('mrGeneratedAt').textContent = data.generatedAt ? `Generated ${new Date(data.generatedAt).toLocaleString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} MT` : '';
+
+      // Executive summary
+      document.getElementById('mrSummary').textContent = data.summary || 'No summary available.';
+
+      // What went well / needs attention
+      const renderList = (items) => (items || []).map(i =>
+        `<div style="padding: 6px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-secondary);">${i}</div>`
+      ).join('') || '<div style="color: var(--text-muted); font-size: 13px;">None</div>';
+
+      document.getElementById('mrWentWell').innerHTML = renderList(data.whatWentWell);
+      document.getElementById('mrNeedsAttention').innerHTML = renderList(data.whatNeedsAttention);
+
+      // Agent reports
+      const agents = data.agentReports || [];
+      document.getElementById('mrAgentReports').innerHTML = agents.map(a => {
+        const statusColor = a.status === 'active' ? 'var(--success)' : a.status === 'idle' ? 'var(--warning)' : 'var(--text-muted)';
+        const accomplishedHtml = (a.accomplished || []).map(x => `<div style="padding: 3px 0; font-size: 13px; color: var(--text-secondary);">+ ${x}</div>`).join('');
+        const issuesHtml = (a.issues || []).map(x => {
+          const isP0 = x.includes('P0');
+          const isP1 = x.includes('P1');
+          const color = isP0 ? 'var(--error)' : isP1 ? 'var(--warning)' : 'var(--text-secondary)';
+          return `<div style="padding: 3px 0; font-size: 13px; color: ${color};">! ${x}</div>`;
+        }).join('');
+        const nextHtml = (a.nextSteps || []).map(x => `<div style="padding: 3px 0; font-size: 13px; color: var(--text-muted);">→ ${x}</div>`).join('');
+
+        return `<div style="border-bottom: 2px solid var(--border-color); padding: 16px 0;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <span style="font-weight: 600; color: var(--text-primary); font-size: 15px; text-transform: capitalize;">${a.agent}</span>
+            <span class="badge" style="background: rgba(109,212,156,0.15); color: ${statusColor}; font-size: 11px;">${a.status}</span>
+          </div>
+          ${accomplishedHtml ? '<div style="margin-bottom: 6px;"><span style="font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); font-family: var(--font-mono);">Accomplished</span>' + accomplishedHtml + '</div>' : ''}
+          ${issuesHtml ? '<div style="margin-bottom: 6px;"><span style="font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); font-family: var(--font-mono);">Issues</span>' + issuesHtml + '</div>' : ''}
+          ${a.learned ? '<div style="margin-bottom: 6px; font-size: 12px; color: var(--text-muted); font-style: italic;">Learned: ' + a.learned + '</div>' : ''}
+          ${nextHtml ? '<div><span style="font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); font-family: var(--font-mono);">Next Steps</span>' + nextHtml + '</div>' : ''}
+        </div>`;
+      }).join('');
+
+      // Kai report
+      const kai = data.kaiReport || {};
+      let kaiHtml = '';
+      if (kai.tasksCompleted) kaiHtml += '<div style="margin-bottom: 10px;"><span style="font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); font-family: var(--font-mono);">Completed</span>' + kai.tasksCompleted.map(t => `<div style="padding: 3px 0; font-size: 13px; color: var(--success);">✓ ${t}</div>`).join('') + '</div>';
+      if (kai.tasksInProgress) kaiHtml += '<div style="margin-bottom: 10px;"><span style="font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); font-family: var(--font-mono);">In Progress</span>' + kai.tasksInProgress.map(t => `<div style="padding: 3px 0; font-size: 13px; color: var(--warning);">⟳ ${t}</div>`).join('') + '</div>';
+      if (kai.recommendations) kaiHtml += '<div><span style="font-size: 11px; text-transform: uppercase; color: var(--text-tertiary); font-family: var(--font-mono);">Recommendations</span>' + kai.recommendations.map(t => `<div style="padding: 3px 0; font-size: 13px; color: var(--text-secondary);">→ ${t}</div>`).join('') + '</div>';
+      document.getElementById('mrKaiReport').innerHTML = kaiHtml || '<div style="color: var(--text-muted);">No CEO report</div>';
+
+      // System health
+      const health = data.systemHealth || {};
+      let healthHtml = '';
+      for (const [key, val] of Object.entries(health)) {
+        const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+        healthHtml += `<div style="padding: 6px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; font-size: 13px;">
+          <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 12px;">${label}</span>
+          <span style="color: var(--text-secondary); max-width: 70%; text-align: right;">${val}</span>
+        </div>`;
+      }
+      document.getElementById('mrSystemHealth').innerHTML = healthHtml || '<div style="color: var(--text-muted);">No health data</div>';
+
+      // Improvements
+      document.getElementById('mrImprovements').innerHTML = renderList(data.improvements);
+
+    } catch(e) {
+      console.error('Morning report load failed:', e);
+    }
+  }
+
   // ═══ BOOT ═══
   function boot() {
     checkHealth();
     loadData();
     loadAetherMetrics();
+    loadMorningReport();
     setInterval(loadData, 30000);
     setInterval(loadAetherMetrics, 30000);
   }

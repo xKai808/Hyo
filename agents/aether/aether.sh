@@ -43,6 +43,23 @@ check_monday_reset() {
   local hour
   hour=$(TZ="America/Denver" date +%H)
 
+  # Guard: only reset once per Monday (check if current week already starts today)
+  local already_reset="false"
+  if [[ -f "$METRICS" ]]; then
+    local current_start
+    current_start=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('start',''))" 2>/dev/null || echo "")
+    local today_date
+    today_date=$(TZ="America/Denver" date +%Y-%m-%d)
+    if [[ "$current_start" == "$today_date" ]]; then
+      already_reset="true"
+    fi
+  fi
+
+  if [[ "$already_reset" == "true" && "${1:-}" != "--reset" ]]; then
+    log "Monday reset: already done for today ($today_date), skipping"
+    return 0
+  fi
+
   if [[ "$dow" == "1" && "$hour" == "00" ]] || [[ "${1:-}" == "--reset" ]]; then
     log "Monday reset triggered"
     python3 - "$METRICS" <<'PYEOF'
