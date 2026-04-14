@@ -42,11 +42,12 @@ NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 agent_ledger() {
   local agent="$1"
   case "$agent" in
-    kai)  echo "$ROOT/kai/ledger" ;;
-    nel)  echo "$ROOT/agents/nel/ledger" ;;
-    ra)   echo "$ROOT/agents/ra/ledger" ;;
-    sam)  echo "$ROOT/agents/sam/ledger" ;;
-    *)    echo "" ;;
+    kai)    echo "$ROOT/kai/ledger" ;;
+    nel)    echo "$ROOT/agents/nel/ledger" ;;
+    ra)     echo "$ROOT/agents/ra/ledger" ;;
+    sam)    echo "$ROOT/agents/sam/ledger" ;;
+    aether) echo "$ROOT/agents/aether/ledger" ;;
+    *)      echo "" ;;
   esac
 }
 

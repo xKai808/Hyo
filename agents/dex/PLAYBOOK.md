@@ -120,3 +120,7 @@ Format: `date | decision | reasoning | outcome`
 
 8. **The ledger is truth:** If JSONL ledgers are corrupted or inconsistent, the entire system's memory becomes untrustworthy. Integrity is P0. Every detection I do is in service of this one principle: ensure the organization knows what it did and what happened.
 
+
+## Research Log
+
+- **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.

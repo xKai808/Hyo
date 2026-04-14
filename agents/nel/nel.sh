@@ -841,6 +841,12 @@ PYEOF
 if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
   bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — QA & Security Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
   log_pass "Self-authored report published to HQ feed"
+
+  # Report to Kai — closed-loop upward communication
+  DISPATCH_BIN="$ROOT/bin/dispatch.sh"
+  if [[ -x "$DISPATCH_BIN" ]]; then
+    bash "$DISPATCH_BIN" report nel "research+reflection published: score=${IMPROVEMENT_SCORE}, sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f, cipher_leaks=${CIPHER_LEAKS}" 2>/dev/null || true
+  fi
 else
   log_warn "Could not publish self-authored report (missing sections or publish script)"
 fi

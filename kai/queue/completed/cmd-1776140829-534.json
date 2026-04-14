@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776140829-534",
+  "ts": "2026-04-14T04:27:12Z",
+  "command": "cd ~/Documents/Projects/Hyo && python3 -c \"\nimport json\n\nfor path in ['website/data/feed.json', 'agents/sam/website/data/feed.json']:\n    with open(path) as f:\n        feed = json.load(f)\n    before = len(feed['reports'])\n    feed['reports'] = [r for r in feed['reports'] if '222001' not in r.get('id','')]\n    # Also clean history\n    for mk in feed.get('history',{}):\n        feed['history'][mk]['reports'] = [rid for rid in feed['history'][mk]['reports'] if '222001' not in rid]\n    after = len(feed['reports'])\n    with open(path, 'w') as f:\n        json.dump(feed, f, indent=2)\n    print(f'{path}: {before} -> {after} reports')\n\" && git add website/data/feed.json agents/sam/website/data/feed.json && git commit -m 'feed: remove stale auto-generated aether reports (pre-rewrite)' && git push origin main",
+  "exit_code": 0,
+  "stdout": "website/data/feed.json: 7 -> 5 reports\nagents/sam/website/data/feed.json: 5 -> 5 reports\n[main 5577de3] feed: remove stale auto-generated aether reports (pre-rewrite)\n 1 file changed, 1 insertion(+), 42 deletions(-)\n",
+  "stderr": "To https://github.com/xKai808/Hyo.git\n   698a58b..5577de3  main -> main\n",
+  "duration_s": 2
+}

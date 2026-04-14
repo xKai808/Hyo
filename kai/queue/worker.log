@@ -585,3 +585,133 @@ PY (timeout: 30s)
 [2026-04-14T04:11:41Z] BATCH: processed 1 commands
 [2026-04-14T04:11:42Z] IDLE: no pending commands
 [2026-04-14T04:25:41Z] EXEC: [cmd-1776140739-445] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'human-readable reports: rewrite all agent self-reports and morning report' && git push origin main (timeout: 30s)
+[2026-04-14T04:25:46Z] DONE: [cmd-1776140739-445] exit=0 (5s)
+[2026-04-14T04:25:46Z] BATCH: processed 1 commands
+[2026-04-14T04:25:46Z] IDLE: no pending commands
+[2026-04-14T04:26:38Z] EXEC: [cmd-1776140796-485] curl -s https://www.hyo.world/data/feed.json | python3 -c "import json,sys; d=json.load(sys.stdin); print('AGENTS:', list(d.get('agents',{}).keys())); print('REPORTS:'); [print(f'  - {r[\"id\"]} | {r[\"title\"]} | {r[\"author\"]}') for r in d.get('reports',[])]" 2>&1 || echo 'FETCH FAILED' (timeout: 20s)
+[2026-04-14T04:26:39Z] DONE: [cmd-1776140796-485] exit=0 (1s)
+[2026-04-14T04:26:39Z] BATCH: processed 1 commands
+[2026-04-14T04:26:39Z] IDLE: no pending commands
+[2026-04-14T04:26:56Z] EXEC: [cmd-1776140815-511] curl -s https://www.hyo.world/data/feed.json | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+for r in d.get('reports',[]):
+    if 'aether' in r['id'].lower() and '222001' in r['id']:
+        print('=== ' + r['title'] + ' ===')
+        s = r.get('sections',{})
+        for k,v in s.items():
+            if isinstance(v,str):
+                print(f'{k}: {v[:200]}')
+            elif isinstance(v,list):
+                print(f'{k}: {v[:2]}')
+        print()
+" (timeout: 20s)
+[2026-04-14T04:26:57Z] DONE: [cmd-1776140815-511] exit=0 (1s)
+[2026-04-14T04:26:57Z] BATCH: processed 1 commands
+[2026-04-14T04:26:58Z] IDLE: no pending commands
+[2026-04-14T04:27:10Z] EXEC: [cmd-1776140829-534] cd ~/Documents/Projects/Hyo && python3 -c "
+import json
+
+for path in ['website/data/feed.json', 'agents/sam/website/data/feed.json']:
+    with open(path) as f:
+        feed = json.load(f)
+    before = len(feed['reports'])
+    feed['reports'] = [r for r in feed['reports'] if '222001' not in r.get('id','')]
+    # Also clean history
+    for mk in feed.get('history',{}):
+        feed['history'][mk]['reports'] = [rid for rid in feed['history'][mk]['reports'] if '222001' not in rid]
+    after = len(feed['reports'])
+    with open(path, 'w') as f:
+        json.dump(feed, f, indent=2)
+    print(f'{path}: {before} -> {after} reports')
+" && git add website/data/feed.json agents/sam/website/data/feed.json && git commit -m 'feed: remove stale auto-generated aether reports (pre-rewrite)' && git push origin main (timeout: 25s)
+[2026-04-14T04:27:12Z] DONE: [cmd-1776140829-534] exit=0 (2s)
+[2026-04-14T04:27:12Z] BATCH: processed 1 commands
+[2026-04-14T04:27:12Z] IDLE: no pending commands
+[2026-04-14T04:27:20Z] EXEC: [cmd-1776140839-559] curl -s https://www.hyo.world/data/feed.json | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+print('Agents:', list(d.get('agents',{}).keys()))
+print()
+for r in d.get('reports',[]):
+    print(f'{r[\"title\"]} by {r[\"author\"]}')
+    s = r.get('sections',{})
+    # Show first 120 chars of introspection/summary to verify tone
+    for k in ['summary','introspection']:
+        if k in s and isinstance(s[k], str):
+            print(f'  [{k}]: {s[k][:150]}...')
+    print()
+" (timeout: 20s)
+[2026-04-14T04:27:21Z] DONE: [cmd-1776140839-559] exit=0 (1s)
+[2026-04-14T04:27:21Z] BATCH: processed 1 commands
+[2026-04-14T04:27:22Z] IDLE: no pending commands
+[2026-04-14T04:27:43Z] EXEC: [cmd-1776140862-587] sleep 5 && curl -s 'https://www.hyo.world/data/feed.json?t=1776140862' | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+print('Reports:', len(d.get('reports',[])))
+for r in d.get('reports',[]):
+    print(f'  {r[\"id\"]}')
+" (timeout: 20s)
+[2026-04-14T04:27:49Z] DONE: [cmd-1776140862-587] exit=0 (6s)
+[2026-04-14T04:27:49Z] BATCH: processed 1 commands
+[2026-04-14T04:27:50Z] IDLE: no pending commands
+[2026-04-14T04:27:57Z] EXEC: [cmd-1776140877-613] curl -s 'https://www.hyo.world/data/feed.json?t=1776140877' | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+mr = [r for r in d['reports'] if r['id']=='mr-2026-04-13'][0]
+s = mr['sections']
+print('SUMMARY:')
+print(s['summary'])
+print()
+print('WENT WELL:')
+for w in s['wentWell']:
+    print(f'  - {w}')
+print()
+print('NEEDS ATTENTION:')
+for n in s['needsAttention']:
+    print(f'  - {n}')
+print()
+print('AGENT HIGHLIGHTS:')
+for agent, text in s['agentHighlights'].items():
+    print(f'  {agent}: {text}')
+" (timeout: 20s)
+[2026-04-14T04:27:58Z] DONE: [cmd-1776140877-613] exit=0 (1s)
+[2026-04-14T04:27:58Z] BATCH: processed 1 commands
+[2026-04-14T04:27:59Z] IDLE: no pending commands
+[2026-04-14T04:44:18Z] EXEC: [cmd-1776141856-488] cd ~/Documents/Projects/Hyo && bash bin/agent-research.sh sam --publish 2>&1 | tail -20 (timeout: 60s)
+[2026-04-14T04:44:26Z] DONE: [cmd-1776141856-488] exit=0 (8s)
+[2026-04-14T04:44:26Z] BATCH: processed 1 commands
+[2026-04-14T04:44:27Z] IDLE: no pending commands
+[2026-04-14T04:44:28Z] EXEC: [cmd-1776141867-511] cd ~/Documents/Projects/Hyo && bash bin/agent-research.sh ra --publish 2>&1 | tail -20 (timeout: 60s)
+[2026-04-14T04:44:39Z] DONE: [cmd-1776141867-511] exit=0 (10s)
+[2026-04-14T04:44:39Z] BATCH: processed 1 commands
+[2026-04-14T04:44:39Z] IDLE: no pending commands
+[2026-04-14T04:44:40Z] EXEC: [cmd-1776141879-539] cd ~/Documents/Projects/Hyo && bash bin/agent-research.sh dex --publish 2>&1 | tail -20 (timeout: 60s)
+[2026-04-14T04:44:47Z] DONE: [cmd-1776141879-539] exit=0 (7s)
+[2026-04-14T04:44:47Z] BATCH: processed 1 commands
+[2026-04-14T04:44:47Z] IDLE: no pending commands
+[2026-04-14T04:44:55Z] EXEC: [cmd-1776141895-718] cd ~/Documents/Projects/Hyo && ls -la agents/sam/research/findings-2026-04-13.md agents/ra/research/findings-2026-04-13.md agents/dex/research/findings-2026-04-13.md 2>&1 (timeout: 60s)
+[2026-04-14T04:44:55Z] DONE: [cmd-1776141895-718] exit=0 (0s)
+[2026-04-14T04:44:55Z] BATCH: processed 1 commands
+[2026-04-14T04:44:56Z] IDLE: no pending commands
+[2026-04-14T04:46:12Z] EXEC: [cmd-1776141970-1270] launchctl list 2>/dev/null | grep -i 'hyo\|aether' ; echo '---' ; ls -la ~/Library/LaunchAgents/com.hyo.aether* 2>&1 ; echo '---' ; cat ~/Library/LaunchAgents/com.hyo.aether* 2>&1 | head -40 ; echo '---' ; ls -la ~/Documents/Projects/Hyo/agents/aether/aether.sh ; echo '---' ; head -30 ~/Documents/Projects/Hyo/agents/aether/aether.sh (timeout: 30s)
+[2026-04-14T04:46:12Z] DONE: [cmd-1776141970-1270] exit=0 (0s)
+[2026-04-14T04:46:12Z] BATCH: processed 1 commands
+[2026-04-14T04:46:13Z] IDLE: no pending commands
+[2026-04-14T04:46:16Z] EXEC: [cmd-1776141976-1359] tail -50 ~/Documents/Projects/Hyo/agents/aether/logs/aether-2026-04-13.log 2>&1 (timeout: 20s)
+[2026-04-14T04:46:16Z] DONE: [cmd-1776141976-1359] exit=0 (0s)
+[2026-04-14T04:46:16Z] BATCH: processed 1 commands
+[2026-04-14T04:46:17Z] IDLE: no pending commands
+[2026-04-14T04:46:21Z] EXEC: [cmd-1776141980-1427] cd ~/Documents/Projects/Hyo && python3 -c "import json; d=json.load(open('agents/sam/website/data/feed.json')); [print(r['id'],'|',r['title'],'|',r['author']) for r in d['reports'] if 'aether' in r.get('author','').lower() or 'aether' in r.get('id','').lower()]" (timeout: 15s)
+[2026-04-14T04:46:21Z] DONE: [cmd-1776141980-1427] exit=0 (0s)
+[2026-04-14T04:46:21Z] BATCH: processed 1 commands
+[2026-04-14T04:46:22Z] IDLE: no pending commands
+[2026-04-14T04:47:29Z] EXEC: [cmd-1776142047-1517] cd ~/Documents/Projects/Hyo && bash bin/agent-research.sh aether --publish 2>&1 | tail -30 (timeout: 60s)
+[2026-04-14T04:47:37Z] DONE: [cmd-1776142047-1517] exit=0 (8s)
+[2026-04-14T04:47:37Z] BATCH: processed 1 commands
+[2026-04-14T04:47:38Z] IDLE: no pending commands
+[2026-04-14T04:47:42Z] EXEC: [cmd-1776142061-1593] cd ~/Documents/Projects/Hyo && python3 -c "import json; d=json.load(open('agents/sam/website/data/feed.json')); [print(r['id'],'|',r['title'],'|',r.get('sections',{}).get('introspection','')[:150]) for r in d['reports'] if 'aether' in r.get('id','').lower() or 'aether' in r.get('author','').lower()]" (timeout: 15s)
+[2026-04-14T04:47:42Z] DONE: [cmd-1776142061-1593] exit=0 (0s)
+[2026-04-14T04:47:42Z] BATCH: processed 1 commands
+[2026-04-14T04:47:43Z] IDLE: no pending commands
+[2026-04-14T04:47:45Z] EXEC: [cmd-1776142065-1616] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'aether: re-publish research report with human-readable format + sam/ra/dex research' && git push origin main 2>&1 (timeout: 30s)

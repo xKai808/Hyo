@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776140862-587",
+  "ts": "2026-04-14T04:27:49Z",
+  "command": "sleep 5 && curl -s 'https://www.hyo.world/data/feed.json?t=1776140862' | python3 -c \"\nimport json,sys\nd=json.load(sys.stdin)\nprint('Reports:', len(d.get('reports',[])))\nfor r in d.get('reports',[]):\n    print(f'  {r[\\\"id\\\"]}')\n\"",
+  "exit_code": 0,
+  "stdout": "Reports: 5\n  mr-2026-04-13\n  kai-ceo-2026-04-13\n  aether-reflection-2026-04-13\n  nel-reflection-2026-04-13\n  ra-reflection-2026-04-13\n",
+  "stderr": "",
+  "duration_s": 6
+}

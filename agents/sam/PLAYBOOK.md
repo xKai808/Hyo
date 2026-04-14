@@ -117,3 +117,7 @@ Format: `date | decision | reasoning | outcome`
 
 8. **End-of-deploy ritual:** After successful deployment, I automatically create a commit message, push, and log the event. No deployment is silent.
 
+
+## Research Log
+
+- **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.

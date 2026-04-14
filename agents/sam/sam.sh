@@ -689,6 +689,12 @@ PYEOF
   if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
     bash "$PUBLISH_SCRIPT" "agent-reflection" "sam" "Sam — Engineering Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
     ok "Self-authored report published to HQ feed"
+
+    # Report to Kai — closed-loop upward communication
+    DISPATCH_BIN="$ROOT/bin/dispatch.sh"
+    if [[ -x "$DISPATCH_BIN" ]]; then
+      bash "$DISPATCH_BIN" report sam "research+reflection published: tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}" 2>/dev/null || true
+    fi
   fi
 
   # STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md)

@@ -891,6 +891,12 @@ PYEOF
   if [[ -f "$AETHER_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
     bash "$PUBLISH_SCRIPT" "agent-reflection" "aether" "Aether — Trading Report" "$AETHER_REFLECTION" 2>/dev/null || true
     log "Self-authored report published to HQ feed"
+
+    # Report to Kai — closed-loop upward communication
+    DISPATCH_BIN="$ROOT/bin/dispatch.sh"
+    if [[ -x "$DISPATCH_BIN" ]]; then
+      bash "$DISPATCH_BIN" report aether "research+reflection published: trades=${trade_count}, pnl=${pnl_total}, dashboard=${dashboard_status}" 2>/dev/null || true
+    fi
   fi
 
   # ─── STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md) ────────

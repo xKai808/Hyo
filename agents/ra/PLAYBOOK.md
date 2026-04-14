@@ -118,3 +118,7 @@ Format: `date | decision | reasoning | outcome`
 
 8. **Archive is the beating heart:** Every entry I synthesize compounds into the archive. If archive is broken or stale, everything downstream (PRN context, trends, research) degrades. Archive integrity is P0.
 
+
+## Research Log
+
+- **2026-04-13:** Researched 7/7 sources. See `research/findings-2026-04-13.md` for details.
