@@ -1,14 +1,9 @@
-# Aether — Active Tasks (auto-updated every cycle)
-**Last updated:** 2026-04-13T22:35:19-0600
+# Aether Active Tasks
 
-## This Cycle
-- Trades this period: 0
-- PNL: $-6.53
-- Assessment: standby mode: no trades this cycle; WARNING: dashboard out-of-sync
+Last updated: 2026-04-14T04:50:38Z
 
-## Open Issues
+## Queued
 
+- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-13T22:50:24-06:00 != API ts 2026-04-14T04:48:03.223Z
+  - Created: 2026-04-14T04:50:26Z
 
-## Reflection Summary
-- Bottleneck: dashboard out-of-sync — data exists but HQ doesn't render it; no trades this cycle — may be blocked on exchange API or AetherBot logger
-- Domain growth: active — PLAYBOOK updated within 7 days

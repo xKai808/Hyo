@@ -436,6 +436,15 @@ if [[ -x "$FOLLOWUP_SCRIPT" ]]; then
   bash "$FOLLOWUP_SCRIPT" 2>&1 | tail -10 || true
 fi
 
+# KAI INBOX ACCOUNTABILITY CHECK
+# Processes forKai items from feed, maintains unreviewed inbox
+# ============================================================================
+FORKAI_SCRIPT="$ROOT/bin/process-forkai.sh"
+if [[ -x "$FORKAI_SCRIPT" ]]; then
+  log "Processing Kai inbox items..."
+  bash "$FORKAI_SCRIPT" 2>&1 | tail -15 || true
+fi
+
 # ============================================================================
 # KAI MEMORY UPDATE (constitutional step 13 — runs q2h with healthcheck)
 # Updates Kai's own memory files so next session/task reads fresh state.

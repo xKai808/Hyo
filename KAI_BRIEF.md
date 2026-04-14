@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~21:30 MT (session 8 final — constitutional v3.1, all memory saved)
+**Updated:** 2026-04-13 ~23:00 MT (session 9 — deep audit, Aether fixes, accountability overhaul)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 **Last healthcheck:** 2026-04-14T00:10:00-06:00 — **ISSUES: 1 P0, 3 P1, 4 P2.** 6TH CONSECUTIVE UNHEALTHY CHECK — no improvement since monitoring began. P0: agents/nel/security gitignore gap (nel-001) — persists across 6+ checks, zero real remediation. P1: Newsletter missed TWO consecutive days (04-12 + 04-13) — now 48+ hours without output. P1: /api/hq 401 still unresolved. P1: Sim-ack masking — 20+ tasks show "DELEGATED — all clear" but nothing is actually fixed. NEW P2: flag-aether-001 triple-logging every 15 min (21+ entries in 2 hours). NEW P2: Sentinel found 2 projects with test failures. Queue completed jobs reference stale session paths — remediation commands are no-ops. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only. Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) actually fix .gitignore on Mini, (2) diagnose + fix API 401, (3) run newsletter pipeline manually, (4) deduplicate flags and close resolved tasks, (5) patch aether.sh to dedup flag logging, (6) patch safeguard cascade to prevent flag multiplication.
@@ -91,9 +91,27 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 ~22:00 MT — Session 8 cont 4, constitutional v3.2)
+## Current state (as of 2026-04-13 ~23:00 MT — Session 9)
 
-**SESSION 8 WAS THE MOST IMPORTANT SESSION.** Everything below this section is older state. Read this first.
+**What shipped in session 9:**
+
+15. **Deep Agent Audit:** Comprehensive review of all 5 agents. Found: 3/5 never ran research. No agent reported to Kai before publishing. Follow-ups duplicated. forKai messages went into void. Full audit at `kai/ledger/audit-2026-04-13.md`.
+
+16. **Aether Deep Dive:** FIXED dispatch registration (260+ cycles of errors). FIXED ACTIVE.md path. FOUND dashboard rendering broken (no view code — SAM-P0-001). FOUND API sync stale (no Vercel KV — SAM-P1-002). FOUND GPT cross-check needs real OpenAI key (HYO-REQUIRED). Full audit at `kai/ledger/aether-deep-audit-2026-04-13.md`.
+
+17. **Human-Readable Reports:** All 5 runners + morning report + research publish rewritten for conversational prose. Feed cleaned.
+
+18. **Dispatch Report for All Agents:** Nel, Sam, Ra, Aether now report to Kai after publishing. Closed-loop.
+
+19. **ForKai Inbox:** `bin/process-forkai.sh` + `kai/ledger/forkai-inbox.jsonl`. Wired into healthcheck.
+
+20. **Follow-up Accountability:** Auto-expire >14 days, dedup, cleanup. Wired into healthcheck.
+
+21. **Kai Feedback:** Open-ended questions on all reports. Meta: agents researching at 30,000ft instead of ground level.
+
+22. **All Agents Researched:** Sam, Ra, Dex triggered on Mini. All succeeded.
+
+---
 
 **What shipped in session 8 continuation 5:**
 

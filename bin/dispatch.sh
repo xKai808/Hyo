@@ -47,6 +47,7 @@ agent_ledger() {
     ra)     echo "$ROOT/agents/ra/ledger" ;;
     sam)    echo "$ROOT/agents/sam/ledger" ;;
     aether) echo "$ROOT/agents/aether/ledger" ;;
+    dex)    echo "$ROOT/agents/dex/ledger" ;;
     *)      echo "" ;;
   esac
 }
