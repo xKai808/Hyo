@@ -1,11 +1,16 @@
 # Ra Active Tasks
 
-Last updated: 2026-04-14T02:10:11Z
+Last updated: 2026-04-14T03:55:07Z
 
 ## In Progress
 
+- **ra-001** [P2] [GUIDANCE] Your domain growth has been stagnant for 3+ cycles. What's one thing an expert in your field does that you're not doing?
+  - Delegated: 2026-04-14T03:39:10Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
+
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-13T18:10:01Z
+  - Delegated: 2026-04-14T03:55:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -56,10 +61,6 @@ Last updated: 2026-04-14T02:10:11Z
 - **ra-008** [P3] SIM-TEST: autonomous task creation verification — 2026-04-12T20:26:49Z (DONE)
 
 - **ra-007** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:33:16Z (DONE)
-  - Result: sim-report: all clear
-  - Notes: sim-verify: nightly handshake passed
-
-- **ra-001** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T06:30:05Z (DONE)
   - Result: sim-report: all clear
   - Notes: sim-verify: nightly handshake passed
 

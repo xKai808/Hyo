@@ -1,9 +1,9 @@
 # Aether — Active Tasks (auto-updated every cycle)
-**Last updated:** 2026-04-13T21:34:11-0600
+**Last updated:** 2026-04-13T21:49:27-0600
 
 ## This Cycle
 - Trades this period: 0
-- PNL: $-7.08
+- PNL: $-6.53
 - Assessment: standby mode: no trades this cycle; WARNING: dashboard out-of-sync
 
 ## Open Issues

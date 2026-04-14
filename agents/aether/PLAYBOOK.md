@@ -473,3 +473,7 @@ Every 15 minutes launchd fires aether.sh:
 
 6. **Monitor for weekly trend degradation:** Track win rate, PnL, trade count week-over-week. Flag any regression immediately.
 
+
+## Research Log
+
+- **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.

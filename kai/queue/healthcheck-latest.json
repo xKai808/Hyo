@@ -1,66 +1,92 @@
 {
-  "ts": "2026-04-14T02:05:00-06:00",
+  "ts": "2026-04-14T03:39:09Z",
   "status": "ISSUES",
-  "issues": 0,
-  "warnings": 5,
+  "issues": 4,
+  "warnings": 6,
   "findings": [
     {
-      "severity": "P2",
-      "area": "aether/dashboard",
-      "detail": "Persistent dashboard data mismatch (flag-aether-001) firing every 15 min since ~22:44Z. 3 duplicate flags per cycle (noise). Local ts consistently behind API ts. PNL drifting: -$11.8 to -$8.28. Dashboard sync mechanism broken."
+      "severity": "P1",
+      "area": "flags",
+      "detail": "5 unaddressed P0/P1 flags in last 2h"
     },
     {
       "severity": "P2",
-      "area": "ra/newsletter",
-      "detail": "No newsletter produced for 2026-04-12 or 2026-04-13. Multiple flags and auto-remediate tasks delegated but none resolved root cause. Ra output dir still only has 2026-04-11 edition."
+      "area": "queue-worker",
+      "detail": "Worker last active 493371h ago \u2014 may be dead"
     },
     {
       "severity": "P2",
-      "area": "sam/activity",
-      "detail": "Sam produced no log output on 2026-04-13. 6 P1 tasks assigned but no evidence of autonomous work. Multiple tasks show bare DELEGATED status with no method or result."
+      "area": "queue",
+      "detail": "1 commands pending \u2014 worker may be stalled"
+    },
+    {
+      "severity": "P0",
+      "area": "morning-report",
+      "detail": "Morning report JSON exists but hq.html has NO rendering code"
     },
     {
       "severity": "P2",
-      "area": "delegation/stale",
-      "detail": "Many In Progress tasks show only sim-ack handshake as method — confirms communication but not actual remediation. nel-001 (P0: security dir gitignore) in this state 4+ hours."
+      "area": "render-binding",
+      "detail": "Data file aether-metrics.json has no reference in hq.html"
     },
     {
-      "severity": "P3",
-      "area": "aether/flag-spam",
-      "detail": "Aether logs 3 identical P2 flags per 15-min cycle to log.jsonl. Likely loop bug in aether runner. Should deduplicate."
+      "severity": "P2",
+      "area": "render-binding",
+      "detail": "Data file hq-state.json has no reference in hq.html"
+    },
+    {
+      "severity": "P2",
+      "area": "render-binding",
+      "detail": "Data file morning-report.json has no reference in hq.html"
+    },
+    {
+      "severity": "P2",
+      "area": "render-binding",
+      "detail": "Data file usage-config.json has no reference in hq.html"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "ra stuck in dead-loop (growth_stagnant): "
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "aether stuck in dead-loop (assessment_stuck): standby mode: no trades this cycle; WARNING: dashboard out-o"
     }
   ],
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues; Kicked queue worker for 1 stalled commands",
   "recent_queue_results": [
     {
-      "id": "cmd-1776131654-195",
+      "id": "event-sam-flag-nel-001",
       "status": "ok",
-      "command": "git pull && git push origin main",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776131145-499",
+      "id": "event-nel-flag-nel-001",
       "status": "ok",
-      "command": "git pull && git push origin main",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776130802-276",
+      "id": "cmd-1776134356-180",
       "status": "ok",
-      "command": "git pull && git push origin main",
+      "command": "cd ~/Documents/Projects/Hyo && git pull && git push",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776134059-253",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git pull && git push",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776134007-187",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git pull && git push",
       "exit_code": 0
     }
   ],
-  "queue_health": {
-    "pending": 0,
-    "running": 0,
-    "last_failed": "recheck-1776044635 (healthcheck sleep timeout, 2026-04-13T01:43:55Z)"
-  },
-  "agent_output_today": {
-    "nel": "yes",
-    "sam": "NO",
-    "ra": "yes",
-    "aether": "yes",
-    "dex": "yes"
-  },
-  "next_check": "in 2 hours"
+  "next_check": "in 2 hours (30min if P0 found)"
 }

@@ -446,3 +446,46 @@
 [2026-04-14T02:39:22Z] DONE: [cmd-1776134356-180] exit=0 (5s)
 [2026-04-14T02:39:22Z] BATCH: processed 1 commands
 [2026-04-14T02:39:23Z] IDLE: no pending commands
+[2026-04-14T03:39:05Z] EXEC: [event-nel-flag-nel-001] bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh (timeout: 300s)
+[2026-04-14T03:39:09Z] DONE: [event-nel-flag-nel-001] exit=0 (4s)
+[2026-04-14T03:39:09Z] EXEC: [event-sam-flag-nel-001] bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh (timeout: 300s)
+[2026-04-14T03:39:09Z] DONE: [event-sam-flag-nel-001] exit=0 (0s)
+[2026-04-14T03:39:09Z] EXEC: [recheck-flag-nel-001] bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh (timeout: 120s)
+[2026-04-14T03:39:11Z] EXEC: [event-ra-flag-nel-001] bash /Users/kai/Documents/Projects/Hyo/agents/ra/ra.sh (timeout: 300s)
+[2026-04-14T03:39:11Z] DONE: [recheck-flag-nel-001] exit=0 (2s)
+[2026-04-14T03:39:11Z] BATCH: processed 3 commands
+[2026-04-14T03:39:11Z] IDLE: no pending commands
+[2026-04-14T03:39:12Z] IDLE: no pending commands
+[2026-04-14T03:39:12Z] IDLE: no pending commands
+[2026-04-14T03:39:13Z] DONE: [event-ra-flag-nel-001] exit=0 (1s)
+[2026-04-14T03:39:13Z] BATCH: processed 1 commands
+[2026-04-14T03:39:13Z] IDLE: no pending commands
+[2026-04-14T03:39:13Z] IDLE: no pending commands
+[2026-04-14T03:39:14Z] IDLE: no pending commands
+[2026-04-14T03:39:15Z] IDLE: no pending commands
+[2026-04-14T03:39:15Z] IDLE: no pending commands
+[2026-04-14T03:55:09Z] EXEC: [event-ra-flag-nel-003] bash /sessions/sharp-gracious-franklin/mnt/Hyo/agents/ra/ra.sh (timeout: 300s)
+[2026-04-14T03:55:09Z] DONE: [event-ra-flag-nel-003] exit=0 (0s)
+[2026-04-14T03:55:09Z] EXEC: [recheck-flag-nel-003] bash /sessions/sharp-gracious-franklin/mnt/Hyo/kai/queue/healthcheck.sh (timeout: 120s)
+[2026-04-14T03:55:09Z] DONE: [recheck-flag-nel-003] exit=0 (0s)
+[2026-04-14T03:55:09Z] BATCH: processed 2 commands
+[2026-04-14T03:55:10Z] IDLE: no pending commands
+[2026-04-14T03:55:10Z] IDLE: no pending commands
+[2026-04-14T03:55:11Z] IDLE: no pending commands
+[2026-04-14T03:58:51Z] EXEC: [cmd-1776139130-108] cd ~/Documents/Projects/Hyo && git pull && HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel --publish 2>&1 | tail -30 (timeout: 90s)
+[2026-04-14T03:59:02Z] DONE: [cmd-1776139130-108] exit=0 (11s)
+[2026-04-14T03:59:02Z] BATCH: processed 1 commands
+[2026-04-14T03:59:03Z] IDLE: no pending commands
+[2026-04-14T03:59:46Z] EXEC: [cmd-1776139184-174] cd ~/Documents/Projects/Hyo && git pull && git push origin main 2>&1 (timeout: 90s)
+[2026-04-14T03:59:51Z] DONE: [cmd-1776139184-174] exit=0 (5s)
+[2026-04-14T03:59:51Z] BATCH: processed 1 commands
+[2026-04-14T03:59:52Z] IDLE: no pending commands
+[2026-04-14T03:59:57Z] EXEC: [cmd-1776139197-198] cd ~/Documents/Projects/Hyo && HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel --publish 2>&1 | tail -20 (timeout: 90s)
+[2026-04-14T04:00:23Z] DONE: [cmd-1776139197-198] exit=0 (26s)
+[2026-04-14T04:00:23Z] BATCH: processed 1 commands
+[2026-04-14T04:00:23Z] IDLE: no pending commands
+[2026-04-14T04:00:54Z] EXEC: [cmd-1776139252-262] cd ~/Documents/Projects/Hyo && git pull && git push origin main 2>&1 (timeout: 90s)
+[2026-04-14T04:00:56Z] DONE: [cmd-1776139252-262] exit=0 (2s)
+[2026-04-14T04:00:56Z] BATCH: processed 1 commands
+[2026-04-14T04:00:57Z] IDLE: no pending commands
+[2026-04-14T04:01:05Z] EXEC: [cmd-1776139264-286] cd ~/Documents/Projects/Hyo && HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel --publish 2>&1 | tail -10 && HYO_ROOT=~/Documents/Projects/Hyo bash bin/sync-agent-profiles.sh 2>&1 | tail -5 && git add -A && git commit -m 'nel: real research + publish to HQ feed [auto]' 2>&1 && git push origin main 2>&1 (timeout: 120s)

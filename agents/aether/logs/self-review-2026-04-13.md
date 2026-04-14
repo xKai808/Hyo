@@ -1,7 +1,7 @@
-# aether Self-Review — 2026-04-13T21:34
+# aether Self-Review — 2026-04-13T21:49
 
 ## Gate 1: Trigger Validation
-- ✓ 8 files checked, all have triggers.
+- ✓ 11 files checked, all have triggers.
 
 ## Gate 2: Visibility Check
 Questions for aether to answer:
@@ -14,7 +14,12 @@ Questions for aether to answer:
 - ✗ **usage-config.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
-- No open resolutions relevant to aether.
+- Open resolution **RES-004** is relevant to aether
+  - This resolution has pending steps. Can aether contribute?
+  - Agent: read the resolution and add your findings.
+- Open resolution **RES-008** is relevant to aether
+  - This resolution has pending steps. Can aether contribute?
+  - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
 - Prior resolutions for 'aether': 0 matches
@@ -31,5 +36,5 @@ Questions for aether to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 4
-- Gate results: trigger=8/8, visibility=checked, resolutions=0, adoption=5/5
+- Gate results: trigger=11/11, visibility=checked, resolutions=2, adoption=5/5
 

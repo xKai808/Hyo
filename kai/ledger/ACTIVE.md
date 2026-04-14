@@ -1,16 +1,16 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-14T03:39:04Z
+Last updated: 2026-04-14T03:55:16Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-14T03:39:04Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
+  - Delegated: 2026-04-14T03:39:05Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T22:10:49Z
+  - Delegated: 2026-04-14T03:55:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -29,13 +29,13 @@ Last updated: 2026-04-14T03:39:04Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-14T03:39:04Z
+- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
+  - Delegated: 2026-04-14T03:39:10Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-13 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T22:10:49Z
+  - Delegated: 2026-04-14T03:55:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -58,8 +58,13 @@ Last updated: 2026-04-14T03:39:04Z
   - Delegated: 2026-04-13T03:31:03Z
   - Status: DELEGATED
 
+- **ra-001** [P2] [GUIDANCE] Your domain growth has been stagnant for 3+ cycles. What's one thing an expert in your field does that you're not doing?
+  - Delegated: 2026-04-14T03:39:10Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
+
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-13T18:10:01Z
+  - Delegated: 2026-04-14T03:55:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -107,8 +112,12 @@ Last updated: 2026-04-14T03:39:04Z
   - Delegated: 2026-04-13T06:07:07Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by kai)
-  - Delegated: 2026-04-13T21:36:50Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-04-14T03:39:10Z
+  - Status: DELEGATED
+
+- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-14T03:39:10Z
   - Status: DELEGATED
 
 ## Queued
