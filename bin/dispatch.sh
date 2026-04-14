@@ -887,9 +887,15 @@ PYEOF
       local yesterday_check
       yesterday_check=$(TZ="America/Denver" date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "")
       if [[ "$mr_date" != "$today_check" ]] && [[ "$mr_date" != "$yesterday_check" ]]; then
-        echo "  ✗ FAIL: Morning report stale (date=$mr_date, today=$today_check)"
+        echo "  ✗ FAIL: Morning report stale (date=$mr_date, today=$today_check) — auto-regenerating"
         render_fail=$((render_fail + 1))
         results+=("FAIL:render:morning-report-stale")
+        # Auto-remediate
+        local mr_gen="$ROOT/bin/generate-morning-report.sh"
+        if [[ -f "$mr_gen" ]]; then
+          HYO_ROOT="$ROOT" bash "$mr_gen" 2>&1 || true
+          echo "  → Auto-regenerated morning report"
+        fi
       else
         echo "  ✓ Morning report current: $mr_date"
       fi
@@ -903,9 +909,15 @@ PYEOF
         echo "  ✓ Morning report rendering wired in hq.html"
       fi
     else
-      echo "  ✗ FAIL: Morning report JSON missing"
+      echo "  ✗ FAIL: Morning report JSON missing — auto-generating"
       render_fail=$((render_fail + 1))
       results+=("FAIL:render:morning-report-missing")
+      # Auto-remediate
+      local mr_gen="$ROOT/bin/generate-morning-report.sh"
+      if [[ -f "$mr_gen" ]]; then
+        HYO_ROOT="$ROOT" bash "$mr_gen" 2>&1 || true
+        echo "  → Auto-generated morning report"
+      fi
     fi
   else
     echo "  · hq.html not found — skipping render checks"

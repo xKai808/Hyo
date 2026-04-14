@@ -457,8 +457,14 @@ if [[ -f "$MR_JSON" ]]; then
   fi
 
   if [[ $MR_AGE_DAYS -gt 1 ]]; then
-    add_finding "P1" "render" "Morning report stale: date=$MR_DATE (${MR_AGE_DAYS} days old)"
+    add_finding "P1" "render" "Morning report stale: date=$MR_DATE (${MR_AGE_DAYS} days old) — auto-regenerating"
     P75_ISSUES=$((P75_ISSUES + 1))
+    # Auto-remediate: regenerate
+    MR_GENERATOR="$ROOT/bin/generate-morning-report.sh"
+    if [[ -f "$MR_GENERATOR" ]]; then
+      log "Nel Phase 7.5: auto-regenerating stale morning report"
+      HYO_ROOT="$ROOT" bash "$MR_GENERATOR" >> "$REPORT" 2>&1 || true
+    fi
   fi
 
   # Verify hq.html has rendering code for morning report
@@ -469,8 +475,14 @@ if [[ -f "$MR_JSON" ]]; then
     fi
   fi
 else
-  add_finding "P1" "render" "Morning report JSON missing: $MR_JSON"
+  add_finding "P1" "render" "Morning report JSON missing: $MR_JSON — auto-generating"
   P75_ISSUES=$((P75_ISSUES + 1))
+  # Auto-remediate: generate from scratch
+  MR_GENERATOR="$ROOT/bin/generate-morning-report.sh"
+  if [[ -f "$MR_GENERATOR" ]]; then
+    log "Nel Phase 7.5: auto-generating missing morning report"
+    HYO_ROOT="$ROOT" bash "$MR_GENERATOR" >> "$REPORT" 2>&1 || true
+  fi
 fi
 
 # ── Check 2: Aether Metrics Real Data ──

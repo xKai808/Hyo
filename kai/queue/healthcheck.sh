@@ -23,6 +23,9 @@ NOW_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 TODAY=$(date +%Y-%m-%d)
 ISSUES=0
 WARNINGS=0
+ACTIONS_LOG=""
+
+log() { echo "[healthcheck] $(TZ='America/Denver' date +%H:%M:%S) $*"; }
 
 # Collect findings
 FINDINGS=""
@@ -107,22 +110,38 @@ done
 # This mirrors Nel Phase 7.5 and Simulation Phase 6 — all 3 systems independently
 # verify that data files actually render on HQ. Added after session 8 gap.
 
-# 5a: Morning report exists and is current
+# 5a: Morning report exists and is current — AUTO-REMEDIATE if stale/missing
 MR_JSON="$ROOT/website/data/morning-report.json"
 HQ_HTML="$ROOT/website/hq.html"
+MR_GENERATOR="$ROOT/bin/generate-morning-report.sh"
+MR_STALE=false
+
 if [[ -f "$MR_JSON" ]]; then
   MR_DATE=$(python3 -c "import json; print(json.load(open('$MR_JSON')).get('date',''))" 2>/dev/null || echo "")
   TODAY_MT=$(TZ="America/Denver" date +%Y-%m-%d)
   YESTERDAY_MT=$(TZ="America/Denver" date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "")
   if [[ "$MR_DATE" != "$TODAY_MT" ]] && [[ "$MR_DATE" != "$YESTERDAY_MT" ]]; then
-    add_finding "P1" "morning-report" "Morning report stale: date=$MR_DATE (today=$TODAY_MT)"
+    add_finding "P1" "morning-report" "Morning report stale: date=$MR_DATE (today=$TODAY_MT) — auto-regenerating"
+    MR_STALE=true
   fi
   # Verify rendering code exists in hq.html
   if [[ -f "$HQ_HTML" ]] && ! grep -q "loadMorningReport\|mrSummary" "$HQ_HTML" 2>/dev/null; then
     add_finding "P0" "morning-report" "Morning report JSON exists but hq.html has NO rendering code"
   fi
 else
-  add_finding "P1" "morning-report" "Morning report JSON missing entirely"
+  add_finding "P1" "morning-report" "Morning report JSON missing entirely — auto-generating"
+  MR_STALE=true
+fi
+
+# Auto-remediate: regenerate morning report if stale or missing
+if [[ "$MR_STALE" == "true" ]] && [[ -f "$MR_GENERATOR" ]]; then
+  log "Auto-regenerating morning report..."
+  if HYO_ROOT="$ROOT" bash "$MR_GENERATOR" 2>&1; then
+    log "Morning report regenerated successfully"
+    ACTIONS_LOG="${ACTIONS_LOG:+$ACTIONS_LOG; }Regenerated stale morning report"
+  else
+    log "Morning report regeneration failed"
+  fi
 fi
 
 # 5b: Aether metrics show real data (not defaults)
