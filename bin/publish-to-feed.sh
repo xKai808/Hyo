@@ -36,14 +36,21 @@ if [[ ! -f "$SECTIONS_FILE" ]]; then
   exit 1
 fi
 
-# Agent metadata lookup
-declare -A ICONS=( [kai]="👔" [nel]="🔧" [sam]="⚙️" [ra]="📰" [aether]="📈" [dex]="🗃️" )
-declare -A COLORS=( [kai]="#d4a853" [nel]="#6dd49c" [sam]="#7ec4e0" [ra]="#b49af0" [aether]="#e8c96a" [dex]="#e07060" )
-
+# Agent metadata lookup (bash 3.x compatible — no associative arrays)
 AUTHOR_LC=$(echo "$AUTHOR" | tr '[:upper:]' '[:lower:]')
-ICON="${ICONS[$AUTHOR_LC]:-📋}"
-COLOR="${COLORS[$AUTHOR_LC]:-#888888}"
-AUTHOR_NAME=$(echo "$AUTHOR" | sed 's/^./\U&/')
+
+case "$AUTHOR_LC" in
+  kai)    ICON="👔"; COLOR="#d4a853" ;;
+  nel)    ICON="🔧"; COLOR="#6dd49c" ;;
+  sam)    ICON="⚙️"; COLOR="#7ec4e0" ;;
+  ra)     ICON="📰"; COLOR="#b49af0" ;;
+  aurora) ICON="🌅"; COLOR="#f0a060" ;;
+  aether) ICON="📈"; COLOR="#e8c96a" ;;
+  dex)    ICON="🗃️"; COLOR="#e07060" ;;
+  *)      ICON="📋"; COLOR="#888888" ;;
+esac
+
+AUTHOR_NAME=$(echo "$AUTHOR_LC" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
 # Generate unique ID
 REPORT_ID="${TYPE}-${AUTHOR_LC}-${TODAY}-$(date +%H%M%S)"
