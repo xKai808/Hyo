@@ -202,7 +202,15 @@ SELF-EVOLUTION CYCLE (runs every execution, after self-review):
          - Update: PLAYBOOK.md, evolution.jsonl, or known-issues.
          - If this changes how I should work → update my PLAYBOOK, not just log it.
 
-      f. "Is this reflection complete, or am I pattern-matching through it?"
+      f. "Did this change how I or the system operates? Did ALL governing docs get updated?"
+         - If my behavior changed → did my PLAYBOOK get updated?
+         - If cross-agent behavior changed → did the constitution get updated?
+         - If session bootstrapping changed → did CLAUDE.md get updated?
+         - The spec is not the implementation. The doc is not the runner.
+           Check BOTH. A doc that says one thing while the code does another
+           is worse than no doc at all — it creates false confidence.
+
+      g. "Is this reflection complete, or am I pattern-matching through it?"
          - If every answer is "no issues" → be skeptical. Look harder.
 
       This loop evolves via the ALGORITHM EVOLUTION LIFECYCLE (below).
@@ -621,7 +629,16 @@ POST-TASK REFLECTION (run after EVERY task, no exceptions):
      - If this changes how I or any agent should work → update the algorithm.
      - If this is a new class of failure → log it for recall.
 
-  6. "Is this reflection itself complete, or am I rushing through it?"
+  6. "Did this change how the system operates? Did I update ALL governing docs?"
+     - If the operating model changed → CLAUDE.md MUST be updated (it bootstraps sessions)
+     - If agent behavior changed → AGENT_ALGORITHMS.md, agent PLAYBOOK, runner
+     - If reasoning changed → REASONING_FRAMEWORK.md
+     - Ask: "If a fresh Kai with zero context reads the docs tomorrow, will it
+       operate correctly?" If no → a governing doc was missed. Fix it now.
+     - The spec is not the implementation. The doc is not the runner.
+       Check BOTH. (Session 8 P0 lesson: governance-propagation-gap)
+
+  7. "Is this reflection itself complete, or am I rushing through it?"
      - If I'm tempted to skip a question → that's the one I need most.
 
   This loop evolves: if a reflection reveals a question that should be

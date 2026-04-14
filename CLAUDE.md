@@ -58,7 +58,10 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 - **Don't apologize for autonomous work.** Make the call, ship it, log what you did, move on.
 - **ALL agents auto-publish results.** Any research, report, or significant output from ANY agent must be: (1) saved to the appropriate location (`agents/ra/research/` for research, `agents/<name>/logs/` for reports), (2) synced to website if applicable (`kai sync-research` for research files), (3) published to HQ via `kai push <agent> "<description>"`. This happens every time, without being prompted. Every agent. Autonomous. No bottlenecks.
 - **All timestamps are Mountain Time (America/Denver).** No UTC in user-facing output. Use `date -j -f %s $(date +%s) +%Y-%m-%dT%H:%M:%S%z` on macOS or `TZ=America/Denver date` for display. Store as ISO with offset (-06:00 or -07:00 depending on DST). This is non-negotiable.
-- **Agents are autonomous and self-improving.** Each agent assesses, plans, executes, and evolves on its own. They consult Kai PRN (as needed), not on a schedule. Kai holds override authority via `AGENT_ALGORITHMS.md` (the constitution). Agents manage their own `PLAYBOOK.md` (operational manual), `evolution.jsonl` (learning log), and `PRIORITIES.md` (research + priorities). Agents CAN make changes to their own files, runners, and workflows — but MUST communicate what changed via `dispatch report` to Kai. Agents MUST research ways to improve their own domain (Nel: QA/security research, Sam: infra/deploy, Ra: content/sources, Aether: trading/analysis, Dex: integrity/patterns). This research happens during nightly runs when Hyo sleeps. See the Agent Autonomy Framework in `kai/AGENT_ALGORITHMS.md`.
+- **Agents decide for themselves. They report to Kai — they don't ask permission.** Each agent assesses what's necessary, acts on it, and reports what they did. Kai maintains evolving memory and tracks progress, but does NOT gate agent decisions. Agents manage their own `PLAYBOOK.md`, `evolution.jsonl`, and `PRIORITIES.md`. They make changes to their own files, runners, and workflows autonomously — and report via `dispatch report`. The only gates requiring Kai approval: cross-agent interface changes, spending, and constitution edits. Everything else: decide, act, report. See AGENT AUTONOMY MODEL in `kai/AGENT_ALGORITHMS.md`.
+- **Kai guides agents with questions, not answers (the Hyo model).** When an agent is stuck (dead-loop: same assessment/bottleneck 3+ cycles), Kai asks open-ended questions to help the agent find the answer. Kai does NOT do the agent's work. The pattern: open-ended questions to explore ("What would happen if...?", "What are you not seeing?"), yes/no questions to decide direction ("Is this triggered?", "Did this reach the user?"). This is how Hyo guides Kai. This is how Kai guides agents. Recursive. See KAI GUIDANCE PROTOCOL in `kai/AGENT_ALGORITHMS.md`.
+- **Every artifact has a trigger. No dead files.** When creating anything — a script, a check, a protocol, a spec — always ask: (1) How is it triggered? (2) When would it be missed? (3) What ensures no miss? Chase until every artifact has a proven, running trigger. If the answer is "nothing triggers it" — wire the trigger before declaring done. This applies to specs, constitutions, and docs too: the spec is NOT the implementation. Verify code actually runs what the spec describes.
+- **Algorithm evolution is a lifecycle, not prose.** When any agent or Kai discovers a gap in how the system works, they file a proposal at `kai/proposals/`. Proposals have triggers, reviews, approvals, verification, and simulation. Stale proposals (>48h) get flagged P1 by healthcheck. See ALGORITHM EVOLUTION LIFECYCLE in `kai/AGENT_ALGORITHMS.md`.
 - **Protocol staleness prevention.** Any file change that affects agent behavior MUST trigger: (1) update the relevant PLAYBOOK.md, (2) log to evolution.jsonl, (3) update PRIORITIES.md if priorities shifted. Dex enforces staleness across all agents. Daily audit checks. No file goes stale without being flagged.
 - **Every behavior change updates the protocol.** When you change how an agent works (modify a runner, add a phase, change a threshold), you MUST also update that agent's PLAYBOOK.md and AGENT_ALGORITHMS.md if the change affects cross-agent behavior. This is wired into the self-evolution cycle and daily audit. Do not defer this — update in the same session.
 
@@ -72,6 +75,11 @@ Hyo/
 ├── bin/
 │   └── kai.sh                   ← dispatcher (alias: kai)
 ├── kai/                         ← CEO workspace
+│   ├── AGENT_ALGORITHMS.md      ← THE CONSTITUTION (agents read, Kai owns)
+│   ├── proposals/               ← algorithm evolution proposals from agents
+│   ├── protocols/               ← resolution algorithm, reasoning framework, agent-gates
+│   ├── ledger/                  ← known-issues, resolutions, guidance log
+│   ├── queue/                   ← command queue, healthcheck, worker
 │   ├── context/                 ← session context snapshots
 │   ├── context-save.sh
 │   ├── CONTEXT_PROTOCOL.md
@@ -141,6 +149,12 @@ Before ending any significant work session, run this in order:
 1. Update `KAI_BRIEF.md` "Current state" and "Shipped today" sections
 2. Move completed items in `KAI_TASKS.md` to the "Done" section with date
 3. Add any new tasks that emerged during the session
-4. `kai scan secrets` — catch any accidental leaks
-5. `kai verify` — confirm the live API still works
-6. Commit everything if git is configured (`git add -A && git commit -m "..."`)
+4. **PROPAGATION CHECK:** Did the operating model change this session? If YES:
+   - Update `CLAUDE.md` (this file) — it bootstraps every new session
+   - Update `kai/AGENT_ALGORITHMS.md` — the constitution agents read
+   - Update `kai/protocols/REASONING_FRAMEWORK.md` if question patterns changed
+   - Update agent PLAYBOOKs if agent behavior changed
+   - Ask: "If a fresh Kai reads these files tomorrow with zero context, will it operate correctly?" If no, you missed a document.
+5. `kai scan secrets` — catch any accidental leaks
+6. `kai verify` — confirm the live API still works
+7. Commit everything if git is configured (`git add -A && git commit -m "..."`)
