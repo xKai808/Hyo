@@ -1,160 +1,75 @@
 {
   "date": "2026-04-13",
-  "generatedAt": "2026-04-13T05:09:00-06:00",
-  "summary": "Sunday night was a full automation cycle — all 7 daemons fired, consolidation ran clean across 6 projects, and Dex completed its weekly deep research synthesis. The big win from yesterday's session was Aether migration completion with GPT integration wired in. The persistent sore spots: no newsletter production (Aurora still sandbox-blocked), API health endpoint failing for the 13th consecutive sentinel run, and 2 corrupt JSONL files that Dex keeps flagging. Cipher ran 6 times overnight with zero leaks detected.",
+  "generatedAt": "2026-04-13T19:18:14-0600",
+  "generatedBy": "bin/generate-morning-report.sh",
+  "executiveSummary": "Morning report for 2026-04-13. Simulation: 25 pass / 2 fail. Health: HEALTHY: 0 issues, 0 warnings. Trading: Balance: $83.6, Trades: ?, Win rate: 0.0, Strategies: 6.",
   "agentReports": [
     {
       "agent": "nel",
-      "status": "active",
-      "accomplished": [
-        "Completed full system sweep — sentinel, cipher, stale file, broken link, test coverage, and file audit phases all ran",
-        "Cipher scans ran 6 times overnight — zero verified leaks across all runs",
-        "Sentinel QA run #13: 5 passed, 4 failed — resolved 2 issues from previous run",
-        "Consolidation ran at 02:00 MT across all 6 project scopes — completed in 2 seconds"
-      ],
-      "issues": [
-        "P0 ESCALATION: api-health-green failing 13 consecutive sentinel runs — health endpoint unreachable or founder token unconfigured on Vercel",
-        "P0: aurora-ran-today — no newsletter for 2026-04-13 (expected, Aurora blocked on Mini migration)",
-        "P1: 15 broken documentation links in website/docs/research/lab/ — all point to newsletters/2026-04-11.md",
-        "P1: 5 potentially sensitive files detected outside .secrets/ (including .env.local and a CSV with 'api_tokens' in the name)",
-        "Nel improvement score dropped from 85 to 65 — driven by broken links and sentinel findings"
-      ],
-      "learned": "Score regression 85→65 logged to self-evolution. The broken link pattern is systemic — research lab files reference newsletter paths that don't resolve from the website docs directory. Needs a path fix, not individual link repair.",
-      "nextSteps": [
-        "Fix broken link pattern (path prefix issue, not individual links)",
-        "Investigate sensitive file flags — determine if .env.local and CSV are safe to remain",
-        "Push for api-health-green resolution — 13 failures is unacceptable"
+      "activeTasks": 41,
+      "score": 90,
+      "assessment": "major capability gap closed \u2014 Nel now tests rendered output, not just infrastructure",
+      "topTasks": [
+        "nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged b",
+        "nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire cod",
+        "nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) \u2014 scan entire cod"
       ]
     },
     {
       "agent": "ra",
-      "status": "active",
-      "accomplished": [
-        "Health check completed at 00:30 MT — pipeline operational with warnings",
-        "Research archive maintained: 21 files across 5 entities, 4 topics, 7 lab items",
-        "Most recent archive entry: agent-supply-chain.md (0 days old)"
-      ],
-      "issues": [
-        "subscribers.jsonl missing — Aurora Public subscriber persistence not yet wired",
-        "No newsletter produced for 2026-04-12 or 2026-04-13 — Aurora blocked on sandbox egress (all sources return 403 from Cowork)",
-        "Yahoo Finance source still flagged as dead for 3+ days"
-      ],
-      "learned": "Pipeline infrastructure is solid — gather, synthesize, render, aurora_public, send_email all present and executable. The blocker is purely environmental (sandbox egress), not code. Once Aurora migrates to Mini launchd, production should resume immediately.",
-      "nextSteps": [
-        "Migrate Aurora to Mini launchd plist (requires Hyo to confirm claude CLI on PATH)",
-        "Wire subscriber persistence to Vercel KV",
-        "Replace Yahoo Finance with yfinance or alternative source"
+      "activeTasks": 15,
+      "score": "?",
+      "assessment": "health check with 1 warning(s)",
+      "topTasks": [
+        "ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06:0",
+        "ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06:0",
+        "ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 \u2014 past 06:0"
       ]
     },
     {
       "agent": "sam",
-      "status": "active",
-      "accomplished": [
-        "Consolidation sentinel passed all 6 checks with 0 failures",
-        "Cipher scan: 0 leaks in sam.sh",
-        "Website infrastructure stable — Vercel deployment pipeline operational"
-      ],
-      "issues": [
-        "No Sam-specific logs generated overnight — operational output embedded in consolidation",
-        "website/ vs agents/sam/website/ divergence still unresolved (P1 task)"
-      ],
-      "learned": "Sam is functionally healthy but under-instrumented. Needs standalone activity logs like other agents.",
-      "nextSteps": [
-        "Resolve website/ symlink divergence",
-        "Add post-deploy API test automation",
-        "Generate standalone Sam activity logs"
+      "activeTasks": 20,
+      "score": "?",
+      "assessment": "",
+      "topTasks": [
+        "sam-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged b",
+        "sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newslet",
+        "sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-016): No newslet"
       ]
     },
     {
       "agent": "aether",
-      "status": "active",
-      "accomplished": [
-        "Metrics pushed every 15 minutes overnight — 50KB+ log for 2026-04-13 already",
-        "GPT cross-check file generated for 2026-04-13 (placeholder — real OpenAI key needed)",
-        "Migration fully complete: 41 analysis files, PLAYBOOK (460 lines), PRIORITIES (204 lines), real trading data live on HQ"
-      ],
-      "issues": [
-        "GPT daily log review blocked — openai.key contains placeholder, not a real key",
-        "Consolidation sentinel flags 'kai/aether.sh runner missing' — runner is at agents/aether/aether.sh, consolidate.sh checks wrong path",
-        "AetherBot logger still writes to original location — post-migration sync needed"
-      ],
-      "learned": "Migration architecture is clean. Remaining issues are all configuration (API key, path reference, log sync) rather than structural. Once the OpenAI key is real, GPT fact-checking activates automatically.",
-      "nextSteps": [
-        "Fix consolidation sentinel path for Aether",
-        "Hyo to provide real OpenAI API key",
-        "Wire AetherBot log sync from original to agents/aether/logs/"
-      ]
-    },
-    {
-      "agent": "dex",
-      "status": "active",
-      "accomplished": [
-        "Full 6-phase daily run completed at 00:07 MT: integrity, stale tasks, compaction, patterns, daily intel, weekly research",
-        "Compacted all 5 agent log files (30-day threshold)",
-        "Weekly research synthesis for W16 generated — topic: JSONL integrity patterns",
-        "Dispatched daily + weekly research requests to Ra"
-      ],
-      "issues": [
-        "2 corrupt JSONL files: known-issues.jsonl (2 entries) and simulation-outcomes.jsonl (6 entries) — actually a schema mismatch, not true corruption",
-        "59 recurrent patterns detected — safeguard status needs review",
-        "All 7 agents flagged with NO research brief (P2)"
-      ],
-      "learned": "Integrity issues increased 0→2 but the 'corrupt' simulation-outcomes entries use a different schema (ts/finished/passed/failed) than Dex expects (ts/action/type). Validator needs updating, not the data.",
-      "nextSteps": [
-        "Fix JSONL validator to recognize simulation-outcomes format",
-        "Review 59 recurrent patterns and update safeguard statuses",
-        "Bootstrap research brief system for all agents"
+      "activeTasks": 1,
+      "score": "?",
+      "assessment": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync",
+      "topTasks": [
+        "flag-aether-001** [P2] Dashboard data mismatch: local ts != API ts"
       ]
     }
   ],
   "kaiReport": {
-    "tasksCompleted": [
-      "Aether migration + GPT integration — fully shipped and committed (c2a88fb)",
-      "Strategy dashboard live on HQ with real trading data ($90.25 balance, 542 tickers, 92.4% resolution)",
-      "Session 8 audit: 7 bug patterns fixed across all runners (stat order, Python bool, grep -P, queue timeout)"
-    ],
-    "tasksInProgress": [
-      "Agent introspective reports on HQ — each agent needs self-assessment visible on hyo.world/hq",
-      "hyo.hyo agent build — UI/UX specialist for website, apps, podcast",
-      "Aurora migration to Mini launchd — blocked on Hyo confirming claude CLI on PATH",
-      "Nel GitHub security scan autonomous verification"
-    ],
-    "decisions": [
-      "Prioritizing Aurora launchd migration as the critical unblock — newsletter production has been down since sandbox egress was discovered",
-      "Dex JSONL 'corruption' is a schema mismatch, not data loss — will fix validator rather than rewrite data",
-      "Morning report format established as JSON for HQ rendering — iterating based on feedback"
-    ],
-    "recommendations": [
-      "Hyo: confirm 'claude' CLI is on launchd PATH on the Mini — this unblocks Aurora newsletter production",
-      "Hyo: place real OpenAI API key at agents/nel/security/openai.key — activates Aether GPT fact-checking",
-      "Hyo: provide read-only exchange API keys for Aether CCXT integration when ready",
-      "Next Kai session: fix Aether consolidation path, resolve 15 broken doc links, build hyo.hyo agent"
-    ]
+    "simulation": "25 pass / 2 fail",
+    "healthcheck": "HEALTHY: 0 issues, 0 warnings",
+    "knownIssues": 2,
+    "newsletter": "produced"
   },
   "systemHealth": {
-    "daemons": "All 7 daemons fired on schedule — aether (q15m), nel-qa (q6h), dex (23:00), simulation (23:30), consolidation (01:00), aurora (03:00, blocked on egress), queue-worker (always on)",
-    "lastSimulation": "00:30 MT — 25 passed, 2 failed. Failures: ra runner exit-2, 1 regression issue. Up from 24/2 earlier. Nel runner now passing.",
-    "lastQACycle": "Nel sweep at ~04:10 MT — score 65/100 (down from 85). 15 broken links, 2 sentinel projects with findings, 5 sensitive file flags. Zero leaks.",
-    "securityScan": "Clean — Cipher ran 6 overnight scans, zero leaks across all scopes. Security dir mode 700, founder token mode 600. Recurring flag: agents/nel/security not gitignored."
+    "queueWorker": "check healthcheck-latest.json",
+    "simulation": "25 pass / 2 fail",
+    "healthcheck": "HEALTHY: 0 issues, 0 warnings"
   },
-  "whatWentWell": [
-    "Aether migration was a landmark — 41 analysis files, real trading data, GPT integration, full PLAYBOOK rewrite shipped in one session",
-    "All 7 launchd daemons fired on schedule with zero gaps — automation layer is holding",
-    "Cipher is boringly reliable: 6 scans, 0 leaks, every time",
-    "Dex weekly deep research synthesis generating real operational improvement requests",
-    "Simulation improved from 24/2 to 25/1 — Nel runner exit bug fixed overnight"
+  "trading": {
+    "summary": "Balance: $83.6, Trades: ?, Win rate: 0.0, Strategies: 6"
+  },
+  "wentWell": [
+    "System healthcheck passing clean",
+    "Newsletter produced on schedule"
   ],
-  "whatNeedsAttention": [
-    "API health endpoint has failed 13 consecutive sentinel runs — P0 escalation, needs investigation",
-    "No newsletter since 2026-04-11 — Aurora blocked on Cowork sandbox egress, migration to Mini launchd is the fix",
-    "2 JSONL files flagged corrupt by Dex — schema mismatch needs validator fix",
-    "agents/nel/security NOT gitignored — flagged repeatedly, needs .gitignore entry",
-    "OpenAI API key is a placeholder — Aether GPT fact-checking wired but non-functional"
+  "needsAttention": [
+    "Simulation: 25 pass / 2 fail"
   ],
   "improvements": [
-    "Session 8 audit logged 7 fix patterns: queue worker timeout cap (300s), Python bool fix across 5 runners, grep -P elimination, cross-platform stat order",
-    "Research files enriched from 12-18 to 61-89 lines after thin-content feedback",
-    "Aether metrics JSON schema stabilized — HQ resilient to both currentWeek and currentPeriod",
-    "Morning report system automated via Cowork scheduled task at 05:00 MT daily"
+    "Review and close stale known issues",
+    "Check agent evolution scores for regressions"
   ]
 }
