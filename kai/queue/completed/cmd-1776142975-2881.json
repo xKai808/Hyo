@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776142975-2881",
+  "ts": "2026-04-14T05:02:57Z",
+  "command": "cd /Users/kai/Documents/Projects/Hyo && diff <(python3 -c 'import json; print(len(json.load(open(\"agents/sam/website/data/feed.json\"))[\"reports\"]))') <(python3 -c 'import json; print(len(json.load(open(\"website/data/feed.json\"))[\"reports\"]))') && echo 'IN SYNC' || echo 'OUT OF SYNC' && echo '---sam---' && python3 -c 'import json; [print(r[\"id\"]) for r in json.load(open(\"agents/sam/website/data/feed.json\"))[\"reports\"]]' && echo '---website---' && python3 -c 'import json; [print(r[\"id\"]) for r in json.load(open(\"website/data/feed.json\"))[\"reports\"]]'",
+  "exit_code": 0,
+  "stdout": "1c1\n< 5\n---\n> 13\nOUT OF SYNC\n---sam---\nmr-2026-04-13\nkai-ceo-2026-04-13\naether-reflection-2026-04-13\nnel-reflection-2026-04-13\nra-reflection-2026-04-13\n---website---\nagent-reflection-aether-2026-04-13-225036\nagent-reflection-aether-2026-04-13-225035\nagent-reflection-aether-2026-04-13-224737\nagent-reflection-dex-2026-04-13-224446\nagent-reflection-ra-2026-04-13-224438\nagent-reflection-sam-2026-04-13-224426\nagent-reflection-aether-2026-04-13-223519\nagent-reflection-aether-2026-04-13-223517\nmr-2026-04-13\nkai-ceo-2026-04-13\naether-reflection-2026-04-13\nnel-reflection-2026-04-13\nra-reflection-2026-04-13\n",
+  "stderr": "",
+  "duration_s": 0
+}

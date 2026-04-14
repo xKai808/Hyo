@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776142945-2832",
+  "ts": "2026-04-14T05:02:27Z",
+  "command": "cd /Users/kai/Documents/Projects/Hyo && echo '=== FEED REPORTS ===' && python3 -c \"\nimport json\nwith open('agents/sam/website/data/feed.json') as f:\n    data = json.load(f)\nprint(f'Agents: {len(data[\\\"agents\\\"])} ({\\\", \\\".join(data[\\\"agents\\\"].keys())})')\nprint(f'Reports: {len(data[\\\"reports\\\"])}')\nfor r in data['reports']:\n    print(f'  {r[\\\"id\\\"]} | {r[\\\"author\\\"]} | {r[\\\"type\\\"]} | {r[\\\"timestamp\\\"]}')\n\" && echo '=== DISPATCH STATUS ===' && bash bin/dispatch.sh status 2>/dev/null | head -20 && echo '=== LAUNCHD ===' && launchctl list | grep com.hyo",
+  "exit_code": 0,
+  "stdout": "=== FEED REPORTS ===\nAgents: 7 (kai, nel, sam, ra, aurora, aether, dex)\nReports: 5\n  mr-2026-04-13 | Kai | morning-report | 2026-04-13T21:50:03-0600\n  kai-ceo-2026-04-13 | Kai | ceo-report | 2026-04-13T21:00:00-06:00\n  aether-reflection-2026-04-13 | Aether | agent-reflection | 2026-04-13T15:00:00-06:00\n  nel-reflection-2026-04-13 | Nel | agent-reflection | 2026-04-13T04:04:00-06:00\n  ra-reflection-2026-04-13 | Ra | agent-reflection | 2026-04-13T03:30:00-06:00\n=== DISPATCH STATUS ===\n=== Kai Dispatch Status ===\n\n  nel: 32 open, 10 done (303 log entries)\n  ra: 10 open, 5 done (115 log entries)\n  sam: 11 open, 9 done (143 log entries)\n=== LAUNCHD ===\n-\t2\tcom.hyo.dex\n84663\t0\tcom.hyo.queue-worker\n80077\t0\tcom.hyo.mcp-tunnel\n-\t0\tcom.hyo.aether\n-\t0\tcom.hyo.consolidation\n-\t0\tcom.hyo.nel-qa\n-\t1\tcom.hyo.simulation\n-\t2\tcom.hyo.aurora\n",
+  "stderr": "",
+  "duration_s": 1
+}

@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-14T03:55:07Z
+Last updated: 2026-04-14T10:00:17Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
-  - Delegated: 2026-04-14T03:39:05Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
+  - Delegated: 2026-04-14T10:00:17Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

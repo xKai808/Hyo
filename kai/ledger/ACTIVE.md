@@ -1,11 +1,11 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-14T04:50:38Z
+Last updated: 2026-04-14T10:00:17Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
-  - Delegated: 2026-04-14T03:39:05Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
+  - Delegated: 2026-04-14T10:00:17Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -29,8 +29,8 @@ Last updated: 2026-04-14T04:50:38Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
-  - Delegated: 2026-04-14T03:39:10Z
+- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-14T10:00:17Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -57,11 +57,6 @@ Last updated: 2026-04-14T04:50:38Z
 - **sam-006** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-014): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
   - Delegated: 2026-04-13T03:31:03Z
   - Status: DELEGATED
-
-- **ra-001** [P2] [GUIDANCE] Your domain growth has been stagnant for 3+ cycles. What's one thing an expert in your field does that you're not doing?
-  - Delegated: 2026-04-14T03:39:10Z
-  - Method: sim-ack: agent handshake test
-  - Status: DELEGATED — sim-report: all clear
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
   - Delegated: 2026-04-14T03:55:07Z
@@ -108,16 +103,16 @@ Last updated: 2026-04-14T04:50:38Z
   - Delegated: 2026-04-13T03:33:17Z
   - Status: DELEGATED
 
-- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 59 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
-  - Delegated: 2026-04-13T06:07:07Z
+- **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
+  - Delegated: 2026-04-14T06:26:16Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-04-14T03:39:10Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 120 recurrent patterns detected — check safeguard status (flagged by kai)
+  - Delegated: 2026-04-14T06:26:17Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-14T03:39:10Z
+  - Delegated: 2026-04-14T06:26:16Z
   - Status: DELEGATED
 
 ## Queued
@@ -125,102 +120,34 @@ Last updated: 2026-04-14T04:50:38Z
 - **nel-019** [P3] Nel run complete: score=65, actions=2, sentinel=2/4
   - Created: 2026-04-12T22:11:30Z
 
-- **kai-sim-failure** [P2] Simulation failure: FAIL:runner:nel:exit-1
-  - Created: 2026-04-12T22:19:12.356391Z
-
-- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-12T18:45:59-06:00 != API ts 2026-04-13T00:42:58.332Z
-  - Created: 2026-04-13T00:46:00Z
-
 - **flag-dex-001** [P2] Dex Phase 1 FAILED: 1 JSONL files have corrupt entries
   - Created: 2026-04-13T01:43:50Z
-
-- **flag-nel-010** [P2] Sentinel: 1 project(s) with test failures
-  - Created: 2026-04-13T02:10:28Z
-
-- **flag-nel-011** [P2] No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Created: 2026-04-13T02:10:28Z
-
-- **flag-nel-012** [P2] Found 15 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-13T02:10:28Z
-
-- **flag-nel-013** [P2] Found 1 code optimization opportunities — rolling improvement
-  - Created: 2026-04-13T02:10:29Z
-
-- **flag-nel-014** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-04-13T02:10:31Z
-
-- **flag-nel-015** [P2] Sentinel: 1 project(s) with test failures
-  - Created: 2026-04-13T02:11:42Z
-
-- **flag-nel-016** [P2] No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Created: 2026-04-13T02:11:42Z
-
-- **flag-nel-017** [P2] Found 15 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-13T02:11:42Z
-
-- **flag-nel-018** [P2] Found 1 code optimization opportunities — rolling improvement
-  - Created: 2026-04-13T02:11:42Z
-
-- **flag-nel-019** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-04-13T02:11:45Z
 
 - **flag-nel-001** [P2] agents/nel/security is NOT gitignored
   - Created: 2026-04-13T02:17:15Z
 
-- **flag-nel-002** [P2] SIM-TEST: upward flag communication test
-  - Created: 2026-04-13T03:30:08Z
-
-- **flag-nel-003** [P2] Sentinel: 1 project(s) with test failures
-  - Created: 2026-04-13T03:30:09Z
-
-- **flag-nel-004** [P2] No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Created: 2026-04-13T03:30:09Z
-
-- **flag-nel-005** [P2] Found 15 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-13T03:30:10Z
-
 - **flag-ra-003** [P2] SIM-TEST: upward flag communication test
   - Created: 2026-04-13T03:33:16Z
 
-- **flag-nel-020** [P2] No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Created: 2026-04-13T03:33:17Z
-
-- **flag-nel-021** [P2] Found 15 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-13T03:33:18Z
-
-- **flag-nel-022** [P2] Found 1 code optimization opportunities — rolling improvement
-  - Created: 2026-04-13T03:33:18Z
-
-- **flag-nel-023** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-04-13T03:33:20Z
-
 ## Recently Completed
 
-- **nel-018** [P2] Verify Sam's gather.py changes — check for hardcoded API keys, validate error handling on new Alpha Vantage fetcher — 2026-04-12T20:35:18Z (DONE)
-  - Result: Code review passed. Alpha Vantage key read from env var (not hardcoded). Error handling present with timeout. No issues found.
-  - Notes: Nel confirms clean code review.
+- **flag-nel-023** [P2] Audit found 5 system issues — review security/structure — 2026-04-13T23:00:50-0600 (DONE)
 
-- **sam-016** [P1] Implement Ra's source replacement: expand FRED to 8 series, add Alpha Vantage, remove Yahoo Finance from gather.py — 2026-04-12T20:35:18Z (DONE)
-  - Result: Changes ready for review. Added fetch_alpha_vantage(), expanded FRED series list, removed fetch_yahoo_quote(). Tests pass (gather.py --dry-run shows 8 FRED + 1 AV sources).
-  - Notes: Nel code review passed. Implementation approved.
+- **flag-nel-022** [P2] Found 1 code optimization opportunities — rolling improvement — 2026-04-13T23:00:50-0600 (DONE)
 
-- **ra-012** [P1] Replace Yahoo Finance source — evaluate alternatives: Alpha Vantage free tier, FRED expanded, or Finnhub — 2026-04-12T20:35:17Z (DONE)
-  - Result: Recommendation: (1) FRED already works — expand from 2 to 8 series covering GDP, CPI, unemployment, 10Y yield, mortgage rates, consumer sentiment. (2) Add Alpha Vantage free tier (5 calls/min, daily OHLCV). (3) Drop Yahoo Finance. Net result: better macro coverage, more reliable.
-  - Notes: Plan approved. Implementation delegated to Sam for gather.py changes.
+- **flag-nel-021** [P2] Found 15 broken documentation links — fix or cleanup needed — 2026-04-13T23:00:50-0600 (DONE)
 
-- **sam-015** [P1] SAFEGUARD: Add test coverage for issue (flag-ra-002): Yahoo Finance source dead for 3+ days — pipeline coverage gap in macro/finance — 2026-04-12T20:35:26Z (DONE)
+- **flag-nel-020** [P2] No newsletter produced for 2026-04-12 — past 06:00 MT deadline — 2026-04-13T23:00:50-0600 (DONE)
 
-- **nel-017** [P1] SAFEGUARD: Cross-reference issue (flag-ra-002) — scan entire codebase for similar patterns: Yahoo Finance source dead for 3+ days — pipeline coverage gap in macro/finance — 2026-04-12T20:35:26Z (DONE)
+- **flag-nel-005** [P2] Found 15 broken documentation links — fix or cleanup needed — 2026-04-13T23:00:50-0600 (DONE)
 
-- **flag-ra-002** [P2] Yahoo Finance source dead for 3+ days — pipeline coverage gap in macro/finance — 2026-04-12T20:35:26Z (DONE)
+- **flag-nel-004** [P2] No newsletter produced for 2026-04-12 — past 06:00 MT deadline — 2026-04-13T23:00:50-0600 (DONE)
 
-- **ra-011** [P3] Daily research: found Beehiiv growth playbook — extracting actionable patterns for Aurora subscriber acquisition — 2026-04-12T20:35:26Z (DONE)
+- **flag-nel-003** [P2] Sentinel: 1 project(s) with test failures — 2026-04-13T23:00:50-0600 (DONE)
 
-- **ra-010** [P2] Nightly pipeline check: Yahoo Finance returning 0 records for 3rd consecutive day — 2026-04-12T20:35:26Z (DONE)
+- **flag-nel-002** [P2] SIM-TEST: upward flag communication test — 2026-04-13T23:00:50-0600 (DONE)
 
-- **sam-014** [P2] Add viewer.html link to HQ sidebar navigation — 2026-04-12T20:35:17Z (DONE)
-  - Result: Added viewer.html to HQ sidebar under Tools section. Tested: link resolves, page loads correctly.
-  - Notes: Confirmed viewer link in sidebar.
+- **flag-nel-019** [P2] Audit found 5 system issues — review security/structure — 2026-04-13T23:00:50-0600 (DONE)
 
-- **flag-sam-003** [P2] viewer.html not linked from any navigation page — orphaned from user flow — 2026-04-12T20:35:26Z (DONE)
+- **flag-nel-018** [P2] Found 1 code optimization opportunities — rolling improvement — 2026-04-13T23:00:50-0600 (DONE)
 

@@ -1,69 +1,65 @@
 {
-  "ts": "2026-04-13T22:02:27-06:00",
+  "ts": "2026-04-14T08:00:00Z",
   "status": "ISSUES",
-  "issues": 3,
-  "warnings": 5,
+  "issues": 4,
+  "warnings": 6,
   "findings": [
     {
       "severity": "P0",
-      "area": "security",
-      "detail": "agents/nel/security is NOT gitignored — flagged at 03:39Z, auto-remediation delegated but unverified"
-    },
-    {
-      "severity": "P0",
-      "area": "hq-rendering",
-      "detail": "Aether metrics JSON + morning-report JSON exist but hq.html has NO rendering code — 4 data files disconnected"
+      "area": "morning-report",
+      "detail": "Morning report JSON exists but hq.html has NO rendering code — carried over from 06:26 check, still unresolved"
     },
     {
       "severity": "P1",
+      "area": "dead-loop",
+      "detail": "ra stuck in dead-loop: no newsletter produced since 2026-04-11, pipeline blocked 3 days running"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "aether stuck in dead-loop: repeating dashboard out-of-sync flag every 15min, 0 trades, PNL drifting negative (-2.85 to -4.13)"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "dex stuck in dead-loop: 2 corrupt JSONL entries unrepaired, recurrent pattern count growing (now 120+)"
+    },
+    {
+      "severity": "P2",
       "area": "newsletter",
-      "detail": "No newsletter produced for 2026-04-13 — past 06:00 MT deadline, flagged twice (03:39Z and 03:55Z), auto-remediation delegated to ra"
-    },
-    {
-      "severity": "P1",
-      "area": "api-auth",
-      "detail": "/api/hq?action=data returned HTTP 401 — HQ API auth broken, delegated to sam"
+      "detail": "No newsletter for 2026-04-12, 2026-04-13, or 2026-04-14 — Ra output dir only has 2026-04-11 edition"
     },
     {
       "severity": "P2",
-      "area": "dead-loop-ra",
-      "detail": "ra stuck in dead-loop (growth_stagnant) — guidance question sent, no resolution"
+      "area": "aether-spam",
+      "detail": "Aether logging duplicate dashboard-mismatch P2 flags every 15min — 20+ duplicate entries in log.jsonl today alone"
     },
     {
       "severity": "P2",
-      "area": "dead-loop-aether",
-      "detail": "aether stuck in dead-loop (assessment_stuck) — 0 trades, PNL=$-6.53, dashboard out-of-sync"
+      "area": "render-binding",
+      "detail": "hq.html missing references to aether-metrics.json, hq-state.json, morning-report.json, usage-config.json"
     },
     {
       "severity": "P2",
-      "area": "docs",
-      "detail": "15 broken documentation links found across codebase"
+      "area": "stale-tasks",
+      "detail": "18+ P1 SAFEGUARD tasks in kai ACTIVE.md stuck in DELEGATED state since Apr 12-13 with no closure"
     },
     {
       "severity": "P2",
-      "area": "tests",
-      "detail": "Sentinel reports 2 projects with test failures"
+      "area": "queue",
+      "detail": "Queue clear (0 pending, 0 running) — last completed jobs ran successfully"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "All 5 agents (nel, ra, sam, aether, dex) produced logs today — agents are running"
     }
   ],
-  "queue_status": {
-    "pending": 0,
-    "running": 0,
-    "worker": "recovered — processing normally since last check",
-    "last_3_completed": "all exit_code 0 (nel research+publish, git sync x2)",
-    "failed_recent": "1 (healthcheck recheck timeout)"
-  },
-  "agent_activity_today": {
-    "nel": "active — 20+ cipher logs, QA reports, simulation, consolidation, research published",
-    "aether": "active — self-review + trade log, 0 trades, dashboard out-of-sync",
-    "dex": "active — daily log + activity JSONL",
-    "ra": "active — self-review + daily log, degraded status",
-    "sam": "active via queue — no standalone log file, output in queue completions"
-  },
-  "delta_from_last_check": "Queue recovered (was stalled, now 0 pending/0 running). Core P0/P1 issues persist: security gitignore, HQ rendering, newsletter, API auth. All have delegated remediation but none verified resolved.",
+  "actions_taken": "Survey only — prior auto-remediation from 06:26 check still in effect, guidance questions sent to ra/aether/dex",
   "recent_queue_results": [
-    {"id": "cmd-1776139264-286", "status": "ok", "command": "nel research + publish + git push", "exit_code": 0},
-    {"id": "cmd-1776139252-262", "status": "ok", "command": "git pull && git push", "exit_code": 0},
-    {"id": "cmd-1776139197-198", "status": "ok", "command": "nel research fetch + publish", "exit_code": 0}
+    {"id": "event-dex-flag-dex-001", "exit_code": 0, "duration_s": 301},
+    {"id": "recheck-flag-dex-001", "exit_code": 0, "duration_s": 3},
+    {"id": "cmd-1776143752-115", "exit_code": 0, "duration_s": 3}
   ],
-  "next_check": "in 30min (P0 present)"
+  "next_check": "in 2 hours"
 }

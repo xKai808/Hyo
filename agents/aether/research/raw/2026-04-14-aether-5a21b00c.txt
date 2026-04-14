@@ -1,0 +1,306 @@
+# Source: QuantConnect Blog
+# URL: https://www.quantconnect.com/blog
+# Fetched: 2026-04-14
+# Focus: Quantitative trading strategies, backtesting patterns, algorithm optimization
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" id="QuantConnect" class="quantconnect" prefix="og: http://ogp.me/ns#" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="fb:app_id" content="147227222023467"> 
+<meta property="og:type" content="website"> 
+<meta property="og:url" content="https://www.quantconnect.com/announcements/"> 
+<meta name="twitter:image:alt" content="Announcements"> 
+<meta name="twitter:title" content="Announcements"> 
+<meta property="og:title" content="Announcements"> 
+<meta name="twitter:description" content="Learn about the latest features and announcements from the world\'s leading algorithmic trading platform QuantConnect."> 
+<meta property="og:description" content="Learn about the latest features and announcements from the world\'s leading algorithmic trading platform QuantConnect."> 
+<meta name="twitter:card" content="summary_large_image"> 
+<meta name="twitter:site" content="@QuantConnect"> 
+<meta name="twitter:image" content="https://cdn.quantconnect.com/i/tu/announcements-meta.png"> 
+<meta property="og:image" content="https://cdn.quantconnect.com/i/tu/announcements-meta.png"> 
+<meta property="og:image:secure_url" content="https://cdn.quantconnect.com/i/tu/announcements-meta.png"> 
+<meta property="og:image:type" content="image/png"> 
+<meta property="og:image:width" content="1200"> 
+<meta property="og:image:height" content="628"> 
+<meta property="og:site_name" content="Announcements - QuantConnect.com"> 
+<meta name="description" content="Learn about the latest features and announcements from the world\'s leading algorithmic trading platform QuantConnect."> 
+<meta name="keywords" content="Forum QuantConnect Algo Trading Community"> 
+<meta name="Content-Type" content="text/html; charset=utf-8"> 
+<meta property="fb:admins" content="551240720"> 
+    <link rel="shortcut icon" type="image/x-icon" href="/qc.ico">
+       <link type="text/css" rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Droid+Sans" />
+   <link type="text/css" rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600" />
+   <link type="text/css" rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" />
+   <link type="text/css" rel="stylesheet"  href="https://www.quantconnect.com/forum/css/build/forum.css?tm=1769462897" />
+ <script type="text/javascript" >var IFRAME_SRC = '//cdn.iframe.ly/api/iframe';var IFRAMELY_API_HASH = 'f8666d7571ca543956a0207272c02c4b'; </script>
+ <script type="text/javascript"  src="https://www.quantconnect.com/forum/js/libraries/ckeditor5/ckeditor.js?tm=1700011859"  ></script>
+ <script type="text/javascript"  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"  ></script>
+ <script type="text/javascript" >window.addEventListener('load', function(event){ $(document).mouseup(function(e) {
+if(!$('.share-menu').is(e.target) && $('.share-menu').has(e.target).length === 0){ $('.share-menu').hide();}
+if(!$('.extra-btns').is(e.target) && $('.extra-btns').has(e.target).length === 0){ $('.extra-btns').hide();}
+if(!$('.discussion-extra-btns').is(e.target) && $('.discussion-extra-btns').has(e.target).length === 0){ $('.discussion-extra-btns').hide();}
+});  }); </script>
+<link href="https://www.quantconnect.com/announcements/" rel="canonical"><link rel="prefetch" href="https://cdn.quantconnect.com/i/tu/backtest-icon-v3.png">
+<title>Announcements - QuantConnect.com</title>
+    <script>
+        var lazyLoaderPosthog = function() {
+            window.removeEventListener('scroll', lazyLoaderPosthog);
+            window.removeEventListener('mouseover', lazyLoaderPosthog);
+
+            ! function(t, e) {
+                var o, n, p, r;
+                e.__SV || (window.posthog = e, e._i = [], e.init = function(i, s, a) {
+                    function g(t, e) {
+                        var o = e.split(".");
+                        2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function() {
+                            t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+                        }
+                    }(p = t.createElement("script")).type = "text/javascript", p.async = !0, p.src = s.api_host + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r);
+                    var u = e;
+                    for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function(t) {
+                            var e = "posthog";
+                            return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e
+                        }, u.people.toString = function() {
+                            return u.toString(1) + ".people (stub)"
+                        }, o = "capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "), n = 0; n < o.length; n++) g(u, o[n]);
+                    e._i.push([i, s, a])
+                }, e.__SV = 1)
+            }(document, window.posthog || []);
+            posthog.init('phc_8NVGcOFSlRejLd3O4vamJS4vLQrxMnQISsq5Ofdk6Wz', {
+                api_host: '//www.quantconnect.com/api/v2/site-performance',
+                person_profiles: 'identified_only',
+                disable_session_recording: true,
+                autocapture: false
+            });
+        };
+
+        // Check if the domain contains 'quantconnect.com' else is a dev render
+        if (window.location.hostname.includes('quantconnect.com')) {
+            // window.addEventListener('mouseover', lazyLoaderPosthog);
+            // window.addEventListener('scroll', lazyLoaderPosthog);
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="height-fixer" style="min-height: 100%; position: relative;">
+        <header class="standard desktop-header">
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container-fluid" style="padding: 0 15px;background-color: #1B1B1F;">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#qc-navbar-collapse" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
+                            <span class="icon-bar"></span> <span class="icon-bar"></span>
+                        </button>
+                        <a id="header-qc-logo" href="https://www.quantconnect.com" class="logo FL clearfix navbar-brand" title="QuantConnect - Democratizing Finance, Empowering Individuals"> </a>
+                    </div>
+                                            <div id="search-wrapper" onclick="GlobalSearchBox.Initialize();">
+                            <div class="search-input" id="header-search-box">
+                                <form autocomplete="off" style="width: calc(100% - 40px);display: inline-block;">
+                                    <input style="display: none" type="text">
+                                    <input id="auto-complete-input-field" type="text" name="qc-search-box" placeholder="&#xF002;" autocomplete="off">
+                                </form>
+                                <div class="input-icons">
+                                    <i class="fa fa-times" aria-hidden="true" onclick="GlobalSearchBox.OnClearClick();"></i>
+                                </div>
+                            </div>
+                            <div id="header-search-hits">
+                                <div class="instructions">
+                                    &uarr;&darr; to select, press <b>enter</b> to go, use <b>esc</b> to exit
+                                </div>
+                                <div class="hits"></div>
+                            </div>
+                            <div id="header-search-hits-backdrop" onclick="GlobalSearchBox.OnClearClick();"></div>
+                        </div>
+                                        <div class="" id="qc-navbar-collapse">
+                        <ul class="nav navbar-nav">
+                                                        <li class="top">
+                                <a class="top" href="/pricing/" title="Pricing"> Pricing </a>
+                            </li>
+
+                            
+                            <li class="top nav-forum">
+                                <a class="top" href="https://www.quantconnect.com/research/" title="Explore comprehensive financial research, providing insights, analysis, and trends for informed decision-making.">
+                                    Research </a>
+                            </li>
+                            <li class="top nav-strategies hidden-sm">
+                                <a class="top" href="https://www.quantconnect.com/strategies/" title="Jumpstart your algorithm development with a selection of top community strategies that update weekly.">
+                                    Strategies </a>
+                            </li>
+                            <li class="top dataButton hidden-sm hidden-md ">
+                                <a class="top" href="https://www.quantconnect.com/datasets/" title="Download free historical data from our Data Library">
+                                    Data </a>
+                            </li>
+                            <li class="top nav-documentation">
+                                <a href="https://www.quantconnect.com/docs/" class="top" title="Learn more about how to make the most of QuantConnect in the documentation">
+                                    <span class="hidden-sm hidden-md qc-hidden-lg">Documentation</span>
+                                    <span class="visible-sm visible-md">Docs</span>
+                                    <span class="qc-visible-lg-block">Docs</span> </a>
+                            </li>
+                            <li class="top nav-terminal">
+                                <a href="https://www.quantconnect.com/terminal/" class="top" title="Backtest your algorithms on historical data.">
+                                    <span class="hidden-sm hidden-md qc-hidden-lg">Algorithm Lab</span>
+                                    <span class="visible-sm visible-md">Lab</span>
+                                    <span class="qc-visible-lg-block">Lab</span> </a>
+                            </li>
+                                                            <li class="top dropdown">
+                                    <a href="/login/" class="dropdown-toggle top" title="Sign In to QuantConnect" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-lock"></i> Sign In </a>
+                                </li>
+                                                    </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <script>
+    function toggleNavigation() {
+        let mobileNavDropdown = $("#qc-navbar-collapse-mobile");
+        mobileNavDropdown.toggleClass('hidden');
+        if (mobileNavDropdown.hasClass('hidden')) {
+            window.removeEventListener('touchmove', blockNavigationTouchPropagtation, {
+                passive: false
+            });
+        } else {
+            window.addEventListener('touchmove', blockNavigationTouchPropagtation, {
+                passive: false
+            });
+        }
+    }
+
+    function blockNavigationTouchPropagtation(event) {
+        if (!$("#qc-navbar-collapse-mobile").hasClass('hidden')) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+    }
+</script>
+<header class="thin mobile-header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid" style="padding: 0 15px;">
+            <div class="navbar-header navbar-header-mobile">
+                <button type="button" class="navbar-toggle collapsed" onclick="toggleNavigation()">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
+                    <span class="icon-bar"></span> <span class="icon-bar"></span>
+                </button>
+                                <a id="header-qc-logo" href="https://www.quantconnect.com" class="logo FL clearfix navbar-brand" title="QuantConnect - Democratizing Finance, Empowering Individuals"> </a>
+                <span class="service-name hidden-xs hidden-sm hidden-md">Forum</span>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="navbar-collapse hidden" id="qc-navbar-collapse-mobile">
+    <button class="close-nav" onclick="toggleNavigation()">
+        <img src="https://cdn.quantconnect.com/i/tu/menu-close-icon.svg">
+    </button>
+    <ul class="nav navbar-nav" id="qc-navbar-mobile-list">
+                <span class="nav-heading" style="margin-top: 15px;">Platform</span>
+        <li class="top nav-live-broadcast">
+            <a class="top" href="//www.quantconnect.com/pricing/" title="Pricing">Pricing</a>
+        </li>
+        <li class="divider-vertical top nav-live-broadcast"></li>
+                <li class="top nav-forum">
+            <a class="top" href="//www.quantconnect.com/research/" title="Explore comprehensive financial research, providing insights, analysis, and trends for informed decision-making.">
+                Research </a>
+        </li>
+        <li class="top nav-strategies">
+            <a class="top" href="//www.quantconnect.com/strategies/" title="Jumpstart your algorithm development with a selection of top community strategies that update weekly.">
+                Strategies </a>
+        </li>
+        <li class="divider-vertical top nav-forum"></li>
+
+        <li class="top nav-terminal">
+            <a class="top" href="//www.quantconnect.com/datasets/" title="Download free historical data from our Data Library.">Datasets</a>
+        </li>
+        <li class="divider-vertical top nav-data"></li>
+        <li class="top nav-documentation">
+            <a href="//www.quantconnect.com/docs/" class="top" title="Learn more about how to make the most of QuantConnect in the documentation">Documentation</a>
+        </li>
+        <li class="divider-vertical top nav-research"></li>
+        <li class="top nav-terminal">
+            <a href="//www.quantconnect.com/terminal/" class="top" title="Backtest your algorithms on historical data.">Algorithm Lab</a>
+        </li>
+
+            </ul>
+            <div class="sign-in">
+            <ul class="sign-up-wrapper nav navbar-nav">
+                <h3>SIGN IN</h3>
+                <li class="options">
+                    <a class="option email" title="Sign In with Email" href="https://www.quantconnect.com/login?target=Forum" rel="nofollow">
+                        <span class="option-text">
+                            Sign in
+                        </span> </a>
+                </li>
+                <li class="options">
+                    <p class="join-today">
+                        Don't have an account? Join QuantConnect Today
+                    </p>
+                </li>
+                <li class="options">
+                    <a class="option sign-up" title="Sign up" href="https://www.quantconnect.com/signup" rel="nofollow" style="top: 5px;">
+                        <span class="option-text">
+                            Sign up for Free
+                        </span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+        <div class="container main-container" data-bind="css:{ 'research-modifier' : QCF.Models.Discussions.OpenDiscussion()?.IsResearch() }">
+<div data-bind="attr:{ class: 'row row-title row-title-forum ' + QCF.Models.Discussions.DataProvider()?.GetHeaderClass() ?? '' }">
+    <div class="left-image">
+        &nbsp;
+    </div>
+    <div class="col-xs-12" style="z-index:10">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2" style="float: unset;margin: 0 auto;">
+                <p class="breadcrumbs" data-bind="if:QCF.Models.Discussions.OpenDiscussion(),">
+                    <img src="https://cdn.quantconnect.com/i/tu/forum-header-back-arrow.svg" alt="back arrow" />
+                    <span data-bind="html:QCF.Models.Discussions.DataProvider()?.GetTitle() ?? 'QUANTCONNECT COMMUNITY' ,click:ControllersDiscussions.Back"></span>
+                </p>
+                                <h1 class="title title-mobile-padding" data-bind="
+                css :{ clickable:  QCF.Models.Discussions.OpenDiscussion() === null },
+                click: function(){ ViewMenu.TittleClickHandler() },
+                html: 
+                ViewsDisplay.GetMainTittleValue(QCF.Models.Discussions.DataProvider(),  QCF.Models.Discussions.OpenDiscussion())
+                " style="margin-top: 0;"></h1>
+            </div>
+        </div>
+    </div>
+    <div class="right-image">
+        &nbsp;
+    </div>
+</div>
+
+<div data-bind="attr:{ class: 'row main-forum-row ' + QCF.Models.Discussions.DataProvider()?.GetHeaderClass() ?? '' }">
+    <div class="col-xs-12 col-md-12 col-lg-10 col-lg-offset-1 col-xl-8 col-xl-offset-2 main-forum" style="display: none;" data-bind="visible:QCF.Views.Display.Discussions()">
+        <div class="row categories" data-bind="visible: QCF.Models.Discussions.DataProvider().GetName() !='tagged'" style="height: 76px; margin-right: 0;">
+    <div class="col-xs-12 nav-row">
+        <div class="nav-menu">
+                            <a class="" href="#research" role="button" data-bind="click:ControllersDiscussions.SetResearchDatasource,css:{selected: QCF.Models.Discussions.DataProvider().GetName()=='research'}">Research</a>
+                <a class="hidden-xs" href="#announcements" role="button" data-bind="click:ControllersDiscussions.SetAnnouncementsDatasource,css:{selected: QCF.Models.Discussions.DataProvider().GetName()=='announcements'}">Announcements</a>
+                <a class="hidden-xs" href="#lean" role="button" data-bind="click:ControllersDiscussions.SetLeanDatasource,css:{selected: QCF.Models.Discussions.DataProvider().GetName()=='lean'}">Lean</a>
+                    </div>
+        <div class="nav-menu" style="float: right;">
+
+                            <a class="" href="#newest" role="button" data-bind="click:ControllersDiscussions.SetNewestDatasource,css:{selected: QCF.Models.Discussions.DataProvider().GetName()=='newest'}">
+                    <span class="short-text" style="line-height: 6px;">COMMUNITY</span>
+                    <span class="long-text" style="line-height: 6px;">COMMUNITY FEED</span>
+                </a>
+            
+                        <span style="line-height: 17px;font-size: 10px;margin-right: 10px;margin-left: 10px;">|</span>
+            <button id="more-menu-2" class="more-menu">
+                <div class="read-toggle-dots clickable"></div>
+                <div class="menu-content" style="display: none;">
+                    <a class="hidden-sm hidden-md hidden-lg" href="#competition" role="button" data-bind="click:ControllersDiscussions.SetAnnouncementsDatasource,css:{selected: QCF.Models.Discussions.DataProvider().GetName()=='announcements'}">Announcements</a>
+                    <a class="hidden-sm hidden-md hidden-lg" href="#lean" role="button" data-bind="click:ControllersDiscussions.SetLeanDatasource,css:{selected: QCF.Models.Discussions.DataProvider().GetName()=='lean'}">Lean</a>
+                    <a href="/datasets/issues">Data Issues</a>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+<hr class="full-width-hr" />
+<!-- ko if: Cont

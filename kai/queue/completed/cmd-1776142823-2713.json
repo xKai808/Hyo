@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776142823-2713",
+  "ts": "2026-04-14T05:00:24Z",
+  "command": "cd /Users/kai/Documents/Projects/Hyo && python3 -c \"\nimport json\nflags = {}\nwith open('kai/ledger/log.jsonl') as f:\n    for l in f:\n        try:\n            e = json.loads(l.strip())\n            if e.get('action') == 'FLAG':\n                flags[e['task_id']] = {'severity': e.get('severity','?'), 'note': e.get('note','')[:80]}\n            if e.get('action') in ('CLOSE','VERIFY') and e.get('task_id','') in flags:\n                del flags[e['task_id']]\n        except: pass\nfor k,v in sorted(flags.items()):\n    print(f'{k} [{v[\\\"severity\\\"]}] {v[\\\"note\\\"]}')\nprint(f'\\nTotal unresolved: {len(flags)}')\n\"",
+  "exit_code": 0,
+  "stdout": "flag-aether-001 [P2] \nflag-dex-001 [P2] \nflag-nel-001 [P2] \nflag-nel-002 [P2] \nflag-nel-003 [P1] \nflag-nel-004 [P2] \nflag-nel-005 [P3] \nflag-nel-006 [P2] \nflag-nel-007 [P2] \nflag-nel-008 [P2] \nflag-nel-009 [P1] \nflag-nel-010 [P2] \nflag-nel-011 [P3] \nflag-nel-012 [P2] \nflag-nel-013 [P2] \nflag-nel-014 [P1] \nflag-nel-015 [P2] \nflag-nel-016 [P3] \nflag-nel-017 [P2] \nflag-nel-018 [P3] \nflag-nel-019 [P2] \nflag-nel-020 [P1] \nflag-nel-021 [P2] \nflag-nel-022 [P3] \nflag-nel-023 [P2] \nflag-ra-001 [P2] \nflag-ra-002 [P3] \nflag-ra-003 [P3] \nflag-sam-001 [P3] \nflag-sam-002 [P3] \nflag-sam-003 [P3] \nkai-sim-failure [P1] \n\nTotal unresolved: 32\n",
+  "stderr": "",
+  "duration_s": 0
+}

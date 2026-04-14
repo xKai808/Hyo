@@ -310,3 +310,11 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/gracious-optimistic-mayer/mnt/Hyo/newsletters/2026-04-13.md [sentinel:aurora-ran-today:f9e5690d:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gracious-optimistic-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e4024e70:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/gracious-tender-davinci/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:3964dca3] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/gracious-tender-davinci/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fe3f475c] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] 17 P0 tasks (overload threshold 5) [sentinel:task-queue-size:8abe625d] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/gracious-tender-davinci/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:3964dca3:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gracious-tender-davinci/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fe3f475c:escalated]

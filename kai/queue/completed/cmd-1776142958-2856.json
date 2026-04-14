@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776142958-2856",
+  "ts": "2026-04-14T05:02:40Z",
+  "command": "curl -s 'https://www.hyo.world/data/feed.json' 2>/dev/null | python3 -c \"\nimport json, sys\ndata = json.load(sys.stdin)\nprint(f'Live feed: {len(data.get(\\\"reports\\\",[]))} reports, {len(data.get(\\\"agents\\\",{}))} agents')\nfor r in data.get('reports',[]):\n    print(f'  {r[\\\"id\\\"]} | {r[\\\"author\\\"]}')\n\"",
+  "exit_code": 0,
+  "stdout": "Live feed: 13 reports, 7 agents\n  agent-reflection-aether-2026-04-13-225036 | Aether\n  agent-reflection-aether-2026-04-13-225035 | Aether\n  agent-reflection-aether-2026-04-13-224737 | Aether\n  agent-reflection-dex-2026-04-13-224446 | Dex\n  agent-reflection-ra-2026-04-13-224438 | Ra\n  agent-reflection-sam-2026-04-13-224426 | Sam\n  agent-reflection-aether-2026-04-13-223519 | Aether\n  agent-reflection-aether-2026-04-13-223517 | Aether\n  mr-2026-04-13 | Kai\n  kai-ceo-2026-04-13 | Kai\n  aether-reflection-2026-04-13 | Aether\n  nel-reflection-2026-04-13 | Nel\n  ra-reflection-2026-04-13 | Ra\n",
+  "stderr": "",
+  "duration_s": 1
+}
