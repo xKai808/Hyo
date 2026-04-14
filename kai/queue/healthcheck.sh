@@ -425,3 +425,74 @@ if [[ $ISSUES -gt 0 ]]; then
   # If a P0 issue needs faster re-checking, add a separate launchd timer.
   echo "Re-check skipped — rely on 2h launchd schedule for next run."
 fi
+
+# ============================================================================
+# KAI MEMORY UPDATE (constitutional step 13 — runs q2h with healthcheck)
+# Updates Kai's own memory files so next session/task reads fresh state.
+# ============================================================================
+log "Running Kai memory update..."
+
+# Check agent ACTIVE.md freshness — flag stale ones
+for agent_dir in "$ROOT"/agents/*/; do
+  agent_name=$(basename "$agent_dir")
+  active_file="$agent_dir/ledger/ACTIVE.md"
+  if [[ -f "$active_file" ]]; then
+    if stat -c %Y / >/dev/null 2>&1; then
+      active_mtime=$(stat -c %Y "$active_file" 2>/dev/null || echo 0)
+    else
+      active_mtime=$(stat -f %m "$active_file" 2>/dev/null || echo 0)
+    fi
+    active_age_h=$(( ($(date +%s) - active_mtime) / 3600 ))
+    if [[ $active_age_h -gt 48 ]]; then
+      add_finding "P1" "memory-stale" "$agent_name ACTIVE.md not updated in ${active_age_h}h (>48h)"
+      log "STALE: $agent_name ACTIVE.md is ${active_age_h}h old"
+    elif [[ $active_age_h -gt 24 ]]; then
+      add_finding "P2" "memory-stale" "$agent_name ACTIVE.md not updated in ${active_age_h}h (>24h)"
+    fi
+  else
+    add_finding "P2" "memory-missing" "$agent_name has no ACTIVE.md — memory update not wired"
+  fi
+done
+
+# Write Kai's own ACTIVE.md summary
+KAI_ACTIVE="$ROOT/kai/ledger/kai-active.md"
+mkdir -p "$(dirname "$KAI_ACTIVE")"
+cat > "$KAI_ACTIVE" << KAIEOF
+# Kai — System State (auto-updated q2h by healthcheck)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## System Health
+- Status: $(if [[ $ISSUES -eq 0 ]]; then echo "HEALTHY"; else echo "ISSUES ($ISSUES P0/P1)"; fi)
+- Warnings: $WARNINGS
+- Actions taken: ${ACTIONS_TAKEN:-none}
+
+## Agent ACTIVE.md Status
+$(for agent_dir in "$ROOT"/agents/*/; do
+  aname=$(basename "$agent_dir")
+  afile="$agent_dir/ledger/ACTIVE.md"
+  if [[ -f "$afile" ]]; then
+    if stat -c %Y / >/dev/null 2>&1; then
+      amtime=$(stat -c %Y "$afile" 2>/dev/null || echo 0)
+    else
+      amtime=$(stat -f %m "$afile" 2>/dev/null || echo 0)
+    fi
+    aage=$(( ($(date +%s) - amtime) / 3600 ))
+    echo "- $aname: updated ${aage}h ago"
+  else
+    echo "- $aname: NO ACTIVE.md"
+  fi
+done)
+
+## Top Issues
+$(python3 -c "
+import json
+try:
+    findings = json.loads('[${FINDINGS%,}]')
+    for f in findings[:5]:
+        if f['severity'] in ('P0','P1'):
+            print(f\"- [{f['severity']}] {f['area']}: {f['detail'][:80]}\")
+except: print('- Unable to parse findings')
+" 2>/dev/null)
+KAIEOF
+
+log "Kai memory update complete: $KAI_ACTIVE"

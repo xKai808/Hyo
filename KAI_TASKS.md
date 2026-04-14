@@ -136,6 +136,7 @@
 
 ## Done
 
+- [x] **2026-04-13** Memory Update Protocol (constitutional v3.2) — Step 13 added to SELF-EVOLUTION CYCLE. Every agent writes ACTIVE.md after every cycle. Kai q2h memory via healthcheck. All 5 runners wired. Healthcheck flags stale ACTIVE.md. Full propagation: CLAUDE.md, AGENT_ALGORITHMS.md, AGENT_CREATION_PROTOCOL.md all updated.
 - [x] **2026-04-13** Session 8 constitutional rebuild — AGENT_ALGORITHMS.md v3.0: POST-TASK REFLECTION, AGENT REFLECTION (step 10 of SELF-EVOLUTION CYCLE), AUTONOMY MODEL (decide + report), KAI GUIDANCE PROTOCOL (questions not answers), ALGORITHM EVOLUTION LIFECYCLE (proposal → review → approve → verify → simulate), dead-loop detection (healthcheck Check 8), event-driven agent triggers (dispatch queues runner on P0/P1), proposal infrastructure (kai/proposals/), file_proposal() helper, REASONING_FRAMEWORK updated with open-ended + yes/no question pattern. All 5 agent runners updated with reflection blocks in evolution entries.
 - [x] **2026-04-13** Resolution Algorithm v1.1 — RA-1 created, tested with RES-001 (detection-without-remediation), self-evolved with process improvements. resolve.sh executor + recall.py search.
 - [x] **2026-04-13** Auto-remediation standard — all 3 detection systems (healthcheck, Nel, simulation) auto-generate morning reports when stale/missing. generate-morning-report.sh standalone generator.

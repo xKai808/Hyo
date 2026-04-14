@@ -795,6 +795,30 @@ PYEOF
     log "WARN: PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
   fi
 
+  # ─── STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md) ────────
+  local aether_active="$ROOT/agents/aether/ledger/ACTIVE.md"
+  mkdir -p "$(dirname "$aether_active")"
+  local trade_count_mem pnl_mem
+  trade_count_mem=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('trades',cw.get('totalTickersTraded',0)))" 2>/dev/null || echo "0")
+  pnl_mem=$(python3 -c "import json; d=json.load(open('$METRICS')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('pnl',0))" 2>/dev/null || echo "0")
+  cat > "$aether_active" << ACTIVEEOF
+# Aether — Active Tasks (auto-updated every cycle)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## This Cycle
+- Trades this period: ${trade_count_mem}
+- PNL: \$${pnl_mem}
+- Assessment: ${assessment}
+
+## Open Issues
+$(if [[ "$staleness_flag" == "True" ]]; then echo "- PLAYBOOK.md is stale"; fi)
+
+## Reflection Summary
+- Bottleneck: ${reflect_bottleneck}
+- Domain growth: ${reflect_domain_growth}
+ACTIVEEOF
+  log "Memory update: ACTIVE.md written"
+
   # ─── Dispatch reporting (closed-loop) ──────────────────────────────────────
   local dispatch_bin="$ROOT/bin/dispatch.sh"
   if [[ -x "$dispatch_bin" ]]; then

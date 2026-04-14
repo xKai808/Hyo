@@ -800,7 +800,35 @@ if [[ "$STALENESS_FLAG" == "True" ]]; then
   log_warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
 fi
 
-# PHASE 12: Dispatch Integration (Upward Communication to Kai)
+# PHASE 12.5: MEMORY UPDATE (constitutional step 13 — AGENT_ALGORITHMS.md)
+# Every cycle updates ACTIVE.md so Kai and healthcheck see current state.
+# ============================================================================
+NEL_ACTIVE="$ROOT/agents/nel/ledger/ACTIVE.md"
+mkdir -p "$(dirname "$NEL_ACTIVE")"
+cat > "$NEL_ACTIVE" << ACTIVEEOF
+# Nel — Active Tasks (auto-updated every cycle)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## This Cycle
+- Improvement score: ${IMPROVEMENT_SCORE}/100
+- Sentinel: ${SENTINEL_PASS} passed, ${SENTINEL_FAIL} failed
+- Cipher leaks: ${CIPHER_LEAKS}
+- Actions filed: ${ACTIONS_FILED}
+- Assessment: ${ASSESSMENT}
+
+## Open Issues
+$(if [[ ${SENTINEL_FAIL:-0} -gt 0 ]]; then echo "- Sentinel has ${SENTINEL_FAIL} failing checks"; fi)
+$(if [[ ${CIPHER_LEAKS:-0} -gt 0 ]]; then echo "- Cipher detected ${CIPHER_LEAKS} potential leaks"; fi)
+$(if [[ "$STALENESS_FLAG" == "True" ]]; then echo "- PLAYBOOK.md is stale (${PLAYBOOK_AGE}d)"; fi)
+$(if [[ $IMPROVEMENT_SCORE -lt 70 ]]; then echo "- System health below target ($IMPROVEMENT_SCORE < 70)"; fi)
+
+## Reflection Summary
+- Bottleneck: ${REFLECT_BOTTLENECK}
+- Domain growth: ${REFLECT_DOMAIN_GROWTH}
+ACTIVEEOF
+log_pass "Memory update: ACTIVE.md written"
+
+# PHASE 13: Dispatch Integration (Upward Communication to Kai)
 # ============================================================================
 DISPATCH="$ROOT/bin/dispatch.sh"
 if [[ -x "$DISPATCH" ]]; then

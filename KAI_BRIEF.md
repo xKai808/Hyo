@@ -91,11 +91,15 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 ~20:30 MT — Session 8 final, constitutional v3.0)
+## Current state (as of 2026-04-13 ~22:00 MT — Session 8 cont 4, constitutional v3.2)
 
 **SESSION 8 WAS THE MOST IMPORTANT SESSION.** Everything below this section is older state. Read this first.
 
-**What shipped in session 8 (3 continuations, ~12 hours total):**
+**What shipped in session 8 continuation 4:**
+
+9. **Memory Update Protocol (constitutional v3.2):** Step 13 added to SELF-EVOLUTION CYCLE. Every agent writes ACTIVE.md after every execution cycle with metrics, open issues, and reflection summary. Kai's own memory updates q2h via healthcheck (writes kai-active.md with system health + agent ACTIVE.md freshness). Healthcheck flags stale ACTIVE.md: >24h = P2, >48h = P1. All 5 runners (nel, sam, ra, aether, dex) wired. CLAUDE.md, AGENT_ALGORITHMS.md, and AGENT_CREATION_PROTOCOL.md all updated (propagation check: pass).
+
+**What shipped in session 8 (4 continuations, ~13 hours total):**
 
 1. **Constitutional v2.0 → v3.0:** AGENT_ALGORITHMS.md completely rewritten for agent autonomy.
    - POST-TASK REFLECTION added to Kai's TASK EXECUTION (6 questions, self-evolving)

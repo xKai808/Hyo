@@ -513,6 +513,29 @@ if [[ "$STALENESS_FLAG" == "True" ]]; then
   warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
 fi
 
+# STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md)
+RA_ACTIVE="$ROOT/agents/ra/ledger/ACTIVE.md"
+mkdir -p "$(dirname "$RA_ACTIVE")"
+cat > "$RA_ACTIVE" << ACTIVEEOF
+# Ra — Active Tasks (auto-updated every cycle)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## This Cycle
+- Newsletter produced: $(if ls ${ROOT}/agents/ra/output/*${TODAY}* 2>/dev/null | head -1 >/dev/null 2>&1; then echo "yes"; else echo "no"; fi)
+- Critical issues: ${CRITICAL:-0}
+- Warnings: ${WARNINGS:-0}
+- Assessment: ${ASSESSMENT}
+
+## Open Issues
+$(if [[ ${CRITICAL:-0} -gt 0 ]]; then echo "- ${CRITICAL} critical issues need attention"; fi)
+$(if [[ "$STALENESS_FLAG" == "True" ]]; then echo "- PLAYBOOK.md is stale (${PLAYBOOK_AGE:-unknown}d)"; fi)
+
+## Reflection Summary
+- Bottleneck: ${REFLECT_BOTTLENECK}
+- Domain growth: ${REFLECT_DOMAIN_GROWTH}
+ACTIVEEOF
+ok "Memory update: ACTIVE.md written"
+
 # Dispatch integration: report findings to Kai ledger
 DISPATCH="$ROOT/bin/dispatch.sh"
 if [[ -x "$DISPATCH" ]]; then

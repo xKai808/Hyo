@@ -53,6 +53,7 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 - **Test everything multiple times.** No assumptions. Run it, verify output, run it again for idempotency. Hyo has explicitly stated: "stop assuming things work."
 - **Update KAI_BRIEF and KAI_TASKS at end of session.** These are your memory. Treat them the way a human CEO treats their notebook.
 - **Memory is sacred — never repeat failures.** Before starting any task, check `known-issues.jsonl` and `evolution.jsonl` for prior attempts. Log what worked and what didn't. We spent 9 hours on session 8. Never lose progress. Never try the same failed approach twice.
+- **Memory updates q2h and after every cycle/change.** Every agent updates their `ACTIVE.md` after every execution cycle (step 13 of SELF-EVOLUTION CYCLE). Kai's own memory (KAI_BRIEF, KAI_TASKS, kai-active.md) updates every 2 hours via healthcheck AND after every task. Stale memory = stale decisions. Healthcheck flags any agent whose ACTIVE.md is >24h old (P2) or >48h old (P1). This is constitutional — see MEMORY UPDATE in `kai/AGENT_ALGORITHMS.md`.
 - **Save context before compression.** Run `kai save` during long sessions. This is separate from project consolidation.
 - **Secrets live in agents/nel/security/ only.** Gitignored, mode 700/600. If you see a secret anywhere else, fix it immediately.
 - **Don't apologize for autonomous work.** Make the call, ship it, log what you did, move on.

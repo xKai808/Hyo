@@ -579,6 +579,36 @@ PYEOF
   if [[ "$staleness_flag" == "True" ]]; then
     warn "PLAYBOOK.md is stale — consider refreshing with latest operational procedures"
   fi
+
+  # STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md)
+  local sam_active="$ROOT/agents/sam/ledger/ACTIVE.md"
+  mkdir -p "$(dirname "$sam_active")"
+  cat > "$sam_active" << ACTIVEEOF
+# Sam — Active Tasks (auto-updated every cycle)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## This Cycle
+- Tests: ${tests_passed} passed, ${tests_failed} failed
+- API health: ${api_health}
+- Deploy status: ${deploy_status}
+- Assessment: ${assessment}
+
+## Open Issues
+$(if [[ "${tests_failed:-0}" -gt 0 ]]; then echo "- ${tests_failed} test failures need attention"; fi)
+$(if [[ "$api_health" != "reachable" ]]; then echo "- API health: ${api_health}"; fi)
+$(if [[ "$staleness_flag" == "True" ]]; then echo "- PLAYBOOK.md is stale"; fi)
+
+## Reflection Summary
+- Bottleneck: ${reflect_bottleneck}
+- Domain growth: ${reflect_domain_growth}
+ACTIVEEOF
+  ok "Memory update: ACTIVE.md written"
+
+  # Dispatch report to Kai
+  local dispatch_bin="$ROOT/bin/dispatch.sh"
+  if [[ -x "$dispatch_bin" ]]; then
+    bash "$dispatch_bin" report sam "cycle complete: tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}" 2>/dev/null || true
+  fi
 }
 
 # ---- self-review: Sam pathway audit -----------------------------------------

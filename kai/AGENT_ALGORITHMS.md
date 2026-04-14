@@ -221,6 +221,38 @@ SELF-EVOLUTION CYCLE (runs every execution, after self-review):
       (MUST include reflection answers from step 10 — not just metrics)
   12. IF improvements_proposed > 0 AND agent can fix it → fix it NOW
       (apply What's Next Gate — don't just log and wait)
+  13. MEMORY UPDATE (mandatory — after every cycle, every scheduled task, every change):
+      Memory is sacred. Stale memory means stale decisions. Every agent updates
+      memory after every execution cycle. This is not optional.
+      
+      What "memory update" means concretely:
+      a. Update agent's own ACTIVE.md with current task status
+         - What was done this cycle
+         - What's still open
+         - What blockers exist
+      b. Evolution entry already written (step 11) — no duplication needed
+      c. Report to Kai's ledger via dispatch report (so Kai's memory stays current)
+      d. If this cycle changed priorities → update PRIORITIES.md
+      e. If this cycle learned something → update PLAYBOOK.md (not just evolution.jsonl)
+      f. If this cycle surfaced a pattern → append to kai/ledger/known-issues.jsonl
+      
+      Kai's own memory update (runs q2h via healthcheck AND after every task):
+      a. Update KAI_BRIEF.md "Current state" section with latest system state
+      b. Update KAI_TASKS.md if tasks completed or new tasks emerged
+      c. Review kai/ledger/known-issues.jsonl for new patterns
+      d. Cross-reference agent evolution entries for drift detection
+      
+      TRIGGERS:
+      - After every agent execution cycle (step 13 of SELF-EVOLUTION CYCLE)
+      - After every scheduled task completes
+      - After every significant change to any governing file
+      - Kai: every 2 hours via healthcheck + after every task execution
+      
+      WHAT ENSURES NO MISS:
+      - Step 13 is constitutional — agents can't skip it
+      - Healthcheck verifies ACTIVE.md freshness (>24h = P2, >48h = P1)
+      - Dex cross-checks evolution.jsonl timestamps vs ACTIVE.md timestamps
+      - If agent writes evolution but skips ACTIVE.md update → healthcheck flags it
 
 PROTOCOL STALENESS PREVENTION:
   Dex enforces this across all agents:

@@ -103,20 +103,26 @@ touch agents/$NAME/ledger/log.jsonl
 touch agents/$NAME/evolution.jsonl
 ```
 
-**ACTIVE.md template:**
+**ACTIVE.md template (auto-updated by runner step 13 — MEMORY UPDATE):**
 ```markdown
-# <Name> Agent — Active Tasks
+# <Name> — Active Tasks (auto-updated every cycle)
+**Last updated:** <ISO timestamp MT>
 
-_Last updated: YYYY-MM-DD_
+## This Cycle
+- [key metrics from this run]
+- Assessment: [current assessment]
 
-## Open
+## Open Issues
+- [any active issues]
 
-(none)
-
-## Recently Closed
-
-(none)
+## Reflection Summary
+- Bottleneck: [from reflection]
+- Domain growth: [from reflection]
 ```
+
+**Memory update is constitutional (AGENT_ALGORITHMS.md step 13).** The runner MUST
+write ACTIVE.md after every cycle. Healthcheck flags stale ACTIVE.md: >24h = P2, >48h = P1.
+This is how Kai's memory stays current without requiring a session.
 
 **PRIORITIES.md template:**
 ```markdown
@@ -353,6 +359,26 @@ main() {
   phase_one
   # ... domain-specific phases ...
   # Self-review + self-evolution run after domain work, before report
+  # STEP 13: MEMORY UPDATE (constitutional — writes ACTIVE.md)
+  local agent_active="$AGENT_HOME/ledger/ACTIVE.md"
+  mkdir -p "$(dirname "$agent_active")"
+  cat > "$agent_active" << ACTIVEEOF
+# <Name> — Active Tasks (auto-updated every cycle)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## This Cycle
+- [key metrics summary]
+- Assessment: [assessment value]
+
+## Open Issues
+- [issues from this cycle]
+
+## Reflection Summary
+- Bottleneck: [reflection bottleneck]
+- Domain growth: [reflection domain growth]
+ACTIVEEOF
+  log "Memory update: ACTIVE.md written"
+
   phase_report
   log "Run complete"
 }
@@ -371,6 +397,7 @@ main "$@"
 8. Self-evolution with v2.0 evolution entry (MUST include `reflection` block)
 9. PLAYBOOK.md must exist and be referenced for staleness checks
 10. Domain-specific reflection signals — not canned "none" strings
+11. MEMORY UPDATE (step 13) — write ACTIVE.md after every cycle. Healthcheck flags stale ACTIVE.md (>24h=P2, >48h=P1). This is how Kai's memory stays fresh.
 
 ---
 

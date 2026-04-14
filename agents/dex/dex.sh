@@ -1057,6 +1057,33 @@ if [[ "$STALENESS_FLAG" == "True" ]]; then
 fi
 
 # ============================================================================
+# STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md)
+# ============================================================================
+DEX_ACTIVE="$ROOT/agents/dex/ledger/ACTIVE.md"
+mkdir -p "$(dirname "$DEX_ACTIVE")"
+cat > "$DEX_ACTIVE" << ACTIVEEOF
+# Dex — Active Tasks (auto-updated every cycle)
+**Last updated:** $(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+
+## This Cycle
+- Integrity: ${INTEGRITY_PASS} files validated, ${INTEGRITY_FAIL} issues
+- Stale tasks: ${STALE_COUNT} (>72h)
+- Recurrent patterns: ${PATTERNS_FOUND}
+- Assessment: ${ASSESSMENT}
+- Status: ${STATUS}
+
+## Open Issues
+$(if [[ ${INTEGRITY_FAIL:-0} -gt 0 ]]; then echo "- ${INTEGRITY_FAIL} integrity failures need repair"; fi)
+$(if [[ ${STALE_COUNT:-0} -gt 0 ]]; then echo "- ${STALE_COUNT} stale tasks need attention"; fi)
+$(if [[ "$STALENESS_FLAG" == "True" ]]; then echo "- PLAYBOOK.md is stale"; fi)
+
+## Reflection Summary
+- Bottleneck: ${REFLECT_BOTTLENECK}
+- Domain growth: ${REFLECT_DOMAIN_GROWTH}
+ACTIVEEOF
+log_pass "Memory update: ACTIVE.md written"
+
+# ============================================================================
 # FINAL: Dispatch to Kai
 # ============================================================================
 log_info "Dispatching daily summary to Kai"
