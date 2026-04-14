@@ -1,161 +1,122 @@
 {
   "date": "2026-04-14",
-  "generatedAt": "2026-04-14T05:09:00-06:00",
-  "summary": "Overnight, the daemon fleet ran on schedule — consolidation, simulation, Nel QA, Dex integrity, Aether metrics, and Cipher scans all fired. The bad news: the same core issues persist. No newsletter for the third straight day (Aurora still sandbox-blocked), the HQ API returns 401 on the data endpoint (28 consecutive sentinel failures), and several data files exist on disk but have zero rendering code in hq.html, meaning they're invisible to users. Nel's health score dropped from 85 to 65 — a regression driven by accumulated unresolved findings. The system is monitoring well but not remediating. An interactive Kai session on the Mini is required to break the logjam.",
+  "generatedAt": "2026-04-14T08:37:56-0600",
+  "generatedBy": "bin/generate-morning-report.sh",
+  "executiveSummary": "Morning report for 2026-04-14. Simulation: 25 pass / 9 fail. Health: ISSUES: 7 issues, 4 warnings. Trading: Balance: $87.45, Trades: ?, Win rate: 0.0, Strategies: 6.",
   "agentReports": [
     {
       "agent": "nel",
-      "status": "active",
-      "accomplished": [
-        "Completed full 9-phase QA cycle at 03:59 UTC",
-        "GitHub security scan passed — zero exposed secrets",
-        "Auto-synced research files (21 to 19)",
-        "Cipher ran 3 times overnight — zero leaks detected",
-        "Sentinel run #28: 5 passed, 4 failed (all recurring)",
-        "Published system report to HQ — health score 65/100"
+      "activeTasks": 42,
+      "score": 65,
+      "assessment": "routine maintenance run",
+      "topTasks": [
+        "**nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged",
+        "**nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire c",
+        "**nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) \u2014 scan entire c"
       ],
-      "issues": [
-        "P0: agents/nel/security directory still not gitignored",
-        "P0: Aether metrics JSON has no rendering code in hq.html",
-        "P1: /api/hq?action=data returns 401 (28th consecutive failure)",
-        "P2: 2 corrupt JSONL entries, 155 uncommitted changes, 15 broken links"
-      ],
-      "learned": "Health score regressed from 85 to 65. Detection is working; remediation is not. Fixes require Mini access that Cowork cannot provide.",
-      "nextSteps": [
-        "Next QA cycle in ~6 hours",
-        "gitignore fix requires interactive Mini session"
-      ]
-    },
-    {
-      "agent": "ra",
-      "status": "active",
-      "accomplished": [
-        "Daily health check completed — pipeline confirmed operational",
-        "Research archive at 30 files (5 entities, 4 topics, 7 lab items)",
-        "Most recent research: agent-supply-chain.md (1 day old)"
-      ],
-      "issues": [
-        "subscribers.jsonl missing at expected path",
-        "No newsletter for April 13 or 14 — Aurora blocked by sandbox egress restrictions"
-      ],
-      "learned": "Pipeline infrastructure is sound. The blockage is execution context — newsletter.sh needs Mini launchd, not Cowork sandbox.",
-      "nextSteps": [
-        "Migrate Aurora onto Mini launchd with working API key",
-        "Fix subscribers.jsonl path"
-      ]
+      "reflection": {
+        "bottleneck": "none",
+        "symptom_or_system": "system",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "sentinel=2p/2f, cipher_leaks=0, score=65"
+      }
     },
     {
       "agent": "sam",
-      "status": "active",
-      "accomplished": [
-        "Consolidation passed 6/6 sentinel checks",
-        "Website infrastructure stable",
-        "Cipher scan: zero leaks"
+      "activeTasks": 20,
+      "score": "?",
+      "assessment": "",
+      "topTasks": [
+        "**sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether m",
+        "**sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsl",
+        "**sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsl"
       ],
-      "issues": [
-        "SAM-P0-001: Aether dashboard has no rendering code",
-        "SAM-P1-002: Vercel KV not wired for data persistence",
-        "website/ vs agents/sam/website/ divergence unfixed"
+      "reflection": {}
+    },
+    {
+      "agent": "ra",
+      "activeTasks": 15,
+      "score": "?",
+      "assessment": "health check with 1 warning(s)",
+      "topTasks": [
+        "**ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's pr",
+        "**ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
+        "**ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06"
       ],
-      "learned": "Sam's logs directory is empty — no self-authored logs. Work is happening but there's no paper trail. Visibility gap.",
-      "nextSteps": [
-        "Build Aether dashboard rendering in hq.html",
-        "Wire Vercel KV"
-      ],
-      "idleJustification": "Sam has no independent log output — consolidation runs but Sam doesn't self-report. This needs fixing."
+      "reflection": {
+        "bottleneck": "no newsletter produced today \u2014 pipeline may be blocked or sources failing",
+        "symptom_or_system": "system",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "critical=0, warnings=1, sources=0, archive=       5"
+      }
     },
     {
       "agent": "aether",
-      "status": "active",
-      "accomplished": [
-        "Ran continuously overnight — 34KB of activity logged",
-        "Self-review completed with 5 findings",
-        "Evolution journal updated (58KB — most active agent by volume)",
-        "PLAYBOOK maintained at 25KB"
+      "activeTasks": 2,
+      "score": "?",
+      "assessment": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync",
+      "topTasks": [
+        "**aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What'",
+        "**flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-13T22:50:24-0"
       ],
-      "issues": [
-        "Dashboard rendering broken — data exists, no HQ display code",
-        "4 open resolutions awaiting contribution",
-        "GPT cross-check blocked by placeholder OpenAI key"
-      ],
-      "learned": "Aether generates data reliably every 15 minutes. But output is invisible because the HQ view hasn't been built. Cross-agent dependency (Aether → Sam) is the bottleneck.",
-      "nextSteps": [
-        "Resolve rendering dependency with Sam",
-        "Contribute to open resolutions"
-      ]
+      "reflection": {
+        "bottleneck": "dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cycle \u2014 may be blocked on exchange API or AetherBot logger",
+        "symptom_or_system": "system",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "trades=0, pnl=-2.8, dashboard=out-of-sync"
+      }
     },
     {
       "agent": "dex",
-      "status": "active",
-      "accomplished": [
-        "Nightly integrity run completed at 06:26 UTC",
-        "JSONL validation across all agent ledgers",
-        "Pattern detection flagged 120+ recurrent patterns",
-        "Self-review completed — gate adoption 5/5"
+      "activeTasks": 2,
+      "score": "?",
+      "assessment": "pattern detection: 120 recurrent issues found",
+      "topTasks": [
+        "**dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a ro",
+        "**flag-dex-001** [P2] Dex Phase 1 FAILED: 2 JSONL files have corrupt entries"
       ],
-      "issues": [
-        "2 JSONL files with corrupt entries (recurring since 04-13)",
-        "Recurrent pattern count growing rapidly (86 to 120 overnight) — dedup not working"
-      ],
-      "learned": "Pattern counter inflation isn't new problems — it's the same ones re-flagged every cycle. Dedup logic needs fixing or signal-to-noise will keep degrading.",
-      "nextSteps": [
-        "Fix corrupt JSONL entries",
-        "Implement flag deduplication"
-      ]
+      "reflection": {
+        "bottleneck": "detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged",
+        "symptom_or_system": "symptom \u2014 120 recurrent patterns suggests prior fixes didn't address root causes",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "integrity=5p/2f, stale=0, patterns=120"
+      }
     }
   ],
   "kaiReport": {
-    "tasksCompleted": [
-      "Aether migration + GPT integration (committed c2a88fb)",
-      "Agent introspective reports wired to HQ",
-      "Dex Python bool bug fixed",
-      "Dispatch flag cleanup: 32 to 9 unresolved",
-      "Morning report scheduled task operational"
-    ],
-    "tasksInProgress": [
-      "Build hyo.hyo agent — waiting for interactive session",
-      "Aether dashboard rendering (SAM-P0-001)",
-      "Vercel KV persistence (SAM-P1-002)",
-      "Agent autonomy architecture decision"
-    ],
-    "decisions": [
-      "Agent autonomy is the #1 strategic question — current agents are bash scripts, not reasoning systems",
-      "Nel recommended as first agent to get real Claude API integration",
-      "Morning report moved to Cowork scheduled task (no Mini access needed)"
-    ],
-    "recommendations": [
-      "URGENT: Schedule an interactive Kai session on the Mini. Cowork can monitor but cannot remediate.",
-      "Decide on LLM backend for agent reasoning (Anthropic API, Grok, or Claude Code CLI auth).",
-      "Consider pausing new features until P0 operational issues are resolved.",
-      "Fix Dex flag dedup before the noise drowns the signal entirely."
-    ]
+    "simulation": "25 pass / 9 fail",
+    "healthcheck": "ISSUES: 7 issues, 4 warnings",
+    "knownIssues": 2,
+    "newsletter": "produced"
   },
   "systemHealth": {
-    "daemons": "7/7 running on schedule",
-    "lastSimulation": "2026-04-14 00:30 MT — 25 passed, 9 failed. 5 new render-binding failures surfaced (data files with no hq.html code). Ra runner exit-2 recurring.",
-    "lastQACycle": "Nel QA 03:59 UTC — 3 phases failed (security, API, data), 1 auto-fixed (research sync). 5 render issues detected.",
-    "securityScan": "Cipher: clean across all overnight scans. Zero leaks. P0 gap: agents/nel/security still not gitignored. 5 sensitive files detected outside .secrets/."
+    "queueWorker": "check healthcheck-latest.json",
+    "simulation": "25 pass / 9 fail",
+    "healthcheck": "ISSUES: 7 issues, 4 warnings"
   },
-  "whatWentWell": [
-    "Every daemon fired on schedule — zero missed triggers overnight",
-    "Cipher security scans consistently clean — no credential leaks",
-    "Nel QA is comprehensive at 9 phases with rendered output verification",
-    "Aether most active agent, running every 15 minutes with real data",
-    "Consolidation clean for 4 of 6 projects"
+  "trading": {
+    "summary": "Balance: $87.45, Trades: ?, Win rate: 0.0, Strategies: 6"
+  },
+  "wentWell": [
+    "Newsletter went out on schedule \u2014 the content pipeline is reliable",
+    "Nel is actively growing \u2014 researching its domain and proposing improvements",
+    "Ra is actively growing \u2014 researching its domain and proposing improvements",
+    "Aether is actively growing \u2014 researching its domain and proposing improvements",
+    "Dex is actively growing \u2014 researching its domain and proposing improvements"
   ],
-  "whatNeedsAttention": [
-    "Interactive Mini session needed — root cause of all P0 remediation failures",
-    "Newsletter dark for 3 consecutive days — Aurora migration to launchd required",
-    "API health endpoint failed 28 consecutive runs",
-    "4 data files have no rendering code in hq.html — users see empty views",
-    "Dex recurrent patterns inflating to 120+ — dedup broken",
-    "OpenAI API key still placeholder"
+  "needsAttention": [
+    "Healthcheck flagged some issues (ISSUES: 7 issues, 4 warnings) \u2014 most are persistent from previous cycles and need root-cause fixes",
+    "Simulation caught failures (25 pass / 9 fail) \u2014 something regressed and needs investigation before it spreads",
+    "Ra is blocked: no newsletter produced today \u2014 pipeline may be blocked or sources failing",
+    "Aether is blocked: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc",
+    "Dex is blocked: detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged"
   ],
   "improvements": [
-    "Morning report now auto-generates at 05:00 MT",
-    "Nel Phase 7.5 catching data-without-render gaps",
-    "Simulation Phase 6 validates render bindings — 5 new failures surfaced",
-    "Self-review gates operational across all agents",
-    "Research auto-sync cleaning stale files"
+    "Review and close stale known issues",
+    "Check agent evolution scores for regressions"
   ]
 }

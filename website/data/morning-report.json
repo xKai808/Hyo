@@ -1,14 +1,14 @@
 {
-  "date": "2026-04-13",
-  "generatedAt": "2026-04-13T21:50:03-0600",
+  "date": "2026-04-14",
+  "generatedAt": "2026-04-14T08:37:56-0600",
   "generatedBy": "bin/generate-morning-report.sh",
-  "executiveSummary": "Morning report for 2026-04-13. Simulation: 25 pass / 2 fail. Health: ISSUES: 4 issues, 6 warnings. Trading: Balance: $83.72, Trades: ?, Win rate: 0.0, Strategies: 6.",
+  "executiveSummary": "Morning report for 2026-04-14. Simulation: 25 pass / 9 fail. Health: ISSUES: 7 issues, 4 warnings. Trading: Balance: $87.45, Trades: ?, Win rate: 0.0, Strategies: 6.",
   "agentReports": [
     {
       "agent": "nel",
       "activeTasks": 42,
-      "score": 85,
-      "assessment": "improvement: score improved 65 \u2192 85",
+      "score": 65,
+      "assessment": "routine maintenance run",
       "topTasks": [
         "**nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged",
         "**nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire c",
@@ -19,7 +19,7 @@
         "symptom_or_system": "system",
         "artifact_alive": "yes",
         "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "sentinel=4p/0f, cipher_leaks=0, score=85"
+        "learning": "sentinel=2p/2f, cipher_leaks=0, score=65"
       }
     },
     {
@@ -28,7 +28,7 @@
       "score": "?",
       "assessment": "",
       "topTasks": [
-        "**sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): No newsl",
+        "**sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether m",
         "**sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsl",
         "**sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsl"
       ],
@@ -40,12 +40,12 @@
       "score": "?",
       "assessment": "health check with 1 warning(s)",
       "topTasks": [
-        "**ra-001** [P2] [GUIDANCE] Your domain growth has been stagnant for 3+ cycles. W",
+        "**ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's pr",
         "**ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
         "**ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06"
       ],
       "reflection": {
-        "bottleneck": "none",
+        "bottleneck": "no newsletter produced today \u2014 pipeline may be blocked or sources failing",
         "symptom_or_system": "system",
         "artifact_alive": "yes",
         "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
@@ -54,59 +54,66 @@
     },
     {
       "agent": "aether",
-      "activeTasks": 5,
+      "activeTasks": 2,
       "score": "?",
       "assessment": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync",
       "topTasks": [
-        "Trades this period: 0",
-        "PNL: $-6.53",
-        "Assessment: standby mode: no trades this cycle; WARNING: dashboard out-of-sync"
+        "**aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What'",
+        "**flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-13T22:50:24-0"
       ],
       "reflection": {
         "bottleneck": "dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cycle \u2014 may be blocked on exchange API or AetherBot logger",
         "symptom_or_system": "system",
         "artifact_alive": "yes",
         "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "trades=0, pnl=-6.53, dashboard=out-of-sync"
+        "learning": "trades=0, pnl=-2.8, dashboard=out-of-sync"
       }
     },
     {
       "agent": "dex",
-      "activeTasks": 8,
+      "activeTasks": 2,
       "score": "?",
-      "assessment": "",
+      "assessment": "pattern detection: 120 recurrent issues found",
       "topTasks": [
-        "**dex-001** [P2] First daily intelligence scan (Phase 6A) \u2014 awaiting 23:00 MT ru",
-        "Autonomous operation: daily at 23:00 MT via com.hyo.dex launchd",
-        "Phase 6A daily intelligence scanning (7 rotating topics)"
+        "**dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a ro",
+        "**flag-dex-001** [P2] Dex Phase 1 FAILED: 2 JSONL files have corrupt entries"
       ],
-      "reflection": {}
+      "reflection": {
+        "bottleneck": "detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged",
+        "symptom_or_system": "symptom \u2014 120 recurrent patterns suggests prior fixes didn't address root causes",
+        "artifact_alive": "yes",
+        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
+        "learning": "integrity=5p/2f, stale=0, patterns=120"
+      }
     }
   ],
   "kaiReport": {
-    "simulation": "25 pass / 2 fail",
-    "healthcheck": "ISSUES: 4 issues, 6 warnings",
+    "simulation": "25 pass / 9 fail",
+    "healthcheck": "ISSUES: 7 issues, 4 warnings",
     "knownIssues": 2,
     "newsletter": "produced"
   },
   "systemHealth": {
     "queueWorker": "check healthcheck-latest.json",
-    "simulation": "25 pass / 2 fail",
-    "healthcheck": "ISSUES: 4 issues, 6 warnings"
+    "simulation": "25 pass / 9 fail",
+    "healthcheck": "ISSUES: 7 issues, 4 warnings"
   },
   "trading": {
-    "summary": "Balance: $83.72, Trades: ?, Win rate: 0.0, Strategies: 6"
+    "summary": "Balance: $87.45, Trades: ?, Win rate: 0.0, Strategies: 6"
   },
   "wentWell": [
-    "Newsletter produced on schedule",
-    "Nel showing active domain growth",
-    "Ra showing active domain growth",
-    "Aether showing active domain growth"
+    "Newsletter went out on schedule \u2014 the content pipeline is reliable",
+    "Nel is actively growing \u2014 researching its domain and proposing improvements",
+    "Ra is actively growing \u2014 researching its domain and proposing improvements",
+    "Aether is actively growing \u2014 researching its domain and proposing improvements",
+    "Dex is actively growing \u2014 researching its domain and proposing improvements"
   ],
   "needsAttention": [
-    "Healthcheck: ISSUES: 4 issues, 6 warnings",
-    "Simulation has failures: 25 pass / 2 fail",
-    "Aether bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc"
+    "Healthcheck flagged some issues (ISSUES: 7 issues, 4 warnings) \u2014 most are persistent from previous cycles and need root-cause fixes",
+    "Simulation caught failures (25 pass / 9 fail) \u2014 something regressed and needs investigation before it spreads",
+    "Ra is blocked: no newsletter produced today \u2014 pipeline may be blocked or sources failing",
+    "Aether is blocked: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc",
+    "Dex is blocked: detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged"
   ],
   "improvements": [
     "Review and close stale known issues",
