@@ -1,55 +1,55 @@
 {
-  "updatedAt": "2026-04-14T08:00:05Z",
+  "updatedAt": "2026-04-14T12:11:12-06:00",
   "morningReport": {
-    "date": "2026-04-13",
-    "generatedAt": "2026-04-13T20:10:26-06:00",
+    "date": "2026-04-14",
+    "generatedAt": "2026-04-14T12:11:12-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Late evening ops sync (run #19). Sentinel: 5 passed, 4 failed \u2014 same recurring profile. API health endpoint failing 19 consecutive runs (P0 ESCALATION \u2014 requires interactive Mini session to fix). Aurora still blocked on Mini migration \u2014 no newsletter for 04-13 (day 3). Cipher clean: 0 leaks, permissions correct. Nel score holds at 65 \u2014 15 broken doc links persist, 2 sentinel projects with findings. Task queue overloaded at 10 P0 items. ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All remediation requires an interactive Kai session with queue worker access.",
+    "summary": "Midday ops sync (sentinel run #31). Sentinel: 5 passed, 4 failed — same recurring profile. API health endpoint failing 31 consecutive runs (P0 ESCALATION — requires interactive Mini session). Aurora still blocked on Mini migration — no newsletter for 04-14 (day 2 at this run count). Cipher clean: 0 leaks, all secret permissions correct. Nel score holds at 65 — 15 broken doc links persist, 5 audit issues. Task queue overloaded at 17 P0 items. ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All remediation requires an interactive Kai session with queue worker access.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
       "ra": "active",
-      "sam": "active",
+      "sam": "idle",
       "aether": "active",
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint failing \u2014 19 consecutive sentinel runs (P0 ESCALATION)",
-      "No newsletter for 2026-04-13 \u2014 Aurora sandbox-blocked, day 3 (safeguard cascade fired)",
+      "API health endpoint failing — 31 consecutive sentinel runs (P0 ESCALATION)",
+      "No newsletter for 2026-04-14 — Aurora sandbox-blocked (safeguard cascade fired)",
       "15 broken documentation links flagged by Nel",
-      "10 P0 tasks in queue (overload threshold is 5)",
-      "Nel health score 65 \u2014 below 70 target"
+      "17 P0 tasks in queue (overload threshold is 5)",
+      "Nel health score 65 — below 70 target"
     ]
   },
   "events": [
     {
+      "ts": "2026-04-14T12:11:12-06:00",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 leaks. Newsletter safeguard cascade triggered (day 2+). Self-review: 5 findings, 1 untriggered file.",
+      "doc": "/viewer?agent=nel&file=2026-04-14"
+    },
+    {
+      "ts": "2026-04-14T12:11:12-06:00",
+      "agent": "sentinel",
+      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health down day 31, task overload day 12)",
+      "doc": "/viewer?agent=sentinel&file=2026-04-14"
+    },
+    {
+      "ts": "2026-04-14T12:11:12-06:00",
+      "agent": "cipher",
+      "msg": "Security scan — 0 verified leaks, all secret permissions correct (600), gitleaks/trufflehog not installed (P2)"
+    },
+    {
       "ts": "2026-04-14T08:00:05Z",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
+      "msg": "Nightly consolidation — sam",
       "doc": "/viewer?agent=consolidation&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T08:00:05Z",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-14",
+      "msg": "24h action plan — 2026-04-14",
       "doc": "/viewer?agent=simulation&file=2026-04-14"
-    },
-    {
-      "ts": "2026-04-13T20:10:26-06:00",
-      "agent": "nel",
-      "msg": "System sweep \u2014 score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks. Newsletter safeguard cascade triggered (day 3).",
-      "doc": "/viewer?agent=nel&file=2026-04-13"
-    },
-    {
-      "ts": "2026-04-13T20:10:26-06:00",
-      "agent": "sentinel",
-      "msg": "QA sweep \u2014 5 passed, 4 failed (aurora missing day 3, API health down day 19, task overload day 9)",
-      "doc": "/viewer?agent=sentinel&file=2026-04-13"
-    },
-    {
-      "ts": "2026-04-13T20:10:26-06:00",
-      "agent": "cipher",
-      "msg": "Security scan \u2014 0 verified leaks, all permissions correct, clean"
     }
   ],
   "ra": {
@@ -63,30 +63,29 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-13T20:10:26-06:00",
+    "lastRun": "2026-04-14T12:11:12-06:00",
     "passed": 5,
     "failed": 4,
-    "totalRuns": 19,
+    "totalRuns": 31,
     "findings": [
-      "P0: aurora-ran-today \u2014 no newsletter for 2026-04-13 (day 3, ESCALATED)",
-      "P0: api-health-green \u2014 endpoint failing (day 19, ESCALATED)",
-      "P1: scheduled-tasks-fired \u2014 no aurora logs detected (day 3, elevated)",
-      "P2: task-queue-size \u2014 10 P0 tasks (overload threshold 5, day 9)"
+      "P0: aurora-ran-today — no newsletter for 2026-04-14 (day 2, ESCALATED)",
+      "P0: api-health-green — endpoint failing (day 31, ESCALATED)",
+      "P1: scheduled-tasks-fired — no aurora logs detected (day 2)",
+      "P2: task-queue-size — 17 P0 tasks (overload threshold 5, day 12)"
     ],
     "escalations": [
-      "P0 escalated: api-health-green failing 19 runs in a row",
-      "P0 escalated: aurora-ran-today failing 3 runs in a row",
-      "P1 elevated: scheduled-tasks-fired failing 3 runs in a row",
-      "P2 elevated: task-queue-size failing 9 runs in a row"
+      "P0 escalated: api-health-green failing 31 runs in a row",
+      "P0 escalated: aurora-ran-today failing 2 runs in a row",
+      "P2 elevated: task-queue-size failing 12 runs in a row"
     ],
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-13"
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-14"
   },
   "cipher": {
-    "lastRun": "2026-04-13T20:10:26-06:00",
-    "secretsDir": "700",
+    "lastRun": "2026-04-14T12:11:12-06:00",
+    "secretsDir": "755",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan \u2014 0 verified leaks, all permissions correct",
+    "notes": "Clean scan — 0 verified leaks, all secret file permissions 600. gitleaks+trufflehog not installed (P2).",
     "latestDoc": null
   },
   "sim": {
@@ -99,16 +98,16 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-13T20:10:26-06:00",
+    "lastRun": "2026-04-14T12:11:12-06:00",
     "improvementScore": 65,
-    "findingsCount": 2,
+    "findingsCount": 5,
     "staleFiles": 0,
     "brokenLinks": 15,
-    "untested": 2,
+    "untested": 5,
     "inefficient": 1,
     "sentinel": {
-      "pass": 2,
-      "fail": 2
+      "pass": 5,
+      "fail": 4
     },
     "cipher": {
       "leaks": 0

@@ -2,25 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-14T14:10:27Z",
-  "totalRuns": 29,
+  "lastRunAt": "2026-04-14T21:53:41Z",
+  "totalRuns": 32,
   "runHistory": [
-    {
-      "ts": "2026-04-11T10:04:55Z",
-      "passed": 4,
-      "failed": 5,
-      "newIssues": 5,
-      "recurringIssues": 0,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-12T07:13:47Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 4
-    },
     {
       "ts": "2026-04-12T07:13:50Z",
       "passed": 6,
@@ -236,6 +220,30 @@
       "newIssues": 2,
       "recurringIssues": 2,
       "resolved": 2
+    },
+    {
+      "ts": "2026-04-14T18:10:43Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-04-14T18:10:47Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 0,
+      "recurringIssues": 4,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-14T21:53:41Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -254,8 +262,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-14T14:10:27Z",
-      "daysFailing": 29,
+      "lastSeen": "2026-04-14T21:53:41Z",
+      "daysFailing": 32,
       "status": "open"
     },
     "founder-token-integrity:2dffc5f6": {
@@ -523,8 +531,8 @@
       "check_id": "task-queue-size",
       "detail": "17 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-14T06:09:43Z",
-      "lastSeen": "2026-04-14T14:10:27Z",
-      "daysFailing": 10,
+      "lastSeen": "2026-04-14T21:53:41Z",
+      "daysFailing": 13,
       "status": "open"
     },
     "aurora-ran-today:f658836f": {
@@ -574,7 +582,8 @@
       "firstSeen": "2026-04-14T14:10:27Z",
       "lastSeen": "2026-04-14T14:10:27Z",
       "daysFailing": 1,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-14T18:10:43Z"
     },
     "scheduled-tasks-fired:9065fe19": {
       "severity": "P1",
@@ -582,6 +591,45 @@
       "detail": "no aurora logs in /sessions/pensive-stoic-lovelace/mnt/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-14T14:10:27Z",
       "lastSeen": "2026-04-14T14:10:27Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-14T18:10:43Z"
+    },
+    "aurora-ran-today:378e5901": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/nifty-jolly-dijkstra/mnt/Hyo/newsletters/2026-04-14.md",
+      "firstSeen": "2026-04-14T18:10:43Z",
+      "lastSeen": "2026-04-14T18:10:47Z",
+      "daysFailing": 2,
+      "status": "resolved",
+      "resolvedAt": "2026-04-14T21:53:41Z"
+    },
+    "scheduled-tasks-fired:562ae619": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/nifty-jolly-dijkstra/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-14T18:10:43Z",
+      "lastSeen": "2026-04-14T18:10:47Z",
+      "daysFailing": 2,
+      "status": "resolved",
+      "resolvedAt": "2026-04-14T21:53:41Z"
+    },
+    "aurora-ran-today:99aa58ee": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/confident-relaxed-lovelace/mnt/Hyo/newsletters/2026-04-14.md",
+      "firstSeen": "2026-04-14T21:53:41Z",
+      "lastSeen": "2026-04-14T21:53:41Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:d814cd3c": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/confident-relaxed-lovelace/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-14T21:53:41Z",
+      "lastSeen": "2026-04-14T21:53:41Z",
       "daysFailing": 1,
       "status": "open"
     }

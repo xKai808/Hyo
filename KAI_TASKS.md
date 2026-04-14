@@ -336,3 +336,11 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 
 - [ ] **[K]** [sentinel] missing or empty /sessions/pensive-stoic-lovelace/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:ffa64cc7] _(filed 2026-04-14)_
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/pensive-stoic-lovelace/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:9065fe19] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/nifty-jolly-dijkstra/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:378e5901] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/nifty-jolly-dijkstra/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:562ae619] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/nifty-jolly-dijkstra/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:378e5901:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/confident-relaxed-lovelace/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:99aa58ee] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-relaxed-lovelace/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d814cd3c] _(filed 2026-04-14)_

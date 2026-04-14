@@ -1,6 +1,6 @@
 # Ra Active Tasks
 
-Last updated: 2026-04-14T10:00:31Z
+Last updated: 2026-04-14T21:53:41Z
 
 ## In Progress
 
@@ -9,13 +9,13 @@ Last updated: 2026-04-14T10:00:31Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-14T03:55:07Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-14 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-04-14T18:10:55Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-13T22:10:49Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-14 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
+  - Delegated: 2026-04-14T21:53:41Z
   - Method: ls + validate all files in agents/ra/output/
   - Status: DELEGATED — Output directory has 2 files: 2026-04-11.md + 2026-04-11.html. HTML is valid (15056B, has doctype and closing tag). No orphaned MD files without matching HTML. Directory is clean — only 1 edition so far (2026-04-11).
 

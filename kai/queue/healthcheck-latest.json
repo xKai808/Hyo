@@ -1,18 +1,18 @@
 {
-  "ts": "2026-04-14T10:38:00-06:00",
+  "ts": "2026-04-14T15:46:46-06:00",
   "status": "ISSUES",
   "issues": 7,
-  "warnings": 4,
+  "warnings": 5,
   "findings": [
     {
       "severity": "P0",
       "area": "security",
-      "detail": "nel-001: agents/nel/security NOT gitignored — delegated 2026-04-14T10:00Z, sim-ack only, no actual .gitignore fix applied. Persists across 11 consecutive healthchecks."
+      "detail": "nel-001: agents/nel/security NOT gitignored — persists across 14 consecutive healthchecks. All delegations are sim-ack only — no actual .gitignore fix applied."
     },
     {
       "severity": "P0",
       "area": "hq-rendering",
-      "detail": "kai-001: Aether metrics JSON exists but hq.html has NO rendering code — delegated 2026-04-14T10:00Z, still sim-ack only, unresolved."
+      "detail": "kai-001: Aether metrics JSON exists but hq.html has NO rendering code — delegated multiple times, still sim-ack only."
     },
     {
       "severity": "P1",
@@ -27,7 +27,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "Aether stuck: 80+ duplicate flag-aether-001 entries in log.jsonl today. Same 'dashboard data mismatch' every 15min. Running but not progressing."
+      "detail": "Aether stuck: 80+ duplicate flag-aether-001 entries in log.jsonl. Same dashboard data mismatch every 15min. Running but not progressing."
     },
     {
       "severity": "P1",
@@ -37,7 +37,12 @@
     {
       "severity": "P1",
       "area": "agent-silent",
-      "detail": "Sam produced zero logs for 2026-04-14. 7 P1 tasks in ACTIVE.md (last updated 10:00Z), none executing."
+      "detail": "Sam produced zero logs for 2026-04-14. 7 P1 tasks in ACTIVE.md (all sim-ack only), none executing."
+    },
+    {
+      "severity": "P2",
+      "area": "queue-stall",
+      "detail": "5 pending queue items, 0 running. Worker not picking up new items. Pending count unchanged from last check."
     },
     {
       "severity": "P2",
@@ -47,7 +52,7 @@
     {
       "severity": "P2",
       "area": "delegation-gap",
-      "detail": "Systemic: nearly all recent delegations are sim-ack only. Queue worker IS functional (morning report ran 08:37 MT) but agents aren't dispatching real work through it."
+      "detail": "SYSTEMIC: Nearly all recent delegations resolve to sim-ack only. Agents aren't dispatching real work through the queue. Core problem unchanged across 14 healthchecks."
     },
     {
       "severity": "P2",
@@ -61,9 +66,10 @@
     }
   ],
   "queue_status": {
-    "pending": 0,
+    "pending": 5,
     "running": 0,
-    "healthy": true,
+    "healthy": false,
+    "note": "5 pending items not being picked up. Worker may need restart.",
     "last_completed": [
       {"id": "cmd-1776177498-248", "desc": "aether feed check", "exit_code": 0},
       {"id": "cmd-1776177475-175", "desc": "morning report generation", "exit_code": 0}
@@ -73,15 +79,15 @@
     "aether": true,
     "dex": true,
     "nel": true,
-    "ra": true,
+    "ra": false,
     "sam": false
   },
   "stale_tasks_over_72h": 0,
-  "note": "11th consecutive ISSUES healthcheck. Core problem: agents generate sim-ack delegations but don't dispatch real work through the queue. Queue itself works (morning report succeeded at 08:37).",
+  "note": "14th consecutive ISSUES healthcheck. No improvement since last check. Core systemic problem unchanged: agents create delegations and sim-acks but do not execute real work through the queue. Real remediation requires an interactive Kai session on the Mini with queue worker access.",
   "recent_queue_results": [
     {"id": "cmd-1776177498-248", "desc": "aether feed check", "exit_code": 0},
     {"id": "cmd-1776177475-175", "desc": "morning report generation", "exit_code": 0}
   ],
-  "consecutive_unhealthy_checks": 11,
-  "next_check": "2026-04-14T12:38:00-06:00"
+  "consecutive_unhealthy_checks": 14,
+  "next_check": "2026-04-14T17:46:00-06:00"
 }

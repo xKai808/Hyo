@@ -1,0 +1,15 @@
+[2026-04-14T21:45:35Z] cipher run start
+[2026-04-14T21:45:36Z] gitleaks/trufflehog not available in sandbox — manual scan performed
+[2026-04-14T21:45:36Z] LAYER 1 (pattern scan): No hardcoded secrets found in tracked files
+[2026-04-14T21:45:36Z]   - Matches in github-security-scanning-best-practices.md are documentation examples only (false positive)
+[2026-04-14T21:45:36Z]   - bin/kai.sh:776 reads HYO_HQ_PASSWORD from env var, not hardcoded (safe)
+[2026-04-14T21:45:36Z] LAYER 2 (permission check): All secrets at mode 600 ✓
+[2026-04-14T21:45:36Z]   - openai.key: 600 ✓
+[2026-04-14T21:45:36Z]   - aethel-bot.key: 600 ✓
+[2026-04-14T21:45:36Z]   - deploy-hook: 600 ✓
+[2026-04-14T21:45:36Z]   - env: 600 ✓
+[2026-04-14T21:45:36Z]   - founder.token: 600 ✓
+[2026-04-14T21:45:36Z] LAYER 3 (.gitignore): .secrets/, *.token, *.key, .env all covered ✓
+[2026-04-14T21:45:36Z] RESULT: CLEAN — 0 leaks, 0 permission drifts, 0 gitignore gaps
+[2026-04-14T21:45:36Z] cipher run complete
+[2026-04-14T21:53:41Z] cipher run start

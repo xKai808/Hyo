@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-04-14T08:10
+# nel Self-Review — 2026-04-14T15:53
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-14-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -41,5 +41,5 @@ Questions for nel to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 5
-- Gate results: trigger=5/6, visibility=checked, resolutions=3, adoption=5/5
+- Gate results: trigger=4/5, visibility=checked, resolutions=3, adoption=5/5
 
