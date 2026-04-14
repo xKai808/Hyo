@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-14T10:10:12Z
+Last updated: 2026-04-14T16:17:10Z
 
 ## In Progress
 
-- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
-  - Delegated: 2026-04-14T10:00:31Z
+- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-14T16:17:10Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

@@ -1,11 +1,11 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-14T11:48:34Z
+Last updated: 2026-04-14T16:17:10Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-14T10:00:17Z
+  - Delegated: 2026-04-14T16:17:10Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -29,8 +29,8 @@ Last updated: 2026-04-14T11:48:34Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
-  - Delegated: 2026-04-14T10:00:31Z
+- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-14T16:17:10Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

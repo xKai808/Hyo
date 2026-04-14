@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-14T10:09:56Z",
-  "totalRuns": 28,
+  "lastRunAt": "2026-04-14T14:10:27Z",
+  "totalRuns": 29,
   "runHistory": [
     {
       "ts": "2026-04-11T10:04:55Z",
@@ -228,6 +228,14 @@
       "newIssues": 0,
       "recurringIssues": 4,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-14T14:10:27Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 2,
+      "recurringIssues": 2,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -246,8 +254,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-14T10:09:56Z",
-      "daysFailing": 28,
+      "lastSeen": "2026-04-14T14:10:27Z",
+      "daysFailing": 29,
       "status": "open"
     },
     "founder-token-integrity:2dffc5f6": {
@@ -515,8 +523,8 @@
       "check_id": "task-queue-size",
       "detail": "17 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-14T06:09:43Z",
-      "lastSeen": "2026-04-14T10:09:56Z",
-      "daysFailing": 9,
+      "lastSeen": "2026-04-14T14:10:27Z",
+      "daysFailing": 10,
       "status": "open"
     },
     "aurora-ran-today:f658836f": {
@@ -546,7 +554,8 @@
       "firstSeen": "2026-04-14T10:09:48Z",
       "lastSeen": "2026-04-14T10:09:56Z",
       "daysFailing": 3,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-14T14:10:27Z"
     },
     "scheduled-tasks-fired:fb9d8666": {
       "severity": "P1",
@@ -555,6 +564,25 @@
       "firstSeen": "2026-04-14T10:09:48Z",
       "lastSeen": "2026-04-14T10:09:56Z",
       "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-04-14T14:10:27Z"
+    },
+    "aurora-ran-today:ffa64cc7": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/pensive-stoic-lovelace/mnt/Hyo/newsletters/2026-04-14.md",
+      "firstSeen": "2026-04-14T14:10:27Z",
+      "lastSeen": "2026-04-14T14:10:27Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:9065fe19": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/pensive-stoic-lovelace/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-14T14:10:27Z",
+      "lastSeen": "2026-04-14T14:10:27Z",
+      "daysFailing": 1,
       "status": "open"
     }
   },

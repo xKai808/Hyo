@@ -333,3 +333,6 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/optimistic-beautiful-bell/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:d991b6d2:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-beautiful-bell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fb9d8666:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/pensive-stoic-lovelace/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:ffa64cc7] _(filed 2026-04-14)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/pensive-stoic-lovelace/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:9065fe19] _(filed 2026-04-14)_

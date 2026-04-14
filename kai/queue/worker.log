@@ -1100,3 +1100,43 @@ for r in aether:
 [2026-04-14T11:59:26Z] DONE: [cmd-1776167965-503] exit=0 (0s)
 [2026-04-14T11:59:26Z] BATCH: processed 1 commands
 [2026-04-14T11:59:27Z] IDLE: no pending commands
+[2026-04-14T12:03:29Z] EXEC: [cmd-1776168207-772] cd ~/Documents/Projects/Hyo && git pull --ff-only && git push origin main (timeout: 30s)
+[2026-04-14T12:03:37Z] DONE: [cmd-1776168207-772] exit=0 (8s)
+[2026-04-14T12:03:37Z] BATCH: processed 1 commands
+[2026-04-14T12:03:37Z] IDLE: no pending commands
+[2026-04-14T12:05:05Z] EXEC: [cmd-1776168304-915] cd ~/Documents/Projects/Hyo && git pull --ff-only && git push origin main (timeout: 30s)
+[2026-04-14T12:05:08Z] DONE: [cmd-1776168304-915] exit=0 (3s)
+[2026-04-14T12:05:08Z] BATCH: processed 1 commands
+[2026-04-14T12:05:09Z] IDLE: no pending commands
+[2026-04-14T12:05:15Z] EXEC: [cmd-1776168314-941] touch /tmp/aether-published-20260414 /tmp/aether-report-published-20260414 && ls -la /tmp/aether-*published* (timeout: 10s)
+[2026-04-14T12:05:15Z] DONE: [cmd-1776168314-941] exit=0 (0s)
+[2026-04-14T12:05:15Z] BATCH: processed 1 commands
+[2026-04-14T12:05:16Z] IDLE: no pending commands
+[2026-04-14T14:37:56Z] EXEC: [cmd-1776177475-175] cd ~/Documents/Projects/Hyo && bash bin/generate-morning-report.sh 2>&1 (timeout: 45s)
+[2026-04-14T14:38:01Z] DONE: [cmd-1776177475-175] exit=0 (5s)
+[2026-04-14T14:38:01Z] BATCH: processed 1 commands
+[2026-04-14T14:38:02Z] IDLE: no pending commands
+[2026-04-14T14:38:12Z] EXEC: [cmd-1776177491-226] cd ~/Documents/Projects/Hyo && python3 -c "
+import json
+with open('website/data/feed.json') as f:
+    data = json.load(f)
+print('today:', data.get('today'))
+print('reports:', len(data.get('reports',[])))
+for r in data.get('reports',[]):
+    print(f'  {r["id"]} | {r.get("date")} | {r.get("type")}')
+" (timeout: 15s)
+[2026-04-14T14:38:12Z] DONE: [cmd-1776177491-226] exit=0 (0s)
+[2026-04-14T14:38:12Z] BATCH: processed 1 commands
+[2026-04-14T14:38:13Z] IDLE: no pending commands
+[2026-04-14T14:38:19Z] EXEC: [cmd-1776177498-248] cd ~/Documents/Projects/Hyo && python3 -c '
+import json
+with open("website/data/feed.json") as f:
+    data = json.load(f)
+print("today:", data.get("today"))
+print("reports:", len(data.get("reports",[])))
+for r in data.get("reports",[]):
+    print("  " + r.get("id","?") + " | " + r.get("date","?") + " | " + r.get("type","?"))
+' (timeout: 15s)
+[2026-04-14T14:38:19Z] DONE: [cmd-1776177498-248] exit=0 (0s)
+[2026-04-14T14:38:19Z] BATCH: processed 1 commands
+[2026-04-14T14:38:20Z] IDLE: no pending commands

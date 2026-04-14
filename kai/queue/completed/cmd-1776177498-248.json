@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776177498-248",
+  "ts": "2026-04-14T14:38:19Z",
+  "command": "cd ~/Documents/Projects/Hyo && python3 -c '\nimport json\nwith open(\"website/data/feed.json\") as f:\n    data = json.load(f)\nprint(\"today:\", data.get(\"today\"))\nprint(\"reports:\", len(data.get(\"reports\",[])))\nfor r in data.get(\"reports\",[]):\n    print(\"  \" + r.get(\"id\",\"?\") + \" | \" + r.get(\"date\",\"?\") + \" | \" + r.get(\"type\",\"?\"))\n'",
+  "exit_code": 0,
+  "stdout": "today: 2026-04-14\nreports: 8\n  mr-2026-04-14 | 2026-04-14 | morning-report\n  agent-reflection-nel-2026-04-14-081035 | 2026-04-14 | agent-reflection\n  agent-reflection-nel-2026-04-14-081035 | 2026-04-14 | agent-reflection\n  mr-2026-04-13 | 2026-04-13 | morning-report\n  kai-ceo-2026-04-13 | 2026-04-13 | ceo-report\n  aether-reflection-2026-04-13 | 2026-04-13 | agent-reflection\n  nel-reflection-2026-04-13 | 2026-04-13 | agent-reflection\n  ra-reflection-2026-04-13 | 2026-04-13 | agent-reflection\n",
+  "stderr": "",
+  "duration_s": 0
+}

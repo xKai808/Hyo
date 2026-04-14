@@ -1,77 +1,87 @@
 {
-  "ts": "2026-04-14T12:00:00-06:00",
+  "ts": "2026-04-14T10:38:00-06:00",
   "status": "ISSUES",
-  "issues": 6,
-  "warnings": 5,
+  "issues": 7,
+  "warnings": 4,
   "findings": [
     {
       "severity": "P0",
       "area": "security",
-      "detail": "agents/nel/security is NOT gitignored — delegated to nel-001 at 10:00Z but still unresolved 2h later"
+      "detail": "nel-001: agents/nel/security NOT gitignored — delegated 2026-04-14T10:00Z, sim-ack only, no actual .gitignore fix applied. Persists across 11 consecutive healthchecks."
     },
     {
       "severity": "P0",
       "area": "hq-rendering",
-      "detail": "Aether metrics JSON + morning-report.json + hq-state.json exist but hq.html has NO rendering code — delegated to kai-001 but unresolved"
+      "detail": "kai-001: Aether metrics JSON exists but hq.html has NO rendering code — delegated 2026-04-14T10:00Z, still sim-ack only, unresolved."
     },
     {
       "severity": "P1",
-      "area": "api",
-      "detail": "/api/hq?action=data returned HTTP 401 — auth issue delegated but unresolved"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "ra stuck: no newsletter produced for 2026-04-12 or 2026-04-13 despite 7+ remediation attempts. Guidance sent but no progress."
+      "area": "api-key",
+      "detail": "Aether OpenAI API key is PLACEHOLDER (sk-your-***-here) — HTTP 401 every GPT log review cycle. Requires Hyo to set real key in .secrets/env."
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck: dashboard out-of-sync every 15min, same assessment repeated. 5+ unprocessed inbox items requesting API keys and threat detection guidance."
+      "detail": "Ra stuck: no newsletter for 2026-04-12, 2026-04-13, or 2026-04-14 (day 4). 7+ remediation tasks all sim-ack only — zero actual pipeline runs."
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "dex stuck: corrupt JSONL entries flagged 3+ cycles, auto-repair status unknown. Same bottleneck reported repeatedly."
+      "detail": "Aether stuck: 80+ duplicate flag-aether-001 entries in log.jsonl today. Same 'dashboard data mismatch' every 15min. Running but not progressing."
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "Dex stuck: corrupt JSONL entries flagged across multiple cycles, same bottleneck reported, no resolution."
+    },
+    {
+      "severity": "P1",
+      "area": "agent-silent",
+      "detail": "Sam produced zero logs for 2026-04-14. 7 P1 tasks in ACTIVE.md (last updated 10:00Z), none executing."
+    },
+    {
+      "severity": "P2",
+      "area": "log-spam",
+      "detail": "Aether flooding log.jsonl: 80+ duplicate FLAG+REPORT entries today (~6 per 15-min cycle). Needs dedup guard."
+    },
+    {
+      "severity": "P2",
+      "area": "delegation-gap",
+      "detail": "Systemic: nearly all recent delegations are sim-ack only. Queue worker IS functional (morning report ran 08:37 MT) but agents aren't dispatching real work through it."
     },
     {
       "severity": "P2",
       "area": "nel-grep",
-      "detail": "nel.sh uses grep -P (PCRE) which is unsupported on macOS — causes stderr errors every run"
+      "detail": "grep -P (PCRE) unsupported on macOS — stderr errors every self-review run. Still unfixed."
     },
     {
       "severity": "P2",
       "area": "docs",
-      "detail": "15 broken documentation links flagged by nel audit"
-    },
-    {
-      "severity": "P2",
-      "area": "audit",
-      "detail": "7 system issues found in nel structural audit"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "4 data files (aether-metrics, hq-state, morning-report, usage-config) have no reference in hq.html"
-    },
-    {
-      "severity": "P3",
-      "area": "code-quality",
-      "detail": "1 code optimization opportunity identified"
+      "detail": "15 broken documentation links flagged by nel audit — unfixed across multiple cycles."
     }
   ],
   "queue_status": {
     "pending": 0,
     "running": 0,
     "healthy": true,
-    "last_completed_exit_codes": [0, 0, 0]
+    "last_completed": [
+      {"id": "cmd-1776177498-248", "desc": "aether feed check", "exit_code": 0},
+      {"id": "cmd-1776177475-175", "desc": "morning report generation", "exit_code": 0}
+    ]
   },
-  "agent_activity_today": ["aether", "dex", "nel", "ra"],
-  "agents_missing_today": ["sam"],
+  "agent_activity_today": {
+    "aether": true,
+    "dex": true,
+    "nel": true,
+    "ra": true,
+    "sam": false
+  },
+  "stale_tasks_over_72h": 0,
+  "note": "11th consecutive ISSUES healthcheck. Core problem: agents generate sim-ack delegations but don't dispatch real work through the queue. Queue itself works (morning report succeeded at 08:37).",
   "recent_queue_results": [
-    {"id": "recheck-flag-nel-001", "status": "ok", "exit_code": 0},
-    {"id": "event-sam-flag-nel-001", "status": "ok", "exit_code": 0},
-    {"id": "event-nel-flag-nel-001", "status": "ok", "exit_code": 0}
+    {"id": "cmd-1776177498-248", "desc": "aether feed check", "exit_code": 0},
+    {"id": "cmd-1776177475-175", "desc": "morning report generation", "exit_code": 0}
   ],
-  "next_check": "in 2 hours (30min if P0 found)"
+  "consecutive_unhealthy_checks": 11,
+  "next_check": "2026-04-14T12:38:00-06:00"
 }
