@@ -641,6 +641,15 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     log "Self-review: $sr_issues issues in Aether pathway"
   fi
 
+  # ─── Agent Gates: Trigger Validation + Resolution Pickup + Recall ──────────
+  AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
+  if [[ -f "$AGENT_GATES" ]]; then
+    source "$AGENT_GATES"
+    run_trigger_validation "aether" || true
+    run_resolution_pickup "aether" || true
+    run_recall_check "aether" || true
+  fi
+
   # ─── Self-Evolution: Aether Learning & Improvement Tracking ─────────────────
   log "Self-evolution: capturing metrics and learning signals..."
 

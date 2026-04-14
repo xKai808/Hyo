@@ -650,6 +650,22 @@ else
 fi
 
 # ============================================================================
+# PHASE 11.5: Agent Gates (Trigger Validation + Resolution Pickup + Recall)
+# ============================================================================
+AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
+if [[ -f "$AGENT_GATES" ]]; then
+  source "$AGENT_GATES"
+  log_info "Running trigger validation gate..."
+  run_trigger_validation "nel" || true
+  log_info "Checking for open resolutions..."
+  run_resolution_pickup "nel" || true
+  log_info "Running recall check..."
+  run_recall_check "nel" || true
+else
+  log_warn "agent-gates.sh not found at $AGENT_GATES — skipping gates"
+fi
+
+# ============================================================================
 # PHASE 11.6: Self-Evolution (Agent Learning & Improvement Tracking)
 # ============================================================================
 log_info "Running self-evolution: capturing metrics and learning signals..."

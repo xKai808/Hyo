@@ -912,6 +912,17 @@ else
 fi
 
 # ============================================================================
+# AGENT GATES: Trigger Validation + Resolution Pickup + Recall
+# ============================================================================
+AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
+if [[ -f "$AGENT_GATES" ]]; then
+  source "$AGENT_GATES"
+  run_trigger_validation "dex" || true
+  run_resolution_pickup "dex" || true
+  run_recall_check "dex" || true
+fi
+
+# ============================================================================
 # SELF-EVOLUTION: Dex Learning & Improvement Tracking
 # ============================================================================
 log_info "Self-evolution: capturing metrics and learning signals..."

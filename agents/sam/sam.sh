@@ -423,6 +423,15 @@ EOF
 cmd_evolve() {
   hdr "Sam: Self-evolution logging"
 
+  # Agent gates: trigger validation, resolution pickup, recall
+  local AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
+  if [[ -f "$AGENT_GATES" ]]; then
+    source "$AGENT_GATES"
+    run_trigger_validation "sam" || true
+    run_resolution_pickup "sam" || true
+    run_recall_check "sam" || true
+  fi
+
   local EVOLUTION_FILE="$ROOT/agents/sam/evolution.jsonl"
   local PLAYBOOK="$ROOT/agents/sam/PLAYBOOK.md"
   local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)

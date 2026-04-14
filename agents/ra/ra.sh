@@ -371,6 +371,15 @@ else
   warn "Self-review: $SELF_REVIEW_ISSUES issues in Ra pathway"
 fi
 
+# ── Agent Gates: Trigger Validation + Resolution Pickup + Recall ──
+AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
+if [[ -f "$AGENT_GATES" ]]; then
+  source "$AGENT_GATES"
+  run_trigger_validation "ra" || true
+  run_resolution_pickup "ra" || true
+  run_recall_check "ra" || true
+fi
+
 # ── Self-Evolution: Ra Learning & Improvement Tracking ──
 say "Self-evolution: capturing metrics and learning signals..."
 
