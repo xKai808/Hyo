@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~01:20 MT (strategy dashboard live, aether.sh verified post-migration, simulation 25/1)
+**Updated:** 2026-04-13 ~21:30 MT (session 8 final — constitutional v3.1, all memory saved)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 **Last healthcheck:** 2026-04-14T00:10:00-06:00 — **ISSUES: 1 P0, 3 P1, 4 P2.** 6TH CONSECUTIVE UNHEALTHY CHECK — no improvement since monitoring began. P0: agents/nel/security gitignore gap (nel-001) — persists across 6+ checks, zero real remediation. P1: Newsletter missed TWO consecutive days (04-12 + 04-13) — now 48+ hours without output. P1: /api/hq 401 still unresolved. P1: Sim-ack masking — 20+ tasks show "DELEGATED — all clear" but nothing is actually fixed. NEW P2: flag-aether-001 triple-logging every 15 min (21+ entries in 2 hours). NEW P2: Sentinel found 2 projects with test failures. Queue completed jobs reference stale session paths — remediation commands are no-ops. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only. Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) actually fix .gitignore on Mini, (2) diagnose + fix API 401, (3) run newsletter pipeline manually, (4) deduplicate flags and close resolved tasks, (5) patch aether.sh to dedup flag logging, (6) patch safeguard cascade to prevent flag multiplication.
@@ -44,12 +44,12 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 | `kai-daily-audit` | 02:00 MT | Daily audit — staleness, bottlenecks, automation gaps |
 
 **WILL NOT fire overnight (requires a Kai session):**
-- Aether migration (AetherBot/ → agents/aether/) — **P0, must be first task in session 9**
-- Building hyo.hyo agent — needs Kai to scaffold, write runner, create manifest
+- ~~Aether migration~~ — ✓ DONE (session 8)
+- Building hyo.hyo agent — needs Kai to scaffold, write runner, create manifest. Follow `docs/AGENT_CREATION_PROTOCOL.md` v2.0.
 - Agent introspective reports on HQ — needs Kai to wire the report template + data flow
 - Two-version report system — needs Kai to modify all runners
 
-**Hyo's concern is valid:** The P0 overnight tasks need a Kai session. The daemons handle monitoring, metrics, and QA — not building. Next session must immediately tackle Aether migration, then Hyo agent, then introspective reports.
+**Next session priorities:** Build hyo.hyo agent (follows creation protocol v2.0), fix P0 operational issues (gitignore, API 401, newsletter pipeline), wire agent introspective reports to HQ.
 
 ---
 
@@ -134,6 +134,38 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - `6ceabef` — wire agent reflection into all 5 runners (spec → implementation)
 - `a5710b9` — close the evolution loop: event-driven triggers + proposal lifecycle
 - `464e229` — autonomy model v3: agents decide + report, Kai guides when stuck
+- `e65ba65` — session 8 memory save: all learnings persisted
+- `212b2a3` — fix governance-propagation-gap: CLAUDE.md + reflection propagation check
+- `3b6032c` — agent creation protocol v2.0: autonomy, reflection, growth from day one
+- `a0029ad` — propagation: CLAUDE.md references creation protocol, checklist updated
+
+**P0 patterns logged this session (known-issues.jsonl):**
+1. `rendered-output-gap` — data exists but nothing renders it
+2. `hydration-skip-on-continuation` — continuation sessions skipping hydration
+3. `detection-without-remediation` — systems that flag but can't fix (RES-001)
+4. `spec-without-implementation` — constitution says X, runner code doesn't do X
+5. `governance-propagation-gap` — operating model changes but governing docs don't all update
+
+**Algorithm evolution versions:**
+- v1.0 — RA-1 Resolution Algorithm created
+- v1.1 — RA-1 process improvements from RES-001
+- v2.0 — AGENT REFLECTION added to SELF-EVOLUTION CYCLE (6→12 steps)
+- v3.0 — AUTONOMY MODEL, KAI GUIDANCE PROTOCOL, ALGORITHM EVOLUTION LIFECYCLE
+- v3.1 — Propagation check added to both reflection loops (Kai q6, agent qf)
+
+**Governing documents updated this session (propagation check):**
+- ✅ `CLAUDE.md` — operating rules, project layout, end-of-session checklist, creation protocol reference
+- ✅ `kai/AGENT_ALGORITHMS.md` — constitution v3.1 (autonomy, guidance, evolution lifecycle, reflection)
+- ✅ `kai/protocols/REASONING_FRAMEWORK.md` — open-ended + yes/no question framework
+- ✅ `docs/AGENT_CREATION_PROTOCOL.md` — v2.0 (PLAYBOOK, reflection, 11-point testing, autonomy)
+- ✅ `KAI_BRIEF.md` — this file
+- ✅ `KAI_TASKS.md` — done items, new items
+- ✅ `kai/protocols/evolution.jsonl` — v1.0 through v3.1 entries
+- ✅ `kai/ledger/known-issues.jsonl` — 5 P0 patterns from session 8
+- ✅ All 5 agent runners (nel, sam, ra, aether, dex) — reflection blocks in evolution entries
+- ✅ `bin/dispatch.sh` — event-driven agent triggers on P0/P1
+- ✅ `kai/queue/healthcheck.sh` — Checks 7 (stale proposals) + 8 (dead-loop detection)
+- ✅ `kai/protocols/agent-gates.sh` — file_proposal() helper
 
 ---
 

@@ -81,6 +81,13 @@
 - [ ] **[K]** **Agent nightly self-improvement cycle** — each agent runs research + improvement during overnight hours. Nel: QA/security patterns. Sam: infra/deploy best practices. Ra: content sources + formats. Aether: trading algorithms. Dex: data integrity patterns. Results published to HQ automatically.
 - [ ] **[K]** **Clean up disabled Cowork scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aether-analysis.
 
+## P1 — Session 8 follow-ups
+
+- [ ] **[K]** **Dex: flag empty proposals dir.** If `kai/proposals/` has zero non-README proposals for >14 days while evolution.jsonl shows gaps, Dex should flag P2. Agents may not be using the evolution lifecycle. This is Dex's domain work — delegate, don't build.
+- [ ] **[K]** **Sam needs a scheduled trigger.** Sam's `cmd_evolve()` only runs on-demand. Every other agent has launchd. Sam's self-evolution (including reflection) won't fire unless someone calls it. Either add a launchd plist or wire it into an existing cycle.
+- [ ] **[agents]** **Populate Domain Reasoning in PLAYBOOKs.** Every agent has stubs ("TODO: evolve this section"). Each agent must write 3-5 domain-specific reasoning questions in PLAYBOOK.md under "## Domain Reasoning." This is agent work — Kai delegates, doesn't write.
+- [ ] **[K]** **Verify reflection blocks fire correctly.** Next time each runner executes, check evolution.jsonl for v2.0 entries with actual reflection data (not all "none"). If any agent writes empty reflections for 3+ cycles, it's a dead-loop — guidance protocol kicks in.
+
 ## P2 — Autonomous CEO Work (Kai builds without prompting)
 
 - [ ] **[K]** **Two-version report system.** Every consolidation, simulation, and agent report produces: (a) technical version in agent ledger/logs, (b) human-readable version on HQ. Wired into all runners.
