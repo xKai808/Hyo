@@ -91,7 +91,53 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 — nightly simulation run, ra.sh stat bug fixed)
+## Current state (as of 2026-04-13 ~20:30 MT — Session 8 final, constitutional v3.0)
+
+**SESSION 8 WAS THE MOST IMPORTANT SESSION.** Everything below this section is older state. Read this first.
+
+**What shipped in session 8 (3 continuations, ~12 hours total):**
+
+1. **Constitutional v2.0 → v3.0:** AGENT_ALGORITHMS.md completely rewritten for agent autonomy.
+   - POST-TASK REFLECTION added to Kai's TASK EXECUTION (6 questions, self-evolving)
+   - AGENT REFLECTION added as step 10 of SELF-EVOLUTION CYCLE (6 questions, constitutional)
+   - All 5 agent runners (nel, sam, ra, aether, dex) updated with reflection blocks in evolution entries (v2.0 entries with "reflection" key)
+   - AGENT AUTONOMY MODEL rewritten: agents decide for themselves, report to Kai. No permission gates except cross-agent interfaces, spending, constitution.
+   - KAI GUIDANCE PROTOCOL: Kai mentors with questions (the Hyo model). Dead-loop detection automated.
+   - ALGORITHM EVOLUTION LIFECYCLE: full proposal → review → approve → implement → verify → simulate chain with 6 explicit triggers
+   - REASONING FRAMEWORK: open-ended questions (explore) + yes/no questions (decide direction) pattern added
+
+2. **Event-driven agent triggers:** dispatch.sh now queues agent runners immediately on P0/P1 flags. Agents respond in minutes, not hours.
+
+3. **Dead-loop detection:** Healthcheck Check 8 reads last 3 evolution entries per agent. Same assessment/bottleneck/stagnant growth 3x → auto-sends guidance question via dispatch. Logs to guidance.jsonl.
+
+4. **Proposal infrastructure:** kai/proposals/ directory + file_proposal() helper in agent-gates.sh. Healthcheck Check 7 catches stale proposals (>48h unreviewed → P1).
+
+5. **Resolution Algorithm v1.1:** RA-1 created, tested with RES-001 (first real resolution: detection-without-remediation), self-evolved with process improvements.
+
+6. **Auto-remediation standard:** All 3 detection systems (healthcheck, Nel, simulation) can now auto-generate morning reports when stale/missing. Detection without remediation is constitutionally incomplete.
+
+7. **Hydration enforcement:** Continuation sessions are NOT exempt from hydration. P1 pattern logged. CLAUDE.md updated with explicit bold-text rule.
+
+**Session 8 fundamental learnings (from Hyo — these are permanent):**
+- Agents are not runners. They are autonomous AI with specialties that need to grow.
+- Kai grows agents. Kai does not do their work. Give questions, not answers.
+- Every artifact needs a trigger (event or schedule). No dead files.
+- Detection without remediation is half the job.
+- Solve the system, not the symptom. Every fix addresses the class of failure.
+- The spec (constitution) is not the implementation (runner code). Both must exist.
+- Apply the Trigger Validation Gate to your OWN output before declaring done.
+- Open-ended questions explore. Yes/no questions decide direction. Pattern: explore → narrow → execute → reflect.
+- Build for amnesia. Everything in files, nothing in sessions.
+
+**Commits (session 8 continuation 3):**
+- `d859aaa` — constitutional v2.0: embed agent reflection into self-evolution cycle
+- `6ceabef` — wire agent reflection into all 5 runners (spec → implementation)
+- `a5710b9` — close the evolution loop: event-driven triggers + proposal lifecycle
+- `464e229` — autonomy model v3: agents decide + report, Kai guides when stuck
+
+---
+
+## Previous state (as of 2026-04-13 — nightly simulation run, ra.sh stat bug fixed)
 
 **📋 NIGHTLY SIMULATION (2026-04-13T03:33 MT) — Cowork scheduled task:**
 
