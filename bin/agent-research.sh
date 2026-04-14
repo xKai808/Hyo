@@ -375,8 +375,9 @@ PYEOF
 
   PUBLISH_SCRIPT="$ROOT/bin/publish-to-feed.sh"
   if [[ -x "$PUBLISH_SCRIPT" ]]; then
+    AGENT_TITLE=$(echo "$AGENT" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
     bash "$PUBLISH_SCRIPT" "agent-reflection" "$AGENT" \
-      "${AGENT^} — Research & Reflection" "$FEED_SECTIONS"
+      "$AGENT_TITLE — Research & Reflection" "$FEED_SECTIONS"
     log "Published research report to feed"
   fi
 fi
