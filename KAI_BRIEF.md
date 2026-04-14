@@ -97,9 +97,11 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 
 **What shipped in session 8 continuation 4:**
 
-9. **Memory Update Protocol (constitutional v3.2):** Step 13 added to SELF-EVOLUTION CYCLE. Every agent writes ACTIVE.md after every execution cycle with metrics, open issues, and reflection summary. Kai's own memory updates q2h via healthcheck (writes kai-active.md with system health + agent ACTIVE.md freshness). Healthcheck flags stale ACTIVE.md: >24h = P2, >48h = P1. All 5 runners (nel, sam, ra, aether, dex) wired. CLAUDE.md, AGENT_ALGORITHMS.md, and AGENT_CREATION_PROTOCOL.md all updated (propagation check: pass).
+9. **Memory Update Protocol (constitutional v3.2):** Step 13 added to SELF-EVOLUTION CYCLE. Every agent writes ACTIVE.md after every execution cycle. Kai q2h memory via healthcheck. All 5 runners wired.
 
-**What shipped in session 8 (4 continuations, ~13 hours total):**
+10. **HQ v9 — Feed-centric Dashboard:** Complete redesign from static dashboard to newsfeed. Left sidebar (Feed, Kai, Nel, Sam, Ra, Aether, Dex, Research). Feed view shows reports most-recent-first, resets daily. Agent detail views show self-written responsibilities, short/medium/long goals, in-process/pending items, report history by month with week groupings. Two-version morning report generator (internal for Kai, feed for Hyo). `publish-to-feed.sh` lets any agent post to the feed. Report types: morning-report, ceo-report, agent-reflection, research-drop. Legacy HQ preserved at hq-legacy.html. Commit: `0fadbdc`.
+
+**What shipped in session 8 continuations 1-3 (~12 hours):**
 
 1. **Constitutional v2.0 → v3.0:** AGENT_ALGORITHMS.md completely rewritten for agent autonomy.
    - POST-TASK REFLECTION added to Kai's TASK EXECUTION (6 questions, self-evolving)
