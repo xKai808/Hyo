@@ -1047,8 +1047,8 @@ entry = {
   },
   "assessment": "$ASSESSMENT",
   "improvements_proposed": $IMPROVEMENTS_PROPOSED,
-  "playbook_updated": $PLAYBOOK_UPDATED,
-  "staleness_flag": $STALENESS_FLAG,
+  "playbook_updated": $([ "$PLAYBOOK_UPDATED" = "true" ] && echo "True" || echo "False"),
+  "staleness_flag": $([ "$STALENESS_FLAG" = "true" ] && echo "True" || echo "False"),
   "reflection": {
     "bottleneck": "$REFLECT_BOTTLENECK",
     "symptom_or_system": "$REFLECT_SYMPTOM_OR_SYSTEM",
