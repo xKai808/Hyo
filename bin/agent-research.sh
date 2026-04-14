@@ -114,19 +114,33 @@ for src in sources:
 
         # Extract relevant snippets based on type
         if src_type == "rss":
-            # Extract titles and descriptions from RSS/Atom
+            # Extract titles and descriptions from RSS/Atom (handle <item> blocks)
             import re
-            titles = re.findall(r'<title[^>]*>(.*?)</title>', content, re.DOTALL)
-            descriptions = re.findall(r'<description[^>]*>(.*?)</description>', content, re.DOTALL)
+            # Try <item>-based extraction first (standard RSS)
+            item_blocks = re.findall(r'<item[^>]*>(.*?)</item>', content, re.DOTALL)
             items = []
-            for i, t in enumerate(titles[:10]):
-                t = re.sub(r'<[^>]+>', '', t).strip()
-                d = ""
-                if i < len(descriptions):
-                    d = re.sub(r'<[^>]+>', '', descriptions[i]).strip()[:200]
-                if t:
-                    items.append(f"- {t}" + (f": {d}" if d else ""))
-            snippet = "\n".join(items[:8])
+            if item_blocks:
+                for block in item_blocks[:15]:
+                    title_m = re.search(r'<title[^>]*>(.*?)</title>', block, re.DOTALL)
+                    desc_m = re.search(r'<description[^>]*>(.*?)</description>', block, re.DOTALL)
+                    link_m = re.search(r'<link[^>]*>(.*?)</link>', block, re.DOTALL)
+                    t = re.sub(r'<!\[CDATA\[|\]\]>|<[^>]+>', '', title_m.group(1)).strip() if title_m else ""
+                    d = re.sub(r'<!\[CDATA\[|\]\]>|<[^>]+>', '', desc_m.group(1)).strip()[:200] if desc_m else ""
+                    l = re.sub(r'<!\[CDATA\[|\]\]>|<[^>]+>', '', link_m.group(1)).strip() if link_m else ""
+                    if t:
+                        items.append(f"- {t}" + (f": {d}" if d else "") + (f"\n  {l}" if l else ""))
+            else:
+                # Fallback: Atom <entry> or flat <title> tags
+                titles = re.findall(r'<title[^>]*>(.*?)</title>', content, re.DOTALL)
+                descriptions = re.findall(r'<description[^>]*>(.*?)</description>', content, re.DOTALL)
+                for i, t in enumerate(titles[:10]):
+                    t = re.sub(r'<!\[CDATA\[|\]\]>|<[^>]+>', '', t).strip()
+                    d = ""
+                    if i < len(descriptions):
+                        d = re.sub(r'<!\[CDATA\[|\]\]>|<[^>]+>', '', descriptions[i]).strip()[:200]
+                    if t and t not in ['', 'CDATA']:
+                        items.append(f"- {t}" + (f": {d}" if d else ""))
+            snippet = "\n".join(items[:15])
         elif src_type == "api":
             # JSON API — extract top-level keys or first few items
             try:
@@ -152,7 +166,7 @@ for src in sources:
             "name": name,
             "status": "ok",
             "focus": focus,
-            "snippet": snippet[:2000],
+            "snippet": snippet[:5000],
             "raw_file": raw_file
         })
         print(f"  OK: {len(content)} bytes, saved to {raw_file}")
@@ -222,9 +236,20 @@ def extract_list_section(text, header):
     if not match:
         return []
     start = match.end()
-    next_bold = re.search(r'\*\*\w+:?\*\*', text[start:])
-    section = text[start:start + next_bold.start()].strip() if next_bold else text[start:].strip()
-    return [l.strip().lstrip('- ').strip() for l in section.split('\n') if l.strip().startswith('-')]
+    # Stop at: next **Bold:** header, --- separator, or ## header
+    next_stop = re.search(r'\*\*\w+:?\*\*|^---$|^##\s+', text[start:], re.MULTILINE)
+    section = text[start:start + next_stop.start()].strip() if next_stop else text[start:].strip()
+    items = []
+    for line in section.split('\n'):
+        line = line.strip()
+        if line.startswith('- ') or line.startswith('* '):
+            item = line.lstrip('- ').lstrip('* ').strip()
+            # Skip checklist items ([ ] Phase 1: ...) — these are operational, not assessment
+            if item.startswith('[ ]') or item.startswith('[x]'):
+                continue
+            if item and len(item) > 5:
+                items.append(item)
+    return items
 
 my_weaknesses = extract_list_section(playbook_text, "Weaknesses")
 my_blindspots = extract_list_section(playbook_text, "Blindspots")
