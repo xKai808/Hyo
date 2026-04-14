@@ -22,6 +22,7 @@ set -uo pipefail
 
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 FEED="$ROOT/website/data/feed.json"
+FEED_GIT="$ROOT/agents/sam/website/data/feed.json"
 TODAY=$(TZ="America/Denver" date +%Y-%m-%d)
 NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
 MONTH_KEY=$(echo "$TODAY" | cut -c1-7)
@@ -118,5 +119,10 @@ with open(feed_path, "w") as f:
 
 print(f"Published to feed: [{report_type}] {title} by {author}")
 PYEOF
+
+# Dual-write: keep git-tracked copy in sync
+if [[ -f "$FEED" && -f "$FEED_GIT" && "$FEED" != "$FEED_GIT" ]]; then
+  cp "$FEED" "$FEED_GIT"
+fi
 
 echo "Feed entry published: $REPORT_ID"
