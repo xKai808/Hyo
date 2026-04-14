@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~23:30 MT (session 9 final — full audit, Aether fixes, launchd diagnosis, flag cleanup)
+**Updated:** 2026-04-14 ~00:00 MT (session 9 closed — Hyo raised fundamental question about agent autonomy)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 **Last healthcheck:** 2026-04-14T00:10:00-06:00 — **ISSUES: 1 P0, 3 P1, 4 P2.** 6TH CONSECUTIVE UNHEALTHY CHECK — no improvement since monitoring began. P0: agents/nel/security gitignore gap (nel-001) — persists across 6+ checks, zero real remediation. P1: Newsletter missed TWO consecutive days (04-12 + 04-13) — now 48+ hours without output. P1: /api/hq 401 still unresolved. P1: Sim-ack masking — 20+ tasks show "DELEGATED — all clear" but nothing is actually fixed. NEW P2: flag-aether-001 triple-logging every 15 min (21+ entries in 2 hours). NEW P2: Sentinel found 2 projects with test failures. Queue completed jobs reference stale session paths — remediation commands are no-ops. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only. Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) actually fix .gitignore on Mini, (2) diagnose + fix API 401, (3) run newsletter pipeline manually, (4) deduplicate flags and close resolved tasks, (5) patch aether.sh to dedup flag logging, (6) patch safeguard cascade to prevent flag multiplication.
@@ -120,6 +120,16 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 26. **Dex Python Bool Fix:** `dex.sh` evolution entry builder converted bash booleans to Python booleans.
 
 27. **Simulation Permission Fix:** `chmod 644` on `hq-state.json`, `known-issues.jsonl`, `log.jsonl`.
+
+28. **Feed dual-write fix:** `publish-to-feed.sh` now copies feed.json to both `website/data/` and `agents/sam/website/data/`. Root cause: these are separate files in git (NOT symlinked), causing persistent divergence. Commit: `cc19c8f`.
+
+29. **Website feed.json synced in git:** `website/data/feed.json` had 13 stale reports. Synced to clean 5-report version from `agents/sam/website/data/feed.json`. Live site verified clean. Commit: `1a3f9d7`.
+
+30. **CRITICAL — Hyo's agent autonomy question (end of session 9):**
+    Hyo asked directly: "Are our agents actual agents or are you categorizing tasks based on occupation? Are they able to think for themselves? Did the agents write the reports or did you?"
+    **Honest answer given:** The agents are bash scripts, not AI. They run predefined phases (curl, grep, file checks). They do not think. Kai wrote all "self-authored" reports via templates with variable substitution. The "forKai" messages, "reflections," and "research synthesis" are all Kai writing on behalf of agents. The monitoring (sentinel, permissions, API health) is real and useful. The "intelligence" is theater.
+    **Hyo's implied direction:** Make at least one agent genuinely autonomous before building more infrastructure. The scaffold exists (each runner has synthesis/decision points). What's missing: real LLM API calls at those points. `synthesize.py` already has the pattern (Claude Code → Grok → Anthropic → fallback) but no API keys are configured.
+    **Next session must address:** Do we plug in real AI at the synthesis points, or do we rethink the architecture? This is the most important open question.
 
 ---
 

@@ -20,6 +20,15 @@
 - [ ] **[K]** **Build `hyo.hyo` agent.** UI/UX specialist. Owns: website, HQ, future apps/dApps, mobile web, podcast, Spotify presence. Follows Agent Creation Protocol. Wire into dispatch, give it a runner, PLAYBOOK, manifest, ledger.
 - [ ] **[K]** **Verify Nel GitHub scan runs autonomously.** Confirm it fires in the q6h launchd cycle (Phase 2.5). Not just manual — must run when we sleep.
 
+## P0 — NEXT SESSION: Agent Autonomy Decision
+
+Hyo called out that agents are bash scripts with no AI. Reports are templates written by Kai. The "intelligence" is theater. This is the #1 priority.
+
+- [ ] **[B]** **Decide: real AI at synthesis points or rethink architecture?** Each runner has a phase where LLM reasoning should happen. Currently it's `echo`/`printf` with variables. Options: (a) plug Claude API into each runner's synthesis/decision phase, (b) use a single Kai orchestrator that calls agents as functions, (c) something else. Hyo decides direction.
+- [ ] **[K]** **Make ONE agent genuinely autonomous first.** Pick the simplest one (Nel — QA cycle has clear inputs/outputs). Wire a real Claude API call into Nel's analysis phase so it actually reasons about findings instead of templating them. Prove the pattern works before scaling to others.
+- [ ] **[H]** **API key decision.** Which LLM backend for agent reasoning? Anthropic API key (Claude), Grok API key (xAI), or rely on Claude Code CLI auth? This gates everything.
+- [ ] **[K]** **Research page — Hyo reports "still dead."** Standalone `/research` loads (verified via JS — 5 entities, 4 topics, 3 lab, 9 trends). But Chrome MCP tools timeout on it, suggesting render performance issue or hang under certain conditions. Investigate: HQ iframe embedding? Mobile? Specific browser? Need Hyo to clarify what "dead" means.
+
 ## P0 — Session 9 Action Items
 
 - [ ] **[K→Sam]** **SAM-P0-001: Build Aether dashboard view in hq.html.** Dashboard nav has `data-view="aether"` but zero rendering code. Must render: balance, P&L, trade count, win rate, strategy list, daily chart. `aether-metrics.json` data exists and is accurate.
