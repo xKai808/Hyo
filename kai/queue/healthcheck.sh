@@ -3,10 +3,14 @@
 #
 # Runs every 2 hours. Checks:
 # 1. Are there unprocessed flags (P0/P1)?
-# 2. Are there stale tasks (>72h)?
-# 3. Is the queue worker alive?
+# 2. Is the queue worker alive?
+# 3. Are there pending queue commands (worker stalled)?
 # 4. Are scheduled agents producing output?
-# 5. Any new completed queue results to report?
+# 5. Rendered output verification (morning report, Aether real data, data-to-HTML binding)
+# 6. Recent completed queue results
+#
+# Check 5 mirrors Nel Phase 7.5 and Simulation Phase 6 — all three systems
+# independently verify rendered output. Added session 8 after morning report gap.
 #
 # Results written to kai/queue/healthcheck-latest.json for Kai to read.
 
@@ -99,7 +103,54 @@ for agent_dir in "$ROOT/agents/"*/logs; do
   fi
 done
 
-# ---- Check 5: Recent completed queue results ----
+# ---- Check 5: Rendered Output Verification (Kai's independent catch) ----
+# This mirrors Nel Phase 7.5 and Simulation Phase 6 — all 3 systems independently
+# verify that data files actually render on HQ. Added after session 8 gap.
+
+# 5a: Morning report exists and is current
+MR_JSON="$ROOT/website/data/morning-report.json"
+HQ_HTML="$ROOT/website/hq.html"
+if [[ -f "$MR_JSON" ]]; then
+  MR_DATE=$(python3 -c "import json; print(json.load(open('$MR_JSON')).get('date',''))" 2>/dev/null || echo "")
+  TODAY_MT=$(TZ="America/Denver" date +%Y-%m-%d)
+  YESTERDAY_MT=$(TZ="America/Denver" date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "")
+  if [[ "$MR_DATE" != "$TODAY_MT" ]] && [[ "$MR_DATE" != "$YESTERDAY_MT" ]]; then
+    add_finding "P1" "morning-report" "Morning report stale: date=$MR_DATE (today=$TODAY_MT)"
+  fi
+  # Verify rendering code exists in hq.html
+  if [[ -f "$HQ_HTML" ]] && ! grep -q "loadMorningReport\|mrSummary" "$HQ_HTML" 2>/dev/null; then
+    add_finding "P0" "morning-report" "Morning report JSON exists but hq.html has NO rendering code"
+  fi
+else
+  add_finding "P1" "morning-report" "Morning report JSON missing entirely"
+fi
+
+# 5b: Aether metrics show real data (not defaults)
+AETHER_JSON="$ROOT/website/data/aether-metrics.json"
+if [[ -f "$AETHER_JSON" ]]; then
+  AETHER_BAL=$(python3 -c "
+import json
+d = json.load(open('$AETHER_JSON'))
+cw = d.get('currentWeek', d.get('currentPeriod', {}))
+print(cw.get('currentBalance', 0))
+" 2>/dev/null || echo "0")
+  if [[ "$AETHER_BAL" == "1000" ]] || [[ "$AETHER_BAL" == "1000.0" ]] || [[ "$AETHER_BAL" == "0" ]]; then
+    add_finding "P1" "aether-render" "Aether balance is default/placeholder (\$$AETHER_BAL)"
+  fi
+fi
+
+# 5c: Data-to-HTML binding — every JSON must have a render reference
+if [[ -f "$HQ_HTML" ]]; then
+  for jf in "$ROOT"/website/data/*.json; do
+    [[ ! -f "$jf" ]] && continue
+    jname=$(basename "$jf")
+    if ! grep -q "$jname" "$HQ_HTML" 2>/dev/null; then
+      add_finding "P2" "render-binding" "Data file $jname has no reference in hq.html"
+    fi
+  done
+fi
+
+# ---- Check 6: Recent completed queue results ----
 RECENT_RESULTS=""
 for f in $(ls -t "$QUEUE/completed/"*.json "$QUEUE/failed/"*.json 2>/dev/null | head -5); do
   RESULT=$(python3 -c "
