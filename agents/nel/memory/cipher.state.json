@@ -2,58 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-14T09:01:36Z",
-  "totalRuns": 116,
+  "lastRunAt": "2026-04-14T12:01:38Z",
+  "totalRuns": 121,
   "runHistory": [
-    {
-      "ts": "2026-04-13T18:01:49Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T18:02:16Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0,
-      "note": "Cowork sandbox \u2014 supplemental checks: no secret patterns in code (regex clean), .secrets symlink intact to agents/nel/security, permissions 700/600 correct on all 5 secret files, founder.token not leaked, no .pem/.key outside .secrets"
-    },
-    {
-      "ts": "2026-04-13T18:10:01Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T19:02:01Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T20:01:50Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-13T20:01:54Z",
-      "failed": 2,
-      "newIssues": 0,
-      "recurring": 2,
-      "resolved": 0,
-      "autofixes": 0
-    },
     {
       "ts": "2026-04-13T20:01:58Z",
       "failed": 2,
@@ -249,6 +200,55 @@
       "recurring": 2,
       "resolved": 0,
       "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T10:01:37Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T10:10:02Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T11:01:48Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T11:01:53Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-14T05:01:53-0600",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "Cowork sandbox \u2014 supplemental checks: .secrets symlink intact, all 5 secret files 600, dir 700, founder.token not leaked, no API key patterns in code, no loose .pem/.key outside .secrets"
+    },
+    {
+      "ts": "2026-04-14T12:01:38Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
     }
   ],
   "knownIssues": {
@@ -257,8 +257,8 @@
       "check_id": "gitleaks-not-installed",
       "detail": "brew install gitleaks",
       "firstSeen": "2026-04-11T06:02:09Z",
-      "lastSeen": "2026-04-14T09:01:36Z",
-      "runsFailing": 111,
+      "lastSeen": "2026-04-14T12:01:38Z",
+      "runsFailing": 116,
       "status": "open"
     },
     "trufflehog-not-installed:cc78f9e8": {
@@ -266,8 +266,8 @@
       "check_id": "trufflehog-not-installed",
       "detail": "brew install trufflesecurity/trufflehog/trufflehog",
       "firstSeen": "2026-04-11T06:02:09Z",
-      "lastSeen": "2026-04-14T09:01:36Z",
-      "runsFailing": 111,
+      "lastSeen": "2026-04-14T12:01:38Z",
+      "runsFailing": 116,
       "status": "open"
     },
     "founder-token-leak:ce83eed1": {
@@ -392,8 +392,8 @@
     }
   ],
   "trendCounters": {
-    "gitleaks_not_installed_runs_in_a_row": 111,
-    "trufflehog_not_installed_runs_in_a_row": 111,
+    "gitleaks_not_installed_runs_in_a_row": 116,
+    "trufflehog_not_installed_runs_in_a_row": 116,
     "perm_drift_events": 78
   },
   "escalationState": {

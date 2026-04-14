@@ -1,65 +1,77 @@
 {
-  "ts": "2026-04-14T08:00:00Z",
+  "ts": "2026-04-14T12:00:00-06:00",
   "status": "ISSUES",
-  "issues": 4,
-  "warnings": 6,
+  "issues": 6,
+  "warnings": 5,
   "findings": [
     {
       "severity": "P0",
-      "area": "morning-report",
-      "detail": "Morning report JSON exists but hq.html has NO rendering code — carried over from 06:26 check, still unresolved"
+      "area": "security",
+      "detail": "agents/nel/security is NOT gitignored — delegated to nel-001 at 10:00Z but still unresolved 2h later"
+    },
+    {
+      "severity": "P0",
+      "area": "hq-rendering",
+      "detail": "Aether metrics JSON + morning-report.json + hq-state.json exist but hq.html has NO rendering code — delegated to kai-001 but unresolved"
+    },
+    {
+      "severity": "P1",
+      "area": "api",
+      "detail": "/api/hq?action=data returned HTTP 401 — auth issue delegated but unresolved"
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "ra stuck in dead-loop: no newsletter produced since 2026-04-11, pipeline blocked 3 days running"
+      "detail": "ra stuck: no newsletter produced for 2026-04-12 or 2026-04-13 despite 7+ remediation attempts. Guidance sent but no progress."
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop: repeating dashboard out-of-sync flag every 15min, 0 trades, PNL drifting negative (-2.85 to -4.13)"
+      "detail": "aether stuck: dashboard out-of-sync every 15min, same assessment repeated. 5+ unprocessed inbox items requesting API keys and threat detection guidance."
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "dex stuck in dead-loop: 2 corrupt JSONL entries unrepaired, recurrent pattern count growing (now 120+)"
+      "detail": "dex stuck: corrupt JSONL entries flagged 3+ cycles, auto-repair status unknown. Same bottleneck reported repeatedly."
     },
     {
       "severity": "P2",
-      "area": "newsletter",
-      "detail": "No newsletter for 2026-04-12, 2026-04-13, or 2026-04-14 — Ra output dir only has 2026-04-11 edition"
+      "area": "nel-grep",
+      "detail": "nel.sh uses grep -P (PCRE) which is unsupported on macOS — causes stderr errors every run"
     },
     {
       "severity": "P2",
-      "area": "aether-spam",
-      "detail": "Aether logging duplicate dashboard-mismatch P2 flags every 15min — 20+ duplicate entries in log.jsonl today alone"
+      "area": "docs",
+      "detail": "15 broken documentation links flagged by nel audit"
+    },
+    {
+      "severity": "P2",
+      "area": "audit",
+      "detail": "7 system issues found in nel structural audit"
     },
     {
       "severity": "P2",
       "area": "render-binding",
-      "detail": "hq.html missing references to aether-metrics.json, hq-state.json, morning-report.json, usage-config.json"
-    },
-    {
-      "severity": "P2",
-      "area": "stale-tasks",
-      "detail": "18+ P1 SAFEGUARD tasks in kai ACTIVE.md stuck in DELEGATED state since Apr 12-13 with no closure"
-    },
-    {
-      "severity": "P2",
-      "area": "queue",
-      "detail": "Queue clear (0 pending, 0 running) — last completed jobs ran successfully"
+      "detail": "4 data files (aether-metrics, hq-state, morning-report, usage-config) have no reference in hq.html"
     },
     {
       "severity": "P3",
-      "area": "agent-output",
-      "detail": "All 5 agents (nel, ra, sam, aether, dex) produced logs today — agents are running"
+      "area": "code-quality",
+      "detail": "1 code optimization opportunity identified"
     }
   ],
-  "actions_taken": "Survey only — prior auto-remediation from 06:26 check still in effect, guidance questions sent to ra/aether/dex",
+  "queue_status": {
+    "pending": 0,
+    "running": 0,
+    "healthy": true,
+    "last_completed_exit_codes": [0, 0, 0]
+  },
+  "agent_activity_today": ["aether", "dex", "nel", "ra"],
+  "agents_missing_today": ["sam"],
   "recent_queue_results": [
-    {"id": "event-dex-flag-dex-001", "exit_code": 0, "duration_s": 301},
-    {"id": "recheck-flag-dex-001", "exit_code": 0, "duration_s": 3},
-    {"id": "cmd-1776143752-115", "exit_code": 0, "duration_s": 3}
+    {"id": "recheck-flag-nel-001", "status": "ok", "exit_code": 0},
+    {"id": "event-sam-flag-nel-001", "status": "ok", "exit_code": 0},
+    {"id": "event-nel-flag-nel-001", "status": "ok", "exit_code": 0}
   ],
-  "next_check": "in 2 hours"
+  "next_check": "in 2 hours (30min if P0 found)"
 }
