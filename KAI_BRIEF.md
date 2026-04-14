@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-13 ~23:00 MT (session 9 — deep audit, Aether fixes, accountability overhaul)
+**Updated:** 2026-04-13 ~23:30 MT (session 9 final — full audit, Aether fixes, launchd diagnosis, flag cleanup)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 **Last healthcheck:** 2026-04-14T00:10:00-06:00 — **ISSUES: 1 P0, 3 P1, 4 P2.** 6TH CONSECUTIVE UNHEALTHY CHECK — no improvement since monitoring began. P0: agents/nel/security gitignore gap (nel-001) — persists across 6+ checks, zero real remediation. P1: Newsletter missed TWO consecutive days (04-12 + 04-13) — now 48+ hours without output. P1: /api/hq 401 still unresolved. P1: Sim-ack masking — 20+ tasks show "DELEGATED — all clear" but nothing is actually fixed. NEW P2: flag-aether-001 triple-logging every 15 min (21+ entries in 2 hours). NEW P2: Sentinel found 2 projects with test failures. Queue completed jobs reference stale session paths — remediation commands are no-ops. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only. Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) actually fix .gitignore on Mini, (2) diagnose + fix API 401, (3) run newsletter pipeline manually, (4) deduplicate flags and close resolved tasks, (5) patch aether.sh to dedup flag logging, (6) patch safeguard cascade to prevent flag multiplication.
@@ -91,7 +91,7 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 ~23:00 MT — Session 9)
+## Current state (as of 2026-04-13 ~23:30 MT — Session 9 final)
 
 **What shipped in session 9:**
 
@@ -110,6 +110,16 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 21. **Kai Feedback:** Open-ended questions on all reports. Meta: agents researching at 30,000ft instead of ground level.
 
 22. **All Agents Researched:** Sam, Ra, Dex triggered on Mini. All succeeded.
+
+23. **Nel ACTIVE.md Cleanup:** Deduplicated 24 flags down to 6 unique issues. Expired SIM-TEST entries, consolidated duplicate newsletter/sentinel/doc-link flags.
+
+24. **Dispatch Flag Cleanup:** Closed 23 of 32 unresolved flags. 9 genuine open items remain (gitignore, sentinel rate, research stale, Ra pipeline, Sam P3s).
+
+25. **Launchd Diagnosis:** Dex exit 2 = Python `true`/`True` bug (FIXED). Aurora exit 2 = Claude Code CLI auth fails in launchd context (needs API key fallback). Simulation exit 1 = file permission errors (FIXED). Commit: `4b7c944`.
+
+26. **Dex Python Bool Fix:** `dex.sh` evolution entry builder converted bash booleans to Python booleans.
+
+27. **Simulation Permission Fix:** `chmod 644` on `hq-state.json`, `known-issues.jsonl`, `log.jsonl`.
 
 ---
 

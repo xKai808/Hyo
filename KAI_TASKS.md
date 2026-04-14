@@ -20,6 +20,17 @@
 - [ ] **[K]** **Build `hyo.hyo` agent.** UI/UX specialist. Owns: website, HQ, future apps/dApps, mobile web, podcast, Spotify presence. Follows Agent Creation Protocol. Wire into dispatch, give it a runner, PLAYBOOK, manifest, ledger.
 - [ ] **[K]** **Verify Nel GitHub scan runs autonomously.** Confirm it fires in the q6h launchd cycle (Phase 2.5). Not just manual — must run when we sleep.
 
+## P0 — Session 9 Action Items
+
+- [ ] **[K→Sam]** **SAM-P0-001: Build Aether dashboard view in hq.html.** Dashboard nav has `data-view="aether"` but zero rendering code. Must render: balance, P&L, trade count, win rate, strategy list, daily chart. `aether-metrics.json` data exists and is accurate.
+- [ ] **[K→Sam]** **SAM-P1-002: Wire Vercel KV for Aether dashboard persistence.** `/api/hq` push succeeds (returns ok:true) but data doesn't persist between Vercel function invocations. Ephemeral `globalThis` → need KV.
+- [ ] **[H]** **HYO-REQUIRED-001: Provide real OpenAI API key** for Aether GPT cross-check. Current: placeholder `sk-your-***-here`. Store in `agents/nel/security/`.
+- [ ] **[K]** **Aurora synthesize.py needs API key fallback.** Claude Code CLI fails in launchd context (no auth session). Set `GROK_API_KEY` or `ANTHROPIC_API_KEY` in com.hyo.aurora plist EnvironmentVariables. Or fix Claude Code CLI auth for launchd.
+- [x] **[K]** **Dex Python bool bug.** FIXED 2026-04-13. Bash true/false → Python True/False in evolution entry.
+- [x] **[K]** **Simulation file permissions.** FIXED 2026-04-13. chmod 644 on hq-state.json, known-issues.jsonl, log.jsonl.
+- [x] **[K]** **Dispatch flag cleanup.** DONE 2026-04-13. 32 → 9 unresolved.
+- [x] **[K]** **Nel ACTIVE.md cleanup.** DONE 2026-04-13. 24 flags → 6 unique issues.
+
 ## P0 — Surfaced by nightly consolidation (2026-04-13 ~03:31 MT)
 
 - [ ] **[K]** **Fix `agents/aether/aether.sh` runner path.** Consolidation sentinel reports `kai/aether.sh runner missing`. Aether runner lives at `agents/aether/aether.sh` but the consolidation sentinel checks `kai/aether.sh`. Either create the symlink/wrapper or update `consolidate.sh` to check the correct path. Confirm Aether dashboard works after fix.
