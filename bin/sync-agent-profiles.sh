@@ -39,11 +39,12 @@ import json, sys, os, re
 feed_path = sys.argv[1]
 root = sys.argv[2]
 
-AGENTS = ["nel", "sam", "ra", "aether", "dex"]
+AGENTS = ["nel", "sam", "ra", "aurora", "aether", "dex"]
 AGENT_META = {
     "nel":    {"name": "Nel",    "role": "System Improvement & Security", "icon": "\U0001F527", "color": "#6dd49c"},
     "sam":    {"name": "Sam",    "role": "Engineering & Infrastructure",  "icon": "\u2699\uFE0F", "color": "#7ec4e0"},
     "ra":     {"name": "Ra",     "role": "Newsletter & Content Intelligence", "icon": "\U0001F4F0", "color": "#b49af0"},
+    "aurora": {"name": "Aurora", "role": "Daily Intelligence Newsletter", "icon": "\U0001F305", "color": "#f0a060"},
     "aether": {"name": "Aether", "role": "Trading & Financial Intelligence", "icon": "\U0001F4C8", "color": "#e8c96a"},
     "dex":    {"name": "Dex",    "role": "Data Integrity & System Intelligence", "icon": "\U0001F5C3\uFE0F", "color": "#e07060"},
 }
@@ -234,6 +235,48 @@ agents_section = {"kai": kai_profile}
 
 for agent in AGENTS:
     meta = AGENT_META[agent]
+
+    # Aurora is a product (daily newsletter) managed by Ra, not a standalone agent dir
+    if agent == "aurora":
+        # Build Aurora profile from Ra's pipeline output + manifest
+        manifest_path = os.path.join(root, "agents", "manifests", "aurora.hyo.json")
+        manifest = {}
+        if os.path.exists(manifest_path):
+            with open(manifest_path) as f:
+                manifest = json.load(f)
+
+        # Check latest newsletter output
+        output_dir = os.path.join(root, "agents", "ra", "output")
+        latest_newsletters = []
+        if os.path.isdir(output_dir):
+            files = sorted(os.listdir(output_dir), reverse=True)[:3]
+            latest_newsletters = files
+
+        aurora_mission = manifest.get("description", "AI-powered daily intelligence briefing — gathers, synthesizes, and delivers personalized newsletters.")
+        in_proc = []
+        if latest_newsletters:
+            in_proc.append(f"Latest output: {latest_newsletters[0]}")
+        else:
+            in_proc.append("No newsletters produced recently — pipeline blocked on infrastructure")
+
+        profile = {
+            "name": "Aurora",
+            "role": "Daily Intelligence Newsletter",
+            "icon": meta["icon"],
+            "color": meta["color"],
+            "responsibilities": aurora_mission,
+            "goals": {
+                "short": ["Unblock newsletter pipeline on Mini via launchd"],
+                "medium": ["Diversify source coverage beyond tech/crypto", "Improve editorial voice"],
+                "long": ["Grow subscriber base", "Launch Aurora Public consumer edition"]
+            },
+            "inProcess": in_proc,
+            "pending": ["Mini launchd migration for gather phase", "Source health monitoring"]
+        }
+        agents_section[agent] = profile
+        print(f"  {agent}: mission=yes (from manifest), goals=5, inProcess={len(in_proc)}, pending=2")
+        continue
+
     playbook = parse_playbook(agent)
     priorities = parse_priorities(agent)
     active = parse_active(agent)

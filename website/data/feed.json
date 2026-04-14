@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-13T21:50:03-0600",
+  "lastUpdated": "2026-04-13T21:55:16-0600",
   "today": "2026-04-13",
   "agents": {
     "kai": {
@@ -114,6 +114,33 @@
         "No pending items reported"
       ]
     },
+    "aurora": {
+      "name": "Aurora",
+      "role": "Daily Intelligence Newsletter",
+      "icon": "\ud83c\udf05",
+      "color": "#f0a060",
+      "responsibilities": "AI-powered daily intelligence briefing \u2014 gathers, synthesizes, and delivers personalized newsletters for Ra (private) and Aurora Public (consumer-facing).",
+      "goals": {
+        "short": [
+          "Unblock newsletter pipeline on Mini via launchd"
+        ],
+        "medium": [
+          "Diversify source coverage beyond tech/crypto",
+          "Improve editorial voice"
+        ],
+        "long": [
+          "Grow subscriber base",
+          "Launch Aurora Public consumer edition"
+        ]
+      },
+      "inProcess": [
+        "Latest output: 2026-04-13.input.md"
+      ],
+      "pending": [
+        "Mini launchd migration for gather phase",
+        "Source health monitoring"
+      ]
+    },
     "aether": {
       "name": "Aether",
       "role": "Trading & Financial Intelligence",
@@ -178,6 +205,88 @@
     }
   },
   "reports": [
+    {
+      "id": "mr-nel-test-2026-04-13",
+      "type": "morning-report",
+      "title": "Morning Report \u2014 Nel Test Run",
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-13T21:56:31-0600",
+      "date": "2026-04-13",
+      "sections": {
+        "executive": "Test morning report sourced entirely from Nel's QA cycle. Nel ran a full 10-phase QA sweep at 21:55 MT. System health score: 65 (below target of 70). Sentinel: 2 passed, 2 failed across 4 projects. Cipher: clean \u2014 no leaks. 15 broken doc links, 5 scripts without test coverage. Newsletter not produced today \u2014 pipeline blocked on Mini infrastructure.",
+        "wentWell": [
+          "Cipher scan clean \u2014 zero secret leaks across entire codebase",
+          "Stale file scan clean \u2014 all tracked files recently updated",
+          "Security directory permissions verified (700/600)",
+          "Nel's self-authored reflection successfully published to HQ feed",
+          "New research infrastructure (agent-research.sh) deployed and executing"
+        ],
+        "needsAttention": [
+          "System health score at 65 \u2014 below 70 target, driven by 2 sentinel failures (hyo, aether projects)",
+          "15 broken doc links persisting \u2014 same count as previous runs, no progress",
+          "Newsletter missing for 04-13 \u2014 P1 escalation + safeguard cascade dispatched",
+          "5 sensitive files detected outside .secrets/ \u2014 env files, CSV with token data",
+          "API health endpoint still failing \u2014 16+ consecutive runs"
+        ],
+        "agentHighlights": [
+          {
+            "agent": "Nel",
+            "icon": "\ud83d\udd27",
+            "summary": "Ran 4 sentinel checks \u2014 2 passed, 2 failed. The 2 failures are persistent and need infrastructure access to fix. No secret leaks detected this cycle. System health score at 65 \u2014 below target. Need to focus on reducing failure rate.",
+            "research": "No notable findings this cycle.",
+            "changes": "Filed 2 action items from QA findings. Ran full QA sweep: sentinel checks, cipher scan, rendered output verification.",
+            "followUps": [
+              "Research response time thresholds for API endpoints",
+              "Explore npm audit integration for dependency vulnerability scanning",
+              "Investigate duplicate flag deduplication in QA queue"
+            ],
+            "forKai": "Score at 65. Failures persisting \u2014 need Mini access for infrastructure fixes. Help me prioritize between fixing existing issues and building new detection capabilities."
+          }
+        ]
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-13-215516",
+      "type": "agent-reflection",
+      "title": "Nel \u2014 QA & Security Report",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-13T21:55:16-0600",
+      "date": "2026-04-13",
+      "sections": {
+        "introspection": "Ran 4 sentinel checks \u2014 2 passed, 2 failed. The 2 failures are persistent and need infrastructure access to fix. No secret leaks detected this cycle. System health score at 65 \u2014 below target. Need to focus on reducing failure rate.",
+        "research": "- No high-signal findings this cycle. Sources may need diversification.",
+        "changes": "Filed 2 action items from QA findings. Ran full QA sweep: sentinel checks, cipher scan, rendered output verification.",
+        "followUps": [
+          "Research response time thresholds for API endpoints",
+          "Explore npm audit integration for dependency vulnerability scanning",
+          "Investigate duplicate flag deduplication in QA queue"
+        ],
+        "forKai": "Score at 65. Failures persisting \u2014 need Mini access for infrastructure fixes. Help me prioritize between fixing existing issues and building new detection capabilities."
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-13-215515",
+      "type": "agent-reflection",
+      "title": "Nel \u2014 Research & Reflection",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-13T21:55:15-0600",
+      "date": "2026-04-13",
+      "sections": {
+        "introspection": "All 6 source fetches failed \u2014 need to review source list.",
+        "research": "No notable findings this cycle.",
+        "changes": "Research findings saved. PLAYBOOK updated with research log entry. Raw data archived.",
+        "followUps": [
+          "Review today's findings and identify integration candidates"
+        ],
+        "forKai": "Review my research findings and help me prioritize which to integrate first."
+      }
+    },
     {
       "id": "mr-2026-04-13",
       "type": "morning-report",
@@ -297,11 +406,14 @@
     "2026-04": {
       "label": "Apr 2026",
       "reports": [
+        "mr-nel-test-2026-04-13",
         "mr-2026-04-13",
         "kai-ceo-2026-04-13",
         "nel-reflection-2026-04-13",
         "ra-reflection-2026-04-13",
-        "aether-reflection-2026-04-13"
+        "aether-reflection-2026-04-13",
+        "agent-reflection-nel-2026-04-13-215515",
+        "agent-reflection-nel-2026-04-13-215516"
       ]
     }
   }
