@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776128302-609",
+  "ts": "2026-04-14T00:58:24Z",
+  "command": "curl -sf 'https://www.hyo.world/data/morning-report.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); print(\"Date:\",d.get(\"date\")); print(\"Agents:\",len(d.get(\"agentReports\",[]))); print(\"Summary len:\",len(d.get(\"summary\",\"\")))'",
+  "exit_code": 0,
+  "stdout": "Date: 2026-04-13\nAgents: 5\nSummary len: 517\n",
+  "stderr": "",
+  "duration_s": 0
+}

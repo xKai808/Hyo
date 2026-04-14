@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-13T12:10:29-06:00",
+  "updatedAt": "2026-04-13T16:11:06-06:00",
   "morningReport": {
     "date": "2026-04-13",
-    "generatedAt": "2026-04-13T05:09:00-06:00",
+    "generatedAt": "2026-04-13T16:11:06-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Sunday night was a full automation cycle — all 7 daemons fired, consolidation ran clean across 6 projects, and Dex completed its weekly deep research synthesis. The big win from yesterday's session was Aether migration completion with GPT integration. Persistent sore spots: no newsletter (Aurora sandbox-blocked), API health failing 13 consecutive runs, 2 JSONL schema mismatches.",
+    "summary": "Evening ops sync completed. Sentinel run #16: 5 passed, 4 failed. API health endpoint now failing 16 consecutive runs (P0 ESCALATION — worsening). Aurora still blocked on Mini migration — no newsletter for 04-13. Cipher clean: all permissions correct, 0 leaks. Nel score holds at 65 — 15 broken doc links persist, 2 sentinel projects with findings. Task queue overloaded at 10 P0 items. Newsletter safeguard cascade triggered — auto-remediation delegated to Ra.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,87 +14,71 @@
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint failing — 13 consecutive sentinel runs (P0 escalation)",
-      "No newsletter since 2026-04-11 — Aurora blocked on sandbox egress, needs Mini launchd migration",
-      "2 JSONL files flagged by Dex — schema mismatch between simulation output and validator",
-      "15 broken documentation links in website/docs/research/lab/",
-      "OpenAI API key is placeholder — Aether GPT fact-checking non-functional"
+      "API health endpoint failing — 16 consecutive sentinel runs (P0 ESCALATION)",
+      "No newsletter for 2026-04-13 — Aurora still sandbox-blocked (safeguard cascade fired)",
+      "15 broken documentation links flagged by Nel",
+      "10 P0 tasks in queue (overload threshold is 5)",
+      "Nel health score 65 — below 70 target"
     ]
   },
   "events": [
     {
-      "ts": "2026-04-13T12:10:29-06:00",
+      "ts": "2026-04-13T16:11:06-06:00",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks. Safeguard cascade triggered for missing newsletter.",
+      "doc": "/viewer?agent=nel&file=2026-04-13"
+    },
+    {
+      "ts": "2026-04-13T16:11:06-06:00",
+      "agent": "sentinel",
+      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health down day 16, task overload)",
+      "doc": "/viewer?agent=sentinel&file=2026-04-13"
+    },
+    {
+      "ts": "2026-04-13T16:11:06-06:00",
+      "agent": "cipher",
+      "msg": "Security scan — 0 verified leaks, all permissions correct, clean"
+    },
+    {
+      "ts": "2026-04-13T08:10:47-06:00",
       "agent": "nel",
       "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
       "doc": "/viewer?agent=nel&file=2026-04-13"
     },
     {
-      "ts": "2026-04-13T12:10:29-06:00",
+      "ts": "2026-04-13T08:10:47-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health failing day 15, task overload)",
+      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health down day 14, task overload)",
       "doc": "/viewer?agent=sentinel&file=2026-04-13"
     },
     {
-      "ts": "2026-04-13T12:10:29-06:00",
+      "ts": "2026-04-13T08:10:47-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, clean"
+      "msg": "Security scan — 0 verified leaks, all permissions correct, clean"
+    },
+    {
+      "ts": "2026-04-13T04:10:59-06:00",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
+      "doc": "/viewer?agent=nel&file=2026-04-13"
+    },
+    {
+      "ts": "2026-04-13T08:00:04Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation — sam",
+      "doc": "/viewer?agent=consolidation&file=2026-04-13"
+    },
+    {
+      "ts": "2026-04-13T08:00:04Z",
+      "agent": "simulation",
+      "msg": "24h action plan — 2026-04-13",
+      "doc": "/viewer?agent=simulation&file=2026-04-13"
     },
     {
       "ts": "2026-04-12T23:10:26-06:00",
       "agent": "nel",
       "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
       "doc": "/viewer?agent=nel&file=2026-04-12"
-    },
-    {
-      "ts": "2026-04-12T23:10:26-06:00",
-      "agent": "sentinel",
-      "msg": "QA sweep — 5 passed, 4 failed (aurora missing, API health down, task overload)",
-      "doc": "/viewer?agent=sentinel&file=2026-04-12"
-    },
-    {
-      "ts": "2026-04-12T23:10:26-06:00",
-      "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, clean"
-    },
-    {
-      "ts": "2026-04-13T03:30:56Z",
-      "agent": "consolidation",
-      "msg": "Nightly consolidation — sam",
-      "doc": "/viewer?agent=consolidation&file=2026-04-13"
-    },
-    {
-      "ts": "2026-04-13T03:30:56Z",
-      "agent": "simulation",
-      "msg": "24h action plan — 2026-04-13",
-      "doc": "/viewer?agent=simulation&file=2026-04-13"
-    },
-    {
-      "ts": "2026-04-12T13:35:34-06:00",
-      "agent": "consolidation",
-      "msg": "Nightly consolidation — sam"
-    },
-    {
-      "ts": "2026-04-12T13:35:34-06:00",
-      "agent": "simulation",
-      "msg": "24h action plan — 2026-04-12",
-      "doc": "/viewer?agent=sim&file=2026-04-12"
-    },
-    {
-      "ts": "2026-04-12T12:07:28-06:00",
-      "agent": "sentinel",
-      "msg": "QA sweep — 7 passed, 0 failed",
-      "doc": "/viewer?agent=sentinel&file=2026-04-11"
-    },
-    {
-      "ts": "2026-04-12T12:07:28-06:00",
-      "agent": "cipher",
-      "msg": "Security scan — secrets dir 700, token 600, 0 leaks (6 false positives confirmed)"
-    },
-    {
-      "ts": "2026-04-12T12:07:28-06:00",
-      "agent": "ra",
-      "msg": "Newsletter check — 1 total, latest 2026-04-11 (2,254 words)",
-      "doc": "/viewer?agent=ra&file=2026-04-11"
     }
   ],
   "ra": {
@@ -108,27 +92,27 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-13T12:10:29-06:00",
+    "lastRun": "2026-04-13T16:11:06-06:00",
     "passed": 5,
     "failed": 4,
+    "totalRuns": 16,
     "findings": [
       "P0: aurora-ran-today — no newsletter for 2026-04-13",
-      "P0: api-health-green — endpoint failing (day 15, 15 consecutive runs)",
+      "P0: api-health-green — endpoint failing (day 16 recurring, ESCALATED)",
       "P1: scheduled-tasks-fired — no aurora logs detected",
       "P2: task-queue-size — 10 P0 tasks (overload threshold 5)"
     ],
     "escalations": [
-      "P0 escalated: api-health-green failing 15 runs in a row",
-      "P2 elevated: task-queue-size failing 5 runs in a row"
+      "P0 escalated: api-health-green failing 16 runs in a row"
     ],
     "latestDoc": "/viewer?agent=sentinel&file=2026-04-13"
   },
   "cipher": {
-    "lastRun": "2026-04-13T12:10:29-06:00",
+    "lastRun": "2026-04-13T16:11:06-06:00",
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan — 0 verified leaks",
+    "notes": "Clean scan — 0 verified leaks, all permissions correct",
     "latestDoc": null
   },
   "sim": {
@@ -137,11 +121,11 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-04-13T03:30:56Z"
+    "lastRun": "2026-04-13T08:00:04Z"
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-13T12:10:29-06:00",
+    "lastRun": "2026-04-13T16:11:06-06:00",
     "improvementScore": 65,
     "findingsCount": 2,
     "staleFiles": 0,
@@ -149,8 +133,8 @@
     "untested": 2,
     "inefficient": 1,
     "sentinel": {
-      "pass": 5,
-      "fail": 4
+      "pass": 2,
+      "fail": 2
     },
     "cipher": {
       "leaks": 0

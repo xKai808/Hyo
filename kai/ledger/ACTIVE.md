@@ -1,6 +1,6 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-13T21:36:47Z
+Last updated: 2026-04-14T01:02:45Z
 
 ## In Progress
 
@@ -10,7 +10,7 @@ Last updated: 2026-04-13T21:36:47Z
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-13 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T18:10:01Z
+  - Delegated: 2026-04-13T22:10:49Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -29,13 +29,13 @@ Last updated: 2026-04-13T21:36:47Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: /api/hq?action=data returned HTTP 401
-  - Delegated: 2026-04-13T21:36:47Z
+- **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
+  - Delegated: 2026-04-13T21:36:49Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-13 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T18:10:01Z
+  - Delegated: 2026-04-13T22:10:49Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -58,8 +58,8 @@ Last updated: 2026-04-13T21:36:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-12 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-016)
-  - Delegated: 2026-04-13T02:11:42Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-04-13T22:10:49Z
   - Method: ls + validate all files in agents/ra/output/
   - Status: DELEGATED — Output directory has 2 files: 2026-04-11.md + 2026-04-11.html. HTML is valid (15056B, has doctype and closing tag). No orphaned MD files without matching HTML. Directory is clean — only 1 edition so far (2026-04-11).
 
@@ -103,7 +103,7 @@ Last updated: 2026-04-13T21:36:47Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] /api/hq?action=data returned HTTP 401 (flagged by kai)
-  - Delegated: 2026-04-13T15:13:54Z
+  - Delegated: 2026-04-13T21:36:50Z
   - Status: DELEGATED
 
 ## Queued

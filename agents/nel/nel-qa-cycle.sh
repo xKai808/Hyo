@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # agents/nel/nel-qa-cycle.sh — Nel v2.0 Autonomous QA Cycle (runs every 6 hours)
 #
-# 9-Phase Quality Assurance Pipeline:
+# 10-Phase Quality Assurance Pipeline:
 #   Phase 1: Link Validation (local + live)
 #   Phase 2: Security Scan (secrets, permissions, exposed data)
 #   Phase 2.5: GitHub Security Scan (repo secrets, history, gitignore coverage)
@@ -10,6 +10,7 @@
 #   Phase 5: Agent Health (all runners execute, daemons alive, logs fresh)
 #   Phase 6: Deployment Verification (Vercel status, git clean, latest commit deployed)
 #   Phase 7: Research Sync (website/docs/research matches agents/ra/research)
+#   Phase 7.5: Rendered Output Verification (data files render on live site, not just exist)
 #   Phase 8: Report & Dispatch (consolidate findings, flag issues, update ledger)
 #
 # Design principles (from nel-qa-architecture-research.md):
@@ -419,6 +420,122 @@ else
   echo "Research directories missing." >> "$REPORT"
   add_finding "P2" "research" "Missing research directories"
   phase_result "7-research" "FAIL" "Directories missing"
+fi
+echo "" >> "$REPORT"
+
+# ============================================================================
+# PHASE 7.5: RENDERED OUTPUT VERIFICATION
+# ============================================================================
+# Purpose: verify that key data files ACTUALLY RENDER on the live site.
+# Files existing and APIs returning 200 is not enough — we must confirm
+# the HTML has the rendering code and the data structure matches what
+# the frontend expects. This phase catches "data exists but user can't
+# see it" failures (the morning report gap from session 8).
+#
+# Checks:
+#   1. Morning report: JSON exists + hq.html references it + today's date
+#   2. Aether metrics: JSON has currentWeek with real balance (not $1000 default)
+#   3. Aether strategies: strategies array is populated (not empty or placeholder)
+#   4. Data-to-HTML binding: every JSON data file has a corresponding render function
+echo "## Phase 7.5: Rendered Output Verification" >> "$REPORT"
+echo "" >> "$REPORT"
+
+P75_ISSUES=0
+
+# ── Check 1: Morning Report ──
+MR_JSON="$ROOT/website/data/morning-report.json"
+HQ_HTML="$ROOT/website/hq.html"
+
+if [[ -f "$MR_JSON" ]]; then
+  # Verify JSON has today's date (or yesterday if before 05:00)
+  MR_DATE=$(python3 -c "import json; print(json.load(open('$MR_JSON')).get('date',''))" 2>/dev/null || echo "")
+  MR_AGE_DAYS=999
+  if [[ -n "$MR_DATE" ]]; then
+    MR_EPOCH=$(date -j -f "%Y-%m-%d" "$MR_DATE" +%s 2>/dev/null || date -d "$MR_DATE" +%s 2>/dev/null || echo "0")
+    NOW_EPOCH=$(date +%s)
+    MR_AGE_DAYS=$(( (NOW_EPOCH - MR_EPOCH) / 86400 ))
+  fi
+
+  if [[ $MR_AGE_DAYS -gt 1 ]]; then
+    add_finding "P1" "render" "Morning report stale: date=$MR_DATE (${MR_AGE_DAYS} days old)"
+    P75_ISSUES=$((P75_ISSUES + 1))
+  fi
+
+  # Verify hq.html has rendering code for morning report
+  if [[ -f "$HQ_HTML" ]]; then
+    if ! grep -q "mrSummary\|loadMorningReport\|morning-report" "$HQ_HTML" 2>/dev/null; then
+      add_finding "P0" "render" "Morning report JSON exists but hq.html has NO rendering code — user cannot see it"
+      P75_ISSUES=$((P75_ISSUES + 1))
+    fi
+  fi
+else
+  add_finding "P1" "render" "Morning report JSON missing: $MR_JSON"
+  P75_ISSUES=$((P75_ISSUES + 1))
+fi
+
+# ── Check 2: Aether Metrics Real Data ──
+AETHER_JSON="$ROOT/website/data/aether-metrics.json"
+if [[ -f "$AETHER_JSON" ]]; then
+  AETHER_BALANCE=$(python3 -c "
+import json
+d = json.load(open('$AETHER_JSON'))
+cw = d.get('currentWeek', d.get('currentPeriod', {}))
+print(cw.get('currentBalance', 0))
+" 2>/dev/null || echo "0")
+
+  # Check for default/placeholder balance
+  if [[ "$AETHER_BALANCE" == "1000.0" ]] || [[ "$AETHER_BALANCE" == "1000" ]] || [[ "$AETHER_BALANCE" == "0" ]]; then
+    add_finding "P1" "render" "Aether metrics shows default balance (\$$AETHER_BALANCE) — not real trading data"
+    P75_ISSUES=$((P75_ISSUES + 1))
+  fi
+
+  # ── Check 3: Aether Strategies Populated ──
+  STRATEGY_COUNT=$(python3 -c "
+import json
+d = json.load(open('$AETHER_JSON'))
+cw = d.get('currentWeek', d.get('currentPeriod', {}))
+strategies = cw.get('strategies', [])
+print(len(strategies))
+" 2>/dev/null || echo "0")
+
+  if [[ "$STRATEGY_COUNT" -lt 2 ]]; then
+    add_finding "P2" "render" "Aether strategies: only $STRATEGY_COUNT found (expected 6 real strategies)"
+    P75_ISSUES=$((P75_ISSUES + 1))
+  fi
+
+  # Verify hq.html has Aether rendering that handles current structure
+  if [[ -f "$HQ_HTML" ]]; then
+    if ! grep -q "abStrategiesTable\|loadAetherMetrics" "$HQ_HTML" 2>/dev/null; then
+      add_finding "P0" "render" "Aether metrics JSON exists but hq.html has NO rendering code"
+      P75_ISSUES=$((P75_ISSUES + 1))
+    fi
+  fi
+else
+  add_finding "P1" "render" "Aether metrics JSON missing: $AETHER_JSON"
+  P75_ISSUES=$((P75_ISSUES + 1))
+fi
+
+# ── Check 4: Data-to-HTML Binding Audit ──
+# Every JSON in website/data/ should have at least one reference in hq.html
+if [[ -f "$HQ_HTML" ]]; then
+  UNBOUND=0
+  for json_file in "$ROOT"/website/data/*.json; do
+    [[ ! -f "$json_file" ]] && continue
+    local_name=$(basename "$json_file")
+    if ! grep -q "$local_name" "$HQ_HTML" 2>/dev/null; then
+      add_finding "P2" "render" "Data file $local_name has no reference in hq.html — may not render"
+      UNBOUND=$((UNBOUND + 1))
+      P75_ISSUES=$((P75_ISSUES + 1))
+    fi
+  done
+fi
+
+if [[ $P75_ISSUES -eq 0 ]]; then
+  echo "All rendered outputs verified: morning report current, Aether real data, strategies populated, all JSON files bound. ✓" >> "$REPORT"
+  phase_result "7.5-render" "PASS" "All outputs verified"
+else
+  echo "Rendered output issues found: $P75_ISSUES" >> "$REPORT"
+  phase_result "7.5-render" "FAIL" "$P75_ISSUES render issues"
 fi
 echo "" >> "$REPORT"
 

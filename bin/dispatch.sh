@@ -844,6 +844,80 @@ PYEOF
     echo "  · No known issues to check (first run)"
   fi
 
+  # ── Phase 6: Rendered Output Pathway Verification ──
+  echo ""
+  echo "Phase 6: Rendered output pathway verification"
+  local render_fail=0
+
+  # Check: every JSON in website/data/ must have a render reference in hq.html
+  local hq_html="$ROOT/website/hq.html"
+  if [[ -f "$hq_html" ]]; then
+    for jf in "$ROOT"/website/data/*.json; do
+      [[ ! -f "$jf" ]] && continue
+      local jname
+      jname=$(basename "$jf")
+      if ! grep -q "$jname" "$hq_html" 2>/dev/null; then
+        echo "  ✗ FAIL: $jname has no rendering reference in hq.html"
+        render_fail=$((render_fail + 1))
+        results+=("FAIL:render:$jname-unbound")
+      fi
+    done
+
+    # Check: aether-metrics.json has real balance
+    local aether_json="$ROOT/website/data/aether-metrics.json"
+    if [[ -f "$aether_json" ]]; then
+      local abal
+      abal=$(python3 -c "import json; d=json.load(open('$aether_json')); cw=d.get('currentWeek',d.get('currentPeriod',{})); print(cw.get('currentBalance',0))" 2>/dev/null || echo "0")
+      if [[ "$abal" == "1000.0" ]] || [[ "$abal" == "1000" ]] || [[ "$abal" == "0" ]]; then
+        echo "  ✗ FAIL: Aether balance is default/placeholder (\$$abal)"
+        render_fail=$((render_fail + 1))
+        results+=("FAIL:render:aether-default-balance")
+      else
+        echo "  ✓ Aether real balance: \$$abal"
+      fi
+    fi
+
+    # Check: morning report exists and is current
+    local mr_json="$ROOT/website/data/morning-report.json"
+    if [[ -f "$mr_json" ]]; then
+      local mr_date
+      mr_date=$(python3 -c "import json; print(json.load(open('$mr_json')).get('date',''))" 2>/dev/null || echo "")
+      local today_check
+      today_check=$(TZ="America/Denver" date +%Y-%m-%d)
+      local yesterday_check
+      yesterday_check=$(TZ="America/Denver" date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "")
+      if [[ "$mr_date" != "$today_check" ]] && [[ "$mr_date" != "$yesterday_check" ]]; then
+        echo "  ✗ FAIL: Morning report stale (date=$mr_date, today=$today_check)"
+        render_fail=$((render_fail + 1))
+        results+=("FAIL:render:morning-report-stale")
+      else
+        echo "  ✓ Morning report current: $mr_date"
+      fi
+
+      # Verify hq.html has rendering code
+      if ! grep -q "loadMorningReport\|mrSummary" "$hq_html" 2>/dev/null; then
+        echo "  ✗ FAIL: Morning report data exists but hq.html has no rendering code"
+        render_fail=$((render_fail + 1))
+        results+=("FAIL:render:morning-report-no-render")
+      else
+        echo "  ✓ Morning report rendering wired in hq.html"
+      fi
+    else
+      echo "  ✗ FAIL: Morning report JSON missing"
+      render_fail=$((render_fail + 1))
+      results+=("FAIL:render:morning-report-missing")
+    fi
+  else
+    echo "  · hq.html not found — skipping render checks"
+  fi
+
+  if [[ $render_fail -eq 0 ]]; then
+    echo "  ✓ All rendered output pathways verified"
+    total_pass=$((total_pass + 1))
+  else
+    total_fail=$((total_fail + render_fail))
+  fi
+
   # ── Summary ──
   local finished; finished=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   echo ""

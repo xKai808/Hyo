@@ -268,3 +268,6 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] missing or empty /sessions/pensive-intelligent-euler/mnt/Hyo/newsletters/2026-04-13.md [sentinel:aurora-ran-today:dbac3f9f] _(filed 2026-04-13)_
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/pensive-intelligent-euler/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:38dd677e] _(filed 2026-04-13)_
 - [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 10 P0 tasks (overload threshold 5) [sentinel:task-queue-size:d2598827:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/practical-focused-goldberg/mnt/Hyo/newsletters/2026-04-13.md [sentinel:aurora-ran-today:135da226] _(filed 2026-04-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/practical-focused-goldberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5ae870c6] _(filed 2026-04-13)_

@@ -1,79 +1,63 @@
 {
-  "ts": "2026-04-13T14:00:00-06:00",
+  "ts": "2026-04-14T00:10:00-06:00",
   "status": "ISSUES",
-  "issues": 5,
+  "issues": 4,
   "warnings": 4,
   "findings": [
     {
       "severity": "P0",
       "area": "security",
-      "detail": "nel-001: agents/nel/security NOT gitignored. Persists across 4+ healthchecks (since 02:17 MT). UNRESOLVED — all remediation was sim-ack only."
+      "detail": "nel-001: agents/nel/security gitignore gap — persists across 6+ healthchecks. Zero real remediation. Sim-ack'd but never actually fixed."
     },
     {
       "severity": "P1",
-      "area": "newsletter",
-      "detail": "No newsletter produced for 2026-04-13 OR 2026-04-12. Two consecutive missed days. Pipeline not running. ra-002 delegated at 18:10 UTC but sim-ack only."
+      "area": "newsletter-pipeline",
+      "detail": "No newsletter produced for 2026-04-12 OR 2026-04-13. 48+ hours without output. flag-nel-003 raised at 22:10Z, auto-remediation delegated to ra-003, but Cowork sandbox cannot execute pipeline. Requires interactive Mini session."
     },
     {
       "severity": "P1",
       "area": "api",
-      "detail": "sam-001: /api/hq?action=data HTTP 401. Flagged at 15:13 UTC, sam delegated but sim-ack only. HQ dashboard inaccessible."
+      "detail": "sam-001: /api/hq?action=data returning HTTP 401. Persists since 21:36Z on 04-13. HQ dashboard data reads broken. Sim-ack'd, not fixed."
     },
     {
       "severity": "P1",
-      "area": "task-resolution",
-      "detail": "ZERO P0/P1 tasks have been actually resolved today. All 15+ delegated tasks are sim-ack with no real execution. The delegation loop is producing paperwork, not fixes."
-    },
-    {
-      "severity": "P1",
-      "area": "agent-sam",
-      "detail": "Sam produced zero logs today. No code shipped, no tests run, no deployments. All sam-00X tasks stuck in DELEGATED."
+      "area": "task-integrity",
+      "detail": "Sim-ack masking pattern: 20+ tasks in Kai ACTIVE.md show DELEGATED — sim-report: all clear but underlying issues remain open. False-green state persists."
     },
     {
       "severity": "P2",
-      "area": "aether-flag-spam",
-      "detail": "217 duplicate flag-aether-001 entries in log.jsonl (948 total lines = 23% noise). Triple-firing every 15min. Aether runner lacks dedup. Ledger is being polluted at scale."
+      "area": "flag-spam",
+      "detail": "flag-aether-001 logged 21+ times in last 2 hours (triple-logged every 15-min cycle). No dedup. Log pollution accelerating."
     },
     {
       "severity": "P2",
-      "area": "queue-stale-paths",
-      "detail": "recheck-flag-nel-003 failed: references /sessions/pensive-intelligent-euler/ (dead session). Queue commands using hardcoded session paths break across sessions."
+      "area": "test-failures",
+      "detail": "flag-nel-002: Sentinel found 2 projects with test failures. Flagged at 22:10Z."
     },
     {
       "severity": "P2",
-      "area": "data-integrity",
-      "detail": "dex-001: Corrupt JSONL entries (59 recurrent patterns). Delegated but unresolved."
-    },
-    {
-      "severity": "P3",
       "area": "documentation",
-      "detail": "15 broken documentation links. Nel self-delegated nel-003 to fix symlinks."
+      "detail": "flag-nel-004: 15 broken documentation links. Nel self-delegated fix (nel-003)."
+    },
+    {
+      "severity": "P2",
+      "area": "queue-paths",
+      "detail": "Queue completed jobs reference stale session paths that no longer resolve. Queue functional but remediation commands are no-ops."
     }
   ],
   "agent_activity_today": {
     "nel": true,
-    "sam": false,
+    "sam": true,
     "ra": true,
     "aether": true,
     "dex": true
   },
-  "queue_state": {
-    "pending": 0,
-    "running": 0,
-    "last_completed": "recheck-flag-nel-003.json (failed - stale path)",
-    "last_failed": "recheck-1776044635.json (sleep timeout)"
-  },
   "recent_queue_results": [
-    {"id": "recheck-flag-nel-003", "status": "failed", "note": "stale session path /sessions/pensive-intelligent-euler/"},
-    {"id": "recheck-flag-nel-001", "status": "ok", "exit_code": 0, "note": "dispatched 3 remediations"},
-    {"id": "recheck-flag-dex-001", "status": "ok", "exit_code": 0, "note": "dispatched dex corrupt JSONL remediation"}
+    {"id": "recheck-flag-nel-003", "exit_code": 0, "note": "stale path — no real execution"},
+    {"id": "recheck-flag-nel-001", "exit_code": 0, "note": "dispatched auto-remediation"},
+    {"id": "recheck-flag-dex-001", "exit_code": 0, "note": "dispatched remediation"}
   ],
-  "log_pollution": {
-    "total_lines": 948,
-    "aether_duplicate_flags": 217,
-    "noise_ratio": "23%"
-  },
-  "critical_pattern": "Delegation loop without execution. Tasks are created, sim-acked, and marked DELEGATED — but no agent actually runs the fix. This has been the state for 12+ hours.",
-  "delta_from_last_check": "All P0/P1 findings unchanged from 12:05 MT check. Aether spam worsened (30 → 217 duplicates). Newsletter now missed 2 consecutive days. Sam still zero output.",
-  "next_check": "2026-04-13T16:00:00-06:00"
+  "consecutive_unhealthy_checks": 6,
+  "root_cause": "Cowork sandbox cannot execute on the Mini. All delegated tasks confirm agent reachability via sim-ack but never perform real remediation. Requires interactive Kai session on Mini with queue worker access.",
+  "next_check": "in 2 hours"
 }
