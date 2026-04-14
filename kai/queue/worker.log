@@ -489,3 +489,27 @@
 [2026-04-14T04:00:56Z] BATCH: processed 1 commands
 [2026-04-14T04:00:57Z] IDLE: no pending commands
 [2026-04-14T04:01:05Z] EXEC: [cmd-1776139264-286] cd ~/Documents/Projects/Hyo && HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel --publish 2>&1 | tail -10 && HYO_ROOT=~/Documents/Projects/Hyo bash bin/sync-agent-profiles.sh 2>&1 | tail -5 && git add -A && git commit -m 'nel: real research + publish to HQ feed [auto]' 2>&1 && git push origin main 2>&1 (timeout: 120s)
+[2026-04-14T04:01:17Z] DONE: [cmd-1776139264-286] exit=0 (12s)
+[2026-04-14T04:01:17Z] BATCH: processed 1 commands
+[2026-04-14T04:01:18Z] IDLE: no pending commands
+[2026-04-14T04:05:01Z] EXEC: [cmd-1776139500-209] echo 'KEY:' $(echo $ANTHROPIC_API_KEY | head -c 15)...; which claude 2>/dev/null && echo 'claude CLI found' || echo 'no claude CLI'; python3 -c 'import anthropic; print("sdk ok")' 2>/dev/null || echo 'no anthropic sdk' (timeout: 20s)
+[2026-04-14T04:05:01Z] DONE: [cmd-1776139500-209] exit=0 (0s)
+[2026-04-14T04:05:01Z] BATCH: processed 1 commands
+[2026-04-14T04:05:02Z] IDLE: no pending commands
+[2026-04-14T04:07:46Z] EXEC: [cmd-1776139664-301] cd ~/Documents/Projects/Hyo && git pull && HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel --publish 2>&1 (timeout: 120s)
+[2026-04-14T04:07:55Z] DONE: [cmd-1776139664-301] exit=0 (9s)
+[2026-04-14T04:07:55Z] BATCH: processed 1 commands
+[2026-04-14T04:07:55Z] IDLE: no pending commands
+[2026-04-14T04:08:06Z] EXEC: [cmd-1776139684-325] cat ~/Documents/Projects/Hyo/agents/nel/research/findings-2026-04-13.md (timeout: 30s)
+[2026-04-14T04:08:06Z] DONE: [cmd-1776139684-325] exit=0 (0s)
+[2026-04-14T04:08:06Z] BATCH: processed 1 commands
+[2026-04-14T04:08:06Z] IDLE: no pending commands
+[2026-04-14T04:09:24Z] EXEC: [cmd-1776139762-415] cd ~/Documents/Projects/Hyo && git pull && HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel --publish 2>&1 | tail -30 (timeout: 120s)
+[2026-04-14T04:09:33Z] DONE: [cmd-1776139762-415] exit=0 (9s)
+[2026-04-14T04:09:33Z] BATCH: processed 1 commands
+[2026-04-14T04:09:34Z] IDLE: no pending commands
+[2026-04-14T04:09:42Z] EXEC: [cmd-1776139780-439] cat ~/Documents/Projects/Hyo/agents/nel/research/findings-2026-04-13.md (timeout: 30s)
+[2026-04-14T04:09:42Z] DONE: [cmd-1776139780-439] exit=0 (0s)
+[2026-04-14T04:09:42Z] BATCH: processed 1 commands
+[2026-04-14T04:09:43Z] IDLE: no pending commands
+[2026-04-14T04:09:52Z] EXEC: [cmd-1776139792-463] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'nel: real thinking cycle — CVEs, blindspot analysis, goal updates [auto]' && git push origin main 2>&1 (timeout: 60s)

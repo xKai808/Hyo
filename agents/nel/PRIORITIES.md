@@ -15,6 +15,10 @@
 | 3 | P2 | Sentinel pass rate 50% (2/4 projects) — investigate failures | OPEN | 2026-04-12 |
 | 4 | P2 | 2 untested pipeline stages found — add coverage | OPEN | 2026-04-12 |
 | 5 | P3 | 1 inefficient pattern detected — optimize | OPEN | 2026-04-12 |
+| ? | P0 | [RESEARCH] Build detection for confirmed blindspot: My blindspot 'No API-level security scanning (injection, auth bypass, repl...' — | OPEN | 2026-04-13 |
+
+| ? | P2 | [RESEARCH] Evaluate snyk for integration into QA cycle | OPEN | 2026-04-13 |
+
 
 ## Daily Research Mandate
 

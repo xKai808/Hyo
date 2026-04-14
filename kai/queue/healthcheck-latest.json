@@ -1,92 +1,69 @@
 {
-  "ts": "2026-04-14T03:39:09Z",
+  "ts": "2026-04-13T22:02:27-06:00",
   "status": "ISSUES",
-  "issues": 4,
-  "warnings": 6,
+  "issues": 3,
+  "warnings": 5,
   "findings": [
     {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "5 unaddressed P0/P1 flags in last 2h"
-    },
-    {
-      "severity": "P2",
-      "area": "queue-worker",
-      "detail": "Worker last active 493371h ago \u2014 may be dead"
-    },
-    {
-      "severity": "P2",
-      "area": "queue",
-      "detail": "1 commands pending \u2014 worker may be stalled"
+      "severity": "P0",
+      "area": "security",
+      "detail": "agents/nel/security is NOT gitignored — flagged at 03:39Z, auto-remediation delegated but unverified"
     },
     {
       "severity": "P0",
-      "area": "morning-report",
-      "detail": "Morning report JSON exists but hq.html has NO rendering code"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file aether-metrics.json has no reference in hq.html"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file hq-state.json has no reference in hq.html"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file morning-report.json has no reference in hq.html"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file usage-config.json has no reference in hq.html"
+      "area": "hq-rendering",
+      "detail": "Aether metrics JSON + morning-report JSON exist but hq.html has NO rendering code — 4 data files disconnected"
     },
     {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "ra stuck in dead-loop (growth_stagnant): "
+      "area": "newsletter",
+      "detail": "No newsletter produced for 2026-04-13 — past 06:00 MT deadline, flagged twice (03:39Z and 03:55Z), auto-remediation delegated to ra"
     },
     {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): standby mode: no trades this cycle; WARNING: dashboard out-o"
+      "area": "api-auth",
+      "detail": "/api/hq?action=data returned HTTP 401 — HQ API auth broken, delegated to sam"
+    },
+    {
+      "severity": "P2",
+      "area": "dead-loop-ra",
+      "detail": "ra stuck in dead-loop (growth_stagnant) — guidance question sent, no resolution"
+    },
+    {
+      "severity": "P2",
+      "area": "dead-loop-aether",
+      "detail": "aether stuck in dead-loop (assessment_stuck) — 0 trades, PNL=$-6.53, dashboard out-of-sync"
+    },
+    {
+      "severity": "P2",
+      "area": "docs",
+      "detail": "15 broken documentation links found across codebase"
+    },
+    {
+      "severity": "P2",
+      "area": "tests",
+      "detail": "Sentinel reports 2 projects with test failures"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues; Kicked queue worker for 1 stalled commands",
+  "queue_status": {
+    "pending": 0,
+    "running": 0,
+    "worker": "recovered — processing normally since last check",
+    "last_3_completed": "all exit_code 0 (nel research+publish, git sync x2)",
+    "failed_recent": "1 (healthcheck recheck timeout)"
+  },
+  "agent_activity_today": {
+    "nel": "active — 20+ cipher logs, QA reports, simulation, consolidation, research published",
+    "aether": "active — self-review + trade log, 0 trades, dashboard out-of-sync",
+    "dex": "active — daily log + activity JSONL",
+    "ra": "active — self-review + daily log, degraded status",
+    "sam": "active via queue — no standalone log file, output in queue completions"
+  },
+  "delta_from_last_check": "Queue recovered (was stalled, now 0 pending/0 running). Core P0/P1 issues persist: security gitignore, HQ rendering, newsletter, API auth. All have delegated remediation but none verified resolved.",
   "recent_queue_results": [
-    {
-      "id": "event-sam-flag-nel-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "event-nel-flag-nel-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776134356-180",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull && git push",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776134059-253",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull && git push",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776134007-187",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull && git push",
-      "exit_code": 0
-    }
+    {"id": "cmd-1776139264-286", "status": "ok", "command": "nel research + publish + git push", "exit_code": 0},
+    {"id": "cmd-1776139252-262", "status": "ok", "command": "git pull && git push", "exit_code": 0},
+    {"id": "cmd-1776139197-198", "status": "ok", "command": "nel research fetch + publish", "exit_code": 0}
   ],
-  "next_check": "in 2 hours (30min if P0 found)"
+  "next_check": "in 30min (P0 present)"
 }
