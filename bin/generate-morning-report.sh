@@ -179,22 +179,22 @@ went_well = []
 needs_attention = []
 
 if "HEALTHY" in hc_summary:
-    went_well.append("System healthcheck passing clean")
+    went_well.append("System healthcheck is clean — all infrastructure checks passing")
 else:
-    needs_attention.append(f"Healthcheck: {hc_summary}")
+    needs_attention.append(f"Healthcheck flagged some issues ({hc_summary}) — most are persistent from previous cycles and need root-cause fixes")
 
 if "0 fail" in sim_summary:
-    went_well.append(f"Nightly simulation all green ({sim_summary})")
+    went_well.append("All simulation tests passed — the delegation lifecycle is working end-to-end")
 else:
-    needs_attention.append(f"Simulation has failures: {sim_summary}")
+    needs_attention.append(f"Simulation caught failures ({sim_summary}) — something regressed and needs investigation before it spreads")
 
 if newsletter_st == "produced":
-    went_well.append("Newsletter produced on schedule")
+    went_well.append("Newsletter went out on schedule — the content pipeline is reliable")
 else:
-    needs_attention.append("Newsletter not produced today — Ra pipeline needs attention")
+    needs_attention.append("No newsletter today — Ra's pipeline can't reach external sources from the sandbox. Needs to move to the Mini.")
 
 if known_issues > 10:
-    needs_attention.append(f"{known_issues} active known issues accumulating — review needed")
+    needs_attention.append(f"{known_issues} known issues are piling up — we're accumulating faster than we're resolving. Time for a cleanup sprint.")
 
 # Check each agent for notable items
 for a in AGENTS:
@@ -202,10 +202,10 @@ for a in AGENTS:
     refl = d.get("reflection", {})
     bn = refl.get("bottleneck", "none")
     if bn and bn != "none":
-        needs_attention.append(f"{a.capitalize()} bottleneck: {bn[:80]}")
+        needs_attention.append(f"{a.capitalize()} is blocked: {bn[:80]}")
     growth = refl.get("domain_growth", "")
     if "active" in str(growth).lower():
-        went_well.append(f"{a.capitalize()} showing active domain growth")
+        went_well.append(f"{a.capitalize()} is actively growing — researching its domain and proposing improvements")
 
 # ═══ VERSION 1: INTERNAL REPORT (for Kai) ═══
 # This is technical, metric-heavy, for Kai to parse and critique
@@ -252,51 +252,110 @@ with open(internal_path, "w") as f:
 print(f"Internal report written: {internal_path}")
 
 # ═══ VERSION 2: FEED ENTRY (for Hyo) ═══
-# This is human-readable, conversational, posted to the HQ feed
+# This is human-readable, conversational, posted to the HQ feed.
+# Written as if Kai is talking to Hyo over coffee.
 
-# Build agent highlights — conversational summaries
+# ── Build conversational agent highlights ──
 agent_highlights = {}
 for a in AGENTS:
     d = agent_data[a]
     refl = d.get("reflection", {})
+    score = d.get("score", "?")
+    assess = d.get("assessment", "")
+    bn = refl.get("bottleneck", "none")
+    growth = refl.get("domain_growth", "")
+    learning = refl.get("learning", "")
+    has_data = bool(assess or (score != "?" and score != 0))
+
+    if not has_data:
+        agent_highlights[a] = f"Quiet cycle from {a.capitalize()} — no new data came in. Need to check if the runner executed or if there's a scheduling issue."
+        continue
+
     parts = []
 
-    # Assessment
-    if d["assessment"]:
-        parts.append(d["assessment"].rstrip("."))
+    # Lead with what matters, in natural language
+    if a == "nel":
+        if isinstance(score, (int, float)):
+            if score >= 85:
+                parts.append(f"Nel's quality score hit {score} this cycle — solid improvement")
+            elif score >= 70:
+                parts.append(f"Nel is at {score} — functional but not where we want to be")
+            else:
+                parts.append(f"Nel's score dropped to {score}, which is below target")
+        if "fail" in assess.lower():
+            parts.append("Same persistent failures that need Mini access to resolve")
+        if "active" in str(growth).lower():
+            parts.append("Actively researching security patterns and growing domain expertise")
 
-    # Score
-    score = d["score"]
-    if score != "?" and isinstance(score, (int, float)):
-        if score >= 90:
-            parts.append(f"Score at {score} — running well")
-        elif score >= 70:
-            parts.append(f"Score at {score} — acceptable but room to grow")
+    elif a == "sam":
+        if "test" in assess.lower() and "fail" in assess.lower():
+            parts.append(f"Sam has test failures to address: {assess[:60]}")
+        elif "improved" in assess.lower():
+            parts.append(f"Sam's test coverage improved: {assess[:60]}")
         else:
-            parts.append(f"Score at {score} — below target, needs focus")
+            parts.append("Platform is stable" if "routine" in assess.lower() or not assess else assess[:80])
+        if bn and bn != "none":
+            parts.append(f"Main blocker: {bn[:60]}")
 
-    # Bottleneck
-    bn = refl.get("bottleneck", "none")
-    if bn and bn != "none":
-        parts.append(f"Bottleneck: {bn[:80]}")
+    elif a == "ra":
+        if newsletter_st == "produced":
+            parts.append("Newsletter went out on schedule — Ra's pipeline is delivering")
+        else:
+            parts.append("Ra couldn't produce a newsletter today — the sandbox blocks source fetches")
+        if "active" in str(growth).lower():
+            parts.append("Working on editorial voice and source diversification in the meantime")
 
-    # Domain growth
-    growth = refl.get("domain_growth", "")
-    if "stagnant" in str(growth).lower():
-        parts.append("Domain growth stagnant — needs research push")
-    elif "active" in str(growth).lower():
-        parts.append("Actively growing in domain expertise")
+    elif a == "aether":
+        if "standby" in assess.lower() or "no trades" in assess.lower():
+            parts.append("Aether is in standby — no live trades happening")
+            parts.append("Waiting on exchange API keys to move from replay mode to live tracking")
+        elif "trade" in assess.lower():
+            parts.append(assess[:80])
+        if "out-of-sync" in str(bn).lower() or "out-of-sync" in assess.lower():
+            parts.append("Dashboard sync issue persists — data exists but HQ can't render it")
 
-    agent_highlights[a] = ". ".join(parts) + "." if parts else "No data from last cycle."
+    elif a == "dex":
+        if assess:
+            parts.append(assess[:80])
+        else:
+            parts.append("Dex ran its integrity sweep")
+        if "stagnant" in str(growth).lower():
+            parts.append("Needs to start its research loop to stay sharp")
 
-# Build the executive summary — conversational, not a data dump
+    agent_highlights[a] = ". ".join(parts) + "." if parts else f"No update from {a.capitalize()} this cycle."
+
+# ── Build conversational executive summary ──
+# Written like a person summarizing their morning, not a dashboard
 summary_parts = []
-if len(went_well) > 0:
-    summary_parts.append(f"{len(went_well)} things running well overnight")
-if len(needs_attention) > 0:
-    summary_parts.append(f"{len(needs_attention)} items need attention")
-summary_parts.append(f"Trading: {aether_summary}")
-exec_summary = ". ".join(summary_parts) + "."
+
+# Overall vibe
+good_count = len(went_well)
+bad_count = len(needs_attention)
+if good_count > bad_count:
+    summary_parts.append("Mostly a good night.")
+elif bad_count > good_count:
+    summary_parts.append("A few things need attention from overnight.")
+else:
+    summary_parts.append("Mixed bag overnight.")
+
+# Highlights
+if newsletter_st == "produced":
+    summary_parts.append("The newsletter went out on schedule.")
+if "0 fail" in sim_summary:
+    summary_parts.append("All simulations passed.")
+elif "fail" in sim_summary:
+    summary_parts.append(f"The simulation suite caught some failures ({sim_summary}), which needs investigation.")
+
+if "ISSUES" in hc_summary or "issues" in hc_summary:
+    summary_parts.append(f"Healthcheck reported {hc_summary.lower()} — mostly persistent items from previous cycles.")
+
+# Trading context
+if "0" in str(aether_summary) and "Trades: 0" in aether_summary or "Trades: ?" in aether_summary:
+    summary_parts.append("No trading activity — Aether is in standby until we get live API keys.")
+elif aether_summary and aether_summary != "No trading data":
+    summary_parts.append(f"Trading: {aether_summary}.")
+
+exec_summary = " ".join(summary_parts)
 
 # The feed entry
 morning_entry = {

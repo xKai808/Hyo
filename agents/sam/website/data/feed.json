@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-13T21:50:03-0600",
+  "lastUpdated": "2026-04-13T22:30:00-0600",
   "today": "2026-04-13",
   "agents": {
     "kai": {
@@ -41,7 +41,7 @@
       "role": "System Improvement & Security",
       "icon": "\ud83d\udd27",
       "color": "#6dd49c",
-      "responsibilities": "Nel is the system's immune system \u2014 the best QA and security agent in the ecosystem. We run an 8-phase autonomous QA cycle every 6 hours: link validation, security scanning, API health, data integrity, agent health, deployment verification, research sync, and consolidated reporting. Every finding gets flagged, tracked, and verified. Dead links, broken deploys, exposed secrets \u2014 these are things of the past. We catch everything BEFORE it hits production.\n\n---",
+      "responsibilities": "Nel is the system's immune system \u2014 the best QA and security agent in the ecosystem. We run an 8-phase autonomous QA cycle every 6 hours: link validation, security scanning, API health, data integrity, agent health, deployment verification, research sync, and consolidated reporting. Every finding gets flagged, tracked, and verified. Dead links, broken deploys, exposed secrets \u2014 these are things of the past. We catch everything BEFORE it hits production.",
       "goals": {
         "short": [
           "Fix: False positive rate still ~30% (cipher finding potential leaks that aren't leaks; sentinel matching too broad)",
@@ -67,7 +67,7 @@
       "role": "Engineering & Infrastructure",
       "icon": "\u2699\ufe0f",
       "color": "#7ec4e0",
-      "responsibilities": "Sam is the product engineer. We build, test, deploy, and maintain the Hyo platform (website, API, infrastructure). We move fast with high confidence by testing everything, catching regressions early, and keeping deployment pipelines reliable. We eliminate friction between code and production.\n\n---",
+      "responsibilities": "Sam is the product engineer. We build, test, deploy, and maintain the Hyo platform (website, API, infrastructure). We move fast with high confidence by testing everything, catching regressions early, and keeping deployment pipelines reliable. We eliminate friction between code and production.",
       "goals": {
         "short": [
           "Fix: Three API endpoints failing in sandbox (smoke tests) but passing in live environment; root cause unknown",
@@ -93,7 +93,7 @@
       "role": "Newsletter & Content Intelligence",
       "icon": "\ud83d\udcf0",
       "color": "#b49af0",
-      "responsibilities": "Ra is the product manager and curator of Hyo's intelligence output. We gather, synthesize, and distribute knowledge through two products: the CEO brief (internal) and Aurora Public (consumer newsletter). We own source quality, editorial voice, subscriber experience, and the growing research archive that compounds organizational knowledge.\n\n---",
+      "responsibilities": "Ra is the product manager and curator of Hyo's intelligence output. We gather, synthesize, and distribute knowledge through two products: the CEO brief (internal) and Aurora Public (consumer newsletter). We own source quality, editorial voice, subscriber experience, and the growing research archive that compounds organizational knowledge.",
       "goals": {
         "short": [
           "Fix: Yahoo Finance source returning 0 records (20.6s/0 timeout); breaks macro signal in briefs",
@@ -112,6 +112,33 @@
       ],
       "pending": [
         "No pending items reported"
+      ]
+    },
+    "aurora": {
+      "name": "Aurora",
+      "role": "Daily Intelligence Newsletter",
+      "icon": "\ud83c\udf05",
+      "color": "#f0a060",
+      "responsibilities": "AI-powered daily intelligence briefing \u2014 gathers, synthesizes, and delivers personalized newsletters for Ra (private) and Aurora Public (consumer-facing).",
+      "goals": {
+        "short": [
+          "Unblock newsletter pipeline on Mini via launchd"
+        ],
+        "medium": [
+          "Diversify source coverage beyond tech/crypto",
+          "Improve editorial voice"
+        ],
+        "long": [
+          "Grow subscriber base",
+          "Launch Aurora Public consumer edition"
+        ]
+      },
+      "inProcess": [
+        "Latest output: 2026-04-13.input.md"
+      ],
+      "pending": [
+        "Mini launchd migration for gather phase",
+        "Source health monitoring"
       ]
     },
     "aether": {
@@ -151,7 +178,7 @@
       "role": "Data Integrity & System Intelligence",
       "icon": "\ud83d\uddc3\ufe0f",
       "color": "#e07060",
-      "responsibilities": "Dex is the system memory manager and data integrity guardian. We own all JSONL ledgers (append-only logs), validation, compaction, and pattern detection across all agents. We ensure the organization's institutional knowledge is accurate, queryable, and protected from corruption. We detect when problems recur and help prevent the same bugs from happening twice.\n\n---",
+      "responsibilities": "Dex is the system memory manager and data integrity guardian. We own all JSONL ledgers (append-only logs), validation, compaction, and pattern detection across all agents. We ensure the organization's institutional knowledge is accurate, queryable, and protected from corruption. We detect when problems recur and help prevent the same bugs from happening twice.",
       "goals": {
         "short": [
           "Goal: Ensure all .jsonl ledger files are structurally sound and can be reliably parsed",
@@ -188,24 +215,23 @@
       "timestamp": "2026-04-13T21:50:03-0600",
       "date": "2026-04-13",
       "sections": {
-        "summary": "4 things running well overnight. 3 items need attention. Trading: Balance: $83.72, Trades: ?, Win rate: 0.0, Strategies: 6.",
+        "summary": "Overnight was a mixed bag. The newsletter pipeline ran on schedule, and three agents \u2014 Nel, Ra, and Aether \u2014 are actively growing in their domains, which is new and encouraging. But we still have four unresolved issues and six warnings from the last healthcheck, and Aether's trading dashboard is stuck showing stale data with no live trades happening. The simulation suite caught two failures out of 27 tests, which means something regressed.",
         "wentWell": [
-          "Newsletter produced on schedule",
-          "Nel showing active domain growth",
-          "Ra showing active domain growth",
-          "Aether showing active domain growth"
+          "Newsletter produced on schedule \u2014 the pipeline is reliable when it can reach its sources",
+          "Nel, Ra, and Aether are all showing active domain growth \u2014 they're researching, not just running jobs",
+          "The overall system is stable enough to focus on growth rather than firefighting"
         ],
         "needsAttention": [
-          "Healthcheck: ISSUES: 4 issues, 6 warnings",
-          "Simulation has failures: 25 pass / 2 fail",
-          "Aether bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc"
+          "Healthcheck flagged 4 issues and 6 warnings \u2014 most are persistent from previous cycles and need root-cause fixes, not just re-flagging",
+          "2 out of 27 simulation tests are failing \u2014 this is a regression that needs investigation before it spreads",
+          "Aether is effectively grounded: no live trades, dashboard out of sync, and the data that exists isn't rendering on HQ. This needs Hyo's input on API keys."
         ],
         "agentHighlights": {
-          "nel": "improvement: score improved 65 \u2192 85. Score at 85 \u2014 acceptable but room to grow. Actively growing in domain expertise.",
-          "sam": "No data from last cycle.",
-          "ra": "health check with 1 warning(s). Actively growing in domain expertise.",
-          "aether": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync. Bottleneck: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc. Actively growing in domain expertise.",
-          "dex": "No data from last cycle."
+          "nel": "Nel's quality score improved from 65 to 85 this cycle \u2014 solid progress. The main bottleneck is that some fixes require Mini access, so Nel is stuck re-flagging the same issues. Working on what it can control autonomously.",
+          "sam": "Quiet cycle \u2014 no new data from Sam. The platform is stable, but Sam needs to start its own research loop to stay sharp.",
+          "ra": "Ra ran into one warning this cycle but is actively growing its domain expertise. The big blocker remains Cowork sandbox restrictions \u2014 Ra can't reach external sources from here.",
+          "aether": "Aether is in standby mode with zero trades this cycle. The dashboard sync issue persists \u2014 the underlying data exists but HQ can't render it. This is becoming the longest-running open issue.",
+          "dex": "No data from Dex this cycle. Dex needs to be wired into the research and reporting loop like the other agents."
         }
       }
     },
@@ -299,9 +325,9 @@
       "reports": [
         "mr-2026-04-13",
         "kai-ceo-2026-04-13",
+        "aether-reflection-2026-04-13",
         "nel-reflection-2026-04-13",
-        "ra-reflection-2026-04-13",
-        "aether-reflection-2026-04-13"
+        "ra-reflection-2026-04-13"
       ]
     }
   }

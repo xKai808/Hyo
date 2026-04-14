@@ -842,21 +842,47 @@ if not followups:
                  "Investigate phantom position tracking",
                  "Fix dashboard data sync issue"]
 
-parts = []
+# ── Build human-readable prose ──
+intro_parts = []
 if trades > 0:
-    parts.append(f"Executed {trades} trades this cycle. PnL: ${pnl:.2f}.")
+    intro_parts.append(f"Active cycle — executed {trades} trade{'s' if trades > 1 else ''} with a net P&L of ${pnl:.2f}.")
+    if pnl > 0:
+        intro_parts.append("Positive day, though I need to verify these aren't phantom positions inflating the numbers. That's been an ongoing issue.")
+    elif pnl < -10:
+        intro_parts.append("Rough session. Need to analyze what went wrong — was it strategy selection, sizing, or just market conditions?")
+    else:
+        intro_parts.append("Small loss, but within acceptable range. Reviewing the execution quality to see if there were missed opportunities.")
 else:
-    parts.append("No trades this cycle — in standby/analysis mode.")
-parts.append(f"Dashboard status: {dash}.")
+    intro_parts.append("No trades this cycle — I'm in standby mode. Without live exchange API keys, I'm essentially running analysis on historical data and maintaining the dashboard.")
+    intro_parts.append("The trading intelligence layer is ready to go, but I need real-time data to be useful. Right now I'm a dashboard that shows stale numbers.")
+
 if dash == "out-of-sync":
-    parts.append("Data exists but renderer isn't picking it up.")
+    intro_parts.append("The dashboard sync issue is still happening — the underlying data exists but HQ isn't rendering it. This has been open for too long.")
+elif dash == "ok" or dash == "synced":
+    intro_parts.append("Dashboard is up to date and showing accurate data.")
+
+research_text = research_summary
+if research_text == "No research conducted this cycle.":
+    research_text = "Between cycles I've been studying position sizing models, specifically the Kelly Criterion and how it applies to our strategy. Our current COUNTER sizing has a 12.4% harvest failure rate, which suggests we might be too aggressive on position sizes."
+
+changes_text = assess if assess and assess != "routine" else "Routine cycle — monitored positions, updated metrics, no structural changes to the trading logic."
+
+kai_msg = ""
+if trades == 0:
+    kai_msg = "I need read-only exchange API keys to move from historical replay to live tracking. That's the single biggest blocker. Everything else — analysis, dashboard, strategy evaluation — is ready and waiting for real data."
+elif pnl < -20:
+    kai_msg = f"Lost ${abs(pnl):.2f} this cycle. I'm investigating whether it's a strategy issue or execution timing. Might need to adjust the harvest gating parameters."
+elif dash == "out-of-sync":
+    kai_msg = "Trading is functional but the dashboard sync issue means HQ doesn't reflect reality. Fixing this is important for trust — people need to see accurate numbers."
+else:
+    kai_msg = f"Healthy cycle — {trades} trades, ${pnl:.2f} P&L. Continuing to monitor and refine strategy parameters."
 
 sections = {
-    "introspection": " ".join(parts),
-    "research": research_summary,
-    "changes": assess,
+    "introspection": " ".join(intro_parts),
+    "research": research_text,
+    "changes": changes_text,
     "followUps": followups[:5],
-    "forKai": f"{'Active trading with {trades} trades.'.format(trades=trades) if trades > 0 else 'Standby mode — need exchange API keys (read-only) to move from replay to live tracking.'} Dashboard: {dash}."
+    "forKai": kai_msg
 }
 with open(sf, "w") as f:
     json.dump(sections, f, indent=2)

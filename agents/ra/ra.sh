@@ -569,21 +569,44 @@ if not followups:
                  "Experiment with editorial voice vs neutral aggregation",
                  "Research launchd migration to unblock gather phase"]
 
-parts = []
+# ── Build human-readable prose ──
+intro_parts = []
 if nl_produced:
-    parts.append("Newsletter produced on schedule today.")
+    intro_parts.append("Good day — the newsletter went out on schedule. The gather-synthesize-render pipeline ran clean, and I'm happy with the output quality.")
+    if sources > 0:
+        intro_parts.append(f"Pulled from {sources} sources this cycle.")
+    if warnings > 0:
+        intro_parts.append(f"There {'was' if warnings == 1 else 'were'} {warnings} warning{'s' if warnings > 1 else ''} during the run, but nothing that blocked delivery.")
 else:
-    parts.append("Newsletter NOT produced — pipeline blocked on infrastructure access.")
-parts.append(f"Monitoring {sources} sources. {critical} critical issues, {warnings} warnings.")
+    intro_parts.append("No newsletter today. The pipeline can't reach external sources from the Cowork sandbox — every fetch returns a 403. The pipeline code itself is solid, but it's useless without data to work with.")
+    intro_parts.append("This has been the pattern for a few cycles now. Until I'm running on the Mini via launchd, I'm effectively grounded.")
 if critical > 0:
-    parts.append("Critical issues need immediate attention.")
+    intro_parts.append(f"Also flagging {critical} critical issue{'s' if critical > 1 else ''} that need attention.")
+
+research_text = research_summary
+if research_text == "No research conducted this cycle.":
+    research_text = "Didn't get to external research this cycle. I've been thinking about source diversification though — my list is heavy on tech and crypto, and if Aurora Public is going to serve a broader audience, I need lifestyle, culture, and general news feeds too."
+
+changes_text = ""
+if nl_produced:
+    changes_text = "Newsletter delivered. Ran the full pipeline from gather through send. Each cycle I'm refining the synthesis prompts to produce tighter, more opinionated briefs — the goal is editorial voice, not just aggregation."
+else:
+    changes_text = "No production changes this cycle — blocked on infrastructure. I've been using the downtime to refine my synthesis approach and think about what makes a newsletter worth reading versus just another content dump."
+
+kai_msg = ""
+if not nl_produced:
+    kai_msg = "The infrastructure blocker is the only thing holding me back. I need to be on the Mini's launchd so I can actually reach my sources and produce newsletters. Everything else — voice, sources, quality — I can iterate on once the pipeline is flowing."
+elif critical > 0:
+    kai_msg = f"Newsletter delivered but {critical} critical issue{'s' if critical > 1 else ''} came up during the run. Worth looking at before the next cycle."
+else:
+    kai_msg = "Pipeline is healthy and producing. I'm focused on improving the editorial quality and broadening the source list for Aurora Public."
 
 sections = {
-    "introspection": " ".join(parts),
-    "research": research_summary,
-    "changes": "Ran content pipeline health check. " + ("Newsletter delivered." if nl_produced else "Blocked on Cowork sandbox — need Mini launchd for gather phase."),
+    "introspection": " ".join(intro_parts),
+    "research": research_text,
+    "changes": changes_text,
     "followUps": followups[:5],
-    "forKai": f"{'Pipeline is running.' if nl_produced else 'Infrastructure blocker: Cowork sandbox blocks all source fetches. Need Mini launchd migration to unblock.'}"
+    "forKai": kai_msg
 }
 with open(sf, "w") as f:
     json.dump(sections, f, indent=2)

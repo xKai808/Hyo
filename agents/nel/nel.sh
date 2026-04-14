@@ -696,9 +696,10 @@ PUBLISH_SCRIPT="$ROOT/bin/publish-to-feed.sh"
 REFLECTION_SECTIONS="/tmp/nel-reflection-sections-$(date +%Y%m%d).json"
 
 # Build Nel's self-authored reflection from THIS cycle's actual data
+# Written in first person, conversational prose — not machine output.
 python3 - "$REFLECTION_SECTIONS" "$IMPROVEMENT_SCORE" "$SENTINEL_PASS" "$SENTINEL_FAIL" \
           "$CIPHER_LEAKS" "$ACTIONS_FILED" "$ROOT" << 'PYEOF'
-import json, sys, os, glob
+import json, sys, os, re
 sections_file = sys.argv[1]
 score = int(sys.argv[2]) if sys.argv[2].isdigit() else 0
 s_pass = int(sys.argv[3]) if sys.argv[3].isdigit() else 0
@@ -709,63 +710,127 @@ root = sys.argv[7]
 from datetime import datetime
 today = datetime.now().strftime("%Y-%m-%d")
 
-# Read latest research findings if they exist
-research_summary = "No research conducted this cycle."
+total_checks = s_pass + s_fail
+
+# Read latest research findings for context
+findings_text = ""
 findings_file = os.path.join(root, "agents", "nel", "research", f"findings-{today}.md")
 if os.path.exists(findings_file):
     with open(findings_file) as f:
-        content = f.read()
-    # Extract key takeaways section
-    if "## Key Takeaways" in content:
-        takeaways = content.split("## Key Takeaways")[1].split("##")[0].strip()
-        research_summary = takeaways if takeaways else "Research completed but no high-signal findings."
-    else:
-        research_summary = "Research completed — see findings file for details."
+        findings_text = f.read()
 
-# Read open follow-ups from research-sources.json
-followups = []
+# Extract specific intel from findings
+cves = list(set(re.findall(r'CVE-\d{4}-\d{4,}', findings_text)))
+tools_found = re.findall(r'Tools mentioned:\s*(.+)', findings_text)
+tools = [t.strip() for t in tools_found[0].split(',')] if tools_found else []
+has_blindspot = "blindspot alert" in findings_text.lower() or "BLINDSPOT" in findings_text
+
+# Read follow-ups
+followups_raw = []
 sources_file = os.path.join(root, "agents", "nel", "research-sources.json")
 if os.path.exists(sources_file):
     with open(sources_file) as f:
         cfg = json.load(f)
-    followups = [f["item"] for f in cfg.get("followUps", []) if f.get("status") == "open"]
+    followups_raw = [f for f in cfg.get("followUps", []) if f.get("status") == "open"]
 
-# Build introspection from real cycle data
-parts = []
-parts.append(f"Ran {s_pass + s_fail} sentinel checks — {s_pass} passed, {s_fail} failed.")
-if s_fail > 0:
-    parts.append(f"The {s_fail} failures are persistent and need infrastructure access to fix.")
+# ── INTROSPECTION: What happened and how I feel about it ──
+intro = []
+if total_checks == 0:
+    intro.append("Quiet cycle — no sentinel checks ran, which usually means the runner hit an early exit.")
+elif s_fail == 0:
+    intro.append(f"Good cycle. All {total_checks} sentinel checks passed, which hasn't happened often lately.")
+else:
+    ratio = f"{s_pass} out of {total_checks}"
+    intro.append(f"Mixed results today. {ratio} sentinel checks passed.")
+    if s_fail <= 2:
+        intro.append(f"The {'failure is' if s_fail == 1 else 'failures are'} persistent — same ones that have been failing for multiple cycles now. They need infrastructure access on the Mini to fix, which means I'm stuck re-flagging them until that happens.")
+    else:
+        intro.append(f"That's more failures than usual. Something may have regressed — worth investigating before the next cycle.")
+
 if leaks > 0:
-    parts.append(f"Cipher detected {leaks} potential secret leak(s) — investigating.")
+    intro.append(f"Cipher flagged {leaks} potential leak{'s' if leaks > 1 else ''} this cycle. Investigating whether {'these are' if leaks > 1 else 'this is'} real or another false positive — my false positive rate has been around 30%, so I'm cautious.")
 else:
-    parts.append("No secret leaks detected this cycle.")
-if score < 70:
-    parts.append(f"System health score at {score} — below target. Need to focus on reducing failure rate.")
-elif score >= 90:
-    parts.append(f"System health score at {score} — running well.")
-else:
-    parts.append(f"System health score at {score} — acceptable but room to improve.")
+    intro.append("No secret leaks detected, which is good — the codebase is clean as far as cipher can see.")
 
-# Build changes from this cycle
-changes = []
+if score >= 90:
+    intro.append(f"Overall health score is {score}. That's strong.")
+elif score >= 70:
+    intro.append(f"Health score sitting at {score} — adequate, but I know there's room to push higher.")
+elif score > 0:
+    intro.append(f"Health score is {score}, which is below where I want it (targeting 70+). The persistent failures are dragging it down.")
+
+introspection = " ".join(intro)
+
+# ── RESEARCH: What I learned from external sources ──
+research_parts = []
+if findings_text:
+    src_count = findings_text.count("### ") - 1  # subtract header
+    if src_count > 0:
+        research_parts.append(f"Checked {src_count} external sources today.")
+    if cves:
+        if len(cves) == 1:
+            research_parts.append(f"Found one CVE worth tracking: {cves[0]}. Need to check if it affects any of our dependencies.")
+        else:
+            research_parts.append(f"Found {len(cves)} CVEs: {', '.join(cves[:3])}. My next step is cross-referencing these against our package.json to see if we're exposed.")
+    if tools:
+        research_parts.append(f"Came across {tools[0]} in the advisories — it could help with my scanning coverage if I can integrate it into the QA cycle.")
+    if has_blindspot:
+        research_parts.append("What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.")
+    if not cves and not tools and not has_blindspot:
+        research_parts.append("Nothing urgent jumped out, but I'm logging everything for trend analysis. Quiet days are fine as long as I'm still watching.")
+else:
+    research_parts.append("No external research this cycle — either the sources were unreachable or the research phase didn't run.")
+
+research = " ".join(research_parts)
+
+# ── CHANGES: What I actually did ──
+changes_parts = []
 if actions > 0:
-    changes.append(f"Filed {actions} action items from QA findings.")
-changes.append("Ran full QA sweep: sentinel checks, cipher scan, rendered output verification.")
+    changes_parts.append(f"Filed {actions} action item{'s' if actions > 1 else ''} from this cycle's findings.")
+changes_parts.append("Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification.")
+if cves or tools:
+    changes_parts.append("Updated my research log and priority queue with findings from external sources.")
+if not changes_parts:
+    changes_parts = ["Routine cycle — everything ran, nothing new to report."]
 
-# Default follow-ups if none from research
+changes = " ".join(changes_parts)
+
+# ── FOLLOW-UPS: Plain language ──
+followups = []
+for fu in followups_raw[:5]:
+    try:
+        age = (datetime.strptime(today, "%Y-%m-%d") - datetime.strptime(fu["date"], "%Y-%m-%d")).days
+    except:
+        age = 0
+    item = fu["item"]
+    if age > 5:
+        followups.append(f"{item} — been open {age} days, need to close this out")
+    else:
+        followups.append(item)
 if not followups:
-    followups = [
-        "Research response time thresholds for API endpoints",
-        "Explore npm audit integration for dependency vulnerability scanning",
-        "Investigate duplicate flag deduplication in QA queue"
-    ]
+    followups = ["Continue monitoring sources and tracking patterns against my blindspots"]
+
+# ── FOR KAI: Honest, direct ──
+kai_parts = []
+if s_fail > 0 and score < 70:
+    kai_parts.append(f"Score is at {score} and the same failures keep recurring because they need Mini access to fix.")
+    kai_parts.append("I'm spending cycles re-flagging issues I can't resolve. Would rather spend that time building new detection capabilities.")
+elif has_blindspot:
+    kai_parts.append("Today's research confirmed a real gap — I'm seeing active threats in areas I can't monitor yet.")
+    kai_parts.append("I'd like to prioritize building basic detection for supply chain and dependency vulnerabilities.")
+elif score >= 85:
+    kai_parts.append(f"Things are running well (score: {score}). No urgent issues.")
+    kai_parts.append("I'm focused on incremental improvements and keeping the research loop going.")
+else:
+    kai_parts.append(f"Steady cycle. Score at {score}, nothing on fire.")
+for_kai = " ".join(kai_parts) if kai_parts else "Nothing urgent to escalate this cycle."
 
 sections = {
-    "introspection": " ".join(parts),
-    "research": research_summary,
-    "changes": " ".join(changes) if changes else "Routine QA cycle — no structural changes this run.",
-    "followUps": followups[:5],
-    "forKai": f"Score at {score}. {'Failures persisting — need Mini access for infrastructure fixes.' if s_fail > 0 else 'All checks passing.'} Help me prioritize between fixing existing issues and building new detection capabilities."
+    "introspection": introspection,
+    "research": research,
+    "changes": changes,
+    "followUps": followups,
+    "forKai": for_kai
 }
 
 with open(sections_file, "w") as f:

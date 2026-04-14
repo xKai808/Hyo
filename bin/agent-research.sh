@@ -663,7 +663,7 @@ fi
 # ── 4. Publish to feed if requested ──
 # Build feed entry from the REAL analysis (not templates)
 if [[ "$PUBLISH" == "--publish" ]]; then
-  python3 - "$FEED_SECTIONS" "$FINDINGS_FILE" "$RESULTS_FILE" "$SOURCES_FILE" "$AGENT" << 'PYEOF'
+  python3 - "$FEED_SECTIONS" "$FINDINGS_FILE" "$RESULTS_FILE" "$SOURCES_FILE" "$AGENT" "$ROOT" << 'PYEOF'
 import json, sys, os, re
 
 out = sys.argv[1]
@@ -671,6 +671,7 @@ findings_path = sys.argv[2]
 results_path = sys.argv[3]
 sources_path = sys.argv[4]
 agent = sys.argv[5]
+root = sys.argv[6]
 
 with open(findings_path) as f:
     findings = f.read()
@@ -681,40 +682,153 @@ with open(results_path) as f:
 with open(sources_path) as f:
     config = json.load(f)
 
-ok = sum(1 for r in results if r["status"] == "ok")
+# Read agent PLAYBOOK for context
+playbook_path = os.path.join(root, "agents", agent, "PLAYBOOK.md")
+playbook = ""
+if os.path.exists(playbook_path):
+    with open(playbook_path) as f:
+        playbook = f.read()
+
+ok_sources = [r for r in results if r["status"] == "ok"]
+failed_sources = [r for r in results if r["status"] != "ok"]
+ok = len(ok_sources)
 total = len(results)
+source_names = [r["name"] for r in ok_sources]
 
-# Extract the My Analysis section from findings
-analysis = ""
-if "## My Analysis" in findings:
-    analysis = findings.split("## My Analysis")[1].split("## Decisions")[0].strip()
-    # Clean markdown formatting for feed display
-    analysis = re.sub(r'\*\*([^*]+)\*\*', r'\1', analysis)
-    analysis = re.sub(r'###\s+', '', analysis)
-    analysis = analysis[:500]
+# ── Extract structured data from findings for prose generation ──
+cves = re.findall(r'CVE-\d{4}-\d{4,}', findings)
+cves = list(set(cves))
+tools = []
+m = re.search(r'Tools discovered:\s*(\d+)', findings)
+tool_count = int(m.group(1)) if m else 0
+tool_names = re.findall(r'Tools mentioned:\s*(.+)', findings)
+if tool_names:
+    tools = [t.strip() for t in tool_names[0].split(',')]
 
-# Extract Decisions section
-decisions = ""
-if "## Decisions" in findings:
-    decisions = findings.split("## Decisions")[1].split("## Goal Impact")[0].strip()
-    decisions = re.sub(r'\*\*([^*]+)\*\*', r'\1', decisions)
-    decisions = decisions[:400]
+patterns = re.findall(r'Security patterns:\s*(.+)', findings)
+attack_patterns = [p.strip() for p in patterns[0].split(',')] if patterns else []
 
-# Extract metrics
-metrics = ""
-if "## Research Metrics" in findings:
-    metrics = findings.split("## Research Metrics")[1].strip()
-    metrics = metrics[:300]
+weakness_matches = []
+if "Findings that address my weaknesses:" in findings:
+    section = findings.split("Findings that address my weaknesses:")[1].split("\n\n")[0]
+    weakness_matches = [l.strip().lstrip("- ") for l in section.strip().split("\n") if l.strip().startswith("-")]
 
-# Get follow-ups
-followups = [fu["item"] for fu in config.get("followUps", []) if fu.get("status") == "open"]
+blindspot_matches = []
+if "Blindspot alerts:" in findings:
+    section = findings.split("Blindspot alerts:")[1].split("\n\n")[0]
+    blindspot_matches = [l.strip().lstrip("- ").replace("WARNING: ","").replace("**","") for l in section.strip().split("\n") if l.strip().startswith("-")]
+
+# RSS headlines
+rss_items = []
+for block in re.findall(r'Headlines \((\d+)\):\*\*\n((?:- .+\n?)+)', findings):
+    count = int(block[0])
+    for line in block[1].strip().split("\n"):
+        if line.strip().startswith("- "):
+            rss_items.append(line.strip().lstrip("- "))
+
+# Follow-ups
+followups = [fu for fu in config.get("followUps", []) if fu.get("status") == "open"]
+
+# ── BUILD HUMAN-READABLE PROSE ──
+
+# Introspection: what I did and what I found, in plain English
+intro_parts = []
+if ok == total:
+    intro_parts.append(f"I checked all {total} of my sources today")
+elif ok > 0:
+    intro_parts.append(f"I managed to reach {ok} out of {total} sources today")
+    if failed_sources:
+        intro_parts.append(f" ({', '.join(r['name'] for r in failed_sources[:2])} {'was' if len(failed_sources)==1 else 'were'} down)")
+else:
+    intro_parts.append("None of my sources responded today, which is unusual")
+
+# What was interesting
+notable = []
+if cves:
+    if len(cves) == 1:
+        notable.append(f"One CVE stood out: {cves[0]}")
+    else:
+        notable.append(f"{len(cves)} CVEs caught my attention — {', '.join(cves[:3])}")
+
+if tools:
+    notable.append(f"I noticed {'a tool' if len(tools)==1 else 'some tools'} worth looking at: {', '.join(tools[:3])}")
+
+if attack_patterns:
+    notable.append(f"{'An attack pattern' if len(attack_patterns)==1 else 'Some attack patterns'} showed up in the wild: {', '.join(attack_patterns[:3])}")
+
+if rss_items:
+    notable.append(f"Picked up {len(rss_items)} headlines worth tracking")
+
+if notable:
+    intro_parts.append(". " + ". ".join(notable) + ".")
+else:
+    intro_parts.append(". Nothing jumped out as urgent, but I logged everything for trend analysis.")
+
+# Self-awareness piece
+if blindspot_matches:
+    intro_parts.append(f"\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. {blindspot_matches[0][:200]} This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.")
+elif weakness_matches:
+    intro_parts.append(f"\n\nI cross-referenced what I found against my known weaknesses, and there's overlap. {weakness_matches[0][:150]} — there are tools out there that could help me close this gap.")
+else:
+    intro_parts.append(f"\n\nI checked my findings against my {len(re.findall(r'Weaknesses', playbook))} tracked weaknesses and {'known blindspots' if 'Blindspots' in playbook else 'gaps'}, and nothing directly overlapped today. That could mean my sources need to be more targeted, or it could just be a quiet day.")
+
+introspection = "".join(intro_parts)
+
+# Research: what I'm going to do about it, in plain English
+research_parts = []
+if cves:
+    research_parts.append(f"First priority is cross-referencing those {len(cves)} CVEs against our actual dependencies — I need to know if any of them affect packages we're running in production.")
+if tools:
+    research_parts.append(f"I want to evaluate {tools[0]} — it looks like it could {'reduce my false positive rate' if 'false positive' in playbook.lower() else 'fill a gap in my scanning coverage'}.")
+if blindspot_matches:
+    research_parts.append(f"The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.")
+if not research_parts:
+    research_parts.append("No immediate action items from today's research. I'll keep monitoring and consider diversifying my source list if the next few cycles are similarly quiet.")
+research = " ".join(research_parts)
+
+# Changes: what actually changed as a result
+changes_parts = []
+if cves or tools or weakness_matches or blindspot_matches:
+    changes_parts.append(f"I saved raw data from {ok} sources and wrote up my analysis.")
+    if weakness_matches or blindspot_matches:
+        changes_parts.append("Updated my priorities based on what I found — the research-driven items are now in my queue.")
+    if followups:
+        changes_parts.append(f"I have {len(followups)} open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.")
+else:
+    changes_parts.append(f"Logged data from {ok} sources. No priority changes this cycle — current goals still look right.")
+changes = " ".join(changes_parts)
+
+# Follow-ups: plain language
+followup_items = []
+for fu in followups[:5]:
+    from datetime import datetime, timedelta
+    try:
+        age = (datetime.strptime(sys.argv[3].split("/")[-1].split("-results")[0].split(f"-{agent}")[0], "%Y-%m-%d") - datetime.strptime(fu["date"], "%Y-%m-%d")).days
+    except:
+        age = 0
+    if age > 3:
+        followup_items.append(f"{fu['item']} (open {age} days — need to close this)")
+    else:
+        followup_items.append(fu["item"])
+if not followup_items:
+    followup_items = ["Keep scanning sources and look for patterns that match my blindspots"]
+
+# For Kai: honest assessment
+if blindspot_matches:
+    for_kai = f"I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+elif weakness_matches:
+    for_kai = f"Good news: I found tools that could help with one of my weaknesses. I'd like to spend time next cycle evaluating {tools[0] if tools else 'what I found'} and seeing if it integrates into my workflow. No blockers, just time."
+elif ok == 0:
+    for_kai = "All my sources were unreachable today. If this keeps happening, I need to either move to the Mini (where network access works) or find alternative sources. I can't grow without data."
+else:
+    for_kai = f"Quiet cycle — checked {ok} sources, nothing urgent. My current priorities still look right. I'll keep watching for patterns."
 
 sections = {
-    "introspection": f"Researched {ok}/{total} sources. {analysis}" if analysis else f"Checked {ok}/{total} sources. No deep analysis produced.",
-    "research": decisions if decisions else "No actionable findings this cycle.",
-    "changes": metrics if metrics else f"Research data saved. {ok} sources processed.",
-    "followUps": followups[:5] if followups else ["Broaden source list for higher signal"],
-    "forKai": f"I found {'matches against my weaknesses' if 'weakness match' in findings.lower() else 'no direct weakness matches'}. {'BLINDSPOT CONFIRMED — need help building detection.' if 'blindspot alert' in findings.lower() else 'Current priorities unchanged.'}"
+    "introspection": introspection,
+    "research": research,
+    "changes": changes,
+    "followUps": followup_items,
+    "forKai": for_kai
 }
 
 with open(out, "w") as f:

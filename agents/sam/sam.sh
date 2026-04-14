@@ -633,18 +633,54 @@ if not followups:
                  "Research Vercel KV integration for persistent storage",
                  "Benchmark API response times for performance baseline"]
 
-parts = [f"Tests: {tp} passed, {tf} failed.", f"API health: {api}.", f"Deploy status: {deploy}."]
-if tf > 0:
-    parts.append(f"{tf} test failures need investigation.")
-if api != "reachable":
-    parts.append("API not reachable — this is blocking user-facing features.")
+# ── Build human-readable prose ──
+intro_parts = []
+total_tests = tp + tf
+if total_tests > 0:
+    if tf == 0:
+        intro_parts.append(f"All {tp} tests passing this cycle — the codebase is in good shape.")
+    else:
+        intro_parts.append(f"Ran {total_tests} tests. {tp} passed, but {tf} failed. {'That one failure' if tf == 1 else 'Those failures'} need investigation before I can be confident about deploying.")
+else:
+    intro_parts.append("No tests ran this cycle, which means I'm flying blind on code quality.")
+
+if api == "up" or api == "reachable":
+    intro_parts.append("The API is responding normally.")
+elif api == "down":
+    intro_parts.append("The API is down, which is a problem — users can't reach any of our endpoints. This is my top priority to investigate.")
+else:
+    intro_parts.append(f"API health is unclear ({api}). Need to dig into this.")
+
+if deploy == "deployed" or deploy == "ok":
+    intro_parts.append("Latest deployment looks good.")
+elif deploy == "not_run":
+    intro_parts.append("No deployment this cycle.")
+
+research_text = research_summary
+if research_text == "No research conducted this cycle.":
+    research_text = "I didn't get to external research this cycle. When I do, I'll be looking at Vercel updates, Node.js releases, and infrastructure patterns that could improve our deployment pipeline."
+
+changes_text = assess if assess != "routine engineering check" else "Routine cycle — ran checks, verified infrastructure, no structural changes needed."
+
+if not followups or followups[0].startswith("Investigate CI"):
+    followups = ["Keep an eye on API response times — need to establish a performance baseline",
+                 "Look into Vercel KV for persistent storage (our current approach is ephemeral)",
+                 "Explore pre-deploy testing in the CI/CD pipeline"]
+
+kai_msg = ""
+if api == "down":
+    kai_msg = "The API being down is the most urgent thing. I need to figure out if it's a Vercel issue or something in our code. This blocks everything user-facing."
+elif tf > 0:
+    kai_msg = f"We have {tf} test failure{'s' if tf > 1 else ''} to address. Not critical yet, but I don't want to let these linger — test failures have a way of multiplying."
+else:
+    kai_msg = "Infrastructure is stable, no urgent issues. I'm focused on incremental improvements — test coverage, deployment reliability, and performance monitoring."
 
 sections = {
-    "introspection": " ".join(parts),
-    "research": research_summary,
-    "changes": assess,
+    "introspection": " ".join(intro_parts),
+    "research": research_text,
+    "changes": changes_text,
     "followUps": followups[:5],
-    "forKai": f"API is {api}, deploy is {deploy}. {'Need help unblocking the 401 on /api/hq.' if api != 'reachable' else 'Infrastructure stable.'}"
+    "forKai": kai_msg
 }
 with open(sf, "w") as f:
     json.dump(sections, f, indent=2)

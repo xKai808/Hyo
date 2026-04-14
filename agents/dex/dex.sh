@@ -1107,19 +1107,50 @@ if not followups:
                  "Research cross-agent dependency graph patterns",
                  "Investigate predictive staleness detection"]
 
-parts = [f"Validated {i_pass} files, found {i_fail} integrity issues."]
+# ── Build human-readable prose ──
+total_files = i_pass + i_fail
+intro_parts = []
+if total_files == 0:
+    intro_parts.append("Quiet cycle — no ledger files were scanned, which probably means the runner exited early or there's a path issue.")
+elif i_fail == 0:
+    intro_parts.append(f"Clean sweep. Validated all {i_pass} ledger files and everything parsed correctly. The organization's data is in good shape.")
+else:
+    intro_parts.append(f"Scanned {total_files} files. {i_pass} are clean, but {i_fail} {'has' if i_fail == 1 else 'have'} integrity problems — corrupt entries, malformed JSON lines, or structural issues that need repair.")
+
 if stale > 0:
-    parts.append(f"{stale} stale tasks detected (>72h old).")
+    intro_parts.append(f"Also found {stale} stale task{'s' if stale > 1 else ''} that {'have' if stale > 1 else 'has'} been sitting open for more than 72 hours. Stale tasks usually mean something got stuck or forgotten.")
 if patterns > 0:
-    parts.append(f"Tracking {patterns} recurrent patterns — too many unresolved.")
-parts.append(assess)
+    if patterns > 10:
+        intro_parts.append(f"I'm tracking {patterns} recurrent patterns in the issue logs. That's too many unresolved — the same bugs keep reappearing, which means we're treating symptoms instead of root causes.")
+    else:
+        intro_parts.append(f"Tracking {patterns} recurrent pattern{'s' if patterns > 1 else ''} across the system. Keeping an eye on whether these resolve or get worse.")
+
+research_text = research_summary
+if research_text == "No research conducted this cycle.":
+    research_text = "No external research this cycle. When I do research, I'm looking at data engineering patterns — append-only logs, event sourcing, JSONL best practices — anything that helps me do a better job as the system's memory guardian."
+
+changes_text = ""
+if i_fail > 0:
+    changes_text = f"Completed the integrity sweep and flagged {i_fail} file{'s' if i_fail > 1 else ''} for repair. {'Also identified' if stale > 0 else 'No'} stale tasks{f' — {stale} items need attention' if stale > 0 else ' this cycle'}."
+else:
+    changes_text = f"Ran the full integrity sweep across {i_pass} files — everything is clean. {'Found ' + str(stale) + ' stale tasks that need follow-up.' if stale > 0 else 'No stale tasks or integrity issues.'}"
+
+kai_msg = ""
+if i_fail > 0:
+    kai_msg = f"We have {i_fail} corrupted ledger file{'s' if i_fail > 1 else ''} that need repair. If left alone, this could cause downstream issues when other agents try to read their history. I'll attempt auto-repair next cycle."
+elif patterns > 10:
+    kai_msg = f"{patterns} recurrent patterns is a lot. We're accumulating unresolved issues faster than we're fixing them. Might need a dedicated cleanup sprint."
+elif stale > 0:
+    kai_msg = f"{stale} stale task{'s' if stale > 1 else ''} in the system. Not urgent, but worth a quick review to see if {'they' if stale > 1 else 'it'} can be closed or reassigned."
+else:
+    kai_msg = "Data layer is healthy. All ledgers parse correctly, no corruption, no stale tasks. I'm doing my job."
 
 sections = {
-    "introspection": " ".join(parts),
-    "research": research_summary,
-    "changes": f"Integrity sweep complete. {i_fail} issues flagged for repair. {stale} stale tasks identified.",
+    "introspection": " ".join(intro_parts),
+    "research": research_text,
+    "changes": changes_text,
     "followUps": followups[:5],
-    "forKai": f"Data integrity: {i_pass} pass, {i_fail} fail. {'System clean.' if i_fail == 0 else f'{i_fail} issues need attention.'} {f'{patterns} recurrent patterns accumulating — need resolution strategy.' if patterns > 10 else ''}"
+    "forKai": kai_msg
 }
 with open(sf, "w") as f:
     json.dump(sections, f, indent=2)
