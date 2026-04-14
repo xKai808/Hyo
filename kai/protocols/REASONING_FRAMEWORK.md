@@ -161,6 +161,59 @@ These questions apply universally. Every agent asks them. The answers are domain
 
 ---
 
+## Question Types: Open-Ended vs Directional
+
+Not all questions serve the same purpose. Agents — and Kai — must develop
+fluency in WHEN to use each type.
+
+### Open-ended questions (explore, discover, grow)
+
+Use when: you don't know what you don't know. When reflecting. When stuck.
+When evaluating your own work. When looking for gaps.
+
+```
+- "What would happen if this failed at 3am with no session?"
+- "Why might this approach not work?"
+- "What am I not seeing?"
+- "What would an expert in my domain do differently?"
+- "What assumption am I making that could be wrong?"
+- "If I had to rebuild this from scratch, what would I change?"
+- "What's the question I should be asking but haven't thought of?"
+```
+
+Open-ended questions are how you GROW. They surface unknown unknowns.
+They're uncomfortable because the answer isn't obvious. That's the point.
+
+### Yes/no questions (decide, validate, move)
+
+Use when: you need to move directionally. When validating work. When
+checking triggers. When confirming a fix.
+
+```
+- "Is this triggered?"          → If no: wire it.
+- "Does this have a consumer?"  → If no: why does it exist?
+- "Will this survive a reboot?" → If no: it's fragile.
+- "Am I solving the system?"    → If no: go deeper.
+- "Did this reach the user?"    → If no: the work is incomplete.
+- "Can this run without me?"    → If no: it doesn't scale.
+```
+
+Yes/no questions are how you DECIDE. They force binary clarity.
+Don't overthink when a yes/no will cut through ambiguity.
+
+### The pattern
+
+When facing any situation:
+1. Start with open-ended questions to understand the space
+2. Narrow with yes/no questions to decide direction
+3. Execute
+4. Reflect with open-ended questions to learn
+
+This is how Hyo guides Kai. This is how Kai guides agents. This is how
+agents guide themselves. The pattern is recursive and universal.
+
+---
+
 ## How Agents Use This
 
 This framework lives at `kai/protocols/REASONING_FRAMEWORK.md`. Every agent reads it during hydration. But the framework is GENERIC — the agents make it SPECIFIC.

@@ -208,6 +208,79 @@ if [[ -d "$PROPOSAL_DIR" ]]; then
   fi
 fi
 
+# ---- Check 8: Dead-loop detection (agents stuck in repeat cycles) ----
+# Read last 3 evolution entries per agent. If assessment or bottleneck is
+# the same 3x in a row, the agent is stuck. Kai sends guidance.
+GUIDANCE_LOG="$ROOT/kai/ledger/guidance.jsonl"
+for agent_name in nel sam ra aether dex; do
+  EVOL="$ROOT/agents/$agent_name/evolution.jsonl"
+  [[ ! -f "$EVOL" ]] && continue
+
+  # Get last 3 assessments
+  STUCK=$(python3 - "$EVOL" "$agent_name" <<'DLEOF'
+import json, sys
+evol_file = sys.argv[1]
+agent = sys.argv[2]
+entries = []
+with open(evol_file) as f:
+    for line in f:
+        line = line.strip()
+        if not line: continue
+        try: entries.append(json.loads(line))
+        except: pass
+
+if len(entries) < 3:
+    sys.exit(0)
+
+last3 = entries[-3:]
+
+# Check assessment repetition
+assessments = [e.get("assessment","") for e in last3]
+if len(set(assessments)) == 1 and assessments[0]:
+    print(f"assessment_stuck|{assessments[0]}")
+    sys.exit(0)
+
+# Check reflection.bottleneck repetition
+bottlenecks = [e.get("reflection",{}).get("bottleneck","none") for e in last3]
+if len(set(bottlenecks)) == 1 and bottlenecks[0] != "none" and bottlenecks[0]:
+    print(f"bottleneck_stuck|{bottlenecks[0]}")
+    sys.exit(0)
+
+# Check reflection.domain_growth stagnant 3x
+growth = [e.get("reflection",{}).get("domain_growth","") for e in last3]
+if all("stagnant" in g for g in growth if g):
+    print(f"growth_stagnant|{growth[0]}")
+    sys.exit(0)
+DLEOF
+  )
+
+  if [[ -n "$STUCK" ]]; then
+    STUCK_TYPE="${STUCK%%|*}"
+    STUCK_DETAIL="${STUCK#*|}"
+    log "DEAD-LOOP: $agent_name stuck ($STUCK_TYPE): ${STUCK_DETAIL:0:80}"
+    FINDINGS="${FINDINGS}{\"severity\":\"P1\",\"area\":\"dead-loop\",\"detail\":\"$agent_name stuck in dead-loop ($STUCK_TYPE): ${STUCK_DETAIL:0:60}\"},"
+    ISSUES=$((ISSUES + 1))
+
+    # Auto-send guidance question via dispatch (if available)
+    if [[ -x "$ROOT/bin/dispatch.sh" ]]; then
+      case "$STUCK_TYPE" in
+        assessment_stuck)
+          QUESTION="Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?" ;;
+        bottleneck_stuck)
+          QUESTION="You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?" ;;
+        growth_stagnant)
+          QUESTION="Your domain growth has been stagnant for 3+ cycles. What's one thing an expert in your field does that you're not doing?" ;;
+      esac
+      bash "$ROOT/bin/dispatch.sh" delegate "$agent_name" P2 "[GUIDANCE] $QUESTION" 2>/dev/null || true
+
+      # Log to guidance ledger
+      mkdir -p "$(dirname "$GUIDANCE_LOG")" 2>/dev/null
+      echo "{\"ts\":\"$NOW_ISO\",\"agent\":\"$agent_name\",\"type\":\"$STUCK_TYPE\",\"detail\":\"${STUCK_DETAIL:0:80}\",\"question\":\"$QUESTION\"}" >> "$GUIDANCE_LOG" 2>/dev/null
+      log "  → Sent guidance question to $agent_name"
+    fi
+  fi
+done
+
 # ============================================================================
 # WHAT'S NEXT GATE — Don't just report. Act.
 # ============================================================================
