@@ -721,7 +721,45 @@ if [[ -f "$PLAYBOOK" ]]; then
   fi
 fi
 
-# Build evolution entry
+# STEP 10: AGENT REFLECTION (constitutional — AGENT_ALGORITHMS.md v2.0)
+# Collect signals from this cycle to answer reflection questions honestly.
+# These are not canned strings — they're evidence-based self-assessment.
+
+REFLECT_BOTTLENECK="none"
+REFLECT_SYMPTOM_OR_SYSTEM="system"
+REFLECT_ARTIFACT_ALIVE="yes"
+REFLECT_DOMAIN_GROWTH="stagnant"
+REFLECT_LEARNING=""
+
+# (a) Bottleneck: did I flag without fixing?
+if [[ $ACTIONS_FILED -gt 0 && $IMPROVEMENT_SCORE -lt 50 ]]; then
+  REFLECT_BOTTLENECK="flagged ${ACTIONS_FILED} issues but improvement score low (${IMPROVEMENT_SCORE}) — may be detecting without remediating"
+fi
+
+# (b) Symptom or system: did I just patch or prevent?
+# Check if any of this cycle's fixes addressed a known-issues pattern
+KNOWN_NEL_PATTERNS=$(grep -c '"agent":"nel"\|"source":".*nel"' "$ROOT/kai/ledger/known-issues.jsonl" 2>/dev/null | tr -d '[:space:]')
+if [[ "${KNOWN_NEL_PATTERNS:-0}" -gt 3 ]]; then
+  REFLECT_SYMPTOM_OR_SYSTEM="symptom — ${KNOWN_NEL_PATTERNS} recurring Nel patterns in known-issues suggests fixes aren't systemic"
+fi
+
+# (c) Artifact alive: check self-review log exists and was written this cycle
+SR_LOG="$ROOT/agents/nel/logs/self-review-$(date +%Y-%m-%d).md"
+if [[ ! -f "$SR_LOG" ]]; then
+  REFLECT_ARTIFACT_ALIVE="no — self-review log not generated this cycle"
+fi
+
+# (d) Domain growth: was PLAYBOOK updated recently with new domain reasoning?
+if [[ "$PLAYBOOK_UPDATED" == "True" ]]; then
+  REFLECT_DOMAIN_GROWTH="active — PLAYBOOK updated within 7 days"
+else
+  REFLECT_DOMAIN_GROWTH="stagnant — PLAYBOOK not updated in ${PLAYBOOK_AGE:-unknown}d, no new domain reasoning"
+fi
+
+# (e) Learning: summarize what this cycle produced
+REFLECT_LEARNING="sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f, cipher_leaks=${CIPHER_LEAKS}, score=${IMPROVEMENT_SCORE}"
+
+# Build evolution entry (MUST include reflection per AGENT_ALGORITHMS.md step 11)
 EVOLUTION_ENTRY=$(python3 << PYEOF
 import json
 from datetime import datetime
@@ -729,7 +767,7 @@ import sys
 
 entry = {
   "ts": "$NOW_ISO",
-  "version": "1.0",
+  "version": "2.0",
   "metrics": {
     "improvement_score": $IMPROVEMENT_SCORE,
     "sentinel_pass": $SENTINEL_PASS,
@@ -740,7 +778,14 @@ entry = {
   "assessment": "$ASSESSMENT",
   "improvements_proposed": $IMPROVEMENTS_PROPOSED,
   "playbook_updated": $PLAYBOOK_UPDATED,
-  "staleness_flag": $STALENESS_FLAG
+  "staleness_flag": $STALENESS_FLAG,
+  "reflection": {
+    "bottleneck": "$REFLECT_BOTTLENECK",
+    "symptom_or_system": "$REFLECT_SYMPTOM_OR_SYSTEM",
+    "artifact_alive": "$REFLECT_ARTIFACT_ALIVE",
+    "domain_growth": "$REFLECT_DOMAIN_GROWTH",
+    "learning": "$REFLECT_LEARNING"
+  }
 }
 
 print(json.dumps(entry))

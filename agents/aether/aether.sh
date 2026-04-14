@@ -719,7 +719,44 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     fi
   fi
 
-  # Build evolution entry
+  # STEP 10: AGENT REFLECTION (constitutional — AGENT_ALGORITHMS.md v2.0)
+  local reflect_bottleneck="none"
+  local reflect_symptom_or_system="system"
+  local reflect_artifact_alive="yes"
+  local reflect_domain_growth="stagnant"
+  local reflect_learning=""
+
+  # (a) Bottleneck: dashboard out of sync = data exists but user can't see it
+  if [[ "$dashboard_status" == "out-of-sync" ]]; then
+    reflect_bottleneck="dashboard out-of-sync — data exists but HQ doesn't render it"
+  fi
+  if [[ $trade_count -eq 0 ]]; then
+    reflect_bottleneck="${reflect_bottleneck:+$reflect_bottleneck; }no trades this cycle — may be blocked on exchange API or AetherBot logger"
+  fi
+
+  # (b) Symptom or system: recurring patterns?
+  local known_aether_patterns=$(grep -c '"agent":"aether"\|"source":".*aether"' "$ROOT/kai/ledger/known-issues.jsonl" 2>/dev/null | tr -d '[:space:]')
+  if [[ "${known_aether_patterns:-0}" -gt 3 ]]; then
+    reflect_symptom_or_system="symptom — ${known_aether_patterns} recurring Aether patterns in known-issues"
+  fi
+
+  # (c) Artifact alive: self-review log
+  local sr_log="$ROOT/agents/aether/logs/self-review-$(date +%Y-%m-%d).md"
+  if [[ ! -f "$sr_log" ]]; then
+    reflect_artifact_alive="no — self-review log not generated this cycle"
+  fi
+
+  # (d) Domain growth
+  if [[ "$playbook_updated" == "True" ]]; then
+    reflect_domain_growth="active — PLAYBOOK updated within 7 days"
+  else
+    reflect_domain_growth="stagnant — PLAYBOOK not updated recently, no new trading analysis patterns"
+  fi
+
+  # (e) Learning
+  reflect_learning="trades=${trade_count}, pnl=${pnl_total}, dashboard=${dashboard_status}"
+
+  # Build evolution entry (MUST include reflection per AGENT_ALGORITHMS.md step 11)
   local evolution_entry=$(python3 << PYEOF
 import json
 from datetime import datetime
@@ -727,7 +764,7 @@ import sys
 
 entry = {
   "ts": "$TS",
-  "version": "1.0",
+  "version": "2.0",
   "metrics": {
     "trade_count": $trade_count,
     "pnl_total": $pnl_total,
@@ -736,7 +773,14 @@ entry = {
   "assessment": "$assessment",
   "improvements_proposed": $improvements_proposed,
   "playbook_updated": $playbook_updated,
-  "staleness_flag": $staleness_flag
+  "staleness_flag": $staleness_flag,
+  "reflection": {
+    "bottleneck": "$reflect_bottleneck",
+    "symptom_or_system": "$reflect_symptom_or_system",
+    "artifact_alive": "$reflect_artifact_alive",
+    "domain_growth": "$reflect_domain_growth",
+    "learning": "$reflect_learning"
+  }
 }
 
 print(json.dumps(entry))

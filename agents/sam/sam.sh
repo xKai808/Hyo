@@ -506,7 +506,41 @@ cmd_evolve() {
     fi
   fi
 
-  # Build evolution entry
+  # STEP 10: AGENT REFLECTION (constitutional — AGENT_ALGORITHMS.md v2.0)
+  local reflect_bottleneck="none"
+  local reflect_symptom_or_system="system"
+  local reflect_artifact_alive="yes"
+  local reflect_domain_growth="stagnant"
+  local reflect_learning=""
+
+  # (a) Bottleneck: API down = Sam can't verify deploys
+  if [[ "$api_health" == "down" ]]; then
+    reflect_bottleneck="API down — cannot verify deploys or test endpoints, blocking verification loop"
+  fi
+
+  # (b) Symptom or system: recurring test failures = symptom fixing
+  local known_sam_patterns=$(grep -c '"agent":"sam"\|"source":".*sam"' "$ROOT/kai/ledger/known-issues.jsonl" 2>/dev/null | tr -d '[:space:]')
+  if [[ "${known_sam_patterns:-0}" -gt 3 ]]; then
+    reflect_symptom_or_system="symptom — ${known_sam_patterns} recurring Sam patterns in known-issues"
+  fi
+
+  # (c) Artifact alive: check self-review log exists
+  local sr_log="$ROOT/agents/sam/logs/self-review-$(date +%Y-%m-%d).md"
+  if [[ ! -f "$sr_log" ]]; then
+    reflect_artifact_alive="no — self-review log not generated this cycle"
+  fi
+
+  # (d) Domain growth: PLAYBOOK freshness
+  if [[ "$playbook_updated" == "True" ]]; then
+    reflect_domain_growth="active — PLAYBOOK updated within 7 days"
+  else
+    reflect_domain_growth="stagnant — PLAYBOOK not updated recently, no new engineering patterns"
+  fi
+
+  # (e) Learning
+  reflect_learning="tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}"
+
+  # Build evolution entry (MUST include reflection per AGENT_ALGORITHMS.md step 11)
   local evolution_entry=$(python3 << PYEOF
 import json
 from datetime import datetime
@@ -514,7 +548,7 @@ import sys
 
 entry = {
   "ts": "$timestamp",
-  "version": "1.0",
+  "version": "2.0",
   "metrics": {
     "tests_passed": $tests_passed,
     "tests_failed": $tests_failed,
@@ -524,7 +558,14 @@ entry = {
   "assessment": "$assessment",
   "improvements_proposed": $improvements_proposed,
   "playbook_updated": $playbook_updated,
-  "staleness_flag": $staleness_flag
+  "staleness_flag": $staleness_flag,
+  "reflection": {
+    "bottleneck": "$reflect_bottleneck",
+    "symptom_or_system": "$reflect_symptom_or_system",
+    "artifact_alive": "$reflect_artifact_alive",
+    "domain_growth": "$reflect_domain_growth",
+    "learning": "$reflect_learning"
+  }
 }
 
 print(json.dumps(entry))

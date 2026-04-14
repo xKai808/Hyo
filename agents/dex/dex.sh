@@ -983,7 +983,40 @@ if [[ -f "$PLAYBOOK" ]]; then
   fi
 fi
 
-# Build evolution entry
+# STEP 10: AGENT REFLECTION (constitutional — AGENT_ALGORITHMS.md v2.0)
+REFLECT_BOTTLENECK="none"
+REFLECT_SYMPTOM_OR_SYSTEM="system"
+REFLECT_ARTIFACT_ALIVE="yes"
+REFLECT_DOMAIN_GROWTH="stagnant"
+REFLECT_LEARNING=""
+
+# (a) Bottleneck: integrity failures = Dex detecting but not auto-repairing
+if [[ $INTEGRITY_FAIL -gt 0 ]]; then
+  REFLECT_BOTTLENECK="detected ${INTEGRITY_FAIL} corrupt JSONL entries — check if auto-repair ran or just flagged"
+fi
+
+# (b) Symptom or system: recurring patterns getting re-flagged
+if [[ $PATTERNS_FOUND -gt 10 ]]; then
+  REFLECT_SYMPTOM_OR_SYSTEM="symptom — ${PATTERNS_FOUND} recurrent patterns suggests prior fixes didn't address root causes"
+fi
+
+# (c) Artifact alive: self-review log
+SR_LOG="$ROOT/agents/dex/logs/self-review-$(date +%Y-%m-%d).md"
+if [[ ! -f "$SR_LOG" ]]; then
+  REFLECT_ARTIFACT_ALIVE="no — self-review log not generated this cycle"
+fi
+
+# (d) Domain growth
+if [[ "$PLAYBOOK_UPDATED" == "true" ]]; then
+  REFLECT_DOMAIN_GROWTH="active — PLAYBOOK updated within 7 days"
+else
+  REFLECT_DOMAIN_GROWTH="stagnant — PLAYBOOK not updated in ${PLAYBOOK_AGE:-unknown}d, no new integrity patterns"
+fi
+
+# (e) Learning
+REFLECT_LEARNING="integrity=${INTEGRITY_PASS}p/${INTEGRITY_FAIL}f, stale=${STALE_COUNT}, patterns=${PATTERNS_FOUND}"
+
+# Build evolution entry (MUST include reflection per AGENT_ALGORITHMS.md step 11)
 EVOLUTION_ENTRY=$(python3 << PYEOF
 import json
 from datetime import datetime
@@ -991,7 +1024,7 @@ import sys
 
 entry = {
   "ts": "$NOW_ISO",
-  "version": "1.0",
+  "version": "2.0",
   "metrics": {
     "integrity_pass": $INTEGRITY_PASS,
     "integrity_fail": $INTEGRITY_FAIL,
@@ -1001,7 +1034,14 @@ entry = {
   "assessment": "$ASSESSMENT",
   "improvements_proposed": $IMPROVEMENTS_PROPOSED,
   "playbook_updated": $PLAYBOOK_UPDATED,
-  "staleness_flag": $STALENESS_FLAG
+  "staleness_flag": $STALENESS_FLAG,
+  "reflection": {
+    "bottleneck": "$REFLECT_BOTTLENECK",
+    "symptom_or_system": "$REFLECT_SYMPTOM_OR_SYSTEM",
+    "artifact_alive": "$REFLECT_ARTIFACT_ALIVE",
+    "domain_growth": "$REFLECT_DOMAIN_GROWTH",
+    "learning": "$REFLECT_LEARNING"
+  }
 }
 
 print(json.dumps(entry))

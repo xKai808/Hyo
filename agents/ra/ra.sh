@@ -438,7 +438,42 @@ if [[ -f "$PLAYBOOK" ]]; then
   fi
 fi
 
-# Build evolution entry
+# STEP 10: AGENT REFLECTION (constitutional — AGENT_ALGORITHMS.md v2.0)
+REFLECT_BOTTLENECK="none"
+REFLECT_SYMPTOM_OR_SYSTEM="system"
+REFLECT_ARTIFACT_ALIVE="yes"
+REFLECT_DOMAIN_GROWTH="stagnant"
+REFLECT_LEARNING=""
+
+# (a) Bottleneck: newsletter production blocked?
+NEWSLETTER_TODAY="$ROOT/agents/ra/output/$(date +%Y-%m-%d)*.md"
+if ! ls $NEWSLETTER_TODAY 1>/dev/null 2>&1; then
+  REFLECT_BOTTLENECK="no newsletter produced today — pipeline may be blocked or sources failing"
+fi
+
+# (b) Symptom or system: recurring source failures?
+KNOWN_RA_PATTERNS=$(grep -c '"agent":"ra"\|"source":".*ra"' "$ROOT/kai/ledger/known-issues.jsonl" 2>/dev/null | tr -d '[:space:]')
+if [[ "${KNOWN_RA_PATTERNS:-0}" -gt 3 ]]; then
+  REFLECT_SYMPTOM_OR_SYSTEM="symptom — ${KNOWN_RA_PATTERNS} recurring Ra patterns in known-issues"
+fi
+
+# (c) Artifact alive: self-review log
+SR_LOG="$ROOT/agents/ra/logs/self-review-$(date +%Y-%m-%d).md"
+if [[ ! -f "$SR_LOG" ]]; then
+  REFLECT_ARTIFACT_ALIVE="no — self-review log not generated this cycle"
+fi
+
+# (d) Domain growth
+if [[ "$PLAYBOOK_UPDATED" == "True" ]]; then
+  REFLECT_DOMAIN_GROWTH="active — PLAYBOOK updated within 7 days"
+else
+  REFLECT_DOMAIN_GROWTH="stagnant — PLAYBOOK not updated in ${PLAYBOOK_AGE:-unknown}d"
+fi
+
+# (e) Learning
+REFLECT_LEARNING="critical=${CRITICAL}, warnings=${WARNINGS}, sources=${SOURCE_COUNT}, archive=${ARCHIVE_ENTITIES}"
+
+# Build evolution entry (MUST include reflection per AGENT_ALGORITHMS.md step 11)
 EVOLUTION_ENTRY=$(python3 << PYEOF
 import json
 from datetime import datetime
@@ -446,7 +481,7 @@ import sys
 
 entry = {
   "ts": "$TIMESTAMP",
-  "version": "1.0",
+  "version": "2.0",
   "metrics": {
     "critical": $CRITICAL,
     "warnings": $WARNINGS,
@@ -456,7 +491,14 @@ entry = {
   "assessment": "$ASSESSMENT",
   "improvements_proposed": $IMPROVEMENTS_PROPOSED,
   "playbook_updated": $PLAYBOOK_UPDATED,
-  "staleness_flag": $STALENESS_FLAG
+  "staleness_flag": $STALENESS_FLAG,
+  "reflection": {
+    "bottleneck": "$REFLECT_BOTTLENECK",
+    "symptom_or_system": "$REFLECT_SYMPTOM_OR_SYSTEM",
+    "artifact_alive": "$REFLECT_ARTIFACT_ALIVE",
+    "domain_growth": "$REFLECT_DOMAIN_GROWTH",
+    "learning": "$REFLECT_LEARNING"
+  }
 }
 
 print(json.dumps(entry))
