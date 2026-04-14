@@ -641,13 +641,17 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     log "Self-review: $sr_issues issues in Aether pathway"
   fi
 
-  # ─── Agent Gates: Trigger Validation + Resolution Pickup + Recall ──────────
+  # ─── Self-Review Reasoning Gates ──────────────────────────────────────────
   AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
   if [[ -f "$AGENT_GATES" ]]; then
     source "$AGENT_GATES"
-    run_trigger_validation "aether" || true
-    run_resolution_pickup "aether" || true
-    run_recall_check "aether" || true
+    run_self_review "aether" || true
+
+    # ── Aether-specific domain reasoning (Aether owns these questions) ──
+    # TODO: Aether — evolve this section via PLAYBOOK.md
+    #   e.g., "Is this signal real or noise? What's my confidence?"
+    #   e.g., "Did I account for the risk, or just the reward?"
+    #   e.g., "What market condition would invalidate my strategy?"
   fi
 
   # ─── Self-Evolution: Aether Learning & Improvement Tracking ─────────────────

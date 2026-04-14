@@ -423,13 +423,17 @@ EOF
 cmd_evolve() {
   hdr "Sam: Self-evolution logging"
 
-  # Agent gates: trigger validation, resolution pickup, recall
+  # Self-review reasoning gates
   local AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
   if [[ -f "$AGENT_GATES" ]]; then
     source "$AGENT_GATES"
-    run_trigger_validation "sam" || true
-    run_resolution_pickup "sam" || true
-    run_recall_check "sam" || true
+    run_self_review "sam" || true
+
+    # ── Sam-specific domain reasoning (Sam owns these questions) ──
+    # TODO: Sam — evolve this section via PLAYBOOK.md
+    #   e.g., "Is this deployed or just committed? Did the deploy succeed?"
+    #   e.g., "Did I test on actual env or just locally?"
+    #   e.g., "What's the rollback plan if this breaks production?"
   fi
 
   local EVOLUTION_FILE="$ROOT/agents/sam/evolution.jsonl"

@@ -912,14 +912,18 @@ else
 fi
 
 # ============================================================================
-# AGENT GATES: Trigger Validation + Resolution Pickup + Recall
+# SELF-REVIEW REASONING GATES
 # ============================================================================
 AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
 if [[ -f "$AGENT_GATES" ]]; then
   source "$AGENT_GATES"
-  run_trigger_validation "dex" || true
-  run_resolution_pickup "dex" || true
-  run_recall_check "dex" || true
+  run_self_review "dex" || true
+
+  # ── Dex-specific domain reasoning (Dex owns these questions) ──
+  # TODO: Dex — evolve this section via PLAYBOOK.md
+  #   e.g., "Is my ledger consistent or has drift crept in?"
+  #   e.g., "Are compaction patterns still valid for current data volume?"
+  #   e.g., "What integrity check am I NOT running that I should be?"
 fi
 
 # ============================================================================

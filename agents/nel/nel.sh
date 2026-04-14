@@ -650,17 +650,21 @@ else
 fi
 
 # ============================================================================
-# PHASE 11.5: Agent Gates (Trigger Validation + Resolution Pickup + Recall)
+# PHASE 11.5: Self-Review (Reasoning Framework)
 # ============================================================================
 AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
 if [[ -f "$AGENT_GATES" ]]; then
   source "$AGENT_GATES"
-  log_info "Running trigger validation gate..."
-  run_trigger_validation "nel" || true
-  log_info "Checking for open resolutions..."
-  run_resolution_pickup "nel" || true
-  log_info "Running recall check..."
-  run_recall_check "nel" || true
+  log_info "Running self-review reasoning gates..."
+  run_self_review "nel" || true
+
+  # ── Nel-specific domain reasoning (Nel owns these questions) ──
+  # These are questions only Nel would think to ask.
+  # Nel SHOULD evolve this section over time via PLAYBOOK.md.
+  # TODO: Nel — add your domain-specific checks here as you learn
+  #   e.g., "Did I test the attack surface, not just the happy path?"
+  #   e.g., "What's my false positive rate this cycle?"
+  #   e.g., "What would an attacker try that I haven't checked?"
 else
   log_warn "agent-gates.sh not found at $AGENT_GATES — skipping gates"
 fi

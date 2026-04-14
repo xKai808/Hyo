@@ -371,13 +371,17 @@ else
   warn "Self-review: $SELF_REVIEW_ISSUES issues in Ra pathway"
 fi
 
-# ── Agent Gates: Trigger Validation + Resolution Pickup + Recall ──
+# ── Self-Review Reasoning Gates ──
 AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"
 if [[ -f "$AGENT_GATES" ]]; then
   source "$AGENT_GATES"
-  run_trigger_validation "ra" || true
-  run_resolution_pickup "ra" || true
-  run_recall_check "ra" || true
+  run_self_review "ra" || true
+
+  # ── Ra-specific domain reasoning (Ra owns these questions) ──
+  # TODO: Ra — evolve this section via PLAYBOOK.md
+  #   e.g., "Are my sources still alive? When did I last verify?"
+  #   e.g., "Is this content useful or just present?"
+  #   e.g., "Am I covering the right topics or just the easy ones?"
 fi
 
 # ── Self-Evolution: Ra Learning & Improvement Tracking ──
