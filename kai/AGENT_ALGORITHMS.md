@@ -107,8 +107,50 @@ SELF-EVOLUTION CYCLE (runs every execution, after self-review):
   9. Recall recent resolutions: check kai/ledger/resolutions/ for
      open (IN-PROGRESS) resolutions relevant to this agent.
      If found, advance the resolution (add verify/simulate results).
-  10. Append evolution entry to evolution.jsonl
-  11. IF improvements_proposed > 0 AND agent can fix it → fix it NOW
+  10. AGENT REFLECTION (mandatory — this is how agents grow):
+      Ask these questions about THIS cycle. Answer in the evolution entry.
+      Do not skip. Do not rush. The one you want to skip is the one you need.
+
+      a. "What bottleneck did I hit? What caused it?"
+         - Did I wait on Kai where I could have solved it myself?
+         - Did I flag without fixing? (Detection without remediation = half the job.)
+         - Did something fail because it needed a session or human?
+         → If yes: what would eliminate this bottleneck permanently?
+
+      b. "Did I fix a symptom or the system?"
+         - Did I patch this one instance, or the class of failure?
+         - If the same type of problem hits tomorrow, does my domain handle it?
+         → If symptom only: the work is incomplete. Add the systemic fix now.
+
+      c. "Does everything I created have a life?"
+         - Every file, check, protocol — is it triggered? Can it run without a session?
+         - Will it still work in 30 days with zero maintenance?
+         - Does something verify it's running?
+         → If any answer is no: fix it before closing this cycle.
+
+      d. "Am I growing in my domain, or just executing tasks?"
+         - Did I learn something new about my specialty this cycle?
+         - Did I research a better way, or just use the same approach?
+         - Would an expert in my field do something I'm not doing?
+         - Have I updated my PLAYBOOK Domain Reasoning with new questions?
+         → If I'm stagnant: add a research task to my own PRIORITIES.md.
+
+      e. "What did I learn? Where is it saved?"
+         - If it's only in this cycle's memory → it dies. Write it down.
+         - Update: PLAYBOOK.md, evolution.jsonl, or known-issues.
+         - If this changes how I should work → update my PLAYBOOK, not just log it.
+
+      f. "Is this reflection complete, or am I pattern-matching through it?"
+         - If every answer is "no issues" → be skeptical. Look harder.
+
+      This loop evolves: if a reflection reveals a question that should be
+      asked but isn't here, the agent ADDS it to their PLAYBOOK.md under
+      "## Reflection Extensions" and proposes it to Kai for the constitution.
+      The loop gets smarter over time. Log additions to evolution.jsonl.
+
+  11. Append evolution entry to evolution.jsonl
+      (MUST include reflection answers from step 10 — not just metrics)
+  12. IF improvements_proposed > 0 AND agent can fix it → fix it NOW
       (apply What's Next Gate — don't just log and wait)
 
 PROTOCOL STALENESS PREVENTION:
@@ -368,13 +410,16 @@ TASK EXECUTION:
   2. Run DELEGATION CHECKLIST for each task
   3. Run AUTOMATION GATE (before)
   4. FOR EACH task:
-     a. dispatch delegate <agent> <priority> <title>
-     b. WAIT for ACK (agent confirms receipt + method)
-     c. WAIT for REPORT (agent delivers result)
-     d. Verify result against ORIGINAL task requirements
-     e. dispatch verify <task_id> IF passes
-     f. dispatch close <task_id>
-     g. Cross-reference: does this complete the ORIGINAL job that spawned it?
+     a. Ask: "Who owns this domain? Am I doing work an agent should own?"
+        - If an agent should own it → delegate, don't do it yourself
+        - If you're about to write code in an agent's domain → STOP → delegate
+     b. dispatch delegate <agent> <priority> <title>
+     c. WAIT for ACK (agent confirms receipt + method)
+     d. WAIT for REPORT (agent delivers result)
+     e. Verify result against ORIGINAL task requirements
+     f. dispatch verify <task_id> IF passes
+     g. dispatch close <task_id>
+     h. Cross-reference: does this complete the ORIGINAL job that spawned it?
         - IF yes → update KAI_TASKS.md
         - IF no → delegate next subtask
   5. After ANY fix:
@@ -382,6 +427,50 @@ TASK EXECUTION:
      b. IF yes → dispatch safeguard <issue> <description>
      c. This spawns Nel cross-reference + Sam test coverage + memory log
   6. Run AUTOMATION GATE (after) — log findings to KAI_TASKS if actionable
+  7. Run POST-TASK REFLECTION (below) — this is not optional
+
+POST-TASK REFLECTION (run after EVERY task, no exceptions):
+  This is the loop that prevents repeating mistakes. It evolves.
+  Ask these questions. Answer honestly. Log what you find.
+
+  1. "Was there a bottleneck? What was it?"
+     - Did I do work that an agent should have done?
+     - Did Hyo have to intervene where the system should have caught it?
+     - Did something require a session that shouldn't have?
+     → If yes: what's the systemic fix? Not a workaround — fix the system.
+
+  2. "Did I solve the symptom or the system?"
+     - Did I fix this one instance, or the class of failure?
+     - If someone else hits the same type of problem tomorrow,
+       does the system handle it automatically?
+     → If no: the work is incomplete. Add the systemic fix now.
+
+  3. "Did I create anything? If so, does it have a life?"
+     - Is it triggered by an event or schedule?
+     - Can it run without a session?
+     - Will it still work in 30 days with zero maintenance?
+     - Does something verify it's running?
+     → If any answer is no: fix it before moving on.
+
+  4. "Did I do work myself that should have grown an agent?"
+     - Did I write code in an agent's domain instead of delegating?
+     - Did I provide answers instead of giving the agent the questions
+       to find the answers themselves?
+     - Could the agent have learned from solving this?
+     → If yes: next time, delegate. Give the questions, not the answers.
+
+  5. "What did I learn? Where is it saved?"
+     - If it's in my memory only → it dies with the session. Write it down.
+     - Update: KAI_BRIEF, KAI_TASKS, known-issues, or agent PLAYBOOK.
+     - If this changes how I or any agent should work → update the algorithm.
+     - If this is a new class of failure → log it for recall.
+
+  6. "Is this reflection itself complete, or am I rushing through it?"
+     - If I'm tempted to skip a question → that's the one I need most.
+
+  This loop evolves: if a reflection reveals a question that should be
+  asked but isn't listed here, ADD IT. The loop gets smarter over time.
+  Log additions to kai/protocols/evolution.jsonl.
 
 WHEN RECEIVING UPWARD COMMUNICATION:
   1. Agent flags arrive in kai/ledger/log.jsonl as action=FLAG
