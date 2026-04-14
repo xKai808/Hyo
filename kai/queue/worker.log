@@ -513,3 +513,75 @@
 [2026-04-14T04:09:42Z] BATCH: processed 1 commands
 [2026-04-14T04:09:43Z] IDLE: no pending commands
 [2026-04-14T04:09:52Z] EXEC: [cmd-1776139792-463] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'nel: real thinking cycle — CVEs, blindspot analysis, goal updates [auto]' && git push origin main 2>&1 (timeout: 60s)
+[2026-04-14T04:09:56Z] DONE: [cmd-1776139792-463] exit=0 (4s)
+[2026-04-14T04:09:56Z] BATCH: processed 1 commands
+[2026-04-14T04:09:57Z] IDLE: no pending commands
+[2026-04-14T04:11:12Z] EXEC: [cmd-1776139870-105] cd ~/Documents/Projects/Hyo && python3 -c "
+import json
+with open('website/data/feed.json') as f:
+    d = json.load(f)
+for r in d.get('reports', []):
+    print(f'{r["id"]}: {r["type"]} by {r["author"]} — {r["title"][:60]}')
+" (timeout: 30s)
+[2026-04-14T04:11:12Z] DONE: [cmd-1776139870-105] exit=0 (0s)
+[2026-04-14T04:11:12Z] BATCH: processed 1 commands
+[2026-04-14T04:11:13Z] IDLE: no pending commands
+[2026-04-14T04:11:19Z] EXEC: [cmd-1776139879-128] cd ~/Documents/Projects/Hyo && python3 << 'PY'
+import json
+with open('website/data/feed.json') as f:
+    d = json.load(f)
+for r in d.get('reports', []):
+    rid = r.get('id','?')
+    rtype = r.get('type','?')
+    auth = r.get('author','?')
+    title = r.get('title','?')[:60]
+    print(f'{rid}: {rtype} by {auth} -- {title}')
+PY (timeout: 30s)
+[2026-04-14T04:11:19Z] DONE: [cmd-1776139879-128] exit=0 (0s)
+[2026-04-14T04:11:19Z] BATCH: processed 1 commands
+[2026-04-14T04:11:20Z] IDLE: no pending commands
+[2026-04-14T04:11:32Z] EXEC: [cmd-1776139891-151] cd ~/Documents/Projects/Hyo && python3 << 'PY'
+import json
+
+with open('website/data/feed.json') as f:
+    feed = json.load(f)
+
+# Keep only: the latest Nel research (220933), the Nel QA report (215516),
+# the nel-test morning report, and remove all stale/duplicate/template reports
+keep_ids = {
+    'agent-reflection-nel-2026-04-13-220933',  # Latest real thinking report
+    'agent-reflection-nel-2026-04-13-215516',  # Nel QA cycle report (real data)
+    'mr-nel-test-2026-04-13',                   # Morning report (Nel test)
+}
+
+removed = []
+kept = []
+for r in feed['reports']:
+    rid = r.get('id', '')
+    if rid in keep_ids:
+        kept.append(r)
+    else:
+        removed.append(rid)
+
+feed['reports'] = kept
+
+# Update history to match
+for month, data in feed.get('history', {}).items():
+    if 'reports' in data:
+        data['reports'] = [rid for rid in data['reports'] if rid in keep_ids]
+
+with open('website/data/feed.json', 'w') as f:
+    json.dump(feed, f, indent=2)
+
+print(f'Kept {len(kept)} reports, removed {len(removed)}:')
+for rid in removed:
+    print(f'  - {rid}')
+PY (timeout: 30s)
+[2026-04-14T04:11:32Z] DONE: [cmd-1776139891-151] exit=0 (0s)
+[2026-04-14T04:11:32Z] BATCH: processed 1 commands
+[2026-04-14T04:11:33Z] IDLE: no pending commands
+[2026-04-14T04:11:39Z] EXEC: [cmd-1776139899-174] cd ~/Documents/Projects/Hyo && git add website/data/feed.json agents/sam/website/data/feed.json && git commit -m 'clean feed: remove 10 stale/template reports, keep 3 real ones' && git push origin main 2>&1 (timeout: 60s)
+[2026-04-14T04:11:41Z] DONE: [cmd-1776139899-174] exit=0 (2s)
+[2026-04-14T04:11:41Z] BATCH: processed 1 commands
+[2026-04-14T04:11:42Z] IDLE: no pending commands
+[2026-04-14T04:25:41Z] EXEC: [cmd-1776140739-445] cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'human-readable reports: rewrite all agent self-reports and morning report' && git push origin main (timeout: 30s)
