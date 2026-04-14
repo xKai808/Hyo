@@ -262,14 +262,39 @@
       margin: 24px 0;
     }
 
-    /* ═══ MOBILE: stack vertically ═══ */
+    /* ═══ MOBILE TOGGLE ═══ */
+    .panel-toggle {
+      display: none;
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--bg-secondary);
+      border: none;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--accent);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .panel-toggle:hover { background: var(--bg-tertiary); }
+
+    /* ═══ MOBILE: collapsible list ═══ */
     @media (max-width: 768px) {
       html, body { overflow: auto; }
       .split { flex-direction: column; height: auto; }
+      .panel-toggle { display: block; }
       .panel-left {
         width: 100%; min-width: unset; border-right: none;
         border-bottom: 1px solid var(--border-color);
-        max-height: 45vh; overflow: hidden;
+        max-height: 50vh;
+        transition: max-height 0.3s ease, opacity 0.2s ease;
+        overflow: hidden;
+      }
+      .panel-left.collapsed {
+        max-height: 0; border-bottom: none;
+        opacity: 0; pointer-events: none;
       }
       .panel-right { min-height: 55vh; }
       .reader { padding: 24px 16px; }
@@ -298,8 +323,10 @@
     </div>
 
     <div class="split">
+      <!-- TOGGLE (mobile only) -->
+      <button class="panel-toggle" id="panelToggle">&#9776; Browse items</button>
       <!-- LEFT: list -->
-      <div class="panel-left">
+      <div class="panel-left" id="panelLeft">
         <div class="tabs">
           <button class="tab active" onclick="switchTab('trends')">Trends</button>
           <button class="tab" onclick="switchTab('entities')">Entities</button>
@@ -576,6 +603,33 @@
       html.setAttribute('data-theme', isDark ? 'light' : 'dark');
       document.querySelector('.top-btn').textContent = isDark ? '🌙' : '☀️';
     }
+
+    // ── Mobile panel toggle ──
+    const panelToggle = document.getElementById('panelToggle');
+    const panelLeft = document.getElementById('panelLeft');
+
+    panelToggle.addEventListener('click', () => {
+      const collapsed = panelLeft.classList.toggle('collapsed');
+      panelToggle.textContent = collapsed ? '\u2630 Browse items' : '\u2715 Close list';
+    });
+
+    // Auto-collapse list when item selected on mobile
+    const origShowContent = window.showContent;
+    window.showContent = function(slug) {
+      origShowContent(slug);
+      if (window.innerWidth <= 768) {
+        panelLeft.classList.add('collapsed');
+        panelToggle.textContent = '\u2630 Browse items';
+      }
+    };
+    const origShowTrend = window.showTrend;
+    window.showTrend = function(index) {
+      origShowTrend(index);
+      if (window.innerWidth <= 768) {
+        panelLeft.classList.add('collapsed');
+        panelToggle.textContent = '\u2630 Browse items';
+      }
+    };
 
     // ── Init ──
     document.addEventListener('DOMContentLoaded', () => {

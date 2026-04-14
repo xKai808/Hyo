@@ -155,6 +155,48 @@
     }
     .theme-toggle:hover { background: var(--bg); border-color: var(--border-hover); }
 
+    /* ═══ HAMBURGER (mobile only) ═══ */
+    .hamburger {
+      display: none;
+      position: fixed; top: 14px; left: 14px; z-index: 1001;
+      width: 40px; height: 40px;
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); cursor: pointer;
+      align-items: center; justify-content: center;
+      color: var(--text-primary); font-size: 20px;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s;
+    }
+    .hamburger:hover { background: var(--bg-tertiary); }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.5); -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ═══ MOBILE ═══ */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+
+      .sidebar {
+        position: fixed; top: 0; left: 0; bottom: 0; z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.28s var(--ease);
+        width: 260px; min-width: 260px;
+        box-shadow: var(--shadow-md);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar.open ~ .sidebar-overlay { display: block; }
+
+      .main {
+        padding: 20px 16px;
+        padding-top: 64px; /* room for hamburger */
+      }
+
+      .report { padding: 18px 16px; }
+      .report-header { flex-wrap: wrap; gap: 10px; }
+      .main-header h1 { font-size: 20px; }
+    }
+
     /* ═══ MAIN CONTENT ═══ */
     .main {
       flex: 1; overflow-y: auto; padding: 32px 40px;
@@ -394,8 +436,11 @@
   <!-- SHELL -->
   <div class="shell" id="shell" style="display: none;">
 
+    <!-- HAMBURGER (mobile) -->
+    <button class="hamburger" id="menuBtn" aria-label="Menu">&#9776;</button>
+
     <!-- SIDEBAR -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="logo">hq</div>
         <div class="version">v9</div>
@@ -423,6 +468,7 @@
         </button>
       </div>
     </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- MAIN -->
     <div class="main" id="mainContent">
@@ -461,6 +507,22 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   updateThemeIcon();
 });
 initTheme();
+
+// ═══ MOBILE SIDEBAR ═══
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.style.display = 'block'; }
+function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.style.display = 'none'; }
+
+menuBtn.addEventListener('click', () => sidebar.classList.contains('open') ? closeSidebar() : openSidebar());
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+// Close sidebar on nav-item click (mobile)
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+});
 
 // ═══ AUTH ═══
 const authGate = document.getElementById('authGate');
