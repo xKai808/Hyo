@@ -212,7 +212,7 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [x] **2026-04-13** AETHER_OPERATIONS.md v2.0 — rewritten from actual AetherBot source data (70+ files parsed).
 - [x] **2026-04-13** Kai↔Aether approval loop + GPT fact-check routing to Aether.
 - [x] **2026-04-13** Dex daily intelligence scanning (Phase 6A daily, 6B Monday deep synthesis). Ra research coordination protocol for all agents.
-- [x] **2026-04-13** Agent Creation Protocol (`docs/AGENT_CREATION_PROTOCOL.md`) — 13-section sellable blueprint.
+- [x] **2026-04-13** Agent Creation Protocol v2.0 (`docs/AGENT_CREATION_PROTOCOL.md`) — 14-section blueprint. v2.0: added PLAYBOOK, evolution.jsonl, reflection, autonomy, 11-point testing, domain growth.
 - [x] **2026-04-13** Continuous Learning Protocol — all agents, Dex enforces anti-stale.
 - [x] **2026-04-13** [AUTOMATE] **Command queue (`kai/queue/`)** — Kai submits commands via JSON, Mini worker daemon auto-executes, Kai reads results. Zero copy/paste for routine ops. Proxy stripping, macOS timeout compat, security filter.
 - [x] **2026-04-13** [AUTOMATE] **2-hour health check** — Cowork scheduled task. Checks P0/P1 flags, stale tasks, queue health, agent output. What's Next gate auto-dispatches remediation.

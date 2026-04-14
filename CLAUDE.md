@@ -64,6 +64,7 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 - **Algorithm evolution is a lifecycle, not prose.** When any agent or Kai discovers a gap in how the system works, they file a proposal at `kai/proposals/`. Proposals have triggers, reviews, approvals, verification, and simulation. Stale proposals (>48h) get flagged P1 by healthcheck. See ALGORITHM EVOLUTION LIFECYCLE in `kai/AGENT_ALGORITHMS.md`.
 - **Protocol staleness prevention.** Any file change that affects agent behavior MUST trigger: (1) update the relevant PLAYBOOK.md, (2) log to evolution.jsonl, (3) update PRIORITIES.md if priorities shifted. Dex enforces staleness across all agents. Daily audit checks. No file goes stale without being flagged.
 - **Every behavior change updates the protocol.** When you change how an agent works (modify a runner, add a phase, change a threshold), you MUST also update that agent's PLAYBOOK.md and AGENT_ALGORITHMS.md if the change affects cross-agent behavior. This is wired into the self-evolution cycle and daily audit. Do not defer this — update in the same session.
+- **Building a new agent? Follow the protocol.** `docs/AGENT_CREATION_PROTOCOL.md` (v2.0) is the complete, repeatable blueprint. 14 sections, 11-point testing. Every new agent gets: PLAYBOOK.md, evolution.jsonl, self-review integration (agent-gates.sh), reflection block in evolution entries, domain reasoning questions, and autonomy from day one. Do NOT build an agent from memory — read the protocol first.
 
 ## Project layout
 
@@ -153,6 +154,7 @@ Before ending any significant work session, run this in order:
    - Update `CLAUDE.md` (this file) — it bootstraps every new session
    - Update `kai/AGENT_ALGORITHMS.md` — the constitution agents read
    - Update `kai/protocols/REASONING_FRAMEWORK.md` if question patterns changed
+   - Update `docs/AGENT_CREATION_PROTOCOL.md` if agent structure/behavior changed
    - Update agent PLAYBOOKs if agent behavior changed
    - Ask: "If a fresh Kai reads these files tomorrow with zero context, will it operate correctly?" If no, you missed a document.
 5. `kai scan secrets` — catch any accidental leaks
