@@ -414,9 +414,27 @@ print(json.dumps({
     echo "  → What's Next: dispatching auto-remediation to $owner"
     cmd_delegate "$owner" "$severity" "[AUTO-REMEDIATE] $title (flagged by $agent, cascade $fid)"
 
-    # Queue accelerated health check (30 min)
+    # EVENT-DRIVEN AGENT TRIGGER: queue the receiving agent's runner immediately.
+    # Don't wait for next scheduled cycle. The agent needs to pick up the task,
+    # act on it, and reflect NOW — not in 6 hours. This is what makes agents
+    # responsive, not just scheduled.
     local QUEUE_DIR="$ROOT/kai/queue/pending"
     if [[ -d "$QUEUE_DIR" ]]; then
+      # Resolve the agent runner path
+      local agent_runner="$ROOT/agents/$owner/$owner.sh"
+      if [[ -f "$agent_runner" ]]; then
+        local run_id="event-${owner}-${fid}"
+        python3 -c "
+import json
+cmd = {'id':'$run_id','ts':'$NOW','command':'bash $agent_runner','timeout':300,'agent':'$owner','note':'event-driven: $severity flag $fid triggered immediate $owner run'}
+with open('$QUEUE_DIR/${run_id}.json','w') as f:
+  json.dump(cmd,f)
+" 2>/dev/null && echo "  → Queued event-driven $owner run: $run_id (agent will pick up task + reflect)"
+      else
+        echo "  → WARN: no runner at $agent_runner — $owner cannot be event-triggered"
+      fi
+
+      # Also queue healthcheck rerun for verification
       local recheck_id="recheck-$fid"
       python3 -c "
 import json

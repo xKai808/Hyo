@@ -182,6 +182,32 @@ with open('$f') as fh:
   RECENT_RESULTS="${RECENT_RESULTS}${RESULT},"
 done
 
+# ---- Check 7: Stale evolution proposals (Kai must review) ----
+PROPOSAL_DIR="$ROOT/kai/proposals"
+if [[ -d "$PROPOSAL_DIR" ]]; then
+  STALE_PROPOSALS=0
+  for pf in "$PROPOSAL_DIR"/*.md; do
+    [[ "$pf" == *"README.md" ]] && continue
+    [[ ! -f "$pf" ]] && continue
+    # Check if proposal is >48h old and not yet acted on (no APPROVED/REJECTED marker)
+    if ! grep -q "APPROVED\|REJECTED\|IMPLEMENTED" "$pf" 2>/dev/null; then
+      PROP_MTIME=$(stat -c %Y "$pf" 2>/dev/null || stat -f %m "$pf" 2>/dev/null || echo "0")
+      PROP_AGE_H=$(( ($(date +%s) - PROP_MTIME) / 3600 ))
+      if [[ $PROP_AGE_H -gt 48 ]]; then
+        STALE_PROPOSALS=$((STALE_PROPOSALS + 1))
+        FINDINGS="${FINDINGS}{\"severity\":\"P1\",\"area\":\"proposals\",\"detail\":\"Stale proposal unreviewed for ${PROP_AGE_H}h: $(basename "$pf")\"},"
+        ISSUES=$((ISSUES + 1))
+      elif [[ $PROP_AGE_H -gt 0 ]]; then
+        WARNINGS=$((WARNINGS + 1))
+        FINDINGS="${FINDINGS}{\"severity\":\"P2\",\"area\":\"proposals\",\"detail\":\"Pending proposal (${PROP_AGE_H}h old): $(basename "$pf")\"},"
+      fi
+    fi
+  done
+  if [[ $STALE_PROPOSALS -gt 0 ]]; then
+    log "P1: $STALE_PROPOSALS evolution proposals unreviewed >48h"
+  fi
+fi
+
 # ============================================================================
 # WHAT'S NEXT GATE — Don't just report. Act.
 # ============================================================================

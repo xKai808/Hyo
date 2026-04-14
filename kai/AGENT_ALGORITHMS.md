@@ -143,10 +143,9 @@ SELF-EVOLUTION CYCLE (runs every execution, after self-review):
       f. "Is this reflection complete, or am I pattern-matching through it?"
          - If every answer is "no issues" → be skeptical. Look harder.
 
-      This loop evolves: if a reflection reveals a question that should be
-      asked but isn't here, the agent ADDS it to their PLAYBOOK.md under
-      "## Reflection Extensions" and proposes it to Kai for the constitution.
-      The loop gets smarter over time. Log additions to evolution.jsonl.
+      This loop evolves via the ALGORITHM EVOLUTION LIFECYCLE (below).
+      If reflection reveals a question that should be asked but isn't here,
+      the agent files a proposal. The loop gets smarter over time.
 
   11. Append evolution entry to evolution.jsonl
       (MUST include reflection answers from step 10 — not just metrics)
@@ -171,6 +170,101 @@ PROTOCOL STALENESS PREVENTION:
   - Dex Phase 5 (cross-agent staleness detection)
   - Daily bottleneck audit (kai/queue/daily-audit.sh)
   - 2-hour health check (kai/queue/healthcheck.sh)
+```
+
+---
+
+## Algorithm Evolution Lifecycle (ALL AGENTS + KAI)
+
+```
+PURPOSE:
+  The system's algorithms (this constitution, PLAYBOOKs, resolution protocols)
+  must evolve. But evolution without a lifecycle is just drift. This defines
+  HOW changes happen, WHO triggers them, and WHAT verifies them.
+
+TRIGGERS — what causes an evolution proposal:
+  1. REFLECTION GAP: Agent runs step 10 (AGENT REFLECTION) and discovers
+     a question that should be asked but isn't in the constitution or PLAYBOOK.
+  2. RESOLUTION LESSON: A completed resolution (RA-1) has a "process
+     improvements" section that suggests algorithm changes.
+  3. RECURRING PATTERN: Dex detects the same class of failure 3+ times
+     in known-issues.jsonl — the algorithm isn't preventing recurrence.
+  4. KAI REFLECTION: Kai's POST-TASK REFLECTION reveals a systemic gap.
+  5. HYO FEEDBACK: Hyo identifies a gap (highest authority — immediate P0).
+  6. EVENT-DRIVEN: A P0/P1 flag triggers an agent run (via dispatch), and
+     the agent's reflection during that run surfaces a gap.
+
+PROPOSAL MECHANISM:
+  Agent writes a proposal file:
+    kai/proposals/<agent>-<YYYY-MM-DD>-<short-slug>.md
+
+  Proposal format:
+    # Proposal: <title>
+    Agent: <name>
+    Date: <ISO timestamp>
+    Trigger: <which trigger above, with evidence>
+    
+    ## Current behavior
+    <what the algorithm does now>
+    
+    ## Problem
+    <what's missing, with specific example from this cycle>
+    
+    ## Proposed change
+    <exact text to add/modify in AGENT_ALGORITHMS.md or PLAYBOOK.md>
+    
+    ## Scope
+    - [ ] PLAYBOOK only (agent can self-approve)
+    - [ ] Constitution (requires Kai review)
+    
+    ## Verification plan
+    <how to confirm the change works — simulation, test, next cycle check>
+
+  After writing the proposal, agent MUST:
+    dispatch flag <agent> P2 "EVOLUTION-PROPOSAL: <title> — see kai/proposals/<filename>"
+
+REVIEW (Kai — triggered by the flag above):
+  1. Kai reads the proposal during next task cycle (P0/P1 flags = immediate)
+  2. For PLAYBOOK-only changes:
+     - Agent can self-approve and implement immediately
+     - Agent MUST log the change to evolution.jsonl
+     - Kai reviews at next cycle but does NOT block
+  3. For CONSTITUTION changes:
+     - Kai reviews the exact proposed text
+     - Kai checks: does this conflict with existing rules? Does it affect
+       other agents? Is the verification plan concrete?
+     - Kai approves, modifies, or rejects with reasoning
+     - Approval: dispatch delegate <agent> P1 "APPROVED: implement <proposal>"
+     - Rejection: dispatch report <agent> "REJECTED: <reasoning>"
+
+IMPLEMENTATION (after approval):
+  1. Agent (or Kai for constitution changes) makes the edit
+  2. Agent updates their PLAYBOOK.md if affected
+  3. Agent logs to evolution.jsonl: type="algorithm_evolution", proposal=<id>
+  4. If AGENT_ALGORITHMS.md changed: version bump in evolution.jsonl
+
+VERIFICATION (mandatory — no evolution is complete without this):
+  1. Syntax check: bash -n on all affected runners
+  2. Run the affected agent's runner once: did it execute the new logic?
+  3. Check evolution.jsonl: does the latest entry reflect the change?
+  4. dispatch simulate — full lifecycle simulation
+  5. If simulation passes → commit + push
+  6. If simulation fails → revert, log failure, reopen proposal
+
+REVIEW FREQUENCY:
+  - Kai reviews kai/proposals/ during EVERY task cycle (not weekly, not daily
+    — every cycle). Proposals that sit unreviewed are dead proposals.
+  - Dex checks kai/proposals/ for stale proposals (>48h unreviewed → P1 flag)
+  - This ensures the evolution loop has the same closed-loop guarantees
+    as everything else. No silent drops.
+
+EVENT-DRIVEN REFLECTION:
+  When dispatch routes a P0/P1 flag to an agent, it queues the agent's runner
+  for immediate execution (not next schedule). The agent picks up the task,
+  acts on it, and reflects in the same run. This means:
+  - Agents respond to errors in minutes, not hours
+  - Reflection happens in context (the error is fresh, not stale)
+  - Evolution proposals triggered by errors are written while the evidence exists
 ```
 
 ---

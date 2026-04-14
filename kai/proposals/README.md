@@ -1,0 +1,1 @@
+# Algorithm Evolution Proposals\n\nAgents and Kai write proposals here. See AGENT_ALGORITHMS.md → Algorithm Evolution Lifecycle.\n\nDex checks this directory for stale proposals (>48h unreviewed → P1 flag).

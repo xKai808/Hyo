@@ -13,6 +13,57 @@
 : "${ROOT:?ROOT must be set before sourcing agent-gates.sh}"
 
 # ──────────────────────────────────────────────────────────────
+# PROPOSAL HELPER: File an algorithm evolution proposal
+# ──────────────────────────────────────────────────────────────
+# Call this when reflection discovers a gap worth proposing.
+# The agent decides WHEN to call this — the code doesn't auto-trigger it.
+#
+# Usage: file_proposal <agent> <slug> <trigger> <current> <problem> <proposed_change> <scope> <verification>
+#   scope: "playbook" (self-approve) or "constitution" (Kai review)
+#
+file_proposal() {
+  local agent="${1:?}" slug="${2:?}" trigger="${3:?}"
+  local current="${4:?}" problem="${5:?}" proposed="${6:?}"
+  local scope="${7:-constitution}" verification="${8:-run next cycle and check evolution entry}"
+  local ts; ts=$(TZ='America/Denver' date +%Y-%m-%dT%H:%M:%S%z)
+  local datestamp; datestamp=$(TZ='America/Denver' date +%Y-%m-%d)
+  local proposal_dir="$ROOT/kai/proposals"
+  local filename="${agent}-${datestamp}-${slug}.md"
+
+  mkdir -p "$proposal_dir" 2>/dev/null
+
+  cat > "$proposal_dir/$filename" << PROPEOF
+# Proposal: $slug
+Agent: $agent
+Date: $ts
+Trigger: $trigger
+
+## Current behavior
+$current
+
+## Problem
+$problem
+
+## Proposed change
+$proposed
+
+## Scope
+$(if [[ "$scope" == "playbook" ]]; then echo "- [x] PLAYBOOK only (agent can self-approve)"; echo "- [ ] Constitution (requires Kai review)"; else echo "- [ ] PLAYBOOK only (agent can self-approve)"; echo "- [x] Constitution (requires Kai review)"; fi)
+
+## Verification plan
+$verification
+PROPEOF
+
+  # Flag Kai via dispatch (if dispatch is available)
+  local dispatch_bin="$ROOT/bin/dispatch.sh"
+  if [[ -x "$dispatch_bin" ]]; then
+    bash "$dispatch_bin" flag "$agent" P2 "EVOLUTION-PROPOSAL: $slug — see kai/proposals/$filename" 2>/dev/null || true
+  fi
+
+  echo "PROPOSAL FILED: $proposal_dir/$filename"
+}
+
+# ──────────────────────────────────────────────────────────────
 # SELF-REVIEW: The core reasoning loop
 # ──────────────────────────────────────────────────────────────
 # This is the master function. It runs ALL the reasoning gates
