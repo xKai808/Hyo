@@ -1,7 +1,8 @@
 # Agent Creation Protocol
 
-**Version:** 1.0 | **Author:** Kai (CEO, hyo.world) | **Date:** 2026-04-13
+**Version:** 2.0 | **Author:** Kai (CEO, hyo.world) | **Date:** 2026-04-13
 **Status:** Battle-tested across 8 agents (Kai, Sam, Nel, Ra, Aurora, Aether, Dex, + Cipher/Sentinel sub-agents)
+**v2.0 changes (session 8):** Added PLAYBOOK.md + evolution.jsonl to file structure. Runner template now includes self-review (agent-gates.sh), self-evolution with reflection block, v2.0 evolution entries. New section 6.5: Agent Autonomy & Growth. Testing protocol expanded to 11 points (PLAYBOOK, evolution, reflection). Post-creation updated for domain growth and proposals.
 
 This document is the complete, repeatable protocol for creating, integrating, testing, and operating an autonomous agent within a multi-agent system. It was developed through iterative production use — every step exists because skipping it caused a failure at some point.
 
@@ -12,17 +13,18 @@ This protocol is designed to be portable. The Hyo-specific implementation detail
 ## Table of Contents
 
 1. Pre-Creation (Define the Agent)
-2. File Structure (Build the Skeleton)
+2. File Structure (Build the Skeleton) — includes PLAYBOOK.md + evolution.jsonl
 3. Manifest (Identity Card)
-4. Runner Script (Execution Engine)
+4. Runner Script (Execution Engine) — includes self-review + reflection
 5. Dispatch Integration (Closed-Loop Communication)
 6. Algorithm Documentation (Runbook)
+6.5. **Agent Autonomy & Growth** (v2.0 — session 8)
 7. CEO/Dispatcher Integration (Routing)
 8. Dashboard/UI Integration (Visibility)
 9. Schedule (Automation)
-10. Testing Protocol (8-Point Validation)
+10. Testing Protocol (11-Point Validation) — expanded from 8 in v2.0
 11. Migration Protocol (Renaming/Restructuring)
-12. Post-Creation (Maintenance)
+12. Post-Creation (Maintenance) — includes reflection monitoring + proposals
 13. Appendix: Failure Catalog
 
 ---
@@ -76,12 +78,15 @@ Every agent follows the same directory structure. No exceptions. Consistency is 
 ```
 agents/<name>/
 ├── <name>.sh              ← Runner script (the agent's brain)
-├── PRIORITIES.md           ← Current operational priorities
+├── PLAYBOOK.md            ← Agent's own operational manual (agent owns, Kai can override)
+├── PRIORITIES.md           ← Current operational priorities + research mandate
+├── evolution.jsonl         ← Append-only learning/growth log (written every run cycle)
 ├── ledger/
 │   ├── ACTIVE.md          ← Open tasks assigned to this agent
 │   └── log.jsonl          ← Append-only event log
 ├── logs/
-│   └── <name>-YYYY-MM-DD.log  ← Daily execution logs
+│   ├── <name>-YYYY-MM-DD.log   ← Daily execution logs
+│   └── self-review-YYYY-MM-DD.md  ← Self-review output (from agent-gates.sh)
 └── [optional domain-specific files]
     ├── com.hyo.<name>.plist    ← macOS launchd schedule
     ├── data/                   ← Agent-specific data files
@@ -95,6 +100,7 @@ mkdir -p agents/$NAME/ledger agents/$NAME/logs
 touch agents/$NAME/$NAME.sh
 chmod +x agents/$NAME/$NAME.sh
 touch agents/$NAME/ledger/log.jsonl
+touch agents/$NAME/evolution.jsonl
 ```
 
 **ACTIVE.md template:**
@@ -127,6 +133,45 @@ _Last updated: YYYY-MM-DD_
 
 ## Success Criteria
 - [how do you know this agent is working?]
+```
+
+**PLAYBOOK.md template:**
+```markdown
+# <Name> Agent — Playbook
+
+_Agent owns this file. Kai can override. Update after every improvement._
+
+## Mission
+[One sentence. What this agent exists to do.]
+
+## Operational Checklist
+[Steps the agent runs every cycle — evolves as agent learns.]
+1. [Step 1]
+2. [Step 2]
+...
+
+## Domain Reasoning
+[Domain-specific questions this agent asks. Extends the universal
+reasoning framework (kai/protocols/REASONING_FRAMEWORK.md).
+Start with 3-5 questions. Add more as the agent learns its domain.]
+
+- "[Domain-specific question 1]"
+- "[Domain-specific question 2]"
+- "[Domain-specific question 3]"
+
+## Reflection Extensions
+[Questions the agent has discovered through reflection that aren't
+in the constitution yet. File proposals for constitutional additions.]
+
+## Improvement Queue
+[Things this agent wants to improve about itself.]
+- [ ] [improvement 1]
+
+## Decision Log
+[Significant autonomous decisions, with reasoning.]
+
+## Current Self-Assessment
+[Honest assessment of performance. Updated every cycle.]
 ```
 
 ---
@@ -227,11 +272,66 @@ phase_one() {
   log "Phase 1 complete"
 }
 
+# ─── Self-Review (reasoning gates — from agent-gates.sh) ─────────────────────
+source "$ROOT/kai/protocols/agent-gates.sh"
+run_self_review "<name>" || true
+
+# ─── Self-Evolution (metrics + AGENT REFLECTION) ─────────────────────────────
+# See AGENT_ALGORITHMS.md SELF-EVOLUTION CYCLE for the full 12-step spec.
+# Key: step 10 is AGENT REFLECTION — 7 questions the agent answers honestly.
+# Evolution entries MUST include reflection answers (version 2.0 format).
+
+EVOLUTION_FILE="$AGENT_HOME/evolution.jsonl"
+PLAYBOOK="$AGENT_HOME/PLAYBOOK.md"
+
+# [Collect agent-specific metrics here — customize per domain]
+
+# Check PLAYBOOK staleness
+PLAYBOOK_UPDATED="False"
+PLAYBOOK_AGE="unknown"
+if [[ -f "$PLAYBOOK" ]]; then
+  PLAYBOOK_MTIME=$(stat -c %Y "$PLAYBOOK" 2>/dev/null || stat -f %m "$PLAYBOOK" 2>/dev/null || echo "0")
+  PLAYBOOK_AGE=$(( ($(date +%s) - PLAYBOOK_MTIME) / 86400 ))
+  [[ $PLAYBOOK_AGE -lt 7 ]] && PLAYBOOK_UPDATED="True"
+fi
+
+# STEP 10: AGENT REFLECTION (constitutional — AGENT_ALGORITHMS.md v2.0)
+# Collect evidence-based signals. Answer from runtime data, not canned strings.
+REFLECT_BOTTLENECK="none"         # (a) What bottleneck did I hit?
+REFLECT_SYMPTOM_OR_SYSTEM="system" # (b) Did I fix a symptom or the system?
+REFLECT_ARTIFACT_ALIVE="yes"       # (c) Does everything I created have a life?
+REFLECT_DOMAIN_GROWTH="stagnant"   # (d) Am I growing in my domain?
+REFLECT_LEARNING=""                # (e) What did I learn?
+# (f) Did this change propagate to all governing docs?
+# (g) Is this reflection complete?
+
+# [Customize reflection signals per agent's domain — see existing runners for examples]
+
+# Build v2.0 evolution entry (MUST include reflection per step 11)
+EVOLUTION_ENTRY=$(python3 << PYEOF
+import json
+entry = {
+  "ts": "$TS", "version": "2.0",
+  "metrics": {},  # [fill with agent-specific metrics]
+  "assessment": "cycle complete",
+  "playbook_updated": $PLAYBOOK_UPDATED,
+  "reflection": {
+    "bottleneck": "$REFLECT_BOTTLENECK",
+    "symptom_or_system": "$REFLECT_SYMPTOM_OR_SYSTEM",
+    "artifact_alive": "$REFLECT_ARTIFACT_ALIVE",
+    "domain_growth": "$REFLECT_DOMAIN_GROWTH",
+    "learning": "$REFLECT_LEARNING"
+  }
+}
+print(json.dumps(entry))
+PYEOF
+)
+echo "$EVOLUTION_ENTRY" >> "$EVOLUTION_FILE"
+log "Self-evolution logged with reflection"
+
 # ─── Phase N: Report ──────────────────────────────────────────────────────────
 phase_report() {
   log "Writing report"
-  # Write human-readable report to logs/
-  # Dispatch results to CEO
   local dispatch_bin="$ROOT/bin/dispatch.sh"
   if [[ -x "$dispatch_bin" ]]; then
     bash "$dispatch_bin" report <name> "summary of what happened" 2>> "$LOG" || true
@@ -251,7 +351,8 @@ trap trap_error ERR
 main() {
   log "=== <Name> agent run ==="
   phase_one
-  # ... more phases ...
+  # ... domain-specific phases ...
+  # Self-review + self-evolution run after domain work, before report
   phase_report
   log "Run complete"
 }
@@ -266,6 +367,10 @@ main "$@"
 4. Mountain Time timestamps — consistency across all agents
 5. Logs to `agents/<name>/logs/` — one file per day
 6. Secrets only from `agents/nel/security/` — never hardcoded
+7. `source agent-gates.sh` + `run_self_review` — reasoning gates every cycle
+8. Self-evolution with v2.0 evolution entry (MUST include `reflection` block)
+9. PLAYBOOK.md must exist and be referenced for staleness checks
+10. Domain-specific reflection signals — not canned "none" strings
 
 ---
 
@@ -325,6 +430,40 @@ FAILURE MODES:
   - [Failure scenario] → [recovery action]
   - [Failure scenario] → [escalation action]
 ```
+
+---
+
+## 6.5. Agent Autonomy & Growth (Session 8 — Fundamental)
+
+Agents are NOT runners. They are autonomous AI with domain specialties that must grow over time. This section defines how a new agent is set up for autonomy from day one.
+
+**Core principle:** The agent decides for itself. It reports to Kai for memory and tracking. It does not ask permission except for cross-agent interface changes, spending, or constitutional edits.
+
+**At creation, every agent must have:**
+
+1. **PLAYBOOK.md** — the agent's own operational manual. The agent owns this file and evolves it every cycle. Kai can override but does not write it for the agent. Template in Section 2.
+
+2. **Domain Reasoning questions** — in PLAYBOOK.md under "## Domain Reasoning". Start with 3-5 domain-specific questions the agent should ask every cycle. These extend the universal framework at `kai/protocols/REASONING_FRAMEWORK.md`. The agent adds more as it learns.
+
+3. **Reflection block in evolution entries** — every evolution.jsonl entry must be v2.0 format with a `"reflection"` object. The agent collects evidence-based signals (not canned "none" strings) and answers honestly: bottleneck, symptom-vs-system, artifact alive, domain growth, learning, propagation check, reflection quality.
+
+4. **Self-review integration** — the runner sources `kai/protocols/agent-gates.sh` and calls `run_self_review("<name>")`. This provides trigger validation, visibility checks, resolution pickup, recall, and gate adoption. The agent extends with domain-specific logic.
+
+5. **Growth trajectory** — at creation, define: what does "expert level" look like for this agent's domain? What would it know in 30 days that it doesn't know today? This goes in PRIORITIES.md as a research agenda.
+
+**Question framework (built into every agent):**
+- Open-ended questions to EXPLORE: "What would happen if...?", "What am I not seeing?", "What would an expert do differently?"
+- Yes/no questions to DECIDE DIRECTION: "Is this triggered?", "Did this reach the user?", "Am I solving the system?"
+- Pattern: explore → narrow → execute → reflect
+
+**Event-driven response:**
+- When dispatch routes a P0/P1 flag to this agent, the agent's runner is queued for immediate execution (not next schedule). The agent picks up the task, acts, and reflects in the same run.
+
+**Algorithm evolution:**
+- When the agent's reflection discovers a gap, the agent files a proposal at `kai/proposals/` using `file_proposal()` from agent-gates.sh. PLAYBOOK changes can be self-approved. Constitutional changes need Kai review. See ALGORITHM EVOLUTION LIFECYCLE in `kai/AGENT_ALGORITHMS.md`.
+
+**Dead-loop protection:**
+- Healthcheck Check 8 monitors for dead-loops (same assessment/bottleneck 3+ cycles). If detected, Kai sends a guidance question — not an answer. The agent finds the answer.
 
 ---
 
@@ -497,7 +636,28 @@ grep -c "dispatch" agents/<name>/<name>.sh  # Should be >= 2 (report + flag)
 grep -q "## <Name>" kai/AGENT_ALGORITHMS.md && echo "PASS" || echo "FAIL"
 ```
 
-**Scoring:** All 8 must PASS. Any FAIL blocks production deployment.
+### Test 9: PLAYBOOK & Evolution Files Exist
+```bash
+[[ -f agents/<name>/PLAYBOOK.md ]] && echo "PASS: PLAYBOOK" || echo "FAIL: PLAYBOOK missing"
+[[ -f agents/<name>/evolution.jsonl ]] && echo "PASS: evolution" || echo "FAIL: evolution.jsonl missing"
+grep -q "Domain Reasoning" agents/<name>/PLAYBOOK.md && echo "PASS: domain reasoning section" || echo "FAIL: no Domain Reasoning in PLAYBOOK"
+```
+
+### Test 10: Self-Review & Reflection Integration
+```bash
+grep -q "agent-gates.sh" agents/<name>/<name>.sh && echo "PASS: sources agent-gates" || echo "FAIL: no agent-gates.sh"
+grep -q "run_self_review" agents/<name>/<name>.sh && echo "PASS: runs self-review" || echo "FAIL: no self-review call"
+grep -q "reflection" agents/<name>/<name>.sh && echo "PASS: reflection block" || echo "FAIL: no reflection in evolution"
+```
+
+### Test 11: Autonomy Readiness
+```bash
+grep -q "Improvement Queue" agents/<name>/PLAYBOOK.md && echo "PASS: improvement queue" || echo "FAIL: no improvement queue"
+grep -q "Decision Log" agents/<name>/PLAYBOOK.md && echo "PASS: decision log" || echo "FAIL: no decision log"
+grep -q "Self-Assessment" agents/<name>/PLAYBOOK.md && echo "PASS: self-assessment" || echo "FAIL: no self-assessment"
+```
+
+**Scoring:** All 11 must PASS. Any FAIL blocks production deployment.
 
 ---
 
@@ -538,24 +698,40 @@ Run all 8 tests from Section 10 on the renamed agent.
 
 ## 12. Post-Creation: Maintenance
 
+**Every cycle (automated — built into the runner):**
+- Self-review via agent-gates.sh (trigger validation, visibility, recall)
+- Self-evolution with reflection (7 questions, evidence-based answers)
+- Evolution entry written with reflection block (v2.0 format)
+- PLAYBOOK.md updated if anything changed
+
 **Daily:**
 - Agent runs on schedule (verify via logs or dispatch status)
 - No P0/P1 flags raised
+- Reflection answers in evolution.jsonl are not all "none" — agent is actually reflecting
 
 **Weekly:**
 - Review PRIORITIES.md — are priorities still correct?
 - Check ledger/ACTIVE.md — any stale tasks?
 - Review logs for patterns — same warnings repeating?
+- Check Domain Reasoning in PLAYBOOK — has the agent added new questions?
+- Check evolution.jsonl — is domain_growth "active" or "stagnant"?
+- If stagnant 3+ weeks → Kai sends guidance question (dead-loop protocol)
 
 **Monthly:**
-- Run full 8-point test protocol again
+- Run full 11-point test protocol again
 - Review manifest — capabilities still accurate?
 - Dex (or equivalent memory manager) runs compaction on the agent's ledger
+- Review proposals — has the agent filed any algorithm evolution proposals?
+  (No proposals in 30 days from an active agent → either the system is perfect
+  or the agent isn't reflecting deeply enough. Investigate.)
 
 **On every code change:**
 - Run `bash -n` syntax check
 - Run dispatch integration check (grep for dispatch calls)
 - Verify no broken references (grep for the agent name in changed files)
+- **PROPAGATION CHECK:** If this changes agent behavior, update PLAYBOOK.md,
+  evolution.jsonl, and AGENT_ALGORITHMS.md if cross-agent. If this changes
+  how new agents should be built, update THIS PROTOCOL.
 
 ---
 
@@ -610,6 +786,18 @@ Failures we've hit in production, documented so they never happen again.
 - Cause: Dashboard reads from static JSON file but agent pushes to API — API uses in-memory store that resets on cold start
 - Fix: Agent writes to static JSON (file-based persistence) AND pushes to API (live updates)
 - Prevention: Dual-write pattern in Aether's runner. Both paths must be present.
+
+**F9: Governance propagation gap (Session 8 P0)**
+- Symptom: New agent built from stale protocol — missing PLAYBOOK, reflection, autonomy model
+- Cause: Operating model changed (constitutional v3.0) but creation protocol wasn't updated. End-of-session checklist didn't include propagation check.
+- Fix: v2.0 of this protocol. Propagation check added to Kai's reflection loop (question 6) and agent's reflection loop (question f).
+- Prevention: Reflection question 6/f: "Did this change how the system operates? Did ALL governing docs get updated?" Applied every cycle, not just when remembered. The spec is not the implementation. The creation protocol is not the constitution. ALL must be current.
+
+**F10: Spec without implementation (Session 8 P0)**
+- Symptom: Constitution says agents should reflect, but runner code writes evolution entries without reflection
+- Cause: Updated the spec (AGENT_ALGORITHMS.md) but didn't verify the execution layer (runner bash code) matches
+- Fix: All 5 runners updated with reflection blocks
+- Prevention: Trigger Validation Gate must always chase to the execution layer. "Is it mentioned?" ≠ "Does code run it?"
 
 ---
 
