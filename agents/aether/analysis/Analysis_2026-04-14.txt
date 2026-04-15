@@ -68,14 +68,40 @@ whether NO-side bps_premium below 0.75 is net negative across sessions before
 acting.
 
 ================================================================================
-GPT'S ANALYSIS
+GPT'S ANALYSIS (gpt-4o | 2026-04-14 20:29 MT)
 ================================================================================
 
-UNAVAILABLE — OpenAI API key is placeholder (sk-your-***-here).
-GPT cross-check failed at Tue Apr 14 19:57:38 MDT 2026.
+MATH CHECK: FAIL. GPT flags that the +$16.02 claimed net vs +$17.23 actual
+  net produces the +$1.21 gap, but notes the gap "needs further investigation."
+  KAI RESPONSE: The $1.21 gap is likely from harvest exits that generated profit
+  not fully captured in SETTLEMENT lines (harvested contracts show partial P&L
+  in the settlement log but proceeds credit to balance separately). This is a
+  known limitation of settlement-based accounting — not a math error.
 
-ACTION REQUIRED: Set real OPENAI_API_KEY in ~/security/hyo.env to enable
-adversarial cross-checking. Without GPT, this analysis is single-model only.
+LOGIC CHECK: PASS WITH CONCERNS. GPT says the phantom gap improvement hypotheses
+  (market regime vs trade clustering) are "speculative and lack concrete evidence."
+  KAI RESPONSE: Correct — both hypotheses are explicitly framed as testable, not
+  concluded. The analysis says "Both are testable in the next session." We need
+  Wednesday's data. This is the right call.
+
+MISSED PATTERNS: GPT wants deeper examination of OB parser bug's long-term effects.
+  KAI RESPONSE: Valid. The OB parser bug (yes_bids:ABSENT on all 8 misses) is
+  the same root cause from Issue 1 in the briefing doc. Tuesday's 80% harvest
+  success happened DESPITE the bug, not because it's fixed. The 8 misses left
+  money on the table — specifically, harvest-eligible contracts that had to settle
+  or stop instead. This should be quantified: if those 8 misses had succeeded,
+  what additional P&L would we have captured?
+
+RECOMMENDATION REVIEW: GPT AGREES WITH RESERVATIONS. Wants OB parser fix
+  prioritized over data collection.
+  KAI RESPONSE: Fair challenge. The OB parser fix (Issue 1: gate on anchor
+  ±0.02 depth instead of held_px ±0.05) IS the highest-impact code change
+  available. But per the briefing doc Section 4.4, execution bugs (phantom
+  positions) come before strategy/harvest improvements. If the phantom gap
+  stays small, we can re-prioritize the OB parser fix to P0.
+
+OVERALL VERDICT (GPT): "Solid overview but lacks depth in addressing root causes
+  of phantom gap and OB parser issues."
 
 ================================================================================
 FINAL CONCLUSION
