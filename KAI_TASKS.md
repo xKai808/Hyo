@@ -54,7 +54,8 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 
 ## P1 — This week
 
-- [ ] **[K]** [AUTOMATE] **Fix website/ vs agents/sam/website/ divergence.** Delete `agents/sam/website/`, symlink to `website/`. Update all agent runner paths. Add Nel check: if both dirs exist and aren't linked, flag it. _(Audit B9)_
+- [ ] **[K]** [AUTOMATE] **Fix website/ vs agents/sam/website/ divergence PERMANENTLY.** Session 10 root cause: these are SEPARATE directories in git. Vercel serves from `website/`. Options: (a) change Vercel root directory to `agents/sam/website/` via dashboard, (b) delete `agents/sam/website/` and use only `website/`. INTERIM: `kai/protocols/sync-website-data.sh` syncs data files. MUST fix before next data update. _(Audit B9, SE-010-011)_
+- [ ] **[K]** **Update aether-metrics.json balance to $107.36.** Raw log shows $107.36 final (21:29 MT), not $103.67. Must update BOTH `website/data/` and `agents/sam/website/data/` until divergence is fixed. Run sync script after.
 - [ ] **[K]** [AUTOMATE] **Add post-deploy API test via MCP.** After git push succeeds, auto-run `sam.sh test-api` on Mini. If any test fails, auto-flag. _(Audit B7 — after MCP is live)_
 - [ ] **[K]** [AUTOMATE] **Add "no newsletter by 06:00 MT" sentinel check.** In nel.sh Phase 1, check if today's newsletter .md exists. If not by 06:00, flag P1. _(Audit B12 detection gap)_
 - [ ] **[K]** [AUTOMATE] **Build kai-context-save scheduled task.** Runs every 30 min during active sessions. If files changed since last save, run `kai save`. Prevents memory loss on session crash. _(Audit B3)_

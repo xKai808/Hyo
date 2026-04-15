@@ -16,12 +16,14 @@ Read these files in order. Do not skip. Do not skim.
 1. `KAI_BRIEF.md` — persistent memory, current state, known blockers
 2. `KAI_TASKS.md` — priority queue; this is what you work on when not actively prompted
 3. `kai/ledger/known-issues.jsonl` — issue patterns to watch for (regressions)
-4. `kai/ledger/simulation-outcomes.jsonl` — last nightly sim result (check for failures)
-5. `kai/AGENT_ALGORITHMS.md` — execution protocols for all agents (follow these exactly)
-6. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
-7. `NFT/HyoRegistry_Notes.md` — canonical architecture notes
-8. Any file in `agents/manifests/` relevant to the current task
-9. Latest log in `agents/nel/logs/` if one exists
+4. `kai/ledger/session-errors.jsonl` — Kai's own mistakes (RECALL SYSTEM — check before every action)
+5. `kai/protocols/VERIFICATION_PROTOCOL.md` — mandatory verification protocol (nothing is done until verified)
+6. `kai/ledger/simulation-outcomes.jsonl` — last nightly sim result (check for failures)
+7. `kai/AGENT_ALGORITHMS.md` — execution protocols for all agents (follow these exactly)
+8. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
+9. `NFT/HyoRegistry_Notes.md` — canonical architecture notes
+10. Any file in `agents/manifests/` relevant to the current task
+11. Latest log in `agents/nel/logs/` if one exists
 
 After hydration, respond with a 4-line status:
 1. What shipped since last session (from KAI_BRIEF "Shipped today" section)
@@ -66,6 +68,10 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 - **Protocol staleness prevention.** Any file change that affects agent behavior MUST trigger: (1) update the relevant PLAYBOOK.md, (2) log to evolution.jsonl, (3) update PRIORITIES.md if priorities shifted. Dex enforces staleness across all agents. Daily audit checks. No file goes stale without being flagged.
 - **Every behavior change updates the protocol.** When you change how an agent works (modify a runner, add a phase, change a threshold), you MUST also update that agent's PLAYBOOK.md and AGENT_ALGORITHMS.md if the change affects cross-agent behavior. This is wired into the self-evolution cycle and daily audit. Do not defer this — update in the same session.
 - **Building a new agent? Follow the protocol.** `docs/AGENT_CREATION_PROTOCOL.md` (v2.0) is the complete, repeatable blueprint. 14 sections, 11-point testing. Every new agent gets: PLAYBOOK.md, evolution.jsonl, self-review integration (agent-gates.sh), reflection block in evolution entries, domain reasoning questions, and autonomy from day one. Do NOT build an agent from memory — read the protocol first.
+- **VERIFY EVERYTHING. ASSUME NOTHING.** (Added session 10 — Hyo feedback.) Before EVERY action, check `kai/ledger/session-errors.jsonl` for matching error patterns. After EVERY action, verify the result with proof (fetch the URL, read the file, run the function). "It should work" is not verification. Follow `kai/protocols/VERIFICATION_PROTOCOL.md` exactly. 0% of session 10's 11 critical errors were caught before Hyo found them. This is the fix.
+- **Error recall is mandatory.** `kai/ledger/session-errors.jsonl` is Kai's mistake ledger. Before starting any task, scan it for matching patterns. After making any mistake, log it immediately with: category, description, who caught it, prevention, severity. This is how we don't repeat failures. The categories are: assumption, skip-verification, reinterpret-instructions, wrong-path, technical-failure. Every session adds its errors. No session's lessons are lost.
+- **Dual-path file awareness.** `website/` and `agents/sam/website/` are SEPARATE directories in git (despite being a symlink locally). Until resolved, ANY update to website data MUST update BOTH paths. Check which path the consumer (Vercel, HQ, etc.) actually reads from. This was a P0 in session 10 (SE-010-011).
+- **When Hyo gives specific instructions, implement EXACTLY those steps.** Do not substitute "equivalent" approaches. Do not reinterpret. If Hyo says "Phase 1: do X, Phase 2: do Y" — implement Phase 1 that does X and Phase 2 that does Y. Kai's interpretation of "what should work" has been wrong twice in one session (SE-010-008, SE-010-009). Follow the spec, not the intuition.
 
 ## Project layout
 

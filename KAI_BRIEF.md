@@ -91,9 +91,35 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-14 ~19:45 MT — Session 10 in progress)
+## Current state (as of 2026-04-15 ~03:30 UTC / 2026-04-14 ~21:30 MT — Session 10 continuation)
 
-**What shipped in session 10:**
+**What shipped in session 10 continuation (after context compaction):**
+
+40. **Stale Vercel Deployment FIXED:** Root cause found — `website/` and `agents/sam/website/` are SEPARATE directories in git (not a symlink as assumed). Updated file was at `agents/sam/website/data/aether-metrics.json` but Vercel serves from `website/`. Synced the correct file, committed, pushed, VERIFIED production shows 44 trades, 75% WR, $103.67 balance. (Note: actual final balance is $107.36 per raw log — see #43.)
+
+41. **Dual-Phase GPT Pipeline (gpt_crosscheck.py v2):** Both Monday and Tuesday analyses now have Phase 1 (GPT independent analysis from raw logs) + Phase 2 (GPT comparative review of Kai's analysis). GPT_VERIFIED: YES on both files with timestamps. All GPT output files created (GPT_Independent_*.txt, GPT_Review_*.txt).
+
+42. **Error Tracking & Recall System Built:**
+    - `kai/ledger/session-errors.jsonl` — 11 errors cataloged from session 10 with categories, root causes, prevention steps
+    - `kai/protocols/VERIFICATION_PROTOCOL.md` — mandatory pre-action checklist, verification-by-action-type, error pattern recall table
+    - Wired into CLAUDE.md hydration (items 4 and 5)
+    - 5 new operating rules added to CLAUDE.md: verify everything, error recall, dual-path awareness, follow instructions exactly, and the recall system itself
+
+43. **Tuesday Balance Discrepancy Resolved:** Raw log shows $107.36 final balance (21:29 MT), not Kai's $103.67 (19:57 MT snapshot) or GPT's $105.80 (20:58 MT snapshot). All three were time-of-measurement issues. True Tuesday P&L: +$20.92. Logged to known-issues for aether-metrics.json update.
+
+44. **Website Data Sync Script:** `kai/protocols/sync-website-data.sh` — syncs `agents/sam/website/data/` → `website/data/` before commits. Prevents SE-010-011 recurrence until Vercel root directory is changed to `agents/sam/website/`.
+
+45. **GPT_VERIFIED Gate System:** Pre-commit gate script (`kai/protocols/verify-gpt-gate.sh`) blocks any Analysis_*.txt commit where GPT_VERIFIED != YES. ANALYSIS_BRIEFING.txt Section 14 documents full failure history (v0 skip, v1 shortcut, v2 correct).
+
+**Session 10 Error Statistics:** 11 critical errors, 0% caught pre-Hyo, 100% caught by Hyo testing. Root causes: skip-verification (4), reinterpret-instructions (2), assumption (3), wrong-path (1), technical-failure (1). Prevention systems now in place for all 11 patterns.
+
+**Pending from session 10:**
+- aether-metrics.json needs balance update to $107.36 (in both paths) — deferred to next session
+- Vercel root directory should be changed to `agents/sam/website/` to eliminate dual-path permanently
+- Aether OB parser bug (yes_bids:ABSENT on harvest misses) — not started
+- hyo.hyo agent build — not started (blocked by operational fires)
+
+**What shipped in session 10 (before compaction):**
 
 31. **Ticket System Built (bin/ticket.sh):** Full lifecycle CLI — create, update, close, escalate, verify, sla-check, list, report. 450+ lines. Tickets stored in `kai/tickets/tickets.jsonl`. Close requires evidence + runs agent verify.sh + git commit audit trail + agent memory write. SLA enforcement: P1=1h, P2=4h, P3=24h.
 
