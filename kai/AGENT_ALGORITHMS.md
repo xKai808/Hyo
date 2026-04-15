@@ -18,6 +18,114 @@ Every agent also has a PLAYBOOK.md they OWN and can self-modify. The constitutio
 
 ---
 
+## Ticket System & Workflow Systems (v1.0 — 2026-04-14)
+
+**Full reference:** `kai/WORKFLOW_SYSTEMS.md`
+**CLI:** `kai ticket <command>` or `bash bin/ticket.sh <command>`
+**Ledger:** `kai/tickets/tickets.jsonl` (single source of truth for all task state)
+
+### The Five Systems
+
+Every task runs through at least one of these five systems. No task exits without passing its gates. This is non-negotiable.
+
+```
+SYSTEM 1 — THE LOOP: Create → Verify → Simulate → Close/Reopen
+  Used by: ALL agents (primary for Kai, Aurora, Ra)
+  Every task is a ticket. Every ticket has open-ended questions.
+  Ticket stays OPEN until all gates pass.
+
+SYSTEM 2 — THE ROLE GATE: Sequential gates by role specialty
+  Used by: Anything going public (newsletter, HQ, website, comms)
+  Gates: Research → Coding → QA → Security → UI/UX → Publishing → CEO
+  No gate can be skipped. Each gate has its own question set.
+
+SYSTEM 3 — THE SPRINT: Batch → Simulate → Ship together
+  Used by: Sam, Nel (coding), multi-task builds, AetherBot builds
+  All tasks simulated before any are shipped.
+  Ship/No-Ship decision requires all individual verifications pass.
+
+SYSTEM 4 — THE ADVERSARIAL: Builder builds, separate agent breaks
+  Used by: QA, Security — mandatory for AetherBot builds
+  Builder CANNOT sign off on own work.
+  Adversarial agent's job: find every failure before production does.
+
+SYSTEM 5 — THE MEMORY LOOP: Every task feeds back into standing instructions
+  Used by: ALL agents (runs after every completed task)
+  What was learned → tacit knowledge → pattern library → updated checklists.
+  Nightly consolidation asks the hard questions about what happened today.
+```
+
+### Agent → System Assignment
+
+```
+Kai (CEO)           → System 1 (Loop) + System 5 (Memory)
+Nel (QA/Security)   → System 4 (Adversarial) primary + Gate 3-4 in System 2
+Sam (Engineering)   → System 3 (Sprint) primary + Gate 2 in System 2
+Ra (Publishing)     → System 1 (Loop) + Gate 1,6 in System 2
+Aurora (Research)   → System 1 (Loop) + Gate 1 in System 2
+Aether (Trading)    → System 3 (Sprint) + System 5 (Memory) + System 4 (Adversarial)
+Dex (Data)          → System 1 (Loop) + System 5 (Memory)
+```
+
+### Ticket Lifecycle
+
+```
+OPEN      → Created. Work not started or in progress.
+ACTIVE    → Agent is currently working on this.
+BLOCKED   → Cannot proceed. Auto-escalates to Kai after SLA.
+IN_REVIEW → Completed. Waiting for gate agent verification.
+CLOSED    → All gates passed. Evidence filed. No open issues.
+ARCHIVED  → Closed and older than 30 days.
+```
+
+**A ticket remains OPEN if:**
+- Any open-ended question is unanswered
+- Any simulation gate has not passed
+- Any agent has issued a FAIL verdict
+- Verification script (`agents/<name>/verify.sh`) has not passed
+- Operator approval required and not yet given
+
+**SLA Escalation (auto-enforced by healthcheck):**
+- P1: 1 hour → auto-escalate to P0
+- P2: 4 hours → auto-escalate to P1
+- P3: 24 hours → auto-escalate to P2
+- BLOCKED tickets older than their SLA are promoted and flagged to Kai
+
+### The Universal Question Set (ask for ANY task, ANY system)
+
+1. What is the expected outcome, and how will we measure it?
+2. What could go wrong, and how would we detect it?
+3. What assumptions are we making that could be false?
+4. Who needs to know about this, and when?
+5. What does success look like 24 hours after this is done?
+6. What should never happen as a result of this task?
+7. Is there a simpler way to accomplish the same outcome?
+8. What would we do differently next time?
+
+### Agent Verification Scripts
+
+Each agent has `agents/<name>/verify.sh` — executable gate checks that encode the open-ended questions as actual tests. A ticket cannot close unless its owning agent's verify.sh passes. Current scripts:
+- `agents/ra/verify.sh` — newsletter exists, deployed, in feed, substantive content, URLs load
+- `agents/nel/verify.sh` — no secrets in tracked files, valid JSONL ledgers, permissions, runner health
+- `agents/sam/verify.sh` — HTML structure, JSON validity, vercel.json, API endpoints, feed sync
+- `agents/aether/verify.sh` — dashboard data freshness, feed presence, phantom position audit, publish gates
+
+### Ticket CLI Reference
+
+```bash
+kai ticket create  --agent ra --title "Ship daily newsletter" --priority P1
+kai ticket update  TASK-20260414-ra-001 --status ACTIVE --note "Gathering sources"
+kai ticket close   TASK-20260414-ra-001 --evidence "/daily/2026-04-14 returns 200" --summary "Newsletter shipped"
+kai ticket escalate TASK-20260414-ra-001 --reason "API key missing on Mini"
+kai ticket verify  TASK-20260414-ra-001    # runs agents/ra/verify.sh
+kai ticket sla-check                        # check all open tickets for SLA breaches
+kai ticket list                             # show all open tickets
+kai ticket list --agent nel --priority P1   # filter
+kai ticket report                           # human-readable summary
+```
+
+---
+
 ## Agent Autonomy Framework
 
 ```

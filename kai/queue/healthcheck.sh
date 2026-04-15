@@ -366,6 +366,28 @@ if [[ "$PENDING_COUNT" -gt 0 ]]; then
   bash "$ROOT/kai/queue/worker.sh" 2>/dev/null &
 fi
 
+# ---- Check 9: Ticket SLA enforcement (System 1 escalation) ----
+TICKET_SCRIPT="$ROOT/bin/ticket.sh"
+if [[ -x "$TICKET_SCRIPT" ]]; then
+  log "Checking ticket SLA compliance..."
+  SLA_OUTPUT=$(HYO_ROOT="$ROOT" bash "$TICKET_SCRIPT" sla-check 2>&1 || true)
+  echo "$SLA_OUTPUT"
+
+  # Count SLA breaches and auto-escalate
+  BREACH_COUNT=$(echo "$SLA_OUTPUT" | grep -c "overdue" || echo "0")
+  if [[ "$BREACH_COUNT" -gt 0 ]]; then
+    add_finding "P1" "ticket-sla" "$BREACH_COUNT tickets have breached SLA"
+    ACTIONS_LOG="${ACTIONS_LOG:+$ACTIONS_LOG; }Escalated $BREACH_COUNT SLA-breached tickets"
+
+    # Auto-escalate each breached ticket
+    BREACH_IDS=$(echo "$SLA_OUTPUT" | grep -oE "TASK-[0-9]+-[a-z]+-[0-9]+" || true)
+    for bid in $BREACH_IDS; do
+      HYO_ROOT="$ROOT" bash "$TICKET_SCRIPT" escalate "$bid" --reason "SLA breach (auto-escalated by healthcheck)" 2>/dev/null || true
+      log "  → Auto-escalated $bid"
+    done
+  fi
+fi
+
 # ---- Write healthcheck result ----
 # Include actions taken, not just findings
 ACTIONS_TAKEN=""

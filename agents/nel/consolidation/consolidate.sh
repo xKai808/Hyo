@@ -662,3 +662,86 @@ fi
 mkdir -p "$ROOT/website/docs/consolidation"
 cp "$LOGFILE" "$ROOT/website/docs/consolidation/${DATE}.md"
 log "Synced to website/docs/consolidation/"
+
+# ── System 5: Memory Loop — Nightly consolidation questions ──
+# From WORKFLOW_SYSTEMS.md: these questions run every night at 23:50 MTN
+# Answers are appended to the consolidation log and saved to kai/ledger
+log ""
+log "═══ System 5: Memory Loop — Nightly Questions ═══"
+MEMORY_LOG="$ROOT/kai/ledger/memory-loop.jsonl"
+
+# Generate answers from today's data
+python3 - "$ROOT" "$DATE" "$TS" "$MEMORY_LOG" << 'MEMEOF'
+import json, sys, os, glob
+from datetime import datetime
+
+root, date, ts, memory_log = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+
+# Gather today's signal
+tickets_file = os.path.join(root, "kai/tickets/tickets.jsonl")
+kai_log = os.path.join(root, "kai/ledger/log.jsonl")
+feed_file = os.path.join(root, "website/data/feed.json")
+
+# Count today's tickets
+tickets_today = []
+blocked_tickets = []
+if os.path.exists(tickets_file):
+    with open(tickets_file) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                t = json.loads(line)
+                if t.get("created_at", "").startswith(date):
+                    tickets_today.append(t)
+                if t.get("status") == "BLOCKED":
+                    blocked_tickets.append(t)
+            except:
+                pass
+
+# Count today's flags
+flags_today = 0
+if os.path.exists(kai_log):
+    with open(kai_log) as f:
+        for line in f:
+            try:
+                e = json.loads(line.strip())
+                if e.get("action") == "FLAG" and e.get("ts", "").startswith(date):
+                    flags_today += 1
+            except:
+                pass
+
+# Find highest-risk open item
+highest_risk = "None identified"
+if blocked_tickets:
+    b = blocked_tickets[0]
+    highest_risk = f"{b['id']}: {b['title']} (BLOCKED: {b.get('blocked_by', 'unknown')})"
+elif tickets_today:
+    p1s = [t for t in tickets_today if t.get("priority") in ("P0", "P1") and t.get("status") != "CLOSED"]
+    if p1s:
+        highest_risk = f"{p1s[0]['id']}: {p1s[0]['title']}"
+
+entry = {
+    "date": date,
+    "ts": ts,
+    "questions": {
+        "most_important_today": f"{len(tickets_today)} tickets created, {flags_today} flags raised",
+        "highest_risk_tomorrow": highest_risk,
+        "blocked_count": len(blocked_tickets),
+        "tickets_closed": len([t for t in tickets_today if t.get("status") == "CLOSED"]),
+        "tickets_open": len([t for t in tickets_today if t.get("status") != "CLOSED"]),
+    },
+    "standing_instruction_updates": [],
+    "patterns_detected": []
+}
+
+# Append to memory loop ledger
+os.makedirs(os.path.dirname(memory_log), exist_ok=True)
+with open(memory_log, "a") as f:
+    f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+print(f"Memory Loop: {len(tickets_today)} tickets today, {len(blocked_tickets)} blocked, risk: {highest_risk[:60]}")
+MEMEOF
+
+log "Memory Loop complete — written to $MEMORY_LOG"
