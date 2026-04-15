@@ -241,6 +241,40 @@ with open(ledger_path, 'w') as f:
     f.write('\n'.join(lines) + '\n')
 PYEOF
   log_ok "Closed $ticket_id with evidence"
+
+  # ─── AUDIT TRAIL: Git commit with ticket ID ───
+  # Every ticket close triggers a commit. The ticket ID in the commit message
+  # creates an immutable, searchable audit trail.
+  local exec_script="$HYO_ROOT/kai/queue/exec.sh"
+  if [[ -x "$exec_script" ]]; then
+    log_info "Triggering audit commit for $ticket_id..."
+    HYO_ROOT="$HYO_ROOT" bash "$exec_script" --timeout 60 \
+      "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/memory/ && git commit -m 'close($ticket_id): $summary' --allow-empty 2>&1 || true" \
+      2>/dev/null || log_warn "Audit commit queued (worker will process)"
+  fi
+
+  # ─── MEMORY: Write lesson to agent memory file ───
+  local agent
+  agent=$(python3 -c "
+import json
+with open('$TICKET_LEDGER') as f:
+    for line in f:
+        e = json.loads(line.strip())
+        if e['id'] == '$ticket_id':
+            print(e['owner'])
+            break
+" 2>/dev/null || echo "unknown")
+
+  local agent_memory="$HYO_ROOT/kai/memory/agent_memory/${agent}.md"
+  mkdir -p "$(dirname "$agent_memory")"
+  cat >> "$agent_memory" << MEMEOF
+
+## $(TZ=America/Denver date +%Y-%m-%d) — $ticket_id
+- **Summary:** $summary
+- **Evidence:** $evidence
+- **Closed at:** $TIMESTAMP
+MEMEOF
+  log_info "Lesson written to $agent memory"
 }
 
 # ─── ESCALATE TICKET ───

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.memory-compact</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>source ~/.zprofile 2>/dev/null; HYO_ROOT=$HOME/Documents/Projects/Hyo bash $HOME/Documents/Projects/Hyo/bin/memory-compact.sh</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>2</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/tmp/hyo-memory-compact.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/hyo-memory-compact.err</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>TZ</key>
+    <string>America/Denver</string>
+    <key>HYO_ROOT</key>
+    <string>/Users/kai/Documents/Projects/Hyo</string>
+  </dict>
+</dict>
+</plist>
