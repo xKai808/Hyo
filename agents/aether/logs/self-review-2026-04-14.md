@@ -1,4 +1,4 @@
-# aether Self-Review — 2026-04-14T20:28
+# aether Self-Review — 2026-04-14T22:30
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-14-aether-results.json**: WHAT triggers this? Found 0 callers.
@@ -27,6 +27,9 @@ Questions for aether to answer:
 - Open resolution **RES-021** is relevant to aether
   - This resolution has pending steps. Can aether contribute?
   - Agent: read the resolution and add your findings.
+- Open resolution **RES-026** is relevant to aether
+  - This resolution has pending steps. Can aether contribute?
+  - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
 - Prior resolutions for 'aether': 0 matches
@@ -46,5 +49,5 @@ Questions for aether to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 9
-- Gate results: trigger=10/11, visibility=checked, resolutions=4, adoption=1/5
+- Gate results: trigger=11/12, visibility=checked, resolutions=5, adoption=1/5
 

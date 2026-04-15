@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.hyo.bridge</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/hyo/Documents/Projects/Hyo/kai/bridge/server.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/hyo/Documents/Projects/Hyo</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HYO_ROOT</key>
+        <string>/Users/hyo/Documents/Projects/Hyo</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/hyo-bridge.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/hyo-bridge.log</string>
+
+    <key>ThrottleInterval</key>
+    <integer>5</integer>
+</dict>
+</plist>

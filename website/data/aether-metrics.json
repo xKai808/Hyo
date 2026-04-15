@@ -7,9 +7,9 @@
     "start": "2026-04-13",
     "end": "2026-04-19",
     "startingBalance": 90.25,
-    "currentBalance": 107.36,
-    "pnl": 17.11,
-    "pnlPercent": 18.96,
+    "currentBalance": 108.11,
+    "pnl": 17.86,
+    "pnlPercent": 19.79,
     "trades": 44,
     "wins": 33,
     "losses": 11,
@@ -49,7 +49,7 @@
       {
         "name": "bps_late",
         "status": "active",
-        "pnl": 2.50,
+        "pnl": 2.5,
         "trades": 3,
         "wins": 3,
         "losses": 0,
@@ -69,7 +69,7 @@
         "winRate": 0.0,
         "stoplossTriggers": 0,
         "harvests": 0,
-        "entryRange": "—",
+        "entryRange": "\u2014",
         "lastAction": "2026-04-10T04:30:00-06:00"
       },
       {
@@ -117,10 +117,30 @@
         "posWarnings": 22,
         "btcChange": "+4.67%",
         "strategies": {
-          "bps_premium": {"trades": 13, "wins": 10, "losses": 3, "net": -7.18},
-          "PAQ_EARLY_AGG": {"trades": 8, "wins": 6, "losses": 2, "net": 22.90},
-          "PAQ_STRUCT_GATE": {"trades": 1, "wins": 1, "losses": 0, "net": 3.57},
-          "bps_late": {"trades": 2, "wins": 2, "losses": 0, "net": 1.84}
+          "bps_premium": {
+            "trades": 13,
+            "wins": 10,
+            "losses": 3,
+            "net": -7.18
+          },
+          "PAQ_EARLY_AGG": {
+            "trades": 8,
+            "wins": 6,
+            "losses": 2,
+            "net": 22.9
+          },
+          "PAQ_STRUCT_GATE": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "net": 3.57
+          },
+          "bps_late": {
+            "trades": 2,
+            "wins": 2,
+            "losses": 0,
+            "net": 1.84
+          }
         }
       },
       {
@@ -128,7 +148,7 @@
         "day": "Tuesday",
         "pnl": 20.92,
         "claimedPnl": 16.02,
-        "phantomGap": 4.90,
+        "phantomGap": 4.9,
         "balance": 107.36,
         "trades": 20,
         "wins": 14,
@@ -140,11 +160,36 @@
         "posWarnings": 40,
         "btcChange": "+0.5%",
         "strategies": {
-          "bps_premium": {"trades": 12, "wins": 9, "losses": 3, "net": 2.51},
-          "PAQ_EARLY_AGG": {"trades": 5, "wins": 3, "losses": 2, "net": 2.39},
-          "PAQ_STRUCT_GATE": {"trades": 2, "wins": 1, "losses": 1, "net": 8.18},
-          "WES_EARLY": {"trades": 1, "wins": 1, "losses": 0, "net": 2.28},
-          "bps_late": {"trades": 1, "wins": 1, "losses": 0, "net": 0.66}
+          "bps_premium": {
+            "trades": 12,
+            "wins": 9,
+            "losses": 3,
+            "net": 2.51
+          },
+          "PAQ_EARLY_AGG": {
+            "trades": 5,
+            "wins": 3,
+            "losses": 2,
+            "net": 2.39
+          },
+          "PAQ_STRUCT_GATE": {
+            "trades": 2,
+            "wins": 1,
+            "losses": 1,
+            "net": 8.18
+          },
+          "WES_EARLY": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "net": 2.28
+          },
+          "bps_late": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "net": 0.66
+          }
         }
       },
       {
@@ -183,33 +228,122 @@
       "cumulativePercent": 18.96
     },
     "recentTrades": [
-      {"date": "2026-04-14", "strategy": "PAQ_STRUCT_GATE", "side": "NO", "entry": 0.48, "size": 20, "net": 8.43, "wl": "WIN", "harvest": 17, "note": "Best trade of the week"},
-      {"date": "2026-04-14", "strategy": "bps_premium", "side": "NO", "entry": 0.72, "size": 9, "net": -5.04, "wl": "LOSS", "stoploss": "TRAIL_EXIT_STAGE2", "note": "Biggest Tue loss"},
-      {"date": "2026-04-14", "strategy": "WES_EARLY", "side": "YES", "entry": 0.43, "size": 4, "net": 2.28, "wl": "WIN", "note": "First WES_EARLY this week"},
-      {"date": "2026-04-13", "strategy": "bps_premium", "side": "NO", "entry": 0.77, "size": 18, "net": -12.96, "wl": "LOSS", "stoploss": "TIME_BDI_LOW", "note": "Biggest loss all week"},
-      {"date": "2026-04-13", "strategy": "PAQ_EARLY_AGG", "side": "YES", "entry": 0.83, "size": 24, "net": 4.08, "wl": "WIN", "note": "Largest PAQ win"},
-      {"date": "2026-04-13", "strategy": "PAQ_EARLY_AGG", "side": "YES", "entry": 0.87, "size": 32, "net": 4.16, "wl": "WIN", "note": "Highest volume trade"}
+      {
+        "date": "2026-04-14",
+        "strategy": "PAQ_STRUCT_GATE",
+        "side": "NO",
+        "entry": 0.48,
+        "size": 20,
+        "net": 8.43,
+        "wl": "WIN",
+        "harvest": 17,
+        "note": "Best trade of the week"
+      },
+      {
+        "date": "2026-04-14",
+        "strategy": "bps_premium",
+        "side": "NO",
+        "entry": 0.72,
+        "size": 9,
+        "net": -5.04,
+        "wl": "LOSS",
+        "stoploss": "TRAIL_EXIT_STAGE2",
+        "note": "Biggest Tue loss"
+      },
+      {
+        "date": "2026-04-14",
+        "strategy": "WES_EARLY",
+        "side": "YES",
+        "entry": 0.43,
+        "size": 4,
+        "net": 2.28,
+        "wl": "WIN",
+        "note": "First WES_EARLY this week"
+      },
+      {
+        "date": "2026-04-13",
+        "strategy": "bps_premium",
+        "side": "NO",
+        "entry": 0.77,
+        "size": 18,
+        "net": -12.96,
+        "wl": "LOSS",
+        "stoploss": "TIME_BDI_LOW",
+        "note": "Biggest loss all week"
+      },
+      {
+        "date": "2026-04-13",
+        "strategy": "PAQ_EARLY_AGG",
+        "side": "YES",
+        "entry": 0.83,
+        "size": 24,
+        "net": 4.08,
+        "wl": "WIN",
+        "note": "Largest PAQ win"
+      },
+      {
+        "date": "2026-04-13",
+        "strategy": "PAQ_EARLY_AGG",
+        "side": "YES",
+        "entry": 0.87,
+        "size": 32,
+        "net": 4.16,
+        "wl": "WIN",
+        "note": "Highest volume trade"
+      }
     ]
   },
   "openIssues": [
-    {"id": 1, "title": "Harvest Miss Root Cause (OB Parser)", "priority": "P0", "status": "ACTIVE", "detail": "yes_bids:ABSENT on all misses. v254 has yes_dollars but harvest path doesn't use it."},
-    {"id": 2, "title": "BDI=0 Stop Hold", "priority": "P1", "status": "ACTIVE", "detail": "Confirmed Mon 4/13 Trade #1. Stop hold at BDI=0 adds delay without saving anything."},
-    {"id": 3, "title": "EU_MORNING EV Monitoring", "priority": "P2", "status": "INSUFFICIENT DATA", "detail": "Zero trades in 03:00-05:00 window both days. Cannot evaluate."},
-    {"id": 4, "title": "Weekend Risk Profile", "priority": "P2", "status": "PENDING", "detail": "Not implemented. Need 2-3 more clean weekend sessions."}
+    {
+      "id": 1,
+      "title": "Harvest Miss Root Cause (OB Parser)",
+      "priority": "P0",
+      "status": "ACTIVE",
+      "detail": "yes_bids:ABSENT on all misses. v254 has yes_dollars but harvest path doesn't use it."
+    },
+    {
+      "id": 2,
+      "title": "BDI=0 Stop Hold",
+      "priority": "P1",
+      "status": "ACTIVE",
+      "detail": "Confirmed Mon 4/13 Trade #1. Stop hold at BDI=0 adds delay without saving anything."
+    },
+    {
+      "id": 3,
+      "title": "EU_MORNING EV Monitoring",
+      "priority": "P2",
+      "status": "INSUFFICIENT DATA",
+      "detail": "Zero trades in 03:00-05:00 window both days. Cannot evaluate."
+    },
+    {
+      "id": 4,
+      "title": "Weekend Risk Profile",
+      "priority": "P2",
+      "status": "PENDING",
+      "detail": "Not implemented. Need 2-3 more clean weekend sessions."
+    }
   ],
   "btcMarketContext": {
     "period": "2026-04-13 to 2026-04-14",
-    "monBtc": {"open": 70974, "close": 74289, "change": "+4.67%"},
-    "tueBtc": {"open": 74265, "close": 74645, "change": "+0.5%"},
+    "monBtc": {
+      "open": 70974,
+      "close": 74289,
+      "change": "+4.67%"
+    },
+    "tueBtc": {
+      "open": 74265,
+      "close": 74645,
+      "change": "+0.5%"
+    },
     "volatility": "Monday high, Tuesday low"
   },
   "operationalMetadata": {
-    "dataSource": "REAL — AetherBot v253/v254 live trading logs, raw settlement data from Kalshi",
+    "dataSource": "REAL \u2014 AetherBot v253/v254 live trading logs, raw settlement data from Kalshi",
     "logsLocation": "agents/aether/logs/",
     "analysisLocation": "agents/aether/analysis/",
     "capital": "real",
     "phantomWarning": "Monday P&L figures UNRELIABLE (phantom gap ~$23). Tuesday figures PLAUSIBLE (gap +$1.21).",
     "note": "Strategy P&L aggregates are sum of claimed settlements. Only balance change is ground truth."
   },
-  "updatedAt": "2026-04-14T21:45:00-06:00"
+  "updatedAt": "2026-04-14T22:30:47-06:00"
 }
