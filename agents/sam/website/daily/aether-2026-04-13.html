@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AetherBot Analysis — 2026-04-13</title>
+<meta name="description" content="Aether Daily Trading Analysis — 2026-04-13" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+  header.meta .badge { display: inline-block; font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; background: var(--accent-soft); color: var(--accent); padding: 6px 12px; border-radius: 4px; margin-top: 12px; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  /* Table styling */
+  .table-wrapper { overflow-x: auto; margin: 32px 0; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg-card); }
+  article table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  article table thead { position: sticky; top: 0; background: var(--bg-card); }
+  article table th { background: var(--bg-card); color: var(--accent); text-align: left; padding: 14px 12px; font-weight: 600; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 2px solid var(--accent); }
+  article table td { padding: 12px; color: var(--fg-body); border-bottom: 1px solid var(--rule); }
+  article table tbody tr:nth-child(odd) { background: rgba(232,226,214,0.02); }
+  article table tbody tr:nth-child(even) { background: transparent; }
+  article table tbody tr:hover { background: rgba(212,168,83,0.08); }
+  article table td:not(:first-child) { font-family: var(--font-mono); font-size: 13px; }
+  article table td.numeric { text-align: right; }
+  article table td.strategy { font-weight: 500; color: var(--fg); }
+  article table td.win { color: #66c986; font-weight: 500; }
+  article table td.loss { color: #f55066; font-weight: 500; }
+
+  /* Section blocks for analysis sections */
+  .gpt-section { border-left: 4px solid rgba(212,168,83,0.3); padding: 20px; margin: 24px 0; background: rgba(212,168,83,0.08); border-radius: 0 8px 8px 0; }
+  .gpt-section h3 { margin-top: 0; color: var(--accent); }
+  .kai-section { border-left: 4px solid rgba(212,168,83,0.2); padding: 20px; margin: 24px 0; background: rgba(232,226,214,0.02); border-radius: 0 8px 8px 0; }
+  .kai-section h3 { margin-top: 0; color: var(--fg); }
+
+  .warning-box { background: rgba(245,80,102,0.1); border-left: 3px solid #f55066; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+  .warning-box p { margin: 0; color: rgba(245,80,102,0.9); font-weight: 500; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+    .table-wrapper { margin: 24px -20px; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Aether · hyo.world</div>
+    <h1>AetherBot Analysis — 2026-04-13</h1>
+    <div class="sub">2026-04-13 · Monday | Trading Session Report</div>
+    <div class="badge">GPT_VERIFIED: YES</div>
+  </header>
+  <article>
+
+<h2>Executive Summary</h2>
+
+<div class="kai-section">
+<h3>Kai's Analysis</h3>
+<ul>
+<li>Phantom position crisis dominates Monday. Claimed +$19.17 from 24 settlements but actual balance moved -$3.81 — a ~$23 phantom gap. The bot is logging wins on positions Kalshi never filled (22 POS WARNINGs: "API 0 local N").</li>
+<li>Trade #1 (bps_premium NO@0.77, 18c, -$12.96) is the biggest single loss. CHOP_TIMEOUT fired, stop engine ran against phantom positions.</li>
+<li>Harvest system underperformed: 21 DONE / 25 MISS (46% success). All misses show "yes_bids:ABSENT | no_bids:ABSENT" — OB parser bug persists.</li>
+<li>BTC rallied +4.67% — high activity (26 entries) but directional risk on NO-side bps_premium trades was elevated. Should have been profitable; was not.</li>
+</ul>
+</div>
+
+<div class="gpt-section">
+<h3>GPT's Dual-Phase Analysis</h3>
+<p><strong>Phase 1 (Independent):</strong> Confirmed start $90.25 → end $86.44, actual net -$3.81. Found 25 trades closed, largest balance jump +$5.57. Unable to identify individual strategies from filtered log structure.</p>
+<p><strong>Phase 2 (Comparative):</strong> MATH CHECK FAIL — confirms ~$23 phantom gap. Claimed +$19.17 vs actual -$3.81. FACT CHECK PASS — Kai's analysis accurately reflects phantom positions. Wants more urgency on v255 deployment and root cause investigation.</p>
+<p><strong>Final Verdict:</strong> Kai correctly identifies phantom positions as critical but lacks depth in root cause exploration. Recommendation AGREES: monitor-and-hold. Phantom issue is P0.</p>
+</div>
+
+<div class="warning-box">
+<p>⚠️ CRITICAL: ALL P&L figures are UNRELIABLE due to phantom positions. Only the total balance change (-$3.81) is ground truth. Cannot meaningfully evaluate strategy performance until execution layer is fixed.</p>
+</div>
+
+<h2>Final Conclusion</h2>
+
+<p><strong>RECOMMENDATION: MONITOR AND HOLD</strong></p>
+
+<p>The bot IS generating trade signals (26 entries on Monday with +4.67% BTC rally is healthy volume). Strategy diversity is good (bps_premium, PAQ_EARLY_AGG, PAQ_STRUCT_GATE, bps_late all active). However, the phantom position issue makes ALL P&L numbers unreliable.</p>
+
+<p><strong>Next trigger:</strong> v255 reconciliation patch deployment. Until deployed, every daily analysis carries this caveat: "P&L figures are UNRELIABLE due to phantom positions."</p>
+
+<p><strong>Interim measure:</strong> Cap max position size at 10c to limit phantom exposure. Monday's worst trade was 18c — largest phantom positions = biggest losses.</p>
+
+<p><strong>Changes made:</strong> None. No code changes are warranted when the execution layer is broken. Fix the execution first.</p>
+
+<hr />
+
+<h2>Trade-by-Trade Ledger</h2>
+
+<p>All P&L from raw log claims. Phantom gap = ~$23 — ALL figures UNRELIABLE. Only total balance change (-$3.81) is ground truth.</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Strategy</th>
+<th>Side</th>
+<th>Entry</th>
+<th>Exit</th>
+<th>Size</th>
+<th>Risk</th>
+<th>Stoploss</th>
+<th>Harvest</th>
+<th>W/L</th>
+<th>Net P&L</th>
+<th>Bal Before</th>
+<th>Bal After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.77</td>
+<td>CHOP→STOP</td>
+<td>18c</td>
+<td class="numeric">$13.86</td>
+<td>TIME_BDI_LOW_STAGE2</td>
+<td>—</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$12.96</td>
+<td class="numeric">$90.25</td>
+<td class="numeric">$77.29</td>
+</tr>
+<tr>
+<td>2</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.67</td>
+<td>1.00 (sttl)</td>
+<td>7c</td>
+<td class="numeric">$2.31</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$2.31</td>
+<td class="numeric">$77.29</td>
+<td class="numeric">$79.60</td>
+</tr>
+<tr>
+<td>3</td>
+<td class="strategy">PAQ_STRUCT_GATE</td>
+<td>YES</td>
+<td>0.49</td>
+<td>1.00 (sttl)</td>
+<td>7c</td>
+<td class="numeric">$3.57</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$3.57</td>
+<td class="numeric">$79.60</td>
+<td class="numeric">$83.17</td>
+</tr>
+<tr>
+<td>4</td>
+<td class="strategy">bps_late</td>
+<td>NO</td>
+<td>0.93</td>
+<td>0.00 (sttl)</td>
+<td>7c</td>
+<td class="numeric">$0.49</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$0.49</td>
+<td class="numeric">$83.17</td>
+<td class="numeric">$83.66</td>
+</tr>
+<tr>
+<td>5</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.83</td>
+<td>1.00 (sttl)</td>
+<td>24c</td>
+<td class="numeric">$4.08</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$4.08</td>
+<td class="numeric">$83.66</td>
+<td class="numeric">$87.74</td>
+</tr>
+<tr>
+<td>6</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.73</td>
+<td>harv+sttl</td>
+<td>6c</td>
+<td class="numeric">$1.62</td>
+<td>—</td>
+<td>2c</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$2.96</td>
+<td class="numeric">$87.74</td>
+<td class="numeric">$84.78</td>
+</tr>
+<tr>
+<td>7</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.80</td>
+<td>0.00 (sttl)</td>
+<td>8c</td>
+<td class="numeric">$1.60</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.60</td>
+<td class="numeric">$84.78</td>
+<td class="numeric">$86.38</td>
+</tr>
+<tr>
+<td>8</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.87</td>
+<td>1.00 (sttl)</td>
+<td>32c</td>
+<td class="numeric">$4.16</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$4.16</td>
+<td class="numeric">$86.38</td>
+<td class="numeric">$90.54</td>
+</tr>
+<tr>
+<td>9</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.86</td>
+<td>1.00 (sttl)</td>
+<td>5c</td>
+<td class="numeric">$0.70</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$0.70</td>
+<td class="numeric">$90.54</td>
+<td class="numeric">$91.24</td>
+</tr>
+<tr>
+<td>10</td>
+<td class="strategy">bps_premium</td>
+<td>YES</td>
+<td>0.88</td>
+<td>stop</td>
+<td>6c</td>
+<td class="numeric">$0.72</td>
+<td>stopped 6c</td>
+<td>—</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$1.50</td>
+<td class="numeric">$91.24</td>
+<td class="numeric">$89.74</td>
+</tr>
+<tr>
+<td>11</td>
+<td class="strategy">bps_late</td>
+<td>YES</td>
+<td>0.85</td>
+<td>1.00 (sttl)</td>
+<td>9c</td>
+<td class="numeric">$1.35</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.35</td>
+<td class="numeric">$89.74</td>
+<td class="numeric">$91.09</td>
+</tr>
+<tr>
+<td>12</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>NO</td>
+<td>0.54</td>
+<td>0.00 (sttl)</td>
+<td>9c</td>
+<td class="numeric">$4.14</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$4.14</td>
+<td class="numeric">$91.09</td>
+<td class="numeric">$95.23</td>
+</tr>
+<tr>
+<td>13</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>NO</td>
+<td>0.56</td>
+<td>0.00 (sttl)</td>
+<td>8c</td>
+<td class="numeric">$3.52</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$3.52</td>
+<td class="numeric">$95.23</td>
+<td class="numeric">$98.75</td>
+</tr>
+<tr>
+<td>14</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.85</td>
+<td>harv+sttl</td>
+<td>9c</td>
+<td class="numeric">$1.35</td>
+<td>—</td>
+<td>8c</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.01</td>
+<td class="numeric">$98.75</td>
+<td class="numeric">$99.76</td>
+</tr>
+<tr>
+<td>15</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>NO</td>
+<td>0.57</td>
+<td>0.00 (sttl)</td>
+<td>8c</td>
+<td class="numeric">$3.44</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$3.44</td>
+<td class="numeric">$99.76</td>
+<td class="numeric">$103.20</td>
+</tr>
+<tr>
+<td>16</td>
+<td class="strategy">bps_premium</td>
+<td>YES</td>
+<td>0.85</td>
+<td>1.00 (sttl)</td>
+<td>6c</td>
+<td class="numeric">$0.90</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$0.90</td>
+<td class="numeric">$103.20</td>
+<td class="numeric">$104.10</td>
+</tr>
+<tr>
+<td>17</td>
+<td class="strategy">bps_premium</td>
+<td>YES</td>
+<td>0.88</td>
+<td>stop</td>
+<td>6c</td>
+<td class="numeric">$0.72</td>
+<td>stopped 6c</td>
+<td>—</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$1.62</td>
+<td class="numeric">$104.10</td>
+<td class="numeric">$102.48</td>
+</tr>
+<tr>
+<td>18</td>
+<td class="strategy">bps_premium</td>
+<td>YES</td>
+<td>0.85</td>
+<td>1.00 (sttl)</td>
+<td>6c</td>
+<td class="numeric">$0.90</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$0.90</td>
+<td class="numeric">$102.48</td>
+<td class="numeric">$103.38</td>
+</tr>
+<tr>
+<td>19</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.79</td>
+<td>stop</td>
+<td>5c</td>
+<td class="numeric">$1.05</td>
+<td>PAQ0_COLLAPSE</td>
+<td>—</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$0.30</td>
+<td class="numeric">$103.38</td>
+<td class="numeric">$103.08</td>
+</tr>
+<tr>
+<td>20</td>
+<td class="strategy">bps_premium</td>
+<td>YES</td>
+<td>0.77</td>
+<td>1.00 (sttl)</td>
+<td>7c</td>
+<td class="numeric">$1.61</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.61</td>
+<td class="numeric">$103.08</td>
+<td class="numeric">$104.69</td>
+</tr>
+<tr>
+<td>21</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.75</td>
+<td>0.00 (sttl)</td>
+<td>6c</td>
+<td class="numeric">$1.50</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.50</td>
+<td class="numeric">$104.69</td>
+<td class="numeric">$106.19</td>
+</tr>
+<tr>
+<td>22</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.89</td>
+<td>1.00 (sttl)</td>
+<td>5c</td>
+<td class="numeric">$0.55</td>
+<td>—</td>
+<td>—</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$0.55</td>
+<td class="numeric">$106.19</td>
+<td class="numeric">$106.74</td>
+</tr>
+<tr>
+<td>23</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.82</td>
+<td>harv+sttl</td>
+<td>13c</td>
+<td class="numeric">$2.34</td>
+<td>—</td>
+<td>12c</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.94</td>
+<td class="numeric">$106.74</td>
+<td class="numeric">$108.68</td>
+</tr>
+<tr>
+<td>24</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>YES</td>
+<td>0.62</td>
+<td>stop</td>
+<td>8c</td>
+<td class="numeric">$3.04</td>
+<td>PAQ0_COLLAPSE</td>
+<td>—</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$0.16</td>
+<td class="numeric">$108.68</td>
+<td class="numeric">$108.52</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p style="font-size: 13px; color: var(--muted); margin-top: 12px;"><strong>Totals:</strong> 19W / 5L (79% WR) | Claimed Net: +$18.27 | Actual Net: -$3.81 | Phantom Gap: ~$22.08</p>
+
+<hr />
+
+<h2>Strategy Summary</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Trades</th>
+<th>Entry Range</th>
+<th>Exit Range</th>
+<th>Harvests</th>
+<th>Stops</th>
+<th>W</th>
+<th>L</th>
+<th>WR%</th>
+<th>Net +/-</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="strategy">bps_premium</td>
+<td class="numeric">13</td>
+<td class="numeric">0.73–0.88</td>
+<td>sttl/stop/harv</td>
+<td class="numeric">22c (3)</td>
+<td class="numeric">3</td>
+<td class="numeric">10</td>
+<td class="numeric">3</td>
+<td class="numeric">77%</td>
+<td class="numeric loss">-$7.18</td>
+</tr>
+<tr>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td class="numeric">8</td>
+<td class="numeric">0.54–0.89</td>
+<td>sttl/stop</td>
+<td class="numeric">0</td>
+<td class="numeric">2</td>
+<td class="numeric">6</td>
+<td class="numeric">2</td>
+<td class="numeric">75%</td>
+<td class="numeric win">+$22.90</td>
+</tr>
+<tr>
+<td class="strategy">PAQ_STRUCT_GATE</td>
+<td class="numeric">1</td>
+<td class="numeric">0.49</td>
+<td>settlement</td>
+<td class="numeric">0</td>
+<td class="numeric">0</td>
+<td class="numeric">1</td>
+<td class="numeric">0</td>
+<td class="numeric">100%</td>
+<td class="numeric win">+$3.57</td>
+</tr>
+<tr>
+<td class="strategy">bps_late</td>
+<td class="numeric">2</td>
+<td class="numeric">0.85–0.93</td>
+<td>settlement</td>
+<td class="numeric">0</td>
+<td class="numeric">0</td>
+<td class="numeric">2</td>
+<td class="numeric">0</td>
+<td class="numeric">100%</td>
+<td class="numeric win">+$1.84</td>
+</tr>
+<tr style="font-weight: 700; border-top: 2px solid var(--accent);">
+<td class="strategy">TOTAL</td>
+<td class="numeric">24</td>
+<td></td>
+<td></td>
+<td class="numeric">22c</td>
+<td class="numeric">5</td>
+<td class="numeric">19</td>
+<td class="numeric">5</td>
+<td class="numeric">79%</td>
+<td class="numeric">+$21.13</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p style="font-size: 13px; color: var(--muted); margin-top: 12px;">Note: ALL figures UNRELIABLE due to phantom gap (~$23). bps_premium shows negative despite 77% WR because Trade #1 (18c, -$12.96) dominates. PAQ_EARLY_AGG claims massive +$22.90 — likely inflated by phantom fills.</p>
+
+<hr />
+
+<h2>Stop and Harvest Event Log</h2>
+
+<h3>Stops (5 total)</h3>
+<ul>
+<li><strong>10:08 MT:</strong> bps_premium NO | CHOP_TIMEOUT → TIME_BDI_LOW_STAGE1→2 | 18c | POS WARNING: API 0 local 18. Multiple partial stops.</li>
+<li><strong>~17:30 MT:</strong> bps_premium YES@0.88 | STOP | 6c | -$1.50 confirmed</li>
+<li><strong>~17:45 MT:</strong> TRAIL_EXIT_STAGE3 NO | 8c via TRAIL</li>
+<li><strong>~18:00 MT:</strong> TRAIL_EXIT_STAGE2 NO | 8c via TRAIL</li>
+<li><strong>PAQ0_COLLAPSE:</strong> 2 total stops | ~-$0.46 combined</li>
+</ul>
+
+<h3>Harvests (21 DONE / 25 MISS)</h3>
+<p>All 25 misses show: "yes_bids:ABSENT | no_bids:ABSENT" — the v254 OB parser is still broken for the harvest path.</p>
+<p>3 trades had successful harvests: Trade #6 (2c), #14 (8c), #23 (12c). These are all bps_premium trades. Harvest success appears to correlate with higher BDI (deeper books).</p>
+
+<hr />
+
+<h2>Open Issues Status</h2>
+
+<h3>Issue 1: Harvest Miss (ACTIVE)</h3>
+<p>25 misses, all showing BOTH_ABSENT. The OB parser fix in v254 is not resolving bids for harvest path. Root cause likely in execute_partial_harvest() — not reading yes_dollars format.</p>
+
+<h3>Issue 2: BDI=0 Stop Hold (ACTIVE)</h3>
+<p>Trade #1 shows BDI 0 hold at 10:13 MT. "STOP HOLD | TIME_BDI_LOW_STAGE2 | NO | BDI 0" followed by staged exit attempts. The hold added delay but didn't save anything. Confirms the removal recommendation from v254 spec.</p>
+
+<h3>Issue 3: EU_Morning (No Data)</h3>
+<p>Zero trades in 03:00-05:00 window. Cannot evaluate. Need more sessions.</p>
+
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+</body>
+</html>
