@@ -2,157 +2,214 @@
   "agent": "aether.hyo",
   "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
   "status": "active",
-  "lastUpdated": "2026-04-12T21:35:00-06:00",
+  "lastUpdated": "2026-04-14T21:45:00-06:00",
   "currentWeek": {
     "start": "2026-04-13",
     "end": "2026-04-19",
     "startingBalance": 90.25,
-    "currentBalance": 104.74,
-    "pnl": 14.49,
-    "pnlPercent": 16.06,
-    "trades": 0,
-    "wins": 0,
-    "losses": 0,
-    "winRate": 0.0,
-    "stoplossTriggers": 0,
-    "harvestEvents": 0,
+    "currentBalance": 103.67,
+    "pnl": 13.42,
+    "pnlPercent": 14.87,
+    "trades": 44,
+    "wins": 33,
+    "losses": 11,
+    "winRate": 75.0,
+    "stoplossTriggers": 11,
+    "harvestEvents": 54,
+    "harvestDone": 54,
+    "harvestMiss": 33,
+    "phantomWarnings": 62,
     "strategies": [
       {
         "name": "bps_premium",
         "status": "active",
-        "pnl": 0.0,
-        "trades": 0,
-        "winRate": 0.0,
-        "lastAction": "2026-04-12T21:35:00-06:00"
+        "pnl": -4.67,
+        "trades": 25,
+        "wins": 19,
+        "losses": 6,
+        "winRate": 76.0,
+        "stoplossTriggers": 6,
+        "harvests": 22,
+        "entryRange": "0.72-0.88",
+        "lastAction": "2026-04-14T19:30:00-06:00"
       },
       {
         "name": "PAQ_EARLY_AGG",
         "status": "active",
-        "pnl": 0.0,
-        "trades": 0,
-        "winRate": 0.0,
-        "lastAction": "2026-04-12T20:15:00-06:00"
+        "pnl": 25.29,
+        "trades": 13,
+        "wins": 9,
+        "losses": 4,
+        "winRate": 69.2,
+        "stoplossTriggers": 4,
+        "harvests": 19,
+        "entryRange": "0.54-0.89",
+        "lastAction": "2026-04-14T19:30:00-06:00"
       },
       {
         "name": "bps_late",
         "status": "active",
-        "pnl": 0.0,
-        "trades": 0,
-        "winRate": 0.0,
-        "lastAction": "2026-04-11T15:30:00-06:00"
+        "pnl": 2.50,
+        "trades": 3,
+        "wins": 3,
+        "losses": 0,
+        "winRate": 100.0,
+        "stoplossTriggers": 0,
+        "harvests": 0,
+        "entryRange": "0.85-0.93",
+        "lastAction": "2026-04-14T19:45:00-06:00"
       },
       {
         "name": "BCDP_FAST_COMMIT",
-        "status": "active",
+        "status": "inactive",
         "pnl": 0.0,
         "trades": 0,
+        "wins": 0,
+        "losses": 0,
         "winRate": 0.0,
+        "stoplossTriggers": 0,
+        "harvests": 0,
+        "entryRange": "—",
         "lastAction": "2026-04-10T04:30:00-06:00"
       },
       {
         "name": "PAQ_STRUCT_GATE",
-        "status": "caution",
-        "pnl": 0.0,
-        "trades": 0,
-        "winRate": 0.0,
-        "lastAction": "2026-04-09T14:00:00-06:00"
+        "status": "active",
+        "pnl": 11.75,
+        "trades": 3,
+        "wins": 2,
+        "losses": 1,
+        "winRate": 66.7,
+        "stoplossTriggers": 1,
+        "harvests": 20,
+        "entryRange": "0.47-0.49",
+        "lastAction": "2026-04-14T16:00:00-06:00"
       },
       {
         "name": "WES_EARLY",
-        "status": "monitoring",
-        "pnl": 0.0,
-        "trades": 0,
-        "winRate": 0.0,
-        "lastAction": "2026-04-09T11:00:00-06:00"
+        "status": "active",
+        "pnl": 2.28,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "winRate": 100.0,
+        "stoplossTriggers": 0,
+        "harvests": 0,
+        "entryRange": "0.43",
+        "lastAction": "2026-04-14T19:00:00-06:00"
       }
     ],
     "dailyPnl": [
       {
         "date": "2026-04-13",
-        "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
+        "day": "Monday",
+        "pnl": -3.81,
+        "claimedPnl": 19.17,
+        "phantomGap": -22.98,
+        "balance": 86.44,
+        "trades": 24,
+        "wins": 19,
+        "losses": 5,
+        "winRate": 79.2,
+        "stoplossTriggers": 5,
+        "harvestDone": 21,
+        "harvestMiss": 25,
+        "posWarnings": 22,
+        "btcChange": "+4.67%",
+        "strategies": {
+          "bps_premium": {"trades": 13, "wins": 10, "losses": 3, "net": -7.18},
+          "PAQ_EARLY_AGG": {"trades": 8, "wins": 6, "losses": 2, "net": 22.90},
+          "PAQ_STRUCT_GATE": {"trades": 1, "wins": 1, "losses": 0, "net": 3.57},
+          "bps_late": {"trades": 2, "wins": 2, "losses": 0, "net": 1.84}
+        }
       },
       {
         "date": "2026-04-14",
-        "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
+        "day": "Tuesday",
+        "pnl": 17.23,
+        "claimedPnl": 16.02,
+        "phantomGap": 1.21,
+        "balance": 103.67,
+        "trades": 20,
+        "wins": 14,
+        "losses": 6,
+        "winRate": 70.0,
+        "stoplossTriggers": 6,
+        "harvestDone": 33,
+        "harvestMiss": 8,
+        "posWarnings": 40,
+        "btcChange": "+0.5%",
+        "strategies": {
+          "bps_premium": {"trades": 12, "wins": 9, "losses": 3, "net": 2.51},
+          "PAQ_EARLY_AGG": {"trades": 5, "wins": 3, "losses": 2, "net": 2.39},
+          "PAQ_STRUCT_GATE": {"trades": 2, "wins": 1, "losses": 1, "net": 8.18},
+          "WES_EARLY": {"trades": 1, "wins": 1, "losses": 0, "net": 2.28},
+          "bps_late": {"trades": 1, "wins": 1, "losses": 0, "net": 0.66}
+        }
       },
       {
         "date": "2026-04-15",
+        "day": "Wednesday",
         "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
+        "balance": 103.67,
+        "trades": 0,
+        "note": "pending"
       },
       {
         "date": "2026-04-16",
+        "day": "Thursday",
         "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
+        "balance": 103.67,
+        "trades": 0,
+        "note": "pending"
       },
       {
         "date": "2026-04-17",
+        "day": "Friday",
         "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
-      },
-      {
-        "date": "2026-04-18",
-        "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
-      },
-      {
-        "date": "2026-04-19",
-        "pnl": 0.0,
-        "balance": 90.25,
-        "trades": 0
+        "balance": 103.67,
+        "trades": 0,
+        "note": "pending"
       }
     ],
-    "recentTrades": []
-  },
-  "lastWeek": {
-    "start": "2026-04-13",
-    "end": "2026-04-19",
-    "startingBalance": 90.25,
-    "endingBalance": 90.25,
-    "pnl": 0.0,
-    "pnlPercent": 0.0,
-    "trades": 0,
-    "wins": 0,
-    "losses": 0,
-    "winRate": 0.0,
-    "stoplossTriggers": 0,
-    "harvestEvents": 0,
-    "bestStrategy": "bps_premium",
-    "worstStrategy": "bps_premium"
-  },
-  "allTimeStats": {
-    "totalPnl": -2.79,
-    "totalTrades": 542,
-    "weeklyHistory": [
-      {
-        "start": "2026-04-07",
-        "end": "2026-04-12",
-        "pnl": -2.79,
-        "trades": 542,
-        "winRate": 92.4
-      }
+    "weeklyCompounding": {
+      "monStart": 90.25,
+      "monEnd": 86.44,
+      "monNet": -3.81,
+      "tueStart": 86.44,
+      "tueEnd": 103.67,
+      "tueNet": 17.23,
+      "cumulativeNet": 13.42,
+      "cumulativePercent": 14.87
+    },
+    "recentTrades": [
+      {"date": "2026-04-14", "strategy": "PAQ_STRUCT_GATE", "side": "NO", "entry": 0.48, "size": 20, "net": 8.43, "wl": "WIN", "harvest": 17, "note": "Best trade of the week"},
+      {"date": "2026-04-14", "strategy": "bps_premium", "side": "NO", "entry": 0.72, "size": 9, "net": -5.04, "wl": "LOSS", "stoploss": "TRAIL_EXIT_STAGE2", "note": "Biggest Tue loss"},
+      {"date": "2026-04-14", "strategy": "WES_EARLY", "side": "YES", "entry": 0.43, "size": 4, "net": 2.28, "wl": "WIN", "note": "First WES_EARLY this week"},
+      {"date": "2026-04-13", "strategy": "bps_premium", "side": "NO", "entry": 0.77, "size": 18, "net": -12.96, "wl": "LOSS", "stoploss": "TIME_BDI_LOW", "note": "Biggest loss all week"},
+      {"date": "2026-04-13", "strategy": "PAQ_EARLY_AGG", "side": "YES", "entry": 0.83, "size": 24, "net": 4.08, "wl": "WIN", "note": "Largest PAQ win"},
+      {"date": "2026-04-13", "strategy": "PAQ_EARLY_AGG", "side": "YES", "entry": 0.87, "size": 32, "net": 4.16, "wl": "WIN", "note": "Highest volume trade"}
     ]
   },
+  "openIssues": [
+    {"id": 1, "title": "Harvest Miss Root Cause (OB Parser)", "priority": "P0", "status": "ACTIVE", "detail": "yes_bids:ABSENT on all misses. v254 has yes_dollars but harvest path doesn't use it."},
+    {"id": 2, "title": "BDI=0 Stop Hold", "priority": "P1", "status": "ACTIVE", "detail": "Confirmed Mon 4/13 Trade #1. Stop hold at BDI=0 adds delay without saving anything."},
+    {"id": 3, "title": "EU_MORNING EV Monitoring", "priority": "P2", "status": "INSUFFICIENT DATA", "detail": "Zero trades in 03:00-05:00 window both days. Cannot evaluate."},
+    {"id": 4, "title": "Weekend Risk Profile", "priority": "P2", "status": "PENDING", "detail": "Not implemented. Need 2-3 more clean weekend sessions."}
+  ],
   "btcMarketContext": {
-    "period": "2026-04-07 to 2026-04-12",
-    "lowPrice": 67835.49,
-    "highPrice": 73675.7,
-    "priceRange": 5840.21,
-    "volatility": "moderate-high"
+    "period": "2026-04-13 to 2026-04-14",
+    "monBtc": {"open": 70974, "close": 74289, "change": "+4.67%"},
+    "tueBtc": {"open": 74265, "close": 74645, "change": "+0.5%"},
+    "volatility": "Monday high, Tuesday low"
   },
   "operationalMetadata": {
-    "dataSource": "REAL \u2014 AetherBot v254 live trading logs + analysis files",
+    "dataSource": "REAL — AetherBot v253/v254 live trading logs, raw settlement data from Kalshi",
     "logsLocation": "agents/aether/logs/",
+    "analysisLocation": "agents/aether/analysis/",
     "capital": "real",
-    "note": "Strategy data extracted from 6 days of trading logs + 41 analysis files. All P&L numbers are real USD from Kalshi binary options."
+    "phantomWarning": "Monday P&L figures UNRELIABLE (phantom gap ~$23). Tuesday figures PLAUSIBLE (gap +$1.21).",
+    "note": "Strategy P&L aggregates are sum of claimed settlements. Only balance change is ground truth."
   },
-  "updatedAt": "2026-04-14T20:28:13-06:00"
+  "updatedAt": "2026-04-14T21:45:00-06:00"
 }
