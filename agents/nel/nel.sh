@@ -676,12 +676,19 @@ fi
 # Findings feed into self-evolution reflection and PLAYBOOK updates.
 # ============================================================================
 RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+NEL_RESEARCH_PUBLISH_MARKER="/tmp/nel-research-published-$(TZ=America/Denver date +%Y%m%d)"
 if [[ -x "$RESEARCH_SCRIPT" ]]; then
-  log_info "Running domain research: security advisories, vulnerability feeds..."
-  if bash "$RESEARCH_SCRIPT" nel --publish 2>&1 | tail -5; then
-    log_pass "Domain research complete — findings saved and published to feed"
+  if [[ -f "$NEL_RESEARCH_PUBLISH_MARKER" ]]; then
+    log_info "Domain research: running metrics-only (already published to HQ today)"
+    bash "$RESEARCH_SCRIPT" nel 2>&1 | tail -3 || true
   else
-    log_warn "Domain research encountered issues — check agents/nel/research/"
+    log_info "Running domain research: security advisories, vulnerability feeds..."
+    if bash "$RESEARCH_SCRIPT" nel --publish 2>&1 | tail -5; then
+      touch "$NEL_RESEARCH_PUBLISH_MARKER"
+      log_pass "Domain research complete — findings saved and published to feed"
+    else
+      log_warn "Domain research encountered issues — check agents/nel/research/"
+    fi
   fi
 else
   log_warn "Research script not found or not executable: $RESEARCH_SCRIPT"
@@ -838,11 +845,17 @@ with open(sections_file, "w") as f:
 print(f"Nel reflection sections written to {sections_file}")
 PYEOF
 
+NEL_REPORT_PUBLISH_MARKER="/tmp/nel-report-published-$(TZ=America/Denver date +%Y%m%d)"
 if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
-  bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — QA & Security Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
-  log_pass "Self-authored report published to HQ feed"
+  if [[ -f "$NEL_REPORT_PUBLISH_MARKER" ]]; then
+    log_info "Self-authored report: skipping HQ publish (already published today)"
+  else
+    bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — QA & Security Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
+    touch "$NEL_REPORT_PUBLISH_MARKER"
+    log_pass "Self-authored report published to HQ feed"
+  fi
 
-  # Report to Kai — closed-loop upward communication
+  # Report to Kai — closed-loop upward communication (always fires for metrics)
   DISPATCH_BIN="$ROOT/bin/dispatch.sh"
   if [[ -x "$DISPATCH_BIN" ]]; then
     bash "$DISPATCH_BIN" report nel "research+reflection published: score=${IMPROVEMENT_SCORE}, sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f, cipher_leaks=${CIPHER_LEAKS}" 2>/dev/null || true

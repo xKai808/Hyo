@@ -387,9 +387,13 @@ fi
 # ── DOMAIN RESEARCH (External Research — agent-research.sh) ──
 # Ra researches newsletter craft, journalism, content synthesis, source diversification.
 RESEARCH_SCRIPT="$ROOT/bin/agent-research.sh"
+RA_RESEARCH_PUBLISH_MARKER="/tmp/ra-research-published-$(TZ=America/Denver date +%Y%m%d)"
 if [[ -x "$RESEARCH_SCRIPT" ]]; then
-  say "Running domain research: newsletter craft, journalism, content patterns..."
-  if bash "$RESEARCH_SCRIPT" ra --publish 2>&1 | tail -5; then
+  if [[ -f "$RA_RESEARCH_PUBLISH_MARKER" ]]; then
+    say "Domain research: running metrics-only (already published to HQ today)"
+    bash "$RESEARCH_SCRIPT" ra 2>&1 | tail -3 || true
+  elif bash "$RESEARCH_SCRIPT" ra --publish 2>&1 | tail -5; then
+    touch "$RA_RESEARCH_PUBLISH_MARKER"
     ok "Domain research complete — findings saved and published"
   else
     warn "Domain research encountered issues — check agents/ra/research/"
@@ -612,11 +616,17 @@ with open(sf, "w") as f:
     json.dump(sections, f, indent=2)
 PYEOF
 
+RA_REPORT_PUBLISH_MARKER="/tmp/ra-report-published-$(TZ=America/Denver date +%Y%m%d)"
 if [[ -f "$RA_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
-  bash "$PUBLISH_SCRIPT" "agent-reflection" "ra" "Ra — Content Pipeline Report" "$RA_REFLECTION" 2>/dev/null || true
-  ok "Self-authored report published to HQ feed"
+  if [[ -f "$RA_REPORT_PUBLISH_MARKER" ]]; then
+    say "Self-authored report: skipping HQ publish (already published today)"
+  else
+    bash "$PUBLISH_SCRIPT" "agent-reflection" "ra" "Ra — Content Pipeline Report" "$RA_REFLECTION" 2>/dev/null || true
+    touch "$RA_REPORT_PUBLISH_MARKER"
+    ok "Self-authored report published to HQ feed"
+  fi
 
-  # Report to Kai — closed-loop upward communication
+  # Report to Kai — closed-loop upward communication (always fires for metrics)
   DISPATCH_BIN="$ROOT/bin/dispatch.sh"
   if [[ -x "$DISPATCH_BIN" ]]; then
     bash "$DISPATCH_BIN" report ra "research+reflection published: newsletter=${nl_produced:+produced}${nl_produced:-blocked}, sources=${SOURCE_COUNT:-?}" 2>/dev/null || true
