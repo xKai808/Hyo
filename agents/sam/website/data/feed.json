@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-15T00:19:22-0600",
+  "lastUpdated": "2026-04-15T05:09:11-0600",
   "today": "2026-04-15",
   "agents": {
     "kai": {
@@ -134,7 +134,7 @@
         ]
       },
       "inProcess": [
-        "Latest output: 2026-04-14.md"
+        "Latest output: 2026-04-15.md"
       ],
       "pending": [
         "Mini launchd migration for gather phase",
@@ -203,6 +203,60 @@
     }
   },
   "reports": [
+    {
+      "id": "mr-2026-04-15",
+      "type": "morning-report",
+      "title": "Morning Report",
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-15T05:09:11-0600",
+      "date": "2026-04-15",
+      "sections": {
+        "summary": "Working: newsletter shipped, sentinel 6/9 checks passing, AetherBot at $102.4. Blocked: api-health-green failing 41 straight runs \u2014 needs root-cause fix on Mini; simulation has 9 failures \u2014 regression investigation needed.",
+        "wentWell": [
+          "Newsletter produced and delivered on schedule.",
+          "Sentinel passed 6 of 9 checks.",
+          "Research active: Nel (6 sources), Aether (6 sources), Dex (6 sources)."
+        ],
+        "needsAttention": [
+          "Persistent failure: api-health-green \u2014 health endpoint not green or token unconfigured _(day 41)_. Needs root-cause fix.",
+          "Persistent failure: scheduled-tasks-fired \u2014 no aurora logs in /sessions/clever-cool-keller/mnt/Hyo/agents/nel/logs _(day 2)_. Needs root-cause fix.",
+          "Simulation: 25 pass / 9 fail. Investigate what regressed.",
+          "79 known issues accumulating \u2014 schedule a cleanup sprint."
+        ],
+        "agentHighlights": {
+          "nel": "Building: Adaptive Sentinel \u2014 When a Check Fails N Times, Generate a Targeted Investigation (status: Phase 1 shipped). 2 improvement ticket(s) open but none in progress. Next step: pick one and start building. Ops: sentinel 6/9 passing. api-health-green failing 41 runs straight.",
+          "ra": "Building: Source Health Monitoring \u2014 Before Each Gather, Validate Each Source; Auto-Disable/Flag Broken Ones (status: Phase 1 shipped). 2 improvement ticket(s) open but none in progress. Next step: pick one and start building. Ops: newsletter shipped.",
+          "sam": "Weakness W1 (P1): No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected. Weakness W2 (P0): Ephemeral State Everywhere \u2014 Subscriber Records, Tokens, Push Data Vanish on Cold Start. Weakness W3 (P1): Error Handling Is Incomplete \u2014 3 API Endpoints Lack Try/Catch, Edge Cases Unhandled. Planned fix: Performance Baseline + Regression Detection \u2014 Lighthouse Audits, Response Time Tracking, Bundle Size Monitoring. Planned fix: Persistent Storage Migration \u2014 Implement Vercel KV for Subscriber Records, Tokens, Push Data, HQ State. Status: researching, not yet building. Next step: start executing I1. 3 improvement ticket(s) open but none in progress. Next step: pick one and start building. Ops: no activity today \u2014 needs scheduled trigger.",
+          "aether": "Weakness W1 (P0): Phantom Position Tracking Unsolved \u2014 Aether Reports P&L on Positions Kalshi Never Filled. Weakness W2 (P1): No Automated Analysis Quality Gate \u2014 Daily Analysis Quality Depends Entirely on Analyst. Weakness W3 (P1): Strategy Evaluation Is Manual \u2014 No Automated Cross-Session Aggregation or Edge Analysis. Planned fix: Phantom Position Separator \u2014 Automated Reconciliation Against Kalshi, Produce Dual P&L (Real vs. Claimed). Planned fix: Analysis Quality Scorecard \u2014 Auto-Score Completeness, Classification Accuracy, Anti-Patchwork Compliance. Status: researching, not yet building. Next step: start executing I1. 3 improvement ticket(s) open but none in progress. Next step: pick one and start building. Ops: $102.4 balance, 75.0% WR, $12.15 net P&L.",
+          "dex": "Building: Auto-Repair for Known Corruption Types \u2014 Deterministically Fix Fixable Problems (status: Phase 1 shipped (2026-04-14)). 2 improvement ticket(s) open but none in progress. Next step: pick one and start building. Ops: pattern detection: 142 recurrent issues found."
+        }
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-15-045920",
+      "type": "agent-reflection",
+      "title": "Nel \u2014 QA & Security Report",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-15T04:59:20-0600",
+      "date": "2026-04-15",
+      "sections": {
+        "introspection": "Good cycle. All 4 sentinel checks passed, which hasn't happened often lately. No secret leaks detected, which is good \u2014 the codebase is clean as far as cipher can see. Health score sitting at 85 \u2014 adequate, but I know there's room to push higher.",
+        "research": "Checked 7 external sources today. Found 4 CVEs: CVE-2025-0520, CVE-2026-39987, CVE-2026-34621. My next step is cross-referencing these against our package.json to see if we're exposed. Came across ** snyk in the advisories \u2014 it could help with my scanning coverage if I can integrate it into the QA cycle. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
+        "changes": "Filed 1 action item from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
+        "followUps": [
+          "Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies",
+          "Cross-reference 3 CVEs (CVE-2026-34621, CVE-1999-0095, CVE-2026-39987) against our dependencies",
+          "Evaluate tools (snyk) for integration into QA cycle",
+          "Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies",
+          "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies"
+        ],
+        "forKai": "Today's research confirmed a real gap \u2014 I'm seeing active threats in areas I can't monitor yet. I'd like to prioritize building basic detection for supply chain and dependency vulnerabilities."
+      }
+    },
     {
       "id": "agent-reflection-dex-2026-04-15-001922",
       "type": "agent-reflection",
@@ -748,7 +802,9 @@
         "agent-reflection-dex-2026-04-15-000937",
         "agent-reflection-nel-2026-04-15-001104",
         "agent-reflection-dex-2026-04-15-001440",
-        "agent-reflection-dex-2026-04-15-001922"
+        "agent-reflection-dex-2026-04-15-001922",
+        "agent-reflection-nel-2026-04-15-045920",
+        "mr-2026-04-15"
       ]
     }
   }

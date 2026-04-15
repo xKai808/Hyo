@@ -1,6 +1,6 @@
 {
-  "date": "2026-04-14",
-  "generatedAt": "2026-04-14T22:50:13-0600",
+  "date": "2026-04-15",
+  "generatedAt": "2026-04-15T05:09:11-0600",
   "generatedBy": "bin/generate-morning-report.sh v2",
   "systemHealth": {
     "healthcheck": {
@@ -12,13 +12,13 @@
       "passed": 25,
       "failed": 9
     },
-    "knownIssues": 71
+    "knownIssues": 79
   },
   "trading": {
-    "balance": 108.11,
+    "balance": 102.4,
     "trades": "?",
     "winRate": 75.0,
-    "pnl": 17.86,
+    "pnl": 12.15,
     "strategies": 6,
     "dailyPnl": [
       {
@@ -144,32 +144,28 @@
       "sentinel": {
         "passed": 6,
         "failed": 3,
-        "new_issues": [
-          {
-            "priority": 1,
-            "check": "scheduled-tasks-fired",
-            "detail": "no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs"
-          }
-        ],
+        "new_issues": [],
         "recurring": [
           {
             "priority": 0,
             "check": "api-health-green",
-            "detail": "health endpoint not green or token unconfigured _(day 33)_"
+            "detail": "health endpoint not green or token unconfigured _(day 41)_"
+          },
+          {
+            "priority": 1,
+            "check": "scheduled-tasks-fired",
+            "detail": "no aurora logs in /sessions/clever-cool-keller/mnt/Hyo/agents/nel/logs _(day 2)_"
           },
           {
             "priority": 2,
             "check": "task-queue-size",
-            "detail": "17 P0 tasks (overload threshold 5) _(day 14)_"
+            "detail": "17 P0 tasks (overload threshold 5) _(day 22)_"
           }
         ],
         "escalations": [
-          "**P0 escalated \u2014 failing 33 runs in a row**: health endpoint not green or token unconfigured"
+          "**P0 escalated \u2014 failing 41 runs in a row**: health endpoint not green or token unconfigured"
         ],
-        "resolved": [
-          "`aurora-ran-today:99aa58ee`",
-          "`scheduled-tasks-fired:d814cd3c`"
-        ]
+        "resolved": []
       },
       "cipher": {
         "ran": true,
@@ -183,28 +179,20 @@
         "successful": 6,
         "failed": [],
         "follow_ups": [
-          "[2026-04-13 +1d] Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies \u2014 open",
-          "[2026-04-13 +1d] Cross-reference 3 CVEs (CVE-2026-34621, CVE-1999-0095, CVE-2026-39987) against our ",
-          "[2026-04-13 +1d] Evaluate tools (snyk) for integration into QA cycle \u2014 open",
-          "[2026-04-14 +0d] Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our d",
-          "[2026-04-14 +0d] Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies \u2014 op"
+          "[2026-04-13 +2d] Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies \u2014 open",
+          "[2026-04-13 +2d] Cross-reference 3 CVEs (CVE-2026-34621, CVE-1999-0095, CVE-2026-39987) against our ",
+          "[2026-04-13 +2d] Evaluate tools (snyk) for integration into QA cycle \u2014 open",
+          "[2026-04-14 +1d] Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our d",
+          "[2026-04-14 +1d] Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies \u2014 op"
         ]
       }
     },
     "ra": {
       "newsletter_produced": true,
       "research": {
-        "sources_checked": 7,
-        "successful": 7,
-        "successful_sources": [
-          "Nieman Lab",
-          "Substack Reads",
-          "Hacker News AI/ML",
-          "AP News Top Stories",
-          "Reuters Lifestyle",
-          "Buttondown Blog",
-          "Reddit Newsletter Community"
-        ]
+        "sources_checked": 0,
+        "successful": 0,
+        "successful_sources": []
       }
     },
     "sam": {
@@ -214,9 +202,9 @@
       }
     },
     "aether": {
-      "analysis_exists": true,
+      "analysis_exists": false,
       "self_review_issues": [
-        "**2026-04-14-aether-results.json**: WHAT triggers this? Found 0 callers.",
+        "**2026-04-15-aether-results.json**: WHAT triggers this? Found 0 callers.",
         "**aether-daily-sections.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user",
         "**hq-state.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user",
         "**morning-report.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user",
@@ -226,8 +214,8 @@
         "sources_checked": 6,
         "successful": 6,
         "follow_ups": [
-          "[2026-04-13 +1d] Model Kelly Criterion against historical trades to find optimal position sizes \u2014 op",
-          "[2026-04-13 +1d] Investigate phantom position tracking \u2014 why fake positions appear in logs \u2014 open"
+          "[2026-04-13 +2d] Model Kelly Criterion against historical trades to find optimal position sizes \u2014 op",
+          "[2026-04-13 +2d] Investigate phantom position tracking \u2014 why fake positions appear in logs \u2014 open"
         ]
       }
     },
@@ -236,7 +224,7 @@
         "sources_checked": 6,
         "successful": 6,
         "follow_ups": [
-          "[2026-04-13 +1d] Evaluate auto-repair for corrupt JSONL entries vs just flagging \u2014 open"
+          "[2026-04-13 +2d] Evaluate auto-repair for corrupt JSONL entries vs just flagging \u2014 open"
         ]
       }
     }
