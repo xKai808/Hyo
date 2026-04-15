@@ -7,7 +7,7 @@
 #   3. Newsletter pipeline health (did today's brief ship?)
 #   4. HQ feed freshness (is the feed stale?)
 # ═══════════════════════════════════════════════════════════════════════════
-set -uo pipefail
+set -o pipefail
 
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 LOG_DIR="$ROOT/kai/memory/daily"

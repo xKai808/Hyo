@@ -4,7 +4,7 @@
 # Runs via launchd every hour. Checks all BLOCKED tickets against SLA.
 # Auto-escalates any that have breached. Writes to daily note.
 # ═══════════════════════════════════════════════════════════════════════════
-set -uo pipefail
+set -o pipefail
 
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 TICKET_SCRIPT="$ROOT/bin/ticket.sh"
