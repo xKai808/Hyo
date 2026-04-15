@@ -4,7 +4,7 @@
     "date": "2026-04-14",
     "generatedAt": "2026-04-14T05:09:00-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync at 20:10 MT. All three agents ran: sentinel (6 pass/3 fail, run #33), cipher (2 findings — secrets dir 755, no verified leaks), nel (score 65, 15 broken links, 5 audit issues). Sentinel resolved 2 prior failures (aurora-ran-today, scheduled-tasks-fired). Core blockers: API health failing 33 consecutive runs (P0 ESCALATION), task queue overloaded at 17 P0 (threshold 5). Nel self-delegated broken link fix. System health below 70 target.",
+    "summary": "Ops sync at 20:10 MT. All three agents ran: sentinel (6 pass/3 fail, run #33), cipher (2 findings \u2014 secrets dir 755, no verified leaks), nel (score 65, 15 broken links, 5 audit issues). Sentinel resolved 2 prior failures (aurora-ran-today, scheduled-tasks-fired). Core blockers: API health failing 33 consecutive runs (P0 ESCALATION), task queue overloaded at 17 P0 (threshold 5). Nel self-delegated broken link fix. System health below 70 target.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,98 +14,98 @@
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint failing — 33 consecutive sentinel runs (P0 ESCALATION)",
+      "API health endpoint failing \u2014 33 consecutive sentinel runs (P0 ESCALATION)",
       "Sentinel resolved 2 checks this run: aurora-ran-today, scheduled-tasks-fired",
-      "Cipher: .secrets/ dir at 755 (should be 700) — P1 perm drift",
-      "Nel health score 65 — below 70 target, 15 broken doc links persist",
-      "Task queue overloaded — 17 P0 tasks (threshold 5, day 14)"
+      "Cipher: .secrets/ dir at 755 (should be 700) \u2014 P1 perm drift",
+      "Nel health score 65 \u2014 below 70 target, 15 broken doc links persist",
+      "Task queue overloaded \u2014 17 P0 tasks (threshold 5, day 14)"
     ]
   },
   "events": [
     {
       "ts": "2026-04-14T20:10:13-06:00",
       "agent": "nel",
-      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Self-delegated broken link fix. Health below target.",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 verified leaks. Self-delegated broken link fix. Health below target.",
       "doc": "/viewer?agent=nel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T20:10:13-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep run #33 — 6 passed, 3 failed. Resolved 2 (aurora-ran-today, scheduled-tasks-fired). API health down day 33, task overload day 14.",
+      "msg": "QA sweep run #33 \u2014 6 passed, 3 failed. Resolved 2 (aurora-ran-today, scheduled-tasks-fired). API health down day 33, task overload day 14.",
       "doc": "/viewer?agent=sentinel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T20:10:13-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
     },
     {
       "ts": "2026-04-14T15:54:02-06:00",
       "agent": "nel",
-      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 leaks. Safeguard cascade triggered for missing newsletter. Self-review: 4 HQ data files invisible (not in hq.html).",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 leaks. Safeguard cascade triggered for missing newsletter. Self-review: 4 HQ data files invisible (not in hq.html).",
       "doc": "/viewer?agent=nel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T15:54:02-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep run #32 — 5 passed, 4 failed (aurora missing day 3, API health down day 32, task overload at 17 day 13)",
+      "msg": "QA sweep run #32 \u2014 5 passed, 4 failed (aurora missing day 3, API health down day 32, task overload at 17 day 13)",
       "doc": "/viewer?agent=sentinel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T15:54:02-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, all permissions correct, clean"
+      "msg": "Security scan \u2014 0 verified leaks, all permissions correct, clean"
     },
     {
       "ts": "2026-04-14T08:10:35-06:00",
       "agent": "nel",
-      "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks, 5 sensitive files outside .secrets/",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks, 5 sensitive files outside .secrets/",
       "doc": "/viewer?agent=nel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T08:10:35-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep run #29 — 5 passed, 4 failed (aurora missing day 3, API health down day 29, task overload at 17)",
+      "msg": "QA sweep run #29 \u2014 5 passed, 4 failed (aurora missing day 3, API health down day 29, task overload at 17)",
       "doc": "/viewer?agent=sentinel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T08:10:35-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, all permissions correct, clean"
+      "msg": "Security scan \u2014 0 verified leaks, all permissions correct, clean"
     },
     {
       "ts": "2026-04-14T04:10:27-06:00",
       "agent": "nel",
-      "msg": "System sweep — score 65 (regression from 85), 15 broken links, 2 sentinel projects with findings, 0 leaks",
+      "msg": "System sweep \u2014 score 65 (regression from 85), 15 broken links, 2 sentinel projects with findings, 0 leaks",
       "doc": "/viewer?agent=nel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T04:10:27-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep — 5 passed, 4 failed (aurora missing day 3, API health down day 28, task overload at 17)",
+      "msg": "QA sweep \u2014 5 passed, 4 failed (aurora missing day 3, API health down day 28, task overload at 17)",
       "doc": "/viewer?agent=sentinel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T04:10:27-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, all permissions correct, clean"
+      "msg": "Security scan \u2014 0 verified leaks, all permissions correct, clean"
     },
     {
       "ts": "2026-04-14T00:10:45-06:00",
       "agent": "nel",
-      "msg": "System sweep — score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 2 sentinel projects with findings, 0 leaks",
       "doc": "/viewer?agent=nel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T00:10:45-06:00",
       "agent": "sentinel",
-      "msg": "QA sweep — 5 passed, 4 failed (aurora missing day 3, API health down day 22, task overload at 17)",
+      "msg": "QA sweep \u2014 5 passed, 4 failed (aurora missing day 3, API health down day 22, task overload at 17)",
       "doc": "/viewer?agent=sentinel&file=2026-04-14"
     },
     {
       "ts": "2026-04-14T00:10:45-06:00",
       "agent": "cipher",
-      "msg": "Security scan — 0 verified leaks, all permissions correct, clean"
+      "msg": "Security scan \u2014 0 verified leaks, all permissions correct, clean"
     }
   ],
   "ra": {
@@ -124,10 +124,10 @@
     "failed": 4,
     "totalRuns": 32,
     "findings": [
-      "P0: aurora-ran-today — no newsletter for 2026-04-14 (day 3, ESCALATED)",
-      "P0: api-health-green — endpoint failing (day 32, ESCALATED)",
-      "P1: scheduled-tasks-fired — no aurora logs detected (day 3, elevated)",
-      "P2: task-queue-size — 17 P0 tasks (overload threshold 5, day 13)"
+      "P0: aurora-ran-today \u2014 no newsletter for 2026-04-14 (day 3, ESCALATED)",
+      "P0: api-health-green \u2014 endpoint failing (day 32, ESCALATED)",
+      "P1: scheduled-tasks-fired \u2014 no aurora logs detected (day 3, elevated)",
+      "P2: task-queue-size \u2014 17 P0 tasks (overload threshold 5, day 13)"
     ],
     "escalations": [
       "P0 escalated: api-health-green failing 32 runs in a row",
@@ -140,7 +140,7 @@
     "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "Clean scan — 0 verified leaks, all permissions correct",
+    "notes": "Clean scan \u2014 0 verified leaks, all permissions correct",
     "latestDoc": null
   },
   "sim": {
@@ -153,16 +153,16 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-15T02:09:37Z",
-    "improvementScore": 65,
-    "findingsCount": 2,
+    "lastRun": "2026-04-15T04:39:41Z",
+    "improvementScore": 85,
+    "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 15,
     "untested": 9,
     "inefficient": 1,
     "sentinel": {
-      "pass": 2,
-      "fail": 2
+      "pass": 4,
+      "fail": 0
     },
     "cipher": {
       "leaks": 0

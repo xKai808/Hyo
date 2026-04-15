@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-04-14T20:09
+# nel Self-Review — 2026-04-14T22:39
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-14-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -26,8 +26,7 @@ Questions for nel to answer:
   - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
-- Prior resolutions for 'nel': 4 matches
-- Agent: review relevant resolutions before starting new work.
+- Prior resolutions for 'nel': 0 matches
 
 ## Gate 5: Gate Adoption
 - ✗ **aether/verify.sh** does not source agent-gates.sh
@@ -44,5 +43,5 @@ Questions for nel to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 9
-- Gate results: trigger=15/16, visibility=checked, resolutions=3, adoption=1/5
+- Gate results: trigger=17/18, visibility=checked, resolutions=3, adoption=1/5
 
