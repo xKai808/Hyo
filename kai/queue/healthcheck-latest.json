@@ -1,18 +1,13 @@
 {
-  "ts": "2026-04-15T05:04:47Z",
+  "ts": "2026-04-15T10:54:28Z",
   "status": "ISSUES",
-  "issues": 6,
+  "issues": 5,
   "warnings": 5,
   "findings": [
     {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "3 unaddressed P0/P1 flags in last 2h"
-    },
-    {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker last active 493397h ago \u2014 may be dead"
+      "detail": "Worker last active 493402h ago \u2014 may be dead"
     },
     {
       "severity": "P0",
@@ -47,7 +42,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
+      "detail": "aether stuck in dead-loop (bottleneck_stuck): dashboard out-of-sync \u2014 data exists but HQ doesn't render "
     },
     {
       "severity": "P1",
@@ -57,11 +52,29 @@
     {
       "severity": "P1",
       "area": "ticket-sla",
-      "detail": "6 tickets have breached SLA"
+      "detail": "21 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
   "recent_queue_results": [
+    {
+      "id": "recheck-flag-kai-001",
+      "status": "ok",
+      "command": "bash /sessions/upbeat-trusting-ptolemy/mnt/Hyo/kai/queue/healthcheck.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "event-dex-flag-dex-001",
+      "status": "ok",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/dex/dex.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "recheck-flag-dex-001",
+      "status": "ok",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
+      "exit_code": 0
+    },
     {
       "id": "recheck-flag-nel-001",
       "status": "ok",
@@ -72,24 +85,6 @@
       "id": "event-sam-flag-nel-001",
       "status": "ok",
       "command": "bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "event-nel-flag-nel-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776226294-176",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776225890-216",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
       "exit_code": 0
     }
   ],

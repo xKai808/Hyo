@@ -373,3 +373,14 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-relaxed-lovelace/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d814cd3c] _(filed 2026-04-14)_
 
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a76d4ff3] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/modest-tender-ramanujan/mnt/Hyo/newsletters/2026-04-15.md [sentinel:aurora-ran-today:9d94093b] _(filed 2026-04-15)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/modest-tender-ramanujan/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4b240f39] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/modest-tender-ramanujan/mnt/Hyo/newsletters/2026-04-15.md [sentinel:aurora-ran-today:9d94093b:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/trusting-nice-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:610a02c0] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/trusting-nice-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:610a02c0:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/clever-cool-keller/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:2644d920] _(filed 2026-04-15)_
