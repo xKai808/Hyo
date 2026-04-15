@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776213067-245",
+  "ts": "2026-04-15T00:31:08Z",
+  "command": "\n# Set Nel + Ra markers so they don't re-publish today (they already have 1 report each)\ntouch /tmp/nel-research-published-20260414\ntouch /tmp/nel-report-published-20260414\ntouch /tmp/ra-research-published-20260414\ntouch /tmp/ra-report-published-20260414\n\n# REMOVE Aether's markers so the next cycle produces one legitimate daily report\nrm -f /tmp/aether-published-20260414\nrm -f /tmp/aether-report-published-20260414\n\necho 'Markers set. Nel/Ra gated for today. Aether unlocked for next cycle.'\nls -la /tmp/*published*20260414 2>/dev/null\n",
+  "exit_code": 0,
+  "stdout": "Markers set. Nel/Ra gated for today. Aether unlocked for next cycle.\n-rw-r--r--  1 kai  wheel  0 Apr 14 18:31 /tmp/nel-report-published-20260414\n-rw-r--r--  1 kai  wheel  0 Apr 14 18:31 /tmp/nel-research-published-20260414\n-rw-r--r--  1 kai  wheel  0 Apr 14 18:31 /tmp/ra-report-published-20260414\n-rw-r--r--  1 kai  wheel  0 Apr 14 18:31 /tmp/ra-research-published-20260414\n",
+  "stderr": "",
+  "duration_s": 0
+}

@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776213049-220",
+  "ts": "2026-04-15T00:30:54Z",
+  "command": "cd ~/Documents/Projects/Hyo && git add agents/nel/nel.sh agents/ra/ra.sh agents/aether/aether.sh website/data/feed.json agents/sam/website/data/feed.json && git commit -m 'fix: daily publish gates for Nel + Ra, clean feed to 1 report/agent/day\n\nNel was publishing 8 entries/day (4 cycles x 2 publish points).\nRa same pattern. Applied same daily marker gate as Aether:\nfirst cycle publishes to HQ, rest are metrics-only.\n\nCleaned todays feed: removed duplicate nel/ra spam entries,\nkept 1 per agent. All agents now max 1 HQ publish per day.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>' && git push origin main",
+  "exit_code": 0,
+  "stdout": "[main 1697bce] fix: daily publish gates for Nel + Ra, clean feed to 1 report/agent/day\n 4 files changed, 83 insertions(+), 226 deletions(-)\n",
+  "stderr": "To https://github.com/xKai808/Hyo.git\n   4e3a2ba..1697bce  main -> main\n",
+  "duration_s": 4
+}

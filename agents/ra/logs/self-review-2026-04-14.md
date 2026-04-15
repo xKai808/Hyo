@@ -1,8 +1,7 @@
-# ra Self-Review — 2026-04-14T00:30
+# ra Self-Review — 2026-04-14T18:26
 
 ## Gate 1: Trigger Validation
-- ✗ **2026-04-13-ra-results.json**: WHAT triggers this? Found 0 callers.
-  - Agent: investigate. Is this dead or newly created?
+- ✓ 2 files checked, all have triggers.
 
 ## Gate 2: Visibility Check
 Questions for ra to answer:
@@ -24,6 +23,9 @@ Questions for ra to answer:
 - Open resolution **RES-010** is relevant to ra
   - This resolution has pending steps. Can ra contribute?
   - Agent: read the resolution and add your findings.
+- Open resolution **RES-015** is relevant to ra
+  - This resolution has pending steps. Can ra contribute?
+  - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
 - Prior resolutions for 'ra': 0 matches
@@ -39,6 +41,6 @@ Questions for ra to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 5
-- Gate results: trigger=13/14, visibility=checked, resolutions=3, adoption=5/5
+- Findings: 4
+- Gate results: trigger=2/2, visibility=checked, resolutions=4, adoption=5/5
 

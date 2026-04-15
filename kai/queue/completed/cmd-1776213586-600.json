@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776213586-600",
+  "ts": "2026-04-15T00:39:47Z",
+  "command": "cd ~/Documents/Projects/Hyo && echo '=== ENV FILES ===' && for f in ~/security/hyo.env ~/security/.env ~/.config/hyo/env; do test -f \"$f\" && echo \"EXISTS: $f\" && grep -c KEY \"$f\" 2>/dev/null; done && echo '=== SYNTH BACKENDS ===' && which claude 2>/dev/null && echo '---' && env | grep -i 'GROK\\|ANTHROPIC\\|OPENAI' 2>/dev/null | sed 's/=.*/=***/' && echo '=== LAUNCHD AETHER ENV ===' && plutil -p ~/Library/LaunchAgents/com.hyo.aurora.plist 2>/dev/null | grep -i 'key\\|env' | head -10",
+  "exit_code": 0,
+  "stdout": "=== ENV FILES ===\n",
+  "stderr": "",
+  "duration_s": 0
+}

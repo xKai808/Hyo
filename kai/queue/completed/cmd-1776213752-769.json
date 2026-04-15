@@ -1,0 +1,9 @@
+{
+  "id": "cmd-1776213752-769",
+  "ts": "2026-04-15T00:42:34Z",
+  "command": "cd ~/Documents/Projects/Hyo && python3 << 'PYEOF'\nimport json\n\n# Add the newsletter as a feed entry\npath = 'website/data/feed.json'\nwith open(path) as f:\n    data = json.load(f)\n\nnewsletter_entry = {\n    'id': 'ra-newsletter-2026-04-14',\n    'type': 'newsletter',\n    'title': 'Ra Daily Brief \u2014 Someone Bought 30 WordPress Plugins and Planted a Backdoor',\n    'author': 'Ra',\n    'authorIcon': '\\U0001F4F0',\n    'authorColor': '#b49af0',\n    'timestamp': '2026-04-14T05:00:00-0600',\n    'date': '2026-04-14',\n    'sections': {\n        'summary': 'Today: the WordPress supply chain attack that should worry every plugin ecosystem, a very green day in crypto (ETH +9.1%, BTC +5.3%), GitHub ships native stacked PRs, and five agent repos hit trending in a single day.',\n        'readLink': '/daily/2026-04-14'\n    }\n}\n\n# Remove any existing newsletter entry for today\ndata['reports'] = [r for r in data.get('reports', []) if r.get('id') != newsletter_entry['id']]\ndata['reports'].append(newsletter_entry)\ndata['reports'].sort(key=lambda r: r.get('timestamp', ''), reverse=True)\n\n# Update history\nmonth = '2026-04'\nif month in data.get('history', {}):\n    if newsletter_entry['id'] not in data['history'][month]['reports']:\n        data['history'][month]['reports'].append(newsletter_entry['id'])\n\nwith open(path, 'w') as f:\n    json.dump(data, f, indent=2)\n\n# Mirror\nimport shutil\nshutil.copy(path, 'agents/sam/website/data/feed.json')\nprint(f'Added newsletter entry. Total reports: {len(data[\"reports\"])}')\nPYEOF",
+  "exit_code": 0,
+  "stdout": "Added newsletter entry. Total reports: 10\n",
+  "stderr": "",
+  "duration_s": 0
+}

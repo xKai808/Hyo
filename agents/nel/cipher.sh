@@ -170,7 +170,8 @@ for f in "${FINDINGS[@]:-}"; do
   [[ -n "$f" ]] && PY_FINDINGS+=("$f")
 done
 
-python3 - "$STATE" "$TASKS" "$NOW_ISO" "$TODAY" "$GITLEAKS_INSTALLED" "$TRUFFLEHOG_INSTALLED" "${#AUTOFIXES[@]}" "${PY_FINDINGS[@]:-}" <<'PYEOF'
+RC=0
+python3 - "$STATE" "$TASKS" "$NOW_ISO" "$TODAY" "$GITLEAKS_INSTALLED" "$TRUFFLEHOG_INSTALLED" "${#AUTOFIXES[@]}" "${PY_FINDINGS[@]:-}" <<'PYEOF' || RC=$?
 import json, sys, hashlib, os
 from datetime import datetime
 
@@ -310,7 +311,7 @@ elif len(parsed) > 0:
 sys.exit(0)
 PYEOF
 
-RC=$?
+# RC already captured above via `|| RC=$?`
 
 # ---- summary output ---------------------------------------------------------
 # Rotate old hourly logs (keep last 48h)

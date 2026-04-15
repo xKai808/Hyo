@@ -2,17 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-14T21:53:41Z",
-  "totalRuns": 32,
+  "lastRunAt": "2026-04-15T02:09:28Z",
+  "totalRuns": 33,
   "runHistory": [
-    {
-      "ts": "2026-04-12T07:13:50Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
     {
       "ts": "2026-04-12T22:10:34Z",
       "passed": 6,
@@ -244,6 +236,14 @@
       "newIssues": 2,
       "recurringIssues": 2,
       "resolved": 2
+    },
+    {
+      "ts": "2026-04-15T02:09:28Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 1,
+      "recurringIssues": 2,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -262,8 +262,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-14T21:53:41Z",
-      "daysFailing": 32,
+      "lastSeen": "2026-04-15T02:09:28Z",
+      "daysFailing": 33,
       "status": "open"
     },
     "founder-token-integrity:2dffc5f6": {
@@ -531,8 +531,8 @@
       "check_id": "task-queue-size",
       "detail": "17 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-14T06:09:43Z",
-      "lastSeen": "2026-04-14T21:53:41Z",
-      "daysFailing": 13,
+      "lastSeen": "2026-04-15T02:09:28Z",
+      "daysFailing": 14,
       "status": "open"
     },
     "aurora-ran-today:f658836f": {
@@ -622,7 +622,8 @@
       "firstSeen": "2026-04-14T21:53:41Z",
       "lastSeen": "2026-04-14T21:53:41Z",
       "daysFailing": 1,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-15T02:09:28Z"
     },
     "scheduled-tasks-fired:d814cd3c": {
       "severity": "P1",
@@ -630,6 +631,16 @@
       "detail": "no aurora logs in /sessions/confident-relaxed-lovelace/mnt/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-14T21:53:41Z",
       "lastSeen": "2026-04-14T21:53:41Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-04-15T02:09:28Z"
+    },
+    "scheduled-tasks-fired:a76d4ff3": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-15T02:09:28Z",
+      "lastSeen": "2026-04-15T02:09:28Z",
       "daysFailing": 1,
       "status": "open"
     }

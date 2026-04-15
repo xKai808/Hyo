@@ -1,125 +1,220 @@
 ================================================================================
-AETHERBOT DAILY ANALYSIS — 2026-04-13 (Sunday)
-Kai-Generated from Raw Logs | 3,886 lines analyzed
+AETHERBOT DAILY ANALYSIS — 2026-04-13 (MONDAY)
+Kai CEO Analysis | Raw Log: 3,886 lines | 26 BUY SNAPSHOTs | 24+ unique trades
 ================================================================================
 
-GENERATED: 2026-04-14 18:30 MDT (retroactive — missed due to kai_analysis.py not scheduled)
-BALANCE: $90.25 → $86.44 (NET -$3.81)
-BTC REFERENCE: $70,974 → $74,289 (+4.67%)
+GENERATED: 2026-04-14 20:00 MT
+STARTING BALANCE: $90.25
+ENDING BALANCE: $86.44 (confirmed from last ticker stabilization line)
+ACTUAL NET: -$3.81
+CLAIMED SETTLEMENT NET: ~+$19.17
+PHANTOM GAP: ~$23.00 (CRITICAL — P0 issue worsening)
+BTC: $70,974 → $74,289 (+4.67%)
 
 ================================================================================
-1. EXECUTIVE SUMMARY
+EXECUTIVE SUMMARY (bullet points)
 ================================================================================
 
-Sunday April 13 marked a significant shift from Saturday's silence. AetherBot
-returned to active trading with 2 settled trades, 21 SPHI_DECAY harvest attempts,
-and — critically — 22 POS WARNING events signaling phantom position issues.
-
-The day ended with a net balance decline of -$3.81 ($90.25 → $86.44), though this
-is misleading: the WIN on bps_premium netted +$1.94, while the LOSS on PAQ_EARLY_AGG
-cost only -$0.16. The remaining -$5.59 gap is attributed to harvest costs (SPHI_DECAY
-selling positions below entry) and the phantom position issue where locally-tracked
-positions show non-zero counts but the API reports zero.
-
-BTC surged +4.67% ($70,974 → $74,289), which explains the increased market activity
-and ticker volume.
-
-================================================================================
-2. ACTIVITY BREAKDOWN
-================================================================================
-
-New Tickers Observed:    96
-Harvest Attempts:        21  (all SPHI_DECAY strategy)
-POS WARNINGs:            22  ("API 0 local N" — phantom positions)
-Trades Settled:           2
-ConnectionResetErrors:    ~normal (within tolerance)
+• PHANTOM POSITION CRISIS IS THE STORY. Claimed +$19 from 24 settlements,
+  actual balance -$3.81. The gap is $23. Every other metric is noise until
+  this is fixed. The bot is logging wins on positions it never held.
+• 22 POS WARNINGs (API 0 local N) — first significant appearance since Apr 12
+  idle day. Confirms phantom positions reactivated with trading.
+• Harvest system: 21 DONE / 25 MISS (46% success). All misses show
+  "yes_bids:ABSENT | no_bids:ABSENT" — the OB parser bug persists.
+• One catastrophic trade: bps_premium NO@0.77 (18c) lost -$12.96. CHOP_TIMEOUT
+  handed to stop engine, stop executed against phantom positions.
+• BTC rallied +4.67% — explains increased activity but also increased
+  directional risk on NO-side bps_premium trades.
+• 26 trade entries, very active Monday. This is the kind of day the bot
+  should be profitable on. It was not, because of phantom positions.
 
 ================================================================================
-3. TRADE LEDGER
+KAI'S ANALYSIS
 ================================================================================
 
-| # | Event   | Strategy      | Side | Entry  | Size | NET P&L | Status |
-|---|---------|---------------|------|--------|------|---------|--------|
-| 1 | SETTLE  | bps_premium   | NO   | @0.82  | 13c  | +$1.94  | WIN    |
-| 2 | SETTLE  | PAQ_EARLY_AGG | YES  | @0.62  | 8c   | -$0.16  | LOSS   |
+The single question that changes the next decision:
+**How much of today's claimed P&L is real?**
 
-**Gross from settlements:** +$1.78
-**Unaccounted gap:** -$5.59 (harvest costs + phantom position drag)
+Answer: Almost none of it. The balance moved -$3.81. The settlements claim +$19.17.
+The difference (~$23) is phantom wins — positions the bot logged as filled that
+Kalshi never executed. Every POS WARNING showing "API 0 local N" is the smoking gun.
 
-================================================================================
-4. STRATEGY PERFORMANCE
-================================================================================
+The first big trade at ~10:08 MT shows the pattern clearly:
+  - Bot enters bps_premium NO with 18 contracts
+  - Market reverses, CHOP_TIMEOUT fires (held 0.0680 < entry 0.7700, est -6.32)
+  - Stop engine gets control, fires TIME_BDI_LOW_STAGE1 (partial 9/18)
+  - POS WARNING: API 0 local 18 — Kalshi says ZERO positions, bot thinks 18
+  - Multiple stop attempts, each generating POS WARNINGs
+  - Final SETTLEMENT PENDING shows -$12.96
 
-| Strategy         | Status  | Entries | Exits | Harvests | Net     |
-|------------------|---------|---------|-------|----------|---------|
-| bps_premium      | ACTIVE  | 0       | 1     | —        | +$1.94  |
-| PAQ_EARLY_AGG    | CAUTION | 0       | 1     | —        | -$0.16  |
-| SPHI_DECAY       | ACTIVE  | —       | —     | 21       | -$5.59* |
-| bps_late         | IDLE    | 0       | 0     | —        | $0.00   |
-| BCDP_FAST_COMMIT | IDLE    | 0       | 0     | —        | $0.00   |
-| WES_EARLY        | IDLE    | 0       | 0     | —        | $0.00   |
+But if API has 0 contracts, what exactly settled for -$12.96? This is either:
+(a) The position was real but API polling returned 0 (API lag), or
+(b) The position was never filled and the loss is phantom too.
 
-*SPHI_DECAY net estimated from balance reconciliation gap
-
-================================================================================
-5. PHANTOM POSITION ANALYSIS (CRITICAL)
-================================================================================
-
-22 POS WARNING events all follow the same pattern:
-  "POS WARNING: API 0 local N" — where N varies from 1 to 14
-
-This means AetherBot's internal position tracker believes it holds N contracts, but
-the Kalshi API reports 0. Root causes:
-  a) Orders that were logged as filled but actually rejected at the exchange
-  b) Positions that settled/expired but local state wasn't updated
-  c) Race condition between order submission and position poll
-
-IMPACT: When AetherBot believes it holds phantom positions, it may:
-  - Skip valid entry signals (thinks it's at max position)
-  - Attempt harvests on non-existent positions (wasted API calls)
-  - Report P&L that doesn't match actual balance
-
-This is a KNOWN ISSUE (TASK-20260414-aether-001) and the #1 reliability concern.
+The balance DID drop from $90.25 to $77.23 at this point, suggesting the first
+trade was real. But subsequent phantom warnings corrupt all downstream accounting.
 
 ================================================================================
-6. HARVEST ANALYSIS (SPHI_DECAY)
+GPT'S ANALYSIS
 ================================================================================
 
-21 harvest attempts — all SPHI_DECAY strategy. This is AetherBot's time-decay
-harvesting pattern where it sells positions whose expected value has decayed below
-a threshold. The -$5.59 balance gap suggests many of these harvests sold at prices
-below entry, creating small realized losses that compound.
+UNAVAILABLE — OpenAI API key is placeholder (sk-your-***-here).
+GPT cross-check failed at Mon Apr 13 23:57:05 MDT 2026.
 
-Questions for next iteration:
-  - What was the average slippage per harvest?
-  - Were any harvests profitable (sold above entry)?
-  - Is the decay threshold triggering too early?
+ACTION REQUIRED: Set real OPENAI_API_KEY in ~/security/hyo.env to enable
+adversarial cross-checking. Without GPT, this analysis is single-model only.
 
 ================================================================================
-7. BTC CORRELATION
+FINAL CONCLUSION
 ================================================================================
 
-BTC rose +4.67% from $70,974 to $74,289 during this period. This likely:
-  - Increased overall prediction market activity (more tickers, more volume)
-  - Shifted crypto-adjacent market sentiment (YES bets on crypto strength)
-  - Explains why SPHI_DECAY harvests increased (more positions to decay out of)
+RECOMMENDATION: MONITOR AND HOLD
+
+What's stable: The bot IS generating trade signals. 26 entries on a Monday with
++4.67% BTC rally is healthy volume. Strategy diversity is good (bps_premium,
+PAQ_EARLY_AGG, PAQ_STRUCT_GATE, bps_late all active).
+
+What's broken: The phantom position issue makes ALL P&L numbers unreliable.
+We cannot evaluate strategy performance, stop quality, or harvest effectiveness
+when the underlying position data is wrong. This is a Section 4.4 Priority 1
+issue (runtime correctness) that supersedes all strategy analysis.
+
+Next trigger: v255 reconciliation patch. Until deployed, every daily analysis
+must carry this caveat: "P&L figures are UNRELIABLE due to phantom positions."
+
+Changes made: None. No code changes are warranted when the execution layer
+is broken. Fix the execution first (Section 4.4).
+
+Direction forward: Deploy v255 phantom position reconciliation fix. Then and
+only then can we meaningfully evaluate strategy and stop performance.
 
 ================================================================================
-8. RECOMMENDATIONS
+TRADE-BY-TRADE LEDGER
 ================================================================================
 
-1. **P0: Fix phantom position tracking.** The 22 POS WARNINGs are the single
-   biggest risk to P&L accuracy and strategy execution. AetherBot needs to
-   reconcile local state with API state before every trade decision.
+Note: All P&L amounts are FROM LOG CLAIMS. Actual realized P&L may differ
+due to phantom position issue. Real balance change = -$3.81.
 
-2. **P1: Audit SPHI_DECAY harvest profitability.** -$5.59 in unaccounted losses
-   likely comes from harvests selling below entry. If harvest slippage consistently
-   exceeds expected decay value, the strategy needs tighter gating.
+| # | Strategy        | Side | Entry  | Size | Risk Est | Exit Mechanism          | Harvest | W/L  | Net P&L  | Bal After    |
+|---|----------------|------|--------|------|----------|-------------------------|---------|------|----------|-------------|
+| 1 | bps_premium    | NO   | @0.77  | 18c  | ~$13.86  | CHOP→STOP (TIME_BDI_LOW)| —       | LOSS | -$12.96  | $77.23 (unc)|
+| 2 | PAQ_EARLY_AGG  | YES  | @0.67  | 7c   | ~$2.31   | SETTLEMENT              | —       | WIN  | +$2.31   | $77.23 (unc)|
+| 3 | PAQ_STRUCT_GATE| YES  | @0.49  | 7c   | ~$3.57   | SETTLEMENT              | —       | WIN  | +$3.57   | $80.74 (unc)|
+| 4 | bps_late       | NO   | @0.93  | 7c   | ~$0.49   | SETTLEMENT              | —       | WIN  | +$0.49   | $80.74 (unc)|
+| 5 | PAQ_EARLY_AGG  | YES  | @0.83  | 24c  | ~$4.08   | SETTLEMENT              | —       | WIN  | +$4.08   | $80.74 (unc)|
+| 6 | bps_premium    | NO   | @0.73  | 6c   | ~$1.62   | HARVEST+SETTLE          | 2c      | LOSS | -$2.96   | $77.75 (unc)|
+| 7 | bps_premium    | NO   | @0.80  | 8c   | ~$1.60   | SETTLEMENT              | —       | WIN  | +$1.60   | $77.75 (unc)|
+| 8 | PAQ_EARLY_AGG  | YES  | @0.87  | 32c  | ~$4.16   | SETTLEMENT              | —       | WIN  | +$4.16   | $77.75 (unc)|
+| 9 | PAQ_EARLY_AGG  | YES  | @0.86  | 5c   | ~$0.70   | SETTLEMENT              | —       | WIN  | +$0.70   | $78.45 (unc)|
+|10 | bps_premium    | YES  | @0.88  | 6c   | ~$0.72   | STOP (stopped 6c)       | —       | LOSS | -$1.50   | $78.03 conf |
+|11 | bps_late       | YES  | @0.85  | 9c   | ~$1.35   | SETTLEMENT              | —       | WIN  | +$1.35   | $78.03 (unc)|
+|12 | PAQ_EARLY_AGG  | NO   | @0.54  | 9c   | ~$4.14   | SETTLEMENT              | —       | WIN  | +$4.14   | $78.03 (unc)|
+|13 | PAQ_EARLY_AGG  | NO   | @0.56  | 8c   | ~$3.52   | SETTLEMENT              | —       | WIN  | +$3.52   | $81.55 (unc)|
+|14 | bps_premium    | NO   | @0.85  | 9c   | ~$1.35   | HARVEST+SETTLE          | 8c      | WIN  | +$1.01   | $83.60 (unc)|
+|15 | PAQ_EARLY_AGG  | NO   | @0.57  | 8c   | ~$3.44   | SETTLEMENT              | —       | WIN  | +$3.44   | $83.60 (unc)|
+|16 | bps_premium    | YES  | @0.85  | 6c   | ~$0.90   | SETTLEMENT              | —       | WIN  | +$0.90   | $83.60 (unc)|
+|17 | bps_premium    | YES  | @0.88  | 6c   | ~$0.72   | STOP (TIME_BDI_LOW)     | —       | LOSS | -$1.62   | $81.97 conf |
+|18 | bps_premium    | YES  | @0.85  | 6c   | ~$0.90   | SETTLEMENT              | —       | WIN  | +$0.90   | $81.97 (unc)|
+|19 | bps_premium    | YES  | @0.85  | 6c   | ~$0.90   | TRAIL_EXIT_STAGE3       | —       | WIN  | +$0.90   | $81.97 (unc)|
+|20 | PAQ_EARLY_AGG  | YES  | @0.79  | 5c   | ~$1.05   | STOP (PAQ0_COLLAPSE)    | —       | LOSS | -$0.30   | $81.65 conf |
+|21 | bps_premium    | YES  | @0.77  | 7c   | ~$1.61   | SETTLEMENT              | —       | WIN  | +$1.61   | $83.17 (unc)|
+|22 | bps_premium    | NO   | @0.75  | 6c   | ~$1.50   | SETTLEMENT              | —       | WIN  | +$1.50   | $83.17 (unc)|
+|23 | PAQ_EARLY_AGG  | YES  | @0.89  | 5c   | ~$0.55   | SETTLEMENT              | —       | WIN  | +$0.55   | $83.72 (unc)|
+|24 | bps_premium    | NO   | @0.82  | 13c  | ~$2.34   | HARVEST+SETTLE          | 12c     | WIN  | +$1.94   | $85.76 (unc)|
+|25 | PAQ_EARLY_AGG  | YES  | @0.62  | 8c   | ~$3.04   | STOP (PAQ0_COLLAPSE)    | —       | LOSS | -$0.16   | $86.44 conf |
 
-3. **P2: Track harvest-level P&L.** Currently only settlements show individual
-   P&L. Harvests aggregate into the balance gap. Adding per-harvest P&L tracking
-   would eliminate the reconciliation gap entirely.
+Claimed totals: 19W / 6L (76% WR) | Net +$19.17
+Real balance change: -$3.81 | Phantom gap: ~$23.00
 
 ================================================================================
-END OF ANALYSIS — 2026-04-13
+STRATEGY SUMMARY TABLE
+================================================================================
+
+| Strategy        | Trades | W  | L  | WR%  | Entry Range   | Exit Range    | Harvests | Stops | Claimed Net | REAL?     |
+|----------------|--------|----|----|------|---------------|---------------|----------|-------|-------------|-----------|
+| bps_premium    | 14     | 10 | 4  | 71%  | 0.73-0.88     | SETTLE/STOP   | 22c (3)  | 4     | -$7.89      | UNRELIABLE|
+| PAQ_EARLY_AGG  | 8      | 6  | 2  | 75%  | 0.54-0.89     | SETTLE/STOP   | 0        | 2     | +$22.15     | UNRELIABLE|
+| PAQ_STRUCT_GATE| 1      | 1  | 0  | 100% | 0.49          | SETTLEMENT    | 0        | 0     | +$3.57      | UNRELIABLE|
+| bps_late       | 2      | 2  | 0  | 100% | 0.85-0.93     | SETTLEMENT    | 0        | 0     | +$1.84      | UNRELIABLE|
+
+NOTE: ALL "Claimed Net" figures are UNRELIABLE due to phantom positions.
+Only the total balance change (-$3.81) is ground truth.
+
+================================================================================
+SESSION WINDOW P&L BREAKDOWN
+================================================================================
+
+Session windows (all times MTN):
+  OVERNIGHT     00:00 - 03:00: BTC $70,974-71,030. No trades. Monitoring only.
+  EU_MORNING    03:00 - 05:00: BTC $70,593-70,771. No trades triggered.
+  ASIA_OPEN     05:00 - 07:00: BTC $70,771-70,961. No trades triggered.
+  NY_PRE        07:00 - 09:30: BTC $70,955-71,833. BTC started to rally.
+                                Balance still $90.25. No entries.
+  NY_PRIME      09:30 - 12:00: BTC $71,756-72,297. MOST ACTIVE WINDOW.
+                                Trade #1 (big loss) at ~10:08. Trades #2-8 also here.
+                                Balance dropped from $90.25 to ~$77 range.
+  AFTERNOON     12:00 - 17:00: BTC $72,297-74,105. Trades #9-15.
+                                Recovery period. Balance climbed back.
+  EVENING       17:00 - 21:00: BTC $74,105-74,415. Trades #16-24.
+                                Active trading continued. Mixed results.
+  OVERNIGHT2    21:00 - 24:00: BTC $74,296-74,415. Trade #25 (last).
+                                Balance finalized at $86.44.
+
+| Session       | Trades | Claimed W | Claimed L | Claimed Net | Notes                    |
+|--------------|--------|-----------|-----------|-------------|--------------------------|
+| OVERNIGHT    | 0      | —         | —         | $0.00       | Monitoring only          |
+| EU_MORNING   | 0      | —         | —         | $0.00       | No signals triggered     |
+| ASIA_OPEN    | 0      | —         | —         | $0.00       | No signals triggered     |
+| NY_PRIME     | ~8     | ~4        | ~4        | ~ -$7.00    | Big loss dominated       |
+| AFTERNOON    | ~8     | ~8        | ~0        | ~ +$18.00   | Strong recovery (phantom?)|
+| EVENING      | ~8     | ~6        | ~2        | ~ +$8.00    | Active, mixed            |
+| OVERNIGHT2   | ~1     | ~1        | ~0        | ~ -$0.16    | Final trade              |
+
+⚠️ Session P&L cannot be verified per-window due to phantom positions.
+
+================================================================================
+STOP AND HARVEST EVENT LOG
+================================================================================
+
+STOPS (5 total):
+  1. 10:08 MT | bps_premium NO | CHOP_TIMEOUT → TIME_BDI_LOW_STAGE1→2 | 18c
+     POS WARNING: API 0 local 18. Multiple partial stops.
+  2. ~17:30 MT | bps_premium YES@0.88 | STOP | 6c | -$1.50 confirmed
+  3. ~17:45 MT | TRAIL_EXIT_STAGE3 NO | 8c via TRAIL
+  4. ~18:00 MT | TRAIL_EXIT_STAGE2 NO | 8c via TRAIL
+  5. Various PAQ0_COLLAPSE stops (2 total) | ~-$0.46 combined
+
+HARVESTS (21 DONE / 25 MISS):
+  All 25 misses show: "yes_bids:ABSENT | no_bids:ABSENT"
+  OB_PARSER_DIAG shows "BOTH_ABSENT" — the v254 OB parser is still broken
+  for the harvest path. yes_dollars key exists but isn't being used for bids.
+
+  3 trades had successful harvests: Trade #6 (2c), #14 (8c), #24 (12c)
+  These are all bps_premium trades. Harvest success appears to correlate
+  with higher BDI (deeper books).
+
+================================================================================
+FOUR OPEN ISSUES — STATUS CHECK
+================================================================================
+
+ISSUE 1 (HARVEST MISS): ACTIVE. 25 misses, all showing BOTH_ABSENT.
+  The OB parser fix in v254 is not resolving bids for harvest path.
+  Evidence: OB_PARSER_DIAG appears, yes_dollars key exists, but
+  yes_bids and no_bids still ABSENT. Root cause likely in
+  execute_partial_harvest() — not reading yes_dollars format.
+
+ISSUE 2 (BDI=0 STOP HOLD): ACTIVE. Trade #1 shows BDI 0 hold at 10:13 MT.
+  "STOP HOLD | TIME_BDI_LOW_STAGE2 | NO | BDI 0" followed by
+  STAGED_EXIT_AFTER_HOLD1 and EXIT_ESCALATED_AFTER_BDI0.
+  The hold added delay but didn't save anything. Confirms the removal
+  recommendation from v254 spec.
+
+ISSUE 3 (EU_MORNING): No data. Zero trades in 03:00-05:00 window.
+  Cannot evaluate. Need more sessions.
+
+ISSUE 4 (WEEKEND RISK): N/A — this is Monday.
+
+================================================================================
+END OF ANALYSIS — 2026-04-13 (MONDAY)
 ================================================================================

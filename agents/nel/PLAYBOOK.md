@@ -183,6 +183,10 @@ Format: `date | decision | reasoning | outcome`
 
 - **2026-04-14:** Researched 1/6 sources. See `research/findings-2026-04-14.md` for details.
 
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
+
+- **2026-04-14:** Researched 1/6 sources. See `research/findings-2026-04-14.md` for details.
+
 - **2026-04-14:** Researched 1/6 sources. See `research/findings-2026-04-14.md` for details.
 
 - **2026-04-14:** Researched 1/6 sources. See `research/findings-2026-04-14.md` for details.

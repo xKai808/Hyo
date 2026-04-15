@@ -353,3 +353,5 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 
 - [ ] **[K]** [sentinel] missing or empty /sessions/confident-relaxed-lovelace/mnt/Hyo/newsletters/2026-04-14.md [sentinel:aurora-ran-today:99aa58ee] _(filed 2026-04-14)_
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-relaxed-lovelace/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d814cd3c] _(filed 2026-04-14)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a76d4ff3] _(filed 2026-04-14)_
