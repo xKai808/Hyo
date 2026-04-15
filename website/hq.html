@@ -982,6 +982,8 @@ function renderReport(report) {
     body = renderAgentReflection(s);
   } else if (report.type === 'newsletter') {
     body = renderNewsletter(s, report);
+  } else if (report.type === 'aether-analysis') {
+    body = renderAetherAnalysis(s, report);
   } else {
     // Generic
     for (const [key, val] of Object.entries(s)) {
@@ -1058,6 +1060,34 @@ function renderNewsletter(s, report) {
     </div>`;
   }
 
+  return html;
+}
+
+function renderAetherAnalysis(s, report) {
+  let html = '';
+  if (s.summary) {
+    html += sec('Summary', `<p>${s.summary}</p>`);
+  }
+  if (s.balance) {
+    html += `<div style="background:var(--bg-tertiary);border-radius:8px;padding:12px 16px;margin:8px 0 12px;font-family:var(--font-mono,'JetBrains Mono',monospace);font-size:13px;color:var(--text-primary);">${s.balance}</div>`;
+  }
+  if (s.trades) {
+    html += sec('Trades', `<p>${s.trades}</p>`);
+  }
+  if (s.risk) {
+    html += sec('Risk & Anomalies', `<p>${s.risk}</p>`);
+  }
+  if (s.btc) {
+    html += sec('BTC Context', `<p>${s.btc}</p>`);
+  }
+  const readLink = s.readLink || report.readLink || '';
+  if (readLink) {
+    html += `<div style="padding:12px 0 4px;">
+      <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:600;text-decoration:none;font-size:0.95em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        View full analysis with trade tables <span style="font-size:1.1em;">\u2192</span>
+      </a>
+    </div>`;
+  }
   return html;
 }
 
@@ -1152,6 +1182,7 @@ function getTypeLabel(type) {
     'agent-reflection': 'Agent Reflection',
     'research-drop': 'Research',
     'newsletter': 'Daily Brief',
+    'aether-analysis': 'Trading Analysis',
   };
   return map[type] || type;
 }
