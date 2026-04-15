@@ -75,6 +75,10 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 - **When Hyo gives specific instructions, implement EXACTLY those steps.** Do not substitute "equivalent" approaches. Do not reinterpret. If Hyo says "Phase 1: do X, Phase 2: do Y" — implement Phase 1 that does X and Phase 2 that does Y. Kai's interpretation of "what should work" has been wrong twice in one session (SE-010-008, SE-010-009). Follow the spec, not the intuition.
 - **Trace the full consumer path before changing data.** Before modifying any data file (JSON, HTML, config), answer: (1) Who consumes this data? (2) How does the consumer render/process it? (3) Does the consumer support what I'm adding? Trace the chain from data → renderer → user-visible output FIRST. Changing data without understanding the renderer causes round-trip waste. This was logged as SE-010-013: added readLink to feed.json without checking whether hq.html had a renderer for aether-analysis type.
 - **GPT analysis must produce adversarial intelligence, not arithmetic.** The dual-phase GPT pipeline exists to catch what a single-pass analyst misses: strategy drift, risk concentration, entry quality degradation, harvest efficiency trends, timing optimization, cross-session regression. If GPT's output is just "your balance is X and mine is Y" — the prompt is broken. GPT should never duplicate work Kai already does. Every GPT dollar spent must produce an insight Kai didn't have. (SE-010-014)
+- **Agent growth is mandatory, not optional.** Every agent maintains a `GROWTH.md` file identifying 3 weaknesses in their domain, 3 planned improvements (systemic, not patchwork), and self-set goals with deadlines. Growth is tracked via improvement tickets (`ticket_type: improvement`) linked to specific weaknesses (W1/W2/W3). Agents execute improvements autonomously — they have the right to build. Kai can veto, but agents execute first and report what they did.
+- **Growth phase runs before main work.** Every agent runner sources `bin/agent-growth.sh` and calls `run_growth_phase` before its main execution phases. This ensures agents work on systemic improvements every cycle, not just operational tasks. Growth is the first thing an agent does, not an afterthought.
+- **Morning reports lead with growth, not operations.** Hyo doesn't need to know agents did their job — that's baseline. The morning report leads with: what weaknesses exist, what improvements are being built, what goals agents set for themselves, and what changed since yesterday. Operations context is secondary. "Doing research" is not a report — what was researched, what was found, what changed is.
+- **Improvements must be systemic.** When an agent identifies a weakness, the fix must be architectural — a new capability, a new pipeline phase, a feedback loop, an automated diagnostic. Not "tighten this threshold" or "add one more check." The question is: "What structural change would prevent this entire class of problem?" Patchwork fixes are logged as operational tickets, not improvement tickets.
 
 ## Project layout
 
@@ -84,7 +88,10 @@ Hyo/
 ├── KAI_BRIEF.md                 ← session-continuity memory
 ├── KAI_TASKS.md                 ← CEO task queue
 ├── bin/
-│   └── kai.sh                   ← dispatcher (alias: kai)
+│   ├── kai.sh                   ← dispatcher (alias: kai)
+│   ├── agent-growth.sh          ← shared growth execution (sourced by all runners)
+│   ├── ticket.sh                ← ticket system (--type improvement, --weakness W1/W2/W3)
+│   └── generate-morning-report.sh ← growth-first morning report generator
 ├── kai/                         ← CEO workspace
 │   ├── AGENT_ALGORITHMS.md      ← THE CONSTITUTION (agents read, Kai owns)
 │   ├── proposals/               ← algorithm evolution proposals from agents
@@ -103,7 +110,8 @@ Hyo/
 │   │   ├── ra.hyo.json
 │   │   └── sam.hyo.json
 │   ├── nel/                     ← Nel: system improvement + security
-│   │   ├── nel.sh               ← runner
+│   │   ├── nel.sh               ← runner (sources agent-growth.sh)
+│   │   ├── GROWTH.md            ← weaknesses, improvements, goals, growth log
 │   │   ├── logs/                ← Nel's consolidated logs
 │   │   ├── security/            ← .secrets (symlink)
 │   │   │   └── founder.token

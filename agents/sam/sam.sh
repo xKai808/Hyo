@@ -46,6 +46,13 @@ warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
 err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }
 die()  { err "$*"; exit 1; }
 
+# ---- Growth Phase (self-improvement before main work) -----------------------
+GROWTH_SH="$ROOT/bin/agent-growth.sh"
+if [[ -f "$GROWTH_SH" ]]; then
+  source "$GROWTH_SH"
+  run_growth_phase "sam" || true
+fi
+
 # ---- logging ----------------------------------------------------------------
 log_activity() {
   local cmd="$1" status="$2" details="${3:-}"

@@ -12,6 +12,15 @@
 
 ---
 
+## Recently Completed — Session 10 Continuation 3
+
+- [x] **[K]** **Agent Growth Framework — GROWTH.md × 5.** 2026-04-14. Every agent identifies 3 domain weaknesses + 3 systemic improvements + self-set goals. Nel: static sentinel, no CVE scanning, broken research sources. Ra: no editorial feedback, unverified sources, content diversity gap. Sam: no regression detection, ephemeral state, incomplete error handling. Aether: phantom positions, no quality gate, manual strategy eval. Dex: detection without remediation, counting not analysis, no drift detection.
+- [x] **[K]** **Growth Execution Engine (bin/agent-growth.sh).** 2026-04-14. Shared growth phase sourced by all 5 runners. Each agent runs autonomous concrete steps toward their improvement tickets before main work. Tested all agents — nel, ra, aether, dex produce actionable output; sam correctly defers (needs LLM session for Lighthouse setup).
+- [x] **[K]** **15 Improvement Tickets Created.** 2026-04-14. IMP-* tickets for all agents (3 each) with ticket_type "improvement", linked to GROWTH.md weaknesses (W1/W2/W3). Includes approach, research needed, success metrics.
+- [x] **[K]** **Morning Report v3 — Growth-First.** 2026-04-14. Rewrote generate-morning-report.sh to lead with growth narratives (weaknesses → improvements → goals → execution) instead of operational status. Reads actual GROWTH.md files + improvement tickets.
+- [x] **[K]** **All Runners Wired for Growth.** 2026-04-14. nel.sh, ra.sh, sam.sh, aether.sh, dex.sh all source agent-growth.sh before main phases. Growth is first, not last.
+- [x] **[K]** **CLAUDE.md Updated with Growth Rules.** 2026-04-14. Mandatory growth, growth-before-work, growth-first reporting, systemic-not-patchwork.
+
 ## Recently Completed — Session 10 Continuation 2
 
 - [x] **[K]** **Articulate AetherBot philosophies from source material.** 2026-04-14. Read all source files (AETHER_OPERATIONS.md, PRE_ANALYSIS_BRIEF.md, ANALYSIS_BRIEFING.txt 660 lines, Profile description.rtf). Three doctrines: anti-patchwork, priority hierarchy (correctness > execution > instrumentation > family-scoped > parameter), preservation bias.

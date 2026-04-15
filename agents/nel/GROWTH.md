@@ -190,3 +190,4 @@ Nel research phase builds a local cache:
 | 2026-04-21 | (Planned) Adaptive Sentinel Phase 1 complete. | Deeper diagnostics auto-generate when checks fail 3x. Example: `api-health-green` failure at run 26 triggers SSL test, auth header validation, endpoint latency check. |
 | 2026-04-28 | (Planned) Dependency Audit Pipeline shipped. | First audit report shows 47 npm packages, 12 Python packages, 3 packages with known CVEs flagged P1. |
 | 2026-05-05 | (Planned) Local Intelligence Cache operational. | Nel reports show "based on live GitHub Advisory data (5min ago)" when on Mini, "based on cached data (18h ago)" when in sandbox. Cache never stale >48h. |
+| 2026-04-14 | IMP-20260414-nel-001 (W1): No chronic failures detected (all <5 consecutive) | Automated assessment |

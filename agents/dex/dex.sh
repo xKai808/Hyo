@@ -33,6 +33,13 @@ ACTIVITY_LOG="$DEX_LOGS/dex-activity-$TODAY.jsonl"
 
 mkdir -p "$DEX_LOGS" "$DEX_HOME/ledger"
 
+# ---- Growth Phase (self-improvement before main work) -----------------------
+GROWTH_SH="$ROOT/bin/agent-growth.sh"
+if [[ -f "$GROWTH_SH" ]]; then
+  source "$GROWTH_SH"
+  run_growth_phase "dex" || true
+fi
+
 # ---- Dispatch sourcing for flag/report commands ----------------------------
 DISPATCH_SH="$ROOT/bin/dispatch.sh"
 

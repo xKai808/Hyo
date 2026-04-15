@@ -53,6 +53,13 @@ fi
 
 say()  { printf '%s\n' "$*"; }
 hdr()  { printf '\n%s==>%s %s%s%s\n' "$BLU" "$RST" "$BOLD" "$*" "$RST"; }
+
+# ---- Growth Phase (self-improvement before main work) -----------------------
+GROWTH_SH="$ROOT/bin/agent-growth.sh"
+if [[ -f "$GROWTH_SH" ]]; then
+  source "$GROWTH_SH"
+  run_growth_phase "ra" || true
+fi
 ok()   { printf '%s✓%s %s\n' "$GRN" "$RST" "$*"; }
 warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
 err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }

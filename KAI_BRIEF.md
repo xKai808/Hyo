@@ -91,7 +91,21 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-15 ~03:30 UTC / 2026-04-14 ~21:30 MT — Session 10 continuation)
+## Current state (as of 2026-04-15 ~05:00 UTC / 2026-04-14 ~23:00 MT — Session 10 continuation 3)
+
+**What shipped in session 10 continuation 3 (after third context compaction):**
+
+52. **Agent Growth Framework — Complete.** Every agent now has a GROWTH.md identifying 3 domain weaknesses, 3 systemic improvements, and self-set goals with deadlines. Files: agents/{nel,ra,sam,aether,dex}/GROWTH.md. 15 improvement tickets created (IMP-*) in kai/tickets/tickets.jsonl with ticket_type "improvement" and weakness links (W1/W2/W3).
+
+53. **Growth Execution Engine (bin/agent-growth.sh).** Shared script sourced by all runners. Each agent's growth phase: reads GROWTH.md → finds next OPEN improvement ticket → executes concrete autonomous steps → updates GROWTH.md growth log. Agent-specific handlers for nel (sentinel state, dependency scan), ra (source config), sam (Vercel KV, error audit), aether (phantom warnings), dex (JSONL corruption, issue clustering). Tested all 5 agents — all produce output.
+
+54. **All Runners Wired.** nel.sh, ra.sh, sam.sh, aether.sh, dex.sh all source agent-growth.sh and call run_growth_phase before main work phases. Growth is the FIRST thing each agent does every cycle.
+
+55. **Morning Report v3 — Growth-First Narratives.** generate-morning-report.sh rewritten to lead with weaknesses, improvements, goals, and execution status. Operations context is secondary. Reads actual GROWTH.md files, improvement tickets, sentinel logs, cipher scans, research findings.
+
+56. **Ticket System Extended.** bin/ticket.sh now supports --type (operational|improvement) and --weakness (W1/W2/W3) flags. Improvement tickets link directly to GROWTH.md weakness sections.
+
+57. **CLAUDE.md Updated.** Growth framework rules added to operating rules: mandatory growth, growth-before-work phase order, growth-first reporting, systemic-not-patchwork mandate.
 
 **What shipped in session 10 continuation 2 (after second context compaction):**
 

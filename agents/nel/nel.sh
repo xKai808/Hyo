@@ -45,6 +45,13 @@ log_pass() { printf '%s✓%s %s\n' "$GRN" "$RST" "$*" | tee -a "$REPORT"; }
 log_warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*" | tee -a "$REPORT"; }
 log_fail() { printf '%s✗%s %s\n' "$RED" "$RST" "$*" | tee -a "$REPORT"; }
 
+# ---- Growth Phase (self-improvement before main work) -----------------------
+GROWTH_SH="$ROOT/bin/agent-growth.sh"
+if [[ -f "$GROWTH_SH" ]]; then
+  source "$GROWTH_SH"
+  run_growth_phase "nel" || true
+fi
+
 # ---- Report Header ----------------------------------------------------------
 cat > "$REPORT" <<EOF
 # Nel System Report

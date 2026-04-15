@@ -36,6 +36,13 @@ TS=$(TZ="America/Denver" date +"%Y-%m-%dT%H:%M:%S-06:00")
 
 log() { echo "[$TS] $*" | tee -a "$LOG"; }
 
+# ─── Growth Phase (self-improvement before main work) ─────────────────────────
+GROWTH_SH="$ROOT/bin/agent-growth.sh"
+if [[ -f "$GROWTH_SH" ]]; then
+  source "$GROWTH_SH"
+  run_growth_phase "aether" || true
+fi
+
 # ─── Monday Reset ─────────────────────────────────────────────────────────────
 check_monday_reset() {
   local dow
