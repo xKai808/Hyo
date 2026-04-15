@@ -2,18 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-15T04:01:25Z",
-  "totalRuns": 155,
+  "lastRunAt": "2026-04-15T05:01:20Z",
+  "totalRuns": 156,
   "runHistory": [
-    {
-      "ts": "2026-04-14T16:03:26Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0,
-      "note": "Cowork sandbox \u2014 supplemental checks: .secrets symlink intact, all 5 secret files 600, dir 700, founder.token not leaked, no API key patterns in code, no loose .pem/.key outside .secrets, .env.local gitignored, .gitignore covers secrets"
-    },
     {
       "ts": "2026-04-14T17:02:29Z",
       "failed": 2,
@@ -249,6 +240,14 @@
       "recurring": 2,
       "resolved": 0,
       "autofixes": 0
+    },
+    {
+      "ts": "2026-04-15T05:01:20Z",
+      "failed": 2,
+      "newIssues": 0,
+      "recurring": 2,
+      "resolved": 0,
+      "autofixes": 0
     }
   ],
   "knownIssues": {
@@ -257,8 +256,8 @@
       "check_id": "gitleaks-not-installed",
       "detail": "brew install gitleaks",
       "firstSeen": "2026-04-11T06:02:09Z",
-      "lastSeen": "2026-04-15T04:01:25Z",
-      "runsFailing": 148,
+      "lastSeen": "2026-04-15T05:01:20Z",
+      "runsFailing": 149,
       "status": "open"
     },
     "trufflehog-not-installed:cc78f9e8": {
@@ -266,8 +265,8 @@
       "check_id": "trufflehog-not-installed",
       "detail": "brew install trufflesecurity/trufflehog/trufflehog",
       "firstSeen": "2026-04-11T06:02:09Z",
-      "lastSeen": "2026-04-15T04:01:25Z",
-      "runsFailing": 148,
+      "lastSeen": "2026-04-15T05:01:20Z",
+      "runsFailing": 149,
       "status": "open"
     },
     "founder-token-leak:ce83eed1": {
@@ -392,8 +391,8 @@
     }
   ],
   "trendCounters": {
-    "gitleaks_not_installed_runs_in_a_row": 148,
-    "trufflehog_not_installed_runs_in_a_row": 148,
+    "gitleaks_not_installed_runs_in_a_row": 149,
+    "trufflehog_not_installed_runs_in_a_row": 149,
     "perm_drift_events": 78
   },
   "escalationState": {

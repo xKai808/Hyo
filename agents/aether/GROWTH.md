@@ -218,3 +218,4 @@ Build a weekly aggregation script that runs after each day's analysis is publish
 | 2026-04-28 | (Planned) Quality Scorecard Phase 12.5 integrated. | Analysis for 2026-04-28 shows: Coverage 100%, Classification 96%, Anti-patchwork 88%, GPT phases 2/2 → Overall 96/100. Published to HQ alongside analysis. |
 | 2026-05-05 | (Planned) Weekly Aggregator complete. First weekly report published. | Report shows: COVERED_CALL family +1.8 edge/contract (up from +1.2 last week), SYNTHETIC_LONG -0.3 (in decline, flag for review), morning window +EV, evening window -EV, concentration 55% (top 3 trades, healthy). |
 | 2026-04-14 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-14 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |

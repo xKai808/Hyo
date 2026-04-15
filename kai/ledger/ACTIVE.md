@@ -1,6 +1,6 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-15T04:49:46Z
+Last updated: 2026-04-15T05:04:48Z
 
 ## In Progress
 
@@ -30,7 +30,7 @@ Last updated: 2026-04-15T04:49:46Z
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
 - **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
-  - Delegated: 2026-04-15T04:49:46Z
+  - Delegated: 2026-04-15T05:04:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -59,7 +59,7 @@ Last updated: 2026-04-15T04:49:46Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-15T04:49:45Z
+  - Delegated: 2026-04-15T05:04:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -109,15 +109,15 @@ Last updated: 2026-04-15T04:49:46Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-15T04:49:46Z
+  - Delegated: 2026-04-15T05:04:47Z
   - Status: DELEGATED
 
 - **kai-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by kai)
-  - Delegated: 2026-04-15T04:49:46Z
+  - Delegated: 2026-04-15T05:04:48Z
   - Status: DELEGATED
 
-- **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-15T04:49:46Z
+- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-15T05:04:47Z
   - Status: DELEGATED
 
 ## Queued

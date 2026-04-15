@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-15T04:49:46Z
+Last updated: 2026-04-15T05:04:47Z
 
 ## In Progress
 
 - **nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged by kai)
-  - Delegated: 2026-04-15T04:49:46Z
+  - Delegated: 2026-04-15T05:04:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
