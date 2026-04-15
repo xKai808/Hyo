@@ -334,6 +334,26 @@ PYEOF
 
 RC=$?
 
+# ---- Adaptive escalation diagnostics -----------------------------------
+# If any check is failing chronically (3+ consecutive failures),
+# run deeper diagnostics to help Nel understand root cause
+ADAPT="$ROOT/agents/nel/sentinel-adapt.sh"
+if [[ -x "$ADAPT" ]]; then
+  echo "" >&2
+  echo "Running adaptive diagnostics (sentinel-adapt.sh)..." >&2
+  bash "$ADAPT" >/dev/null 2>&1 || true
+  # Append diagnostics summary to report if they exist
+  DIAGNOSTICS="$LOGS/sentinel-diagnostics-$TODAY.md"
+  if [[ -f "$DIAGNOSTICS" ]]; then
+    echo "" >> "$REPORT"
+    echo "---" >> "$REPORT"
+    echo "" >> "$REPORT"
+    echo "## Adaptive Diagnostics" >> "$REPORT"
+    echo "" >> "$REPORT"
+    echo "See \`$DIAGNOSTICS\` for detailed investigation of chronic failures (escalation level 2+)." >> "$REPORT"
+  fi
+fi
+
 # ---- summary output ---------------------------------------------------------
 # ---- auto-push to HQ -------------------------------------------------------
 KAI="$ROOT/bin/kai.sh"

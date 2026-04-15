@@ -597,6 +597,21 @@ def write_jsonl(records: list[Record], path: Path, *, append: bool) -> int:
     return count
 
 
+def should_skip_source(source_name: str) -> bool:
+    """Check if a source is disabled (via source_health.py). Return True if disabled."""
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["python3", str(HERE / "source_health.py"), "--skip-source", source_name],
+            capture_output=True,
+            timeout=2,
+        )
+        return result.returncode == 0  # 0 = disabled, 1 = enabled
+    except Exception:
+        # If health check fails, don't skip — assume source is ok
+        return False
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Hyo newsletter gather stage (stdlib-only).")
     ap.add_argument("--date", help="YYYY-MM-DD (default: today)")
@@ -642,6 +657,12 @@ def main() -> int:
         if not fn:
             stats.append((name, 0, f"skip:unknown_type={stype}"))
             continue
+
+        # Check if source is disabled by health monitor
+        if should_skip_source(name):
+            stats.append((name, 0, f"skip:disabled_by_health_monitor"))
+            continue
+
         src_t0 = time.time()
         try:
             recs = fn(src, run_cfg)

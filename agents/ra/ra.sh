@@ -167,6 +167,49 @@ fi
 
 REPORT+=$'\n'
 
+# ---- 3.5. Source health ----
+hdr "Checking source health"
+REPORT+="## 3.5. Source Health Status"$'\n'$'\n'
+
+SOURCE_HEALTH_SCRIPT="$NEWSLETTER_DIR/source_health.py"
+if [[ -f "$SOURCE_HEALTH_SCRIPT" ]]; then
+  HEALTH_REPORT=$(python3 "$SOURCE_HEALTH_SCRIPT" --dry-run 2>&1 || true)
+  if echo "$HEALTH_REPORT" | grep -q "sandbox detected"; then
+    warn "source health: sandbox mode (network unavailable)"
+    REPORT+="! Source health: sandbox detected, health checks skipped"$'\n'
+  else
+    HEALTH_JSON="$NEWSLETTER_DIR/source-health.json"
+    if [[ -f "$HEALTH_JSON" ]]; then
+      ok "source health data available"
+      # Extract summary from JSON
+      HEALTH_SUMMARY=$(python3 << PEOF
+import json
+with open("$HEALTH_JSON") as f:
+  data = json.load(f)
+sources = data.get("sources", {})
+healthy = sum(1 for h in sources.values() if h.get("status") == "healthy")
+degraded = sum(1 for h in sources.values() if h.get("status") == "degraded")
+disabled = sum(1 for h in sources.values() if h.get("status") == "disabled")
+print(f"Healthy: {healthy}, Degraded: {degraded}, Disabled: {disabled}")
+PEOF
+)
+      REPORT+="✓ Source health: $HEALTH_SUMMARY"$'\n'
+      if [[ $disabled -gt 0 ]]; then
+        warn "source health: $disabled source(s) disabled"
+        WARNINGS=$((WARNINGS+1))
+      fi
+    else
+      warn "source health: no health data available (first run?)"
+      REPORT+="! Source health: no data available"$'\n'
+    fi
+  fi
+else
+  warn "source_health.py script missing"
+  REPORT+="! source_health.py not found at $SOURCE_HEALTH_SCRIPT"$'\n'
+fi
+
+REPORT+=$'\n'
+
 # ---- 4. Content gaps ----
 hdr "Checking for content gaps"
 REPORT+="## 4. Content Gap Analysis"$'\n'$'\n'

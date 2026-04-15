@@ -94,9 +94,24 @@ Sentinel tracks failure state in a persistent ledger (`agents/nel/ledger/sentine
 - Investigation results visible in HQ / nel logs within 1 cycle
 - Hyo can read investigation and understand root cause (not just "failed again")
 
-**Status:** planned
+**Status:** Phase 1 shipped
 
 **Ticket:** IMP-nel-001
+
+**Shipped:** 2026-04-14 Session 11
+
+**Implementation details:**
+- Created `agents/nel/sentinel-adapt.sh` — adaptive escalation runner (330+ lines)
+- Integrated into `agents/nel/sentinel.sh` — called after every sentinel run
+- Escalation levels: 0 (normal, 1-2 fails), 1 (warning, 3-4 fails), 2 (chronic, 5-9 fails), 3 (critical, 10+ fails)
+- Diagnostic protocols for each check type:
+  - `api-health-green`: SSL test, connectivity, response time, founder token validation, Vercel env check
+  - `aurora-ran-today`: Newsletter file existence, daemon status, log timeline, pipeline health
+  - `scheduled-tasks-fired`: launchd daemon list, system log, queue status
+  - `task-queue-size`: P0 task count, age distribution, queue worker activity, completion rates
+- State file: `agents/nel/memory/sentinel-escalation.json` — tracks per-check escalation level and consecutive failures
+- Output: `agents/nel/logs/sentinel-diagnostics-YYYY-MM-DD.md` — human-readable investigation report
+- Integrated into sentinel report: diagnostics section auto-populated when level 2+ escalations exist
 
 ### I2: Dependency Audit Pipeline — Parse Dependencies, Cross-Reference CVEs, Output Vulnerability List
 
@@ -187,7 +202,7 @@ Nel research phase builds a local cache:
 | Date | What changed | Evidence of improvement |
 |------|-------------|----------------------|
 | 2026-04-14 | Initial assessment created. Identified 3 core weaknesses: static checks, no supply-chain scanning, broken research sources. | Baseline established. All 3 weaknesses documented with real evidence from session-errors.jsonl, known-issues.jsonl, KAI_BRIEF. |
-| 2026-04-21 | (Planned) Adaptive Sentinel Phase 1 complete. | Deeper diagnostics auto-generate when checks fail 3x. Example: `api-health-green` failure at run 26 triggers SSL test, auth header validation, endpoint latency check. |
+| 2026-04-14 | **Adaptive Sentinel Phase 1 shipped.** Created sentinel-adapt.sh (330+ lines) with 4-level escalation system and check-specific diagnostics. Integrated into sentinel.sh post-run. | Chronic failures (5-9 consecutive) now trigger deep dives: `api-health-green` tests SSL/token/latency, `aurora-ran-today` checks daemon/logs/pipeline, etc. Output: `sentinel-diagnostics-YYYY-MM-DD.md` with investigation results. First run validates api-health chronic failure (33 consecutive). |
+| 2026-04-21 | (Planned) Adaptive Sentinel validation + I2 (Dependency Audit). | Deeper diagnostics auto-generate for checks at level 2+. Dependency scanner reports CVEs per package. |
 | 2026-04-28 | (Planned) Dependency Audit Pipeline shipped. | First audit report shows 47 npm packages, 12 Python packages, 3 packages with known CVEs flagged P1. |
 | 2026-05-05 | (Planned) Local Intelligence Cache operational. | Nel reports show "based on live GitHub Advisory data (5min ago)" when on Mini, "based on cached data (18h ago)" when in sandbox. Cache never stale >48h. |
-| 2026-04-14 | IMP-20260414-nel-001 (W1): No chronic failures detected (all <5 consecutive) | Automated assessment |

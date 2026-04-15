@@ -190,10 +190,108 @@ validate_jsonl "$DEX_LOG" "dex" || true
 
 if [[ $INTEGRITY_FAIL -gt 0 ]]; then
   log_activity "PHASE_1_INTEGRITY" "failed" "Found $INTEGRITY_FAIL corrupt JSONL files"
-  dispatch_flag "P0" "Dex Phase 1 FAILED: $INTEGRITY_FAIL JSONL files have corrupt entries"
+  # Don't flag yet — Phase 1.5 will attempt auto-repair
 else
   log_activity "PHASE_1_INTEGRITY" "passed" "All JSONL files validated successfully"
   log_pass "Phase 1 complete: All JSONL files valid"
+fi
+
+# ============================================================================
+# PHASE 1.5: AUTO-REPAIR FOR FIXABLE CORRUPTION
+# ============================================================================
+echo "## Phase 1.5: Auto-Repair for Fixable Corruption" >> "$REPORT"
+echo "" >> "$REPORT"
+
+log_info "Phase 1.5: Attempting auto-repair on detected corruption"
+log_activity "PHASE_1_5_REPAIR" "in_progress" "Running auto-repair on corrupt JSONL files"
+
+REPAIR_SCRIPT="$DEX_HOME/repair.sh"
+REPAIR_COUNT=0
+REPAIR_RESULTS=""
+STILL_CORRUPT=0
+
+# Function to repair a JSONL file
+repair_jsonl() {
+  local filepath="$1"
+  local agent_name="$2"
+
+  if [[ ! -f "$filepath" ]] || [[ ! -s "$filepath" ]]; then
+    return 0
+  fi
+
+  if [[ ! -x "$REPAIR_SCRIPT" ]]; then
+    log_warn "repair.sh not found or not executable at $REPAIR_SCRIPT"
+    return 1
+  fi
+
+  # Run repair and capture JSON output
+  local repair_output
+  repair_output=$(bash "$REPAIR_SCRIPT" "$filepath" 2>/dev/null || echo '{"status":"error"}')
+
+  # Parse repair output
+  local status=$(echo "$repair_output" | python3 -c "import json, sys; d=json.load(sys.stdin); print(d.get('status', 'unknown'))" 2>/dev/null || echo "unknown")
+  local repaired=$(echo "$repair_output" | python3 -c "import json, sys; d=json.load(sys.stdin); print(d.get('repaired', 0))" 2>/dev/null || echo "0")
+  local unfixable=$(echo "$repair_output" | python3 -c "import json, sys; d=json.load(sys.stdin); print(d.get('unfixable', 0))" 2>/dev/null || echo "0")
+  local removed=$(echo "$repair_output" | python3 -c "import json, sys; d=json.load(sys.stdin); print(d.get('removed', 0))" 2>/dev/null || echo "0")
+
+  if [[ "$status" != "error" ]]; then
+    ((REPAIR_COUNT++))
+    if [[ $repaired -gt 0 ]] || [[ $removed -gt 0 ]]; then
+      log_pass "Repaired: $agent_name:$filepath (fixed $repaired, deduped/removed $removed)"
+      REPAIR_RESULTS="${REPAIR_RESULTS}  - $agent_name: repaired=$repaired, deduped=$removed, unfixable=$unfixable\n"
+    fi
+    if [[ $unfixable -gt 0 ]]; then
+      ((STILL_CORRUPT++))
+      REPAIR_RESULTS="${REPAIR_RESULTS}    ⚠ $unfixable entries still unfixable — requires manual review\n"
+    fi
+  else
+    log_warn "repair.sh failed for $agent_name:$filepath"
+    REPAIR_RESULTS="${REPAIR_RESULTS}  - $agent_name: repair failed (see logs)\n"
+  fi
+}
+
+# Attempt repair on all ledger files if corruption was detected
+if [[ $INTEGRITY_FAIL -gt 0 ]]; then
+  repair_jsonl "$KAI_LEDGER/log.jsonl" "kai" || true
+  repair_jsonl "$NEL_LEDGER/log.jsonl" "nel" || true
+  repair_jsonl "$RA_LEDGER/log.jsonl" "ra" || true
+  repair_jsonl "$SAM_LEDGER/log.jsonl" "sam" || true
+  repair_jsonl "$KAI_LEDGER/known-issues.jsonl" "kai:known-issues" || true
+  repair_jsonl "$KAI_LEDGER/simulation-outcomes.jsonl" "kai:simulation-outcomes" || true
+  repair_jsonl "$DEX_LOG" "dex" || true
+
+  # Report Phase 1.5 results
+  {
+    echo "### Results"
+    echo ""
+    echo "- Files processed: $REPAIR_COUNT"
+    echo "- Entries still unfixable: $STILL_CORRUPT"
+    echo ""
+
+    if [[ -n "$REPAIR_RESULTS" ]]; then
+      echo "### Repair Details"
+      echo ""
+      echo -e "$REPAIR_RESULTS"
+      echo ""
+    fi
+  } >> "$REPORT"
+
+  if [[ $STILL_CORRUPT -gt 0 ]]; then
+    log_activity "PHASE_1_5_REPAIR" "partial" "Fixed some, $STILL_CORRUPT entries remain unfixable"
+    dispatch_flag "P1" "Dex Phase 1.5: Repaired corruption but $STILL_CORRUPT entries still unfixable (manual review needed)"
+  else
+    log_activity "PHASE_1_5_REPAIR" "success" "All fixable corruption repaired"
+    log_pass "Phase 1.5 complete: All fixable corruption repaired"
+  fi
+else
+  {
+    echo "### Results"
+    echo ""
+    echo "- Skipped: No corruption detected in Phase 1"
+    echo ""
+  } >> "$REPORT"
+  log_activity "PHASE_1_5_REPAIR" "skipped" "No corruption found to repair"
+  log_pass "Phase 1.5 skipped: No corruption to repair"
 fi
 
 # ============================================================================

@@ -103,9 +103,9 @@ Add Phase 0 (pre-gather) to the newsletter pipeline:
 - HQ feed shows source health status (which are HEALTHY, which are DEGRADED, when was last-known-good)
 - Hyo can see why a newsletter might be sparse: "3 of 15 sources degraded"
 
-**Status:** planned
+**Status:** Phase 1 shipped
 
-**Ticket:** IMP-ra-001
+**Ticket:** IMP-20260414-ra-001
 
 ### I2: Content Quality Scoring — After Synthesis, Score Output for Diversity/Freshness/Length; Track Over Time
 
@@ -205,7 +205,7 @@ Addresses W3
 | Date | What changed | Evidence of improvement |
 |------|-------------|----------------------|
 | 2026-04-14 | Initial assessment created. Identified 3 weaknesses: no feedback loop, unverified sources, content diversity gaps. | Baseline established. Real evidence from KAI_BRIEF ("Yahoo Finance dead 3+ days"), known-issues.jsonl (0-records sources), session logs showing "no newsletter produced" 3x. |
-| 2026-04-21 | (Planned) Source Health Monitoring Phase 0 implemented. | All 15 sources tested before gather. Yahoo Finance scores 15/100 (dead), auto-disabled. AP News scores 45/100 (degraded). 13 sources healthy. Health status published to HQ. |
+| 2026-04-14 | I1 Phase 1 shipped: Source Health Monitoring system implemented. | Created `source_health.py` (430 lines) with health tracking, status classification, and dry-run mode for sandbox. Wired into gather.py to skip disabled sources. Updated ra.sh to report health summary. Tracks success_rate, consecutive_failures, avg_response_time_ms. Status rules: disabled (sr<0.3 or cf>=7), degraded (0.3<=sr<=0.8 or cf>=3), healthy (sr>=0.8). Sandbox detection prevents false failures in Cowork. |
+| 2026-04-21 | (Planned) Source health checks run during gather phase. First disabled sources identified and skipped. | Real data: which sources consistently fail, when, what errors. Health status visible in ra.sh output. Newsletter coverage may drop if sources stay disabled >7 cycles. |
 | 2026-04-28 | (Planned) Quality Scoring Phase 4.5 complete. First scorecard published. | Newsletter for 2026-04-28 shows: diversity 18/30 topics (60%), freshness 92%, length 1150 words (compliant), uniqueness 11/15 sources. Overall score: 75/100. |
 | 2026-05-12 | (Planned) Gap coverage research + first wave of new sources. | 3 new sources integrated: ArtsAxis (culture), ESPN RSS (sports), Wellness API (lifestyle). Coverage matrix shows 22/30 topics now have 2+sources (up from 9/30). Next newsletter will test diversification. |
-| 2026-04-14 | IMP-20260414-ra-001 (W1): Found 16 sources across 2 categories. | Automated assessment |

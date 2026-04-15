@@ -2,8 +2,8 @@
 
 **Owner:** Dex (self-managed)  
 **Override authority:** Kai (CEO)  
-**Last self-update:** 2026-04-13  
-**Evolution version:** 1.0
+**Last self-update:** 2026-04-14  
+**Evolution version:** 1.1
 
 ---
 
@@ -17,6 +17,7 @@ Dex is the system memory manager and data integrity guardian. We own all JSONL l
 
 **Strengths:**
 - JSONL integrity validation solid (JSON parsing, required-field checks working correctly)
+- Auto-repair engine operational (Phase 1.5 — handles trailing comma, missing braces, truncated lines, duplicates, empty lines)
 - Stale task detection algorithm accurate (72h threshold, ACTIVE.md cross-reference)
 - Log compaction logic sound (30-day archive generation, monthly file organization)
 - Pattern detection working (substring matching on known-issues vs recent logs)
@@ -44,7 +45,8 @@ Every daily cycle Dex runs at 03:00 MT in this order. When improvements are foun
 
 - [ ] **Phase 1: Startup** — Load prior state from `agents/dex/ledger/dex.state.json`; verify all source ledgers readable; check if this is first run of the day
 - [ ] **Phase 2: JSONL Integrity** — For each ledger (kai/, nel/, ra/, sam/, dex/ledger/*.jsonl): parse line-by-line as JSON; verify required fields (ts, action/type, agent); flag any parse errors or truncated lines as P0
-- [ ] **Phase 3: Integrity Report** — If P0 integrity failure: dispatch flag immediately, halt processing, do not proceed to later phases
+- [ ] **Phase 3: Integrity Report** — If P0 integrity failure: do not halt; proceed to Phase 1.5 for auto-repair attempt
+- [ ] **Phase 1.5: Auto-Repair** — (NEW — 2026-04-14) For any JSONL files detected as corrupt in Phase 1: run `agents/dex/repair.sh` to auto-fix common corruption types (trailing comma, missing braces, truncated lines, duplicates, empty lines). Output JSON summary with (total_lines, corrupt, repaired, removed, unfixable). If unfixable entries remain, flag P1; if all fixed, continue normally. Never halt; repair is always attempted.
 - [ ] **Phase 4: Stale Task Detection** — Load all ACTIVE.md files (kai/ledger/, agents/*/ledger/); for each open task: check delegated timestamp; if >72h with no status update, flag as stale
 - [ ] **Phase 5: Stale Task Report** — Compile list of stale tasks (task_id, age_hours, last_update_timestamp); call `dispatch flag dex P1 "Stale task: <id> age <hours>h"` for each
 - [ ] **Phase 6: Log Compaction** — For each ledger, scan log.jsonl for entries >30 days old; move to log-archive-YYYY-MM.jsonl; keep active log with <14 days of entries only
