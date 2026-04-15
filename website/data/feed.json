@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-14T20:09:48-0600",
+  "lastUpdated": "2026-04-14T22:33:32-0600",
   "today": "2026-04-14",
   "agents": {
     "kai": {
@@ -134,7 +134,7 @@
         ]
       },
       "inProcess": [
-        "Latest output: 2026-04-14.input.md"
+        "Latest output: 2026-04-14.md"
       ],
       "pending": [
         "Mini launchd migration for gather phase",
@@ -204,6 +204,57 @@
   },
   "reports": [
     {
+      "id": "mr-2026-04-14",
+      "type": "morning-report",
+      "title": "Morning Report",
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-14T22:33:32-0600",
+      "date": "2026-04-14",
+      "sections": {
+        "summary": "Working: newsletter shipped, sentinel 6/9 checks passing, AetherBot at $108.11. Blocked: api-health-green failing  straight runs \u2014 root cause: health endpoint not green or token unconfigured _(day 33)_; simulation has 9 failures \u2014 regression investigation needed.",
+        "wentWell": [
+          "Newsletter produced and delivered on schedule.",
+          "Sentinel passed 6 of 9 checks.",
+          "Aether daily analysis produced.",
+          "Research active: Nel (1 sources), Ra (7 sources), Aether (6 sources), Dex (6 sources)."
+        ],
+        "needsAttention": [
+          "New sentinel issue (P1): scheduled-tasks-fired \u2014 no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs.",
+          "Persistent failure: api-health-green \u2014 health endpoint not green or token unconfigured _(day 33)_. Needs root-cause fix.",
+          "Persistent failure: task-queue-size \u2014 17 P0 tasks (overload threshold 5) _(day 14)_. Needs root-cause fix.",
+          "Simulation: 25 pass / 9 fail. Investigate what regressed.",
+          "68 known issues accumulating \u2014 schedule a cleanup sprint."
+        ],
+        "agentHighlights": {
+          "nel": "Sentinel ran 9 checks: 6 passed, 3 failed. New P1 issue: scheduled-tasks-fired \u2014 no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs. Persistent problem: api-health-green has been failing for  consecutive runs. This needs a root-cause fix, not monitoring. 1 escalation(s) active. Cipher scan: 0 finding(s). Investigate immediately. Research: 1/6 sources responded. Failed: Node.js Security RSS, OWASP News, Snyk Vulnerability DB. These sources are unreachable from the sandbox \u2014 either move research to Mini or find alternative endpoints. Open follow-up: [2026-04-13 +1d] Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies.",
+          "ra": "Newsletter produced (2026-04-14.input.md). Pipeline is working. Research: pulled from 7/7 sources (Nieman Lab, Substack Reads, Hacker News AI/ML, AP News Top Stories). Looking at newsletter craft, audience engagement, and content format patterns.",
+          "sam": "No research output today. Sam's runner either didn't fire or had no research phase. Sam needs a scheduled trigger \u2014 currently only runs on-demand, which means it sits idle unless someone calls it. No logs from Sam today. Next step: add a launchd plist so Sam's self-evolution fires automatically like the other agents.",
+          "aether": "Trading: balance $108.11, ? trades, 75.0% win rate, net P&L $17.86. Daily analysis written. GPT dual-phase verification: complete. Self-review found 5 issue(s): **2026-04-14-aether-results.json**: WHAT triggers this? Found 0 callers.. Research: 6/6 sources. Tracking exchange API patterns, position sizing models. Open: [2026-04-13 +1d] Model Kelly Criterion against historical trades to find optimal.",
+          "dex": "Research: pulled from 6/6 sources (Hacker News Data Engineering, Martin Kleppmann Blog, JSONL Spec and Alternatives). Investigating data integrity patterns, JSONL alternatives, and event sourcing architectures. Open: [2026-04-13 +1d] Evaluate auto-repair for corrupt JSONL entries vs just flagging. Integrity finding: detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged. Dex needs to decide whether to auto-repair corrupt JSONL entries or just flag them for manual review."
+        }
+      }
+    },
+    {
+      "id": "aether-analysis-2026-04-14",
+      "type": "aether-analysis",
+      "title": "AetherBot Daily Analysis \u2014 Tue Apr 14 (+$17.23, best day this week)",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-14T21:30:00-0600",
+      "date": "2026-04-14",
+      "sections": {
+        "summary": "Tuesday was AetherBot's strongest day. Balance surged +$17.23 ($86.44 \u2192 $103.67), breaking back above $100. 20 unique trades: 14W/6L (70% WR). Monster trade: PAQ_STRUCT_GATE NO@0.48 (20c) harvested 17c for +$8.43. Phantom gap improved dramatically from Monday's -$23 to just +$1.21. Harvest success rate flipped to 80% (33/41) from Monday's 46%. BTC flat (+0.5%).",
+        "trades": "20 trades settled. bps_premium: 12 trades (9W/3L, +$2.51). PAQ_EARLY_AGG: 5 trades (3W/2L, +$2.39). PAQ_STRUCT_GATE: 2 trades (1W/1L, +$8.18). WES_EARLY: 1 trade (1W, +$2.28). bps_late: 1 trade (1W, +$0.66). Big loss: bps_premium NO@0.72 stopped -$5.04.",
+        "risk": "40 POS WARNINGs but phantom gap only +$1.21 (vs Monday's -$23). Warnings are firing but NOT corrupting P&L. 8 harvest misses still show OB parser bug (yes_bids:ABSENT).",
+        "balance": "$86.44 \u2192 $103.67 | Net: +$17.23 | Claimed: +$16.02 | Phantom gap: +$1.21",
+        "btc": "BTC $74,265 \u2192 $74,645 (+0.5%). Flat day \u2014 stability may explain why phantom gap shrank vs Monday's volatile +4.67%.",
+        "readLink": "/daily/aether-2026-04-14"
+      }
+    },
+    {
       "id": "agent-reflection-nel-2026-04-14-200948",
       "type": "agent-reflection",
       "title": "Nel \u2014 Research & Reflection",
@@ -269,24 +320,6 @@
       }
     },
     {
-      "id": "aether-analysis-2026-04-14",
-      "type": "aether-analysis",
-      "title": "AetherBot Daily Analysis \u2014 Tue Apr 14 (+$17.23, best day this week)",
-      "author": "Aether",
-      "authorIcon": "\ud83d\udcc8",
-      "authorColor": "#e8c96a",
-      "timestamp": "2026-04-14T21:30:00-0600",
-      "date": "2026-04-14",
-      "sections": {
-        "summary": "Tuesday was AetherBot's strongest day. Balance surged +$17.23 ($86.44 \u2192 $103.67), breaking back above $100. 20 unique trades: 14W/6L (70% WR). Monster trade: PAQ_STRUCT_GATE NO@0.48 (20c) harvested 17c for +$8.43. Phantom gap improved dramatically from Monday's -$23 to just +$1.21. Harvest success rate flipped to 80% (33/41) from Monday's 46%. BTC flat (+0.5%).",
-        "trades": "20 trades settled. bps_premium: 12 trades (9W/3L, +$2.51). PAQ_EARLY_AGG: 5 trades (3W/2L, +$2.39). PAQ_STRUCT_GATE: 2 trades (1W/1L, +$8.18). WES_EARLY: 1 trade (1W, +$2.28). bps_late: 1 trade (1W, +$0.66). Big loss: bps_premium NO@0.72 stopped -$5.04.",
-        "risk": "40 POS WARNINGs but phantom gap only +$1.21 (vs Monday's -$23). Warnings are firing but NOT corrupting P&L. 8 harvest misses still show OB parser bug (yes_bids:ABSENT).",
-        "balance": "$86.44 \u2192 $103.67 | Net: +$17.23 | Claimed: +$16.02 | Phantom gap: +$1.21",
-        "btc": "BTC $74,265 \u2192 $74,645 (+0.5%). Flat day \u2014 stability may explain why phantom gap shrank vs Monday's volatile +4.67%.",
-        "readLink": "/daily/aether-2026-04-14"
-      }
-    },
-    {
       "id": "agent-reflection-ra-2026-04-14-182615",
       "type": "agent-reflection",
       "title": "Ra \u2014 Content Pipeline Report",
@@ -328,40 +361,6 @@
           "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies"
         ],
         "forKai": "I found a confirmed blindspot in today's research \u2014 active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
-      }
-    },
-    {
-      "id": "mr-2026-04-14",
-      "type": "morning-report",
-      "title": "Morning Report",
-      "author": "Kai",
-      "authorIcon": "\ud83d\udc54",
-      "authorColor": "#d4a853",
-      "timestamp": "2026-04-14T08:37:56-0600",
-      "date": "2026-04-14",
-      "sections": {
-        "summary": "Mixed bag overnight. The newsletter went out on schedule. The simulation suite caught some failures (25 pass / 9 fail), which needs investigation. Healthcheck reported issues: 7 issues, 4 warnings \u2014 mostly persistent items from previous cycles. No trading activity \u2014 Aether is in standby until we get live API keys.",
-        "wentWell": [
-          "Newsletter went out on schedule \u2014 the content pipeline is reliable",
-          "Nel is actively growing \u2014 researching its domain and proposing improvements",
-          "Ra is actively growing \u2014 researching its domain and proposing improvements",
-          "Aether is actively growing \u2014 researching its domain and proposing improvements",
-          "Dex is actively growing \u2014 researching its domain and proposing improvements"
-        ],
-        "needsAttention": [
-          "Healthcheck flagged some issues (ISSUES: 7 issues, 4 warnings) \u2014 most are persistent from previous cycles and need root-cause fixes",
-          "Simulation caught failures (25 pass / 9 fail) \u2014 something regressed and needs investigation before it spreads",
-          "Ra is blocked: no newsletter produced today \u2014 pipeline may be blocked or sources failing",
-          "Aether is blocked: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc",
-          "Dex is blocked: detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged"
-        ],
-        "agentHighlights": {
-          "nel": "Nel's score dropped to 65, which is below target. Actively researching security patterns and growing domain expertise.",
-          "sam": "Quiet cycle from Sam \u2014 no new data came in. Need to check if the runner executed or if there's a scheduling issue.",
-          "ra": "Newsletter went out on schedule \u2014 Ra's pipeline is delivering. Working on editorial voice and source diversification in the meantime.",
-          "aether": "Aether is in standby \u2014 no live trades happening. Waiting on exchange API keys to move from replay mode to live tracking. Dashboard sync issue persists \u2014 data exists but HQ can't render it.",
-          "dex": "pattern detection: 120 recurrent issues found."
-        }
       }
     },
     {

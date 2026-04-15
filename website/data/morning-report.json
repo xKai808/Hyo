@@ -1,122 +1,250 @@
 {
   "date": "2026-04-14",
-  "generatedAt": "2026-04-14T08:37:56-0600",
-  "generatedBy": "bin/generate-morning-report.sh",
-  "executiveSummary": "Morning report for 2026-04-14. Simulation: 25 pass / 9 fail. Health: ISSUES: 7 issues, 4 warnings. Trading: Balance: $87.45, Trades: ?, Win rate: 0.0, Strategies: 6.",
-  "agentReports": [
-    {
-      "agent": "nel",
-      "activeTasks": 42,
-      "score": 65,
-      "assessment": "routine maintenance run",
-      "topTasks": [
-        "**nel-001** [P0] [AUTO-REMEDIATE] agents/nel/security is NOT gitignored (flagged",
-        "**nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) \u2014 scan entire c",
-        "**nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) \u2014 scan entire c"
-      ],
-      "reflection": {
-        "bottleneck": "none",
-        "symptom_or_system": "system",
-        "artifact_alive": "yes",
-        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "sentinel=2p/2f, cipher_leaks=0, score=65"
-      }
-    },
-    {
-      "agent": "sam",
-      "activeTasks": 20,
-      "score": "?",
-      "assessment": "",
-      "topTasks": [
-        "**sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether m",
-        "**sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsl",
-        "**sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsl"
-      ],
-      "reflection": {}
-    },
-    {
-      "agent": "ra",
-      "activeTasks": 15,
-      "score": "?",
-      "assessment": "health check with 1 warning(s)",
-      "topTasks": [
-        "**ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's pr",
-        "**ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06",
-        "**ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-13 \u2014 past 06"
-      ],
-      "reflection": {
-        "bottleneck": "no newsletter produced today \u2014 pipeline may be blocked or sources failing",
-        "symptom_or_system": "system",
-        "artifact_alive": "yes",
-        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "critical=0, warnings=1, sources=0, archive=       5"
-      }
-    },
-    {
-      "agent": "aether",
-      "activeTasks": 2,
-      "score": "?",
-      "assessment": "standby mode: no trades this cycle; WARNING: dashboard out-of-sync",
-      "topTasks": [
-        "**aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What'",
-        "**flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-13T22:50:24-0"
-      ],
-      "reflection": {
-        "bottleneck": "dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cycle \u2014 may be blocked on exchange API or AetherBot logger",
-        "symptom_or_system": "system",
-        "artifact_alive": "yes",
-        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "trades=0, pnl=-2.8, dashboard=out-of-sync"
-      }
-    },
-    {
-      "agent": "dex",
-      "activeTasks": 2,
-      "score": "?",
-      "assessment": "pattern detection: 120 recurrent issues found",
-      "topTasks": [
-        "**dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a ro",
-        "**flag-dex-001** [P2] Dex Phase 1 FAILED: 2 JSONL files have corrupt entries"
-      ],
-      "reflection": {
-        "bottleneck": "detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged",
-        "symptom_or_system": "symptom \u2014 120 recurrent patterns suggests prior fixes didn't address root causes",
-        "artifact_alive": "yes",
-        "domain_growth": "active \u2014 PLAYBOOK updated within 7 days",
-        "learning": "integrity=5p/2f, stale=0, patterns=120"
-      }
-    }
-  ],
-  "kaiReport": {
-    "simulation": "25 pass / 9 fail",
-    "healthcheck": "ISSUES: 7 issues, 4 warnings",
-    "knownIssues": 2,
-    "newsletter": "produced"
-  },
+  "generatedAt": "2026-04-14T22:33:32-0600",
+  "generatedBy": "bin/generate-morning-report.sh v2",
   "systemHealth": {
-    "queueWorker": "check healthcheck-latest.json",
-    "simulation": "25 pass / 9 fail",
-    "healthcheck": "ISSUES: 7 issues, 4 warnings"
+    "healthcheck": {
+      "status": "ISSUES",
+      "issues": 5,
+      "warnings": 5
+    },
+    "simulation": {
+      "passed": 25,
+      "failed": 9
+    },
+    "knownIssues": 68
   },
   "trading": {
-    "summary": "Balance: $87.45, Trades: ?, Win rate: 0.0, Strategies: 6"
+    "balance": 108.11,
+    "trades": "?",
+    "winRate": 75.0,
+    "pnl": 17.86,
+    "strategies": 6,
+    "dailyPnl": [
+      {
+        "date": "2026-04-13",
+        "day": "Monday",
+        "pnl": -3.81,
+        "claimedPnl": 19.17,
+        "phantomGap": -22.98,
+        "balance": 86.44,
+        "trades": 24,
+        "wins": 19,
+        "losses": 5,
+        "winRate": 79.2,
+        "stoplossTriggers": 5,
+        "harvestDone": 21,
+        "harvestMiss": 25,
+        "posWarnings": 22,
+        "btcChange": "+4.67%",
+        "strategies": {
+          "bps_premium": {
+            "trades": 13,
+            "wins": 10,
+            "losses": 3,
+            "net": -7.18
+          },
+          "PAQ_EARLY_AGG": {
+            "trades": 8,
+            "wins": 6,
+            "losses": 2,
+            "net": 22.9
+          },
+          "PAQ_STRUCT_GATE": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "net": 3.57
+          },
+          "bps_late": {
+            "trades": 2,
+            "wins": 2,
+            "losses": 0,
+            "net": 1.84
+          }
+        }
+      },
+      {
+        "date": "2026-04-14",
+        "day": "Tuesday",
+        "pnl": 20.92,
+        "claimedPnl": 16.02,
+        "phantomGap": 4.9,
+        "balance": 107.36,
+        "trades": 20,
+        "wins": 14,
+        "losses": 6,
+        "winRate": 70.0,
+        "stoplossTriggers": 6,
+        "harvestDone": 33,
+        "harvestMiss": 8,
+        "posWarnings": 40,
+        "btcChange": "+0.5%",
+        "strategies": {
+          "bps_premium": {
+            "trades": 12,
+            "wins": 9,
+            "losses": 3,
+            "net": 2.51
+          },
+          "PAQ_EARLY_AGG": {
+            "trades": 5,
+            "wins": 3,
+            "losses": 2,
+            "net": 2.39
+          },
+          "PAQ_STRUCT_GATE": {
+            "trades": 2,
+            "wins": 1,
+            "losses": 1,
+            "net": 8.18
+          },
+          "WES_EARLY": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "net": 2.28
+          },
+          "bps_late": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "net": 0.66
+          }
+        }
+      },
+      {
+        "date": "2026-04-15",
+        "day": "Wednesday",
+        "pnl": 0.0,
+        "balance": 107.36,
+        "trades": 0,
+        "note": "pending"
+      },
+      {
+        "date": "2026-04-16",
+        "day": "Thursday",
+        "pnl": 0.0,
+        "balance": 107.36,
+        "trades": 0,
+        "note": "pending"
+      },
+      {
+        "date": "2026-04-17",
+        "day": "Friday",
+        "pnl": 0.0,
+        "balance": 107.36,
+        "trades": 0,
+        "note": "pending"
+      }
+    ]
   },
-  "wentWell": [
-    "Newsletter went out on schedule \u2014 the content pipeline is reliable",
-    "Nel is actively growing \u2014 researching its domain and proposing improvements",
-    "Ra is actively growing \u2014 researching its domain and proposing improvements",
-    "Aether is actively growing \u2014 researching its domain and proposing improvements",
-    "Dex is actively growing \u2014 researching its domain and proposing improvements"
-  ],
-  "needsAttention": [
-    "Healthcheck flagged some issues (ISSUES: 7 issues, 4 warnings) \u2014 most are persistent from previous cycles and need root-cause fixes",
-    "Simulation caught failures (25 pass / 9 fail) \u2014 something regressed and needs investigation before it spreads",
-    "Ra is blocked: no newsletter produced today \u2014 pipeline may be blocked or sources failing",
-    "Aether is blocked: dashboard out-of-sync \u2014 data exists but HQ doesn't render it; no trades this cyc",
-    "Dex is blocked: detected 2 corrupt JSONL entries \u2014 check if auto-repair ran or just flagged"
-  ],
-  "improvements": [
-    "Review and close stale known issues",
-    "Check agent evolution scores for regressions"
-  ]
+  "agents": {
+    "nel": {
+      "sentinel": {
+        "passed": 6,
+        "failed": 3,
+        "new_issues": [
+          {
+            "priority": 1,
+            "check": "scheduled-tasks-fired",
+            "detail": "no aurora logs in /sessions/nifty-friendly-wozniak/mnt/Hyo/agents/nel/logs"
+          }
+        ],
+        "recurring": [
+          {
+            "priority": 0,
+            "check": "api-health-green",
+            "detail": "health endpoint not green or token unconfigured _(day 33)_"
+          },
+          {
+            "priority": 2,
+            "check": "task-queue-size",
+            "detail": "17 P0 tasks (overload threshold 5) _(day 14)_"
+          }
+        ],
+        "escalations": [
+          "**P0 escalated \u2014 failing 33 runs in a row**: health endpoint not green or token unconfigured"
+        ],
+        "resolved": [
+          "`aurora-ran-today:99aa58ee`",
+          "`scheduled-tasks-fired:d814cd3c`"
+        ]
+      },
+      "cipher": {
+        "ran": true,
+        "clean": false,
+        "findings": 0,
+        "layers_run": [],
+        "layers_skipped": []
+      },
+      "research": {
+        "sources_checked": 6,
+        "successful": 1,
+        "failed": [
+          "Node.js Security RSS",
+          "OWASP News",
+          "Snyk Vulnerability DB",
+          "NIST NVD Recent",
+          "The Hacker News"
+        ],
+        "follow_ups": [
+          "[2026-04-13 +1d] Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies \u2014 open",
+          "[2026-04-13 +1d] Cross-reference 3 CVEs (CVE-2026-34621, CVE-1999-0095, CVE-2026-39987) against our ",
+          "[2026-04-13 +1d] Evaluate tools (snyk) for integration into QA cycle \u2014 open",
+          "[2026-04-14 +0d] Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our d",
+          "[2026-04-14 +0d] Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies \u2014 op"
+        ]
+      }
+    },
+    "ra": {
+      "newsletter_produced": true,
+      "research": {
+        "sources_checked": 7,
+        "successful": 7,
+        "successful_sources": [
+          "Nieman Lab",
+          "Substack Reads",
+          "Hacker News AI/ML",
+          "AP News Top Stories",
+          "Reuters Lifestyle",
+          "Buttondown Blog",
+          "Reddit Newsletter Community"
+        ]
+      }
+    },
+    "sam": {
+      "research": {
+        "sources_checked": 0,
+        "successful": 0
+      }
+    },
+    "aether": {
+      "analysis_exists": true,
+      "self_review_issues": [
+        "**2026-04-14-aether-results.json**: WHAT triggers this? Found 0 callers.",
+        "**aether-daily-sections.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user",
+        "**hq-state.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user",
+        "**morning-report.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user",
+        "**usage-config.json**: data exists but is NOT referenced in hq.html \u2014 invisible to user"
+      ],
+      "research": {
+        "sources_checked": 6,
+        "successful": 6,
+        "follow_ups": [
+          "[2026-04-13 +1d] Model Kelly Criterion against historical trades to find optimal position sizes \u2014 op",
+          "[2026-04-13 +1d] Investigate phantom position tracking \u2014 why fake positions appear in logs \u2014 open"
+        ]
+      }
+    },
+    "dex": {
+      "research": {
+        "sources_checked": 6,
+        "successful": 6,
+        "follow_ups": [
+          "[2026-04-13 +1d] Evaluate auto-repair for corrupt JSONL entries vs just flagging \u2014 open"
+        ]
+      }
+    }
+  }
 }
