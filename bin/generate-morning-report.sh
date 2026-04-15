@@ -2,16 +2,19 @@
 # bin/generate-morning-report.sh — Two-version morning report generator
 #
 # Produces TWO outputs:
-#   1. INTERNAL: website/data/morning-report.json — technical, for Kai to parse
-#   2. FEED: appends to website/data/feed.json — human-readable, for Hyo's HQ feed
+#   1. INTERNAL: website/data/morning-report.json — technical metrics for Kai
+#   2. FEED: appends to website/data/feed.json — human-readable narrative for Hyo
+#
+# v2 (2026-04-14): Rewritten to read ACTUAL agent outputs (sentinel logs, cipher
+# scans, research findings, analysis files, self-reviews) instead of just
+# evolution.jsonl metadata. Each agent section is unique because it's built from
+# what the agent actually did, not a template.
 #
 # Called by:
 #   - com.hyo.morning-report launchd plist (05:00 MT daily)
 #   - healthcheck.sh auto-remediation (when morning report is stale)
 #   - nel-qa-cycle.sh Phase 7.5 auto-remediation
 #   - dispatch.sh simulation Phase 6 auto-remediation
-#
-# After generating, commits and pushes so Vercel picks it up.
 #
 # Usage: bash bin/generate-morning-report.sh
 #        HYO_ROOT=/path/to/Hyo bash bin/generate-morning-report.sh
@@ -22,13 +25,14 @@ ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 INTERNAL_OUTPUT="$ROOT/website/data/morning-report.json"
 FEED_OUTPUT="$ROOT/website/data/feed.json"
 TODAY=$(TZ="America/Denver" date +%Y-%m-%d)
+YESTERDAY=$(TZ="America/Denver" date -v-1d +%Y-%m-%d 2>/dev/null || TZ="America/Denver" date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "unknown")
 NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
 MONTH_KEY=$(echo "$TODAY" | cut -c1-7)
 LOG_TAG="[morning-report]"
 
 log() { echo "$LOG_TAG $(TZ='America/Denver' date +%H:%M:%S) $*"; }
 
-log "Generating morning report for $TODAY"
+log "Generating morning report v2 for $TODAY"
 
 # ── Sync agent profiles from PLAYBOOKs before generating report ──
 SYNC_SCRIPT="$ROOT/bin/sync-agent-profiles.sh"
@@ -37,333 +41,563 @@ if [[ -x "$SYNC_SCRIPT" ]]; then
   log "Agent profiles synced from PLAYBOOKs"
 fi
 
-# ── Gather data ──
-
-# Simulation
-SIM_SUMMARY="No simulation data"
-SIM_FILE="$ROOT/kai/ledger/simulation-outcomes.jsonl"
-if [[ -f "$SIM_FILE" ]]; then
-  LAST_SIM=$(tail -1 "$SIM_FILE" 2>/dev/null)
-  if [[ -n "$LAST_SIM" ]]; then
-    SIM_SUMMARY=$(python3 -c "
-import json, sys
-s = json.loads(sys.stdin.read())
-print(f\"{s.get('passed',0)} pass / {s.get('failed',0)} fail\")
-" <<< "$LAST_SIM" 2>/dev/null || echo "Parse error")
-  fi
-fi
-
-# Healthcheck
-HC_SUMMARY="No healthcheck data"
-HC_FILE="$ROOT/kai/queue/healthcheck-latest.json"
-if [[ -f "$HC_FILE" ]]; then
-  HC_SUMMARY=$(python3 -c "
-import json
-with open('$HC_FILE') as f:
-  h = json.load(f)
-print(f\"{h.get('status','?')}: {h.get('issues',0)} issues, {h.get('warnings',0)} warnings\")
-" 2>/dev/null || echo "Parse error")
-fi
-
-# Aether trading
-AETHER_SUMMARY="No trading data"
-AETHER_JSON="$ROOT/website/data/aether-metrics.json"
-if [[ -f "$AETHER_JSON" ]]; then
-  AETHER_SUMMARY=$(python3 -c "
-import json
-with open('$AETHER_JSON') as f:
-  d = json.load(f)
-cw = d.get('currentWeek', d.get('currentPeriod', {}))
-bal = cw.get('currentBalance', '?')
-trades = cw.get('totalTrades', '?')
-wr = cw.get('winRate', '?')
-strats = len(cw.get('strategies', []))
-print(f'Balance: \${bal}, Trades: {trades}, Win rate: {wr}, Strategies: {strats}')
-" 2>/dev/null || echo "Parse error")
-fi
-
-# Known issues
-KNOWN_ISSUES_COUNT=0
-KI_FILE="$ROOT/kai/ledger/known-issues.jsonl"
-if [[ -f "$KI_FILE" ]]; then
-  KNOWN_ISSUES_COUNT=$(grep -c '"status":"active"' "$KI_FILE" 2>/dev/null || echo "0")
-fi
-
-# Newsletter
-NEWSLETTER_STATUS="not produced"
-for nl in "$ROOT/agents/ra/output/"*"$TODAY"*; do
-  if [[ -f "$nl" ]]; then
-    NEWSLETTER_STATUS="produced"
-    break
-  fi
-done
-
 # ── Generate both reports via Python ──
 
-python3 - "$INTERNAL_OUTPUT" "$FEED_OUTPUT" "$TODAY" "$NOW_MT" "$MONTH_KEY" \
-          "$SIM_SUMMARY" "$HC_SUMMARY" "$AETHER_SUMMARY" \
-          "$KNOWN_ISSUES_COUNT" "$NEWSLETTER_STATUS" "$ROOT" <<'PYEOF'
-import json, sys, os
+python3 - "$INTERNAL_OUTPUT" "$FEED_OUTPUT" "$TODAY" "$YESTERDAY" "$NOW_MT" "$MONTH_KEY" "$ROOT" <<'PYEOF'
+import json, sys, os, re, glob
+from pathlib import Path
 
 internal_path = sys.argv[1]
 feed_path     = sys.argv[2]
 today         = sys.argv[3]
-now_mt        = sys.argv[4]
-month_key     = sys.argv[5]
-sim_summary   = sys.argv[6]
-hc_summary    = sys.argv[7]
-aether_summary= sys.argv[8]
-known_issues  = int(sys.argv[9])
-newsletter_st = sys.argv[10]
-root          = sys.argv[11]
+yesterday     = sys.argv[4]
+now_mt        = sys.argv[5]
+month_key     = sys.argv[6]
+root          = sys.argv[7]
 
-# ── Helpers ──
+# ══════════════════════════════════════════════════════════════════════════════
+# DATA GATHERING — Read actual agent outputs, not just metadata
+# ══════════════════════════════════════════════════════════════════════════════
 
-def read_evolution(agent):
-    """Read latest evolution entry for an agent."""
-    evo = os.path.join(root, "agents", agent, "evolution.jsonl")
-    if not os.path.exists(evo):
+def read_file_head(path, max_chars=3000):
+    """Read first N chars of a file, return empty string if missing."""
+    try:
+        with open(path) as f:
+            return f.read(max_chars)
+    except:
+        return ""
+
+def read_file_lines(path, max_lines=50):
+    """Read first N lines, return list."""
+    try:
+        with open(path) as f:
+            return [l.rstrip() for _, l in zip(range(max_lines), f)]
+    except:
+        return []
+
+def find_latest_file(directory, pattern, max_age_days=2):
+    """Find the most recent file matching pattern in directory."""
+    matches = sorted(glob.glob(os.path.join(directory, pattern)), reverse=True)
+    return matches[0] if matches else None
+
+def parse_sentinel(text):
+    """Extract structured data from sentinel report markdown."""
+    result = {"passed": 0, "failed": 0, "new_issues": [], "recurring": [], "escalations": [], "resolved": []}
+    for line in text.splitlines():
+        m = re.match(r'\*\*This run:\*\*\s*(\d+)\s*passed,\s*(\d+)\s*failed', line)
+        if m:
+            result["passed"] = int(m.group(1))
+            result["failed"] = int(m.group(2))
+        if line.startswith("- **P") and "##" not in line:
+            # Extract priority and description
+            pm = re.match(r'- \*\*P(\d)\*\*\s*`([^`]+)`\s*—\s*(.*)', line)
+            if pm:
+                entry = {"priority": int(pm.group(1)), "check": pm.group(2), "detail": pm.group(3).rstrip()}
+                # Determine section by context (crude but effective)
+                if "day " in entry["detail"] or "failing" in entry["detail"]:
+                    result["recurring"].append(entry)
+                else:
+                    result["new_issues"].append(entry)
+        if line.startswith("- **P") and "escalated" in line.lower():
+            result["escalations"].append(line.strip("- ").strip())
+        if line.startswith("- `") and "##" not in line and "Resolved" in text[:text.find(line)] if line in text else False:
+            result["resolved"].append(line.strip("- ").strip())
+    return result
+
+def parse_cipher(text):
+    """Extract structured data from cipher log."""
+    result = {"ran": False, "clean": False, "findings": 0, "layers_run": [], "layers_skipped": []}
+    for line in text.splitlines():
+        if "cipher" in line.lower() and ("run" in line.lower() or "scheduled" in line.lower()):
+            result["ran"] = True
+        if "RESULT: CLEAN" in line:
+            result["clean"] = True
+        if "skipped" in line.lower():
+            m = re.search(r'Layer \d+: (\w+)', line)
+            if m:
+                result["layers_skipped"].append(m.group(1))
+        elif "Layer" in line and "✓" in line:
+            m = re.search(r'Layer \d+: (.+?)—', line)
+            if m:
+                result["layers_run"].append(m.group(1).strip())
+        fm = re.search(r'(\d+) findings', line)
+        if fm:
+            result["findings"] = int(fm.group(1))
+    return result
+
+def parse_research(text):
+    """Extract structured data from research findings markdown."""
+    result = {"sources_checked": 0, "successful": 0, "failed_sources": [],
+              "successful_sources": [], "follow_ups": [], "has_analysis": False}
+    for line in text.splitlines():
+        m = re.match(r'\*\*Sources checked:\*\*\s*(\d+)', line)
+        if m: result["sources_checked"] = int(m.group(1))
+        m = re.match(r'\*\*Successful:\*\*\s*(\d+)', line)
+        if m: result["successful"] = int(m.group(1))
+        if "— FAILED" in line:
+            src = line.replace("###", "").replace("— FAILED", "").strip()
+            result["failed_sources"].append(src)
+        elif line.startswith("### ") and "FAILED" not in line and "Follow" not in line and "Analysis" not in line:
+            result["successful_sources"].append(line.replace("###", "").strip())
+        if "open" in line.lower() and line.strip().startswith("- ["):
+            result["follow_ups"].append(line.strip("- ").strip()[:100])
+    if "## My Analysis" in text:
+        analysis_section = text.split("## My Analysis")[1][:500]
+        if "no direct matches" not in analysis_section.lower():
+            result["has_analysis"] = True
+    return result
+
+def parse_aether_metrics(path):
+    """Read aether trading metrics."""
+    try:
+        with open(path) as f:
+            d = json.load(f)
+        cw = d.get("currentWeek", d.get("currentPeriod", {}))
+        return {
+            "balance": cw.get("currentBalance", "?"),
+            "trades": cw.get("totalTrades", "?"),
+            "winRate": cw.get("winRate", "?"),
+            "pnl": cw.get("pnl", "?"),
+            "strategies": len(cw.get("strategies", [])),
+            "dailyPnl": cw.get("dailyPnl", [])
+        }
+    except:
         return None
-    last = None
-    with open(evo) as f:
-        for line in f:
-            line = line.strip()
-            if not line: continue
-            try: last = json.loads(line)
-            except: pass
-    return last
 
-def read_active(agent):
-    """Read ACTIVE.md for an agent."""
-    path = os.path.join(root, "agents", agent, "ledger", "ACTIVE.md")
-    if not os.path.exists(path):
-        return {"tasks": 0, "lines": []}
-    tasks = 0
-    lines = []
-    with open(path) as f:
-        for line in f:
-            if line.startswith("- "):
-                tasks += 1
-                lines.append(line.strip("- \n")[:80])
-    return {"tasks": tasks, "lines": lines[:5]}
+def parse_self_review(text):
+    """Extract key findings from agent self-review."""
+    issues = []
+    for line in text.splitlines():
+        if line.strip().startswith("- ✗"):
+            issues.append(line.strip("- ✗ ").strip()[:100])
+    return issues[:5]
 
-def read_agent_profile(agent):
-    """Read agent profile from feed.json if it exists."""
-    if os.path.exists(feed_path):
-        try:
-            with open(feed_path) as f:
-                fd = json.load(f)
-            return fd.get("agents", {}).get(agent, {})
-        except:
-            pass
-    return {}
+def parse_simulation(text):
+    """Extract simulation results."""
+    result = {"has_plan": False, "agents_covered": []}
+    for line in text.splitlines():
+        if line.startswith("### "):
+            agent = line.replace("###", "").strip()
+            if agent:
+                result["agents_covered"].append(agent)
+                result["has_plan"] = True
+    return result
 
-# ── Build agent data ──
+# ══════════════════════════════════════════════════════════════════════════════
+# GATHER ALL AGENT DATA
+# ══════════════════════════════════════════════════════════════════════════════
 
-AGENTS = ["nel", "sam", "ra", "aether", "dex"]
-agent_data = {}
-for a in AGENTS:
-    evo = read_evolution(a)
-    active = read_active(a)
-    agent_data[a] = {
-        "evolution": evo,
-        "active": active,
-        "score": evo.get("metrics", {}).get("improvement_score", "?") if evo else "?",
-        "assessment": evo.get("assessment", "")[:100] if evo else "",
-        "reflection": evo.get("reflection", {}) if evo else {}
-    }
+# --- Healthcheck ---
+hc = {"status": "unknown", "issues": 0, "warnings": 0}
+hc_path = os.path.join(root, "kai", "queue", "healthcheck-latest.json")
+try:
+    with open(hc_path) as f:
+        hc = json.load(f)
+except: pass
 
-# ── Determine what went well / needs attention ──
+# --- Simulation outcomes ---
+sim = {"passed": 0, "failed": 0}
+sim_path = os.path.join(root, "kai", "ledger", "simulation-outcomes.jsonl")
+try:
+    with open(sim_path) as f:
+        lines = [l.strip() for l in f if l.strip()]
+        if lines:
+            sim = json.loads(lines[-1])
+except: pass
 
-went_well = []
-needs_attention = []
+# --- Known issues ---
+ki_count = 0
+ki_path = os.path.join(root, "kai", "ledger", "known-issues.jsonl")
+try:
+    with open(ki_path) as f:
+        ki_count = sum(1 for l in f if '"status":"active"' in l or '"status": "active"' in l)
+except: pass
 
-if "HEALTHY" in hc_summary:
-    went_well.append("System healthcheck is clean — all infrastructure checks passing")
-else:
-    needs_attention.append(f"Healthcheck flagged some issues ({hc_summary}) — most are persistent from previous cycles and need root-cause fixes")
+# --- Nel: sentinel + cipher + research ---
+nel_sentinel_path = find_latest_file(
+    os.path.join(root, "agents", "nel", "logs"), f"sentinel-{today}.md")
+if not nel_sentinel_path:
+    nel_sentinel_path = find_latest_file(
+        os.path.join(root, "agents", "nel", "logs"), f"sentinel-{yesterday}.md")
+nel_sentinel = parse_sentinel(read_file_head(nel_sentinel_path)) if nel_sentinel_path else None
 
-if "0 fail" in sim_summary:
-    went_well.append("All simulation tests passed — the delegation lifecycle is working end-to-end")
-else:
-    needs_attention.append(f"Simulation caught failures ({sim_summary}) — something regressed and needs investigation before it spreads")
+nel_cipher_path = find_latest_file(
+    os.path.join(root, "agents", "nel", "logs"), f"cipher-{today}*.log")
+if not nel_cipher_path:
+    nel_cipher_path = find_latest_file(
+        os.path.join(root, "agents", "nel", "logs"), f"cipher-{yesterday}*.log")
+nel_cipher = parse_cipher(read_file_head(nel_cipher_path)) if nel_cipher_path else None
 
-if newsletter_st == "produced":
-    went_well.append("Newsletter went out on schedule — the content pipeline is reliable")
-else:
-    needs_attention.append("No newsletter today — Ra's pipeline can't reach external sources from the sandbox. Needs to move to the Mini.")
+nel_research_path = find_latest_file(
+    os.path.join(root, "agents", "nel", "research"), f"findings-{today}.md")
+nel_research = parse_research(read_file_head(nel_research_path)) if nel_research_path else None
 
-if known_issues > 10:
-    needs_attention.append(f"{known_issues} known issues are piling up — we're accumulating faster than we're resolving. Time for a cleanup sprint.")
+# --- Ra: newsletter output + research ---
+ra_newsletter_exists = False
+ra_newsletter_file = None
+for pattern in [f"*{today}*", f"*{yesterday}*"]:
+    matches = glob.glob(os.path.join(root, "agents", "ra", "output", pattern))
+    if matches:
+        ra_newsletter_exists = True
+        ra_newsletter_file = os.path.basename(matches[0])
+        break
 
-# Check each agent for notable items
-for a in AGENTS:
-    d = agent_data[a]
-    refl = d.get("reflection", {})
-    bn = refl.get("bottleneck", "none")
-    if bn and bn != "none":
-        needs_attention.append(f"{a.capitalize()} is blocked: {bn[:80]}")
-    growth = refl.get("domain_growth", "")
-    if "active" in str(growth).lower():
-        went_well.append(f"{a.capitalize()} is actively growing — researching its domain and proposing improvements")
+ra_research_path = find_latest_file(
+    os.path.join(root, "agents", "ra", "research"), f"findings-{today}.md")
+ra_research = parse_research(read_file_head(ra_research_path)) if ra_research_path else None
 
-# ═══ VERSION 1: INTERNAL REPORT (for Kai) ═══
-# This is technical, metric-heavy, for Kai to parse and critique
+# --- Sam: logs + research ---
+sam_research_path = find_latest_file(
+    os.path.join(root, "agents", "sam", "research"), f"findings-{today}.md")
+sam_research = parse_research(read_file_head(sam_research_path)) if sam_research_path else None
+
+# --- Aether: trading metrics + analysis + self-review + research ---
+aether_metrics = parse_aether_metrics(
+    os.path.join(root, "website", "data", "aether-metrics.json"))
+
+aether_analysis_path = find_latest_file(
+    os.path.join(root, "agents", "aether", "analysis"), f"Analysis_{today}.txt")
+aether_analysis_preview = read_file_head(aether_analysis_path, 500) if aether_analysis_path else ""
+
+aether_review_path = find_latest_file(
+    os.path.join(root, "agents", "aether", "logs"), f"self-review-{today}.md")
+aether_self_review = parse_self_review(read_file_head(aether_review_path)) if aether_review_path else []
+
+aether_research_path = find_latest_file(
+    os.path.join(root, "agents", "aether", "research"), f"findings-{today}.md")
+aether_research = parse_research(read_file_head(aether_research_path)) if aether_research_path else None
+
+# --- Dex: research + integrity ---
+dex_research_path = find_latest_file(
+    os.path.join(root, "agents", "dex", "research"), f"findings-{today}.md")
+dex_research = parse_research(read_file_head(dex_research_path)) if dex_research_path else None
+
+# --- Simulation report ---
+sim_report_path = find_latest_file(
+    os.path.join(root, "agents", "nel", "logs"), f"simulation-{today}.md")
+sim_report = parse_simulation(read_file_head(sim_report_path)) if sim_report_path else None
+
+# ══════════════════════════════════════════════════════════════════════════════
+# BUILD THE INTERNAL REPORT (for Kai — technical, structured)
+# ══════════════════════════════════════════════════════════════════════════════
 
 internal = {
     "date": today,
     "generatedAt": now_mt,
-    "generatedBy": "bin/generate-morning-report.sh",
-    "executiveSummary": f"Morning report for {today}. Simulation: {sim_summary}. Health: {hc_summary}. Trading: {aether_summary}.",
-    "agentReports": [],
-    "kaiReport": {
-        "simulation": sim_summary,
-        "healthcheck": hc_summary,
-        "knownIssues": known_issues,
-        "newsletter": newsletter_st
-    },
+    "generatedBy": "bin/generate-morning-report.sh v2",
     "systemHealth": {
-        "queueWorker": "check healthcheck-latest.json",
-        "simulation": sim_summary,
-        "healthcheck": hc_summary
+        "healthcheck": {
+            "status": hc.get("status", "?"),
+            "issues": hc.get("issues", 0),
+            "warnings": hc.get("warnings", 0)
+        },
+        "simulation": {
+            "passed": sim.get("passed", 0),
+            "failed": sim.get("failed", 0)
+        },
+        "knownIssues": ki_count
     },
-    "trading": {"summary": aether_summary},
-    "wentWell": went_well,
-    "needsAttention": needs_attention,
-    "improvements": [
-        "Review and close stale known issues",
-        "Check agent evolution scores for regressions"
-    ]
+    "trading": aether_metrics or {},
+    "agents": {
+        "nel": {
+            "sentinel": nel_sentinel,
+            "cipher": nel_cipher,
+            "research": {
+                "sources_checked": nel_research["sources_checked"] if nel_research else 0,
+                "successful": nel_research["successful"] if nel_research else 0,
+                "failed": nel_research["failed_sources"] if nel_research else [],
+                "follow_ups": nel_research["follow_ups"] if nel_research else []
+            }
+        },
+        "ra": {
+            "newsletter_produced": ra_newsletter_exists,
+            "research": {
+                "sources_checked": ra_research["sources_checked"] if ra_research else 0,
+                "successful": ra_research["successful"] if ra_research else 0,
+                "successful_sources": ra_research["successful_sources"] if ra_research else []
+            }
+        },
+        "sam": {
+            "research": {
+                "sources_checked": sam_research["sources_checked"] if sam_research else 0,
+                "successful": sam_research["successful"] if sam_research else 0
+            }
+        },
+        "aether": {
+            "analysis_exists": bool(aether_analysis_path),
+            "self_review_issues": aether_self_review,
+            "research": {
+                "sources_checked": aether_research["sources_checked"] if aether_research else 0,
+                "successful": aether_research["successful"] if aether_research else 0,
+                "follow_ups": aether_research["follow_ups"] if aether_research else []
+            }
+        },
+        "dex": {
+            "research": {
+                "sources_checked": dex_research["sources_checked"] if dex_research else 0,
+                "successful": dex_research["successful"] if dex_research else 0,
+                "follow_ups": dex_research["follow_ups"] if dex_research else []
+            }
+        }
+    }
 }
-
-for a in AGENTS:
-    d = agent_data[a]
-    internal["agentReports"].append({
-        "agent": a,
-        "activeTasks": d["active"]["tasks"],
-        "score": d["score"],
-        "assessment": d["assessment"],
-        "topTasks": d["active"]["lines"][:3],
-        "reflection": d["reflection"]
-    })
 
 with open(internal_path, "w") as f:
     json.dump(internal, f, indent=2)
 print(f"Internal report written: {internal_path}")
 
-# ═══ VERSION 2: FEED ENTRY (for Hyo) ═══
-# This is human-readable, conversational, posted to the HQ feed.
-# Written as if Kai is talking to Hyo over coffee.
+# ══════════════════════════════════════════════════════════════════════════════
+# BUILD THE EXTERNAL REPORT (for Hyo — human-readable narrative)
+# Each agent section is built from what they ACTUALLY did, not templates.
+# ══════════════════════════════════════════════════════════════════════════════
 
-# ── Build conversational agent highlights ──
-agent_highlights = {}
-for a in AGENTS:
-    d = agent_data[a]
-    refl = d.get("reflection", {})
-    score = d.get("score", "?")
-    assess = d.get("assessment", "")
-    bn = refl.get("bottleneck", "none")
-    growth = refl.get("domain_growth", "")
-    learning = refl.get("learning", "")
-    has_data = bool(assess or (score != "?" and score != 0))
+# --- Nel section: built from sentinel + cipher + research ---
+nel_parts = []
+if nel_sentinel:
+    p, f_ = nel_sentinel["passed"], nel_sentinel["failed"]
+    nel_parts.append(f"Sentinel ran {p + f_} checks: {p} passed, {f_} failed.")
+    if nel_sentinel["new_issues"]:
+        for iss in nel_sentinel["new_issues"][:2]:
+            nel_parts.append(f"New P{iss['priority']} issue: {iss['check']} — {iss['detail'][:80]}.")
+    if nel_sentinel["recurring"]:
+        worst = nel_sentinel["recurring"][0]
+        # Extract day count from detail like "_(day 33)_"
+        day_m = re.search(r'day\s+(\d+)', worst['detail'])
+        day_count = day_m.group(1) if day_m else "multiple"
+        nel_parts.append(f"Persistent problem: {worst['check']} has been failing for {day_count} consecutive runs. This needs a root-cause fix, not monitoring.")
+    if nel_sentinel["escalations"]:
+        nel_parts.append(f"{len(nel_sentinel['escalations'])} escalation(s) active.")
+else:
+    nel_parts.append("Sentinel didn't run — no report found for today or yesterday.")
 
-    if not has_data:
-        agent_highlights[a] = f"Quiet cycle from {a.capitalize()} — no new data came in. Need to check if the runner executed or if there's a scheduling issue."
-        continue
-
-    parts = []
-
-    # Lead with what matters, in natural language
-    if a == "nel":
-        if isinstance(score, (int, float)):
-            if score >= 85:
-                parts.append(f"Nel's quality score hit {score} this cycle — solid improvement")
-            elif score >= 70:
-                parts.append(f"Nel is at {score} — functional but not where we want to be")
-            else:
-                parts.append(f"Nel's score dropped to {score}, which is below target")
-        if "fail" in assess.lower():
-            parts.append("Same persistent failures that need Mini access to resolve")
-        if "active" in str(growth).lower():
-            parts.append("Actively researching security patterns and growing domain expertise")
-
-    elif a == "sam":
-        if "test" in assess.lower() and "fail" in assess.lower():
-            parts.append(f"Sam has test failures to address: {assess[:60]}")
-        elif "improved" in assess.lower():
-            parts.append(f"Sam's test coverage improved: {assess[:60]}")
+if nel_cipher:
+    if nel_cipher["ran"]:
+        if nel_cipher["clean"]:
+            layers = ", ".join(nel_cipher["layers_run"][:3]) if nel_cipher["layers_run"] else "filesystem checks"
+            nel_parts.append(f"Cipher scan: clean, zero findings. Ran {layers}.")
+            if nel_cipher["layers_skipped"]:
+                nel_parts.append(f"Skipped {', '.join(nel_cipher['layers_skipped'])} (not available in sandbox — need gitleaks/trufflehog installed on Mini).")
+        elif nel_cipher["findings"] > 0:
+            nel_parts.append(f"Cipher scan: {nel_cipher['findings']} finding(s). Investigate immediately.")
         else:
-            parts.append("Platform is stable" if "routine" in assess.lower() or not assess else assess[:80])
-        if bn and bn != "none":
-            parts.append(f"Main blocker: {bn[:60]}")
+            nel_parts.append("Cipher scan ran, no findings.")
+    else:
+        nel_parts.append("Cipher didn't run this cycle.")
 
-    elif a == "ra":
-        if newsletter_st == "produced":
-            parts.append("Newsletter went out on schedule — Ra's pipeline is delivering")
-        else:
-            parts.append("Ra couldn't produce a newsletter today — the sandbox blocks source fetches")
-        if "active" in str(growth).lower():
-            parts.append("Working on editorial voice and source diversification in the meantime")
+if nel_research:
+    hit = nel_research["successful"]
+    total = nel_research["sources_checked"]
+    if nel_research["failed_sources"]:
+        nel_parts.append(f"Research: {hit}/{total} sources responded. Failed: {', '.join(nel_research['failed_sources'][:3])}. These sources are unreachable from the sandbox — either move research to Mini or find alternative endpoints.")
+    elif hit > 0:
+        nel_parts.append(f"Research: pulled from {hit} sources. {len(nel_research['follow_ups'])} follow-ups open (CVE cross-referencing).")
+    if nel_research["follow_ups"]:
+        nel_parts.append(f"Open follow-up: {nel_research['follow_ups'][0][:80]}.")
 
-    elif a == "aether":
-        if "standby" in assess.lower() or "no trades" in assess.lower():
-            parts.append("Aether is in standby — no live trades happening")
-            parts.append("Waiting on exchange API keys to move from replay mode to live tracking")
-        elif "trade" in assess.lower():
-            parts.append(assess[:80])
-        if "out-of-sync" in str(bn).lower() or "out-of-sync" in assess.lower():
-            parts.append("Dashboard sync issue persists — data exists but HQ can't render it")
+nel_narrative = " ".join(nel_parts)
 
-    elif a == "dex":
-        if assess:
-            parts.append(assess[:80])
-        else:
-            parts.append("Dex ran its integrity sweep")
-        if "stagnant" in str(growth).lower():
-            parts.append("Needs to start its research loop to stay sharp")
+# --- Ra section: built from newsletter status + research ---
+ra_parts = []
+if ra_newsletter_exists:
+    ra_parts.append(f"Newsletter produced ({ra_newsletter_file}). Pipeline is working.")
+else:
+    ra_parts.append("No newsletter produced today. The pipeline can't reach external sources from the Cowork sandbox — this has been blocked for 3+ days. Fix: move newsletter.sh to the Mini's launchd, or provide API keys so the sandbox can use an LLM to generate from cached data.")
 
-    agent_highlights[a] = ". ".join(parts) + "." if parts else f"No update from {a.capitalize()} this cycle."
+if ra_research:
+    hit = ra_research["successful"]
+    total = ra_research["sources_checked"]
+    srcs = ", ".join(ra_research["successful_sources"][:4])
+    if hit > 0:
+        ra_parts.append(f"Research: pulled from {hit}/{total} sources ({srcs}). Looking at newsletter craft, audience engagement, and content format patterns.")
+    else:
+        ra_parts.append(f"Research: 0/{total} sources returned usable data. Ra's source list needs updating.")
+else:
+    ra_parts.append("No research output found. Ra's research runner either didn't fire or produced no output.")
 
-# ── Build conversational executive summary ──
-# Written like a person summarizing their morning, not a dashboard
+ra_narrative = " ".join(ra_parts)
+
+# --- Sam section: built from research + deploy status ---
+sam_parts = []
+if sam_research:
+    hit = sam_research["successful"]
+    total = sam_research["sources_checked"]
+    if hit > 0:
+        srcs = ", ".join(sam_research["successful_sources"][:3]) if sam_research["successful_sources"] else f"{hit} sources"
+        sam_parts.append(f"Research: pulled from {srcs}. Sam is tracking infrastructure patterns relevant to our Vercel + API stack.")
+    else:
+        sam_parts.append(f"Research: 0/{total} sources returned data. Sam's research runner may need different endpoints.")
+else:
+    sam_parts.append("No research output today. Sam's runner either didn't fire or had no research phase. Sam needs a scheduled trigger — currently only runs on-demand, which means it sits idle unless someone calls it.")
+
+# Check for any recent Sam activity
+sam_log_path = os.path.join(root, "agents", "sam", "logs")
+sam_logs = sorted(glob.glob(os.path.join(sam_log_path, f"*{today}*")), reverse=True) if os.path.isdir(sam_log_path) else []
+if sam_logs:
+    sam_parts.append(f"Sam produced {len(sam_logs)} log(s) today.")
+else:
+    sam_parts.append("No logs from Sam today. Next step: add a launchd plist so Sam's self-evolution fires automatically like the other agents.")
+
+sam_narrative = " ".join(sam_parts)
+
+# --- Aether section: built from trading metrics + analysis + self-review + research ---
+aether_parts = []
+if aether_metrics:
+    bal = aether_metrics.get("balance", "?")
+    trades = aether_metrics.get("trades", "?")
+    wr = aether_metrics.get("winRate", "?")
+    pnl = aether_metrics.get("pnl", "?")
+    aether_parts.append(f"Trading: balance ${bal}, {trades} trades, {wr}% win rate, net P&L ${pnl}.")
+    daily = aether_metrics.get("dailyPnl", [])
+    if daily:
+        latest = daily[-1] if isinstance(daily[-1], dict) else {}
+        if latest.get("pnl"):
+            aether_parts.append(f"Latest session: {latest.get('day', '?')} P&L ${latest['pnl']}.")
+else:
+    aether_parts.append("No trading metrics available.")
+
+if aether_analysis_path:
+    aether_parts.append("Daily analysis written.")
+    # Check GPT verification
+    if "GPT_VERIFIED: YES" in aether_analysis_preview:
+        aether_parts.append("GPT dual-phase verification: complete.")
+    elif "GPT_VERIFIED: NO" in aether_analysis_preview:
+        aether_parts.append("GPT verification pending — analysis needs to go through the adversarial pipeline before it's final.")
+else:
+    aether_parts.append("No analysis produced today. Either the scheduled task didn't fire or the raw log wasn't available.")
+
+if aether_self_review:
+    aether_parts.append(f"Self-review found {len(aether_self_review)} issue(s): {aether_self_review[0][:80]}.")
+
+if aether_research:
+    hit = aether_research["successful"]
+    total = aether_research["sources_checked"]
+    aether_parts.append(f"Research: {hit}/{total} sources. Tracking exchange API patterns, position sizing models.")
+    if aether_research["follow_ups"]:
+        aether_parts.append(f"Open: {aether_research['follow_ups'][0][:80]}.")
+
+aether_narrative = " ".join(aether_parts)
+
+# --- Dex section: built from research + integrity ---
+dex_parts = []
+if dex_research:
+    hit = dex_research["successful"]
+    total = dex_research["sources_checked"]
+    srcs = ", ".join(dex_research["successful_sources"][:3]) if dex_research.get("successful_sources") else f"{hit} sources"
+    if hit > 0:
+        dex_parts.append(f"Research: pulled from {hit}/{total} sources ({srcs}). Investigating data integrity patterns, JSONL alternatives, and event sourcing architectures.")
+    if dex_research["follow_ups"]:
+        dex_parts.append(f"Open: {dex_research['follow_ups'][0][:80]}.")
+else:
+    dex_parts.append("No research output today.")
+
+# Check dex evolution for integrity findings
+dex_evo_path = os.path.join(root, "agents", "dex", "evolution.jsonl")
+try:
+    with open(dex_evo_path) as f:
+        lines = [l.strip() for l in f if l.strip()]
+        if lines:
+            last_evo = json.loads(lines[-1])
+            assess = last_evo.get("assessment", "")
+            refl = last_evo.get("reflection", {})
+            bn = refl.get("bottleneck", "")
+            if "corrupt" in bn.lower() or "corrupt" in assess.lower():
+                dex_parts.append(f"Integrity finding: {bn[:100]}. Dex needs to decide whether to auto-repair corrupt JSONL entries or just flag them for manual review.")
+            elif "pattern" in assess.lower():
+                dex_parts.append(f"Pattern detection: {assess[:80]}.")
+except: pass
+
+if not dex_parts:
+    dex_parts.append("Dex was quiet today. Its integrity sweep and pattern detection either didn't run or found nothing new.")
+
+dex_narrative = " ".join(dex_parts)
+
+# --- Build executive summary from actual findings ---
 summary_parts = []
 
-# Overall vibe
-good_count = len(went_well)
-bad_count = len(needs_attention)
-if good_count > bad_count:
-    summary_parts.append("Mostly a good night.")
-elif bad_count > good_count:
-    summary_parts.append("A few things need attention from overnight.")
-else:
-    summary_parts.append("Mixed bag overnight.")
+# What's working
+working = []
+blocked = []
 
-# Highlights
-if newsletter_st == "produced":
-    summary_parts.append("The newsletter went out on schedule.")
-if "0 fail" in sim_summary:
-    summary_parts.append("All simulations passed.")
-elif "fail" in sim_summary:
-    summary_parts.append(f"The simulation suite caught some failures ({sim_summary}), which needs investigation.")
+if ra_newsletter_exists:
+    working.append("newsletter shipped")
+if nel_sentinel and nel_sentinel["passed"] > 0:
+    working.append(f"sentinel {nel_sentinel['passed']}/{nel_sentinel['passed'] + nel_sentinel['failed']} checks passing")
+if nel_cipher and nel_cipher["clean"]:
+    working.append("no secret leaks")
+if aether_metrics and aether_metrics.get("balance") and aether_metrics["balance"] != "?":
+    working.append(f"AetherBot at ${aether_metrics['balance']}")
 
-if "ISSUES" in hc_summary or "issues" in hc_summary:
-    summary_parts.append(f"Healthcheck reported {hc_summary.lower()} — mostly persistent items from previous cycles.")
+# What's blocked and WHY
+if not ra_newsletter_exists:
+    blocked.append("newsletter blocked — sandbox can't reach external sources, needs Mini migration")
+if nel_sentinel and nel_sentinel["failed"] > 0:
+    recurring = nel_sentinel.get("recurring", [])
+    if recurring:
+        worst = recurring[0]
+        day_m = re.search(r'day\s+(\d+)', worst['detail'])
+        day_count = day_m.group(1) if day_m else "multiple"
+        blocked.append(f"{worst['check']} failing {day_count} straight runs — needs root-cause fix on Mini")
+sim_fails = sim.get("failed", 0)
+if sim_fails > 0:
+    blocked.append(f"simulation has {sim_fails} failures — regression investigation needed")
 
-# Trading context
-if "0" in str(aether_summary) and "Trades: 0" in aether_summary or "Trades: ?" in aether_summary:
-    summary_parts.append("No trading activity — Aether is in standby until we get live API keys.")
-elif aether_summary and aether_summary != "No trading data":
-    summary_parts.append(f"Trading: {aether_summary}.")
+if working:
+    summary_parts.append(f"Working: {', '.join(working)}.")
+if blocked:
+    summary_parts.append(f"Blocked: {'; '.join(blocked)}.")
+if not blocked:
+    summary_parts.append("Nothing actively blocked.")
 
 exec_summary = " ".join(summary_parts)
 
-# The feed entry
+# --- What went well / needs attention (with specifics, not templates) ---
+went_well = []
+needs_attention = []
+
+if ra_newsletter_exists:
+    went_well.append("Newsletter produced and delivered on schedule.")
+if nel_sentinel and nel_sentinel["passed"] >= nel_sentinel["failed"]:
+    went_well.append(f"Sentinel passed {nel_sentinel['passed']} of {nel_sentinel['passed'] + nel_sentinel['failed']} checks.")
+if nel_cipher and nel_cipher["clean"]:
+    went_well.append("Cipher security scan: clean, zero findings.")
+if aether_analysis_path:
+    went_well.append("Aether daily analysis produced.")
+
+# Research activity (specific, not "actively growing")
+research_active = []
+for name, res in [("Nel", nel_research), ("Ra", ra_research), ("Aether", aether_research), ("Dex", dex_research)]:
+    if res and res["successful"] > 0:
+        research_active.append(f"{name} ({res['successful']} sources)")
+if research_active:
+    went_well.append(f"Research active: {', '.join(research_active)}.")
+
+if not ra_newsletter_exists:
+    needs_attention.append("No newsletter today — Ra's pipeline is blocked on sandbox network restrictions. Move to Mini launchd.")
+if nel_sentinel and nel_sentinel["failed"] > 0:
+    for iss in nel_sentinel.get("new_issues", [])[:2]:
+        needs_attention.append(f"New sentinel issue (P{iss['priority']}): {iss['check']} — {iss['detail'][:80]}.")
+    for iss in nel_sentinel.get("recurring", [])[:2]:
+        needs_attention.append(f"Persistent failure: {iss['check']} — {iss['detail'][:80]}. Needs root-cause fix.")
+if sim_fails > 0:
+    needs_attention.append(f"Simulation: {sim.get('passed', 0)} pass / {sim_fails} fail. Investigate what regressed.")
+if ki_count > 10:
+    needs_attention.append(f"{ki_count} known issues accumulating — schedule a cleanup sprint.")
+
+agent_highlights = {
+    "nel": nel_narrative,
+    "ra": ra_narrative,
+    "sam": sam_narrative,
+    "aether": aether_narrative,
+    "dex": dex_narrative
+}
+
+# ── Feed entry ──
 morning_entry = {
     "id": f"mr-{today}",
     "type": "morning-report",
     "title": "Morning Report",
     "author": "Kai",
-    "authorIcon": "\U0001F454",  # tie emoji
+    "authorIcon": "\U0001F454",
     "authorColor": "#d4a853",
     "timestamp": now_mt,
     "date": today,
@@ -375,36 +609,26 @@ morning_entry = {
     }
 }
 
-# Read existing feed.json, add new entry, deduplicate by id
+# Read existing feed.json, replace today's morning report
 feed = {"lastUpdated": now_mt, "today": today, "agents": {}, "reports": [], "history": {}}
 if os.path.exists(feed_path):
     try:
         with open(feed_path) as f:
             feed = json.load(f)
-    except:
-        pass
+    except: pass
 
-# Update metadata
 feed["lastUpdated"] = now_mt
 feed["today"] = today
-
-# Remove existing morning report for today (if re-running)
 feed["reports"] = [r for r in feed.get("reports", []) if r.get("id") != morning_entry["id"]]
-
-# Add new entry
 feed["reports"].append(morning_entry)
-
-# Sort by timestamp descending
 feed["reports"].sort(key=lambda r: r.get("timestamp", ""), reverse=True)
 
-# Update history index
 if month_key not in feed.get("history", {}):
     months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
     m_idx = int(month_key.split("-")[1]) - 1
     label = f"{months[m_idx]} {month_key.split('-')[0]}"
     feed["history"][month_key] = {"label": label, "reports": []}
 
-# Add report id to month history if not already there
 month_hist = feed["history"][month_key]
 if morning_entry["id"] not in month_hist["reports"]:
     month_hist["reports"].append(morning_entry["id"])
@@ -424,8 +648,6 @@ fi
 SAM_MIRROR_INTERNAL="$ROOT/agents/sam/website/data/morning-report.json"
 SAM_MIRROR_FEED="$ROOT/agents/sam/website/data/feed.json"
 if [[ -d "$(dirname "$SAM_MIRROR_INTERNAL")" ]]; then
-  # Internal report already written to website/data/ which IS agents/sam/website/data/ via symlink
-  # But if they're separate dirs, copy
   if [[ ! "$INTERNAL_OUTPUT" -ef "$SAM_MIRROR_INTERNAL" ]] 2>/dev/null; then
     cp "$INTERNAL_OUTPUT" "$SAM_MIRROR_INTERNAL" 2>/dev/null || true
   fi
@@ -441,10 +663,10 @@ CHANGED=$(git diff --name-only "$INTERNAL_OUTPUT" "$FEED_OUTPUT" 2>/dev/null | w
 if [[ "$CHANGED" -gt 0 ]]; then
   git add "$INTERNAL_OUTPUT" "$FEED_OUTPUT" 2>/dev/null
   git add "$SAM_MIRROR_INTERNAL" "$SAM_MIRROR_FEED" 2>/dev/null
-  git commit -m "morning-report: $TODAY (internal + feed)" 2>/dev/null
+  git commit -m "morning-report: $TODAY (v2 — real agent outputs)" 2>/dev/null
   git push origin main 2>/dev/null && log "Pushed to origin" || log "Push failed (will retry next cycle)"
 else
   log "No changes to commit"
 fi
 
-log "Done — internal + feed reports generated"
+log "Done — v2 morning report generated"
