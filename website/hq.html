@@ -980,6 +980,8 @@ function renderReport(report) {
     body = renderCeoReport(s);
   } else if (report.type === 'agent-reflection') {
     body = renderAgentReflection(s);
+  } else if (report.type === 'newsletter') {
+    body = renderNewsletter(s, report);
   } else {
     // Generic
     for (const [key, val] of Object.entries(s)) {
@@ -1027,6 +1029,35 @@ function renderMorningReport(s) {
     }
     html += sec('Agent Highlights', ah);
   }
+  return html;
+}
+
+function renderNewsletter(s, report) {
+  let html = '';
+  const summary = s.summary || s.headline || report.title || '';
+  const topics = s.topics || [];
+  const readLink = s.readLink || report.readLink || '';
+
+  if (summary) {
+    html += `<div class="newsletter-summary" style="font-size:1.05em;line-height:1.6;color:var(--text-primary);padding:12px 0 8px;">${summary}</div>`;
+  }
+
+  if (topics.length) {
+    html += `<div class="newsletter-topics" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 0;">`;
+    topics.forEach(t => {
+      html += `<span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:3px 10px;border-radius:12px;font-size:0.8em;">${t}</span>`;
+    });
+    html += `</div>`;
+  }
+
+  if (readLink) {
+    html += `<div style="padding:12px 0 4px;">
+      <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:600;text-decoration:none;font-size:0.95em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        Read the full brief <span style="font-size:1.1em;">→</span>
+      </a>
+    </div>`;
+  }
+
   return html;
 }
 
@@ -1120,6 +1151,7 @@ function getTypeLabel(type) {
     'ceo-report': 'CEO Report',
     'agent-reflection': 'Agent Reflection',
     'research-drop': 'Research',
+    'newsletter': 'Daily Brief',
   };
   return map[type] || type;
 }
