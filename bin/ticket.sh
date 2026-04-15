@@ -55,6 +55,7 @@ generate_id() {
 # ─── CREATE TICKET ───
 cmd_create() {
   local agent="" title="" priority="P2" system="1" blocked_by="" created_by="kai"
+  local ticket_type="operational" weakness=""
   while [[ $# -gt 0 ]]; do
     case "$1" in
       --agent)      agent="$2"; shift 2 ;;
@@ -63,6 +64,8 @@ cmd_create() {
       --system)     system="$2"; shift 2 ;;
       --blocked-by) blocked_by="$2"; shift 2 ;;
       --created-by) created_by="$2"; shift 2 ;;
+      --type)       ticket_type="$2"; shift 2 ;;  # operational | improvement
+      --weakness)   weakness="$2"; shift 2 ;;     # W1, W2, W3 — links to GROWTH.md
       *) shift ;;
     esac
   done
@@ -101,6 +104,8 @@ print(json.dumps({
     'created_by': '$created_by',
     'priority': '$priority',
     'status': '$status',
+    'ticket_type': '$ticket_type',
+    'weakness': '$weakness',
     'system': 'system-$system',
     'created_at': '$TIMESTAMP',
     'updated_at': '$TIMESTAMP',

@@ -59,6 +59,64 @@ root          = sys.argv[7]
 # DATA GATHERING — Read actual agent outputs, not just metadata
 # ══════════════════════════════════════════════════════════════════════════════
 
+def parse_growth(agent_name):
+    """Parse GROWTH.md for an agent — extract weaknesses, improvements, goals."""
+    path = os.path.join(root, "agents", agent_name, "GROWTH.md")
+    if not os.path.exists(path):
+        return None
+    text = open(path).read()
+    result = {"weaknesses": [], "improvements": [], "goals": []}
+
+    # Extract weaknesses (### W1: Title lines)
+    for m in re.finditer(r'### W(\d): (.+)', text):
+        wnum = m.group(1)
+        title = m.group(2).strip()
+        # Find severity
+        sev_m = re.search(rf'### W{wnum}:.*?\n.*?\*\*Severity:\*\*\s*(P\d)', text[m.start():], re.DOTALL)
+        severity = sev_m.group(1) if sev_m else "?"
+        result["weaknesses"].append({"id": f"W{wnum}", "title": title, "severity": severity})
+
+    # Extract improvements (### I1: Title lines)
+    for m in re.finditer(r'### I(\d): (.+)', text):
+        inum = m.group(1)
+        title = m.group(2).strip()
+        # Find status
+        stat_m = re.search(rf'### I{inum}:.*?\*\*Status:\*\*\s*(.+?)$', text[m.start():], re.DOTALL | re.MULTILINE)
+        status = stat_m.group(1).strip() if stat_m else "unknown"
+        # Find ticket
+        tick_m = re.search(rf'### I{inum}:.*?\*\*Ticket:\*\*\s*(.+?)$', text[m.start():], re.DOTALL | re.MULTILINE)
+        ticket = tick_m.group(1).strip() if tick_m else ""
+        result["improvements"].append({"id": f"I{inum}", "title": title, "status": status, "ticket": ticket})
+
+    # Extract goals (numbered list after ## Goals)
+    goals_m = re.search(r'## Goals.*?\n((?:\d+\..+\n?)+)', text)
+    if goals_m:
+        for line in goals_m.group(1).strip().splitlines():
+            g = re.sub(r'^\d+\.\s*', '', line).strip()
+            if g:
+                result["goals"].append(g[:120])
+
+    return result
+
+def read_improvement_tickets(agent_name):
+    """Read improvement tickets for an agent from the ticket ledger."""
+    ledger = os.path.join(root, "kai", "tickets", "tickets.jsonl")
+    tickets = []
+    if not os.path.exists(ledger):
+        return tickets
+    with open(ledger) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                t = json.loads(line)
+                if t.get("owner") == agent_name and t.get("ticket_type") == "improvement":
+                    tickets.append(t)
+            except:
+                pass
+    return tickets
+
 def read_file_head(path, max_chars=3000):
     """Read first N chars of a file, return empty string if missing."""
     try:
@@ -277,6 +335,13 @@ sim_report_path = find_latest_file(
     os.path.join(root, "agents", "nel", "logs"), f"simulation-{today}.md")
 sim_report = parse_simulation(read_file_head(sim_report_path)) if sim_report_path else None
 
+# --- Agent Growth Plans ---
+agent_growth = {}
+agent_imp_tickets = {}
+for agent_name in ["nel", "ra", "sam", "aether", "dex"]:
+    agent_growth[agent_name] = parse_growth(agent_name)
+    agent_imp_tickets[agent_name] = read_improvement_tickets(agent_name)
+
 # ══════════════════════════════════════════════════════════════════════════════
 # BUILD THE INTERNAL REPORT (for Kai — technical, structured)
 # ══════════════════════════════════════════════════════════════════════════════
@@ -348,149 +413,110 @@ print(f"Internal report written: {internal_path}")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # BUILD THE EXTERNAL REPORT (for Hyo — human-readable narrative)
-# Each agent section is built from what they ACTUALLY did, not templates.
+# GROWTH-FIRST: Lead with what each agent is improving, what they're building,
+# what weaknesses they identified. Operational status is secondary context.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# --- Nel section: built from sentinel + cipher + research ---
-nel_parts = []
+def build_agent_narrative(agent_name, growth, imp_tickets, ops_context):
+    """Build a growth-first narrative for an agent.
+
+    Structure:
+    1. GROWTH: What weaknesses are being addressed? What improvements are in progress?
+    2. GOALS: What has the agent set for itself?
+    3. EXECUTION: What did the agent actually build/change? (not just 'researched')
+    4. BLOCKED: If something didn't execute, why? What's the fix?
+    5. CONTEXT: Brief operational status (secondary)
+    """
+    parts = []
+
+    # --- GROWTH: Weaknesses + Improvements ---
+    if growth:
+        # Show what weaknesses are being worked on
+        active_imps = [i for i in growth.get("improvements", []) if i.get("status") not in ("planned", "unknown", "")]
+        planned_imps = [i for i in growth.get("improvements", []) if i.get("status") in ("planned", "unknown", "")]
+
+        if active_imps:
+            for imp in active_imps:
+                parts.append(f"Building: {imp['title']} (status: {imp['status']}).")
+        else:
+            # Show what weaknesses were identified and what the plan is
+            weaknesses = growth.get("weaknesses", [])
+            if weaknesses:
+                for w in weaknesses:
+                    parts.append(f"Weakness {w['id']} ({w['severity']}): {w['title'][:120]}.")
+            if planned_imps:
+                for imp in planned_imps[:2]:
+                    parts.append(f"Planned fix: {imp['title'][:120]}.")
+                parts.append(f"Status: researching, not yet building. Next step: start executing {planned_imps[0]['id']}.")
+
+        # Show goals
+        goals = growth.get("goals", [])
+        if goals:
+            parts.append(f"Current goal: {goals[0][:100]}.")
+    else:
+        parts.append("No growth plan yet — needs GROWTH.md with identified weaknesses and improvement proposals.")
+
+    # --- IMPROVEMENT TICKETS ---
+    if imp_tickets:
+        open_count = sum(1 for t in imp_tickets if t.get("status") in ("OPEN", "ACTIVE"))
+        in_progress = [t for t in imp_tickets if t.get("status") == "ACTIVE"]
+        if in_progress:
+            for t in in_progress[:2]:
+                parts.append(f"In progress: {t['title'][:80]} ({t['id']}).")
+        elif open_count > 0:
+            # Tickets exist but none are being worked — flag it
+            parts.append(f"{open_count} improvement ticket(s) open but none in progress. Next step: pick one and start building.")
+
+    # --- OPERATIONAL CONTEXT (secondary) ---
+    if ops_context:
+        parts.append(ops_context)
+
+    return " ".join(parts)
+
+# --- Build operational context per agent (brief, not the main story) ---
+
+# Nel ops context
+nel_ops = ""
 if nel_sentinel:
     p, f_ = nel_sentinel["passed"], nel_sentinel["failed"]
-    nel_parts.append(f"Sentinel ran {p + f_} checks: {p} passed, {f_} failed.")
-    if nel_sentinel["new_issues"]:
-        for iss in nel_sentinel["new_issues"][:2]:
-            nel_parts.append(f"New P{iss['priority']} issue: {iss['check']} — {iss['detail'][:80]}.")
+    nel_ops = f"Ops: sentinel {p}/{p+f_} passing."
     if nel_sentinel["recurring"]:
         worst = nel_sentinel["recurring"][0]
-        # Extract day count from detail like "_(day 33)_"
         day_m = re.search(r'day\s+(\d+)', worst['detail'])
         day_count = day_m.group(1) if day_m else "multiple"
-        nel_parts.append(f"Persistent problem: {worst['check']} has been failing for {day_count} consecutive runs. This needs a root-cause fix, not monitoring.")
-    if nel_sentinel["escalations"]:
-        nel_parts.append(f"{len(nel_sentinel['escalations'])} escalation(s) active.")
-else:
-    nel_parts.append("Sentinel didn't run — no report found for today or yesterday.")
+        nel_ops += f" {worst['check']} failing {day_count} runs straight."
+    if nel_cipher and nel_cipher.get("clean"):
+        nel_ops += " Cipher: clean."
+    if nel_research and nel_research["failed_sources"]:
+        nel_ops += f" Research: {nel_research['successful']}/{nel_research['sources_checked']} sources reachable."
+nel_narrative = build_agent_narrative("nel", agent_growth.get("nel"), agent_imp_tickets.get("nel", []), nel_ops)
 
-if nel_cipher:
-    if nel_cipher["ran"]:
-        if nel_cipher["clean"]:
-            layers = ", ".join(nel_cipher["layers_run"][:3]) if nel_cipher["layers_run"] else "filesystem checks"
-            nel_parts.append(f"Cipher scan: clean, zero findings. Ran {layers}.")
-            if nel_cipher["layers_skipped"]:
-                nel_parts.append(f"Skipped {', '.join(nel_cipher['layers_skipped'])} (not available in sandbox — need gitleaks/trufflehog installed on Mini).")
-        elif nel_cipher["findings"] > 0:
-            nel_parts.append(f"Cipher scan: {nel_cipher['findings']} finding(s). Investigate immediately.")
-        else:
-            nel_parts.append("Cipher scan ran, no findings.")
-    else:
-        nel_parts.append("Cipher didn't run this cycle.")
-
-if nel_research:
-    hit = nel_research["successful"]
-    total = nel_research["sources_checked"]
-    if nel_research["failed_sources"]:
-        nel_parts.append(f"Research: {hit}/{total} sources responded. Failed: {', '.join(nel_research['failed_sources'][:3])}. These sources are unreachable from the sandbox — either move research to Mini or find alternative endpoints.")
-    elif hit > 0:
-        nel_parts.append(f"Research: pulled from {hit} sources. {len(nel_research['follow_ups'])} follow-ups open (CVE cross-referencing).")
-    if nel_research["follow_ups"]:
-        nel_parts.append(f"Open follow-up: {nel_research['follow_ups'][0][:80]}.")
-
-nel_narrative = " ".join(nel_parts)
-
-# --- Ra section: built from newsletter status + research ---
-ra_parts = []
-if ra_newsletter_exists:
-    ra_parts.append(f"Newsletter produced ({ra_newsletter_file}). Pipeline is working.")
-else:
-    ra_parts.append("No newsletter produced today. The pipeline can't reach external sources from the Cowork sandbox — this has been blocked for 3+ days. Fix: move newsletter.sh to the Mini's launchd, or provide API keys so the sandbox can use an LLM to generate from cached data.")
-
+# Ra ops context
+ra_ops = f"Ops: newsletter {'shipped' if ra_newsletter_exists else 'NOT produced (sandbox blocks sources)'}."
 if ra_research:
-    hit = ra_research["successful"]
-    total = ra_research["sources_checked"]
-    srcs = ", ".join(ra_research["successful_sources"][:4])
-    if hit > 0:
-        ra_parts.append(f"Research: pulled from {hit}/{total} sources ({srcs}). Looking at newsletter craft, audience engagement, and content format patterns.")
-    else:
-        ra_parts.append(f"Research: 0/{total} sources returned usable data. Ra's source list needs updating.")
-else:
-    ra_parts.append("No research output found. Ra's research runner either didn't fire or produced no output.")
+    ra_ops += f" Research: {ra_research['successful']}/{ra_research['sources_checked']} sources."
+ra_narrative = build_agent_narrative("ra", agent_growth.get("ra"), agent_imp_tickets.get("ra", []), ra_ops)
 
-ra_narrative = " ".join(ra_parts)
-
-# --- Sam section: built from research + deploy status ---
-sam_parts = []
-if sam_research:
-    hit = sam_research["successful"]
-    total = sam_research["sources_checked"]
-    if hit > 0:
-        srcs = ", ".join(sam_research["successful_sources"][:3]) if sam_research["successful_sources"] else f"{hit} sources"
-        sam_parts.append(f"Research: pulled from {srcs}. Sam is tracking infrastructure patterns relevant to our Vercel + API stack.")
-    else:
-        sam_parts.append(f"Research: 0/{total} sources returned data. Sam's research runner may need different endpoints.")
-else:
-    sam_parts.append("No research output today. Sam's runner either didn't fire or had no research phase. Sam needs a scheduled trigger — currently only runs on-demand, which means it sits idle unless someone calls it.")
-
-# Check for any recent Sam activity
+# Sam ops context
 sam_log_path = os.path.join(root, "agents", "sam", "logs")
 sam_logs = sorted(glob.glob(os.path.join(sam_log_path, f"*{today}*")), reverse=True) if os.path.isdir(sam_log_path) else []
-if sam_logs:
-    sam_parts.append(f"Sam produced {len(sam_logs)} log(s) today.")
-else:
-    sam_parts.append("No logs from Sam today. Next step: add a launchd plist so Sam's self-evolution fires automatically like the other agents.")
+sam_ops = f"Ops: {'active' if sam_logs else 'no activity today — needs scheduled trigger'}."
+sam_narrative = build_agent_narrative("sam", agent_growth.get("sam"), agent_imp_tickets.get("sam", []), sam_ops)
 
-sam_narrative = " ".join(sam_parts)
-
-# --- Aether section: built from trading metrics + analysis + self-review + research ---
-aether_parts = []
+# Aether ops context
+aether_ops = ""
 if aether_metrics:
     bal = aether_metrics.get("balance", "?")
-    trades = aether_metrics.get("trades", "?")
     wr = aether_metrics.get("winRate", "?")
     pnl = aether_metrics.get("pnl", "?")
-    aether_parts.append(f"Trading: balance ${bal}, {trades} trades, {wr}% win rate, net P&L ${pnl}.")
-    daily = aether_metrics.get("dailyPnl", [])
-    if daily:
-        latest = daily[-1] if isinstance(daily[-1], dict) else {}
-        if latest.get("pnl"):
-            aether_parts.append(f"Latest session: {latest.get('day', '?')} P&L ${latest['pnl']}.")
-else:
-    aether_parts.append("No trading metrics available.")
-
+    aether_ops = f"Ops: ${bal} balance, {wr}% WR, ${pnl} net P&L."
 if aether_analysis_path:
-    aether_parts.append("Daily analysis written.")
-    # Check GPT verification
-    if "GPT_VERIFIED: YES" in aether_analysis_preview:
-        aether_parts.append("GPT dual-phase verification: complete.")
-    elif "GPT_VERIFIED: NO" in aether_analysis_preview:
-        aether_parts.append("GPT verification pending — analysis needs to go through the adversarial pipeline before it's final.")
-else:
-    aether_parts.append("No analysis produced today. Either the scheduled task didn't fire or the raw log wasn't available.")
+    gpt_status = "GPT verified" if "GPT_VERIFIED: YES" in aether_analysis_preview else "GPT pending"
+    aether_ops += f" Analysis written ({gpt_status})."
+aether_narrative = build_agent_narrative("aether", agent_growth.get("aether"), agent_imp_tickets.get("aether", []), aether_ops)
 
-if aether_self_review:
-    aether_parts.append(f"Self-review found {len(aether_self_review)} issue(s): {aether_self_review[0][:80]}.")
-
-if aether_research:
-    hit = aether_research["successful"]
-    total = aether_research["sources_checked"]
-    aether_parts.append(f"Research: {hit}/{total} sources. Tracking exchange API patterns, position sizing models.")
-    if aether_research["follow_ups"]:
-        aether_parts.append(f"Open: {aether_research['follow_ups'][0][:80]}.")
-
-aether_narrative = " ".join(aether_parts)
-
-# --- Dex section: built from research + integrity ---
-dex_parts = []
-if dex_research:
-    hit = dex_research["successful"]
-    total = dex_research["sources_checked"]
-    srcs = ", ".join(dex_research["successful_sources"][:3]) if dex_research.get("successful_sources") else f"{hit} sources"
-    if hit > 0:
-        dex_parts.append(f"Research: pulled from {hit}/{total} sources ({srcs}). Investigating data integrity patterns, JSONL alternatives, and event sourcing architectures.")
-    if dex_research["follow_ups"]:
-        dex_parts.append(f"Open: {dex_research['follow_ups'][0][:80]}.")
-else:
-    dex_parts.append("No research output today.")
-
-# Check dex evolution for integrity findings
+# Dex ops context
+dex_ops = ""
 dex_evo_path = os.path.join(root, "agents", "dex", "evolution.jsonl")
 try:
     with open(dex_evo_path) as f:
@@ -498,18 +524,12 @@ try:
         if lines:
             last_evo = json.loads(lines[-1])
             assess = last_evo.get("assessment", "")
-            refl = last_evo.get("reflection", {})
-            bn = refl.get("bottleneck", "")
-            if "corrupt" in bn.lower() or "corrupt" in assess.lower():
-                dex_parts.append(f"Integrity finding: {bn[:100]}. Dex needs to decide whether to auto-repair corrupt JSONL entries or just flag them for manual review.")
-            elif "pattern" in assess.lower():
-                dex_parts.append(f"Pattern detection: {assess[:80]}.")
+            if assess:
+                dex_ops = f"Ops: {assess[:80]}."
 except: pass
-
-if not dex_parts:
-    dex_parts.append("Dex was quiet today. Its integrity sweep and pattern detection either didn't run or found nothing new.")
-
-dex_narrative = " ".join(dex_parts)
+if not dex_ops:
+    dex_ops = "Ops: no activity logged today."
+dex_narrative = build_agent_narrative("dex", agent_growth.get("dex"), agent_imp_tickets.get("dex", []), dex_ops)
 
 # --- Build executive summary from actual findings ---
 summary_parts = []
