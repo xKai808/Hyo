@@ -419,6 +419,169 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+    /* ═══ AETHER DASHBOARD ═══ */
+    .aether-dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .aether-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .aether-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .aether-card.metric {
+      border-left: 3px solid var(--warning);
+    }
+
+    .aether-card .label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .aether-card .value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+    }
+
+    .aether-card .subtext {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .aether-card .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .aether-card .status-active {
+      background: rgba(109, 212, 156, 0.15);
+      color: var(--success);
+    }
+
+    .aether-card .status-standby {
+      background: rgba(232, 201, 106, 0.15);
+      color: var(--warning);
+    }
+
+    .aether-card .status-caution {
+      background: rgba(224, 112, 96, 0.15);
+      color: var(--error);
+    }
+
+    .aether-card .status-monitoring {
+      background: rgba(126, 196, 224, 0.15);
+      color: var(--cyan);
+    }
+
+    .aether-strategies {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+    }
+
+    .aether-strategies h4 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .aether-strategies table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .aether-strategies th {
+      text-align: left;
+      padding: 10px 0;
+      padding-right: 16px;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    .aether-strategies td {
+      padding: 12px 0;
+      padding-right: 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .aether-strategies td:last-child {
+      padding-right: 0;
+    }
+
+    .aether-strategies tr:last-child td {
+      border-bottom: none;
+    }
+
+    .aether-strategies .strategy-name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .aether-strategies .metric-num {
+      font-family: var(--font-mono);
+      text-align: right;
+    }
+
+    .aether-pnl-positive {
+      color: var(--success);
+    }
+
+    .aether-pnl-negative {
+      color: var(--error);
+    }
+
+    .aether-section {
+      margin-top: 24px;
+    }
+
+    @media (max-width: 1400px) {
+      .aether-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .aether-summary {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -485,6 +648,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 let FEED_DATA = null;
+let AETHER_DATA = null;
 let currentView = 'feed';
 let currentMonth = null; // for agent history
 let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
@@ -609,10 +773,26 @@ async function fetchFeed() {
 
 async function boot() {
   FEED_DATA = await fetchFeed();
+  try {
+    const resp = await fetch('/data/aether-metrics.json');
+    if (resp.ok) {
+      AETHER_DATA = await resp.json();
+    }
+  } catch (e) {
+    console.log('Could not load Aether metrics');
+  }
   render();
   // Refresh every 60s
   setInterval(async () => {
     FEED_DATA = await fetchFeed();
+    try {
+      const resp = await fetch('/data/aether-metrics.json');
+      if (resp.ok) {
+        AETHER_DATA = await resp.json();
+      }
+    } catch (e) {
+      console.log('Could not load Aether metrics');
+    }
     render();
   }, 60000);
 }
@@ -664,6 +844,12 @@ function renderAgentView(container, agentId) {
   const agent = FEED_DATA.agents?.[agentId];
   if (!agent) {
     container.innerHTML = '<div class="empty-state">Agent not found</div>';
+    return;
+  }
+
+  // Special dashboard for Aether
+  if (agentId.toLowerCase() === 'aether') {
+    renderAetherDashboard(container, agent);
     return;
   }
 
@@ -936,6 +1122,200 @@ function getTypeLabel(type) {
     'research-drop': 'Research',
   };
   return map[type] || type;
+}
+
+// ═══ AETHER DASHBOARD ═══
+function renderAetherDashboard(container, agent) {
+  if (!AETHER_DATA) {
+    container.innerHTML = '<div class="empty-state">Aether metrics not loaded</div>';
+    return;
+  }
+
+  const data = AETHER_DATA;
+  const week = data.currentWeek || {};
+  const allTime = data.allTimeStats || {};
+  const strategies = week.strategies || [];
+  const btcContext = data.btcMarketContext || {};
+
+  // Get all reports by Aether, organized by month
+  const agentReports = (FEED_DATA.reports || [])
+    .filter(r => r.author.toLowerCase() === 'aether')
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  const months = {};
+  for (const r of agentReports) {
+    const m = r.date.slice(0, 7); // YYYY-MM
+    if (!months[m]) months[m] = [];
+    months[m].push(r);
+  }
+  const monthKeys = Object.keys(months).sort().reverse();
+
+  let html = `
+    <div class="agent-profile">
+      <div class="agent-profile-header">
+        <div class="ap-icon">${agent.icon}</div>
+        <div class="ap-info">
+          <h2>${agent.name}</h2>
+          <div class="ap-role">${agent.role}</div>
+        </div>
+      </div>
+      <div class="ap-responsibilities">"${agent.responsibilities}"</div>
+    </div>
+
+    <div class="aether-dashboard">
+      <!-- Portfolio Summary Cards -->
+      <div class="aether-summary">
+        <div class="aether-card metric">
+          <div class="label">Current Balance</div>
+          <div class="value">$${(week.currentBalance || 0).toFixed(2)}</div>
+          <div class="subtext">Week Starting: ${week.start}</div>
+        </div>
+
+        <div class="aether-card metric">
+          <div class="label">Week P&L</div>
+          <div class="value ${week.pnl >= 0 ? 'aether-pnl-positive' : 'aether-pnl-negative'}">
+            ${week.pnl >= 0 ? '+' : ''}$${(week.pnl || 0).toFixed(2)}
+          </div>
+          <div class="subtext">${(week.pnlPercent || 0).toFixed(2)}% return</div>
+        </div>
+
+        <div class="aether-card metric">
+          <div class="label">Win Rate</div>
+          <div class="value">${(week.winRate || 0).toFixed(1)}%</div>
+          <div class="subtext">${week.wins || 0}W / ${week.losses || 0}L</div>
+        </div>
+
+        <div class="aether-card metric">
+          <div class="label">Total Trades (Week)</div>
+          <div class="value">${week.trades || 0}</div>
+          <div class="subtext">Stoploss: ${week.stoplossTriggers || 0} events</div>
+        </div>
+      </div>
+
+      <!-- Strategy Performance -->
+      <div class="aether-strategies">
+        <h4>Strategy Performance</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th style="text-align: right;">Status</th>
+              <th style="text-align: right;">P&L</th>
+              <th style="text-align: right;">Trades</th>
+              <th style="text-align: right;">Win Rate</th>
+              <th style="text-align: right;">Last Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${strategies.map(s => {
+              const statusClass = `status-${s.status.toLowerCase().replace(' ', '-')}`;
+              const pnlClass = s.pnl >= 0 ? 'aether-pnl-positive' : 'aether-pnl-negative';
+              const lastAction = new Date(s.lastAction).toLocaleString('en-US', {
+                timeZone: 'America/Denver',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              });
+              return `
+                <tr>
+                  <td><span class="strategy-name">${s.name}</span></td>
+                  <td style="text-align: right;"><span class="status-badge ${statusClass}">${s.status}</span></td>
+                  <td style="text-align: right;"><span class="metric-num ${pnlClass}">$${(s.pnl || 0).toFixed(2)}</span></td>
+                  <td style="text-align: right;"><span class="metric-num">${s.trades || 0}</span></td>
+                  <td style="text-align: right;"><span class="metric-num">${(s.winRate || 0).toFixed(1)}%</span></td>
+                  <td style="text-align: right; color: var(--text-tertiary); font-size: 12px;">${lastAction}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Market Context -->
+      <div class="aether-card" style="padding: 20px;">
+        <h4 style="margin-bottom: 12px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">BTC Market Context</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; font-size: 13px;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Period</div>
+            <div style="color: var(--text-primary);">${btcContext.period || 'N/A'}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Low Price</div>
+            <div style="color: var(--text-primary);">$${(btcContext.lowPrice || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">High Price</div>
+            <div style="color: var(--text-primary);">$${(btcContext.highPrice || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Volatility</div>
+            <div style="color: var(--text-primary);">${btcContext.volatility || 'N/A'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- All-Time Stats -->
+      <div class="aether-card" style="padding: 20px;">
+        <h4 style="margin-bottom: 12px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">All-Time Statistics</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px;">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total P&L</div>
+            <div style="font-size: 20px; font-weight: 700; color: ${allTime.totalPnl >= 0 ? 'var(--success)' : 'var(--error)'};">
+              ${allTime.totalPnl >= 0 ? '+' : ''}$${(allTime.totalPnl || 0).toFixed(2)}
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total Trades</div>
+            <div style="font-size: 20px; font-weight: 700; color: var(--text-primary);">${(allTime.totalTrades || 0).toLocaleString()}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Add Report History
+  html += `<div class="history-section" style="margin-top: 32px;">
+    <h3>Report History</h3>`;
+
+  if (monthKeys.length === 0) {
+    html += '<div class="empty-state">No reports from Aether yet.</div>';
+  } else {
+    // Month tabs
+    html += '<div class="month-tabs">';
+    for (const mk of monthKeys) {
+      const label = formatMonthLabel(mk);
+      const active = mk === currentMonth ? ' active' : '';
+      html += `<div class="month-tab${active}" onclick="selectMonth('${mk}')">${label}</div>`;
+    }
+    html += '</div>';
+
+    // Reports for selected month
+    const monthReports = months[currentMonth || monthKeys[0]] || [];
+    html += '<div class="history-feed">';
+    if (monthReports.length === 0) {
+      html += '<div class="empty-state">No reports this month.</div>';
+    } else {
+      // Group by week
+      const weeks = {};
+      for (const r of monthReports) {
+        const weekNum = getWeekLabel(r.date);
+        if (!weeks[weekNum]) weeks[weekNum] = [];
+        weeks[weekNum].push(r);
+      }
+      for (const [weekLabel, reports] of Object.entries(weeks)) {
+        html += `<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin:20px 0 12px;">${weekLabel}</div>`;
+        for (const r of reports) {
+          html += renderReport(r);
+        }
+      }
+    }
+    html += '</div>';
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
 }
 
 </script>
