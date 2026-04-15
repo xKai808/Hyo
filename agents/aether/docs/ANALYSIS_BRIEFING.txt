@@ -586,45 +586,75 @@ Hyo does not want hedging. Hyo wants a position. Take one.
 
 
 ================================================================================
-SECTION 14: GPT CROSS-CHECK GATE (MANDATORY — added 2026-04-14)
+SECTION 14: GPT DUAL-PHASE PIPELINE (MANDATORY — added 2026-04-14, v2)
 ================================================================================
 
-Every analysis file MUST be verified by GPT-4o before it is considered complete.
-This is non-negotiable. It was added after Kai skipped the GPT cross-check when
-rewriting analysis files on 2026-04-14, shipping reformatted analyses without
-sending the updated content to GPT. Hyo caught it. Never again.
+Every analysis file MUST go through GPT-4o's dual-phase pipeline before it is
+considered complete. This is non-negotiable.
 
-THE RULE:
-  1. Every Analysis file has a GPT_VERIFIED line near the top.
-  2. When first created or when content changes: GPT_VERIFIED: NO
-  3. After running gpt_crosscheck.py AND integrating the review: GPT_VERIFIED: YES | <timestamp> | <review_file>
-  4. An analysis with GPT_VERIFIED: NO is INCOMPLETE. Do not commit it. Do not push it. Do not tell Hyo it's done.
+HISTORY OF FAILURES (so you don't repeat them):
+  v0 (2026-04-14 first attempt): Kai skipped GPT entirely when rewriting analyses.
+    Hyo caught it. "Why am I typing it if you don't use it?"
+  v1 (2026-04-14 second attempt): Kai sent the finished analysis to GPT for
+    review, but GPT never saw the raw logs. GPT was rubber-stamping Kai's work
+    instead of forming independent conclusions. Hyo caught it again.
+    "Why did you choose to take a shortcut?"
+  v2 (2026-04-14 current): Dual-phase pipeline. GPT sees raw logs FIRST, writes
+    its OWN analysis, THEN reads Kai's and fact-checks. This is what Hyo specified.
+
+THE TWO PHASES:
+  Phase 1 — GPT INDEPENDENT ANALYSIS:
+    GPT receives the RAW TRADING LOG (not Kai's analysis).
+    GPT forms its own conclusions: balance, trade count, P&L, concerns.
+    GPT writes its own recommendation based solely on what the data shows.
+    Output: GPT_Independent_YYYY-MM-DD.txt
+
+  Phase 2 — GPT COMPARATIVE REVIEW:
+    GPT receives Kai's analysis AND its own Phase 1 findings.
+    GPT fact-checks Kai against the raw data.
+    GPT agrees, disagrees, or pushes back on specific points.
+    Output: GPT_Review_YYYY-MM-DD.txt
 
 THE PROCESS:
-  1. Write/rewrite the analysis
+  1. Write Kai's analysis from raw logs
   2. Set GPT_VERIFIED: NO
   3. Run: python3 agents/aether/analysis/gpt_crosscheck.py YYYY-MM-DD
-  4. Read the GPT_Review file
-  5. Integrate GPT's findings into the GPT'S ANALYSIS section (body)
-  6. Update the EXECUTIVE SUMMARY GPT bullet points
-  7. If GPT disagrees with the recommendation, RESPOND TO THE DISAGREEMENT.
-     Either change the recommendation or explain why GPT is wrong. Do not ignore it.
-  8. Set GPT_VERIFIED: YES | <timestamp MT> | GPT_Review_YYYY-MM-DD.txt
-  9. Run: bash kai/protocols/verify-gpt-gate.sh (confirms all analyses pass)
+     This runs BOTH phases automatically (Phase 1 + Phase 2)
+  4. Read BOTH output files (GPT_Independent + GPT_Review)
+  5. Add GPT'S INDEPENDENT ANALYSIS section to the report body
+     — Include GPT's balance, trade count, key findings
+     — Write KAI RESPONSE addressing discrepancies
+  6. Add GPT'S COMPARATIVE REVIEW section to the report body
+     — Include each check (MATH, FACT, LOGIC, DISAGREE, AGREE)
+     — Write KAI RESPONSE to every point
+  7. Update EXECUTIVE SUMMARY GPT bullet points with both phases
+  8. If GPT finds DISCREPANCIES (different numbers, missed patterns):
+     ENGAGE WITH THEM. Either reconcile the numbers or explain why they differ.
+     Do NOT dismiss them. GPT finding $105.80 when Kai reports $103.67 is
+     EXACTLY what this pipeline is for.
+  9. If GPT DISAGREES with the recommendation: change it or argue back with
+     evidence. Do not ignore disagreements.
+  10. Set GPT_VERIFIED: YES | <timestamp MT> | GPT_Independent + GPT_Review
+  11. Run: bash kai/protocols/verify-gpt-gate.sh
 
-WHAT TRIGGERS A RE-CHECK:
-  - Any rewrite of the executive summary
+WHAT TRIGGERS A FULL RE-RUN:
+  - Any rewrite of the analysis content
   - Any change to the recommendation
-  - Any change to the trade tables that affects P&L totals
-  - Any change to the body analysis sections
-  Minor formatting fixes (typo, column alignment) do NOT require re-check.
+  - Any change to trade tables that affects P&L totals
+  Minor formatting fixes (typo, column alignment) do NOT require re-run.
+
+THE REPORT MUST INCLUDE:
+  - GPT'S INDEPENDENT ANALYSIS section (what GPT found on its own)
+  - GPT'S COMPARATIVE REVIEW section (GPT's fact-check of Kai's work)
+  - KAI RESPONSE to every GPT finding
+  - Executive summary must cover BOTH GPT phases
 
 WHY THIS EXISTS:
-  The dual-model pipeline (Claude → GPT → Claude) exists so no single model's
-  analysis goes unchecked. GPT caught real issues on both Monday and Tuesday
-  analyses — including a recommendation change on Tuesday where GPT correctly
-  pushed back on sequencing bug fixes vs data collection. Skipping the cross-check
-  means shipping single-model analysis, which defeats the entire architecture.
+  Single-model analysis is blind to its own errors. GPT already caught a $2.13
+  balance discrepancy on Tuesday that Kai missed. That's real money. The pipeline
+  exists so two models independently analyze the same data and disagreements
+  surface real issues. Shortcutting it turns a dual-model system into a
+  single-model system with extra steps. Never again.
 
 
 ================================================================================
