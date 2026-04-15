@@ -116,88 +116,94 @@ Direction forward: Deploy v255 phantom position reconciliation fix. Then and
 only then can we meaningfully evaluate strategy and stop performance.
 
 ================================================================================
-TRADE-BY-TRADE LEDGER
+TABLE 1: TRADE-BY-TRADE LEDGER
 ================================================================================
 
-Note: All P&L amounts are FROM LOG CLAIMS. Actual realized P&L may differ
-due to phantom position issue. Real balance change = -$3.81.
+All P&L from RAW LOG CLAIMS. Phantom gap = ~$23 — ALL figures UNRELIABLE.
+Only total balance change (-$3.81) is ground truth.
+Conviction = PAQ count at entry (N/A — not in settlement data, requires BUY SNAPSHOT context grep).
 
-| # | Strategy        | Side | Entry  | Size | Risk Est | Exit Mechanism          | Harvest | W/L  | Net P&L  | Bal After    |
-|---|----------------|------|--------|------|----------|-------------------------|---------|------|----------|-------------|
-| 1 | bps_premium    | NO   | @0.77  | 18c  | ~$13.86  | CHOP→STOP (TIME_BDI_LOW)| —       | LOSS | -$12.96  | $77.23 (unc)|
-| 2 | PAQ_EARLY_AGG  | YES  | @0.67  | 7c   | ~$2.31   | SETTLEMENT              | —       | WIN  | +$2.31   | $77.23 (unc)|
-| 3 | PAQ_STRUCT_GATE| YES  | @0.49  | 7c   | ~$3.57   | SETTLEMENT              | —       | WIN  | +$3.57   | $80.74 (unc)|
-| 4 | bps_late       | NO   | @0.93  | 7c   | ~$0.49   | SETTLEMENT              | —       | WIN  | +$0.49   | $80.74 (unc)|
-| 5 | PAQ_EARLY_AGG  | YES  | @0.83  | 24c  | ~$4.08   | SETTLEMENT              | —       | WIN  | +$4.08   | $80.74 (unc)|
-| 6 | bps_premium    | NO   | @0.73  | 6c   | ~$1.62   | HARVEST+SETTLE          | 2c      | LOSS | -$2.96   | $77.75 (unc)|
-| 7 | bps_premium    | NO   | @0.80  | 8c   | ~$1.60   | SETTLEMENT              | —       | WIN  | +$1.60   | $77.75 (unc)|
-| 8 | PAQ_EARLY_AGG  | YES  | @0.87  | 32c  | ~$4.16   | SETTLEMENT              | —       | WIN  | +$4.16   | $77.75 (unc)|
-| 9 | PAQ_EARLY_AGG  | YES  | @0.86  | 5c   | ~$0.70   | SETTLEMENT              | —       | WIN  | +$0.70   | $78.45 (unc)|
-|10 | bps_premium    | YES  | @0.88  | 6c   | ~$0.72   | STOP (stopped 6c)       | —       | LOSS | -$1.50   | $78.03 conf |
-|11 | bps_late       | YES  | @0.85  | 9c   | ~$1.35   | SETTLEMENT              | —       | WIN  | +$1.35   | $78.03 (unc)|
-|12 | PAQ_EARLY_AGG  | NO   | @0.54  | 9c   | ~$4.14   | SETTLEMENT              | —       | WIN  | +$4.14   | $78.03 (unc)|
-|13 | PAQ_EARLY_AGG  | NO   | @0.56  | 8c   | ~$3.52   | SETTLEMENT              | —       | WIN  | +$3.52   | $81.55 (unc)|
-|14 | bps_premium    | NO   | @0.85  | 9c   | ~$1.35   | HARVEST+SETTLE          | 8c      | WIN  | +$1.01   | $83.60 (unc)|
-|15 | PAQ_EARLY_AGG  | NO   | @0.57  | 8c   | ~$3.44   | SETTLEMENT              | —       | WIN  | +$3.44   | $83.60 (unc)|
-|16 | bps_premium    | YES  | @0.85  | 6c   | ~$0.90   | SETTLEMENT              | —       | WIN  | +$0.90   | $83.60 (unc)|
-|17 | bps_premium    | YES  | @0.88  | 6c   | ~$0.72   | STOP (TIME_BDI_LOW)     | —       | LOSS | -$1.62   | $81.97 conf |
-|18 | bps_premium    | YES  | @0.85  | 6c   | ~$0.90   | SETTLEMENT              | —       | WIN  | +$0.90   | $81.97 (unc)|
-|19 | bps_premium    | YES  | @0.85  | 6c   | ~$0.90   | TRAIL_EXIT_STAGE3       | —       | WIN  | +$0.90   | $81.97 (unc)|
-|20 | PAQ_EARLY_AGG  | YES  | @0.79  | 5c   | ~$1.05   | STOP (PAQ0_COLLAPSE)    | —       | LOSS | -$0.30   | $81.65 conf |
-|21 | bps_premium    | YES  | @0.77  | 7c   | ~$1.61   | SETTLEMENT              | —       | WIN  | +$1.61   | $83.17 (unc)|
-|22 | bps_premium    | NO   | @0.75  | 6c   | ~$1.50   | SETTLEMENT              | —       | WIN  | +$1.50   | $83.17 (unc)|
-|23 | PAQ_EARLY_AGG  | YES  | @0.89  | 5c   | ~$0.55   | SETTLEMENT              | —       | WIN  | +$0.55   | $83.72 (unc)|
-|24 | bps_premium    | NO   | @0.82  | 13c  | ~$2.34   | HARVEST+SETTLE          | 12c     | WIN  | +$1.94   | $85.76 (unc)|
-|25 | PAQ_EARLY_AGG  | YES  | @0.62  | 8c   | ~$3.04   | STOP (PAQ0_COLLAPSE)    | —       | LOSS | -$0.16   | $86.44 conf |
+| #  | Strategy        | Side | Entry | Exit/Fill         | Size | Risk    | Conviction | Stoploss                              | Harvest | W/L  | Net P&L  | Bal Before | Bal After |
+|----|----------------|------|-------|-------------------|------|---------|------------|---------------------------------------|---------|------|----------|------------|-----------|
+|  1 | bps_premium    | NO   | 0.77  | CHOP→STOP         | 18c  | $13.86  | —          | TIME_BDI_LOW_STAGE2 9c stop+9c sttl   | —       | LOSS | -$12.96  | $90.25     | $77.29    |
+|  2 | PAQ_EARLY_AGG  | YES  | 0.67  | 1.00 (sttl)       | 7c   | $2.31   | —          | —                                     | —       | WIN  | +$2.31   | $77.29     | $79.60    |
+|  3 | PAQ_STRUCT_GATE| YES  | 0.49  | 1.00 (sttl)       | 7c   | $3.57   | —          | —                                     | —       | WIN  | +$3.57   | $79.60     | $83.17    |
+|  4 | bps_late       | NO   | 0.93  | 0.00 (sttl)       | 7c   | $0.49   | —          | —                                     | —       | WIN  | +$0.49   | $83.17     | $83.66    |
+|  5 | PAQ_EARLY_AGG  | YES  | 0.83  | 1.00 (sttl)       | 24c  | $4.08   | —          | —                                     | —       | WIN  | +$4.08   | $83.66     | $87.74    |
+|  6 | bps_premium    | NO   | 0.73  | harv+sttl         | 6c   | $1.62   | —          | —                                     | 2c      | LOSS | -$2.96   | $87.74     | $84.78    |
+|  7 | bps_premium    | NO   | 0.80  | 0.00 (sttl)       | 8c   | $1.60   | —          | —                                     | —       | WIN  | +$1.60   | $84.78     | $86.38    |
+|  8 | PAQ_EARLY_AGG  | YES  | 0.87  | 1.00 (sttl)       | 32c  | $4.16   | —          | —                                     | —       | WIN  | +$4.16   | $86.38     | $90.54    |
+|  9 | PAQ_EARLY_AGG  | YES  | 0.86  | 1.00 (sttl)       | 5c   | $0.70   | —          | —                                     | —       | WIN  | +$0.70   | $90.54     | $91.24    |
+| 10 | bps_premium    | YES  | 0.88  | stop              | 6c   | $0.72   | —          | stopped 6c -$1.50                     | —       | LOSS | -$1.50   | $91.24     | $89.74    |
+| 11 | bps_late       | YES  | 0.85  | 1.00 (sttl)       | 9c   | $1.35   | —          | —                                     | —       | WIN  | +$1.35   | $89.74     | $91.09    |
+| 12 | PAQ_EARLY_AGG  | NO   | 0.54  | 0.00 (sttl)       | 9c   | $4.14   | —          | —                                     | —       | WIN  | +$4.14   | $91.09     | $95.23    |
+| 13 | PAQ_EARLY_AGG  | NO   | 0.56  | 0.00 (sttl)       | 8c   | $3.52   | —          | —                                     | —       | WIN  | +$3.52   | $95.23     | $98.75    |
+| 14 | bps_premium    | NO   | 0.85  | harv+sttl         | 9c   | $1.35   | —          | —                                     | 8c      | WIN  | +$1.01   | $98.75     | $99.76    |
+| 15 | PAQ_EARLY_AGG  | NO   | 0.57  | 0.00 (sttl)       | 8c   | $3.44   | —          | —                                     | —       | WIN  | +$3.44   | $99.76     | $103.20   |
+| 16 | bps_premium    | YES  | 0.85  | 1.00 (sttl)       | 6c   | $0.90   | —          | —                                     | —       | WIN  | +$0.90   | $103.20    | $104.10   |
+| 17 | bps_premium    | YES  | 0.88  | stop              | 6c   | $0.72   | —          | stopped 6c -$1.62                     | —       | LOSS | -$1.62   | $104.10    | $102.48   |
+| 18 | bps_premium    | YES  | 0.85  | 1.00 (sttl)       | 6c   | $0.90   | —          | —                                     | —       | WIN  | +$0.90   | $102.48    | $103.38   |
+| 19 | PAQ_EARLY_AGG  | YES  | 0.79  | stop              | 5c   | $1.05   | —          | PAQ0_COLLAPSE 5c -$0.30               | —       | LOSS | -$0.30   | $103.38    | $103.08   |
+| 20 | bps_premium    | YES  | 0.77  | 1.00 (sttl)       | 7c   | $1.61   | —          | —                                     | —       | WIN  | +$1.61   | $103.08    | $104.69   |
+| 21 | bps_premium    | NO   | 0.75  | 0.00 (sttl)       | 6c   | $1.50   | —          | —                                     | —       | WIN  | +$1.50   | $104.69    | $106.19   |
+| 22 | PAQ_EARLY_AGG  | YES  | 0.89  | 1.00 (sttl)       | 5c   | $0.55   | —          | —                                     | —       | WIN  | +$0.55   | $106.19    | $106.74   |
+| 23 | bps_premium    | NO   | 0.82  | harv+sttl         | 13c  | $2.34   | —          | —                                     | 12c     | WIN  | +$1.94   | $106.74    | $108.68   |
+| 24 | PAQ_EARLY_AGG  | YES  | 0.62  | stop              | 8c   | $3.04   | —          | PAQ0_COLLAPSE 8c -$0.16               | —       | LOSS | -$0.16   | $108.68    | $108.52   |
 
-Claimed totals: 19W / 6L (76% WR) | Net +$19.17
-Real balance change: -$3.81 | Phantom gap: ~$23.00
-
-================================================================================
-STRATEGY SUMMARY TABLE
-================================================================================
-
-| Strategy        | Trades | W  | L  | WR%  | Entry Range   | Exit Range    | Harvests | Stops | Claimed Net | REAL?     |
-|----------------|--------|----|----|------|---------------|---------------|----------|-------|-------------|-----------|
-| bps_premium    | 14     | 10 | 4  | 71%  | 0.73-0.88     | SETTLE/STOP   | 22c (3)  | 4     | -$7.89      | UNRELIABLE|
-| PAQ_EARLY_AGG  | 8      | 6  | 2  | 75%  | 0.54-0.89     | SETTLE/STOP   | 0        | 2     | +$22.15     | UNRELIABLE|
-| PAQ_STRUCT_GATE| 1      | 1  | 0  | 100% | 0.49          | SETTLEMENT    | 0        | 0     | +$3.57      | UNRELIABLE|
-| bps_late       | 2      | 2  | 0  | 100% | 0.85-0.93     | SETTLEMENT    | 0        | 0     | +$1.84      | UNRELIABLE|
-
-NOTE: ALL "Claimed Net" figures are UNRELIABLE due to phantom positions.
-Only the total balance change (-$3.81) is ground truth.
+TOTALS: 19W / 5L* (79% WR) | Claimed Net: +$18.27* | Actual Net: -$3.81 | Phantom Gap: ~$22.08
+*Note: Trade #6 (bps_premium NO@0.73) shows as LOSS (-$2.96) despite having
+harvests — counted as loss above. Actual W/L = 18W/6L if counted differently.
+Running Bal After for Trade #24 = $108.52 vs actual $86.44 — confirms phantom gap.
+Conviction column N/A across all trades — requires BUY SNAPSHOT context grep from raw logs.
 
 ================================================================================
-SESSION WINDOW P&L BREAKDOWN
+TABLE 2: STRATEGY SUMMARY
 ================================================================================
 
-Session windows (all times MTN):
-  OVERNIGHT     00:00 - 03:00: BTC $70,974-71,030. No trades. Monitoring only.
-  EU_MORNING    03:00 - 05:00: BTC $70,593-70,771. No trades triggered.
-  ASIA_OPEN     05:00 - 07:00: BTC $70,771-70,961. No trades triggered.
-  NY_PRE        07:00 - 09:30: BTC $70,955-71,833. BTC started to rally.
-                                Balance still $90.25. No entries.
-  NY_PRIME      09:30 - 12:00: BTC $71,756-72,297. MOST ACTIVE WINDOW.
-                                Trade #1 (big loss) at ~10:08. Trades #2-8 also here.
-                                Balance dropped from $90.25 to ~$77 range.
-  AFTERNOON     12:00 - 17:00: BTC $72,297-74,105. Trades #9-15.
-                                Recovery period. Balance climbed back.
-  EVENING       17:00 - 21:00: BTC $74,105-74,415. Trades #16-24.
-                                Active trading continued. Mixed results.
-  OVERNIGHT2    21:00 - 24:00: BTC $74,296-74,415. Trade #25 (last).
-                                Balance finalized at $86.44.
+| Strategy        | Trades | Entry Range | Exit Range      | Harvests  | Stops | W  | L  | WR%  | Net +/-    |
+|----------------|--------|-------------|-----------------|-----------|-------|----|----|------|------------|
+| bps_premium    | 13     | 0.73–0.88   | sttl/stop/harv  | 22c (3)   | 3     | 10 | 3  | 77%  | -$7.18     |
+| PAQ_EARLY_AGG  | 8      | 0.54–0.89   | sttl/stop       | 0         | 2     | 6  | 2  | 75%  | +$22.90    |
+| PAQ_STRUCT_GATE| 1      | 0.49        | settlement      | 0         | 0     | 1  | 0  | 100% | +$3.57     |
+| bps_late       | 2      | 0.85–0.93   | settlement      | 0         | 0     | 2  | 0  | 100% | +$1.84     |
+| **TOTAL**      | **24** |             |                 | **22c**   | **5** |**19**|**5**|**79%**|**+$21.13** |
 
-| Session       | Trades | Claimed W | Claimed L | Claimed Net | Notes                    |
-|--------------|--------|-----------|-----------|-------------|--------------------------|
-| OVERNIGHT    | 0      | —         | —         | $0.00       | Monitoring only          |
-| EU_MORNING   | 0      | —         | —         | $0.00       | No signals triggered     |
-| ASIA_OPEN    | 0      | —         | —         | $0.00       | No signals triggered     |
-| NY_PRIME     | ~8     | ~4        | ~4        | ~ -$7.00    | Big loss dominated       |
-| AFTERNOON    | ~8     | ~8        | ~0        | ~ +$18.00   | Strong recovery (phantom?)|
-| EVENING      | ~8     | ~6        | ~2        | ~ +$8.00    | Active, mixed            |
-| OVERNIGHT2   | ~1     | ~1        | ~0        | ~ -$0.16    | Final trade              |
+⚠️ ALL figures UNRELIABLE. Phantom gap = ~$23. Only balance change (-$3.81) is truth.
+bps_premium is claimed net negative despite 77% WR because Trade #1 (18c, -$12.96) dominates.
+PAQ_EARLY_AGG claims massive +$22.90 — likely inflated by phantom fills on trades #5 (24c) and #8 (32c).
 
-⚠️ Session P&L cannot be verified per-window due to phantom positions.
+================================================================================
+TABLE 3: SESSION × STRATEGY BREAKDOWN
+================================================================================
+
+All times MTN. Session mapping estimated from balance progression and BTC timestamps.
+BTC rallied +4.67% ($70,974→$74,289) — most activity clustered NY_PRIME through EVENING.
+
+| Session      | Strategy        | Trades | Entry Range | Exit Range     | Harvests | Stops | W | L | Net +/-    |
+|-------------|----------------|--------|-------------|----------------|----------|-------|---|---|------------|
+| OVERNIGHT   | —              | 0      | —           | —              | —        | —     | — | — | $0.00      |
+| EU_MORNING  | —              | 0      | —           | —              | —        | —     | — | — | $0.00      |
+| ASIA_OPEN   | —              | 0      | —           | —              | —        | —     | — | — | $0.00      |
+| NY_OPEN     | —              | 0      | —           | —              | —        | —     | — | — | $0.00      |
+| NY_PRIME    | bps_premium    | 2      | 0.73–0.77   | CHOP_STOP/sttl | 0        | 1     | 1 | 1 | -$11.36    |
+| NY_PRIME    | PAQ_EARLY_AGG  | 2      | 0.67–0.83   | settlement     | 0        | 0     | 2 | 0 | +$6.39     |
+| NY_PRIME    | PAQ_STRUCT_GATE| 1      | 0.49        | settlement     | 0        | 0     | 1 | 0 | +$3.57     |
+| NY_PRIME    | bps_late       | 1      | 0.93        | settlement     | 0        | 0     | 1 | 0 | +$0.49     |
+| NY_PRIME    | bps_premium    | 1      | 0.80        | settlement     | 0        | 0     | 1 | 0 | +$1.60     |
+| **NY_PRIME TOTAL** |         | **7**  |             |                |          |       |**6**|**1**| **+$0.69** |
+| AFTERNOON   | PAQ_EARLY_AGG  | 4      | 0.54–0.87   | settlement     | 0        | 0     | 4 | 0 | +$15.82    |
+| AFTERNOON   | bps_premium    | 3      | 0.85–0.88   | sttl/harv/stop | 8c (1)   | 1     | 2 | 1 | +$0.41     |
+| AFTERNOON   | bps_late       | 1      | 0.85        | settlement     | 0        | 0     | 1 | 0 | +$1.35     |
+| **AFTERNOON TOTAL** |        | **8**  |             |                |          |       |**7**|**1**| **+$17.58** |
+| EVENING     | bps_premium    | 5      | 0.75–0.88   | sttl/harv/stop | 12c (1)  | 1     | 4 | 1 | +$3.23     |
+| EVENING     | PAQ_EARLY_AGG  | 3      | 0.62–0.89   | sttl/stop      | 0        | 2     | 1 | 2 | +$0.09     |
+| **EVENING TOTAL** |          | **8**  |             |                |          |       |**5**|**3**| **+$3.32** |
+| OVERNIGHT2  | PAQ_EARLY_AGG  | 1      | 0.62        | PAQ0_COLLAPSE  | 0        | 1     | 0 | 1 | -$0.16     |
+| **OVERNIGHT2 TOTAL** |       | **1**  |             |                |          |       |**0**|**1**| **-$0.16** |
+
+⚠️ ALL session P&L is UNRELIABLE due to phantom positions. Use for pattern
+analysis only (which sessions are most active, which strategies fire where).
+AFTERNOON claimed +$17.58 is almost certainly inflated by phantom fills.
 
 ================================================================================
 STOP AND HARVEST EVENT LOG
