@@ -17,13 +17,14 @@ Read these files in order. Do not skip. Do not skim.
 2. `KAI_TASKS.md` — priority queue; this is what you work on when not actively prompted
 3. `kai/ledger/known-issues.jsonl` — issue patterns to watch for (regressions)
 4. `kai/ledger/session-errors.jsonl` — Kai's own mistakes (RECALL SYSTEM — check before every action)
-5. `kai/protocols/VERIFICATION_PROTOCOL.md` — mandatory verification protocol (nothing is done until verified)
-6. `kai/ledger/simulation-outcomes.jsonl` — last nightly sim result (check for failures)
-7. `kai/AGENT_ALGORITHMS.md` — execution protocols for all agents (follow these exactly)
-8. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
-9. `NFT/HyoRegistry_Notes.md` — canonical architecture notes
-10. Any file in `agents/manifests/` relevant to the current task
-11. Latest log in `agents/nel/logs/` if one exists
+5. `kai/protocols/EXECUTION_GATE.md` — the 5 questions that run BEFORE every action (pre-action gate)
+6. `kai/protocols/VERIFICATION_PROTOCOL.md` — mandatory verification protocol (post-action check)
+7. `kai/ledger/simulation-outcomes.jsonl` — last nightly sim result (check for failures)
+8. `kai/AGENT_ALGORITHMS.md` — execution protocols for all agents (follow these exactly)
+9. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
+10. `NFT/HyoRegistry_Notes.md` — canonical architecture notes
+11. Any file in `agents/manifests/` relevant to the current task
+12. Latest log in `agents/nel/logs/` if one exists
 
 After hydration, respond with a 4-line status:
 1. What shipped since last session (from KAI_BRIEF "Shipped today" section)

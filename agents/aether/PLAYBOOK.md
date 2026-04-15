@@ -187,9 +187,36 @@ The first automated analysis missed 25% of the day's trades (evening period fell
 
 ---
 
-## Daily Operating Cycle (12-Step Deep Analysis)
+## Daily Operating Cycle (Question-Driven Analysis)
 
-Every trading day, Aether runs this protocol autonomously:
+**Full algorithm:** `agents/aether/ANALYSIS_ALGORITHM.md` — the authoritative reference.
+This section is a summary. When in doubt, follow the algorithm file.
+
+The daily analysis is a **question-driven decision tree**, not a task list. Each gate has questions that must be answered with evidence before proceeding. If a question can't be answered, that IS the finding.
+
+### Phase 1 — Kai's Analysis (7 gates)
+- **Gate 1: Ground Truth** — Establish real balance change from raw log. If phantom gap > $5, all P&L flagged UNRELIABLE.
+- **Gate 2: Trade Ledger** — Every trade: strategy, entry, exit, size, risk, harvest, stop, W/L, P&L, running balance. → Table 1
+- **Gate 3: Strategy Assessment** — Per-strategy edge-per-contract (the real measure, not WR). Trend vs. prior sessions. → Table 2
+- **Gate 4: Timing Assessment** — Per-session-window P&L and risk-adjusted return. Is each window worth trading? → Table 3
+- **Gate 5: Risk Assessment** — Max drawdown, concentration (>50% from one trade = lucky), worst-case scenario, correlated losses.
+- **Gate 6: Harvest Health** — Success rate, efficiency (% of theoretical max captured), $ left on table, trend.
+- **Gate 7: Open Issues** — New evidence? Issues closeable? New issues emerged?
+
+### Phase 2 — GPT Adversarial (gpt_crosscheck.py)
+- **Phase 2a (Independent):** GPT analyzes raw log without seeing Kai's work. Must answer: entry quality, risk concentration, edge per contract, harvest efficiency, stop quality, phantom separation, timing patterns, critical finding.
+- **Phase 2b (Comparative):** GPT compares findings. Must answer: Kai's blind spots, strategy overrides, risk scenario, parameter changes, day grade (A-F), critical recommendation.
+- GPT must produce **adversarial intelligence** — insights Kai didn't have. Not balance comparisons. (SE-010-014)
+
+### Phase 3 — Final Conclusion
+- Decision gate: Does GPT change anything? (C1-C5)
+- Final questions: F1 (one specific improvement), F2 (protect what's working), F3 (halt conditions?), F4 (what data needed tomorrow?), F5 (the "so what?" test)
+
+### Self-Check (before publishing)
+S1-S8 in ANALYSIS_ALGORITHM.md. Covers: tables present, GPT included, HTML published to both paths, HQ feed has readLink, metrics updated, committed+pushed+verified live.
+
+### Legacy 12-Step Reference
+The previous 12-step protocol is preserved below for reference. The question-driven algorithm supersedes it.
 
 ```
 Step 1: Full trade-by-trade ledger extraction
@@ -475,6 +502,18 @@ Every 15 minutes launchd fires aether.sh:
 
 
 ## Research Log
+
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
+
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
+
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
+
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
+
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
+
+- **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
 
 - **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
 
