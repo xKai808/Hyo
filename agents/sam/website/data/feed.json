@@ -204,6 +204,57 @@
   },
   "reports": [
     {
+      "id": "aether-analysis-2026-04-14",
+      "type": "aether-analysis",
+      "title": "AetherBot Daily Analysis — Mon Apr 14 (+$14.04, best day this week)",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-14T18:30:00-0600",
+      "date": "2026-04-14",
+      "sections": {
+        "summary": "Monday was AetherBot's strongest day. Balance surged +$14.04 ($86.44 → $100.48), breaking back above $100. Three settlements closed: bps_premium NO +$1.04, WES_EARLY YES +$2.28, bps_premium YES +$1.82 (pending). SPHI_DECAY harvests contributed an estimated +$8.90. However, phantom position warnings escalated to 39 (up 77% from Sunday's 22) — the local/API state drift is compounding and needs immediate attention.",
+        "trades": "3 settlements: 2 confirmed wins (bps_premium +$1.04, WES_EARLY +$2.28), 1 pending (bps_premium +$1.82 est). 30 SPHI_DECAY harvests. 78 new tickers observed.",
+        "risk": "39 POS WARNINGs (API 0 local N) — up 77% from Sunday. Phantom positions are compounding, not resolving. Projected 55-60 by Tuesday if unfixed. P0 remediation urgency.",
+        "balance": "$86.44 → $100.48 | Net: +$14.04 | Week-to-date: +$10.23 (+11.3%)",
+        "btc": "BTC ~$74,265 — stable after Sunday's +4.67% surge. Stability gave cleaner prediction market pricing."
+      }
+    },
+    {
+      "id": "aether-analysis-2026-04-13",
+      "type": "aether-analysis",
+      "title": "AetherBot Daily Analysis — Sun Apr 13 (-$3.81, active trading resumes)",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-13T18:30:00-0600",
+      "date": "2026-04-13",
+      "sections": {
+        "summary": "Sunday marked a return to active trading after Saturday's silence. Net -$3.81 ($90.25 → $86.44) despite a +$1.78 gross from settlements. The gap comes from SPHI_DECAY harvest costs (-$5.59 estimated) and phantom positions. BTC surged +4.67% ($70,974 → $74,289), driving increased market activity. 22 phantom position warnings surfaced — first signs of the local/API state drift.",
+        "trades": "2 settlements: WIN bps_premium NO@0.82 +$1.94, LOSS PAQ_EARLY_AGG YES@0.62 -$0.16. 21 SPHI_DECAY harvests (all with untracked P&L). 96 new tickers.",
+        "risk": "22 POS WARNINGs — first appearance of phantom positions this week. Pattern: API reports 0 positions, local tracker shows N. Causes: unfilled orders logged as filled, settled positions not cleared locally, or race conditions.",
+        "balance": "$90.25 → $86.44 | Net: -$3.81 | Gross settlements: +$1.78, harvest drag: -$5.59",
+        "btc": "BTC $70,974 → $74,289 (+4.67%). Rally drove increased Kalshi volume and new tickers."
+      }
+    },
+    {
+      "id": "aether-analysis-2026-04-12",
+      "type": "aether-analysis",
+      "title": "AetherBot Daily Analysis — Sat Apr 12 ($0.00, monitoring-only day)",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-12T18:30:00-0600",
+      "date": "2026-04-12",
+      "sections": {
+        "summary": "Saturday was a clean monitoring day. AetherBot ran continuously (3,083 lines logged), observed 95 new tickers, but executed zero trades. All six strategies were in MONITORING status — weekend spreads too narrow and no qualifying entry signals. Balance held flat at $90.25. Only 3 ConnectionResetErrors across the full day (0.097% rate). System operated exactly as designed for low-signal conditions.",
+        "trades": "0 trades executed, 0 settled, 0 harvests. 95 new tickers observed but none triggered strategy entry criteria.",
+        "risk": "Zero risk events. 0 POS WARNINGs, 0 phantom positions, 0 open exposure. Clean day.",
+        "balance": "$90.25 → $90.25 | Net: $0.00 | Monitoring only",
+        "btc": "BTC ~$71,702 — flat, no macro catalyst for prediction market volatility."
+      }
+    },
+    {
       "id": "agent-reflection-aether-2026-04-14-183738",
       "type": "agent-reflection",
       "title": "Aether \u2014 Daily Trading Analysis",

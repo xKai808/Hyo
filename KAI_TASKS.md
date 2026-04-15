@@ -156,6 +156,15 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 
 ## Done
 
+- [x] **2026-04-14** Ticket system (bin/ticket.sh) — full lifecycle CLI with SLA enforcement, verify gates, git audit trail, agent memory write. 6 active tickets.
+- [x] **2026-04-14** 5 Workflow Systems integrated into AGENT_ALGORITHMS.md — Loop, Role Gate, Sprint, Adversarial, Memory Loop.
+- [x] **2026-04-14** Agent verify.sh scripts — Ra (7 checks), Sam (9 checks), Nel (4 checks), Aether (4 checks). All tested.
+- [x] **2026-04-14** Scheduled maintenance system — 4 launchd daemons (healthcheck q15m, business-monitor q30m, escalation q1h, compaction 02:30).
+- [x] **2026-04-14** Memory layer system — daily notes, pattern library, 3-tier recall. memory-compact.sh for archival.
+- [x] **2026-04-14** Newsletter renderer for HQ — renderNewsletter() function in hq.html.
+- [x] **2026-04-14** 3-day AetherBot analysis (Sat-Mon) — retroactive analysis from raw logs, published to HQ feed. Week-to-date: +$10.23 (+11.3%).
+- [x] **2026-04-14** Aether analysis scheduled task — com.hyo.aether-analysis.plist (daily 23:00 MT) + run_analysis.sh wrapper. Loaded on Mini.
+- [x] **2026-04-14** Memory save — KAI_BRIEF, KAI_TASKS, all agent ACTIVE.md files updated.
 - [x] **2026-04-13** Memory Update Protocol (constitutional v3.2) — Step 13 added to SELF-EVOLUTION CYCLE. Every agent writes ACTIVE.md after every cycle. Kai q2h memory via healthcheck. All 5 runners wired. Healthcheck flags stale ACTIVE.md. Full propagation: CLAUDE.md, AGENT_ALGORITHMS.md, AGENT_CREATION_PROTOCOL.md all updated.
 - [x] **2026-04-13** Session 8 constitutional rebuild — AGENT_ALGORITHMS.md v3.0: POST-TASK REFLECTION, AGENT REFLECTION (step 10 of SELF-EVOLUTION CYCLE), AUTONOMY MODEL (decide + report), KAI GUIDANCE PROTOCOL (questions not answers), ALGORITHM EVOLUTION LIFECYCLE (proposal → review → approve → verify → simulate), dead-loop detection (healthcheck Check 8), event-driven agent triggers (dispatch queues runner on P0/P1), proposal infrastructure (kai/proposals/), file_proposal() helper, REASONING_FRAMEWORK updated with open-ended + yes/no question pattern. All 5 agent runners updated with reflection blocks in evolution entries.
 - [x] **2026-04-13** Resolution Algorithm v1.1 — RA-1 created, tested with RES-001 (detection-without-remediation), self-evolved with process improvements. resolve.sh executor + recall.py search.

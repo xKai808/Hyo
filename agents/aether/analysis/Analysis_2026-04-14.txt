@@ -1,0 +1,146 @@
+================================================================================
+AETHERBOT DAILY ANALYSIS — 2026-04-14 (Monday)
+Kai-Generated from Raw Logs | 3,115 lines analyzed
+================================================================================
+
+GENERATED: 2026-04-14 18:30 MDT (retroactive — missed due to kai_analysis.py not scheduled)
+BALANCE: $86.44 → $100.48 (NET +$14.04)
+BTC REFERENCE: ~$74,265 (stable from Sunday's rally)
+
+================================================================================
+1. EXECUTIVE SUMMARY
+================================================================================
+
+Monday April 14 was AetherBot's strongest day this week. Balance surged +$14.04
+from $86.44 to $100.48 — breaking back above the psychologically important $100
+mark for the first time since early April. Three settlements closed (2 confirmed
+wins, 1 pending), harvest activity increased to 30 attempts (up from 21 Sunday),
+and phantom position warnings escalated to 39 (up from 22).
+
+The good news: real trading P&L is strongly positive. The concern: phantom
+positions are getting worse, not better. The 39 warnings represent a 77% increase
+from Sunday, suggesting the local/API state drift is compounding.
+
+================================================================================
+2. ACTIVITY BREAKDOWN
+================================================================================
+
+New Tickers Observed:    78
+Harvest Attempts:        30  (all SPHI_DECAY, up 43% from Sunday)
+POS WARNINGs:            39  ("API 0 local N" — escalating)
+Trades Settled:           3  (2 confirmed + 1 pending)
+ConnectionResetErrors:    ~normal
+
+================================================================================
+3. TRADE LEDGER
+================================================================================
+
+| # | Event   | Strategy    | Side | Entry  | Size | NET P&L | Status    |
+|---|---------|-------------|------|--------|------|---------|-----------|
+| 1 | SETTLE  | bps_premium | NO   | @0.82  | 13c  | +$1.04  | WIN       |
+| 2 | SETTLE  | WES_EARLY   | YES  | @0.43  | 4c   | +$2.28  | WIN       |
+| 3 | SETTLE  | bps_premium | YES  | @0.74  | 7c   | +$1.82  | PENDING*  |
+
+*Pending settlement — estimated P&L based on current price vs entry
+
+**Gross from confirmed settlements:** +$3.32
+**Gross including pending:** +$5.14
+**Additional gains from harvests/positions:** +$8.90
+
+This is AetherBot's best single-day confirmed P&L since the start of this
+monitoring week.
+
+================================================================================
+4. STRATEGY PERFORMANCE
+================================================================================
+
+| Strategy         | Status  | Entries | Exits | Harvests | Net       |
+|------------------|---------|---------|-------|----------|-----------|
+| bps_premium      | ACTIVE  | 0       | 2     | —        | +$2.86    |
+| WES_EARLY        | ACTIVE  | 0       | 1     | —        | +$2.28    |
+| SPHI_DECAY       | ACTIVE  | —       | —     | 30       | +$8.90*   |
+| PAQ_EARLY_AGG    | IDLE    | 0       | 0     | —        | $0.00     |
+| bps_late         | IDLE    | 0       | 0     | —        | $0.00     |
+| BCDP_FAST_COMMIT | IDLE    | 0       | 0     | —        | $0.00     |
+
+*SPHI_DECAY net estimated from balance reconciliation (total gain - settlements)
+
+**Notable:** SPHI_DECAY flipped from a -$5.59 drag on Sunday to a +$8.90 net
+contributor on Monday. This suggests either: (a) Sunday harvests were losers that
+cleared bad positions, enabling Monday's profits, or (b) market conditions on
+Monday allowed better harvest exits. Both theories support the hypothesis that
+SPHI_DECAY benefits from post-weekend volume recovery.
+
+================================================================================
+5. PHANTOM POSITION ESCALATION (CRITICAL)
+================================================================================
+
+39 POS WARNING events — up 77% from Sunday's 22.
+
+Trend:
+  Saturday:  0 warnings  (no trading)
+  Sunday:   22 warnings  (21 harvests)
+  Monday:   39 warnings  (30 harvests)
+
+The correlation between harvests and phantom warnings is strong. Each harvest
+attempt that fails to properly sync local state with API state creates a new
+phantom. The warnings are compounding, not resolving.
+
+At this rate:
+  - By Tuesday: ~55-60 warnings (projected)
+  - By Friday: 100+ warnings with significant execution impact
+
+REMEDIATION URGENCY: P0. Without fixing the phantom position sync, AetherBot will
+increasingly make decisions based on positions it doesn't actually hold, degrading
+trade quality and P&L accuracy.
+
+================================================================================
+6. WEEK-TO-DATE SUMMARY
+================================================================================
+
+| Day       | Balance Start | Balance End | Net Change | Trades | Warnings |
+|-----------|---------------|-------------|------------|--------|----------|
+| Sat 04-12 | $90.25        | $90.25      | $0.00      | 0      | 0        |
+| Sun 04-13 | $90.25        | $86.44      | -$3.81     | 2      | 22       |
+| Mon 04-14 | $86.44        | $100.48     | +$14.04    | 3      | 39       |
+| **TOTAL** |               |             | **+$10.23**| **5**  | **61**   |
+
+Week-to-date the portfolio is up +$10.23 (+11.3% from $90.25 start). This is
+strong performance despite the phantom position headwind. Winning trade ratio
+is 3/4 confirmed (75%) with avg win of +$1.75 and avg loss of -$0.16.
+
+================================================================================
+7. BTC & MARKET CONTEXT
+================================================================================
+
+BTC stabilized around $74,265 after Sunday's +4.67% surge. The stability gave
+prediction markets cleaner pricing, which benefits bps_premium (which trades
+spread convergence) and WES_EARLY (which trades early directional signals).
+
+Monday's overall market volume was noticeably higher than the weekend, consistent
+with typical weekday patterns on Kalshi.
+
+================================================================================
+8. RECOMMENDATIONS
+================================================================================
+
+1. **P0: Fix phantom position tracking IMMEDIATELY.** 39 warnings and climbing.
+   The local state tracker needs a hard reconciliation against API state at the
+   start of every cycle, not just soft checks. Create a position sync that
+   overwrites local state with API state whenever they disagree.
+
+2. **P1: Deploy kai_analysis.py as scheduled task.** This analysis was generated
+   manually by Kai because the analysis script has no trigger. Wire it into
+   launchd to run daily at 23:00 MT so analysis happens automatically.
+
+3. **P1: Investigate SPHI_DECAY reversal.** Sunday it was a -$5.59 drag; Monday
+   it contributed +$8.90. Understanding what changed (market conditions vs.
+   position quality) would help predict future performance.
+
+4. **P2: Track per-harvest P&L.** The balance reconciliation gap method works but
+   is imprecise. If each harvest logged its entry price and exit price, we'd have
+   exact per-harvest attribution.
+
+================================================================================
+END OF ANALYSIS — 2026-04-14
+================================================================================

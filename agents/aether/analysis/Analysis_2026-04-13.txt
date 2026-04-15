@@ -1,0 +1,125 @@
+================================================================================
+AETHERBOT DAILY ANALYSIS — 2026-04-13 (Sunday)
+Kai-Generated from Raw Logs | 3,886 lines analyzed
+================================================================================
+
+GENERATED: 2026-04-14 18:30 MDT (retroactive — missed due to kai_analysis.py not scheduled)
+BALANCE: $90.25 → $86.44 (NET -$3.81)
+BTC REFERENCE: $70,974 → $74,289 (+4.67%)
+
+================================================================================
+1. EXECUTIVE SUMMARY
+================================================================================
+
+Sunday April 13 marked a significant shift from Saturday's silence. AetherBot
+returned to active trading with 2 settled trades, 21 SPHI_DECAY harvest attempts,
+and — critically — 22 POS WARNING events signaling phantom position issues.
+
+The day ended with a net balance decline of -$3.81 ($90.25 → $86.44), though this
+is misleading: the WIN on bps_premium netted +$1.94, while the LOSS on PAQ_EARLY_AGG
+cost only -$0.16. The remaining -$5.59 gap is attributed to harvest costs (SPHI_DECAY
+selling positions below entry) and the phantom position issue where locally-tracked
+positions show non-zero counts but the API reports zero.
+
+BTC surged +4.67% ($70,974 → $74,289), which explains the increased market activity
+and ticker volume.
+
+================================================================================
+2. ACTIVITY BREAKDOWN
+================================================================================
+
+New Tickers Observed:    96
+Harvest Attempts:        21  (all SPHI_DECAY strategy)
+POS WARNINGs:            22  ("API 0 local N" — phantom positions)
+Trades Settled:           2
+ConnectionResetErrors:    ~normal (within tolerance)
+
+================================================================================
+3. TRADE LEDGER
+================================================================================
+
+| # | Event   | Strategy      | Side | Entry  | Size | NET P&L | Status |
+|---|---------|---------------|------|--------|------|---------|--------|
+| 1 | SETTLE  | bps_premium   | NO   | @0.82  | 13c  | +$1.94  | WIN    |
+| 2 | SETTLE  | PAQ_EARLY_AGG | YES  | @0.62  | 8c   | -$0.16  | LOSS   |
+
+**Gross from settlements:** +$1.78
+**Unaccounted gap:** -$5.59 (harvest costs + phantom position drag)
+
+================================================================================
+4. STRATEGY PERFORMANCE
+================================================================================
+
+| Strategy         | Status  | Entries | Exits | Harvests | Net     |
+|------------------|---------|---------|-------|----------|---------|
+| bps_premium      | ACTIVE  | 0       | 1     | —        | +$1.94  |
+| PAQ_EARLY_AGG    | CAUTION | 0       | 1     | —        | -$0.16  |
+| SPHI_DECAY       | ACTIVE  | —       | —     | 21       | -$5.59* |
+| bps_late         | IDLE    | 0       | 0     | —        | $0.00   |
+| BCDP_FAST_COMMIT | IDLE    | 0       | 0     | —        | $0.00   |
+| WES_EARLY        | IDLE    | 0       | 0     | —        | $0.00   |
+
+*SPHI_DECAY net estimated from balance reconciliation gap
+
+================================================================================
+5. PHANTOM POSITION ANALYSIS (CRITICAL)
+================================================================================
+
+22 POS WARNING events all follow the same pattern:
+  "POS WARNING: API 0 local N" — where N varies from 1 to 14
+
+This means AetherBot's internal position tracker believes it holds N contracts, but
+the Kalshi API reports 0. Root causes:
+  a) Orders that were logged as filled but actually rejected at the exchange
+  b) Positions that settled/expired but local state wasn't updated
+  c) Race condition between order submission and position poll
+
+IMPACT: When AetherBot believes it holds phantom positions, it may:
+  - Skip valid entry signals (thinks it's at max position)
+  - Attempt harvests on non-existent positions (wasted API calls)
+  - Report P&L that doesn't match actual balance
+
+This is a KNOWN ISSUE (TASK-20260414-aether-001) and the #1 reliability concern.
+
+================================================================================
+6. HARVEST ANALYSIS (SPHI_DECAY)
+================================================================================
+
+21 harvest attempts — all SPHI_DECAY strategy. This is AetherBot's time-decay
+harvesting pattern where it sells positions whose expected value has decayed below
+a threshold. The -$5.59 balance gap suggests many of these harvests sold at prices
+below entry, creating small realized losses that compound.
+
+Questions for next iteration:
+  - What was the average slippage per harvest?
+  - Were any harvests profitable (sold above entry)?
+  - Is the decay threshold triggering too early?
+
+================================================================================
+7. BTC CORRELATION
+================================================================================
+
+BTC rose +4.67% from $70,974 to $74,289 during this period. This likely:
+  - Increased overall prediction market activity (more tickers, more volume)
+  - Shifted crypto-adjacent market sentiment (YES bets on crypto strength)
+  - Explains why SPHI_DECAY harvests increased (more positions to decay out of)
+
+================================================================================
+8. RECOMMENDATIONS
+================================================================================
+
+1. **P0: Fix phantom position tracking.** The 22 POS WARNINGs are the single
+   biggest risk to P&L accuracy and strategy execution. AetherBot needs to
+   reconcile local state with API state before every trade decision.
+
+2. **P1: Audit SPHI_DECAY harvest profitability.** -$5.59 in unaccounted losses
+   likely comes from harvests selling below entry. If harvest slippage consistently
+   exceeds expected decay value, the strategy needs tighter gating.
+
+3. **P2: Track harvest-level P&L.** Currently only settlements show individual
+   P&L. Harvests aggregate into the balance gap. Adding per-harvest P&L tracking
+   would eliminate the reconciliation gap entirely.
+
+================================================================================
+END OF ANALYSIS — 2026-04-13
+================================================================================

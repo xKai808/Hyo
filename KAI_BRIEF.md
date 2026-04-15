@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-14 ~00:00 MT (session 9 closed — Hyo raised fundamental question about agent autonomy)
+**Updated:** 2026-04-14 ~19:45 MT (session 10 — ticket system, maintenance daemons, 3-day Aether analysis, memory save)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 **Last healthcheck:** 2026-04-14T12:20:00-06:00 — **ISSUES: 2 P0, 5 P1, 5 P2.** 13TH CONSECUTIVE UNHEALTHY CHECK — no improvement. Queue pending growing (3→5, worker not picking up). P0: agents/nel/security gitignore gap (nel-001, sim-ack only). P0: HQ rendering disconnected (kai-001, sim-ack only). P1: Newsletter missed THREE consecutive days (04-12, 04-13, 04-14). P1: Aether API key placeholder — root cause of GPT log review failures. P1: ra, aether, dex all in dead-loops. P1: Sam completely silent today (0 logs, 7 P1 tasks unexecuted). P2: Queue stalling — 5 pending, 0 running. P2: Aether flooding log.jsonl with 80+ duplicate entries. P2: All delegations are sim-ack only — no real execution. P2: grep -P macOS compat. P2: 15 broken doc links. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only (sim-ack). Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) fix .gitignore on Mini, (2) set real OpenAI API key in .secrets/env, (3) diagnose + fix API 401, (4) run newsletter pipeline manually, (5) patch aether.sh to dedup flag logging + reduce feed spam, (6) fix grep -P → grep -E for macOS, (7) respond to Aether's inbox items (API keys, threat detection), (8) investigate queue worker stall (5 pending not being processed).
@@ -91,9 +91,35 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
-## Current state (as of 2026-04-13 ~23:30 MT — Session 9 final)
+## Current state (as of 2026-04-14 ~19:45 MT — Session 10 in progress)
 
-**What shipped in session 9:**
+**What shipped in session 10:**
+
+31. **Ticket System Built (bin/ticket.sh):** Full lifecycle CLI — create, update, close, escalate, verify, sla-check, list, report. 450+ lines. Tickets stored in `kai/tickets/tickets.jsonl`. Close requires evidence + runs agent verify.sh + git commit audit trail + agent memory write. SLA enforcement: P1=1h, P2=4h, P3=24h.
+
+32. **5 Workflow Systems Integrated:** Loop (create→verify→simulate→close), Role Gate (sequential gates by specialty), Sprint (batch→simulate→ship), Adversarial (builder builds, breaker breaks), Memory Loop (every task feeds back into standing instructions). All documented in `kai/AGENT_ALGORITHMS.md` and `kai/WORKFLOW_SYSTEMS.md`.
+
+33. **Agent-Specific verify.sh Scripts:** Ra (7 checks — newsletter exists, rendered, deployed, in feed, has readLink, 500+ words, feed copies synced), Sam (9 checks — HTML structure, JSON validity, vercel.json, API endpoints, console.log, feed sync), Nel (4 checks — no secrets in tracked files, JSONL validation, security perms, runners executable), Aether (4 checks — dashboard JSON valid+fresh, feed entry, phantom warnings, publish markers).
+
+34. **Scheduled Maintenance System (4 launchd daemons):** 15-min healthcheck (SLA + system health), 30-min business monitor (tickets, newsletter, feed), hourly escalation (blocked ticket escalation), 02:30 AM compaction (archive, compress, rotate). All deployed to Mini via queue. `kai/launchd/install.sh` manages all plists.
+
+35. **Memory Layer System:** Three layers (durable facts / daily events / learned rules), three recall tiers (file read / grep / semantic search). Daily notes in `kai/memory/daily/`, pattern library at `kai/memory/patterns/pattern_library.md`. memory-compact.sh handles archival.
+
+36. **Newsletter Renderer for HQ:** `renderNewsletter()` function added to `hq.html` — displays summary, topic tags, and "Read the full brief →" link. Newsletter entries now render properly in the HQ feed.
+
+37. **3-Day AetherBot Analysis (retroactive):** Produced comprehensive analysis for Sat Apr 12 (monitoring-only, $0 net), Sun Apr 13 (active trading, -$3.81, 22 phantom warnings), Mon Apr 14 (best day, +$14.04, 39 phantom warnings). All published to HQ feed as `aether-analysis` report type. Week-to-date: +$10.23 (+11.3%). Root cause of missed analysis: `kai_analysis.py` had no scheduled trigger.
+
+38. **Aether Analysis Scheduled Task:** Created `com.hyo.aether-analysis.plist` (daily 23:00 MT) + `run_analysis.sh` wrapper. Loaded on Mini. Will auto-generate daily analysis going forward (requires API keys in hyo.env).
+
+39. **6 Active Tickets in Ledger:**
+    - TASK-20260414-ra-001 (P1 BLOCKED): Newsletter API key — blocked on ANTHROPIC_API_KEY
+    - TASK-20260414-nel-001 (P2 OPEN): Reduce cipher false positive rate
+    - TASK-20260414-sam-001 (P2 OPEN): Wire Vercel KV for persistence
+    - TASK-20260414-aether-001 (P2 OPEN): Fix phantom position tracking
+    - TASK-20260414-aether-002 (P1 ACTIVE): Wire kai_analysis.py into launchd — DONE, needs verification
+    - TASK-20260414-aether-003 (P2 OPEN): Fix trade counting to read from raw logs
+
+**What shipped in session 9 (prior):**
 
 15. **Deep Agent Audit:** Comprehensive review of all 5 agents. Found: 3/5 never ran research. No agent reported to Kai before publishing. Follow-ups duplicated. forKai messages went into void. Full audit at `kai/ledger/audit-2026-04-13.md`.
 
