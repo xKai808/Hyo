@@ -162,8 +162,13 @@ G6: PHANTOM SEPARATION — What does the day look like if phantom
 
 G7: TIMING PATTERNS — Which session windows are +EV vs. -EV?
 
-G8: CRITICAL FINDING — The ONE specific parameter change that would
-    have improved today's result, with data backing.
+G8: CRITICAL FINDING — The ONE most justified next step for the business.
+    Use the action classification hierarchy:
+    (1) Runtime correctness fix (2) Instrumentation gap
+    (3) Execution-layer fix (4) Family/session-scoped fix
+    (5) Threshold/parameter change (LAST resort, only after 1-4 are clean)
+    Back it with data. If the best answer is "monitor" or "collect more
+    data," say that — not every day demands a change.
 ```
 
 ### Phase 2b: Comparative Review (GPT sees both)
@@ -176,10 +181,17 @@ G10: What did Kai get WRONG?
 G11: For each of Kai's strategy recommendations: AGREE or OVERRIDE?
      Override requires a specific alternative with evidence.
 G12: RISK SCENARIO — What would today look like with 2% adverse BTC?
-G13: PARAMETER CHANGES — Specific, actionable, backed by data.
+G13: ACTION CLASSIFICATION — For each finding, tag as one of:
+     runtime correctness fix | instrumentation | execution-layer fix |
+     stop/risk engine fix | entry-engine fix | session/regime handling |
+     no change. Then classify: build now / monitor / revisit later / do not change.
 G14: DAY GRADE — A/B/C/D/F with 2-sentence justification.
-G15: CRITICAL RECOMMENDATION — The single most important change
-     before tomorrow's session.
+G15: CRITICAL RECOMMENDATION — The single most justified next step
+     using the priority hierarchy: correctness > execution > instrumentation >
+     family-scoped > parameter change. Format as BUILD vXXX (with exact
+     changes + evidence + risk of waiting), COLLECT MORE DATA (with what
+     events needed + sessions), or MONITOR AND HOLD (with trigger for
+     next decision). "Tighten parameter X" is only valid when 1-4 are clean.
 ```
 
 ---
@@ -217,8 +229,12 @@ C5: What is GPT's day grade? Does Kai agree?
 Before writing the conclusion, answer:
 
 ```
-F1: What is the ONE thing that would most improve tomorrow's performance?
-    This must be SPECIFIC (a parameter, a toggle, a threshold — not "monitor more").
+F1: What is the ONE most justified next step for the business?
+    Classify using priority hierarchy: correctness > execution > instrumentation >
+    family-scoped > parameter change. Format as: BUILD (exact change + evidence),
+    COLLECT MORE DATA (what events + how many sessions), or MONITOR AND HOLD
+    (what's uncertain + trigger for revisit). Must be specific — not "monitor more"
+    but also not "change parameter X" unless categories 1-4 are all clean.
 
 F2: What is the ONE thing that went best today that we should PROTECT?
     (Don't accidentally break what's working while fixing what isn't.)

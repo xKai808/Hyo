@@ -186,7 +186,14 @@ Your job — focus on THESE questions:
 7. PHANTOM POSITION IMPACT: Separate phantom P&L from real P&L. What would the day look like if phantom positions are excluded entirely?
 8. POSITION SIZING: Are position sizes scaling with conviction/edge, or are they uniform? Is the bot betting big on low-edge setups?
 9. CROSS-TRADE DEPENDENCIES: Did any stop cascade (one stop triggering repositioning that also stopped)? Are there correlated losses?
-10. ACTIONABLE RECOMMENDATION: One specific parameter change, strategy toggle, or risk limit that would have improved today's result. Back it with data from the log.
+10. ACTIONABLE RECOMMENDATION: The ONE most justified next step for the business, using this priority hierarchy:
+    (1) Runtime correctness fix (stale state, wrong exit paths, NameErrors)
+    (2) Instrumentation gap (can't see what happened — add logging/metrics)
+    (3) Execution-layer fix (harvest fills, order placement, exchange response)
+    (4) Family/session-scoped fix (gate by environment, not blanket restriction)
+    (5) Threshold/parameter change (LAST RESORT — only when 1-4 are all clean)
+    Do NOT default to "tighten parameter X." If the best answer is MONITOR or COLLECT MORE DATA, say that.
+    Format: BUILD vXXX (exact change + log evidence) | COLLECT MORE DATA (what events + how many sessions) | MONITOR AND HOLD (trigger for revisit).
 
 Format your response as:
 
@@ -217,7 +224,7 @@ PHANTOM IMPACT:
 • [Real vs phantom P&L separation. Adjusted metrics excluding phantom.]
 
 CRITICAL FINDING:
-• [The ONE thing that would most improve this bot's performance tomorrow, backed by today's data.]"""
+• [The ONE most justified next step using the priority hierarchy: correctness > execution > instrumentation > family-scoped > parameter change. Format as BUILD/COLLECT/MONITOR. Back with log data.]"""
 
     phase1_user = f"""Analyze this raw AetherBot trading log for {date_arg}.
 Form your own independent conclusions. Do not assume anything — work from the data.
@@ -298,11 +305,14 @@ Your job in Phase 2 — focus on these higher-order questions:
 
 3. RISK ASSESSMENT Kai's analysis tends to focus on what happened. Your job is to ask: what COULD have happened? If BTC had moved 2% instead of 0.5%, which positions would have blown up? Calculate worst-case exposure for the largest positions.
 
-4. PARAMETER RECOMMENDATIONS: Based on BOTH analyses, recommend specific parameter changes:
-   - Should any strategy be toggled off? (cite evidence: negative edge per contract, or >3 consecutive losing sessions)
-   - Should position sizing change? (cite: risk concentration data)
-   - Should session windows be restricted? (cite: per-window P&L data)
-   - Should harvest thresholds change? (cite: harvest efficiency data)
+4. ACTION CLASSIFICATION: For each finding from both analyses, classify using the priority hierarchy:
+   (1) Runtime correctness fix — stale state, wrong paths, NameErrors
+   (2) Instrumentation gap — can't diagnose root cause, need more logging
+   (3) Execution-layer fix — harvest fills, order placement, exchange response
+   (4) Family/session-scoped fix — gate by environment, not blanket restriction
+   (5) Threshold/parameter change — LAST RESORT, only when 1-4 are clean
+   Then tag each: build now / monitor / revisit later / do not change.
+   Do NOT default to parameter tightening. That is patchwork.
 
 5. MULTI-DAY TREND (if you have prior context): Is today's performance consistent with the last 2-3 days, or is there drift? Are the same strategies winning/losing? Are the same issues recurring?
 
@@ -322,13 +332,15 @@ STRATEGY OVERRIDES:
 RISK SCENARIO:
 • [Worst-case: what would today look like with 2% adverse BTC move? Quantify.]
 
-PARAMETER CHANGES:
-• [Specific, actionable parameter recommendations with evidence]
+ACTION CLASSIFICATION:
+• [Each finding tagged: correctness/instrumentation/execution/family-scoped/parameter]
+• [Each tagged: build now / monitor / revisit later / do not change]
+• [Parameter changes are LAST RESORT — only when categories 1-4 are clean]
 
 DAY GRADE: [A/B/C/D/F] — [2-sentence justification]
 
 CRITICAL RECOMMENDATION:
-• [The single most important thing to change before tomorrow's trading session]"""
+• [The ONE most justified next step. Format: BUILD vXXX (exact change + evidence + risk of waiting) | COLLECT MORE DATA (events needed + sessions) | MONITOR AND HOLD (trigger for next decision). Use priority hierarchy: correctness > execution > instrumentation > family-scoped > parameter.]"""
 
 phase2_user = f"""Review this AetherBot daily analysis by Kai (Claude) for {date_arg}.
 Compare against your own independent analysis. Fact-check, agree, disagree, push back.

@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-14 ~19:45 MT (session 10 — ticket system, maintenance daemons, 3-day Aether analysis, memory save)
+**Updated:** 2026-04-14 ~22:30 MT (session 10 continuation 2 — philosophy articulation, algorithm + GPT prompt correction, root pattern analysis)
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
 **Last healthcheck:** 2026-04-14T12:20:00-06:00 — **ISSUES: 2 P0, 5 P1, 5 P2.** 13TH CONSECUTIVE UNHEALTHY CHECK — no improvement. Queue pending growing (3→5, worker not picking up). P0: agents/nel/security gitignore gap (nel-001, sim-ack only). P0: HQ rendering disconnected (kai-001, sim-ack only). P1: Newsletter missed THREE consecutive days (04-12, 04-13, 04-14). P1: Aether API key placeholder — root cause of GPT log review failures. P1: ra, aether, dex all in dead-loops. P1: Sam completely silent today (0 logs, 7 P1 tasks unexecuted). P2: Queue stalling — 5 pending, 0 running. P2: Aether flooding log.jsonl with 80+ duplicate entries. P2: All delegations are sim-ack only — no real execution. P2: grep -P macOS compat. P2: 15 broken doc links. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only (sim-ack). Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) fix .gitignore on Mini, (2) set real OpenAI API key in .secrets/env, (3) diagnose + fix API 401, (4) run newsletter pipeline manually, (5) patch aether.sh to dedup flag logging + reduce feed spam, (6) fix grep -P → grep -E for macOS, (7) respond to Aether's inbox items (API keys, threat detection), (8) investigate queue worker stall (5 pending not being processed).
@@ -92,6 +92,20 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 - **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
 
 ## Current state (as of 2026-04-15 ~03:30 UTC / 2026-04-14 ~21:30 MT — Session 10 continuation)
+
+**What shipped in session 10 continuation 2 (after second context compaction):**
+
+46. **AetherBot Philosophy Articulation:** Read all source files (AETHER_OPERATIONS.md, PRE_ANALYSIS_BRIEF.md, ANALYSIS_BRIEFING.txt 660+ lines, Profile description.rtf). Three core doctrines identified: anti-patchwork (reactive fixes are the #1 systemic risk), priority hierarchy (correctness > execution > instrumentation > family-scoped > parameter), preservation bias (profitable families preserved unless multi-session evidence proves harm).
+
+47. **Analysis Goals Articulated:** Daily analysis exists to answer ONE question: "what pattern changes the next decision?" Output format: BUILD/COLLECT/MONITOR with action classification tags. Not a report — part of the system.
+
+48. **ANALYSIS_ALGORITHM.md Corrected (3 locations):** G8 (Phase 2a critical finding), G13/G15 (Phase 2b action classification + critical recommendation), F1 (final output). All formerly defaulted to "parameter change" — now enforce the priority hierarchy from PRE_ANALYSIS_BRIEF.md Section 6. Parameter changes labeled LAST RESORT.
+
+49. **GPT Prompts Corrected (gpt_crosscheck.py, 4 locations):** Phase 1 recommendation, Phase 1 output format, Phase 2 action classification, Phase 2 critical recommendation. All now require action classification hierarchy and explicitly label parameter tightening as patchwork. Syntax validated via ast.parse().
+
+50. **Root Pattern Analysis (14 session-10 errors):** All 14 errors trace to one behavioral failure: "execute before understand." Assumptions (001, 002, 013), skip-verification (004, 005, 007, 010, 012), reinterpret-instructions (008, 009, 014), wrong-path (011) — all are variants of going from "receive task" to "produce output" without understanding what's being worked with. This is why the analysis algorithm contradicted the source philosophy — it was written without reading the philosophy first.
+
+51. **Session-errors.jsonl expanded:** Now 14 entries (SE-010-001 through SE-010-014). All categorized, all with prevention steps.
 
 **What shipped in session 10 continuation (after context compaction):**
 
