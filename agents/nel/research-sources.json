@@ -35,8 +35,30 @@
       "url": "https://feeds.feedburner.com/TheHackersNews",
       "type": "rss",
       "focus": "Emerging security threats, breach patterns, defense strategies for small platforms"
+    },
+    {
+      "name": "Reddit netsec",
+      "url": "https://www.reddit.com/r/netsec/.json?limit=10",
+      "type": "api",
+      "focus": "Network security community — vulnerability disclosures, pentesting tools, defense patterns"
+    },
+    {
+      "name": "Reddit cybersecurity",
+      "url": "https://www.reddit.com/r/cybersecurity/.json?limit=10",
+      "type": "api",
+      "focus": "Cybersecurity practitioner discussions — incident response, threat detection, tooling"
     }
   ],
+  "mcp_sources": {
+    "github": {
+      "available": true,
+      "use_for": "Search GitHub Security Advisories, CVE repos, dependency vulnerability databases, security tool repos"
+    },
+    "youtube": {
+      "available": true,
+      "use_for": "Security conference talks (DEF CON, Black Hat), vulnerability demos, tool tutorials"
+    }
+  },
   "followUps": [
     {
       "date": "2026-04-13",

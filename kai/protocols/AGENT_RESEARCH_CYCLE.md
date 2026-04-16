@@ -280,47 +280,36 @@ EXECUTIVE SUMMARY (Kai → Hyo):
 
 ---
 
-## Research Access Plan
-
-Agents need real research sources. Current access and path to full access:
+## Research Access (as of 2026-04-15)
 
 ```
-HAVE NOW:
-  - WebSearch (broad web research) — available in Cowork + Mini
-  - gh CLI (GitHub search, repos, issues, code) — available on Mini
-  - Exa MCP (web search + code docs) — available in registry, not connected
+INSTALLED AND CONNECTED (on Mini — Claude Code MCP):
+  ✅ GitHub MCP (@modelcontextprotocol/server-github)
+     → Capabilities: search repos, read issues, search code, read PRs, security advisories
+     → Auth: GitHub PAT with repo, read:org, read:user scopes
 
-NEED TO INSTALL ON MINI:
-  - GitHub MCP Server (github/github-mcp-server)
-    → npm install -g @github/mcp-server
-    → Requires: GitHub PAT with repo scope
-    → Capabilities: search repos, read code, search issues/PRs, code search
+  ✅ YouTube MCP (@kirbah/mcp-youtube)
+     → Capabilities: search videos, get transcripts, channel search
+     → Auth: YouTube Data API v3 key (10k queries/day free)
 
-  - Reddit MCP Server (mcp-server-reddit)
-    → pip install mcp-server-reddit
-    → Requires: Reddit API credentials (free tier)
-    → Capabilities: search subreddits, read threads, search by keyword
+AVAILABLE WITHOUT AUTH (RSS/JSON feeds in research-sources.json):
+  ✅ Reddit (via .json feeds — no API key needed)
+     → r/netsec, r/cybersecurity, r/algotrading, r/CryptoCurrency,
+       r/dataengineering, r/LocalLLaMA, r/webdev, r/node,
+       r/Newsletters, r/emailmarketing, r/artificial
+     → Rate limit: 60 req/min unauthenticated (plenty for daily ARIC)
 
-  - YouTube MCP Server (kirbah/mcp-youtube or IA-Programming/youtube-mcp)
-    → npm install (from repo)
-    → Requires: YouTube Data API v3 key (free tier, 10k queries/day)
-    → Capabilities: search videos, get transcripts, channel search
+AVAILABLE FROM COWORK SANDBOX:
+  ✅ WebSearch / WebFetch (limited by egress rules)
 
-  - X/Twitter MCP Server (Infatoshi/x-mcp or EnesCinr/twitter-mcp)
-    → npm install (from repo)
-    → Requires: X API credentials (Basic tier, $100/mo OR free read-only scraper)
-    → Capabilities: search tweets, read timelines, keyword monitoring
+NOT YET INSTALLED:
+  - Exa MCP (connect from registry — zero install, adds semantic web search)
+  - X/Twitter MCP ($100/mo — deferred, low ROI)
 
-  - Exa MCP (already in registry)
-    → Connect via Cowork MCP registry
-    → Capabilities: web search + code documentation search
-
-INSTALLATION PRIORITY:
-  P0: GitHub MCP (most research value per dollar — free)
-  P0: Exa MCP (connect from registry — zero install)
-  P1: Reddit MCP (free tier, high signal for technical discussions)
-  P1: YouTube MCP (free tier, conference talks and tutorials)
-  P2: X MCP (costs money, lower signal-to-noise)
+AGENT MCP USAGE:
+  Each agent's research-sources.json has a "mcp_sources" section
+  documenting which MCP tools to use and what to search for.
+  Phase 4 research should use MCP tools for deep dives beyond RSS surface hits.
 ```
 
 ---
@@ -332,7 +321,7 @@ This protocol is wired into:
 1. **AGENT_ALGORITHMS.md** — Constitutional reference to ARIC
 2. **Each agent's PLAYBOOK.md** — Agent-specific Phase 2/3 questions
 3. **bin/agent-growth.sh** — `run_growth_phase` calls Phase 1 (OBSERVE) daily
-4. **Agent runners** — Weekly ARIC trigger based on day-of-week
+4. **Agent runners** — Daily ARIC trigger (all agents, every day)
 5. **generate-morning-report.sh** — Reads Phase 7 output for report
 6. **CLAUDE.md** — Operating rule: ARIC is mandatory, scheduled, no shortcuts
 7. **kai/queue/** — MCP server installation tasks for Mini

@@ -94,6 +94,18 @@ These are Hyo's direct instructions. They override lower-priority tasks. Do not 
 
 ## Current state (as of 2026-04-15 ~05:00 UTC / 2026-04-14 ~23:00 MT — Session 10 continuation 3)
 
+**What shipped in session 10 continuation 4 (after fourth context compaction):**
+
+58. **GitHub MCP Server installed and connected on Mini.** `@modelcontextprotocol/server-github` with PAT (repo, read:org, read:user scopes). Verified connected in Claude Code `/mcp`. Agents can now search GitHub repos, issues, code, PRs, and security advisories during ARIC Phase 4.
+
+59. **YouTube MCP Server installed and connected on Mini.** `@kirbah/mcp-youtube` with YouTube Data API v3 key. Verified connected in Claude Code `/mcp`. Agents can search videos, get transcripts, and search channels for domain research.
+
+60. **Reddit RSS feeds wired into all 5 agents.** No API key needed — using `.json` endpoints. Added subreddits per agent domain: Nel (r/netsec, r/cybersecurity), Sam (r/webdev, r/node), Ra (r/emailmarketing, r/artificial), Aether (r/CryptoCurrency), Dex (r/LocalLLaMA). 60 req/min unauthenticated rate limit — plenty for daily ARIC.
+
+61. **MCP source documentation in all research-sources.json.** Each agent now has a `mcp_sources` section documenting GitHub and YouTube MCP tools available and what to search for in their domain.
+
+62. **ARIC Research Access Plan updated.** `kai/protocols/AGENT_RESEARCH_CYCLE.md` updated from "need to install" to "installed and connected" for GitHub and YouTube. Reddit documented as available via RSS. Integration points corrected (daily not weekly).
+
 **What shipped in session 10 continuation 3 (after third context compaction):**
 
 52. **Agent Growth Framework — Complete.** Every agent now has a GROWTH.md identifying 3 domain weaknesses, 3 systemic improvements, and self-set goals with deadlines. Files: agents/{nel,ra,sam,aether,dex}/GROWTH.md. 15 improvement tickets created (IMP-*) in kai/tickets/tickets.jsonl with ticket_type "improvement" and weakness links (W1/W2/W3).
