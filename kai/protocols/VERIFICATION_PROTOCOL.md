@@ -40,6 +40,9 @@ Before taking any action, Kai must:
 
 ## VERIFICATION BY ACTION TYPE
 
+### Git Commit → Push (MANDATORY — SE-010-015)
+Every `git commit` MUST be immediately followed by `kai exec "cd ~/Documents/Projects/Hyo && git push origin main"`. Not "later." Not "after the next task." In the same action. If push fails, log the failure and flag P1. Do not start the next task until push is confirmed or the failure is recorded. "Committed locally" is NOT "done" — it's halfway. This rule exists because 8 commits sat latent for 18 hours while Kai moved on to other work.
+
 ### Deployment (git push → Vercel)
 1. `git push` succeeds (exit code 0)
 2. Wait 15s for Vercel build
@@ -87,6 +90,7 @@ Before every action, scan for these known failure modes:
 | Pipeline unwired | Verify trigger exists and fires | SE-010-007 |
 | Shell syntax assumed | Test in target shell, use shellcheck | SE-010-001, SE-010-003 |
 | API format assumed | Check docs or test payload first | SE-010-002 |
+| Committed not pushed | `kai exec git push` immediately after every commit | SE-010-015 |
 
 ---
 
