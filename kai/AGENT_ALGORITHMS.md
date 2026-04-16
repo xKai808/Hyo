@@ -605,7 +605,9 @@ ERROR-TO-GATE PROTOCOL (mandatory — ALL agents, ALL errors):
 
 **Full specification:** `kai/protocols/AGENT_RESEARCH_CYCLE.md` (v1.0 — constitutional, no shortcuts)
 
-Every agent runs the ARIC cycle weekly on their assigned day. This is not optional. ARIC ensures every agent:
+Every agent runs the full ARIC cycle DAILY. Every agent. Every day. No exceptions.
+This is not optional. Stagnation is not acceptable — there is always a weakness to
+investigate, always research to do, always an improvement to build. ARIC ensures every agent:
 1. Observes their domain with fresh data (not memory)
 2. Identifies 3 internal structural weaknesses backed by evidence
 3. Identifies 2 external expansion opportunities with concrete research
@@ -614,16 +616,11 @@ Every agent runs the ARIC cycle weekly on their assigned day. This is not option
 6. Acts by building the improvement and testing against the outcome
 7. Reports what changed (Phase 7 output → morning report)
 
-**SCHEDULE (staggered weekly):**
-- Monday: Nel runs ARIC (Phases 1-7)
-- Tuesday: Ra runs ARIC
-- Wednesday: Sam runs ARIC
-- Thursday: Aether runs ARIC
-- Friday: Dex runs ARIC
-
-**DAILY (all agents):**
-- Every agent runs Phase 1 (OBSERVE) as part of growth phase
-- If Phase 1 surfaces a new weakness → escalate to full ARIC cycle immediately
+**SCHEDULE: DAILY, ALL AGENTS.**
+No day-of-week gating. Every agent runs Phases 1-7 every cycle.
+Agents don't need to work on the same weakness every day — observe,
+pick the most important thing, research, decide, build, report. Tomorrow,
+observe again — did it work? Pick the next thing.
 
 **ARIC OUTPUT:**
 - Phase 7 (REPORT) feeds directly into morning report

@@ -225,16 +225,17 @@ This is what appears in the morning report. Not Phase 1 data. Not "conducted res
 ## Schedule
 
 ```
-WEEKLY CYCLE (every agent, staggered):
-  Monday:    Nel runs ARIC (Phases 1-7)
-  Tuesday:   Ra runs ARIC
-  Wednesday: Sam runs ARIC
-  Thursday:  Aether runs ARIC
-  Friday:    Dex runs ARIC
+DAILY CYCLE (every agent, every day, no exceptions):
+  Every agent runs the full ARIC cycle (Phases 1-7) every day.
+  Not Phase 1 only. Not "observe and defer." The full cycle.
+  If an agent has nothing new to research → that's a Phase 2 failure.
+  There is always a weakness to investigate, always research to do,
+  always an improvement to build. Stagnation is not acceptable.
 
-DAILY:
-  Every agent runs Phase 1 (OBSERVE) as part of their growth phase.
-  If Phase 1 surfaces a new weakness → escalate to full ARIC cycle.
+  Agents don't all need to work on the SAME weakness every day.
+  The cycle is: observe → pick the most important thing → research it
+  → decide → build → report. Tomorrow, observe again — did it work?
+  Pick the next thing. This is continuous improvement, not a weekly event.
 
 REPORTING:
   Phase 7 output feeds directly into the morning report.
