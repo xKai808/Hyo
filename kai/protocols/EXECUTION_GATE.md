@@ -77,13 +77,71 @@ The pattern:
 
 ---
 
+---
+
+## Completion Gate (run after EVERY unit of work)
+
+The 5 questions above run BEFORE action. This flowchart runs AFTER. It loops until the work is actually done — not "I think it's done" done, but provably on origin and verified done.
+
+```
+START → Did I make changes to files?
+  │
+  ├─ NO → Am I sure? (git status)
+  │         └─ YES → Done.
+  │
+  └─ YES ↓
+         Did I commit?
+           │
+           ├─ NO → Commit now. Return to top.
+           │
+           └─ YES ↓
+                  Did I push? (not "will push later" — did the push succeed?)
+                    │
+                    ├─ NO → kai exec "git push origin main" NOW.
+                    │         Did push succeed?
+                    │           ├─ NO → Log P1. Fix the blocker. Do not start next task.
+                    │           └─ YES → Continue ↓
+                    │
+                    └─ YES ↓
+                           Did I verify the result?
+                             │
+                             ├─ NO → Verify now. What does the consumer see?
+                             │         Fetch the URL / read the file / run the function.
+                             │         Is the output correct?
+                             │           ├─ NO → Fix it. Return to top.
+                             │           └─ YES → Continue ↓
+                             │
+                             └─ YES ↓
+                                    Did I update memory?
+                                      │
+                                      ├─ NO → Update KAI_BRIEF, KAI_TASKS, relevant
+                                      │        ACTIVE.md, tickets. Return to top.
+                                      │
+                                      └─ YES ↓
+                                             Can a fresh Kai pick this up tomorrow
+                                             with zero context and know exactly what
+                                             happened and what's next?
+                                               │
+                                               ├─ NO → What's missing? Write it. Return to top.
+                                               │
+                                               └─ YES → DONE. Next task.
+```
+
+**The rule:** You do not exit this flowchart until you reach DONE. Every "NO" loops back. There is no "I'll do it later." There is no "next task" until this task is closed.
+
+**Why this exists (SE-010-015):** 8 commits sat local for 18 hours. Kai answered "Did I commit?" with YES and skipped to next task. The flowchart makes skipping structurally impossible — commit without push loops back, push without verify loops back, verify without memory update loops back.
+
+---
+
 ## Integration
 
 This gate is wired into:
-- Kai's hydration protocol (item 5: read VERIFICATION_PROTOCOL.md → this replaces it as the PRE-action check)
+- Kai's hydration protocol (item 5: read EXECUTION_GATE.md — runs both pre-action questions AND completion gate)
 - The daily analysis algorithm (ANALYSIS_ALGORITHM.md references these as pre-publish checks)
 - Every scheduled task prompt should reference "run execution gate before each step"
+- **Every agent runner** should run the completion gate before exiting
 
-The execution gate is the PRE-action check.
-The verification protocol is the POST-action check.
-Both must run. Neither is optional.
+The 5 questions are the PRE-action check.
+The completion gate is the POST-action check.
+The verification protocol defines HOW to verify by action type.
+All three run. None is optional.
