@@ -1,0 +1,87 @@
+{
+  "cycle_date": "YYYY-MM-DD",
+  "agent": "agent_name",
+  "cycle_id": "ARIC-YYYY-MM-DD-agent",
+  "version": "1.0",
+  "timestamp": "ISO-8601-with-timezone",
+
+  "phase_7_report": {
+    "7_1_weakness": {
+      "weakness_id": "W1|W2|W3",
+      "description": "One sentence: structural weakness with evidence",
+      "evidence_source": "Phase 1 metric or finding that identified this weakness",
+      "evidence_value": "specific data point or observation"
+    },
+
+    "7_2_research": {
+      "research_question": "What problem was researched?",
+      "sources": [
+        {
+          "source_name": "GitHub repo / blog / paper / etc",
+          "source_url": "https://...",
+          "finding": "Specific finding from this source"
+        },
+        {
+          "source_name": "Second source",
+          "source_url": "https://...",
+          "finding": "Specific finding"
+        },
+        {
+          "source_name": "Third source",
+          "source_url": "https://...",
+          "finding": "Specific finding"
+        }
+      ],
+      "summary": "What experts in the field recommend (cite sources above)"
+    },
+
+    "7_3_build": {
+      "improvement_title": "What was built?",
+      "improvement_description": "Specific change made to the system",
+      "file_path": "/path/to/modified/file",
+      "commit_ref": "git commit hash or 'not-yet-committed'",
+      "pull_request": "URL or 'none'",
+      "status": "shipped|in-progress|blocked"
+    },
+
+    "7_4_metric": {
+      "metric_name": "What was measured?",
+      "baseline_value": "Before value (from Phase 1.4 or historical)",
+      "baseline_date": "YYYY-MM-DD when baseline was measured",
+      "current_value": "After value (measured after Phase 6)",
+      "current_date": "YYYY-MM-DD when current was measured",
+      "improvement_percent": "percentage change",
+      "measurement_method": "How was this measured? (script, manual count, log analysis, etc)",
+      "direction": "up|down",
+      "significance": "Does this metric change matter? (explain why in 1-2 sentences)"
+    },
+
+    "7_5_next_target": {
+      "target_condition": "What is the next improvement target condition? (Improvement Kata Q1)",
+      "expected_outcome": "What is expected to happen when we reach this target? (measurable)",
+      "timeline": "When? (next week, next cycle, etc)"
+    },
+
+    "7_6_external_opportunity": {
+      "opportunity_type": "vertical|horizontal",
+      "opportunity_name": "What external capability or tool?",
+      "vertical_or_horizontal_description": "Vertical = go deeper in our domain. Horizontal = expand to adjacent domains.",
+      "concrete_integration_plan": "What are the MVP steps to integrate this? (numbered list)",
+      "blockers": "What would prevent us from integrating this? (dependencies, costs, complexity)"
+    },
+
+    "7_7_dependencies": {
+      "what_is_needed": "What does this agent need from others to continue?",
+      "from_kai": "Any Kai decisions, approvals, or strategic input?",
+      "from_agents": "Any help from other agents (Sam, Nel, Ra, etc)?",
+      "blockers": "What is currently blocking progress?"
+    }
+  },
+
+  "metadata": {
+    "aric_protocol_version": "1.0",
+    "notes": "Additional context, observations, or learnings",
+    "self_assessment": "How confident is the agent in this cycle's findings and improvements? (high|medium|low with reasoning)",
+    "next_action": "What is the very next step this agent should take?"
+  }
+}

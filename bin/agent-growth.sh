@@ -24,6 +24,35 @@ GROWTH_LOG_TAG="[growth]"
 
 growth_log() { echo "$GROWTH_LOG_TAG $(TZ='America/Denver' date +%H:%M:%S) [$1] $2"; }
 
+check_aric_day() {
+  local agent="$1"
+  local day_of_week
+  day_of_week=$(date +%u)  # 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat, 7=Sun
+
+  # Map day to agent ARIC schedule
+  local aric_agent=""
+  case "$day_of_week" in
+    1) aric_agent="nel" ;;
+    2) aric_agent="ra" ;;
+    3) aric_agent="sam" ;;
+    4) aric_agent="aether" ;;
+    5) aric_agent="dex" ;;
+    *) return 0 ;;
+  esac
+
+  # If today is this agent's ARIC day, trigger it
+  if [[ "$agent" == "$aric_agent" ]]; then
+    local aric_date
+    aric_date=$(TZ="America/Denver" date +%Y-%m-%d)
+    local aric_marker_dir="$HYO_ROOT/agents/$agent/research"
+    mkdir -p "$aric_marker_dir"
+
+    growth_log "$agent" "ARIC trigger: Today is $agent's ARIC day — full research cycle triggered (Phases 1-7)"
+    touch "$aric_marker_dir/aric-trigger-$aric_date"
+    growth_log "$agent" "Created marker: $aric_marker_dir/aric-trigger-$aric_date"
+  fi
+}
+
 run_growth_phase() {
   local agent="$1"
   local growth_file="$HYO_ROOT/agents/$agent/GROWTH.md"
@@ -32,6 +61,9 @@ run_growth_phase() {
   timestamp=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
 
   growth_log "$agent" "Starting growth phase"
+
+  # Check if today is this agent's ARIC day and trigger if so
+  check_aric_day "$agent"
 
   if [[ ! -f "$growth_file" ]]; then
     growth_log "$agent" "No GROWTH.md found — skipping growth phase"

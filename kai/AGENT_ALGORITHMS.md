@@ -601,6 +601,49 @@ ERROR-TO-GATE PROTOCOL (mandatory — ALL agents, ALL errors):
 
 ---
 
+## Agent Research & Improvement Cycle (ARIC) (ALL AGENTS — MANDATORY)
+
+**Full specification:** `kai/protocols/AGENT_RESEARCH_CYCLE.md` (v1.0 — constitutional, no shortcuts)
+
+Every agent runs the ARIC cycle weekly on their assigned day. This is not optional. ARIC ensures every agent:
+1. Observes their domain with fresh data (not memory)
+2. Identifies 3 internal structural weaknesses backed by evidence
+3. Identifies 2 external expansion opportunities with concrete research
+4. Conducts real research (minimum 3 sources, no gestalt)
+5. Decides on a specific improvement with Target Condition and Expected Outcome
+6. Acts by building the improvement and testing against the outcome
+7. Reports what changed (Phase 7 output → morning report)
+
+**SCHEDULE (staggered weekly):**
+- Monday: Nel runs ARIC (Phases 1-7)
+- Tuesday: Ra runs ARIC
+- Wednesday: Sam runs ARIC
+- Thursday: Aether runs ARIC
+- Friday: Dex runs ARIC
+
+**DAILY (all agents):**
+- Every agent runs Phase 1 (OBSERVE) as part of growth phase
+- If Phase 1 surfaces a new weakness → escalate to full ARIC cycle immediately
+
+**ARIC OUTPUT:**
+- Phase 7 (REPORT) feeds directly into morning report
+- All outputs stored: kai/templates/aric-output.json structure
+- Morning report shows: what was researched, what was built, what metric moved
+
+**KEY RULES:**
+- 7 phases, 38 questions — no skipping any question
+- Research must be data-driven with specific sources, never gestalt
+- Every weakness must be cited with evidence from Phase 1
+- Every improvement must have measurable success metric
+- Every action requires verification against Expected Outcome from Phase 5
+- ARIC is the primary mechanism for agent continuous growth — it MUST produce growth, not just operational work
+
+**RESEARCH ACCESS (agent tooling for ARIC Phase 4):**
+Available: WebSearch, gh CLI (GitHub), Exa MCP
+To install on Mini: GitHub MCP (P0), Reddit MCP (P1), YouTube MCP (P1), X/Twitter MCP (P2)
+
+---
+
 ## Continuous Learning Protocol (ALL AGENTS)
 
 Every agent — including Kai — must stay current with evolving methods, tools, and best practices in their domain. AI and agentic AI are moving fast. An agent that stops learning becomes a liability.

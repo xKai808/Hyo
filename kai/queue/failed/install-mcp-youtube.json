@@ -1,0 +1,14 @@
+{
+  "id": "mcp-install-youtube",
+  "type": "install",
+  "priority": "P1",
+  "created": "2026-04-15T19:30:00-06:00",
+  "description": "Install YouTube MCP server for agent research access",
+  "commands": [
+    "cd /tmp && git clone https://github.com/kirbah/mcp-youtube.git && cd mcp-youtube && npm install && npm link",
+    "echo 'YouTube MCP server installed. Configure YOUTUBE_API_KEY in .secrets/env'"
+  ],
+  "requires": "YouTube Data API v3 key — create at console.cloud.google.com (free tier, 10k queries/day)",
+  "agent": "kai",
+  "aric_phase": "Phase 4 research access"
+}

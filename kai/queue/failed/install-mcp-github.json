@@ -1,0 +1,14 @@
+{
+  "id": "mcp-install-github",
+  "type": "install",
+  "priority": "P0",
+  "created": "2026-04-15T19:30:00-06:00",
+  "description": "Install GitHub MCP server for agent research access",
+  "commands": [
+    "npm install -g @github/mcp-server || npm install -g @modelcontextprotocol/server-github",
+    "echo 'GitHub MCP server installed. Configure PAT in .secrets/env as GITHUB_TOKEN'"
+  ],
+  "requires": "GitHub Personal Access Token with repo scope — create at github.com/settings/tokens",
+  "agent": "kai",
+  "aric_phase": "Phase 4 research access"
+}

@@ -1,661 +1,396 @@
 #!/usr/bin/env bash
-# bin/generate-morning-report.sh — Two-version morning report generator
+# bin/generate-morning-report.sh — v4 Growth-Driven Morning Report Generator
 #
-# Produces TWO outputs:
-#   1. INTERNAL: website/data/morning-report.json — technical metrics for Kai
-#   2. FEED: appends to website/data/feed.json — human-readable narrative for Hyo
+# REWRITTEN FOR ARIC PHASE 7 CONSUMPTION
+# ════════════════════════════════════════════════════════════════════════════════
 #
-# v2 (2026-04-14): Rewritten to read ACTUAL agent outputs (sentinel logs, cipher
-# scans, research findings, analysis files, self-reviews) instead of just
-# evolution.jsonl metadata. Each agent section is unique because it's built from
-# what the agent actually did, not a template.
+# Protocol: kai/protocols/AGENT_RESEARCH_CYCLE.md
+#   - Phase 7 output format (aric-latest.json per agent)
+#   - Morning Report Structure (v4 — Growth-Driven)
 #
-# Called by:
+# KEY DIFFERENCES FROM v3:
+#   - v3 tracked: agent operational status (checks passed, newsletters shipped, etc)
+#   - v4 tracks: novel work, weakness research, improvements built, metrics moved
+#   - v3: "what agents did" (baseline ops)
+#   - v4: "what agents are LEARNING and BUILDING" (growth)
+#   - v3 consumed: logs, health checks, arbitrary files
+#   - v4 consumes: ARIC Phase 7 JSON + GROWTH.md
+#
+# WHAT THE REPORT SHOWS (per agent):
+#   1. Novel work — what new improvement is this agent building?
+#   2. Weakness — what structural issue did they identify?
+#   3. Research — what external sources informed their fix? (with sources + findings)
+#   4. Improvement built — what code/config changed? (with commit)
+#   5. Metric movement — before → after (with measurement method)
+#   6. External expansion — vertical (deeper) or horizontal (broader) opportunity
+#
+# INPUT FILES (required):
+#   - agents/<name>/research/aric-latest.json  [Phase 7 output, JSON format]
+#   - agents/<name>/GROWTH.md                  [fallback if ARIC data missing]
+#
+# OUTPUT FILES:
+#   - website/data/morning-report.json         [structured JSON for HQ dashboard]
+#   - stdout                                   [human-readable narrative for Hyo]
+#
+# EXAMPLE ARIC PHASE 7 JSON:
+#   {
+#     "agent": "nel",
+#     "cycle_date": "2026-04-15",
+#     "weakness_worked": "Static Checks Never Adapt ...",
+#     "research_conducted": [
+#       {"source": "GitHub: prometheus/alertmanager", "finding": "Adaptive grouping with ..."},
+#       {"source": "Reddit: r/devops/...", "finding": "Exponential backoff on ..."}
+#     ],
+#     "improvement_built": {
+#       "description": "sentinel-adapt.sh — 4-level escalation",
+#       "files_changed": ["agents/nel/sentinel-adapt.sh"],
+#       "commit": "f9a1938c2b5d7e9a1c3d5e7f",
+#       "status": "shipped"
+#     },
+#     "metric_before": "Mean time to root-cause: 3+ days",
+#     "metric_after": "Mean time to root-cause: <1h",
+#     "external_opportunity": {
+#       "type": "vertical",
+#       "description": "GitHub Advisory Database API for CVE scanning",
+#       "status": "researched, ticket IMP-20260415-nel-003"
+#     },
+#     "next_target": "Reduce false positive rate from 8% to <3%",
+#     "needs_from_kai": null
+#   }
+#
+# FALLBACK BEHAVIOR:
+#   - If aric-latest.json missing → reads GROWTH.md for context
+#   - Flags agent with "No ARIC cycle completed yet — growth data only"
+#   - Extracts weaknesses but notes research is incomplete
+#
+# CALLED BY:
 #   - com.hyo.morning-report launchd plist (05:00 MT daily)
-#   - healthcheck.sh auto-remediation (when morning report is stale)
-#   - nel-qa-cycle.sh Phase 7.5 auto-remediation
-#   - dispatch.sh simulation Phase 6 auto-remediation
+#   - Manual: HYO_ROOT=/path/to/Hyo bash bin/generate-morning-report.sh
 #
-# Usage: bash bin/generate-morning-report.sh
+# USAGE: bash bin/generate-morning-report.sh
 #        HYO_ROOT=/path/to/Hyo bash bin/generate-morning-report.sh
 
 set -uo pipefail
 
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-INTERNAL_OUTPUT="$ROOT/website/data/morning-report.json"
-FEED_OUTPUT="$ROOT/website/data/feed.json"
+JSON_OUTPUT="$ROOT/website/data/morning-report.json"
 TODAY=$(TZ="America/Denver" date +%Y-%m-%d)
-YESTERDAY=$(TZ="America/Denver" date -v-1d +%Y-%m-%d 2>/dev/null || TZ="America/Denver" date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "unknown")
 NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
-MONTH_KEY=$(echo "$TODAY" | cut -c1-7)
-LOG_TAG="[morning-report]"
+LOG_TAG="[morning-report-v4]"
 
 log() { echo "$LOG_TAG $(TZ='America/Denver' date +%H:%M:%S) $*"; }
 
-log "Generating morning report v2 for $TODAY"
+log "Generating morning report v4 (growth-driven) for $TODAY"
 
-# ── Sync agent profiles from PLAYBOOKs before generating report ──
-SYNC_SCRIPT="$ROOT/bin/sync-agent-profiles.sh"
-if [[ -x "$SYNC_SCRIPT" ]]; then
-  bash "$SYNC_SCRIPT" 2>&1 | tail -2
-  log "Agent profiles synced from PLAYBOOKs"
-fi
+# ══════════════════════════════════════════════════════════════════════════════
+# Python script: Read ARIC Phase 7, GROWTH.md, compile report
+# ══════════════════════════════════════════════════════════════════════════════
 
-# ── Generate both reports via Python ──
-
-python3 - "$INTERNAL_OUTPUT" "$FEED_OUTPUT" "$TODAY" "$YESTERDAY" "$NOW_MT" "$MONTH_KEY" "$ROOT" <<'PYEOF'
+python3 - "$JSON_OUTPUT" "$TODAY" "$NOW_MT" "$ROOT" <<'PYEOF'
 import json, sys, os, re, glob
 from pathlib import Path
+from collections import defaultdict
 
-internal_path = sys.argv[1]
-feed_path     = sys.argv[2]
-today         = sys.argv[3]
-yesterday     = sys.argv[4]
-now_mt        = sys.argv[5]
-month_key     = sys.argv[6]
-root          = sys.argv[7]
+json_output_path = sys.argv[1]
+today = sys.argv[2]
+now_mt = sys.argv[3]
+root = sys.argv[4]
 
-# ══════════════════════════════════════════════════════════════════════════════
-# DATA GATHERING — Read actual agent outputs, not just metadata
-# ══════════════════════════════════════════════════════════════════════════════
+# ── Helper functions ──
 
-def parse_growth(agent_name):
-    """Parse GROWTH.md for an agent — extract weaknesses, improvements, goals."""
-    path = os.path.join(root, "agents", agent_name, "GROWTH.md")
-    if not os.path.exists(path):
+def read_json_safe(path):
+    """Read JSON file, return None if missing or malformed."""
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except:
         return None
-    text = open(path).read()
-    result = {"weaknesses": [], "improvements": [], "goals": []}
 
-    # Extract weaknesses (### W1: Title lines)
-    for m in re.finditer(r'### W(\d): (.+)', text):
-        wnum = m.group(1)
-        title = m.group(2).strip()
-        # Find severity
-        sev_m = re.search(rf'### W{wnum}:.*?\n.*?\*\*Severity:\*\*\s*(P\d)', text[m.start():], re.DOTALL)
-        severity = sev_m.group(1) if sev_m else "?"
-        result["weaknesses"].append({"id": f"W{wnum}", "title": title, "severity": severity})
-
-    # Extract improvements (### I1: Title lines)
-    for m in re.finditer(r'### I(\d): (.+)', text):
-        inum = m.group(1)
-        title = m.group(2).strip()
-        # Find status
-        stat_m = re.search(rf'### I{inum}:.*?\*\*Status:\*\*\s*(.+?)$', text[m.start():], re.DOTALL | re.MULTILINE)
-        status = stat_m.group(1).strip() if stat_m else "unknown"
-        # Find ticket
-        tick_m = re.search(rf'### I{inum}:.*?\*\*Ticket:\*\*\s*(.+?)$', text[m.start():], re.DOTALL | re.MULTILINE)
-        ticket = tick_m.group(1).strip() if tick_m else ""
-        result["improvements"].append({"id": f"I{inum}", "title": title, "status": status, "ticket": ticket})
-
-    # Extract goals (numbered list after ## Goals)
-    goals_m = re.search(r'## Goals.*?\n((?:\d+\..+\n?)+)', text)
-    if goals_m:
-        for line in goals_m.group(1).strip().splitlines():
-            g = re.sub(r'^\d+\.\s*', '', line).strip()
-            if g:
-                result["goals"].append(g[:120])
-
-    return result
-
-def read_improvement_tickets(agent_name):
-    """Read improvement tickets for an agent from the ticket ledger."""
-    ledger = os.path.join(root, "kai", "tickets", "tickets.jsonl")
-    tickets = []
-    if not os.path.exists(ledger):
-        return tickets
-    with open(ledger) as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                t = json.loads(line)
-                if t.get("owner") == agent_name and t.get("ticket_type") == "improvement":
-                    tickets.append(t)
-            except:
-                pass
-    return tickets
-
-def read_file_head(path, max_chars=3000):
-    """Read first N chars of a file, return empty string if missing."""
+def read_file_safe(path, max_chars=5000):
+    """Read text file, return empty string if missing."""
     try:
         with open(path) as f:
             return f.read(max_chars)
     except:
         return ""
 
-def read_file_lines(path, max_lines=50):
-    """Read first N lines, return list."""
-    try:
-        with open(path) as f:
-            return [l.rstrip() for _, l in zip(range(max_lines), f)]
-    except:
-        return []
-
-def find_latest_file(directory, pattern, max_age_days=2):
-    """Find the most recent file matching pattern in directory."""
-    matches = sorted(glob.glob(os.path.join(directory, pattern)), reverse=True)
-    return matches[0] if matches else None
-
-def parse_sentinel(text):
-    """Extract structured data from sentinel report markdown."""
-    result = {"passed": 0, "failed": 0, "new_issues": [], "recurring": [], "escalations": [], "resolved": []}
-    for line in text.splitlines():
-        m = re.match(r'\*\*This run:\*\*\s*(\d+)\s*passed,\s*(\d+)\s*failed', line)
-        if m:
-            result["passed"] = int(m.group(1))
-            result["failed"] = int(m.group(2))
-        if line.startswith("- **P") and "##" not in line:
-            # Extract priority and description
-            pm = re.match(r'- \*\*P(\d)\*\*\s*`([^`]+)`\s*—\s*(.*)', line)
-            if pm:
-                entry = {"priority": int(pm.group(1)), "check": pm.group(2), "detail": pm.group(3).rstrip()}
-                # Determine section by context (crude but effective)
-                if "day " in entry["detail"] or "failing" in entry["detail"]:
-                    result["recurring"].append(entry)
-                else:
-                    result["new_issues"].append(entry)
-        if line.startswith("- **P") and "escalated" in line.lower():
-            result["escalations"].append(line.strip("- ").strip())
-        if line.startswith("- `") and "##" not in line and "Resolved" in text[:text.find(line)] if line in text else False:
-            result["resolved"].append(line.strip("- ").strip())
-    return result
-
-def parse_cipher(text):
-    """Extract structured data from cipher log."""
-    result = {"ran": False, "clean": False, "findings": 0, "layers_run": [], "layers_skipped": []}
-    for line in text.splitlines():
-        if "cipher" in line.lower() and ("run" in line.lower() or "scheduled" in line.lower()):
-            result["ran"] = True
-        if "RESULT: CLEAN" in line:
-            result["clean"] = True
-        if "skipped" in line.lower():
-            m = re.search(r'Layer \d+: (\w+)', line)
-            if m:
-                result["layers_skipped"].append(m.group(1))
-        elif "Layer" in line and "✓" in line:
-            m = re.search(r'Layer \d+: (.+?)—', line)
-            if m:
-                result["layers_run"].append(m.group(1).strip())
-        fm = re.search(r'(\d+) findings', line)
-        if fm:
-            result["findings"] = int(fm.group(1))
-    return result
-
-def parse_research(text):
-    """Extract structured data from research findings markdown."""
-    result = {"sources_checked": 0, "successful": 0, "failed_sources": [],
-              "successful_sources": [], "follow_ups": [], "has_analysis": False}
-    for line in text.splitlines():
-        m = re.match(r'\*\*Sources checked:\*\*\s*(\d+)', line)
-        if m: result["sources_checked"] = int(m.group(1))
-        m = re.match(r'\*\*Successful:\*\*\s*(\d+)', line)
-        if m: result["successful"] = int(m.group(1))
-        if "— FAILED" in line:
-            src = line.replace("###", "").replace("— FAILED", "").strip()
-            result["failed_sources"].append(src)
-        elif line.startswith("### ") and "FAILED" not in line and "Follow" not in line and "Analysis" not in line:
-            result["successful_sources"].append(line.replace("###", "").strip())
-        if "open" in line.lower() and line.strip().startswith("- ["):
-            result["follow_ups"].append(line.strip("- ").strip()[:100])
-    if "## My Analysis" in text:
-        analysis_section = text.split("## My Analysis")[1][:500]
-        if "no direct matches" not in analysis_section.lower():
-            result["has_analysis"] = True
-    return result
-
-def parse_aether_metrics(path):
-    """Read aether trading metrics."""
-    try:
-        with open(path) as f:
-            d = json.load(f)
-        cw = d.get("currentWeek", d.get("currentPeriod", {}))
-        return {
-            "balance": cw.get("currentBalance", "?"),
-            "trades": cw.get("totalTrades", "?"),
-            "winRate": cw.get("winRate", "?"),
-            "pnl": cw.get("pnl", "?"),
-            "strategies": len(cw.get("strategies", [])),
-            "dailyPnl": cw.get("dailyPnl", [])
-        }
-    except:
+def parse_growth_md(agent_name):
+    """Parse GROWTH.md for context on weaknesses and improvements."""
+    path = os.path.join(root, "agents", agent_name, "GROWTH.md")
+    if not os.path.exists(path):
         return None
 
-def parse_self_review(text):
-    """Extract key findings from agent self-review."""
-    issues = []
-    for line in text.splitlines():
-        if line.strip().startswith("- ✗"):
-            issues.append(line.strip("- ✗ ").strip()[:100])
-    return issues[:5]
+    text = read_file_safe(path, 10000)
+    result = {
+        "weaknesses": [],
+        "improvements": [],
+        "assessment": ""
+    }
 
-def parse_simulation(text):
-    """Extract simulation results."""
-    result = {"has_plan": False, "agents_covered": []}
-    for line in text.splitlines():
-        if line.startswith("### "):
-            agent = line.replace("###", "").strip()
-            if agent:
-                result["agents_covered"].append(agent)
-                result["has_plan"] = True
+    # Extract weaknesses (W1, W2, W3)
+    for m in re.finditer(r'### W(\d): (.+)\n', text):
+        wnum = m.group(1)
+        title = m.group(2).strip()
+        result["weaknesses"].append({"id": f"W{wnum}", "title": title})
+
+    # Extract improvements (I1, I2, I3)
+    for m in re.finditer(r'### I(\d): (.+)\n', text):
+        inum = m.group(1)
+        title = m.group(2).strip()
+        # Find status if present
+        status_match = re.search(rf'### I{inum}:.+?\*\*Status:\*\*\s*(.+?)(?:\n|$)', text, re.DOTALL)
+        status = status_match.group(1).strip() if status_match else "unknown"
+        result["improvements"].append({"id": f"I{inum}", "title": title, "status": status})
+
+    # Extract first assessment line (usually a summary)
+    assess_match = re.search(r'## System Weaknesses.*?\n\n(.+?)(?=###|\n\n)', text, re.DOTALL)
+    if assess_match:
+        first_line = assess_match.group(1).split('\n')[0]
+        result["assessment"] = first_line[:150]
+
     return result
 
-# ══════════════════════════════════════════════════════════════════════════════
-# GATHER ALL AGENT DATA
-# ══════════════════════════════════════════════════════════════════════════════
+def read_aric_phase7(agent_name):
+    """Read aric-latest.json for an agent. This is Phase 7 output."""
+    path = os.path.join(root, "agents", agent_name, "research", "aric-latest.json")
+    data = read_json_safe(path)
+    if data:
+        # Add flag that data came from ARIC
+        data["_source"] = "aric-phase7"
+        return data
+    return None
 
-# --- Healthcheck ---
-hc = {"status": "unknown", "issues": 0, "warnings": 0}
-hc_path = os.path.join(root, "kai", "queue", "healthcheck-latest.json")
-try:
-    with open(hc_path) as f:
-        hc = json.load(f)
-except: pass
+def extract_novel_work(agent_name, aric_data, growth_data):
+    """Determine what novel work the agent is doing."""
+    if aric_data:
+        # Phase 7.3: improvement_built
+        improvement = aric_data.get("improvement_built")
+        if improvement and improvement.get("status") == "shipped":
+            return f"Shipped {improvement.get('description', 'improvement')} (commit {improvement.get('commit', '?')})"
+        elif improvement:
+            return f"Building: {improvement.get('description', 'improvement')} ({improvement.get('status', 'in progress')})"
 
-# --- Simulation outcomes ---
-sim = {"passed": 0, "failed": 0}
-sim_path = os.path.join(root, "kai", "ledger", "simulation-outcomes.jsonl")
-try:
-    with open(sim_path) as f:
-        lines = [l.strip() for l in f if l.strip()]
-        if lines:
-            sim = json.loads(lines[-1])
-except: pass
+    if growth_data:
+        # Check for active improvements
+        active = [i for i in growth_data.get("improvements", []) if i.get("status") in ("in progress", "building", "active")]
+        if active:
+            return f"Building: {active[0].get('title', 'improvement')}"
 
-# --- Known issues ---
-ki_count = 0
-ki_path = os.path.join(root, "kai", "ledger", "known-issues.jsonl")
-try:
-    with open(ki_path) as f:
-        ki_count = sum(1 for l in f if '"status":"active"' in l or '"status": "active"' in l)
-except: pass
+    return "No novel work identified — check if improvement cycle is running."
 
-# --- Nel: sentinel + cipher + research ---
-nel_sentinel_path = find_latest_file(
-    os.path.join(root, "agents", "nel", "logs"), f"sentinel-{today}.md")
-if not nel_sentinel_path:
-    nel_sentinel_path = find_latest_file(
-        os.path.join(root, "agents", "nel", "logs"), f"sentinel-{yesterday}.md")
-nel_sentinel = parse_sentinel(read_file_head(nel_sentinel_path)) if nel_sentinel_path else None
-
-nel_cipher_path = find_latest_file(
-    os.path.join(root, "agents", "nel", "logs"), f"cipher-{today}*.log")
-if not nel_cipher_path:
-    nel_cipher_path = find_latest_file(
-        os.path.join(root, "agents", "nel", "logs"), f"cipher-{yesterday}*.log")
-nel_cipher = parse_cipher(read_file_head(nel_cipher_path)) if nel_cipher_path else None
-
-nel_research_path = find_latest_file(
-    os.path.join(root, "agents", "nel", "research"), f"findings-{today}.md")
-nel_research = parse_research(read_file_head(nel_research_path)) if nel_research_path else None
-
-# --- Ra: newsletter output + research ---
-ra_newsletter_exists = False
-ra_newsletter_file = None
-for pattern in [f"*{today}*", f"*{yesterday}*"]:
-    matches = glob.glob(os.path.join(root, "agents", "ra", "output", pattern))
-    if matches:
-        ra_newsletter_exists = True
-        ra_newsletter_file = os.path.basename(matches[0])
-        break
-
-ra_research_path = find_latest_file(
-    os.path.join(root, "agents", "ra", "research"), f"findings-{today}.md")
-ra_research = parse_research(read_file_head(ra_research_path)) if ra_research_path else None
-
-# --- Sam: logs + research ---
-sam_research_path = find_latest_file(
-    os.path.join(root, "agents", "sam", "research"), f"findings-{today}.md")
-sam_research = parse_research(read_file_head(sam_research_path)) if sam_research_path else None
-
-# --- Aether: trading metrics + analysis + self-review + research ---
-aether_metrics = parse_aether_metrics(
-    os.path.join(root, "website", "data", "aether-metrics.json"))
-
-aether_analysis_path = find_latest_file(
-    os.path.join(root, "agents", "aether", "analysis"), f"Analysis_{today}.txt")
-aether_analysis_preview = read_file_head(aether_analysis_path, 500) if aether_analysis_path else ""
-
-aether_review_path = find_latest_file(
-    os.path.join(root, "agents", "aether", "logs"), f"self-review-{today}.md")
-aether_self_review = parse_self_review(read_file_head(aether_review_path)) if aether_review_path else []
-
-aether_research_path = find_latest_file(
-    os.path.join(root, "agents", "aether", "research"), f"findings-{today}.md")
-aether_research = parse_research(read_file_head(aether_research_path)) if aether_research_path else None
-
-# --- Dex: research + integrity ---
-dex_research_path = find_latest_file(
-    os.path.join(root, "agents", "dex", "research"), f"findings-{today}.md")
-dex_research = parse_research(read_file_head(dex_research_path)) if dex_research_path else None
-
-# --- Simulation report ---
-sim_report_path = find_latest_file(
-    os.path.join(root, "agents", "nel", "logs"), f"simulation-{today}.md")
-sim_report = parse_simulation(read_file_head(sim_report_path)) if sim_report_path else None
-
-# --- Agent Growth Plans ---
-agent_growth = {}
-agent_imp_tickets = {}
-for agent_name in ["nel", "ra", "sam", "aether", "dex"]:
-    agent_growth[agent_name] = parse_growth(agent_name)
-    agent_imp_tickets[agent_name] = read_improvement_tickets(agent_name)
-
-# ══════════════════════════════════════════════════════════════════════════════
-# BUILD THE INTERNAL REPORT (for Kai — technical, structured)
-# ══════════════════════════════════════════════════════════════════════════════
-
-internal = {
-    "date": today,
-    "generatedAt": now_mt,
-    "generatedBy": "bin/generate-morning-report.sh v2",
-    "systemHealth": {
-        "healthcheck": {
-            "status": hc.get("status", "?"),
-            "issues": hc.get("issues", 0),
-            "warnings": hc.get("warnings", 0)
-        },
-        "simulation": {
-            "passed": sim.get("passed", 0),
-            "failed": sim.get("failed", 0)
-        },
-        "knownIssues": ki_count
-    },
-    "trading": aether_metrics or {},
-    "agents": {
-        "nel": {
-            "sentinel": nel_sentinel,
-            "cipher": nel_cipher,
-            "research": {
-                "sources_checked": nel_research["sources_checked"] if nel_research else 0,
-                "successful": nel_research["successful"] if nel_research else 0,
-                "failed": nel_research["failed_sources"] if nel_research else [],
-                "follow_ups": nel_research["follow_ups"] if nel_research else []
+def extract_weakness_and_research(aric_data, growth_data):
+    """Extract what weakness was worked on and what was researched."""
+    if aric_data:
+        weakness = aric_data.get("weakness_worked")
+        research = aric_data.get("research_conducted", [])
+        if weakness and research:
+            sources_str = "; ".join([r.get("source", "?") for r in research[:2]])
+            findings_str = "; ".join([r.get("finding", "?") for r in research[:2]])
+            return {
+                "weakness": weakness,
+                "sources": sources_str,
+                "findings": findings_str,
+                "count": len(research)
             }
-        },
-        "ra": {
-            "newsletter_produced": ra_newsletter_exists,
-            "research": {
-                "sources_checked": ra_research["sources_checked"] if ra_research else 0,
-                "successful": ra_research["successful"] if ra_research else 0,
-                "successful_sources": ra_research["successful_sources"] if ra_research else []
+
+    if growth_data:
+        weaknesses = growth_data.get("weaknesses", [])
+        if weaknesses:
+            w = weaknesses[0]
+            return {
+                "weakness": w.get("title", "unknown"),
+                "sources": "(no ARIC data yet)",
+                "findings": "(research not completed)",
+                "count": 0
             }
-        },
-        "sam": {
-            "research": {
-                "sources_checked": sam_research["sources_checked"] if sam_research else 0,
-                "successful": sam_research["successful"] if sam_research else 0
-            }
-        },
-        "aether": {
-            "analysis_exists": bool(aether_analysis_path),
-            "self_review_issues": aether_self_review,
-            "research": {
-                "sources_checked": aether_research["sources_checked"] if aether_research else 0,
-                "successful": aether_research["successful"] if aether_research else 0,
-                "follow_ups": aether_research["follow_ups"] if aether_research else []
-            }
-        },
-        "dex": {
-            "research": {
-                "sources_checked": dex_research["sources_checked"] if dex_research else 0,
-                "successful": dex_research["successful"] if dex_research else 0,
-                "follow_ups": dex_research["follow_ups"] if dex_research else []
-            }
-        }
+
+    return {
+        "weakness": "Unknown",
+        "sources": "N/A",
+        "findings": "N/A",
+        "count": 0
     }
+
+def extract_metric_movement(aric_data):
+    """Extract before/after metric."""
+    if aric_data:
+        before = aric_data.get("metric_before")
+        after = aric_data.get("metric_after")
+        if before and after:
+            return {"before": before, "after": after}
+    return None
+
+def extract_external_expansion(aric_data):
+    """Extract vertical/horizontal expansion opportunity."""
+    if aric_data:
+        opp = aric_data.get("external_opportunity")
+        if opp:
+            return {
+                "type": opp.get("type", "unknown"),
+                "description": opp.get("description", ""),
+                "status": opp.get("status", "")
+            }
+    return None
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GATHER DATA PER AGENT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+agents_list = ["nel", "ra", "sam", "aether", "dex"]
+agent_reports = {}
+growth_trajectories = []
+risks = []
+wins = []
+
+for agent_name in agents_list:
+    aric = read_aric_phase7(agent_name)
+    growth = parse_growth_md(agent_name)
+
+    novel_work = extract_novel_work(agent_name, aric, growth)
+    weakness_research = extract_weakness_and_research(aric, growth)
+    metric_move = extract_metric_movement(aric)
+    external = extract_external_expansion(aric)
+
+    # Improvement status
+    improvement_status = "unknown"
+    if aric and aric.get("improvement_built"):
+        improvement_status = aric["improvement_built"].get("status", "unknown")
+    elif growth:
+        active_imps = [i for i in growth.get("improvements", []) if i.get("status") in ("in progress", "building")]
+        if active_imps:
+            improvement_status = "in progress"
+        else:
+            improvement_status = "no active work"
+
+    # Track trajectory and risks/wins
+    if "shipped" in improvement_status.lower() or "building" in novel_work.lower():
+        growth_trajectories.append("expanding")
+    else:
+        growth_trajectories.append("maintaining")
+
+    if "no" in novel_work.lower() or "unknown" in novel_work.lower():
+        risks.append(f"{agent_name}: {novel_work}")
+
+    if "shipped" in improvement_status.lower():
+        wins.append(f"{agent_name}: {novel_work}")
+
+    # Compile agent report
+    agent_reports[agent_name] = {
+        "novel_work": novel_work,
+        "weakness_identified": weakness_research.get("weakness", "?"),
+        "research_conducted": weakness_research.get("sources", "none"),
+        "research_findings": weakness_research.get("findings", "none"),
+        "research_count": weakness_research.get("count", 0),
+        "improvement_status": improvement_status,
+        "improvement_description": aric.get("improvement_built", {}).get("description") if aric else "N/A",
+        "metric_before": metric_move.get("before") if metric_move else "N/A",
+        "metric_after": metric_move.get("after") if metric_move else "N/A",
+        "metric_moved": bool(metric_move),
+        "external_opportunity_type": external.get("type") if external else "none",
+        "external_opportunity_desc": external.get("description") if external else "none",
+        "has_aric_data": aric is not None,
+        "aric_cycle_date": aric.get("cycle_date", "unknown") if aric else None
+    }
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# BUILD EXECUTIVE SUMMARY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Growth trajectory
+expanding_count = growth_trajectories.count("expanding")
+trajectory = "expanding" if expanding_count >= 3 else ("maintaining" if expanding_count >= 1 else "declining")
+
+biggest_risk = risks[0] if risks else "No major blockers identified"
+biggest_win = wins[0] if wins else "Focus on growth identification"
+
+# Determine if Hyo attention needed
+hyo_attention = None
+no_novel = [a for a in agents_list if "no" in agent_reports[a]["novel_work"].lower()]
+if len(no_novel) > 1:
+    hyo_attention = f"{len(no_novel)} agents have no active novel work — growth cycle may be stalled"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GENERATE JSON OUTPUT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+report = {
+    "generated": now_mt,
+    "date": today,
+    "version": "v4-growth-driven",
+    "executive_summary": {
+        "growth_trajectory": trajectory,
+        "trajectory_confidence": f"{expanding_count}/{len(agents_list)} agents expanding",
+        "biggest_risk": biggest_risk,
+        "biggest_win": biggest_win,
+        "kai_focus": "Enabling research access (MCP servers) + monitoring growth cycle execution",
+        "hyo_attention": hyo_attention
+    },
+    "agents": agent_reports
 }
 
-with open(internal_path, "w") as f:
-    json.dump(internal, f, indent=2)
-print(f"Internal report written: {internal_path}")
+# Write JSON
+with open(json_output_path, "w") as f:
+    json.dump(report, f, indent=2)
 
-# ══════════════════════════════════════════════════════════════════════════════
-# BUILD THE EXTERNAL REPORT (for Hyo — human-readable narrative)
-# GROWTH-FIRST: Lead with what each agent is improving, what they're building,
-# what weaknesses they identified. Operational status is secondary context.
-# ══════════════════════════════════════════════════════════════════════════════
+print(f"✓ JSON report written: {json_output_path}")
 
-def build_agent_narrative(agent_name, growth, imp_tickets, ops_context):
-    """Build a growth-first narrative for an agent.
+# ═══════════════════════════════════════════════════════════════════════════════
+# GENERATE HUMAN-READABLE NARRATIVE FOR HYO
+# ═══════════════════════════════════════════════════════════════════════════════
 
-    Structure:
-    1. GROWTH: What weaknesses are being addressed? What improvements are in progress?
-    2. GOALS: What has the agent set for itself?
-    3. EXECUTION: What did the agent actually build/change? (not just 'researched')
-    4. BLOCKED: If something didn't execute, why? What's the fix?
-    5. CONTEXT: Brief operational status (secondary)
-    """
+def build_agent_narrative(name, report):
+    """Build a 3-5 sentence narrative for one agent, growth-focused."""
     parts = []
 
-    # --- GROWTH: Weaknesses + Improvements ---
-    if growth:
-        # Show what weaknesses are being worked on
-        active_imps = [i for i in growth.get("improvements", []) if i.get("status") not in ("planned", "unknown", "")]
-        planned_imps = [i for i in growth.get("improvements", []) if i.get("status") in ("planned", "unknown", "")]
-
-        if active_imps:
-            for imp in active_imps:
-                parts.append(f"Building: {imp['title']} (status: {imp['status']}).")
-        else:
-            # Show what weaknesses were identified and what the plan is
-            weaknesses = growth.get("weaknesses", [])
-            if weaknesses:
-                for w in weaknesses:
-                    parts.append(f"Weakness {w['id']} ({w['severity']}): {w['title'][:120]}.")
-            if planned_imps:
-                for imp in planned_imps[:2]:
-                    parts.append(f"Planned fix: {imp['title'][:120]}.")
-                parts.append(f"Status: researching, not yet building. Next step: start executing {planned_imps[0]['id']}.")
-
-        # Show goals
-        goals = growth.get("goals", [])
-        if goals:
-            parts.append(f"Current goal: {goals[0][:100]}.")
+    # Novel work
+    novel = report["novel_work"]
+    if "no" not in novel.lower() and "unknown" not in novel.lower():
+        parts.append(f"**{name.upper()}** is {novel}.")
     else:
-        parts.append("No growth plan yet — needs GROWTH.md with identified weaknesses and improvement proposals.")
+        parts.append(f"**{name.upper()}** has no active novel work — {novel}.")
+        return " ".join(parts)
 
-    # --- IMPROVEMENT TICKETS ---
-    if imp_tickets:
-        open_count = sum(1 for t in imp_tickets if t.get("status") in ("OPEN", "ACTIVE"))
-        in_progress = [t for t in imp_tickets if t.get("status") == "ACTIVE"]
-        if in_progress:
-            for t in in_progress[:2]:
-                parts.append(f"In progress: {t['title'][:80]} ({t['id']}).")
-        elif open_count > 0:
-            # Tickets exist but none are being worked — flag it
-            parts.append(f"{open_count} improvement ticket(s) open but none in progress. Next step: pick one and start building.")
+    # Weakness + research
+    weakness = report["weakness_identified"]
+    sources = report["research_conducted"]
+    findings = report["research_findings"]
+    if sources != "none" and sources != "(no ARIC data yet)":
+        parts.append(f"Identified weakness: {weakness}. Researched: {sources}. Finding: {findings}.")
+    elif weakness != "?":
+        parts.append(f"Weakness identified: {weakness}. Research in progress.")
 
-    # --- OPERATIONAL CONTEXT (secondary) ---
-    if ops_context:
-        parts.append(ops_context)
+    # Metric movement
+    if report["metric_moved"]:
+        parts.append(f"Metric moved: {report['metric_before']} → {report['metric_after']}.")
+
+    # External expansion
+    if report["external_opportunity_type"] != "none":
+        parts.append(f"Pursuing {report['external_opportunity_type']} expansion: {report['external_opportunity_desc']}.")
+
+    # ARIC status
+    if not report["has_aric_data"]:
+        parts.append("⚠️ No ARIC Phase 7 data — cycle may not have run.")
 
     return " ".join(parts)
 
-# --- Build operational context per agent (brief, not the main story) ---
+# Build narrative per agent
+print("\n" + "="*80)
+print("MORNING REPORT — " + today)
+print("="*80 + "\n")
 
-# Nel ops context
-nel_ops = ""
-if nel_sentinel:
-    p, f_ = nel_sentinel["passed"], nel_sentinel["failed"]
-    nel_ops = f"Ops: sentinel {p}/{p+f_} passing."
-    if nel_sentinel["recurring"]:
-        worst = nel_sentinel["recurring"][0]
-        day_m = re.search(r'day\s+(\d+)', worst['detail'])
-        day_count = day_m.group(1) if day_m else "multiple"
-        nel_ops += f" {worst['check']} failing {day_count} runs straight."
-    if nel_cipher and nel_cipher.get("clean"):
-        nel_ops += " Cipher: clean."
-    if nel_research and nel_research["failed_sources"]:
-        nel_ops += f" Research: {nel_research['successful']}/{nel_research['sources_checked']} sources reachable."
-nel_narrative = build_agent_narrative("nel", agent_growth.get("nel"), agent_imp_tickets.get("nel", []), nel_ops)
+print(f"Growth trajectory: {trajectory} ({expanding_count}/{len(agents_list)} expanding)")
+print(f"Biggest risk: {biggest_risk}")
+print(f"Biggest win: {biggest_win}")
+if hyo_attention:
+    print(f"⚠️ NEEDS ATTENTION: {hyo_attention}")
+print()
 
-# Ra ops context
-ra_ops = f"Ops: newsletter {'shipped' if ra_newsletter_exists else 'NOT produced (sandbox blocks sources)'}."
-if ra_research:
-    ra_ops += f" Research: {ra_research['successful']}/{ra_research['sources_checked']} sources."
-ra_narrative = build_agent_narrative("ra", agent_growth.get("ra"), agent_imp_tickets.get("ra", []), ra_ops)
+for agent_name in agents_list:
+    narrative = build_agent_narrative(agent_name, agent_reports[agent_name])
+    print(narrative)
+    print()
 
-# Sam ops context
-sam_log_path = os.path.join(root, "agents", "sam", "logs")
-sam_logs = sorted(glob.glob(os.path.join(sam_log_path, f"*{today}*")), reverse=True) if os.path.isdir(sam_log_path) else []
-sam_ops = f"Ops: {'active' if sam_logs else 'no activity today — needs scheduled trigger'}."
-sam_narrative = build_agent_narrative("sam", agent_growth.get("sam"), agent_imp_tickets.get("sam", []), sam_ops)
-
-# Aether ops context
-aether_ops = ""
-if aether_metrics:
-    bal = aether_metrics.get("balance", "?")
-    wr = aether_metrics.get("winRate", "?")
-    pnl = aether_metrics.get("pnl", "?")
-    aether_ops = f"Ops: ${bal} balance, {wr}% WR, ${pnl} net P&L."
-if aether_analysis_path:
-    gpt_status = "GPT verified" if "GPT_VERIFIED: YES" in aether_analysis_preview else "GPT pending"
-    aether_ops += f" Analysis written ({gpt_status})."
-aether_narrative = build_agent_narrative("aether", agent_growth.get("aether"), agent_imp_tickets.get("aether", []), aether_ops)
-
-# Dex ops context
-dex_ops = ""
-dex_evo_path = os.path.join(root, "agents", "dex", "evolution.jsonl")
-try:
-    with open(dex_evo_path) as f:
-        lines = [l.strip() for l in f if l.strip()]
-        if lines:
-            last_evo = json.loads(lines[-1])
-            assess = last_evo.get("assessment", "")
-            if assess:
-                dex_ops = f"Ops: {assess[:80]}."
-except: pass
-if not dex_ops:
-    dex_ops = "Ops: no activity logged today."
-dex_narrative = build_agent_narrative("dex", agent_growth.get("dex"), agent_imp_tickets.get("dex", []), dex_ops)
-
-# --- Build executive summary from actual findings ---
-summary_parts = []
-
-# What's working
-working = []
-blocked = []
-
-if ra_newsletter_exists:
-    working.append("newsletter shipped")
-if nel_sentinel and nel_sentinel["passed"] > 0:
-    working.append(f"sentinel {nel_sentinel['passed']}/{nel_sentinel['passed'] + nel_sentinel['failed']} checks passing")
-if nel_cipher and nel_cipher["clean"]:
-    working.append("no secret leaks")
-if aether_metrics and aether_metrics.get("balance") and aether_metrics["balance"] != "?":
-    working.append(f"AetherBot at ${aether_metrics['balance']}")
-
-# What's blocked and WHY
-if not ra_newsletter_exists:
-    blocked.append("newsletter blocked — sandbox can't reach external sources, needs Mini migration")
-if nel_sentinel and nel_sentinel["failed"] > 0:
-    recurring = nel_sentinel.get("recurring", [])
-    if recurring:
-        worst = recurring[0]
-        day_m = re.search(r'day\s+(\d+)', worst['detail'])
-        day_count = day_m.group(1) if day_m else "multiple"
-        blocked.append(f"{worst['check']} failing {day_count} straight runs — needs root-cause fix on Mini")
-sim_fails = sim.get("failed", 0)
-if sim_fails > 0:
-    blocked.append(f"simulation has {sim_fails} failures — regression investigation needed")
-
-if working:
-    summary_parts.append(f"Working: {', '.join(working)}.")
-if blocked:
-    summary_parts.append(f"Blocked: {'; '.join(blocked)}.")
-if not blocked:
-    summary_parts.append("Nothing actively blocked.")
-
-exec_summary = " ".join(summary_parts)
-
-# --- What went well / needs attention (with specifics, not templates) ---
-went_well = []
-needs_attention = []
-
-if ra_newsletter_exists:
-    went_well.append("Newsletter produced and delivered on schedule.")
-if nel_sentinel and nel_sentinel["passed"] >= nel_sentinel["failed"]:
-    went_well.append(f"Sentinel passed {nel_sentinel['passed']} of {nel_sentinel['passed'] + nel_sentinel['failed']} checks.")
-if nel_cipher and nel_cipher["clean"]:
-    went_well.append("Cipher security scan: clean, zero findings.")
-if aether_analysis_path:
-    went_well.append("Aether daily analysis produced.")
-
-# Research activity (specific, not "actively growing")
-research_active = []
-for name, res in [("Nel", nel_research), ("Ra", ra_research), ("Aether", aether_research), ("Dex", dex_research)]:
-    if res and res["successful"] > 0:
-        research_active.append(f"{name} ({res['successful']} sources)")
-if research_active:
-    went_well.append(f"Research active: {', '.join(research_active)}.")
-
-if not ra_newsletter_exists:
-    needs_attention.append("No newsletter today — Ra's pipeline is blocked on sandbox network restrictions. Move to Mini launchd.")
-if nel_sentinel and nel_sentinel["failed"] > 0:
-    for iss in nel_sentinel.get("new_issues", [])[:2]:
-        needs_attention.append(f"New sentinel issue (P{iss['priority']}): {iss['check']} — {iss['detail'][:80]}.")
-    for iss in nel_sentinel.get("recurring", [])[:2]:
-        needs_attention.append(f"Persistent failure: {iss['check']} — {iss['detail'][:80]}. Needs root-cause fix.")
-if sim_fails > 0:
-    needs_attention.append(f"Simulation: {sim.get('passed', 0)} pass / {sim_fails} fail. Investigate what regressed.")
-if ki_count > 10:
-    needs_attention.append(f"{ki_count} known issues accumulating — schedule a cleanup sprint.")
-
-agent_highlights = {
-    "nel": nel_narrative,
-    "ra": ra_narrative,
-    "sam": sam_narrative,
-    "aether": aether_narrative,
-    "dex": dex_narrative
-}
-
-# ── Feed entry ──
-morning_entry = {
-    "id": f"mr-{today}",
-    "type": "morning-report",
-    "title": "Morning Report",
-    "author": "Kai",
-    "authorIcon": "\U0001F454",
-    "authorColor": "#d4a853",
-    "timestamp": now_mt,
-    "date": today,
-    "sections": {
-        "summary": exec_summary,
-        "wentWell": went_well,
-        "needsAttention": needs_attention,
-        "agentHighlights": agent_highlights
-    }
-}
-
-# Read existing feed.json, replace today's morning report
-feed = {"lastUpdated": now_mt, "today": today, "agents": {}, "reports": [], "history": {}}
-if os.path.exists(feed_path):
-    try:
-        with open(feed_path) as f:
-            feed = json.load(f)
-    except: pass
-
-feed["lastUpdated"] = now_mt
-feed["today"] = today
-feed["reports"] = [r for r in feed.get("reports", []) if r.get("id") != morning_entry["id"]]
-feed["reports"].append(morning_entry)
-feed["reports"].sort(key=lambda r: r.get("timestamp", ""), reverse=True)
-
-if month_key not in feed.get("history", {}):
-    months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-    m_idx = int(month_key.split("-")[1]) - 1
-    label = f"{months[m_idx]} {month_key.split('-')[0]}"
-    feed["history"][month_key] = {"label": label, "reports": []}
-
-month_hist = feed["history"][month_key]
-if morning_entry["id"] not in month_hist["reports"]:
-    month_hist["reports"].append(morning_entry["id"])
-
-with open(feed_path, "w") as f:
-    json.dump(feed, f, indent=2)
-print(f"Feed entry written: {feed_path}")
+print("="*80)
 
 PYEOF
 
@@ -664,29 +399,23 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
-# ── Copy to sam/website mirror if needed ──
-SAM_MIRROR_INTERNAL="$ROOT/agents/sam/website/data/morning-report.json"
-SAM_MIRROR_FEED="$ROOT/agents/sam/website/data/feed.json"
-if [[ -d "$(dirname "$SAM_MIRROR_INTERNAL")" ]]; then
-  if [[ ! "$INTERNAL_OUTPUT" -ef "$SAM_MIRROR_INTERNAL" ]] 2>/dev/null; then
-    cp "$INTERNAL_OUTPUT" "$SAM_MIRROR_INTERNAL" 2>/dev/null || true
+# ── Sync to sam/website mirror ──
+SAM_MIRROR="$ROOT/agents/sam/website/data/morning-report.json"
+if [[ -d "$(dirname "$SAM_MIRROR")" ]]; then
+  if [[ ! "$JSON_OUTPUT" -ef "$SAM_MIRROR" ]] 2>/dev/null; then
+    cp "$JSON_OUTPUT" "$SAM_MIRROR" 2>/dev/null || true
   fi
-  if [[ ! "$FEED_OUTPUT" -ef "$SAM_MIRROR_FEED" ]] 2>/dev/null; then
-    cp "$FEED_OUTPUT" "$SAM_MIRROR_FEED" 2>/dev/null || true
-  fi
-  log "Mirrors synced"
+  log "Mirror synced: $SAM_MIRROR"
 fi
 
-# ── Commit and push ──
+# ── Commit if changes exist ──
 cd "$ROOT" || exit 1
-CHANGED=$(git diff --name-only "$INTERNAL_OUTPUT" "$FEED_OUTPUT" 2>/dev/null | wc -l | tr -d ' ')
-if [[ "$CHANGED" -gt 0 ]]; then
-  git add "$INTERNAL_OUTPUT" "$FEED_OUTPUT" 2>/dev/null
-  git add "$SAM_MIRROR_INTERNAL" "$SAM_MIRROR_FEED" 2>/dev/null
-  git commit -m "morning-report: $TODAY (v2 — real agent outputs)" 2>/dev/null
-  git push origin main 2>/dev/null && log "Pushed to origin" || log "Push failed (will retry next cycle)"
-else
+if git diff --quiet "$JSON_OUTPUT" 2>/dev/null; then
   log "No changes to commit"
+else
+  git add "$JSON_OUTPUT" "$SAM_MIRROR" 2>/dev/null || true
+  git commit -m "morning-report: $TODAY (v4 — growth-driven ARIC consumption)" 2>/dev/null || true
+  git push origin main 2>/dev/null && log "Pushed to origin" || log "Push failed (will retry)"
 fi
 
-log "Done — v2 morning report generated"
+log "Done — v4 morning report generated"
