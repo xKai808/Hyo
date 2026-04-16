@@ -853,22 +853,90 @@ print(f"Nel reflection sections written to {sections_file}")
 PYEOF
 
 NEL_REPORT_PUBLISH_MARKER="/tmp/nel-report-published-$(TZ=America/Denver date +%Y%m%d)"
+
+# SE-011-005: Reflection is SEPARATE from research and runs q24 in the nightly
+# window only. Hyo directive (2026-04-15): "Nel's research and reflection are
+# too frequent. They should be separate." Research (Phase 11.7) runs daily
+# with its own dedupe marker. Reflection publish is gated here.
+#
+# Gate: publish iff
+#   (a) it's the nightly consolidation window (00:00–02:59 MT), OR
+#   (b) called explicitly with NEL_FORCE_REFLECT=1
+# AND no prior publish today.
+REFLECT_HOUR=$(TZ=America/Denver date +%H)
+NIGHTLY_WINDOW=0
+if [[ "$REFLECT_HOUR" =~ ^0[0-2]$ ]]; then NIGHTLY_WINDOW=1; fi
+FORCE_REFLECT="${NEL_FORCE_REFLECT:-0}"
+
 if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
   if [[ -f "$NEL_REPORT_PUBLISH_MARKER" ]]; then
-    log_info "Self-authored report: skipping HQ publish (already published today)"
+    log_info "Reflection: skipping HQ publish (already published today)"
+  elif [[ "$NIGHTLY_WINDOW" -eq 0 && "$FORCE_REFLECT" != "1" ]]; then
+    log_info "Reflection: skipping HQ publish (q24/nightly gate — current hour $REFLECT_HOUR MT; set NEL_FORCE_REFLECT=1 to override)"
   else
-    bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — QA & Security Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
+    bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — Daily Reflection" "$REFLECTION_SECTIONS" 2>/dev/null || true
     touch "$NEL_REPORT_PUBLISH_MARKER"
-    log_pass "Self-authored report published to HQ feed"
+    log_pass "Reflection published to HQ feed (nightly q24 window)"
   fi
 
   # Report to Kai — closed-loop upward communication (always fires for metrics)
   DISPATCH_BIN="$ROOT/bin/dispatch.sh"
   if [[ -x "$DISPATCH_BIN" ]]; then
-    bash "$DISPATCH_BIN" report nel "research+reflection published: score=${IMPROVEMENT_SCORE}, sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f, cipher_leaks=${CIPHER_LEAKS}" 2>/dev/null || true
+    bash "$DISPATCH_BIN" report nel "research+reflection cycle: score=${IMPROVEMENT_SCORE}, sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f, cipher_leaks=${CIPHER_LEAKS}, reflection_published=$([[ -f $NEL_REPORT_PUBLISH_MARKER ]] && echo yes || echo no)" 2>/dev/null || true
   fi
 else
-  log_warn "Could not publish self-authored report (missing sections or publish script)"
+  log_warn "Could not publish reflection (missing sections or publish script)"
+fi
+
+# ════════════════════════════════════════════════════════════════════════════
+# PHASE 11.8.5: INTROSPECTION → IMPROVEMENT TICKET (SE-011-006)
+# Hyo directive: "we don't complete introspection just for the sake of it and
+# call it a day. We learn from it and make changes accordingly."
+#
+# Gate: reflection cannot "complete" without emitting at least one improvement
+# ticket IF weaknesses were surfaced. Links the ticket to the GROWTH.md weakness.
+# ════════════════════════════════════════════════════════════════════════════
+TICKET_BIN="$ROOT/bin/ticket.sh"
+INTROSPECTION_TICKET_MARKER="/tmp/nel-intro-ticket-$(TZ=America/Denver date +%Y%m%d)"
+
+if [[ -x "$TICKET_BIN" && -f "$REFLECTION_SECTIONS" ]]; then
+  # Emit at most one improvement ticket per day (dedupe by marker)
+  if [[ -f "$INTROSPECTION_TICKET_MARKER" ]]; then
+    log_info "Introspection→ticket: already emitted today (skipping)"
+  else
+    # Decide: do we have a real weakness/finding to act on?
+    # Criteria: health<70 OR persistent sentinel failures OR CVEs found OR blindspot flagged
+    EMIT_TICKET=0
+    TICKET_TITLE=""
+    TICKET_WEAKNESS="W1"
+    if [[ "${IMPROVEMENT_SCORE:-0}" -lt 70 ]]; then
+      EMIT_TICKET=1
+      TICKET_TITLE="Health score below 70 ($IMPROVEMENT_SCORE) — persistent failures blocking improvement"
+      TICKET_WEAKNESS="W1"
+    elif [[ "${SENTINEL_FAIL:-0}" -gt 0 ]]; then
+      EMIT_TICKET=1
+      TICKET_TITLE="Persistent sentinel failures ($SENTINEL_FAIL) — root cause investigation required"
+      TICKET_WEAKNESS="W2"
+    elif grep -qiE 'blindspot|CVE-' "$REFLECTION_SECTIONS" 2>/dev/null; then
+      EMIT_TICKET=1
+      TICKET_TITLE="Research surfaced blindspot or CVE — coverage gap to close"
+      TICKET_WEAKNESS="W3"
+    fi
+
+    if [[ "$EMIT_TICKET" -eq 1 ]]; then
+      if bash "$TICKET_BIN" create --agent nel --title "$TICKET_TITLE" --priority P2 \
+             --type improvement --weakness "$TICKET_WEAKNESS" 2>&1 | tee -a "$REPORT"; then
+        touch "$INTROSPECTION_TICKET_MARKER"
+        log_pass "Introspection→ticket: improvement ticket emitted ($TICKET_WEAKNESS)"
+      else
+        log_warn "Introspection→ticket: ticket create failed"
+      fi
+    else
+      log_info "Introspection→ticket: no actionable weakness surfaced this cycle"
+    fi
+  fi
+else
+  log_warn "Introspection→ticket: ticket.sh not executable or reflection missing"
 fi
 
 # ============================================================================

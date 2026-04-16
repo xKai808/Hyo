@@ -134,6 +134,20 @@ def call_gpt(content, key, system_prompt, model="gpt-4o", max_tokens=4000):
     result = json.loads(resp.read())
     reply = result["choices"][0]["message"]["content"]
     usage = result.get("usage", {})
+    # SE-011-003: Record API usage (non-fatal)
+    try:
+        import subprocess
+        _root = os.environ.get("HYO_ROOT") or os.path.expanduser("~/Documents/Projects/Hyo")
+        subprocess.run(
+            ["bash", os.path.join(_root, "bin", "api-usage.sh"), "log",
+             "openai", "aether", model,
+             str(int(usage.get("prompt_tokens", 0) or 0)),
+             str(int(usage.get("completion_tokens", 0) or 0)),
+             "gpt_factcheck"],
+            check=False, timeout=5, capture_output=True
+        )
+    except Exception:
+        pass
     return reply, usage
 
 

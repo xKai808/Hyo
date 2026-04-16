@@ -328,7 +328,8 @@
       <!-- LEFT: list -->
       <div class="panel-left" id="panelLeft">
         <div class="tabs">
-          <button class="tab active" onclick="switchTab('trends')">Trends</button>
+          <button class="tab active" onclick="switchTab('briefs')">Briefs</button>
+          <button class="tab" onclick="switchTab('trends')">Trends</button>
           <button class="tab" onclick="switchTab('entities')">Entities</button>
           <button class="tab" onclick="switchTab('topics')">Topics</button>
           <button class="tab" onclick="switchTab('lab')">Lab</button>
@@ -350,22 +351,37 @@
 
   <script>
     // ── State ──
-    let allData = { trends: [], entities: {}, topics: {}, lab: {} };
-    let currentTab = 'trends';
+    let allData = { briefs: {}, trends: [], entities: {}, topics: {}, lab: {} };
+    let currentTab = 'briefs';
     let activeSlug = null;
 
     // ── Parse index.md for dynamic file discovery ──
     function parseIndexForNames(indexText) {
-      const sections = { entities: [], topics: [], lab: [] };
+      const sections = { briefs: [], entities: [], topics: [], lab: [] };
       let current = null;
       for (const line of indexText.split('\n')) {
+        if (/^## Briefs/i.test(line)) { current = 'briefs'; continue; }
         if (/^## Entities/i.test(line)) { current = 'entities'; continue; }
         if (/^## Topics/i.test(line)) { current = 'topics'; continue; }
         if (/^## Lab/i.test(line)) { current = 'lab'; continue; }
         if (/^## /.test(line)) { current = null; continue; }
         if (!current) continue;
-        const match = line.match(/\[([^\]]+)\]\((?:entities|topics|lab)\/([^)]+)\.md\)/);
-        if (match) sections[current].push({ display: match[1], slug: match[2] });
+        const match = line.match(/\[([^\]]+)\]\((?:briefs|entities|topics|lab)\/([^)]+)\.md\)/);
+        if (match) {
+          // Briefs table: | Name | Agent | Date | — capture extra columns
+          if (current === 'briefs') {
+            const parts = line.split('|').map(p => p.trim()).filter(p => p);
+            // parts: [ "[Name](briefs/slug.md)", "Agent", "Date" ]
+            sections.briefs.push({
+              display: match[1],
+              slug: match[2],
+              agent: parts[1] || 'Ra',
+              date: parts[2] || ''
+            });
+          } else {
+            sections[current].push({ display: match[1], slug: match[2] });
+          }
+        }
       }
       return sections;
     }
@@ -405,7 +421,8 @@
           return results;
         };
 
-        const [entities, topics, lab] = await Promise.all([
+        const [briefs, entities, topics, lab] = await Promise.all([
+          loadCategory('briefs', discovered.briefs),
           loadCategory('entities', discovered.entities.length ? discovered.entities : [
             {display:'Bitcoin',slug:'bitcoin'},{display:'Federal Reserve',slug:'fed'},
             {display:'Marimo',slug:'marimo'},{display:'AI Scientist-v2',slug:'ai-scientist-v2'},
@@ -421,6 +438,15 @@
           ])
         ]);
 
+        // Merge extra brief metadata (agent, date) onto the loaded content entries
+        for (const b of discovered.briefs) {
+          if (briefs[b.slug]) {
+            briefs[b.slug].agent = b.agent;
+            briefs[b.slug].date = b.date;
+          }
+        }
+
+        allData.briefs = briefs;
         allData.entities = entities;
         allData.topics = topics;
         allData.lab = lab;
@@ -449,20 +475,37 @@
       }
 
       const data = allData[currentTab] || {};
-      const entries = Object.entries(data);
+      let entries = Object.entries(data);
       if (entries.length === 0) {
         list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--text-muted);">No items found</div>';
         return;
       }
 
-      list.innerHTML = entries.map(([slug, { display, content }]) => {
+      // Briefs: sort by date descending so newest shows at top
+      if (currentTab === 'briefs') {
+        entries.sort(([, a], [, b]) => (b.date || '').localeCompare(a.date || ''));
+      }
+
+      list.innerHTML = entries.map(([slug, item]) => {
+        const { display, content } = item;
         const meta = extractMeta(content);
         const isNew = isNewItem(meta.dateObj);
-        const icon = currentTab === 'entities' ? '📊' : currentTab === 'topics' ? '🔍' : '🧪';
+        let icon, sublabel, datelabel;
+        if (currentTab === 'briefs') {
+          const agent = (item.agent || 'Ra').toLowerCase();
+          const agentIcons = { aether: '📈', nel: '🛡️', dex: '🗄️', ra: '📰', sam: '🧱', kai: '🧭' };
+          icon = agentIcons[agent] || '📄';
+          sublabel = `${icon} ${item.agent || 'Ra'}`;
+          datelabel = item.date || meta.lastSeen;
+        } else {
+          icon = currentTab === 'entities' ? '📊' : currentTab === 'topics' ? '🔍' : '🧪';
+          sublabel = `${icon} ${currentTab}`;
+          datelabel = meta.lastSeen;
+        }
         return `<div class="list-item ${activeSlug === slug ? 'active' : ''}"
                      onclick="showContent('${slug}')">
           <div class="list-item-title">${display || extractTitle(content)}${isNew ? '<span class="badge new">NEW</span>' : ''}</div>
-          <div class="list-item-meta"><span>${icon} ${currentTab}</span><span>${meta.lastSeen}</span></div>
+          <div class="list-item-meta"><span>${sublabel}</span><span>${datelabel}</span></div>
         </div>`;
       }).join('');
     }

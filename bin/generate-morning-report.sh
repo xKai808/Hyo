@@ -313,6 +313,36 @@ if len(no_novel) > 1:
 # GENERATE JSON OUTPUT
 # ═══════════════════════════════════════════════════════════════════════════════
 
+# ── API usage summary (SE-011-003: visibility on daily API spend) ──
+api_spend_summary = ""
+try:
+    from datetime import date as _date
+    ledger = os.path.join(root, "kai", "ledger", "api-usage.jsonl")
+    if os.path.exists(ledger):
+        by_prov = defaultdict(lambda: {"cost": 0.0, "calls": 0})
+        total = 0.0
+        calls = 0
+        with open(ledger) as _f:
+            for _line in _f:
+                try:
+                    _e = json.loads(_line)
+                except Exception:
+                    continue
+                if _e.get("date") != today:
+                    continue
+                _c = float(_e.get("cost_usd", 0) or 0)
+                _p = _e.get("provider", "?")
+                by_prov[_p]["cost"] += _c
+                by_prov[_p]["calls"] += 1
+                total += _c
+                calls += 1
+        parts = [f"{p}=${info['cost']:.2f}" for p, info in sorted(by_prov.items(), key=lambda x: -x[1]["cost"])]
+        api_spend_summary = f"${total:.2f} ({calls} calls)" + (f" — {', '.join(parts)}" if parts else "")
+    else:
+        api_spend_summary = "$0.00 (0 calls) — ledger not started"
+except Exception as _api_err:
+    api_spend_summary = f"error: {_api_err}"
+
 report = {
     "generated": now_mt,
     "date": today,
@@ -323,7 +353,8 @@ report = {
         "biggest_risk": biggest_risk,
         "biggest_win": biggest_win,
         "kai_focus": "Enabling research access (MCP servers) + monitoring growth cycle execution",
-        "hyo_attention": hyo_attention
+        "hyo_attention": hyo_attention,
+        "api_spend_today": api_spend_summary
     },
     "agents": agent_reports
 }
@@ -381,6 +412,7 @@ print("="*80 + "\n")
 print(f"Growth trajectory: {trajectory} ({expanding_count}/{len(agents_list)} expanding)")
 print(f"Biggest risk: {biggest_risk}")
 print(f"Biggest win: {biggest_win}")
+print(f"API spend today: {api_spend_summary}")
 if hyo_attention:
     print(f"⚠️ NEEDS ATTENTION: {hyo_attention}")
 print()

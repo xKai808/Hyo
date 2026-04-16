@@ -135,6 +135,23 @@
     }
     .nav-dot.ok { background: var(--success); }
     .nav-dot.err { background: var(--error); }
+    /* New-report badge (SE-011-004: visibility when an agent ships new work) */
+    .nav-badge {
+      margin-left: auto;
+      display: none;
+      padding: 1px 6px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      line-height: 1.5;
+    }
+    .nav-badge.visible { display: inline-block; }
+    /* When badge visible, push nav-dot to be adjacent (not margin-left:auto) */
+    .nav-item .nav-badge.visible + .nav-dot { margin-left: 6px; }
 
     .sidebar-footer {
       margin-top: auto;
@@ -613,12 +630,12 @@
       <div class="nav-item active" data-view="feed"><span class="nav-icon">📡</span><span>Feed</span></div>
 
       <div class="nav-section">Team</div>
-      <div class="nav-item" data-view="kai"><span class="nav-icon">👔</span><span>Kai</span></div>
-      <div class="nav-item" data-view="nel"><span class="nav-icon">🔧</span><span>Nel</span><div class="nav-dot ok" id="dot-nel"></div></div>
-      <div class="nav-item" data-view="sam"><span class="nav-icon">⚙️</span><span>Sam</span><div class="nav-dot ok" id="dot-sam"></div></div>
-      <div class="nav-item" data-view="ra"><span class="nav-icon">📰</span><span>Ra</span><div class="nav-dot ok" id="dot-ra"></div></div>
-      <div class="nav-item" data-view="aether"><span class="nav-icon">📈</span><span>Aether</span><div class="nav-dot ok" id="dot-aether"></div></div>
-      <div class="nav-item" data-view="dex"><span class="nav-icon">🗃️</span><span>Dex</span><div class="nav-dot ok" id="dot-dex"></div></div>
+      <div class="nav-item" data-view="kai"><span class="nav-icon">👔</span><span>Kai</span><span class="nav-badge" id="badge-kai">NEW</span></div>
+      <div class="nav-item" data-view="nel"><span class="nav-icon">🔧</span><span>Nel</span><span class="nav-badge" id="badge-nel">NEW</span><div class="nav-dot ok" id="dot-nel"></div></div>
+      <div class="nav-item" data-view="sam"><span class="nav-icon">⚙️</span><span>Sam</span><span class="nav-badge" id="badge-sam">NEW</span><div class="nav-dot ok" id="dot-sam"></div></div>
+      <div class="nav-item" data-view="ra"><span class="nav-icon">📰</span><span>Ra</span><span class="nav-badge" id="badge-ra">NEW</span><div class="nav-dot ok" id="dot-ra"></div></div>
+      <div class="nav-item" data-view="aether"><span class="nav-icon">📈</span><span>Aether</span><span class="nav-badge" id="badge-aether">NEW</span><div class="nav-dot ok" id="dot-aether"></div></div>
+      <div class="nav-item" data-view="dex"><span class="nav-icon">🗃️</span><span>Dex</span><span class="nav-badge" id="badge-dex">NEW</span><div class="nav-dot ok" id="dot-dex"></div></div>
 
       <div class="nav-section">Intel</div>
       <div class="nav-item" data-view="research"><span class="nav-icon">📚</span><span>Research</span></div>
@@ -759,7 +776,50 @@ function goView(name) {
   document.querySelectorAll('.nav-item').forEach(n =>
     n.classList.toggle('active', n.dataset.view === name)
   );
+  // SE-011-004: clear the "new report" badge for this agent when visited
+  markAgentSeen(name);
   render();
+}
+
+// ═══ NEW-REPORT BADGE (SE-011-004) ═══
+// Track the most recent report timestamp seen per agent in localStorage.
+// On each feed refresh, compare the latest report timestamp per agent
+// against the last-seen value. If newer → show a "NEW" badge on the sidebar.
+const BADGE_AGENTS = ['kai', 'nel', 'sam', 'ra', 'aether', 'dex'];
+
+function getLastSeen(agent) {
+  try { return localStorage.getItem('hq:lastSeen:' + agent) || ''; }
+  catch (e) { return ''; }
+}
+function setLastSeen(agent, ts) {
+  try { localStorage.setItem('hq:lastSeen:' + agent, ts || ''); }
+  catch (e) {}
+}
+function latestReportTsFor(agent) {
+  if (!FEED_DATA || !FEED_DATA.reports) return '';
+  let latest = '';
+  for (const r of FEED_DATA.reports) {
+    if ((r.author || '').toLowerCase() !== agent) continue;
+    const ts = r.timestamp || r.date || '';
+    if (ts > latest) latest = ts;
+  }
+  return latest;
+}
+function markAgentSeen(agent) {
+  if (!BADGE_AGENTS.includes(agent)) return;
+  const ts = latestReportTsFor(agent);
+  if (ts) setLastSeen(agent, ts);
+  updateBadges();
+}
+function updateBadges() {
+  for (const a of BADGE_AGENTS) {
+    const el = document.getElementById('badge-' + a);
+    if (!el) continue;
+    const latest = latestReportTsFor(a);
+    const seen = getLastSeen(a);
+    const hasNew = latest && latest > seen && currentView !== a;
+    el.classList.toggle('visible', !!hasNew);
+  }
 }
 
 // ═══ DATA ═══
@@ -804,6 +864,13 @@ function render() {
     main.innerHTML = '<div class="empty-state">Loading feed...</div>';
     return;
   }
+  // Update sidebar badges on every render (feed may have new reports)
+  try { updateBadges(); } catch (e) { /* no-op */ }
+  // If we're currently viewing this agent, mark their latest report as seen
+  if (BADGE_AGENTS.includes(currentView)) {
+    const latest = latestReportTsFor(currentView);
+    if (latest) setLastSeen(currentView, latest);
+  }
   if (currentView === 'feed') {
     renderFeed(main);
   } else if (currentView === 'research') {
@@ -817,8 +884,13 @@ function render() {
 function renderFeed(container) {
   const today = FEED_DATA.today || new Date().toISOString().slice(0, 10);
   // Show today's reports, most recent first
+  // Feed scope (Hyo directive, 2026-04-15):
+  // The main feed shows ONLY: morning-report, Ra's newsletter, Aether's daily analysis.
+  // Everything else (agent-reflection, ceo-report, research-drop) lives on the
+  // per-agent sub-page, not the feed.
+  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis']);
   const todayReports = (FEED_DATA.reports || [])
-    .filter(r => r.date === today)
+    .filter(r => r.date === today && FEED_ALLOWED_TYPES.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   let html = `

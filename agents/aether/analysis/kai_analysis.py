@@ -117,25 +117,71 @@ def get_historical_logs(limit=5):
             historical[date] = f.read()[:3000]
     return historical
 
+
+import time as _time
+def _retry_api(fn, *, what='api', attempts=4, base_sleep=3.0):
+    last = None
+    for i in range(attempts):
+        try:
+            return fn()
+        except Exception as e:
+            last = e
+            sleep_s = base_sleep * (2 ** i)
+            print(f'[{what}] attempt {i+1}/{attempts} failed: {e!r} — sleeping {sleep_s:.1f}s')
+            _time.sleep(sleep_s)
+    raise RuntimeError(f'{what} failed after {attempts} attempts: {last!r}')
+
+def _log_api_usage(provider: str, model: str, in_tok: int, out_tok: int, notes: str = "") -> None:
+    """SE-011-003: Record API usage to kai/ledger/api-usage.jsonl via bin/api-usage.sh.
+    Non-fatal — never let logging break the pipeline."""
+    try:
+        import subprocess as _sp
+        _root = os.environ.get("HYO_ROOT") or os.path.expanduser("~/Documents/Projects/Hyo")
+        _sp.run(
+            ["bash", os.path.join(_root, "bin", "api-usage.sh"), "log",
+             provider, "aether", model, str(in_tok), str(out_tok), notes],
+            check=False, timeout=5, capture_output=True
+        )
+    except Exception as _e:
+        print(f"[api-usage] logging failed (non-fatal): {_e!r}")
+
 def call_claude(messages: list) -> str:
-    response = anthropic_client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=4096,
-        system=CLAUDE_SYSTEM,
-        messages=messages
-    )
-    return response.content[0].text
+    def _do():
+        response = anthropic_client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=4096,
+            system=CLAUDE_SYSTEM,
+            messages=messages
+        )
+        try:
+            _u = getattr(response, "usage", None)
+            _in = int(getattr(_u, "input_tokens", 0) or 0) if _u else 0
+            _out = int(getattr(_u, "output_tokens", 0) or 0) if _u else 0
+            _log_api_usage("anthropic", "claude-sonnet-4-6", _in, _out, "kai_analysis.call_claude")
+        except Exception:
+            pass
+        return response.content[0].text
+    return _retry_api(_do, what="claude")
 
 def call_gpt(user_message: str) -> str:
-    response = openai_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "system", "content": GPT_SYSTEM},
-            {"role": "user", "content": user_message}
-        ],
-        max_tokens=4096
-    )
-    return response.choices[0].message.content
+    def _do():
+        response = openai_client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": GPT_SYSTEM},
+                {"role": "user", "content": user_message}
+            ],
+            max_tokens=4096
+        )
+        try:
+            _u = getattr(response, "usage", None)
+            _in = int(getattr(_u, "prompt_tokens", 0) or 0) if _u else 0
+            _out = int(getattr(_u, "completion_tokens", 0) or 0) if _u else 0
+            _log_api_usage("openai", "gpt-4o", _in, _out, "kai_analysis.call_gpt")
+        except Exception:
+            pass
+        return response.choices[0].message.content
+    return _retry_api(_do, what="gpt")
 
 # ── MAIN PIPELINE ─────────────────────────────────────────────────────────────
 

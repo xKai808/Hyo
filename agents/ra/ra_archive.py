@@ -386,11 +386,40 @@ def rebuild_index():
     top_rows = [[f"[{t['name']}](topics/{t['slug']}.md)", t["last_seen"], str(t["count"])] for t in tops]
     lab_rows = [[f"[{l['name']}](lab/{l['slug']}.md)", l["first_seen"], l["last_updated"]] for l in labs_raw]
 
+    # Briefs — scan the briefs/ dir and list each brief file with a display title.
+    # Naming convention: <agent-or-pointer>-YYYY-MM-DD.md  OR  YYYY-MM-DD.md
+    briefs_raw = []
+    for p in sorted(BRIEFS.glob("*.md")):
+        try:
+            text = p.read_text(errors="replace")
+        except Exception:
+            text = ""
+        # Extract title from first H1
+        name_m = re.match(r"^#\s+(.+)$", text.splitlines()[0] if text else "")
+        name = name_m.group(1).strip() if name_m else p.stem
+        # Extract date from filename or body
+        date_m = re.search(r"(\d{4}-\d{2}-\d{2})", p.stem) or re.search(r"(\d{4}-\d{2}-\d{2})", text[:400])
+        date_str = date_m.group(1) if date_m else ""
+        # Derive agent from filename prefix (e.g. "aether-2026-04-15" → "aether")
+        agent_m = re.match(r"^([a-z]+)-\d{4}-\d{2}-\d{2}$", p.stem)
+        agent = agent_m.group(1).capitalize() if agent_m else "Ra"
+        briefs_raw.append({
+            "slug": p.stem,
+            "name": name,
+            "agent": agent,
+            "date": date_str,
+        })
+    # Newest briefs first
+    briefs_raw.sort(key=lambda x: (x["date"], x["slug"]), reverse=True)
+    brief_rows = [[f"[{b['name']}](briefs/{b['slug']}.md)", b["agent"], b["date"]] for b in briefs_raw]
+
     now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
     out = (
         f"# Ra Research Archive — Index\n\n"
         f"*Auto-generated {now}. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*\n\n"
-        f"## Entities ({len(ents)})\n\n"
+        f"## Briefs ({len(briefs_raw)})\n\n"
+        + _fmt_table(brief_rows, ["Name", "Agent", "Date"])
+        + f"\n## Entities ({len(ents)})\n\n"
         + _fmt_table(ent_rows, ["Name", "Last seen", "Briefs"])
         + f"\n## Topics ({len(tops)})\n\n"
         + _fmt_table(top_rows, ["Name", "Last seen", "Briefs"])

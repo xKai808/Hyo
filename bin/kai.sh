@@ -947,6 +947,8 @@ case "$sub" in
   scan)               cmd_scan "$@" ;;
   ra)                 cmd_ra "$@" ;;
   push)               cmd_push "$@" ;;
+  report)             bash "$ROOT/bin/kai-report.sh" "$@" ;;
+  api)                bash "$ROOT/bin/api-usage.sh" "$@" ;;
   sam)                bash "$ROOT/agents/sam/sam.sh" "$@" ;;
   aether|ab)       bash "$ROOT/agents/aether/aether.sh" "$@" ;;
   dex)             bash "$ROOT/agents/dex/dex.sh" "$@" ;;

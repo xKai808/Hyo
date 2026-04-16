@@ -745,3 +745,19 @@ print(f"Memory Loop: {len(tickets_today)} tickets today, {len(blocked_tickets)} 
 MEMEOF
 
 log "Memory Loop complete — written to $MEMORY_LOG"
+
+# ════════════════════════════════════════════════════════════════════════════
+# NIGHTLY REFLECTION TRIGGER (SE-011-005)
+# ════════════════════════════════════════════════════════════════════════════
+# After nightly consolidation completes, fire Nel's q24 reflection.
+# nel.sh has a nightly-window gate (00:00–02:59 MT) but we pass NEL_FORCE_REFLECT=1
+# to guarantee reflection publishes exactly once per day here, regardless of
+# when consolidation actually runs.
+NEL_RUNNER="$ROOT/agents/nel/nel.sh"
+if [[ -x "$NEL_RUNNER" ]]; then
+  log "Triggering Nel nightly reflection (q24)"
+  NEL_FORCE_REFLECT=1 bash "$NEL_RUNNER" 2>&1 | tail -20 || log "Nel reflection exited non-zero (continuing)"
+  log "Nel nightly reflection complete"
+else
+  log "Nel runner not found — skipping nightly reflection"
+fi

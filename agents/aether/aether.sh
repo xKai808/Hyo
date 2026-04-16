@@ -192,7 +192,9 @@ try:
   cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
   cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw["startingBalance"] else 0
 
-  data["updatedAt"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+  _now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+  data["updatedAt"] = _now
+  data["lastUpdated"] = _now  # SE-011-002: HQ reads lastUpdated, must refresh too
 
   with open(metrics_file, "w") as f:
     json.dump(data, f, indent=2)
@@ -355,7 +357,9 @@ cw["recentTrades"].insert(0, {
 if len(cw["recentTrades"]) > 50:
     cw["recentTrades"] = cw["recentTrades"][:50]
 
-data["updatedAt"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+_now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+data["updatedAt"] = _now
+data["lastUpdated"] = _now  # SE-011-002: HQ reads lastUpdated, must refresh too
 
 with open(metrics_file, "w") as f:
     json.dump(data, f, indent=2)
@@ -592,12 +596,17 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
   # recognizes, wants to change, etc"
   gpt_daily_log_review
 
-  # Normal run: update timestamp + push to HQ
+  # Normal run: update timestamps + push to HQ
+  # Both `updatedAt` (internal) and `lastUpdated` (HQ consumer reads this) must refresh.
+  # Bug fix: prior version only touched updatedAt, so HQ showed a stale lastUpdated
+  # even when the file was being written every 15 min. SE-011-002.
   python3 -c "
 import json
 from datetime import datetime
 with open('$METRICS') as f: d = json.load(f)
-d['updatedAt'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S-06:00')
+now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S-06:00')
+d['updatedAt'] = now
+d['lastUpdated'] = now
 with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
 "
   push_to_hq

@@ -129,6 +129,20 @@ else:
 analysis_text = analysis_file.read_text()
 
 
+def _log_api_usage(provider, model, in_tok, out_tok, notes=""):
+    """SE-011-003: Record API usage to kai/ledger/api-usage.jsonl. Non-fatal."""
+    try:
+        import subprocess, os
+        _root = os.environ.get("HYO_ROOT") or os.path.expanduser("~/Documents/Projects/Hyo")
+        subprocess.run(
+            ["bash", os.path.join(_root, "bin", "api-usage.sh"), "log",
+             provider, "aether", model, str(in_tok), str(out_tok), notes],
+            check=False, timeout=5, capture_output=True
+        )
+    except Exception:
+        pass
+
+
 def call_gpt(system_prompt, user_msg, max_tokens=4000):
     """Call GPT-4o and return the response text."""
     payload = {
@@ -150,6 +164,14 @@ def call_gpt(system_prompt, user_msg, max_tokens=4000):
     )
     with urllib.request.urlopen(req, timeout=120) as resp:
         result = json.loads(resp.read())
+        try:
+            u = result.get("usage", {}) or {}
+            _log_api_usage("openai", "gpt-4o",
+                           int(u.get("prompt_tokens", 0) or 0),
+                           int(u.get("completion_tokens", 0) or 0),
+                           "gpt_crosscheck")
+        except Exception:
+            pass
         return result["choices"][0]["message"]["content"]
 
 
