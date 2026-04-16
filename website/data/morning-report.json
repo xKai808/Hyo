@@ -1,14 +1,15 @@
 {
-  "generated": "2026-04-15T19:33:55-0600",
+  "generated": "2026-04-15T23:44:24-0600",
   "date": "2026-04-15",
   "version": "v4-growth-driven",
   "executive_summary": {
-    "growth_trajectory": "maintaining",
-    "trajectory_confidence": "1/5 agents expanding",
+    "growth_trajectory": "declining",
+    "trajectory_confidence": "0/5 agents expanding",
     "biggest_risk": "nel: No novel work identified \u2014 check if improvement cycle is running.",
     "biggest_win": "Focus on growth identification",
     "kai_focus": "Enabling research access (MCP servers) + monitoring growth cycle execution",
-    "hyo_attention": "4 agents have no active novel work \u2014 growth cycle may be stalled"
+    "hyo_attention": "5 agents have no active novel work \u2014 growth cycle may be stalled",
+    "api_spend_today": "$0.00 (0 calls) \u2014 ledger not started"
   },
   "agents": {
     "nel": {
@@ -44,20 +45,20 @@
       "aric_cycle_date": null
     },
     "sam": {
-      "novel_work": "Building: Integrated Lighthouse CI into Sam's CI/CD. Measures: First Contentful Paint, Largest Contentful Paint, Cumulative Layout Shift. Baseline set at latest stable deploy. Any commit regressing >5% blocks merge until fixed. (in progress)",
+      "novel_work": "No novel work identified \u2014 check if improvement cycle is running.",
       "weakness_identified": "No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
-      "research_conducted": "GitHub: GoogleChrome/lighthouse-ci; Vercel docs: Analytics Engine",
-      "research_findings": "Continuous performance monitoring with historical baselines \u2014 flags commits that degrade FCP, LCP, CLS by configured threshold; Real-time performance metrics in CI/CD pipeline \u2014 can gate deployments on performance regression",
-      "research_count": 2,
-      "improvement_status": "in progress",
-      "improvement_description": "Integrated Lighthouse CI into Sam's CI/CD. Measures: First Contentful Paint, Largest Contentful Paint, Cumulative Layout Shift. Baseline set at latest stable deploy. Any commit regressing >5% blocks merge until fixed.",
-      "metric_before": "Performance regression detection: manual spot-checks only. False negative rate: ~60% (missed regressions)",
-      "metric_after": "Performance regression detection: automated on every PR. FCP baseline: 2.3s (current: 2.2s). Target: zero regressions >5%",
-      "metric_moved": true,
-      "external_opportunity_type": "horizontal",
-      "external_opportunity_desc": "Mobile performance testing \u2014 expand beyond desktop lighthouse scores to include mobile-specific Core Web Vitals",
-      "has_aric_data": true,
-      "aric_cycle_date": "2026-04-15"
+      "research_conducted": "(no ARIC data yet)",
+      "research_findings": "(research not completed)",
+      "research_count": 0,
+      "improvement_status": "no active work",
+      "improvement_description": "N/A",
+      "metric_before": "N/A",
+      "metric_after": "N/A",
+      "metric_moved": false,
+      "external_opportunity_type": "none",
+      "external_opportunity_desc": "none",
+      "has_aric_data": false,
+      "aric_cycle_date": null
     },
     "aether": {
       "novel_work": "No novel work identified \u2014 check if improvement cycle is running.",
