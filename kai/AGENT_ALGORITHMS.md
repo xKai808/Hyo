@@ -265,7 +265,8 @@ SELF-EVOLUTION CYCLE (runs every execution, after self-review):
   1. Collect run-specific metrics (unique per agent)
   2. Read last evolution entry (tail -1 evolution.jsonl)
   3. Compare current vs previous metrics
-  4. IF regression detected → log it, assess root cause, propose fix
+  4. IF regression detected → log it, assess root cause, propose fix,
+     AND extract a gate question (ERROR-TO-GATE PROTOCOL, mandatory)
   5. IF improvement detected → log it, consider making permanent
   6. IF new pattern discovered → add to improvement queue in PLAYBOOK.md
   7. Check PLAYBOOK.md staleness (>7 days without update → flag)
@@ -502,10 +503,12 @@ THE LOOP (mandatory, in order):
   9. CLOSE     — confirm, commit, push
 
 KEY RULES:
-  - STEP 3 requires BOTH immediate fix AND systemic prevention. Fixing
-    without prevention is patchwork. Prevention without fixing is theater.
+  - STEP 3 requires THREE things: immediate fix, systemic prevention, AND
+    a gate question (see ERROR-TO-GATE PROTOCOL below). Fixing without
+    prevention is patchwork. Prevention without a gate is ignorable.
+    The gate question is what makes the prevention stick.
   - STEP 5 must test the NEGATIVE case: if the problem recurs, will the
-    system catch it? If not, the fix is incomplete.
+    gate catch it? If not, the fix is incomplete.
   - STEP 7 report must include WHAT FAILED (approaches that didn't work)
     and WHY, not just what succeeded. Failures are data.
   - Every report has a "process improvements" section that feeds back into
@@ -529,6 +532,71 @@ AUTO-REMEDIATION STANDARD:
   a) Fix it automatically (preferred), OR
   b) Have an escalation path that triggers an automated fix
   Flagging alone is not acceptable. If you can detect it, build the fix.
+
+ERROR-TO-GATE PROTOCOL (mandatory — ALL agents, ALL errors):
+  A rule says "don't do X." A gate asks "did I do X?" and blocks until answered.
+  Rules get skipped. Gates don't. Every error prevention MUST include a gate.
+
+  When an error is identified (by any agent, Kai, Hyo, or automation):
+
+  1. LOG the error
+     → session-errors.jsonl or known-issues.jsonl (standard)
+
+  2. FIX the immediate issue
+     → Resolution Algorithm steps 3-4 (standard)
+
+  3. EXTRACT THE GATE QUESTION
+     This is the new requirement. Ask:
+       "What yes/no question, asked at the right moment, would have
+        prevented this error?"
+
+     The question must be:
+       - Binary (yes/no) — no ambiguity
+       - Specific — not "did I check everything?" but "did I push after commit?"
+       - Timed — when in the workflow does it trigger?
+       - Blocking — the answer NO stops progress until resolved
+
+     Examples of GOOD gate questions:
+       - "Did push succeed?" (after every commit)
+       - "Did I read the source file before modifying the algorithm?" (before any algorithm edit)
+       - "Does the consumer render this field?" (before adding data to any JSON)
+       - "Did I verify with proof, not assumption?" (after every deployment)
+       - "Is the ticket SHIPPED with evidence?" (before moving to next task)
+
+     Examples of BAD gate questions (too vague, not blocking):
+       - "Did I do a good job?"
+       - "Should I verify?"
+       - "Is everything working?"
+
+  4. PLACE THE GATE in the right location
+     Where does the question go? It must live where it will be ASKED,
+     not where it will be read. A question in a doc nobody reads is not a gate.
+
+     Placement hierarchy:
+       a. EXECUTION_GATE.md completion flowchart (if it applies to all work)
+       b. Agent's PLAYBOOK.md Domain Reasoning (if agent-specific)
+       c. VERIFICATION_PROTOCOL.md (if verification-specific)
+       d. The agent's runner script as a literal bash check (if automatable)
+       e. AGENT_ALGORITHMS.md self-evolution step 10 (if it's a reflection question)
+
+     Best case: the gate is a bash check in the runner that blocks execution.
+     Second best: a question in the completion flowchart that blocks task closure.
+     Minimum acceptable: a domain reasoning question in the agent's PLAYBOOK.
+
+  5. VERIFY THE GATE WORKS
+     Simulate the original error scenario. Does the gate fire?
+     Does it block? Does the "NO" path lead back to resolution?
+     If the gate doesn't catch the error it was built for, it's broken.
+
+  6. LOG THE GATE
+     Append to session-errors.jsonl or known-issues.jsonl:
+       "gate_question": "Did I push after commit?",
+       "gate_location": "EXECUTION_GATE.md completion flowchart",
+       "gate_type": "blocking"  // or "reflective" for PLAYBOOK questions
+
+  This is constitutional. Every agent, every error, every time.
+  A fix without a gate is incomplete. A rule without a question is ignorable.
+  The error ledger is not just a log — it's a library of gates.
 ```
 
 ---
