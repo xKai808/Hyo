@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-15T10:11:10Z",
+  "updatedAt": "2026-04-15T22:11:09Z",
   "morningReport": {
-    "date": "2026-04-14",
-    "generatedAt": "2026-04-14T05:09:00-06:00",
+    "date": "2026-04-15",
+    "generatedAt": "2026-04-15T16:11:09-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync at 04:11 MT on 2026-04-15. All three agents ran: sentinel (6 pass/3 fail, run #41), cipher (2 findings \u2014 secrets dir 755, founder token 600 OK), nel (score 65, 15 broken links, 5 audit issues, growth phase ran). Core blockers unchanged: API health failing 41 consecutive runs (P0 ESCALATION), aurora newsletter missing (day 2), task queue overloaded at 17 P0 (threshold 5, day 22). Nel growth phase: attempted CVE scanner build (IMP-nel-002), no package.json at root. Nel regression detected: score dropped 85\u219265. System health below 70 target.",
+    "summary": "Ops sync at 16:11 MT on 2026-04-15. All three agents ran: sentinel (6 pass/3 fail, run #51), cipher (2 findings \u2014 secrets dir 755, founder token 600 OK), nel (score 65, 15 broken links, 5 audit issues, 0 verified leaks, growth phase ran). Core blockers unchanged: API health failing 51 consecutive runs (P0 ESCALATION), aurora newsletter missing (scheduled-tasks-fired day 3), task queue overloaded at 17 P0 (threshold 5, day 32). Nel growth phase: attempted CVE scanner build (IMP-nel-002), no package.json at root. Nel self-delegated broken link fix. System health below 70 target. PermissionError in nel reflection (/tmp write denied in sandbox).",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,14 +14,65 @@
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint failing \u2014 41 consecutive sentinel runs (P0 ESCALATION)",
-      "Aurora newsletter missing for 2026-04-15 (day 2 recurring)",
+      "API health endpoint failing \u2014 51 consecutive sentinel runs (P0 ESCALATION)",
+      "Aurora scheduled-tasks-fired \u2014 no aurora logs in sandbox (day 3 recurring)",
       "Cipher: .secrets/ dir at 755 (should be 700) \u2014 P1 perm drift",
-      "Nel health score 65 \u2014 below 70 target, regression from 85. 15 broken doc links persist",
-      "Task queue overloaded \u2014 17 P0 tasks (threshold 5, day 22)"
+      "Nel health score 65 \u2014 below 70 target. 15 broken doc links persist",
+      "Task queue overloaded \u2014 17 P0 tasks (threshold 5, day 32)"
     ]
   },
   "events": [
+    {
+      "ts": "2026-04-15T16:11:09-0600",
+      "agent": "nel",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T16:11:09-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #51 \u2014 6 passed, 3 failed. API health down day 51 (ESCALATED), scheduled-tasks-fired day 3, task overload day 32.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T16:11:09-0600",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
+    {
+      "ts": "2026-04-15T12:11:00-0600",
+      "agent": "nel",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T12:11:00-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #48 \u2014 6 passed, 3 failed. API health down day 48 (ESCALATED), aurora missing day 4, task overload day 29.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T12:11:00-0600",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
+    {
+      "ts": "2026-04-15T08:11:13-0600",
+      "agent": "nel",
+      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target. Regression: 85\u219265.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T08:11:13-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #44 \u2014 6 passed, 3 failed. API health down day 44 (ESCALATED), aurora missing day 3, task overload day 25.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T08:11:13-0600",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
     {
       "ts": "2026-04-15T04:11:10-0600",
       "agent": "nel",
@@ -62,28 +113,6 @@
       "agent": "sentinel",
       "msg": "QA sweep run #35 \u2014 5 passed, 4 failed. API health down day 35 (ESCALATED), aurora missing day 2, task overload day 16.",
       "doc": "/viewer?agent=sentinel&file=2026-04-15"
-    },
-    {
-      "ts": "2026-04-15T00:11:17-06:00",
-      "agent": "cipher",
-      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
-    },
-    {
-      "ts": "2026-04-14T20:10:13-06:00",
-      "agent": "nel",
-      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 verified leaks. Self-delegated broken link fix. Health below target.",
-      "doc": "/viewer?agent=nel&file=2026-04-14"
-    },
-    {
-      "ts": "2026-04-14T20:10:13-06:00",
-      "agent": "sentinel",
-      "msg": "QA sweep run #33 \u2014 6 passed, 3 failed. Resolved 2 (aurora-ran-today, scheduled-tasks-fired). API health down day 33, task overload day 14.",
-      "doc": "/viewer?agent=sentinel&file=2026-04-14"
-    },
-    {
-      "ts": "2026-04-14T20:10:13-06:00",
-      "agent": "cipher",
-      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
     }
   ],
   "ra": {
@@ -97,24 +126,24 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-15T00:11:17-06:00",
-    "passed": 5,
-    "failed": 4,
-    "totalRuns": 35,
+    "lastRun": "2026-04-15T12:11:00-0600",
+    "passed": 6,
+    "failed": 3,
+    "totalRuns": 48,
     "findings": [
-      "P0: aurora-ran-today \u2014 no newsletter for 2026-04-15 (day 2, ESCALATED)",
-      "P0: api-health-green \u2014 endpoint failing (day 35, ESCALATED)",
-      "P1: scheduled-tasks-fired \u2014 no aurora logs detected (day 2)",
-      "P2: task-queue-size \u2014 17 P0 tasks (overload threshold 5, day 16)"
+      "P0: api-health-green \u2014 endpoint failing (day 48, ESCALATED)",
+      "P1: scheduled-tasks-fired \u2014 no aurora logs detected (day 4)",
+      "P2: task-queue-size \u2014 17 P0 tasks (overload threshold 5, day 29)"
     ],
     "escalations": [
-      "P0 escalated: api-health-green failing 35 runs in a row",
-      "P0 escalated: aurora-ran-today failing 2 runs in a row"
+      "P0 escalated: api-health-green failing 48 runs in a row",
+      "P1 elevated: scheduled-tasks-fired failing 4 runs in a row",
+      "P2 elevated: task-queue-size failing 29 runs in a row"
     ],
     "latestDoc": "/viewer?agent=sentinel&file=2026-04-15"
   },
   "cipher": {
-    "lastRun": "2026-04-15T00:11:17-06:00",
+    "lastRun": "2026-04-15T12:11:00-0600",
     "secretsDir": "755",
     "founderToken": "600",
     "leaks": 2,
@@ -131,20 +160,19 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-15T00:11:17-06:00",
-    "improvementScore": 65,
-    "findingsCount": 4,
+    "lastRun": "2026-04-15T23:00:03Z",
+    "improvementScore": 85,
+    "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 15,
     "untested": 9,
     "inefficient": 1,
     "sentinel": {
-      "pass": 5,
-      "fail": 4
+      "pass": 4,
+      "fail": 0
     },
     "cipher": {
-      "leaks": 2
-    },
-    "growthPhase": "CVE scanner build (IMP-nel-002) \u2014 no package.json at root"
+      "leaks": 0
+    }
   }
 }

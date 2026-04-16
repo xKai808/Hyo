@@ -1,13 +1,18 @@
 {
-  "ts": "2026-04-15T10:54:28Z",
+  "ts": "2026-04-16T00:42:55Z",
   "status": "ISSUES",
-  "issues": 5,
+  "issues": 6,
   "warnings": 5,
   "findings": [
     {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "2 unaddressed P0/P1 flags in last 2h"
+    },
+    {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker last active 493402h ago \u2014 may be dead"
+      "detail": "Worker last active 493416h ago \u2014 may be dead"
     },
     {
       "severity": "P0",
@@ -55,38 +60,7 @@
       "detail": "21 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
-  "recent_queue_results": [
-    {
-      "id": "recheck-flag-kai-001",
-      "status": "ok",
-      "command": "bash /sessions/upbeat-trusting-ptolemy/mnt/Hyo/kai/queue/healthcheck.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "event-dex-flag-dex-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/dex/dex.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "recheck-flag-dex-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "recheck-flag-nel-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "event-sam-flag-nel-001",
-      "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh",
-      "exit_code": 0
-    }
-  ],
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
+  "recent_queue_results": [],
   "next_check": "in 2 hours (30min if P0 found)"
 }

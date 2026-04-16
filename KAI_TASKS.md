@@ -384,3 +384,15 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/trusting-nice-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:610a02c0:escalated]
 
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/clever-cool-keller/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:2644d920] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/busy-practical-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:40b9d398] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/busy-practical-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:40b9d398:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/vibrant-youthful-pasteur/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:c05f0eb3] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/vibrant-youthful-pasteur/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:c05f0eb3:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/modest-funny-goldberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:74bfd26f] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/modest-funny-goldberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:74bfd26f:escalated]
