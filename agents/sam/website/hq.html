@@ -2,11 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>hq — hyo.world</title>
+  <!-- PWA / native-app meta -->
+  <meta name="theme-color" content="#0f1117" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="hyo hq" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icon-180.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -57,14 +65,47 @@
       --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
     }
 
-    html, body { height: 100%; }
+    html, body { height: 100%; overflow-x: hidden; }
     body {
       font-family: var(--font-body);
       background: var(--bg);
       color: var(--text-primary);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      -webkit-text-size-adjust: 100%;
+      overscroll-behavior: none;
     }
+
+    /* ═══ NATIVE APP FEEL ═══ */
+    /* Remove iOS tap flash on every interactive element */
+    * { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    /* Allow natural scroll gestures back */
+    .main, .sidebar { touch-action: pan-y; }
+    /* No accidental text selection on UI chrome */
+    .nav-item, .bottom-nav-item, .hamburger, button { user-select: none; -webkit-user-select: none; }
+    /* Inputs stay selectable */
+    input, textarea { user-select: text; -webkit-user-select: text; }
+    /* Prevent iOS long-press context menu on UI elements */
+    .nav-item, .bottom-nav, .sidebar-header { -webkit-touch-callout: none; }
+    /* Safe-area: status bar on iOS standalone */
+    .shell { padding-top: env(safe-area-inset-top, 0px); }
+    /* Safe-area: home indicator on iPhone */
+    .bottom-nav {
+      padding-bottom: max(6px, env(safe-area-inset-bottom, 6px));
+      height: calc(56px + env(safe-area-inset-bottom, 0px));
+    }
+    .bottom-nav-item { height: 56px; }
+    /* Content clears bottom nav including safe area */
+    @media (max-width: 768px) {
+      .main { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important; }
+    }
+    /* Auth input: 16px prevents iOS auto-zoom on focus */
+    .auth-box input { font-size: 16px !important; }
+    /* View transition — smooth page switch (Chrome 111+, Safari 18.1+) */
+    ::view-transition-old(root) { animation: hq-fade-out 180ms ease-out forwards; }
+    ::view-transition-new(root) { animation: hq-fade-in 180ms ease-in forwards; }
+    @keyframes hq-fade-out { to { opacity: 0; } }
+    @keyframes hq-fade-in { from { opacity: 0; } }
 
     .hidden { display: none !important; }
 
@@ -205,8 +246,9 @@
       .sidebar.open ~ .sidebar-overlay { display: block; }
 
       .main {
-        padding: 20px 16px;
+        padding: 14px 12px;
         padding-top: 64px; /* room for hamburger */
+        overflow-x: clip;
       }
 
       .report { padding: 18px 16px; }
@@ -216,8 +258,8 @@
 
     /* ═══ MAIN CONTENT ═══ */
     .main {
-      flex: 1; overflow-y: auto; overflow-x: hidden; padding: 32px 40px;
-      max-width: 900px;
+      flex: 1; overflow-y: auto; overflow-x: clip; padding: 32px 40px;
+      max-width: 900px; min-width: 0;
     }
     @media (min-width: 1400px) { .main { max-width: 960px; } }
 
@@ -606,6 +648,8 @@
       grid-template-columns: 1fr 300px;
       gap: 14px;
     }
+    .aether-main-grid > * { min-width: 0; }
+    .aether-metric-grid > * { min-width: 0; }
     .aether-table-scroll {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -663,7 +707,7 @@
 
     @media (max-width: 768px) {
       .bottom-nav { display: flex; }
-      .main { padding-bottom: 72px !important; overflow-x: hidden; }
+      .main { padding-bottom: 80px !important; overflow-x: clip; }
     }
   </style>
 </head>
@@ -872,10 +916,17 @@ function goView(name) {
   );
   // SE-011-004: clear the "new report" badge for this agent when visited
   markAgentSeen(name);
-  // Scroll main content to top on view change (mobile UX)
+  // Scroll main content to top on view change
   const main = document.getElementById('mainContent');
   if (main) main.scrollTop = 0;
-  render();
+  // Light haptic on nav tap (Android; iOS silent-fails gracefully)
+  if (navigator.vibrate) navigator.vibrate(8);
+  // Native-feel view transition (Chrome 111+ / Safari 18.1+; falls back silently)
+  if (document.startViewTransition) {
+    document.startViewTransition(() => render());
+  } else {
+    render();
+  }
 }
 
 // ═══ NEW-REPORT BADGE (SE-011-004) ═══
@@ -1857,6 +1908,13 @@ function renderAetherDashboard(container, agent) {
   container.innerHTML = html;
 }
 
+</script>
+<script>
+  // Service worker registration — enables offline + "Add to Home Screen"
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .catch(() => {}); // Silent fail — doesn't break anything
+  }
 </script>
 </body>
 </html>
