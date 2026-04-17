@@ -287,6 +287,33 @@ RAW LOG:
         )
         print(f"\nSaved Phase 1 to: {p1_file}")
 
+        # ── OUTPUT QUALITY GATE (SE-011-015) ─────────────────────────────
+        # If >50% of analysis fields are empty/N/A/"does not provide",
+        # the output is incomplete. Flag it, auto-create ticket.
+        empty_markers = ["does not provide", "insufficient data", "no data",
+                         "cannot be assessed", "n/a", "not available",
+                         "impossible to", "cannot determine", "no information"]
+        field_count = 0
+        empty_count = 0
+        for line in phase1_output.split("\n"):
+            if line.strip().startswith("•") or line.strip().startswith("-"):
+                field_count += 1
+                if any(m in line.lower() for m in empty_markers):
+                    empty_count += 1
+        if field_count > 0 and empty_count / field_count > 0.5:
+            print(f"\n⚠ QUALITY GATE: {empty_count}/{field_count} fields empty/N/A ({empty_count*100//field_count}%)")
+            print("  GPT did not receive sufficient data. Check log path and filtering.")
+            # Auto-create ticket
+            import subprocess
+            ticket_sh = ROOT / "bin" / "ticket.sh"
+            if ticket_sh.exists():
+                subprocess.run(["bash", str(ticket_sh), "create", "--agent", "aether",
+                    "--title", f"GPT Phase 1 quality gate: {empty_count}/{field_count} fields empty for {date_arg}",
+                    "--priority", "P0"], capture_output=True)
+                print("  Auto-created P0 ticket for quality gate failure.")
+        elif field_count > 0:
+            print(f"\n✓ Quality gate passed: {field_count - empty_count}/{field_count} fields populated.")
+
     except urllib.error.HTTPError as e:
         print(f"PHASE 1 HTTP ERROR {e.code}: {e.read().decode()[:500]}")
         print("Phase 1 failed. Continuing to Phase 2 in degraded mode.")

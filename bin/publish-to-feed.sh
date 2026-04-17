@@ -57,8 +57,8 @@ AUTHOR_NAME=$(echo "$AUTHOR_LC" | awk '{print toupper(substr($0,1,1)) substr($0,
 REPORT_ID="${TYPE}-${AUTHOR_LC}-${TODAY}-$(date +%H%M%S)"
 
 python3 - "$FEED" "$REPORT_ID" "$TYPE" "$AUTHOR_NAME" "$ICON" "$COLOR" \
-          "$NOW_MT" "$TODAY" "$MONTH_KEY" "$TITLE" "$SECTIONS_FILE" <<'PYEOF'
-import json, sys, os
+          "$NOW_MT" "$TODAY" "$MONTH_KEY" "$TITLE" "$SECTIONS_FILE" "$ROOT" <<'PYEOF'
+import json, sys, os, subprocess
 
 feed_path    = sys.argv[1]
 report_id    = sys.argv[2]
@@ -71,10 +71,53 @@ date         = sys.argv[8]
 month_key    = sys.argv[9]
 title        = sys.argv[10]
 sections_file= sys.argv[11]
+hyo_root     = sys.argv[12] if len(sys.argv) > 12 else os.path.expanduser("~/Documents/Projects/Hyo")
+
+# ── SCHEMA VALIDATION GATE ──────────────────────────────────────────────────
+# Each report type has REQUIRED section keys that the HQ renderer expects.
+# If keys don't match → block publish, auto-create ticket.
+# This gate exists because session 11 published a morning-report with
+# ceo-report keys (direction/priorities/agentGrowth/risks) instead of
+# the renderer's expected keys (summary/wentWell/needsAttention/agentHighlights).
+# Result: HQ showed empty content. Hyo caught it. Never again.
+REQUIRED_KEYS = {
+    "morning-report":    {"summary"},
+    "aether-analysis":   {"summary", "balance", "trades", "risk"},
+    "ceo-report":        {"direction"},
+    "agent-reflection":  {"introspection"},
+    "newsletter":        set(),  # flexible
+    "research-drop":     {"topic", "finding"},
+}
+RECOMMENDED_KEYS = {
+    "morning-report":    {"summary", "wentWell", "needsAttention", "agentHighlights"},
+    "aether-analysis":   {"summary", "balance", "trades", "risk", "btc"},
+}
 
 # Read sections
 with open(sections_file) as f:
     sections = json.load(f)
+
+# Validate
+required = REQUIRED_KEYS.get(report_type, set())
+section_keys = set(sections.keys())
+missing = required - section_keys
+if missing:
+    err_msg = f"SCHEMA GATE BLOCKED: {report_type} missing required keys: {missing}. Got: {section_keys}"
+    print(f"ERROR: {err_msg}", file=sys.stderr)
+    # Auto-create ticket
+    ticket_sh = os.path.join(hyo_root, "bin", "ticket.sh")
+    if os.path.exists(ticket_sh):
+        ticket_title = f"Schema validation failed: {report_type} missing {missing}"
+        subprocess.run(["bash", ticket_sh, "create", "--agent", "kai",
+                        "--title", ticket_title, "--priority", "P0"], capture_output=True)
+        print(f"Auto-created P0 ticket for schema failure", file=sys.stderr)
+    sys.exit(1)
+
+# Warn on recommended but don't block
+recommended = RECOMMENDED_KEYS.get(report_type, set())
+rec_missing = recommended - section_keys
+if rec_missing:
+    print(f"WARNING: {report_type} missing recommended keys: {rec_missing}. Feed card may render incomplete.", file=sys.stderr)
 
 # Build entry
 entry = {
