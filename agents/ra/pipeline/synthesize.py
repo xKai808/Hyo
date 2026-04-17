@@ -16,8 +16,10 @@ API. Supports four synthesis backends, picked in this order:
     1. Claude Code CLI           — if `claude` binary is on PATH (uses
                                     Hyo's Max subscription, no API key)
     2. xAI Grok 4 Fast           — if GROK_API_KEY is set
-    3. Anthropic Claude API       — if ANTHROPIC_API_KEY is set
-    4. "bundle mode" (no key)    — writes a prompt+context bundle to
+    3. OpenAI GPT-4o             — if OPENAI_API_KEY is set or
+                                    agents/nel/security/openai.key exists
+    4. Anthropic Claude API       — if ANTHROPIC_API_KEY is set
+    5. "bundle mode" (no key)    — writes a prompt+context bundle to
                                     newsletters/YYYY-MM-DD.input.md
                                     that a Cowork scheduled task can
                                     pick up and complete manually.
@@ -290,6 +292,38 @@ def call_xai(prompt: str, context: str, *, model: str, timeout: int) -> str:
         raise RuntimeError(f"xai: unexpected response shape: {data}") from exc
 
 
+def call_openai(prompt: str, context: str, *, model: str, timeout: int) -> str:
+    # Try env var first, then key file
+    key = os.environ.get("OPENAI_API_KEY", "").strip()
+    if not key:
+        key_file = HERE.parent.parent / "nel" / "security" / "openai.key"
+        if key_file.is_file():
+            key = key_file.read_text().strip()
+    if not key:
+        raise RuntimeError("OPENAI_API_KEY not set and openai.key not found")
+    data = _post_json(
+        "https://api.openai.com/v1/chat/completions",
+        headers={
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+        },
+        payload={
+            "model": model,
+            "messages": [
+                {"role": "system", "content": prompt},
+                {"role": "user", "content": context},
+            ],
+            "temperature": 0.3,
+            "max_tokens": 4000,
+        },
+        timeout=timeout,
+    )
+    try:
+        return data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError) as exc:
+        raise RuntimeError(f"openai: unexpected response shape: {data}") from exc
+
+
 def call_anthropic(prompt: str, context: str, *, model: str, timeout: int) -> str:
     key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not key:
@@ -320,6 +354,7 @@ def call_anthropic(prompt: str, context: str, *, model: str, timeout: int) -> st
 BACKENDS = {
     "claude_code": (call_claude_code, "claude-code-cli"),
     "xai": (call_xai, "grok-4-fast"),
+    "openai": (call_openai, "gpt-4o"),
     "anthropic": (call_anthropic, "claude-sonnet-4-5"),
 }
 
@@ -339,6 +374,14 @@ def pick_backend(preferred: str | None) -> tuple[str, str]:
         return "claude_code", BACKENDS["claude_code"][1]
     if os.environ.get("GROK_API_KEY", "").strip():
         return "xai", BACKENDS["xai"][1]
+    # OpenAI: check env var or key file
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    if not openai_key:
+        key_file = HERE.parent.parent / "nel" / "security" / "openai.key"
+        if key_file.is_file():
+            openai_key = key_file.read_text().strip()
+    if openai_key:
+        return "openai", BACKENDS["openai"][1]
     if os.environ.get("ANTHROPIC_API_KEY", "").strip():
         return "anthropic", BACKENDS["anthropic"][1]
     return "bundle", ""
