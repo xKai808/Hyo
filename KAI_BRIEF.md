@@ -12,6 +12,12 @@
 
 ## Shipped today (2026-04-16)
 
+**Session 13 (Cowork, ~23:00 MT):**
+32. **HQ Aether dashboard REBUILT with counterpart design.** Complete rewrite of `renderAetherDashboard` in hq.html. New: full dark terminal UI (AETHERBOT header, #00ff88/#ff4444/#00c8ff palette), 5-metric header row (4-day net, WR, trades, record, open issues), sortable strategy table with WR bars + SVG sparklines + derived status badges (ACTIVE/WATCH/ALERT/MONITOR), session windows table (placeholder pending v254 log instrumentation), daily report feed with collapsible day cards (balance in/out, strategy breakdown per day), balance ledger with LIVE marker, open issues panel from aether-metrics.json. Sort state via vanilla JS globals — no React dependency. Synced both paths, committed `8080002`, pushed, Vercel deployed READY.
+33. **Data mapping verified.** Strategy status derived from live WR/PnL: ALERT if WR<40% or PnL<-$5, WATCH if WR<60% or PnL<0, MONITOR if trades<5, ACTIVE otherwise. Sparklines pull per-strategy per-day P&L from `week.dailyPnl[].strategies[stratName].pnl`.
+34. **Aether dashboard color scheme matched to site.** Replaced all hardcoded terminal colors (#0d0d0d, #00ff88, #ff4444) with site CSS custom properties (var(--success), var(--error), var(--warning), var(--cyan), var(--accent), var(--bg-card), etc.). SVG fill/stroke use actual hex values (#6dd49c/#e07060) since SVG presentation attributes don't support CSS vars. Status badge backgrounds use rgba tints. Committed `598e4c9`, pushed, Vercel READY.
+35. **Mobile-first Aether dashboard — no horizontal scroll.** Replaced all inline grid styles with responsive CSS classes (.aether-metric-grid, .aether-main-grid, .aether-table-scroll, .aether-hide-mobile). Breakpoints: 5-col→3-col→2-col metrics at 1024/768px; sidebar collapses to single-column at 768px; Avg Win/Loss/Sparkline columns hide on mobile. Added bottom nav bar (Feed/Aether/Kai/Research/More) fixed at bottom of viewport for thumb-zone navigation. goView() syncs both sidebar and bottom-nav active states. overflow-x: hidden on .main. Safe-area-inset padding for iPhone notch. Committed `2a20480`, pushed, Vercel READY.
+
 **Session 12 (Cowork, ~21:30–22:10 MT):**
 27. **aether.sh frozen-PnL bug FIXED (SE-012-001).** Two loops over strategy data — first updated correctly but never wrote back. Second re-read stale data, guarded behind trades==0. Strategy P&L was frozen after first population. Fixed: single authoritative loop, always updates from settled trades.
 28. **P&L calculation clarified.** Balance math (currentBalance - startingBalance) is authoritative because it captures premium collection. Settled trade NETs only capture WIN/LOSS events, missing expiry-based premium. SE-012-002 logged.
@@ -53,11 +59,50 @@
 17. **6 research papers created.** Separate from reflections. Nel (adaptive security), Ra (newsletter analytics), Sam (regression detection), Aether (phantom reconciliation), Dex (auto-remediation), Kai (Claude platform assessment). Published to feed + daily/ pages.
 18. **Committed + pushed.** 877c9c5 (local) → b857bbb (Mini, pushed to origin).
 
+**Shipped session 13 continuation (feedback integration, ~00:30 MT Apr 17):**
+36. **Hyo feedback absorbed + acted on.** 8-part feedback doc received. 4 session errors logged (SE-013-001 through SE-013-004): wrong role, wrong model strings, vendor-locked architecture recommendation, observation-level analysis. aether-metrics.json updated with 2 new canonical issues (EU_MORNING post-04:15 P2, Weekend risk profile P3) and operationalNotes with v254 hold status + role note. KAI_BRIEF updated with corrections. Session errors logged. Both paths synced.
+
 **Carryover (not resolved this session):**
 - Queue worker on Mini still stalled (cmd-1776333784-340 in running/ since 10:03Z)
 - Claude Code CLI auth in launchd — needs Sam to diagnose and fix root cause
 - Newsletter pipeline still blocked (aurora sources 403 from sandbox)
 - Sam silent (no runner log for 04-16, 4th consecutive day)
+- **Tailscale + SSH setup on Mac mini BEFORE Hyo travels** (days away — P0 pre-travel)
+- **Run 3 clean daily analysis sessions** through full Claude→GPT→Claude loop to rebuild Hyo's trust on Aether analysis quality (this is the fastest path to v254 approval)
+
+## ⚡ CORRECTIONS FROM HAYO FEEDBACK (2026-04-16) — READ EVERY SESSION
+
+These override prior assumptions. Non-negotiable.
+
+1. **ROLE: Kai is orchestrator, not CEO.** Hyo is the CEO. Every document, footer, and report uses "Kai, orchestrator of hyo.world." Never "CEO." Wrong role = wrong decision scope. (SE-013-001)
+
+2. **MODEL STRINGS — verified correct as of Apr 16:**
+   - `claude-opus-4-6`
+   - `claude-sonnet-4-6`
+   - `claude-haiku-4-5-20251001`
+   Never use from memory. Verify at docs.claude.com before hardcoding. (SE-013-002)
+
+3. **ARCHITECTURE: Model-agnostic stack only.** Do NOT build on Anthropic Agent SDK (Claude-only, no migration path). Correct stack: **CrewAI** (orchestration) + **LiteLLM** (model translation layer) + thin **ModelClient abstraction** (one file, one place to swap providers). AetherBot uses direct Anthropic SDK calls — this is correct and portable as-is. (SE-013-003)
+
+4. **ANALYSIS STANDARD: Mechanism level, not observation level.** Every observation must answer: (1) What does this actually mean? (2) What specifically should change? If both cannot be answered with specific log-sourced evidence + timestamps + dollar amounts → analysis is incomplete. Example: not "EVENING had losses" → "4 bps_premium NO positions 19:45-21:15, BTC directional against, one session of regime-driven losses, no gate change." (SE-013-004)
+
+5. **RECOMMENDATION FORMAT — exactly one of three:**
+   - `RECOMMENDATION: BUILD v[XXX]` — what changes (exact code), why now (log evidence + timestamps + $), risk if we wait
+   - `RECOMMENDATION: COLLECT MORE DATA` — what events needed, how many sessions, what log patterns trigger build
+   - `RECOMMENDATION: MONITOR AND HOLD` — what's stable, what's uncertain, next trigger
+
+6. **v254 HOLD.** Do NOT build, do NOT suggest building early. Scope confirmed: harvest instrumentation, BDI=0 time gate (secs_left≤120 → skip hold), POS WARNING logging. Hyo decided: collect end-of-week data first. Wait for approval. (Reference: feedback Part 4.3)
+
+7. **Aether pipeline roles:** Kai = pipeline manager. Claude API = analyst. GPT API = fact-checker. Hyo = decision authority. Kai does NOT insert own analysis as substitute for Claude's. Steps: pull log → inject context → Claude → GPT → Claude synthesis → ONE recommendation to Hyo → wait for "approved."
+
+8. **Balance ledger (authoritative from feedback):**
+   - All-time start 3/28: $101.38
+   - 3/28 $89.87 → 4/7 $104.02 → [4/8-12 unavailable, dropped to $90.25]
+   - 4/13 $86.44 → 4/14 $108.91 → 4/15 $115.79 est ($116.16 confirmed - $0.37)
+   - 4/16 $113.96 confirmed at 21:15 MTN (ACTIVE)
+   - All-time net through Apr 16 confirmed: +$12.58
+
+9. **Tailscale setup before Hyo travels (days away):** (1) `brew install tailscale` on Mini, (2) Enable Remote Login (SSH) in System Settings → General → Sharing, (3) Install Tailscale on travel device, same account, (4) Note Mini's Tailscale IP (100.x.x.x), (5) Test: `ssh username@100.x.x.x`, (6) Confirm aetherbot_logger.py running via nohup. **Queue this NOW — if Hyo leaves without SSH access, Aether is a black box.**
 
 ## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
 
