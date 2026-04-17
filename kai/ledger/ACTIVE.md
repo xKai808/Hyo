@@ -1,6 +1,6 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-17T04:06:36Z
+Last updated: 2026-04-17T04:13:56Z
 
 ## In Progress
 
@@ -59,7 +59,7 @@ Last updated: 2026-04-17T04:06:36Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-17T03:56:50Z
+  - Delegated: 2026-04-17T04:11:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -109,7 +109,7 @@ Last updated: 2026-04-17T04:06:36Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-17T03:56:51Z
+  - Delegated: 2026-04-17T04:11:53Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-16 — past 06:00 MT deadline (flagged by kai)
@@ -117,7 +117,7 @@ Last updated: 2026-04-17T04:06:36Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-17T03:56:50Z
+  - Delegated: 2026-04-17T04:11:53Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-002)
