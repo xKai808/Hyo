@@ -440,16 +440,116 @@ if [[ -d "$(dirname "$SAM_MIRROR")" ]]; then
   log "Mirror synced: $SAM_MIRROR"
 fi
 
+# ── Publish to feed.json (TASK-20260417-kai-002: must happen in this script, not externally) ──
+FEED_JSON="$ROOT/website/data/feed.json"
+if [[ -f "$FEED_JSON" ]] && [[ -f "$JSON_OUTPUT" ]]; then
+  log "Adding morning report to feed.json..."
+  python3 - "$FEED_JSON" "$JSON_OUTPUT" "$TODAY" <<'FEED_PYEOF'
+import json, sys
+from datetime import datetime
+
+feed_path = sys.argv[1]
+mr_path = sys.argv[2]
+today = sys.argv[3]
+
+with open(feed_path) as f:
+    feed = json.load(f)
+with open(mr_path) as f:
+    mr = json.load(f)
+
+reports = feed.get("reports", [])
+
+# Remove any existing morning report for today (idempotent)
+reports = [r for r in reports if not (r.get("type") == "morning-report" and r.get("date") == today)]
+
+# Build sections from morning report data
+exec_summary = mr.get("executive_summary", {})
+agents = mr.get("agents", {})
+
+went_well = []
+needs_attention = []
+highlights = {}
+
+for name, data in agents.items():
+    parts = []
+    w = data.get("weakness_identified", "")
+    if w and w not in ("?", "Unknown"):
+        parts.append(f"Researching: {w}.")
+    rc = data.get("research_count", 0)
+    if rc > 0:
+        parts.append(f"{rc} sources analyzed.")
+    rf = data.get("research_findings", "")
+    if rf and rf not in ("none", "N/A"):
+        parts.append(rf[:150] + "..." if len(rf) > 150 else rf)
+    nw = data.get("novel_work", "")
+    if "no novel" not in nw.lower():
+        parts.append(nw)
+    highlights[name] = " ".join(parts) if parts else "No active work this cycle."
+
+    if data.get("research_count", 0) > 0 and data.get("has_aric_data"):
+        went_well.append(f"{name.capitalize()} completed ARIC research cycle ({data['research_count']} sources)")
+
+if not went_well:
+    went_well = ["All agents have ARIC data available"]
+
+if exec_summary.get("hyo_attention"):
+    needs_attention.append(exec_summary["hyo_attention"])
+risk = exec_summary.get("biggest_risk", "")
+if risk and "no novel" in risk.lower():
+    needs_attention.append(risk)
+if not needs_attention:
+    needs_attention = ["No critical issues identified"]
+
+summary_text = (
+    f"Growth trajectory {exec_summary.get('growth_trajectory', '?')} "
+    f"— {exec_summary.get('trajectory_confidence', '?')}. "
+    f"{exec_summary.get('biggest_win', '')}. "
+    f"API spend: {exec_summary.get('api_spend_today', '?')}."
+)
+
+now_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+entry = {
+    "id": f"morning-report-kai-{today}-{datetime.now().strftime('%H%M%S')}",
+    "type": "morning-report",
+    "title": f"Morning Report — {today}",
+    "author": "Kai",
+    "authorIcon": "\U0001f454",
+    "authorColor": "#d4a853",
+    "timestamp": now_ts,
+    "date": today,
+    "sections": {
+        "summary": summary_text,
+        "wentWell": went_well,
+        "needsAttention": needs_attention,
+        "agentHighlights": highlights
+    }
+}
+
+reports.insert(0, entry)
+feed["reports"] = reports
+feed["lastUpdated"] = now_ts
+
+with open(feed_path, "w") as f:
+    json.dump(feed, f, indent=2)
+    f.write("\n")
+
+print(f"Morning report added to feed.json for {today}")
+FEED_PYEOF
+  log "Feed entry created"
+else
+  log "WARN: feed.json or morning-report.json missing — feed entry not created"
+fi
+
 # ── Commit if changes exist ──
 cd "$ROOT" || exit 1
 
 # Prevention: clear stale lock files from crashed processes (TASK-20260417-kai-002)
 rm -f .git/index.lock 2>/dev/null
 
-if git diff --quiet "$JSON_OUTPUT" 2>/dev/null; then
+if git diff --quiet "$JSON_OUTPUT" "$FEED_JSON" 2>/dev/null; then
   log "No changes to commit"
 else
-  git add "$JSON_OUTPUT" "$SAM_MIRROR" 2>/dev/null || true
+  git add "$JSON_OUTPUT" "$SAM_MIRROR" "$FEED_JSON" 2>/dev/null || true
   if git commit -m "morning-report: $TODAY (v4 — growth-driven ARIC consumption)"; then
     if git push origin main; then
       log "Pushed to origin"
