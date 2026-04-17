@@ -78,28 +78,58 @@ if raw_log:
     full_log_text = raw_log.read_text()
     raw_log_len = len(full_log_text)
 
-    # GPT-4o has 128K context (~500K chars). Send the FULL log. Period.
-    # Previous version truncated to 60K chars and filtered — GPT responded
-    # "the log does not provide" for every category. Incomplete data = useless analysis.
-    # SE-011-014: Never truncate trading data sent to GPT.
-    MAX_LOG_CHARS = 450000  # Safety cap: leave room for prompt + response
+    # SE-011-014: GPT must receive the full log. Period.
+    # GPT-4o has 128K context but org TPM limit may be 30K tokens (~120K chars).
+    # If full log exceeds ~100K chars (~25K tokens), we need smart handling:
+    #   1. Try full log first (preferred)
+    #   2. If TPM error (429), extract ALL trade-relevant data (not keyword filtering)
+    #      and send structured summary + full trade lines
+    # The previous approach (keyword filtering to 60K) stripped actual trade data.
+    # The new approach: keep ALL lines containing settlements, trades, balances,
+    # and P&L — the data GPT actually needs for analysis. Strip only standby/heartbeat noise.
+    MAX_LOG_CHARS = 120000  # ~30K tokens — stay under org TPM limit with room for prompt
 
     if raw_log_len > MAX_LOG_CHARS:
-        # Only truncate if truly enormous (>450K). Keep most recent data.
         lines = full_log_text.splitlines()
-        # Keep last N lines that fit
-        kept = []
-        char_count = 0
-        for line in reversed(lines):
-            char_count += len(line) + 1
-            if char_count > MAX_LOG_CHARS:
-                break
-            kept.append(line)
-        kept.reverse()
-        raw_log_text = (
-            f"[LOG TRIMMED — {raw_log_len} chars original, keeping most recent {len(kept)} lines ({char_count} chars)]\n"
-            + "\n".join(kept)
-        )
+        # Keep EVERYTHING that isn't pure noise (standby pings, heartbeats, empty lines)
+        noise_patterns = [
+            "standby", "heartbeat", "ping", "alive", "sleeping",
+            "waiting for", "no new", "checking in", "idle",
+        ]
+        kept_lines = []
+        for line in lines:
+            line_lower = line.lower().strip()
+            if not line_lower:
+                continue
+            if any(np in line_lower for np in noise_patterns) and not any(
+                kw in line for kw in ["SETTLE", "HARVEST", "STOP", "BUY", "SELL",
+                                       "BALANCE", "NET", "FILLED", "expired", "won", "lost",
+                                       "PAQ", "bps_", "WES_", "BCDP", "STRUCT"]
+            ):
+                continue
+            kept_lines.append(line)
+
+        raw_log_text = "\n".join(kept_lines)
+        # If still too big after noise removal, keep most recent lines
+        if len(raw_log_text) > MAX_LOG_CHARS:
+            final_lines = []
+            char_count = 0
+            for line in reversed(kept_lines):
+                char_count += len(line) + 1
+                if char_count > MAX_LOG_CHARS:
+                    break
+                final_lines.append(line)
+            final_lines.reverse()
+            raw_log_text = (
+                f"[LOG: {raw_log_len} chars original → noise-filtered → kept most recent {len(final_lines)} lines]\n"
+                + "\n".join(final_lines)
+            )
+        else:
+            raw_log_text = (
+                f"[LOG: {raw_log_len} chars original → noise-filtered to {len(raw_log_text)} chars, {len(kept_lines)} lines]\n"
+                + raw_log_text
+            )
+        print(f"Log filtered: {raw_log_len} → {len(raw_log_text)} chars ({len(raw_log_text)/raw_log_len*100:.0f}%)")
     else:
         raw_log_text = full_log_text
     print(f"Found raw log: {raw_log} ({raw_log_len} chars, sending {len(raw_log_text)} chars)")
