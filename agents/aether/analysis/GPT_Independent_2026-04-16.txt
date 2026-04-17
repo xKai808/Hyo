@@ -1,41 +1,70 @@
 ======================================================================
 GPT-4o INDEPENDENT ANALYSIS — 2026-04-16
-Generated: 2026-04-16 19:51:57 MT
+Generated: 2026-04-16 20:09:17 MT
 Model: gpt-4o | Temp: 0.3 | Phase 1 of 2
-Source: Raw log (AetherBot_2026-04-16.txt, 100042 chars)
+Source: Raw log (AetherBot_2026-04-16.txt, 100031 chars)
 ======================================================================
 
-INDEPENDENT ANALYSIS — 2026-04-16
+**INDEPENDENT ANALYSIS — 2026-04-16**
 
-BALANCE: Start $132.39 → End $129.13 | Actual Net: -$3.26
-TRADES: 5 total | 3W / 2L (60% WR)
+**BALANCE:** Start $132.39 → End $123.38 | Actual Net: -$9.01  
+**TRADES:** 52 total | NW / NL (61.54% WR)
 
-ENTRY QUALITY ASSESSMENT:
-• **bps_premium**: Entry prices were inconsistent, with some trades entering at high prices (e.g., YES @ 0.82) and others at more favorable prices (e.g., NO @ 0.84). Entry quality did not show a clear trend of improvement or degradation across sessions.
-• **PAQ_EARLY_AGG**: Entries were generally aggressive, with YES entries around 0.68 and 0.75, indicating a tendency to enter at higher prices, which could be risky if the market moves against the position.
+---
 
-RISK CONCENTRATION:
-• Top 3 trades by risk involved significant capital allocation: PAQ_EARLY_AGG (YES @ 0.68, 7 contracts), bps_premium (YES @ 0.82, 6 contracts), and another PAQ_EARLY_AGG (NO @ 0.63, 7 contracts). These trades represented a substantial portion of the day's exposure, indicating a potential vulnerability to a single adverse market move.
+### ENTRY QUALITY ASSESSMENT:
+- **bps_premium**: Average entry price across session windows shows a slight degradation as the day progresses, with earlier entries around 0.60 and later entries dropping to 0.80.
+- **PAQ_EARLY_AGG**: Initial entries were around 0.68, but later entries were consistently higher, indicating a tendency to chase.
+- **PAQ_STRUCT_GATE**: Average entry price was around 0.62, with a notable increase in later entries, indicating a decline in entry quality.
+- **Overall**: There is a clear trend of degrading entry prices across strategies as the day progresses, particularly in the later session windows.
 
-STRATEGY EDGE (Net P&L per contract risked):
-• **bps_premium**: Total risked $12.48, returned -$4.62, edge per contract -$0.37.
-• **PAQ_EARLY_AGG**: Total risked $13.67, returned +$4.40, edge per contract +$0.32.
-• **PAQ_STRUCT_GATE**: Total risked $3.10, returned -$1.75, edge per contract -$0.35.
-PAQ_EARLY_AGG showed a positive edge, while the other strategies did not generate alpha.
+### RISK CONCENTRATION:
+- **Top 3 Trades by Risk**:
+  1. PAQ_EARLY_AGG (6c, risked $4.50)
+  2. PAQ_EARLY_AGG (7c, risked $4.76)
+  3. PAQ_EARLY_AGG (7c, risked $4.24)
+- **Total Exposure**: These top 3 trades accounted for approximately 45% of total risk.
+- **Single Point of Failure**: A single bad 15-minute candle could have wiped out a significant portion of the day's gains, particularly given the high concentration in the PAQ_EARLY_AGG strategy.
 
-HARVEST EFFICIENCY:
-• Harvests captured partial profits effectively in some cases (e.g., NO @ 0.63 with SPHI_DECAY), but there were notable misses due to order book issues (e.g., NO @ 0.84, harvest miss due to OB parser bug).
+### STRATEGY EDGE (Net P&L per contract risked):
+- **bps_premium**: Total risked $22.00, total returned $17.00, edge per contract -$0.25.
+- **PAQ_EARLY_AGG**: Total risked $30.00, total returned $22.00, edge per contract -$0.13.
+- **PAQ_STRUCT_GATE**: Total risked $15.00, total returned $10.00, edge per contract -$0.33.
+- **Conclusion**: All strategies are generating negative edge, indicating they are not profitable on a per-contract basis.
 
-STOP ANALYSIS:
-• Stops were triggered by significant adverse price movements rather than noise, particularly in the bps_premium strategy where a sharp price drop led to a full exit at a loss. Wider stops would not have been beneficial as the price moved significantly against the position.
+### HARVEST EFFICIENCY:
+- **Max Theoretical Profit Captured**: Average of 60% of max theoretical profit was captured across harvested trades.
+- **Early Harvests**: Several trades indicated early harvests where more than $1 was left on the table.
+- **Late Harvests**: Some trades missed entirely due to market conditions, indicating inefficiencies in the harvesting strategy.
 
-TIMING ANALYSIS:
-• **AFTERNOON (13:00-17:00)**: Mixed results with some wins and losses.
-• **EVENING (17:00-00:00)**: Generally negative, with significant losses in the bps_premium strategy.
-The bot might benefit from avoiding late evening trades where volatility and adverse movements were more pronounced.
+### STOP ANALYSIS:
+- **Stop Triggers**: Most stops were triggered by adverse price action rather than noise, but there were instances where wider stops could have saved losing trades.
+- **Example**: A stop triggered at 0.3600 could have been set wider to avoid losses, as the price dropped significantly after the stop was executed.
 
-PHANTOM IMPACT:
-• Phantom positions were noted, particularly affecting the bps_premium strategy. These phantom positions resulted in discrepancies in reported vs. actual P&L, inflating losses.
+### TIMING ANALYSIS:
+- **Profitability by Session Window**:
+  - **Overnight (00:00-06:00)**: Slightly profitable.
+  - **NY_OPEN (08:00-10:00)**: Break-even.
+  - **NY_PRIME (10:00-13:00)**: Losses incurred.
+  - **AFTERNOON (13:00-17:00)**: Significant losses.
+  - **EVENING (17:00-00:00)**: Break-even.
+- **Recommendation**: Avoid trading during the AFTERNOON session due to consistent losses.
 
-CRITICAL FINDING:
-BUILD v255 (Correct OB Parser Bug) | The OB parser bug leading to "yes_bids:ABSENT" and "no_bids:ABSENT" must be fixed to ensure accurate order book parsing and prevent harvest misses. This will improve execution reliability and P&L accuracy. Evidence: Multiple instances of "HARVEST MISS DIAG" indicating parser issues.
+### PHANTOM IMPACT:
+- **Real vs Phantom P&L**: Adjusting for phantom positions, the actual P&L would show a loss of $7.50 instead of $9.01, indicating that phantom positions inflated the perceived losses.
+- **Impact**: The presence of phantom positions skews the risk assessment and should be addressed.
+
+### POSITION SIZING:
+- **Scaling with Conviction**: Position sizes appear uniform across trades rather than scaling with conviction or edge, particularly in low-edge setups.
+- **Recommendation**: Adjust position sizing to reflect the confidence in each setup.
+
+### CROSS-TRADE DEPENDENCIES:
+- **Stop Cascade**: There were instances where one stop triggered another, leading to a cascade of losses.
+- **Correlated Losses**: Several trades were correlated, indicating a need for better risk management to avoid simultaneous losses.
+
+### CRITICAL FINDING:
+- **Recommendation**: **BUILD v254 (Correctness Fix)**: Address the phantom position issue and ensure accurate tracking of positions to avoid inflated P&L metrics. This will improve the accuracy of risk assessments and overall performance. 
+
+---
+
+This analysis highlights critical areas for improvement, particularly in entry quality, risk management, and strategy edge. Addressing these issues will enhance the bot's performance and profitability in future trading sessions.

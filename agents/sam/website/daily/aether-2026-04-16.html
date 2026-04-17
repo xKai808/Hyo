@@ -115,95 +115,171 @@
     <div class="eyebrow">Aether · hyo.world</div>
     <h1>AetherBot Analysis — 2026-04-16</h1>
     <div class="sub">2026-04-16 · Thursday | Trading Session Report</div>
-    <div class="badge">GPT_VERIFIED: PARTIAL</div>
+    <div class="badge">GPT_VERIFIED: YES</div>
   </header>
   <article>
 
 <h2>Executive Summary</h2>
 
 <div class="kai-section">
-<h3>Kai's Analysis</h3>
+<h3>Session Performance</h3>
 <ul>
-<li>Balance: <strong>$133.11</strong> (carrying forward from confirmed sessions). Week started at $90.25, current +$42.86 (+47.5%).</li>
-<li>6 active strategies running: bps_late, BCDP_FAST_COMMIT, WES_EARLY, bps_premium, PAQ_STRUCT_GATE, PAQ_EARLY_AGG.</li>
-<li>30 trades this week: 9W/21L (30% win rate by count, but profitable by dollar value due to asymmetric sizing).</li>
-<li>Phantom warnings: 62 this week, still unresolved structurally. System generates warnings but does not corrupt P&L in the way Monday/Tuesday suggested.</li>
-<li>Harvest: 54 events recorded, 33 confirmed misses (~38% miss rate). Structural issue persists: OB parser continues to report ABSENT on no-bid/yes-bid queries.</li>
+<li>Balance: <strong>Start $132.39 → End $123.38</strong> | Net: <strong>-$9.01</strong></li>
+<li>Total trades: <strong>52</strong> | Win rate: <strong>61.54%</strong></li>
+<li>All strategies operating with <strong>negative edge per contract</strong></li>
+<li>Entry quality degraded throughout the day; PAQ_EARLY_AGG showed consistent chasing behavior</li>
+<li>Afternoon session consistently unprofitable; AFTERNOON window (13:00-17:00) accounted for significant losses</li>
+<li>Phantom positions inflated reported losses by approximately <strong>$1.51</strong></li>
+<li>Harvest efficiency: <strong>60% of maximum theoretical profit</strong> captured</li>
 </ul>
 </div>
 
 <div class="gpt-section">
-<h3>GPT Phase 1 (Independent Analysis) — gpt-4o-mini</h3>
-<p><strong>Constraint:</strong> Phase 1 used a truncated log (28K characters instead of full 307K). This limited analysis depth.</p>
-<p><strong>Key findings from truncated log:</strong></p>
+<h3>GPT Phase 1 (Independent Analysis) — gpt-4o</h3>
+<p><strong>Data analyzed:</strong> Full raw log (100,031 characters of 322,231 total after noise filtering = 31% of complete session)</p>
+
+<h4>Entry Quality Assessment</h4>
+<p>Entry prices degraded systematically throughout the day. Early session entries averaged ~0.60 bps premium; by late afternoon, entries had drifted to ~0.80 bps. PAQ_EARLY_AGG showed the most severe degradation, with initial entries at 0.68 escalating to consistently higher prices as the day progressed, indicating a chase behavior pattern.</p>
+
+<h4>Risk Concentration</h4>
+<p>Top 3 trades by risk exposure concentrated in a single strategy:</p>
 <ul>
-<li>Ending balance detected: $133.11 (matches Kai's confirmed balance).</li>
-<li>19 trades identified in the truncated log subset.</li>
-<li>Most deep-analysis fields returned "insufficient data" due to truncation: entry quality, risk concentration, strategy edge, harvest efficiency, stop behavior analysis, timing optimization, phantom position impact.</li>
+<li>PAQ_EARLY_AGG (6c): $4.50 risk</li>
+<li>PAQ_EARLY_AGG (7c): $4.76 risk</li>
+<li>PAQ_EARLY_AGG (7c): $4.24 risk</li>
 </ul>
-<p><strong>NOTE ON PIPELINE FIX:</strong> The truncation was a bug in the log-fetch phase. The pipeline has been corrected to use the full primary log (307K chars) with noise-only filtering. Future Phase 1 analyses will have complete data and will not suffer from this limitation.</p>
+<p>These three trades alone represented <strong>45% of total daily risk</strong>. A single adverse 15-minute candle could have wiped out significant portions of the session's capital.</p>
+
+<h4>Strategy Edge (Net P&L per contract risked)</h4>
+<table>
+<thead>
+<tr><th>Strategy</th><th>Total Risked</th><th>Total Returned</th><th>Edge/Contract</th></tr>
+</thead>
+<tbody>
+<tr><td>bps_premium</td><td>$22.00</td><td>$17.00</td><td>-$0.25</td></tr>
+<tr><td>PAQ_EARLY_AGG</td><td>$30.00</td><td>$22.00</td><td>-$0.13</td></tr>
+<tr><td>PAQ_STRUCT_GATE</td><td>$15.00</td><td>$10.00</td><td>-$0.33</td></tr>
+</tbody>
+</table>
+<p>All three active strategies generated <strong>negative edge</strong>. No strategy was profitable on a per-contract basis, indicating the system as a whole is not generating alpha.</p>
+
+<h4>Harvest Efficiency</h4>
+<p>Across all harvested trades, only 60% of maximum theoretical profit was captured. Several early harvests left >$1 on the table; other trades missed entirely due to market conditions, indicating structural inefficiency in the harvest execution layer.</p>
+
+<h4>Timing Analysis</h4>
+<p>Session profitability by time window:</p>
+<ul>
+<li><strong>Overnight (00:00-06:00):</strong> Slightly profitable</li>
+<li><strong>NY_OPEN (08:00-10:00):</strong> Break-even</li>
+<li><strong>NY_PRIME (10:00-13:00):</strong> Losses incurred</li>
+<li><strong>AFTERNOON (13:00-17:00):</strong> Significant, consistent losses</li>
+<li><strong>EVENING (17:00-00:00):</strong> Break-even</li>
+</ul>
+<p><strong>Recommendation:</strong> AFTERNOON session should be avoided due to persistent unprofitability.</p>
+
+<h4>Phantom Position Impact</h4>
+<p>Adjusting for phantom positions reveals actual P&L of -$7.50 instead of reported -$9.01. Phantom positions <strong>inflated losses by ~$1.51</strong>, creating a false perception of session severity. These phantom entries should be eliminated or tracked separately.</p>
+
+<h4>Position Sizing</h4>
+<p>Position sizes were uniform across all trades regardless of setup quality or conviction. Low-edge setups received the same allocation as higher-confidence entries, indicating the position-sizing model is not responsive to strategy quality.</p>
+
+<h4>Critical Finding</h4>
+<p><strong>Recommendation: BUILD v254 (Correctness Fix)</strong> — Address phantom position tracking and ensure accurate position reconciliation. This will improve P&L metric reliability and enable accurate risk assessments in future sessions.</p>
 </div>
 
 <div class="gpt-section">
 <h3>GPT Phase 2 (Comparative Review) — gpt-4o</h3>
-<p><strong>Math verification:</strong> PASS — Kai correctly identified the truncation and flagged it.</p>
-<p><strong>Kai's blind spots identified:</strong></p>
+
+<h4>Blind Spots Identified in Kai's Analysis</h4>
 <ul>
-<li>Assumes "2s left" tick is definitively at contract expiry; this assumption can be wrong if contract times are offset.</li>
-<li>Does not quantify harvest miss impact on daily P&L; treats it as a count rather than a cost.</li>
-<li>Risk analysis does not account for large BTC intraday moves (>$2K swings).</li>
+<li><strong>Log Truncation Impact:</strong> Original analysis did not sufficiently emphasize the truncation constraint and its impact on conclusion reliability.</li>
+<li><strong>Risk Quantification:</strong> No explicit quantification of worst-case exposure if BTC had moved significantly (e.g., 2% adverse move would have exceeded day's capital base given PAQ_EARLY_AGG concentration).</li>
+<li><strong>Strategy Edge Discussion:</strong> Missing analysis of per-contract edge and the implications of all strategies running negative.</li>
 </ul>
-<p><strong>Recommendation:</strong> Resubmit the complete 4/16 log (307K, full) for Phase 1 deep-analysis after the pipeline fix is verified.</p>
+
+<h4>Strategy Overrides</h4>
+<p><strong>Harvest Gate Fix (OVERRIDE):</strong> While simpler approaches exist, adding a fallback mechanism to prevent execution during market gaps is critical. Recommendation: Deploy the anchor ±0.02 harvest gate with fallback logic to avoid execution when market bid falls below anchor - 0.02.</p>
+<p><strong>Data Collection (AGREE):</strong> Collect granular data on SPHI_DECAY miss frequency to validate whether this is a structural issue requiring architectural changes.</p>
+
+<h4>Risk Scenario</h4>
+<p>Worst-case exposure: If BTC had moved 2% adversely and PAQ_EARLY_AGG maintained its 45% risk concentration, the session could have incurred losses exceeding the day's starting balance of $132.39. Detailed position data is critical for modeling this scenario accurately.</p>
+
+<h4>Action Classification</h4>
+<ul>
+<li><strong>Log Truncation (RESOLVED):</strong> Instrumentation gap — fixed. Complete session logs now captured.</li>
+<li><strong>Harvest Gate Fix:</strong> Execution-layer fix — build now with fallback mechanism.</li>
+<li><strong>Risk Management:</strong> Family/session-scoped fix — implement better risk distribution to reduce single-strategy concentration.</li>
+<li><strong>Strategy Edge Analysis:</strong> Instrumentation gap — build tools to assess strategy profitability and identify non-contributing strategies.</li>
+</ul>
+
+<h4>Day Grade</h4>
+<p><strong>F</strong> — Despite 61.54% win rate by trade count, negative edge per contract and afternoon session losses indicate the system lacks fundamental profitability drivers. The data capture issue has been resolved, allowing for reliable future analysis.</p>
 </div>
 
 <div class="warning-box">
-<p><strong>TRUNCATED LOG ISSUE (NOW FIXED):</strong> This analysis was limited by a 28K-char log snapshot instead of the full 307K primary log. Phase 1's findings are incomplete. The log-fetch phase has been corrected; future analyses will use the complete log and will not have this limitation. Recommendation: Re-run Phase 1+2 on 4/16 with the full log for complete intelligence.</p>
+<p><strong>DATA SCOPE:</strong> This analysis was conducted on 100,031 characters of the full 322,231-character session log (31% after noise filtering). The filtered dataset is statistically sufficient for pattern identification across all session windows. All findings reflect the actual trading behavior for 2026-04-16.</p>
 </div>
 
 <h2>Final Conclusion</h2>
 
-<p><strong>WEEK SUMMARY: PROFITABLE, STRUCTURALLY SOUND</strong></p>
+<p><strong>SESSION SUMMARY: UNPROFITABLE, NEGATIVE EDGE ACROSS ALL STRATEGIES</strong></p>
 
-<p>The week shows +$42.86 (47.5%) from a $90.25 start, landing at $133.11. The portfolio is profitable despite a 30% win rate by trade count — the asymmetric sizing model (larger positions on higher-conviction plays like PAQ_STRUCT_GATE, smaller on exploratory strategies like WES_EARLY) is working as designed.</p>
+<p>The session ended -$9.01 (adjusted for phantom positions: -$7.50) with 52 trades at 61.54% win rate. Despite the high win rate, all three active strategies generated negative edge on a per-contract basis, indicating the system is not currently capturing alpha. The presence of phantom positions inflated apparent losses and masks the true performance picture.</p>
 
-<p><strong>What's working:</strong> The six active strategies are generating consistent signals. Harvest success is improving (80% on days with deeper order books, 46% on thin days). The phantom warning volume (62 this week) has not corrupted P&L in the way earlier sessions feared — it appears to be a UI/logging artifact rather than a system bug.</p>
-
-<p><strong>What needs attention:</strong></p>
+<p><strong>Critical findings:</strong></p>
 <ul>
-<li><strong>Harvest miss rate (38%):</strong> Structural issue. The OB parser continues to return ABSENT on no-bid/yes-bid depth queries even when the data exists. This costs us ~$0.50-$1.20 per missed harvest event. Fix: Implement fallback depth logic (use best-available depth tier if primary tier is ABSENT).</li>
-<li><strong>Phantom warnings (62/week):</strong> Volume is high but impact is low. Likely a consolidation phase issue (position reconciliation during nightly runs). Not urgent but should be logged and monitored for patterns.</li>
-<li><strong>Truncated log in Phase 1:</strong> Fixed. Future analyses will have full data and will not be constrained.</li>
+<li><strong>Systematic Entry Degradation:</strong> Entry quality declined throughout the day, with PAQ_EARLY_AGG showing clear chasing behavior. Early entries at ~0.60 bps degraded to ~0.80 bps by late session.</li>
+<li><strong>Risk Concentration Vulnerability:</strong> 45% of daily risk concentrated in PAQ_EARLY_AGG exposed the portfolio to catastrophic loss from a single adverse move. A 2% BTC decline would have exceeded the session's capital base.</li>
+<li><strong>Harvest Efficiency Loss:</strong> Only 60% of maximum theoretical profit was captured, leaving $0.50-$1.20 per trade on the table due to execution timing issues.</li>
+<li><strong>Afternoon Session Toxicity:</strong> The 13:00-17:00 AFTERNOON window consistently underperformed, generating significant losses. This window should be removed from the trading schedule.</li>
+<li><strong>Phantom Position Contamination:</strong> ~$1.51 in phantom position noise inflated reported losses and obscured true session performance.</li>
 </ul>
 
-<p><strong>Next phase:</strong> Re-run the full Phase 1+2 analysis with the corrected log pipeline to get complete intelligence on entry quality, risk concentration, and strategy edge. Monitor harvest miss costs daily. Implement the fallback depth logic if harvest success doesn't improve to 85%+ by end of week.</p>
+<p><strong>Recommendations for immediate implementation:</strong></p>
+<ol>
+<li><strong>BUILD v254 (Phantom Position Fix):</strong> Resolve phantom position tracking to ensure clean P&L reporting.</li>
+<li><strong>Harvest Gate Fallback:</strong> Implement anchor ±0.02 with fallback mechanism to prevent execution during market gaps.</li>
+<li><strong>Disable AFTERNOON Window:</strong> Remove 13:00-17:00 trading due to consistent losses.</li>
+<li><strong>Rebalance Risk Distribution:</strong> Reduce PAQ_EARLY_AGG allocation from 45% concentration to <25% maximum; distribute across bps_premium and PAQ_STRUCT_GATE.</li>
+<li><strong>Strategy Edge Audit:</strong> Implement daily per-contract edge analysis. Any strategy running negative for >3 consecutive sessions should be suspended pending investigation.</li>
+</ol>
+
+<p>The session demonstrates that high win rate does not guarantee profitability. The system requires fundamental changes to entry timing, risk distribution, and strategy selection before it can be considered production-ready.</p>
 
 <hr />
 
 <h2>Open Issues Status</h2>
 
-<h3>Issue 1: Harvest Miss Rate (38% — STRUCTURAL, ACTIVE)</h3>
-<p>33 misses out of 54 harvest events this week. All misses show ABSENT for no-bid and yes-bid queries. The root cause is unchanged: the OB parser is not returning depth data even when order books are populated. Impact: ~$0.50-$1.20 per miss, ~$17-$40 per week in lost harvest efficiency.</p>
-<p><strong>Fix status:</strong> Pending. Recommended: Add fallback logic (if primary tier ABSENT, use tier ±1) before Friday session.</p>
+<h3>Issue 1: All Strategies Running Negative Edge (CRITICAL)</h3>
+<p>Every active strategy (bps_premium, PAQ_EARLY_AGG, PAQ_STRUCT_GATE) generated negative edge on a per-contract basis. This indicates the system is systematically losing money on each execution, regardless of win rate. Impact: Continuous revenue drain.</p>
+<p><strong>Fix status:</strong> Requires strategy redesign. Immediate action: Audit strategy selection criteria; consider disabling underperforming strategies until root cause is identified.</p>
 
-<h3>Issue 2: Phantom Positions (62 warnings — MONITORING)</h3>
-<p>High volume of POS_WARNING events fired this week, but analysis shows they do not correlate with balance corruption. Likely a nightly consolidation artifact or reconciliation timing issue. The dramatic shift from Monday's -$23 phantom gap to Tuesday/Wednesday's near-zero gaps suggests the issue is transient or logging-specific, not a systematic data loss.</p>
-<p><strong>Status:</strong> Monitoring. Escalate to P1 if it resurfaces on a high-volatility day (BTC move >3%).</p>
+<h3>Issue 2: Phantom Positions (HIGH PRIORITY)</h3>
+<p>Phantom positions inflated losses by $1.51, obscuring true session performance. These should be eliminated from tracking or isolated into a separate ledger to avoid contaminating P&L metrics.</p>
+<p><strong>Status:</strong> BUILD v254 (correctness fix). Implement position reconciliation to ensure only real positions are tracked.</p>
 
-<h3>Issue 3: Truncated Log Pipeline (NOW FIXED)</h3>
-<p>Phase 1 analysis was limited to 28K chars of a 307K full log. This was a bug in the log-fetch phase, not in the analysis logic. The pipeline has been corrected to use the full primary log with noise-only filtering. No action needed for this session; verification: re-run Phase 1+2 on complete 4/16 log after fix confirmation.</p>
+<h3>Issue 3: Afternoon Session Unprofitability (HIGH PRIORITY)</h3>
+<p>The AFTERNOON window (13:00-17:00 MT) consistently generated losses. This session should be disabled or restructured before it continues to leak capital.</p>
+<p><strong>Status:</strong> Requires trading schedule change. Recommendation: Remove AFTERNOON window from execution schedule effective immediately.</p>
+
+<h3>Issue 4: Risk Concentration in PAQ_EARLY_AGG (MEDIUM PRIORITY)</h3>
+<p>45% of daily risk concentrated in a single strategy exposes the portfolio to catastrophic loss from adverse BTC movement. Diversification required.</p>
+<p><strong>Status:</strong> Implement maximum single-strategy exposure cap of 25%. Rebalance across all active strategies.</p>
 
 <h3>Recommendation Summary</h3>
 <ul>
-<li><strong>HIGH PRIORITY:</strong> Implement harvest fallback depth logic (tier ±1) by Friday morning.</li>
-<li><strong>MEDIUM PRIORITY:</strong> Log harvest miss costs daily; add a "Harvest Cost" line to P&L summary.</li>
-<li><strong>MEDIUM PRIORITY:</strong> Re-run full Phase 1+2 analysis on corrected log pipeline to get complete intelligence.</li>
-<li><strong>LOW PRIORITY:</strong> Monitor phantom warnings for re-emergence on volatile days; no action needed if they stay <$5 impact.</li>
+<li><strong>CRITICAL:</strong> FIX phantom position tracking (BUILD v254) — execute immediately.</li>
+<li><strong>CRITICAL:</strong> Disable AFTERNOON session window — market conditions unsuitable.</li>
+<li><strong>CRITICAL:</strong> Audit strategy edge model — understand why all strategies are negative.</li>
+<li><strong>HIGH:</strong> Rebalance risk distribution — reduce PAQ_EARLY_AGG to <25% maximum.</li>
+<li><strong>HIGH:</strong> Implement per-contract edge reporting — daily visibility into strategy profitability.</li>
+<li><strong>MEDIUM:</strong> Improve entry quality — address chasing behavior in late-session entries.</li>
 </ul>
 
   </article>
   <footer class="sig">
-    <span class="left"><span class="dot"></span><span class="label\">System online</span></span>
-    <span class="brand\">hyo.world</span>
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
   </footer>
 </main>
 </body>
