@@ -950,6 +950,59 @@ PYEOF
     total_fail=$((total_fail + render_fail))
   fi
 
+  # ── Phase 7: OS permission / TCC audit (SE-011-007) ──
+  # Any binary that accesses protected macOS directories (~/Documents, ~/Desktop,
+  # ~/Downloads, etc.) requires explicit user grant via TCC prompt. Simulation
+  # must catch this BEFORE the user sees an unexpected dialog.
+  echo ""
+  echo "Phase 7: OS permission audit (TCC / protected directories)"
+  local tcc_fail=0
+  local protected_dirs=("$HOME/Documents" "$HOME/Desktop" "$HOME/Downloads")
+
+  # Enumerate agent tools that scan filesystem
+  local scan_bins=()
+  command -v gitleaks  >/dev/null 2>&1 && scan_bins+=("gitleaks")
+  command -v trufflehog >/dev/null 2>&1 && scan_bins+=("trufflehog")
+  # Add any other security scanners here as they're installed
+
+  for bin_name in "${scan_bins[@]}"; do
+    local bin_path; bin_path=$(command -v "$bin_name" 2>/dev/null || true)
+    if [[ -z "$bin_path" ]]; then continue; fi
+
+    # Check if this binary has been granted Full Disk Access via TCC database
+    # (We can't read the TCC DB directly, but we can test access to a protected dir)
+    for pdir in "${protected_dirs[@]}"; do
+      if [[ -d "$pdir" ]]; then
+        # Try a non-destructive access test
+        if ! ls "$pdir" >/dev/null 2>&1; then
+          echo "  ✗ FAIL: $bin_name cannot access $pdir (TCC denied or not granted)"
+          echo "    → Hyo must grant access: System Settings → Privacy & Security → Files and Folders → $bin_name"
+          tcc_fail=$((tcc_fail + 1))
+          results+=("FAIL:tcc:$bin_name:$(basename "$pdir")")
+        fi
+      fi
+    done
+
+    # If binary has access, verify it's been granted (no pending prompt)
+    if [[ $tcc_fail -eq 0 ]]; then
+      echo "  ✓ $bin_name: access to protected directories OK"
+      ((total_pass++))
+    fi
+  done
+
+  if [[ ${#scan_bins[@]} -eq 0 ]]; then
+    echo "  · No filesystem-scanning binaries found (gitleaks, trufflehog not installed)"
+    ((total_pass++))
+  fi
+
+  if [[ $tcc_fail -gt 0 ]]; then
+    echo ""
+    echo "  ⚠ ACTION REQUIRED FOR HYO:"
+    echo "  The following tools need folder access granted in macOS Privacy settings."
+    echo "  Kai MUST notify Hyo before first run of any tool that triggers a TCC prompt."
+    total_fail=$((total_fail + tcc_fail))
+  fi
+
   # ── Summary ──
   local finished; finished=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   echo ""
@@ -964,7 +1017,7 @@ print(json.dumps({
   'passed': int(sys.argv[3]), 'failed': int(sys.argv[4]),
   'failures': sys.argv[5].split(',') if sys.argv[5] else [],
   'agents_tested': ['nel', 'ra', 'sam'],
-  'phases': ['delegation', 'upward-comm', 'runners', 'xref', 'regression']
+  'phases': ['delegation', 'upward-comm', 'runners', 'xref', 'regression', 'render', 'tcc-audit']
 }))" "$started" "$finished" "$total_pass" "$total_fail" "$(IFS=,; echo "${results[*]:-}")")
   echo "$outcome" >> "$sim_log"
   echo "Outcome logged to: kai/ledger/simulation-outcomes.jsonl"

@@ -45,6 +45,21 @@
    Edited a file → read it back, confirm the change
    Updated data → check the consumer renders it
    "It should work" is not proof. "I fetched it and saw X" is proof.
+
+6. WILL THIS TRIGGER AN OS PROMPT HYO HASN'T SEEN BEFORE? (SE-011-007)
+   Any tool/binary that touches ~/Documents, ~/Desktop, ~/Downloads,
+   Camera, Microphone, Contacts, Calendar, or Location will trigger a
+   macOS TCC permission dialog the FIRST time it runs.
+   Installing a new binary? → Check if it accesses protected dirs.
+   Running a tool for the first time? → Same check.
+   If YES → Notify Hyo BEFORE execution. Tell them:
+     (a) what app/tool will request access
+     (b) what it will access and why
+     (c) what the dialog will look like
+     (d) that they should click "Allow"
+   If NO advance notice was given → DO NOT EXECUTE.
+   This is blocking. No exceptions. Hyo denied cipher's access because
+   we didn't warn them. That's our fault, not theirs.
 ```
 
 ---
