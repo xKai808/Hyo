@@ -195,11 +195,13 @@ fi
 # ─── 6. HQ HTML exists ────────────────────────────────────────────────────
 log "--- HTML Pages ---"
 for page in "/hq.html" "/marketplace.html" "/aurora.html"; do
-  code=$(curl -s -o /dev/null -w "%{http_code}" "$SITE$page" 2>/dev/null || echo "000")
+  code=$(curl -sL -o /dev/null -w "%{http_code}" "$SITE$page" 2>/dev/null || echo "000")
   if [[ "$code" == "200" ]]; then
     pass "$page: HTTP 200"
   elif [[ "$code" == "401" || "$code" == "403" ]]; then
     pass "$page: HTTP $code (auth-gated, expected)"
+  elif [[ "$code" == "308" || "$code" == "301" || "$code" == "307" ]]; then
+    pass "$page: HTTP $code (redirect, normal for Vercel domain config)"
   else
     fail "$page: HTTP $code"
   fi
