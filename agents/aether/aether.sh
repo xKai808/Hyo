@@ -278,8 +278,7 @@ cw["currentBalance"] = round(latest_balance, 2)
 cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
 cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw.get("startingBalance") else 0
 
-# Track both for transparency
-cw["settledPnl"] = settled_pnl
+# Internal tracking only — settled P&L not shown on dashboard (confusing when premium dominates)
 cw["settledTrades"] = total_trades
 cw["wins"] = wins
 cw["losses"] = losses
@@ -325,9 +324,10 @@ with open(metrics_file, "w") as f:
     json.dump(data, f, indent=2)
     f.write("\n")
 
-print(f"Full metrics extracted: bal ${old_balance}→${latest_balance}, "
-      f"settled PnL ${settled_pnl} ({total_trades} settled: {wins}W/{losses}L, {win_rate}%), "
-      f"{len(strat_stats)} strategies from raw logs")
+pnl_val = round(latest_balance - cw["startingBalance"], 2)
+print(f"Metrics: bal ${latest_balance} (start ${cw['startingBalance']}), "
+      f"PnL ${pnl_val} ({round(pnl_val/cw['startingBalance']*100,1) if cw['startingBalance'] else 0}%), "
+      f"{total_trades} settled ({wins}W/{losses}L), {len(strat_stats)} strategies")
 PYEOF
 
   # Sync to dual path
