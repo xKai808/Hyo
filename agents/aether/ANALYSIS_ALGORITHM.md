@@ -65,22 +65,35 @@ Q3.7: How many harvest attempts? How many succeeded?
 
 **OUTPUT:** Table 2 — Strategy Summary. The sort order is edge-per-contract, not win rate.
 
-### Gate 4: Timing Assessment
+### Gate 4: Session Window Breakdown
 
-For EACH session window that had trades:
+For EACH session window, provide trade-level detail:
+
+**Windows (all MTN):**
+- **ASIA_OPEN** (00:00–03:00): Overnight activity, typically small positions
+- **EU_MORNING** (03:00–05:00): European open, tracked per Issue #3
+- **NY_PRIME** (09:00–15:00): The profit engine — largest positions, highest volume
+- **EVENING** (17:00–22:00): Secondary session, regime-sensitive to BTC direction
 
 ```
-Q4.1: How many trades in this window?
-Q4.2: What was the net P&L?
-Q4.3: Which strategies traded in this window?
-Q4.4: ★ Is this window WORTH TRADING?
-      Calculate: (net P&L) ÷ (total risk deployed in window).
-      If ratio < 0 for 3+ consecutive sessions → recommend sitting out.
-Q4.5: Are entries in this window getting WORSE over time?
-      Compare average entry price to prior sessions for same strategy/window.
+Q4.1: For each window — list EVERY trade with timestamp, strategy, side,
+      contracts, outcome, net P&L. Not aggregates — individual trades.
+Q4.2: Window net P&L: ____
+Q4.3: Which strategies dominated this window? Which lost?
+Q4.4: ★ Cross-session pattern: Is this window net positive across 3+ sessions?
+      If YES → the window is working. DO NOT gate it based on one bad session.
+      If NO → Is the pattern regime-driven (BTC direction) or structural (strategy)?
+Q4.5: For EU_MORNING specifically: track post-04:15 entries separately.
+      Evidence shows all post-04:15 entries are losses. Monitor this boundary.
+Q4.6: For EVENING specifically: track BTC spot direction at trade entry vs.
+      BTC direction at settlement. If all losses show same BTC directional
+      pattern → regime filter research needed (not a build).
 ```
 
-**OUTPUT:** Table 3 — Session × Strategy Breakdown.
+**OUTPUT:** Table 3 — Window × Strategy × Individual Trade Breakdown.
+**CRITICAL:** If a window turns from positive to negative, the first question is
+"what changed in BTC regime?" not "should we gate this window?" Market variance
+is not a code bug. Separate the two before recommending action.
 
 ### Gate 5: Risk Assessment
 
@@ -103,21 +116,46 @@ Q5.6: Is the current balance above or below the weekly starting balance?
 
 **GATE:** If Q5.1 drawdown > 15% of starting balance, or Q5.4 worst-case > 20% of balance → P0 risk flag. Recommend position size reduction before next session.
 
-### Gate 6: Harvest System Health
+### Gate 6: Stop & Harvest Mechanism Analysis
+
+This gate evaluates whether exit MECHANISMS are working correctly, separate
+from whether entry STRATEGIES are profitable. A mechanism failure (BDI=0 hold
+at expiry) is a code bug. A strategy loss (bad entry price) is market variance.
+The analysis must separate these.
 
 ```
-Q6.1: Total harvest attempts today: ____
-Q6.2: Successful (DONE): ____  |  Failed (MISS): ____
-Q6.3: Success rate: ____%
-Q6.4: ★ For successful harvests: what % of THEORETICAL MAX profit
-      was captured? (harvest proceeds ÷ full settlement value)
-      If < 60% → harvests are firing too early.
-      If > 90% → harvests are barely adding value over settlement.
-Q6.5: For failed harvests: do they all show the same diagnostic?
-      (e.g., "yes_bids:ABSENT" = OB parser bug, not market condition)
-Q6.6: Estimated $ left on table from harvest misses: ____
-      (contracts that missed × estimated harvest value)
-Q6.7: Is harvest rate improving or declining vs. prior sessions?
+Q6.1: HARVEST ATTEMPTS
+      Total attempts: ____
+      Successful (DONE): ____  |  Failed (MISS): ____
+      Success rate: ____%
+Q6.2: HARVEST MISS MODE CLASSIFICATION (critical — two distinct causes)
+      Mode A count: ____ (thin book — anchor_depth low, int_bdi low)
+      Mode B count: ____ (stale book — int_bdi high, anchor_depth high,
+                          yet yes_bids:ABSENT. Race condition between poll and order.)
+      Mode A fix: anchor ±0.02 depth filter
+      Mode B fix: place harvest at CURRENT best bid at submission, not polled anchor
+Q6.3: For successful harvests: what % of THEORETICAL MAX was captured?
+      If < 60% → harvests firing too early. If > 90% → barely adding value.
+Q6.4: BDI=0 HOLD EVENTS
+      Total BDI=0 holds: ____
+      With seconds_left > 120: ____ (outcome: ____)
+      With seconds_left <= 120: ____ (outcome: ____)
+      ★ Every BDI=0 hold with <=120s remaining that led to expiry loss is a
+        mechanism failure, not market variance. Log each one.
+Q6.5: POS WARNING EVENTS
+      Total POS WARNING (API 0 local N): ____
+      At what seconds_left did they fire? ____
+      Was the original BUY confirmed by exchange? (v254 data needed)
+      ★ If API says 0 positions while bot says N: either phantom position
+        (BUY never filled → P0 rebuild) or stale state (contract expired
+        before exit → P1 fix). Cannot determine without v254 instrumentation.
+Q6.6: EXIT MECHANISM EVENTS
+      FLIP_EMERGENCY fires: ____ (Was each one correct? Compare exit price
+                                   to subsequent price — did it save money?)
+      EXIT_ESCALATED fires: ____ (How many resolved? How many expired?)
+      CONTRACT_VELOCITY exits: ____ (Fill rate?)
+Q6.7: Estimated $ impact from mechanism failures (not strategy losses): ____
+      This is the ACTIONABLE number — losses from code that could be fixed.
 ```
 
 ### Gate 7: Open Issues Check

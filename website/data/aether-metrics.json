@@ -2,9 +2,9 @@
   "agent": "aether.hyo",
   "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
   "status": "active",
-  "lastUpdated": "2026-04-16T22:30:26-06:00",
-  "updatedAt": "2026-04-16T22:30:26-06:00",
-  "dataSource": "RAW AetherBot logs \u2014 BUY SNAPSHOT for trades, TICKER CLOSE for outcomes, bal for P&L",
+  "lastUpdated": "2026-04-16T22:44:07-06:00",
+  "updatedAt": "2026-04-16T22:44:07-06:00",
+  "dataSource": "BUY SNAPSHOT for trades, TICKER CLOSE for outcomes, balance math for P&L",
   "currentWeek": {
     "start": "2026-04-13",
     "end": "2026-04-19",
@@ -12,7 +12,7 @@
     "currentBalance": 114.33,
     "pnl": 24.08,
     "pnlPercent": 26.68,
-    "trades": 120,
+    "trades": 121,
     "wins": 81,
     "losses": 36,
     "winRate": 69.2,
@@ -25,37 +25,37 @@
         "wins": 36,
         "losses": 13,
         "winRate": 73.5,
-        "lastAction": "2026-04-16T22:30:26-06:00"
+        "lastAction": "2026-04-16T22:44:07-06:00"
       },
       {
         "name": "bps_late",
-        "status": "idle today",
+        "status": "active",
         "pnl": 2.98,
         "trades": 4,
         "wins": 4,
         "losses": 0,
         "winRate": 100.0,
-        "lastAction": "2026-04-16T22:30:26-06:00"
+        "lastAction": "2026-04-16T22:44:07-06:00"
       },
       {
         "name": "WES_EARLY",
-        "status": "idle today",
+        "status": "active",
         "pnl": 2.08,
         "trades": 3,
         "wins": 2,
         "losses": 1,
         "winRate": 66.7,
-        "lastAction": "2026-04-16T22:30:26-06:00"
+        "lastAction": "2026-04-16T22:44:07-06:00"
       },
       {
         "name": "BCDP_FAST_COMMIT",
-        "status": "idle today",
+        "status": "active",
         "pnl": 1.02,
         "trades": 1,
         "wins": 1,
         "losses": 0,
         "winRate": 100.0,
-        "lastAction": "2026-04-16T22:30:26-06:00"
+        "lastAction": "2026-04-16T22:44:07-06:00"
       },
       {
         "name": "bps_premium",
@@ -65,7 +65,7 @@
         "wins": 36,
         "losses": 15,
         "winRate": 70.6,
-        "lastAction": "2026-04-16T22:30:26-06:00"
+        "lastAction": "2026-04-16T22:44:07-06:00"
       },
       {
         "name": "PAQ_STRUCT_GATE",
@@ -75,7 +75,7 @@
         "wins": 3,
         "losses": 6,
         "winRate": 33.3,
-        "lastAction": "2026-04-16T22:30:26-06:00"
+        "lastAction": "2026-04-16T22:44:07-06:00"
       }
     ],
     "dailyPnl": [
@@ -281,24 +281,43 @@
   "openIssues": [
     {
       "id": 1,
-      "title": "PAQ_STRUCT_GATE Net Negative ($-8.84 weekly)",
-      "priority": "P2",
-      "status": "ACTIVE",
-      "detail": "9 trades, 3W/6L (33.3% WR)."
-    },
-    {
-      "id": 1,
-      "title": "Harvest Miss Root Cause (OB Parser)",
+      "title": "POS WARNING — Phantom Position Investigation (v254)",
       "priority": "P0",
       "status": "ACTIVE",
-      "detail": "yes_bids:ABSENT on all misses. v254 has yes_dollars but harvest path doesn't use it."
+      "detail": "Apr 16: 'POS WARNING | API 0 local 2' and 'API 0 local 15'. Bot tries to exit positions the exchange says don't exist. Three hypotheses: (a) BUY never filled (phantom), (b) exchange already settled at expiry (stale state), (c) API poll lag. v254 must log: full API response, BUY fill confirmation, seconds_left at warning. If (a) confirmed, this is a P0 rebuild — bot entering losses on phantom positions.",
+      "source": "Canonical analysis Part 4.3"
     },
     {
       "id": 2,
-      "title": "BDI=0 Stop Hold",
+      "title": "BDI=0 Hold Time Gate — <120s Expiry Losses",
       "priority": "P1",
       "status": "ACTIVE",
-      "detail": "Confirmed Mon 4/13 Trade #1. Stop hold at BDI=0 adds delay without saving anything."
+      "detail": "4 confirmed cases across Apr 13-16 where BDI=0 hold fired with <120s remaining. 3 of 4 expired worthless. Apr 13: -$12.96 (18c), Apr 14: -$1.60 (4c), Apr 15: -$4.83 (7c), Apr 16: -$9.60 (15c). Total: -$28.99 from mechanism failure. Fix: BDI=0 hold should NOT fire when seconds_left <= 120. No recovery possible at <120s.",
+      "source": "Canonical analysis Part 4.2, Pattern 1"
+    },
+    {
+      "id": 3,
+      "title": "Harvest Miss Dual-Mode Fix",
+      "priority": "P1",
+      "status": "ACTIVE",
+      "detail": "Two distinct failure modes confirmed. Mode A: Low anchor_depth (thin book at ±0.02). Mode B: High BDI (805+), deep book (817 contracts), yet yes_bids:ABSENT — stale orderbook race condition between poll and order placement. Mode A fix: anchor ±0.02 depth filter. Mode B fix: place harvest at CURRENT best bid at submission time, not polled anchor. v254 must instrument both modes separately.",
+      "source": "Canonical analysis Part 4.1, Pattern 2"
+    },
+    {
+      "id": 4,
+      "title": "PAQ_STRUCT_GATE Watch — 3W/6L (33% WR), -$7.84 net",
+      "priority": "P2",
+      "status": "MONITORING",
+      "detail": "4-day degradation from baseline 62% WR. But: (1) Apr 16 -$9.60 is BDI=0 hold mechanism failure not strategy failure (remove from eval), (2) Remaining losses need BTC regime cross-check — was BTC in false coil? (3) Apr 14 +$8.43 proves logic is sound in correct regime. Kill threshold NOT met: requires 5+ sessions with no positive-EV environment + Hyo approval. DO NOT gate further without BTC regime data.",
+      "source": "Canonical analysis Part 6"
+    },
+    {
+      "id": 5,
+      "title": "EVENING bps_premium Regime Sensitivity",
+      "priority": "P2",
+      "status": "MONITORING",
+      "detail": "Apr 13 EVENING bps_premium: +$5.94. Apr 16 EVENING bps_premium: -$14.82 (4 losses 19:45-21:15). BTC moved directionally against all positions. Not a strategy failure — regime-driven. Track BTC spot direction at entry vs settlement for EVENING trades. If pattern repeats 3+ sessions, research multi-candle BTC direction filter. DO NOT gate based on one session.",
+      "source": "Canonical analysis Part 7, Pattern 3"
     }
   ],
   "operationalNotes": {}

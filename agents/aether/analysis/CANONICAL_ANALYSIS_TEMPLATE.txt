@@ -1,0 +1,577 @@
+================================================================================
+AETHERBOT SESSION ANALYSIS | APR 13–16, 2026
+Prepared for Kai — Example of correct analysis methodology
+================================================================================
+
+
+================================================================================
+PART 1: BALANCE LEDGER UPDATE
+================================================================================
+
+Prior confirmed EOD (Apr 7):  $104.02
+Note: Apr 8–12 logs not provided. Balance dropped to $90.25 by Apr 13 open.
+Apr 8–12 net (inferred):      -$13.77 (unconfirmed, not in provided logs)
+
+Apr 13 (Sun)  Open: $90.25   EOD: $86.44   Net: -$3.81
+Apr 14 (Mon)  Open: $86.44   EOD: $108.91  Net: +$22.47
+Apr 15 (Tue)  Open: $108.91  EOD: $115.79  Net: +$6.88  (estimated — last confirmed $116.16 minus -$0.37 at 22:00)
+Apr 16 (Wed)  Open: $116.16  Live: $113.96 as of 21:15 MTN (day still active)
+
+4-day gross: +$25.54 (through confirmed Apr 16 balance)
+
+Starting baseline (Apr 7):  $104.02
+Current (Apr 16 live):      $113.96
+Period net (Apr 7→16):      +$9.94
+
+NOTE: Apr 16 is still in session. Final EOD balance must come from Kalshi app
+after all positions settle. Do not use the $113.96 figure as confirmed EOD.
+
+
+================================================================================
+PART 2: TRADE-BY-TRADE LEDGER BY FAMILY (confirmed settlements only)
+================================================================================
+
+--- APR 13 (SUNDAY) ---
+
+bps_premium
+  10:15  NO @ 0.77  18c  LOSS  -$12.96  (TIME_BDI_LOW staged exit + BDI=0 hold)
+  13:00  NO @ 0.73   6c  LOSS   -$2.96  (TIME_BDI_LOW staged exit + BDI=0 hold)
+  13:15  NO @ 0.80   8c  WIN    +$1.60
+  17:15  bps_premium portion of 2-trade close  LOSS  -$1.50
+  18:15  NO @ ~0.85  WIN    +$1.10
+  18:15  NO @ 0.85   9c  WIN    +$1.01
+  19:15  YES @ 0.85  6c  WIN    +$0.90
+  19:30  LOSS  -$1.62
+  20:15  YES @ 0.85  6c  WIN    +$0.90
+  21:15  YES @ 0.77  7c  WIN    +$1.61
+  21:30  NO @ 0.75   6c  WIN    +$1.50
+  22:45  NO @ 0.82  13c  WIN    +$1.94
+  bps_premium net:  +$0.52  (12 trades, 8W/4L, 67% WR)
+
+PAQ_EARLY_AGG
+  10:30  YES @ 0.67   7c  WIN    +$2.31
+  12:45  YES @ 0.83  24c  WIN    +$4.08
+  13:30  YES @ 0.87  32c  WIN    +$4.16
+  13:45  YES @ 0.86   5c  WIN    +$0.70
+  17:45  NO  @ 0.54   9c  WIN    +$4.14
+  18:00  NO  @ 0.56   8c  WIN    +$3.52
+  18:30  NO  @ 0.57   8c  WIN    +$3.44
+  20:30  LOSS  -$0.30
+  21:45  YES @ 0.89   5c  WIN    +$0.55
+  23:00  LOSS  -$0.16
+  PAQ_EARLY_AGG net:  +$22.44  (10 trades, 8W/2L, 80% WR)
+
+PAQ_STRUCT_GATE
+  11:15  YES @ 0.49   7c  WIN    +$3.57
+  PAQ_STRUCT_GATE net:  +$3.57  (1 trade, 1W)
+
+bps_late
+  12:30  NO @ 0.93   7c  WIN    +$0.49
+  17:15  YES @ 0.85  9c  WIN    +$1.35
+  bps_late net:  +$1.84  (2 trades, 2W)
+
+WES_EARLY
+  17:15  WIN  +$0.80  (part of 2-trade close)
+  WES_EARLY net:  +$0.80  (1 trade, 1W)
+
+APR 13 SESSION NET:  -$3.81
+  Big loss at 10:15 (-$12.96) defines the day. Strong EVENING recovery not enough to overcome it.
+
+--- APR 14 (MONDAY) ---
+
+bps_premium
+  00:45  YES @ 0.72   4c  LOSS   -$1.60  (BDI=0 hold stop)
+  01:00  YES @ 0.79   4c  WIN    +$0.84
+  01:30  NO @ 0.78   8c  WIN    +$0.53  (with harvest: +$0.31 harvested + $0.22 settled)
+  03:00  YES @ 0.77   7c  WIN    +$1.61
+  09:30  YES @ 0.78   8c  WIN    +$1.76
+  11:15  YES @ 0.82   8c  WIN    +$1.44
+  12:00  YES @ 0.85   5c  WIN    +$0.75
+  12:30  NO @ 0.73   4c  WIN    +$1.08
+  13:45  LOSS  -$5.04
+  17:15  LOSS  -$0.68
+  19:00  WIN   +$1.04
+  19:15  YES @ 0.74   7c  WIN    +$1.82
+  19:45  WIN   +$1.50
+  20:45  NO @ 0.84  13c  WIN    +$0.99
+  21:15  NO @ 0.82   9c  WIN    +$1.52
+  21:30  YES @ 0.76   7c  WIN    +$1.68
+  22:00  YES @ 0.81   4c  WIN    +$0.76
+  bps_premium net:  +$8.00  (17 trades, 14W/3L, 82% WR)
+
+PAQ_EARLY_AGG
+  00:30  YES @ 0.81   6c  WIN    +$1.14
+  01:45  NO @ 0.85   5c  WIN    +$0.67  (harvested 4c, settled 1c)
+  02:45  YES @ 0.89   5c  WIN    +$0.04  (harvest partial + stop partial)
+  04:00  LOSS  -$0.20
+  17:30  LOSS  -$0.20
+  19:30  NO @ 0.72   6c  WIN    +$0.98
+  20:15  NO @ 0.53   5c  WIN    +$0.99
+  23:45  WIN   +$0.73
+  PAQ_EARLY_AGG net:  +$4.15  (8 trades, 6W/2L, 75% WR)
+
+PAQ_STRUCT_GATE
+  12:15  LOSS  -$0.25
+  13:30  NO @ 0.48  20c  WIN    +$8.43   ← standout trade of the period
+  PAQ_STRUCT_GATE net:  +$8.18  (2 trades, 1W/1L)
+
+bps_late
+  19:45  NO @ 0.89   6c  WIN    +$0.66
+  bps_late net:  +$0.66  (1 trade, 1W)
+
+WES_EARLY
+  18:30  YES @ 0.43   4c  WIN    +$2.28
+  WES_EARLY net:  +$2.28  (1 trade, 1W)
+
+APR 14 SESSION NET:  +$22.47
+  Best day of the 4-day window. PAQ_STRUCT_GATE's +$8.43 carry. bps_premium consistent.
+  WES_EARLY showing positive early signal.
+
+--- APR 15 (TUESDAY) ---
+
+bps_premium
+  01:00  NO @ 0.74  15c  WIN    +$3.90  (no harvests; BDI=0 skip on exit)
+  01:45  NO @ 0.79  10c  WIN    +$2.10
+  02:00  YES @ 0.74  10c  WIN    +$2.60
+  03:00  NO @ 0.77   4c  LOSS   -$3.08  (BDI=0 hold on staged exit)
+  03:15  NO @ 0.77   9c  WIN    +$1.12
+  04:15  YES @ 0.84   5c  WIN    +$0.80
+  04:30  NO @ 0.88   7c  WIN    +$0.46
+  04:45  LOSS  -$0.55
+  09:15  NO @ 0.88   7c  LOSS   -$4.39
+  12:00  YES @ 0.73   9c  WIN    +$2.43
+  17:15  NO @ 0.87  12c  WIN    +$1.49
+  18:30  NO @ 0.82   9c  WIN    +$1.62
+  21:30  YES @ 0.80   4c  WIN    +$0.80
+  21:45  NO @ 0.78   6c  WIN    +$0.50
+  22:00  LOSS  -$0.37
+  bps_premium net:  +$9.33  (15 trades, 11W/4L, 73% WR)
+
+PAQ_EARLY_AGG
+  00:15  NO @ 0.72   6c  WIN    +$1.68
+  01:15  NO @ 0.69   7c  LOSS   -$4.83  (BDI=0 hold, expired at zero)
+  05:00  NO @ 0.63   7c  WIN    +$2.59
+  09:15  LOSS  -$2.61
+  09:30  NO @ 0.53   9c  WIN    +$2.35
+  10:15  YES @ 0.70   7c  WIN    +$2.10
+  11:15  YES @ 0.78  35c  WIN    +$7.58   ← 35c position
+  12:15  YES @ 0.84   5c  WIN    +$0.80
+  12:30  NO @ 0.65  30c  WIN   +$10.11   ← biggest win of period
+  12:45  YES @ 0.76  36c  WIN    +$4.41   ← 36c position
+  17:30  YES @ 0.85   2c  WIN    +$0.02
+  17:45  NO @ 0.69   7c  WIN    +$1.95
+  18:00  YES @ 0.81   6c  WIN    +$1.14
+  19:15  WIN    +$1.02
+  19:45  LOSS   -$1.04
+  20:45  WIN (PAQ_EARLY_AGG, BCDP_FAST_COMMIT overlap, see below)
+  21:15  LOSS   -$0.76
+  PAQ_EARLY_AGG net:  +$26.51  (17 trades, 13W/4L, 76% WR)
+
+PAQ_STRUCT_GATE
+  11:30  LOSS   -$7.70
+  17:30  LOSS   -$4.18
+  PAQ_STRUCT_GATE net:  -$11.88  (2 trades, 0W/2L) — RED FLAG, see analysis
+
+bps_late
+  11:45  NO @ 0.93   7c  WIN    +$0.48
+  bps_late net:  +$0.48  (1 trade, 1W)
+
+WES_EARLY
+  19:00  LOSS   -$1.00
+  WES_EARLY net:  -$1.00  (1 trade, 0W/1L)
+
+BCDP_FAST_COMMIT  [NEW FAMILY — first appearance]
+  20:15  YES @ 0.78  11c  WIN    +$1.02
+  BCDP_FAST_COMMIT net:  +$1.02  (1 trade, 1W)
+
+APR 15 SESSION NET:  +$6.88 (estimated)
+  NY_PRIME produced +$26.66 from PAQ_EARLY_AGG alone (30c, 36c, 35c positions).
+  PAQ_STRUCT_GATE had its worst 2-session stretch: both losses, -$11.88.
+
+--- APR 16 (WEDNESDAY — PARTIAL, day still active as of 21:15 MTN) ---
+
+PAQ_EARLY_AGG
+  03:15  YES @ 0.59   8c  WIN    +$3.28  (EU_MORNING)
+  03:45  NO @ 0.82   6c  WIN    +$0.90  (EU_MORNING, harvested 5c)
+  04:30  YES @ 0.90   2c  LOSS   -$0.22  (EU_MORNING, TIME_BDI_LOW stop — small)
+  05:00  NO @ 0.90   3c  LOSS   -$0.35  (EU_MORNING, BDI=0 hold stop — small)
+  10:30  YES @ 0.82  34c  LOSS  -$14.96  (FLIP_EMERGENCY exit at 0.38 — major)
+  11:15  NO @ 0.90  11c  WIN    +$1.10
+  11:30  YES @ 0.59  47c  WIN   +$19.27  ← largest single win of the period
+  11:45  LOSS   -$3.06
+  12:30  NO @ 0.87  11c  WIN    +$1.43
+  13:00  YES @ 0.89   5c  WIN    +$0.55
+  17:15  YES @ 0.68   7c  WIN    +$2.24
+  17:30  WIN    +$1.14
+  18:00  WIN    +$1.04
+  20:45  YES @ 0.62   8c  WIN    +$3.04
+  21:45  LOSS   -$2.04
+  PAQ_EARLY_AGG net:  +$13.36  (15 trades, 10W/5L, 67% WR) — distorted by -14.96/+19.27 pair
+
+PAQ_STRUCT_GATE
+  09:30  YES @ 0.64  15c  LOSS   -$9.60  (BDI=0 hold, expiry — see analysis)
+  12:00  YES @ 0.53  13c  LOSS   -$3.92
+  12:45  YES @ 0.59  16c  WIN    +$6.56
+  18:30  LOSS   -$1.75
+  PAQ_STRUCT_GATE net:  -$8.71  (4 trades, 1W/3L) — third consecutive session with losses
+
+bps_premium
+  10:00  YES @ 0.82  12c  WIN    +$2.16
+  19:45  YES @ 0.82   6c  LOSS   -$4.62  (EVENING — BTC move)
+  20:00  NO @ 0.84   9c  LOSS   -$5.76   (EVENING — BTC move)
+  20:30  WIN    +$0.80
+  21:15  LOSS   -$2.42
+  21:15  NO @ 0.83   6c  LOSS   -$4.98  (EVENING — BTC move)
+  bps_premium net:  -$14.82  (6 trades, 2W/4L, 33% WR) — EVENING disaster
+
+APR 16 NET (through 21:15):  -$2.20 vs start, $113.96 confirmed
+
+
+================================================================================
+PART 3: SESSION WINDOW BREAKDOWN (4-day aggregate where identifiable)
+================================================================================
+
+EU_MORNING (03:00–05:00 MTN) — tracking per Issue #3
+  Apr 13:  No EU_MORNING trades logged
+  Apr 14:  03:00 bps_premium WIN +$1.61 (just inside window)
+           04:00 PAQ_EARLY_AGG LOSS -$0.20
+           EU_MORNING net: +$1.41
+  Apr 15:  03:00 bps_premium LOSS -$3.08
+           03:15 bps_premium WIN +$1.12
+           04:15 bps_premium WIN +$0.80
+           04:30 bps_premium WIN +$0.46
+           04:45 bps_premium LOSS -$0.55
+           EU_MORNING net: -$1.25
+  Apr 16:  03:15 PAQ_EARLY_AGG WIN +$3.28
+           03:45 PAQ_EARLY_AGG WIN +$0.90
+           04:30 PAQ_EARLY_AGG LOSS -$0.22  (opened after 04:15 — consistent with pattern)
+           05:00 PAQ_EARLY_AGG LOSS -$0.35  (opened after 04:15 — consistent with pattern)
+           EU_MORNING net: +$3.61
+
+EU_MORNING 3-session summary (Apr 14–16):
+  Net: +$3.77  |  W: 7  L: 5  WR: 58%
+  Losses after 04:15: All 3 post-04:15 trades are losses (-$0.20, -$0.22, -$0.35)
+  Losses before 04:15: 2 losses (-$3.08, -$0.55) — both bps_premium on Apr 15
+  FINDING: The post-04:15 pattern is consistent. The Apr 15 pre-04:15 losses are
+  bps_premium-specific (not a window issue). EU_MORNING is net positive.
+  Do NOT kill EU_MORNING. The window appears to be working. The question is
+  whether the Apr 15 bps_premium losses are a bps_premium + EU_MORNING
+  regime issue, not an EU_MORNING issue.
+
+ASIA_OPEN (00:00–03:00 MTN)
+  Apr 13:  No trades (scanning only)
+  Apr 14:  Multiple bps_premium and PAQ_EARLY_AGG wins. Net approx +$5.04
+  Apr 15:  bps_premium and PAQ_EARLY_AGG wins. Net approx +$9.00
+  ASIA_OPEN is producing consistent small wins. Not a concern.
+
+NY_PRIME (09:00–15:00 MTN) — the profit engine
+  Apr 13:  +$1.26 net (overshadowed by the 10:15 loss from prior session entry)
+  Apr 14:  +$15.23 (bps_premium backbone + PAQ_STRUCT_GATE +8.43 carry)
+  Apr 15:  +$24.02 (PAQ_EARLY_AGG 30c/36c/35c positions dominating)
+  Apr 16:  -$0.35 (PAQ_EARLY_AGG -14.96 and +19.27 nearly cancel; PAQ_STRUCT_GATE -9.60 hurts)
+  FINDING: NY_PRIME produced big absolute returns on Apr 14 and 15. Apr 16 was
+  distorted by the -14.96 loss and the 47c +19.27 recovery. NY_PRIME is intact
+  as the profit engine but Apr 16 reveals concentration risk in large PAQ_EARLY_AGG
+  positions during reversals.
+
+EVENING (17:00–22:00 MTN)
+  Apr 13:  +$18.28 (EVENING was the day's best window — PAQ and bps both winning)
+  Apr 14:  +$9.22 (solid — WES_EARLY +2.28, bps chain)
+  Apr 15:  -$3.87 (PAQ_STRUCT_GATE -4.18, WES_EARLY -1.00, mixed bps)
+  Apr 16:  -$13.98 (bps_premium disaster: -4.62, -5.76, -2.42, -4.98)
+  FINDING: EVENING turned from the best window on Apr 13 to a disaster on Apr 16.
+  This is likely BTC regime-driven (strong directional move in EVENING on Apr 16).
+  Do NOT gate EVENING — this needs session-by-session BTC context tracking.
+  bps_premium in EVENING on Apr 16 looks like it was fighting a BTC trend all session.
+
+
+================================================================================
+PART 4: STOP AND HARVEST EVENT LOG — KEY EVENTS
+================================================================================
+
+4.1 HARVEST MISSES — CONFIRMED ROOT CAUSE DISCREPANCY
+------------------------------------------------------
+The harvest miss diagnostic is now producing a new critical signal:
+
+  → HARVEST MISS DIAG | yes_bids:ABSENT | no_bids:ABSENT
+
+This appears on EVERY harvest miss across all 4 days. The parsed_ob shows
+orderbook depth. The int_bdi shows real depth (e.g., 805, 1112, 863 on Apr 15).
+But the exchange returns ABSENT bids when the order is placed.
+
+Two distinct failure modes are observed:
+
+MODE A — Low anchor_depth:
+  int_bdi 11 | near_bdi 11 | anchor_depth(±0.02) 0
+  (Apr 14, 01:35 event)
+  Here the ±0.02 filter genuinely has no liquidity. The fix (anchor ±0.02
+  instead of held_px ±0.05) would help. This is the original hypothesis.
+
+MODE B — High BDI, deep book, still ABSENT:
+  int_bdi 822 | anchor_depth(±0.02) 817 | yes_bids:ABSENT | no_bids:ABSENT
+  (Apr 15, 00:42 event)
+  817 contracts at anchor depth. Book is full. But exchange says ABSENT.
+  The fix is NOT the depth filter — the depth is there. The problem is
+  timing: the orderbook state at poll time differs from the state when
+  the order hits the exchange. The book is moving between poll and order.
+
+IMPLICATION: Two separate fixes are needed, not one.
+  Mode A fix: anchor ±0.02 depth (already identified — Issue #1 current theory)
+  Mode B fix: order placement timing — the harvest order is being placed
+              at a price that existed during polling but is gone by fill time.
+              This is a stale orderbook / race condition problem.
+
+4.2 BDI=0 STOP HOLD — DIRECT LOSSES CONFIRMED
+----------------------------------------------
+Apr 13: bps_premium NO @ 0.77 (18c) — BDI=0 hold on TIME_BDI_LOW_STAGE2
+        → EXIT_ESCALATED → STOP UNFILLED events → settled at -$12.96
+Apr 14: bps_premium YES @ 0.72 (4c) — BDI=0 hold on TIME_BDI_LOW_STAGE2
+        → escalation → partial fill → settled -$1.60
+Apr 15: PAQ_EARLY_AGG NO @ 0.69 (7c) — BDI=0 hold → expired worthless
+        → settled -$4.83
+Apr 16: PAQ_STRUCT_GATE YES @ 0.64 (15c) — BDI=0 hold + book thin at 59s
+        → STOP UNFILLED → expiry → settled -$9.60
+
+PATTERN: When BDI=0 hold fires with <120 seconds remaining, the position
+consistently expires at zero. The hold adds no value at <120s — there is
+no time to recover. A time-gated BDI=0 hold (e.g., only hold if secs_left > 120)
+would have reduced losses on at least 2 of the 4 above events.
+
+4.3 POS WARNING — NEW CRITICAL SIGNAL [FIRST APPEARANCE]
+---------------------------------------------------------
+New log event observed in Apr 16:
+  → POS WARNING | API 0 local 2
+  → POS WARNING | API 0 local 15
+
+This fires during exit sequences. Meaning: AetherBot's local state says it
+holds N contracts. The exchange API reports 0.
+
+Observed in conjunction with:
+  - STOP UNFILLED / book thin events
+  - EXIT_ESCALATED_AFTER_BDI0 sequences
+  - CONTRACT_VELOCITY exits that fail to fill
+
+When the exchange says API 0 while local says 15, one of three things is true:
+  (a) The original BUY order did not fill — AetherBot is trying to exit a
+      phantom position.
+  (b) The exchange already settled the position (contract expired) before
+      AetherBot issued the exit — the state is stale.
+  (c) There is an API polling lag where the position will appear on next poll.
+
+Case (b) is most likely given that the POS WARNINGs appear at <120s remaining.
+Case (a) would mean AetherBot enters a loss without ever having a real position —
+this would be the most severe scenario and requires immediate investigation.
+
+The v254 instrumentation MUST capture POS WARNING context:
+  - What is the full API response when the position check returns 0?
+  - Was the original BUY order confirmed by the exchange?
+  - Does the POS WARNING resolve on the next poll or persist?
+
+
+================================================================================
+PART 5: NEW FAMILIES OBSERVED
+================================================================================
+
+WES_EARLY (3 trades across Apr 13–15):
+  Apr 13:  WIN  +$0.80  (17:15 MTN, EVENING)
+  Apr 14:  WIN  +$2.28  (18:30 MTN, EVENING)
+  Apr 15:  LOSS -$1.00  (19:00 MTN, EVENING)
+  Net: +$2.08  |  2W/1L  |  67% WR
+  Not enough trades to evaluate. Monitor only. Entry appears to be at
+  discounted YES prices (0.43) — confirms name suggests early-window momentum.
+
+BCDP_FAST_COMMIT (1 trade, Apr 15):
+  Apr 15:  WIN +$1.02  (20:15 MTN, YES @ 0.78, 11c)
+  One trade only. Cannot evaluate. Appears to be a rapid BCDP-triggered entry
+  at already-committed BCDP 8C prices. Requires 10+ trades before any assessment.
+
+Neither family should be gated, modified, or killed based on current data.
+Monitor and log only.
+
+
+================================================================================
+PART 6: PAQ_STRUCT_GATE — WATCH STATUS ESCALATED
+================================================================================
+
+PAQ_STRUCT_GATE results over the 4-day period:
+
+  Apr 13:  WIN  +$3.57  (YES @ 0.49, 7c)
+  Apr 14:  LOSS -$0.25  (small)
+  Apr 14:  WIN  +$8.43  (NO @ 0.48, 20c)  ← 20c position, dominant win
+  Apr 15:  LOSS -$7.70  (large)
+  Apr 15:  LOSS -$4.18  (large)
+  Apr 16:  LOSS -$9.60  (BDI=0 hold expiry — mechanism failure)
+  Apr 16:  LOSS -$3.92
+  Apr 16:  WIN  +$6.56  (YES @ 0.59, 16c)
+  Apr 16:  LOSS -$1.75
+
+  4-day net:  -$7.84  (9 trades, 3W/6L, 33% WR)
+  Prior baseline (from memory): 62% WR, +$21.88 (16 trades)
+
+ASSESSMENT: PAQ_STRUCT_GATE has gone cold. But before acting:
+
+1. The Apr 16 -$9.60 loss is a mechanism failure (BDI=0 hold at expiry),
+   not a PAQ_STRUCT_GATE strategy failure. Remove this from the evaluation.
+
+2. The Apr 15 and Apr 16 remaining losses: were they entered in low-abs /
+   choppy conditions? The PAQ_STRUCT_GATE fires at abs 0.015–0.08% — when
+   BTC is in a false coil (looks like compression but breaks down), the gate
+   produces losses. Need to cross-check BTC price action on Apr 15 11:30 and
+   Apr 16 12:00.
+
+3. The Apr 14 +$8.43 win is the same family. The logic is sound. The regime
+   is the variable.
+
+RECOMMENDATION ON PAQ_STRUCT_GATE: Do NOT kill or gate further without
+understanding the BTC regime on the losing sessions. Pull BTC price data
+for Apr 15 11:30 MTN and Apr 16 09:30 / 12:00 MTN. If BTC was in a false
+breakout or trend-continuation pattern (not coiling), then PAQ_STRUCT_GATE
+was correctly reading structure but the structure resolved directionally.
+That is not a bug — it's market variance.
+
+3-session 33% WR is concerning but not the kill threshold. Threshold requires:
+  (a) 5+ sessions with no positive-EV environment identified
+  (b) No regime where it wins
+  (c) Hyo approval
+None of these are met.
+
+
+================================================================================
+PART 7: SYSTEMIC PATTERNS
+================================================================================
+
+PATTERN 1 — BDI=0 HOLD WITH <120s REMAINING = EXPIRY LOSS
+------------------------------------------------------------
+Across 4 sessions: 4 confirmed cases where BDI=0 hold fired with <120s
+remaining. In 3 of 4 cases, the position expired worthless or near-worthless.
+
+The hold logic exists to prevent exiting into a momentary BDI collapse that
+will recover. But with <120s left, recovery is impossible — the contract expires.
+A time gate on BDI=0 hold behavior is warranted and well-supported by log evidence.
+
+Mechanism question: Does the current BDI=0 hold code check seconds_left?
+Log evidence suggests it does not. It holds regardless of contract time remaining.
+
+PATTERN 2 — HARVEST MODE B (HIGH BDI + ABSENT BIDS) is not a depth problem
+---------------------------------------------------------------------------
+Apr 15 shows harvest misses with int_bdi 805, 863, 1112 — enormous depth.
+anchor_depth(±0.02) shows 490, 817, 756 contracts at the target rung.
+Yet yes_bids:ABSENT / no_bids:ABSENT on every attempt.
+
+This is a market microstructure problem: the harvest order is being routed
+to a price level where bids existed during the last poll but have been filled
+or cancelled by the time the sell order hits the exchange. The ±0.02 filter
+fix addresses Mode A (thin book) but NOT Mode B (stale book).
+
+Mode B fix requires: place the harvest order at the CURRENT best bid at order
+submission time, not the polled anchor price. The anchor is stale.
+
+PATTERN 3 — EVENING bps_premium (Apr 16) as a BTC regime indicator
+-------------------------------------------------------------------
+Apr 13 EVENING: bps_premium +$5.94 (strong BTC stability, bets paying off)
+Apr 14 EVENING: bps_premium mixed positive
+Apr 15 EVENING: bps_premium slightly negative in evening hours
+Apr 16 EVENING: bps_premium -$14.82 (4 losses in a row, 19:45 to 21:15 MTN)
+
+This is not a bps_premium failure — this is BTC moving directionally against
+positions during evening hours on Apr 16. The strategy is correctly identifying
+momentum (BPS alignment) but BTC continued moving beyond the 15-minute window.
+
+Do NOT add gates to bps_premium EVENING based on one session. Track BTC spot
+direction at trade entry vs. BTC direction at settlement for Apr 16 EVENING
+trades. If all 4 losses show the same BTC directional pattern, the question
+becomes whether a BTC momentum regime filter (e.g., multi-candle BTC direction)
+should gate bps_premium entries. This is a future research question, not a build.
+
+PATTERN 4 — FLIP_EMERGENCY (new exit mechanism, Apr 16)
+--------------------------------------------------------
+FLIP_EMERGENCY fired on the 34c YES @ 0.82 position at 10:22 MTN on Apr 16.
+Exit was at 0.38 (0.44 loss/contract = -$14.96).
+Without FLIP_EMERGENCY, the position would have continued to drop to 0.34
+(visible in next log lines: 10:25 YES=0.54, 10:26 YES=0.34). 
+Exit at 0.38 vs continuing decline to 0.34 = approximately $1.36 saved on 34c.
+
+FLIP_EMERGENCY appears to be functioning correctly — it cut the loss at the
+right moment. This is NOT a mechanism failure. The -$14.96 is a market event loss
+on a large YES position in NY_PRIME during a BTC reversal. No action needed.
+
+
+================================================================================
+PART 8: RECOMMENDATION
+================================================================================
+
+RECOMMENDATION: BUILD v254
+
+Target: Next scheduled build, as previously planned.
+
+SCOPE — Three confirmed additions, in priority order:
+
+ADDITION 1 (P0 — State Correctness): POS WARNING investigation path
+  When POS WARNING fires (API 0 local N), immediately:
+    - Log the full raw API position response
+    - Log whether the original BUY order has a confirmed fill receipt
+    - Log seconds_left at time of POS WARNING
+    - If API returns 0 AND seconds_left <= 30: treat as settled, clear state,
+      do NOT continue issuing exit orders into an already-closed position
+  This prevents stop ladders from firing on expired/already-settled positions.
+
+ADDITION 2 (P1 — Stop Correctness): Time-gate the BDI=0 hold
+  Current: BDI=0 hold fires regardless of seconds_left
+  Change: BDI=0 hold should NOT fire when seconds_left <= 120
+  When seconds_left <= 120 and BDI=0: proceed directly to staged exit
+  regardless of BDI. There is no recovery possible at <120s.
+  Evidence: 4 confirmed cases where BDI=0 hold at <120s led to expiry losses.
+  No cases where BDI=0 hold at <120s prevented a loss.
+
+ADDITION 3 (P2 — Harvest Instrumentation): Full exchange response on every harvest
+  Already confirmed in plan. Add to place_exit_order():
+    - Log the full exchange API response on every harvest attempt
+    - Log the time delta between the last orderbook poll and order placement
+    - Log whether the ob_bid price at order time matches the polled anchor
+  This will definitively separate Mode A harvest misses (depth) from
+  Mode B harvest misses (staleness) and drive the correct next fix.
+
+NO entry changes in v254. The PAQ_STRUCT_GATE losses need more session data
+before any gate modifications. The EVENING bps_premium losses on Apr 16 are
+one session — do not react.
+
+NEXT DECISION POINT: After v254 deploys, the question that changes everything is:
+  "When POS WARNING fires, does the API 0 response mean the position never
+  filled, or that it expired — and is AetherBot currently entering phantom
+  positions that settle as pure losses with no real exposure on the exchange?"
+
+That answer determines whether we have a state tracking bug (P0 rebuild) or
+a routine expiry-detection gap (P1 fix). Until we see the full API response
+from the instrumented v254 logs, we cannot know. This is why v254 ships first.
+
+
+================================================================================
+PART 9: BALANCE LEDGER (updated)
+================================================================================
+
+3/28 (Sat)   $89.87
+3/29 (Sun)   $101.25
+3/30 (Mon)   $90.18
+3/31 (Tue)   $110.32
+4/1  (Wed)   $119.02
+4/2  (Thu)   $121.02
+4/3  (Fri)   $111.55
+4/4  (Sat)   $107.30
+4/5  (Sun)   $76.18
+4/6  (Mon)   $93.04  confirmed
+4/7  (Tue)   $104.02 confirmed
+[4/8–4/12: logs not available]
+4/13 (Sun)   $86.44  confirmed
+4/14 (Mon)   $108.91 confirmed
+4/15 (Tue)   $115.79 estimated ($116.16 confirmed - $0.37 unsettled loss at 22:00)
+4/16 (Wed)   ACTIVE — last confirmed $113.96 at 21:15 MTN. Day not complete.
+
+Starting balance (3/28):  $101.38
+Current confirmed:        $113.96  (Apr 16 live, not EOD)
+All-time net:             +$12.58 (through last confirmed Apr 16 balance)
+Peak balance:             $133.75 (Apr 16 at 17:15, intraday)
+Target:                   $100+/day net (currently missing target on most sessions)
+
+================================================================================
+END OF ANALYSIS
+================================================================================
