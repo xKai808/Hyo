@@ -442,12 +442,28 @@ fi
 
 # ── Commit if changes exist ──
 cd "$ROOT" || exit 1
+
+# Prevention: clear stale lock files from crashed processes (TASK-20260417-kai-002)
+rm -f .git/index.lock 2>/dev/null
+
 if git diff --quiet "$JSON_OUTPUT" 2>/dev/null; then
   log "No changes to commit"
 else
   git add "$JSON_OUTPUT" "$SAM_MIRROR" 2>/dev/null || true
-  git commit -m "morning-report: $TODAY (v4 — growth-driven ARIC consumption)" 2>/dev/null || true
-  git push origin main 2>/dev/null && log "Pushed to origin" || log "Push failed (will retry)"
+  if git commit -m "morning-report: $TODAY (v4 — growth-driven ARIC consumption)"; then
+    if git push origin main; then
+      log "Pushed to origin"
+    else
+      log "ERROR: git push failed — morning report NOT published. Manual push required."
+      # Flag for sentinel
+      local dispatch_bin="$ROOT/bin/dispatch.sh"
+      if [[ -x "$dispatch_bin" ]]; then
+        bash "$dispatch_bin" flag kai P0 "morning report generated but git push failed — report not live" 2>/dev/null || true
+      fi
+    fi
+  else
+    log "ERROR: git commit failed — morning report NOT published."
+  fi
 fi
 
 log "Done — v4 morning report generated"
