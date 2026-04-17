@@ -60,6 +60,33 @@
    If NO advance notice was given → DO NOT EXECUTE.
    This is blocking. No exceptions. Hyo denied cipher's access because
    we didn't warn them. That's our fault, not theirs.
+
+7. AM I ABOUT TO ESCALATE TO HYO? (SE-011-018)
+   Before telling Hyo ANYTHING requires their physical presence:
+     (a) Did I attempt it via the queue first?
+     (b) Did it actually fail? What was the error?
+     (c) Is the failure something only Hyo can fix?
+         Valid reasons for Hyo: biometric prompt, GUI password entry,
+         physical hardware, queue worker down AND launchctl unreachable.
+         NOT valid: "I assumed it needs the Mini." Assumptions are not errors.
+   If the answer to (a) is NO → attempt via queue. Do not escalate.
+   If the answer to (b) is "I didn't check" → investigate. Do not escalate.
+   If the answer to (c) is NO → fix it yourself. Do not escalate.
+   Hyo's time is the scarcest resource. Every false escalation wastes it
+   and erodes trust. This gate exists because Kai escalated 3 items to
+   Hyo that all worked fine via queue. Zero of them needed Hyo.
+
+8. AM I FIXING THE ROOT CAUSE OR ADDING A WORKAROUND? (SE-011-016)
+   If a tool/system is broken, the fix is making it work — not bypassing it.
+   Workarounds accumulate. Each one adds cost, complexity, and another
+   thing that can break. Ask:
+     (a) What is the root cause of the failure?
+     (b) Is there an agent who owns this? (Sam = infra, Nel = security)
+     (c) Did I delegate to that agent?
+   If the answer to (a) is "I don't know" → investigate before doing anything.
+   If the answer to (c) is NO → delegate. Do not do their job.
+   Workarounds are acceptable ONLY as temporary bridges while the root fix
+   is in progress — and only if a ticket tracks the root fix with a deadline.
 ```
 
 ---

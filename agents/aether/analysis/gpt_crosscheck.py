@@ -26,7 +26,10 @@ from datetime import datetime
 ROOT = Path(__file__).resolve().parent.parent.parent.parent  # Hyo/
 SECURITY = ROOT / "agents" / "nel" / "security"
 ANALYSIS_DIR = Path(__file__).resolve().parent
-LOGS_DIR = ROOT / "agents" / "aether" / "logs"
+# Primary: original AetherBot logs (full data). Fallback: sync copy (may be truncated).
+LOGS_DIR_PRIMARY = Path.home() / "Documents" / "Projects" / "AetherBot" / "Logs"
+LOGS_DIR_FALLBACK = ROOT / "agents" / "aether" / "logs"
+LOGS_DIR = LOGS_DIR_PRIMARY if LOGS_DIR_PRIMARY.exists() else LOGS_DIR_FALLBACK
 
 # ── Load OpenAI key ─────────────────────────────────────────────────────────
 key = None
@@ -75,48 +78,28 @@ if raw_log:
     full_log_text = raw_log.read_text()
     raw_log_len = len(full_log_text)
 
-    # GPT-4o TPM limit is 30k tokens (~120k chars). We need room for the prompt
-    # and response, so cap raw log at ~60k chars (~15k tokens).
-    MAX_LOG_CHARS = 60000
+    # GPT-4o has 128K context (~500K chars). Send the FULL log. Period.
+    # Previous version truncated to 60K chars and filtered — GPT responded
+    # "the log does not provide" for every category. Incomplete data = useless analysis.
+    # SE-011-014: Never truncate trading data sent to GPT.
+    MAX_LOG_CHARS = 450000  # Safety cap: leave room for prompt + response
 
-    # Smart truncation: keep lines with trading-relevant keywords
-    # The raw log often contains standby/daemon noise between actual trades
     if raw_log_len > MAX_LOG_CHARS:
-        trade_keywords = [
-            "BUY SNAPSHOT", "SETTLEMENT", "SETTLE", "POS WARNING",
-            "HARVEST", "STOP", "CHOP", "TRAIL", "ticker_result",
-            "BALANCE", "balance", "NET", "PAQ", "bps_premium",
-            "WES_EARLY", "bps_late", "BCDP", "STRUCT_GATE",
-            "BDI", "OB_PARSER", "NEW TICKER", "STABILIZ",
-            "ENTRY", "EXIT", "FILLED", "expired", "won", "lost"
-        ]
+        # Only truncate if truly enormous (>450K). Keep most recent data.
         lines = full_log_text.splitlines()
-        relevant_lines = []
-        for i, line in enumerate(lines):
-            if any(kw in line for kw in trade_keywords):
-                # Include context: 1 line before and after
-                start = max(0, i - 1)
-                end = min(len(lines), i + 2)
-                for j in range(start, end):
-                    if lines[j] not in relevant_lines[-3:] if relevant_lines else True:
-                        relevant_lines.append(lines[j])
-
-        filtered = "\n".join(relevant_lines)
-        if len(filtered) > MAX_LOG_CHARS:
-            filtered = filtered[:MAX_LOG_CHARS] + "\n... [TRUNCATED]"
-
+        # Keep last N lines that fit
+        kept = []
+        char_count = 0
+        for line in reversed(lines):
+            char_count += len(line) + 1
+            if char_count > MAX_LOG_CHARS:
+                break
+            kept.append(line)
+        kept.reverse()
         raw_log_text = (
-            f"[FILTERED LOG — {raw_log_len} chars original, kept {len(filtered)} chars of trade-relevant lines]\n"
-            f"[First 20 lines of original log for context:]\n"
-            + "\n".join(lines[:20])
-            + f"\n\n[Trade-relevant lines below:]\n"
-            + filtered
-            + f"\n\n[Last 20 lines of original log:]\n"
-            + "\n".join(lines[-20:])
+            f"[LOG TRIMMED — {raw_log_len} chars original, keeping most recent {len(kept)} lines ({char_count} chars)]\n"
+            + "\n".join(kept)
         )
-        # Final safety cap
-        if len(raw_log_text) > MAX_LOG_CHARS + 5000:
-            raw_log_text = raw_log_text[:MAX_LOG_CHARS + 5000] + "\n... [HARD TRUNCATED]"
     else:
         raw_log_text = full_log_text
     print(f"Found raw log: {raw_log} ({raw_log_len} chars, sending {len(raw_log_text)} chars)")

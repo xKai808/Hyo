@@ -1,5 +1,5 @@
 {
-  "ts": "2026-04-17T01:26:29Z",
+  "ts": "2026-04-17T01:41:31Z",
   "status": "ISSUES",
   "issues": 6,
   "warnings": 5,
@@ -57,39 +57,39 @@
     {
       "severity": "P1",
       "area": "ticket-sla",
-      "detail": "23 tickets have breached SLA"
+      "detail": "27 tickets have breached SLA"
     }
   ],
   "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776389186-523",
+      "id": "cmd-1776389409-869",
       "status": "ok",
-      "command": "head -c 10 ~/Documents/Projects/Hyo/agents/nel/security/openai.key; echo '...'",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776389179-500",
+      "id": "cmd-1776389375-813",
       "status": "ok",
-      "command": "ls ~/Documents/Projects/Hyo/agents/nel/security/",
+      "command": "cd ~/Documents/Projects/Hyo && git add agents/ra/output/2026-04-16.md agents/ra/",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776389140-443",
+      "id": "cmd-1776389370-787",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo/agents/ra/pipeline && python3 synthesize.py --date 2",
+      "command": "cd ~/Documents/Projects/Hyo && git add agents/ra/output/2026-04-16.md agents/ra/",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776389134-419",
+      "id": "cmd-1776389363-763",
       "status": "ok",
-      "command": "ls -la ~/Documents/Projects/Hyo/agents/ra/output/2026-04-16.md 2>/dev/null && wc",
+      "command": "cd ~/Documents/Projects/Hyo/agents/ra/pipeline && python3 render.py --date 2026-",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776389127-395",
+      "id": "cmd-1776389322-731",
       "status": "ok",
-      "command": "cat ~/Documents/Projects/Hyo/kai/queue/completed/cmd-1776389056-314.json",
+      "command": "cd ~/Documents/Projects/Hyo && git pull origin main && python3 agents/ra/pipelin",
       "exit_code": 0
     }
   ],

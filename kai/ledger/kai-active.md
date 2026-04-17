@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-04-16T19:26:31-0600
+**Last updated:** 2026-04-16T19:41:33-0600
 
 ## System Health
 - Status: ISSUES (6 P0/P1)
@@ -11,9 +11,9 @@
 - dex: updated 0h ago
 - kai: NO ACTIVE.md
 - manifests: NO ACTIVE.md
-- nel: updated 0h ago
+- nel: updated 1h ago
 - ra: updated 0h ago
-- sam: updated 0h ago
+- sam: updated 1h ago
 
 ## Top Issues
 - [P1] flags: 3 unaddressed P0/P1 flags in last 2h
