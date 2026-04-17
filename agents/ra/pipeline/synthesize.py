@@ -501,22 +501,32 @@ def main() -> int:
               file=sys.stderr)
         return 0
 
-    fn = BACKENDS[backend][0]
-    t0 = time.time()
-    try:
-        result = fn(prompt, context, model=model, timeout=HTTP_TIMEOUT)
-    except Exception as exc:  # noqa: BLE001
-        print(f"[error] {backend} call failed: {exc}", file=sys.stderr)
-        # fallback: write the bundle so the run is still useful
-        write_bundle(prompt, context, bundle_path)
-        print(f"[ok] wrote fallback bundle → {bundle_path}")
-        return 2
+    # Build ordered fallback chain: chosen backend → remaining backends
+    backend_order = [backend]
+    all_backends = ["claude_code", "xai", "openai", "anthropic"]
+    for b in all_backends:
+        if b != backend and b in BACKENDS:
+            backend_order.append(b)
 
-    write_markdown(result, md_path, date_str)
-    elapsed = time.time() - t0
-    print(f"[ok] synthesized in {elapsed:.1f}s via {backend}/{model}")
-    print(f"[ok] wrote {md_path}")
-    return 0
+    t0 = time.time()
+    for attempt_backend in backend_order:
+        attempt_fn = BACKENDS[attempt_backend][0]
+        attempt_model = args.model if (args.model and attempt_backend == backend) else BACKENDS[attempt_backend][1]
+        try:
+            result = attempt_fn(prompt, context, model=attempt_model, timeout=HTTP_TIMEOUT)
+            write_markdown(result, md_path, date_str)
+            elapsed = time.time() - t0
+            print(f"[ok] synthesized in {elapsed:.1f}s via {attempt_backend}/{attempt_model}")
+            print(f"[ok] wrote {md_path}")
+            return 0
+        except Exception as exc:  # noqa: BLE001
+            print(f"[error] {attempt_backend} call failed: {exc}", file=sys.stderr)
+            continue
+
+    # All backends failed — write bundle as last resort
+    write_bundle(prompt, context, bundle_path)
+    print(f"[ok] wrote fallback bundle → {bundle_path}")
+    return 2
 
 
 if __name__ == "__main__":
