@@ -1028,13 +1028,81 @@ function renderAgentView(container, agentId) {
 
 // ═══ RESEARCH VIEW (keeps sidebar) ═══
 function renderResearch(container) {
+  // Pull ALL agent reports: reflections, research-drops, and research papers
+  const researchTypes = new Set(['agent-reflection', 'research-drop']);
+  const allReports = (FEED_DATA.reports || [])
+    .filter(r => researchTypes.has(r.type))
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  // Group by agent
+  const agents = {};
+  for (const r of allReports) {
+    const agent = r.author || 'Unknown';
+    if (!agents[agent]) agents[agent] = [];
+    agents[agent].push(r);
+  }
+  const agentNames = Object.keys(agents).sort();
+
+  let filterHtml = `<button class="research-filter active" data-agent="all">All Agents (${allReports.length})</button>`;
+  for (const name of agentNames) {
+    filterHtml += `<button class="research-filter" data-agent="${name}">${name} (${agents[name].length})</button>`;
+  }
+
+  let reportsHtml = '';
+  for (const r of allReports) {
+    const time = formatTime(r.timestamp);
+    const s = r.sections || {};
+    const typeLabel = r.type === 'research-drop' ? 'Research' : 'Reflection';
+    const borderColor = r.authorColor || 'var(--accent)';
+    let body = '';
+    if (r.type === 'research-drop') {
+      body = renderResearchDrop(s, r);
+    } else {
+      body = renderAgentReflection(s);
+    }
+    reportsHtml += `
+      <div class="report-card research-entry" data-agent="${r.author}" style="border-left: 3px solid ${borderColor}; margin-bottom: 16px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <span style="font-size:1.1em;">${r.authorIcon || '📄'}</span>
+            <strong>${r.author}</strong>
+            <span style="font-size:12px;color:var(--text-muted);margin-left:8px;">${typeLabel}</span>
+          </div>
+          <span style="font-size:12px;color:var(--text-tertiary);">${time}</span>
+        </div>
+        <div style="font-weight:600;margin-bottom:8px;">${r.title}</div>
+        <div class="report-body">${body}</div>
+      </div>
+    `;
+  }
+
   container.innerHTML = `
     <div class="main-header">
-      <h1>Research Archive</h1>
-      <div class="sub">Intelligence gathered by Ra and the agent network</div>
+      <h1>Research & Intelligence</h1>
+      <div class="sub">Reports from all agents — reflections, research, and analysis</div>
     </div>
-    <iframe src="/research.html" style="width:100%;height:calc(100vh - 140px);border:none;border-radius:var(--radius);background:var(--bg-secondary);" sandbox="allow-scripts allow-same-origin"></iframe>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+      ${filterHtml}
+    </div>
+    <div id="research-list">
+      ${reportsHtml}
+    </div>
+    <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);">
+      <a href="/research.html" target="_blank" style="color:var(--accent);font-size:13px;">View Ra's full research archive →</a>
+    </div>
   `;
+
+  // Wire filter buttons
+  container.querySelectorAll('.research-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      container.querySelectorAll('.research-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const agent = btn.dataset.agent;
+      container.querySelectorAll('.research-entry').forEach(entry => {
+        entry.style.display = (agent === 'all' || entry.dataset.agent === agent) ? '' : 'none';
+      });
+    });
+  });
 }
 
 // ═══ REPORT RENDERER ═══
@@ -1362,9 +1430,9 @@ function renderAetherDashboard(container, agent) {
         </div>
 
         <div class="aether-card metric">
-          <div class="label">Total Trades (Week)</div>
-          <div class="value">${week.trades || 0}</div>
-          <div class="subtext">Stoploss: ${week.stoplossTriggers || 0} events</div>
+          <div class="label">Settled Trades (Week)</div>
+          <div class="value">${week.settledTrades || week.trades || 0}</div>
+          <div class="subtext">${week.totalTradeEvents || 0} total events</div>
         </div>
       </div>
 
