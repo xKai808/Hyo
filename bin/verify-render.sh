@@ -250,7 +250,11 @@ fi
 
 # Log result to ledger
 mkdir -p "$(dirname "$RESULTS_FILE")"
-echo "{\"ts\":\"$TS\",\"passed\":$passed,\"failed\":$failed,\"warnings\":$warnings,\"failures\":[$(printf '"%s",' "${failures[@]}" | sed 's/,$//')]}" >> "$RESULTS_FILE"
+if [[ ${#failures[@]} -gt 0 ]]; then
+  echo "{\"ts\":\"$TS\",\"passed\":$passed,\"failed\":$failed,\"warnings\":$warnings,\"failures\":[$(printf '"%s",' "${failures[@]}" | sed 's/,$//')]}" >> "$RESULTS_FILE"
+else
+  echo "{\"ts\":\"$TS\",\"passed\":$passed,\"failed\":$failed,\"warnings\":$warnings,\"failures\":[]}" >> "$RESULTS_FILE"
+fi
 
 if [[ $failed -gt 0 ]]; then
   log ""
