@@ -1258,8 +1258,9 @@ function renderResearchDrop(s, report) {
   if (s.implications) {
     html += sec('Implications', `<p>${s.implications}</p>`);
   }
-  if (s.nextSteps?.length) {
-    html += sec('Next Steps', `<ul>${s.nextSteps.map(n => `<li>${n}</li>`).join('')}</ul>`);
+  if (s.nextSteps) {
+    const steps = Array.isArray(s.nextSteps) ? s.nextSteps : [s.nextSteps];
+    html += sec('Next Steps', `<ul>${steps.map(n => `<li>${n}</li>`).join('')}</ul>`);
   }
   const readLink = s.readLink || '';
   if (readLink) {
