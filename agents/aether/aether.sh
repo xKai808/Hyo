@@ -254,15 +254,43 @@ for t in trades:
         s["losses"] += 1
     s["last_bal"] = t["bal"]
 
-# Merge into existing strategies array (preserve metadata, update stats)
-existing_strats = {s["name"]: s for s in cw.get("strategies", [])}
+# SE-012-001: FIXED — previous version had TWO loops over strategies.
+# Loop 1 (lines 258-291) updated PnL correctly but never wrote back to cw.
+# Loop 2 (lines 306-338) re-read OLD data and only updated if trades==0.
+# Result: strategy PnL was FROZEN after first population. Now single loop,
+# ALWAYS updates from the full week's settled trades. No shortcuts.
+
 _now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 
+# ── Settled P&L is authoritative (sum of all NET values from settled trades) ──
+settled_pnl = round(sum(t["net"] for t in trades), 2)
+
+# ── Write back ──
+old_balance = cw.get("currentBalance", 0)
+cw["currentBalance"] = round(latest_balance, 2)
+
+# P&L: use settled trade NET sum as authoritative, NOT balance math.
+# Balance math (currentBalance - startingBalance) drifts with unsettled positions.
+# Settled P&L is provable from WIN/LOSS SETTLED lines.
+cw["pnl"] = settled_pnl
+cw["pnlPercent"] = round((settled_pnl / cw["startingBalance"]) * 100, 2) if cw.get("startingBalance") else 0
+
+# Also track total trade events (SETTLED lines only — the ones we can prove)
+cw["settledTrades"] = total_trades
+cw["wins"] = wins
+cw["losses"] = losses
+cw["winRate"] = win_rate
+
+# ── Strategy merge — ALWAYS update from settled trades (single authoritative loop) ──
+existing_strats = {s["name"]: s for s in cw.get("strategies", [])}
 for sname, ss in strat_stats.items():
     if sname in existing_strats:
         es = existing_strats[sname]
+        # ALWAYS overwrite from settled trade data — no stale guards
         es["pnl"] = ss["pnl"]
         es["trades"] = ss["trades"]
+        es["wins"] = ss["wins"]
+        es["losses"] = ss["losses"]
         es["winRate"] = round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0
         es["status"] = "active"
         es["lastAction"] = _now
@@ -276,57 +304,6 @@ for sname, ss in strat_stats.items():
             "wins": ss["wins"],
             "losses": ss["losses"],
             "winRate": round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0,
-            "stoplossTriggers": 0,
-            "harvests": 0,
-            "entryRange": "—",
-            "lastAction": _now,
-        }
-
-# Mark strategies with zero trades today as maintaining (not inactive)
-for sname, es in existing_strats.items():
-    if sname not in strat_stats and es.get("status") == "active":
-        es["status"] = "idle today"
-
-# Sort by PnL desc
-strats_list = sorted(existing_strats.values(), key=lambda x: x.get("pnl", 0), reverse=True)
-
-# ── Write back ──
-# Balance is authoritative from the log. Trade counts/PnL come from record_trade
-# (per-contract granularity) so we DON'T overwrite those — we only refresh:
-# 1. currentBalance + derived PnL
-# 2. strategy lastAction timestamps (so HQ shows strategies are active today)
-# 3. strategy PnL/trades ONLY if record_trade hasn't run this week (bootstrap)
-old_balance = cw.get("currentBalance", 0)
-cw["currentBalance"] = round(latest_balance, 2)
-cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
-cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw["startingBalance"] else 0
-
-# Update strategy lastAction timestamps from SETTLED lines
-# Also bootstrap strategy data if record_trade hasn't populated it
-existing_strats = {s["name"]: s for s in cw.get("strategies", [])}
-for sname, ss in strat_stats.items():
-    if sname in existing_strats:
-        es = existing_strats[sname]
-        es["lastAction"] = _now
-        es["status"] = "active"
-        # Only overwrite PnL/trades if existing data looks stale (0 trades)
-        if es.get("trades", 0) == 0:
-            es["pnl"] = ss["pnl"]
-            es["trades"] = ss["trades"]
-            es["winRate"] = round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0
-    else:
-        # New strategy from log not in existing data — add it
-        existing_strats[sname] = {
-            "name": sname,
-            "status": "active",
-            "pnl": ss["pnl"],
-            "trades": ss["trades"],
-            "wins": ss["wins"],
-            "losses": ss["losses"],
-            "winRate": round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0,
-            "stoplossTriggers": 0,
-            "harvests": 0,
-            "entryRange": "—",
             "lastAction": _now,
         }
 
@@ -345,8 +322,8 @@ with open(metrics_file, "w") as f:
     f.write("\n")
 
 print(f"Full metrics extracted: bal ${old_balance}→${latest_balance}, "
-      f"{total_trades} trades ({wins}W/{losses}L, {win_rate}%), "
-      f"{len(strat_stats)} active strategies")
+      f"settled PnL ${settled_pnl} ({total_trades} settled: {wins}W/{losses}L, {win_rate}%), "
+      f"{len(strat_stats)} strategies from raw logs")
 PYEOF
 
   # Sync to dual path
