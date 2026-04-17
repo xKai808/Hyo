@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Automated System Remediation: Beyond Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0d14; --bg-card: #12141e; --fg: #e8e2d6; --fg-body: rgba(232,226,214,0.88);
+    --muted: rgba(232,226,214,0.50); --accent: #d4a853; --accent-soft: rgba(212,168,83,0.15);
+    --rule: rgba(212,168,83,0.12); --code-bg: rgba(232,226,214,0.05);
+    --font-body: 'Plus Jakarta Sans', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+  }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; color: var(--muted); margin-top: 16px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); font-weight: 700; }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; font-weight: 700; }
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); }
+  article strong { color: var(--fg); font-weight: 600; }
+  article ul { margin: 12px 0 20px 20px; }
+  article li { font-size: 15px; line-height: 1.7; color: var(--fg-body); margin-bottom: 8px; }
+  article a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 560px) { body { padding: 40px 20px 80px; } header.meta h1 { font-size: 32px; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Dex Research Report</div>
+    <h1>Automated System Remediation: Beyond Detection</h1>
+    <div class="sub">Moving from detection-only integrity checking to auto-remediation. April 16, 2026.</div>
+  </header>
+  <article>
+    <h2>Problem Statement</h2>
+    <p>Dex detects issues (stale files, broken links, configuration drift, out-of-sync state) but cannot fix them. Current behavior: Dex runs health checks, discovers problems, logs them to `ledger/known-issues.jsonl`, and alerts via console. Humans must then manually remediate: restore a file from git, update a config, resync a database. This creates a bottleneck:</p>
+    <ul>
+      <li>Issues are discovered automatically but fixed manually</li>
+      <li>Response time is hours to days, not minutes</li>
+      <li>Manual remediation is error-prone (wrong file version restored, incomplete rollback)</li>
+      <li>Issues can cascade if they aren't fixed quickly</li>
+    </ul>
+    <p>For a small team running 5+ autonomous agents, the cost of manual remediation is high. A stale file that broke the build, a configuration drift that corrupted state, or a broken symlink can propagate through multiple agents before being noticed. Automated remediation closes this gap: the system detects AND fixes issues, with humans reviewing the remediation afterward.</p>
+
+    <h2>Remediation Patterns from Infrastructure Automation</h2>
+    <h3>Pattern 1: Self-Healing Configuration via Ansible</h3>
+    <p><strong>Tool: Ansible</strong> (open-source, 31.5K GitHub stars, GPLv3). Ansible is an infrastructure automation engine that applies idempotent configuration changes. A playbook describes the desired state (e.g., "file X should contain Y", "service Z should be running"). When run, Ansible checks the current state, and if it differs from desired, it applies corrections.</p>
+    <p>Key advantage: Ansible is idempotent. Running it 100 times produces the same result as running it once. This is crucial for automated remediation — if a fix partially fails and is retried, the system doesn't break.</p>
+    <p>For Hyo: Define Ansible playbooks for common issues. Example playbook for stale files:</p>
+    <code style="display: block; background: var(--code-bg); padding: 8px; border-radius: 4px; margin: 12px 0; font-family: var(--font-mono); font-size: 13px;">
+- name: Restore stale files from git
+  hosts: localhost
+  tasks:
+    - name: Check if file is stale
+      stat: path=/path/to/file
+      register: file_stat
+    - name: Restore if stale
+      shell: git checkout HEAD -- /path/to/file
+      when: file_stat.stat.mtime < (ansible_date_time.epoch|int - 86400)
+    </code>
+    <h3>Pattern 2: Policy Enforcement via OPA (Open Policy Agent)</h3>
+    <p><strong>Tool: OPA</strong> (open-source, 9.1K GitHub stars, Apache 2.0). OPA is a policy engine that evaluates configuration files and enforces compliance rules. Rules are written in Rego, a high-level policy language. OPA can be integrated into CI/CD or runtime checks to automatically reject non-compliant configs.</p>
+    <p>Example: An OPA policy enforces "all agent config files must have a timeout field". When an agent config is modified, OPA checks it. If the timeout is missing, the policy fails and the config change is rejected. Humans must fix it before deployment.</p>
+    <p>For Hyo: Define OPA policies for configuration correctness:</p>
+    <ul>
+      <li>All agent manifests must have a schedule field</li>
+      <li>All API endpoints must have rate-limit config</li>
+      <li>All secrets must live in agents/nel/security/ only</li>
+    </ul>
+    <h3>Pattern 3: Automated Rollback via Argo Rollouts</h3>
+    <p><strong>Tool: Argo Rollouts</strong> (open-source, 4.8K GitHub stars, Apache 2.0). Argo Rollouts is a progressive delivery tool that automates canary deployments and automatic rollback. When a new version is deployed, Argo monitors metrics. If metrics degrade (e.g., error rate spikes), it automatically rolls back to the previous version.</p>
+    <p>For Hyo: Deploy agent updates progressively. Monitor key metrics (error rate, run duration, memory usage). If any metric degrades >10%, automatically roll back to the prior version and alert.</p>
+    <h3>Pattern 4: Self-Correction via Declarative State Management</h3>
+    <p>Instead of imperative fixes ("run this script to fix X"), declare the desired state and let a controller continuously enforce it. Example:</p>
+    <code style="display: block; background: var(--code-bg); padding: 8px; border-radius: 4px; margin: 12px 0; font-family: var(--font-mono); font-size: 13px;">
+# agents/dex/remediation/desired-state.json
+{
+  "symlinks": {
+    "website/": "agents/sam/website/",
+    "newsletter/": "agents/ra/pipeline/"
+  },
+  "file-permissions": {
+    "agents/nel/security/": "mode 700"
+  },
+  "file-freshness": {
+    "KAI_BRIEF.md": "max_age_seconds 3600",
+    "agents/*/ACTIVE.md": "max_age_seconds 86400"
+  }
+}
+    </code>
+    <p>A controller runs every 10 minutes and enforces this state: checks symlinks are correct, permissions are right, files are fresh. If any divergence is detected, the controller automatically corrects it and logs the action.</p>
+
+    <h2>Implementation for Hyo's Dex Agent</h2>
+    <h3>Layer 1: Detection with Prescribed Remediation (Week 1)</h3>
+    <p>Enhance Dex's health checks to include a "remediation script" field. When an issue is detected, Dex doesn't just log it — it runs the associated remediation script (with safeguards). Example:</p>
+    <code style="display: block; background: var(--code-bg); padding: 8px; border-radius: 4px; margin: 12px 0; font-family: var(--font-mono); font-size: 13px;">
+issue = {
+  "type": "stale_file",
+  "file": "KAI_BRIEF.md",
+  "remediation": "git checkout HEAD -- {file}",
+  "safeguard": "backup {file} before restore"
+}
+    </code>
+    <p>When detected, Dex: (1) backs up the file, (2) runs the remediation script, (3) logs the action, (4) verifies the fix worked (e.g., file is now fresh).</p>
+    <h3>Layer 2: Ansible Integration for Complex Fixes (Week 2)</h3>
+    <p>For complex issues (e.g., symlink repair, permission correction), use Ansible playbooks. Dex invokes Ansible with the appropriate playbook and captures output.</p>
+    <h3>Layer 3: OPA Policy Enforcement (Week 3)</h3>
+    <p>Integrate OPA into the deployment pipeline. Any agent config change that violates a policy is rejected before deployment. Humans see the policy failure and must fix the config.</p>
+    <h3>Layer 4: Argo Rollouts for Agent Updates (Week 4)</h3>
+    <p>Deploy agent code changes progressively. Monitor agent health (CPU, memory, error rate, run duration). If any metric degrades, automatically roll back to the prior version.</p>
+
+    <h2>Remediation Playbooks for Hyo</h2>
+    <p><strong>Playbook 1: Stale Files</strong></p>
+    <ul>
+      <li>Detect: File mtime > 24 hours old</li>
+      <li>Remediate: `git checkout HEAD -- {file}`</li>
+      <li>Verify: File mtime is now recent</li>
+    </ul>
+    <p><strong>Playbook 2: Symlink Drift</strong></p>
+    <ul>
+      <li>Detect: Symlink target doesn't match expected target</li>
+      <li>Remediate: `ln -sf {expected_target} {link}`</li>
+      <li>Verify: `readlink {link}` matches expected</li>
+    </ul>
+    <p><strong>Playbook 3: Permission Drift</strong></p>
+    <ul>
+      <li>Detect: File permissions don't match expected (e.g., agents/nel/security/ is world-readable)</li>
+      <li>Remediate: `chmod {expected_mode} {file}`</li>
+      <li>Verify: `stat {file}` shows correct mode</li>
+    </ul>
+    <p><strong>Playbook 4: Agent Stale State</strong></p>
+    <ul>
+      <li>Detect: Agent's ACTIVE.md is older than 48 hours</li>
+      <li>Remediate: Trigger an agent health check to update ACTIVE.md</li>
+      <li>Verify: ACTIVE.md mtime is fresh</li>
+    </ul>
+    <p><strong>Playbook 5: Config Invalid</strong></p>
+    <ul>
+      <li>Detect: Agent config fails JSON schema validation</li>
+      <li>Remediate: Restore config from git HEAD; alert human if no valid prior version exists</li>
+      <li>Verify: Config passes schema validation</li>
+    </ul>
+
+    <h2>Safeguards and Verification</h2>
+    <p>Automated remediation is powerful but dangerous. Safeguards are essential:</p>
+    <ul>
+      <li><strong>Dry-Run First:</strong> Before applying a remediation, run it in dry-run mode to show what would change</li>
+      <li><strong>Backup Before Modify:</strong> Before overwriting a file, back it up to `agents/dex/remediation-backups/{timestamp}/`</li>
+      <li><strong>Verification Step:</strong> After remediation, verify the fix actually worked (e.g., file is now fresh, symlink is correct)</li>
+      <li><strong>Audit Log:</strong> Log every remediation action to `agents/dex/logs/remediation-YYYY-MM-DD.jsonl` with: timestamp, issue type, remediation script, output, success/failure</li>
+      <li><strong>Rollback Plan:</strong> Every remediation must have a rollback script (e.g., "restore config from backup")</li>
+      <li><strong>Human Review:</strong> High-risk remediations (e.g., permission changes, file deletions) require human approval before execution. Medium-risk remediations (e.g., file restore from git) execute automatically but are logged for review. Low-risk remediations (e.g., symlink repair) execute without approval.</li>
+    </ul>
+
+    <h2>Expected Outcomes</h2>
+    <ul>
+      <li><strong>Faster Recovery:</strong> Issues are fixed in minutes, not hours or days.</li>
+      <li><strong>Fewer Manual Interventions:</strong> Humans review fixes after they're applied, not before.</li>
+      <li><strong>Fewer Cascading Issues:</strong> Rapid remediation prevents problems from propagating through agents.</li>
+      <li><strong>Reliable Self-Healing:</strong> The system keeps itself in a valid state automatically.</li>
+      <li><strong>Auditable Changes:</strong> Every remediation is logged, backed up, and reversible.</li>
+    </ul>
+
+    <h2>Risk Mitigation</h2>
+    <p>Automated remediation has risks. Mitigation strategies:</p>
+    <ul>
+      <li>Start with low-risk remediations only (symlink repair, file freshness). Add high-risk remediations (permission changes, deletions) only after 2 weeks of zero false positives.</li>
+      <li>Always maintain a rollback capability. Every backup is tested (periodically restore from backup and verify it works).</li>
+      <li>Alert on every remediation, even if successful. Humans see the audit log and can investigate anomalies.</li>
+      <li>Rate-limit remediation attempts. Don't run more than 5 remediations per minute. If the system is broken badly enough to need constant fixing, halt and alert rather than entering a repair loop.</li>
+    </ul>
+
+    <h2>Conclusion</h2>
+    <p>Automated remediation transforms Dex from a reporting tool into a self-healing system. Ansible, OPA, and Argo Rollouts provide the tooling. Implementation over 4 weeks brings Hyo's system uptime and reliability in line with production infrastructure. The result: a small team can reliably operate a complex multi-agent system without manual intervention.</p>
+
+  </article>
+</main>
+</body>
+</html>

@@ -888,7 +888,7 @@ function renderFeed(container) {
   // The main feed shows ONLY: morning-report, Ra's newsletter, Aether's daily analysis.
   // Everything else (agent-reflection, ceo-report, research-drop) lives on the
   // per-agent sub-page, not the feed.
-  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis']);
+  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'research-drop']);
   const todayReports = (FEED_DATA.reports || [])
     .filter(r => r.date === today && FEED_ALLOWED_TYPES.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1056,6 +1056,8 @@ function renderReport(report) {
     body = renderNewsletter(s, report);
   } else if (report.type === 'aether-analysis') {
     body = renderAetherAnalysis(s, report);
+  } else if (report.type === 'research-drop') {
+    body = renderResearchDrop(s, report);
   } else {
     // Generic
     for (const [key, val] of Object.entries(s)) {
@@ -1124,10 +1126,24 @@ function renderNewsletter(s, report) {
     html += `</div>`;
   }
 
+  // Full content inline — no click-to-expand gate (Hyo directive)
+  if (s.story) {
+    html += sec('The Story', `<p>${s.story}</p>`);
+  }
+  if (s.alsoMoving) {
+    html += sec('Also Moving', `<p>${s.alsoMoving}</p>`);
+  }
+  if (s.lab) {
+    html += sec('The Lab', `<p>${s.lab}</p>`);
+  }
+  if (s.reflection) {
+    html += sec('Worth Sitting With', `<p style="font-style:italic;color:var(--text-secondary);">${s.reflection}</p>`);
+  }
+
   if (readLink) {
     html += `<div style="padding:12px 0 4px;">
-      <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:600;text-decoration:none;font-size:0.95em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-        Read the full brief <span style="font-size:1.1em;">→</span>
+      <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-weight:500;text-decoration:none;font-size:0.85em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        View formatted version <span style="font-size:1.1em;">→</span>
       </a>
     </div>`;
   }
@@ -1157,6 +1173,31 @@ function renderAetherAnalysis(s, report) {
     html += `<div style="padding:12px 0 4px;">
       <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:600;text-decoration:none;font-size:0.95em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
         View full analysis with trade tables <span style="font-size:1.1em;">\u2192</span>
+      </a>
+    </div>`;
+  }
+  return html;
+}
+
+function renderResearchDrop(s, report) {
+  let html = '';
+  if (s.topic) {
+    html += sec('Topic', `<p>${s.topic}</p>`);
+  }
+  if (s.finding) {
+    html += sec('Key Findings', `<p>${s.finding}</p>`);
+  }
+  if (s.implications) {
+    html += sec('Implications', `<p>${s.implications}</p>`);
+  }
+  if (s.nextSteps?.length) {
+    html += sec('Next Steps', `<ul>${s.nextSteps.map(n => `<li>${n}</li>`).join('')}</ul>`);
+  }
+  const readLink = s.readLink || '';
+  if (readLink) {
+    html += `<div style="padding:12px 0 4px;">
+      <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-weight:500;text-decoration:none;font-size:0.85em;">
+        View full research paper <span style="font-size:1.1em;">→</span>
       </a>
     </div>`;
   }
