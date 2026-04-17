@@ -98,9 +98,13 @@ if os.path.exists(feed_path):
     except:
         pass
 
-# Update
+# Update — SE-011-010: dedup by report ID before appending
 feed["lastUpdated"] = timestamp
 feed["today"] = date
+existing_ids = {r.get("id") for r in feed.get("reports", [])}
+if report_id in existing_ids:
+    # Replace existing entry with updated version
+    feed["reports"] = [r for r in feed["reports"] if r.get("id") != report_id]
 feed["reports"].append(entry)
 feed["reports"].sort(key=lambda r: r.get("timestamp", ""), reverse=True)
 
