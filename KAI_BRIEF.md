@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-16 ~23:30 MT (session 11 continuation 3 — P0 fixes, 3 major reports published, overnight directives addressed)
+**Updated:** 2026-04-16 ~22:10 MT (session 12 — aether.sh frozen-PnL bug fixed, extraction now authoritative from raw logs)
 **Last healthcheck re-check:** 2026-04-16T20:03Z (14:03 MT, sandbox zealous-determined-clarke). Status: ISSUES (5 P0/P1 + 3 P2) — **P0+ QUEUE WORKER NOW STALLED 10h** (5th consecutive escalation: 2h→4h→6h→8h→10h): cmd-1776333784-340 (cipher.sh, 80s timeout) still in `kai/queue/running/` since 10:03:05Z; worker.log dead; pending still at 6 (including Nel's 12:19Z safeguard cascade, re-flagged at 18:19Z). **P0 (8h unresolved):** 'Aether metrics JSON exists but hq.html has NO rendering code' — Nel detected at 12:19:26Z, re-flagged 18:19:46Z (SE-010-013 pattern). **P1 (8h unresolved):** '/api/hq?action=data returned HTTP 401' — Nel detected at 12:19:25Z, re-flagged 18:19:46Z. Both safeguard DELEGATEs blocked behind stalled worker. **FIRST INTERACTIVE ACTION (CRITICAL — 10h overdue):** `launchctl kickstart gui/<uid>/com.hyo.queue-worker` on the Mini, `mv running/cmd-1776333784-340.json failed/`, drain 6-item pending backlog, then resolve /api/hq 401 + hq.html Aether renderer gap. **Carryover — still unresolved:** (1) P1 Sam 8th consecutive healthcheck with no runner log for 2026-04-16, 9+ DELEGATEs with 0 REPORTs, 4th consecutive day; (2) P1 23+ SLA-breached tickets, frozen; (3) P2 3 MCP install jobs failed w/ null payloads; (4) P2 aether dashboard-mismatch false positive; (5) P2 ra/aether/dex ACTIVE.md now 10h old — past P1 threshold. See `kai/queue/healthcheck-latest.json`.
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
@@ -11,6 +11,15 @@
 **Last sentinel run:** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. **P0 ESCALATION: `api-health-green` failing 58 consecutive runs** (health endpoint unreachable or token unconfigured). **P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row** (missing or empty `/sessions/clever-dazzling-gauss/mnt/Hyo/newsletters/2026-04-16.md`). P1 `scheduled-tasks-fired` (no aurora logs in this sandbox session, day 3). P2 `task-queue-size` (17 P0 tasks, threshold 5, day 39). 0 new issues, 4 recurring, 0 resolved. Findings auto-filed to KAI_TASKS.md (lines 404-409). Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-16.md`.
 
 ## Shipped today (2026-04-16)
+
+**Session 12 (Cowork, ~21:30–22:10 MT):**
+27. **aether.sh frozen-PnL bug FIXED (SE-012-001).** Two loops over strategy data — first updated correctly but never wrote back. Second re-read stale data, guarded behind trades==0. Strategy P&L was frozen after first population. Fixed: single authoritative loop, always updates from settled trades.
+28. **P&L calculation clarified.** Balance math (currentBalance - startingBalance) is authoritative because it captures premium collection. Settled trade NETs only capture WIN/LOSS events, missing expiry-based premium. SE-012-002 logged.
+29. **settledPnl removed from dashboard.** Per Hyo directive — showing -$44 settled alongside +$24 balance P&L adds confusion, not clarity.
+30. **4 session errors logged** (SE-012-001 through SE-012-004) including trust-erosion pattern from back-and-forth changes.
+31. **Node access prompts identified.** Claude Desktop Chrome Control extension and Helper Plugin (both Node.js processes) triggered macOS folder access prompts. Hyo advised to deny Photos access.
+
+**CRITICAL LEARNING (embed to memory):** AetherBot P&L has THREE components: (1) premium collected from selling (no SETTLED line), (2) WIN SETTLED (profit from winning trades), (3) LOSS SETTLED (losses). Balance math captures all three. Settled NET only captures 2+3. Premium dominates — settled P&L can be deeply negative while balance P&L is positive. Never show settled P&L as "the P&L."
 
 **Session 11 (Cowork, ~17:00–19:15 MT):**
 1. **Morning report → HQ feed FIXED.** Was passing empty sections arg to publish-to-feed.sh. Now generates sections JSON from morning-report.json data. Published: `morning-report-kai-2026-04-16`.
