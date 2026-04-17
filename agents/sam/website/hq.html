@@ -588,6 +588,12 @@
       margin-top: 24px;
     }
 
+    /* ═══ AETHER v2 dashboard ═══ */
+    .aether-v2 {
+      font-family: var(--font-body);
+      color: var(--text-primary);
+    }
+
     @media (max-width: 1400px) {
       .aether-summary {
         grid-template-columns: repeat(2, 1fr);
@@ -1400,16 +1406,26 @@ function renderAetherDashboard(container, agent) {
   const openIssues = data.openIssues || [];
   const strategies = week.strategies || [];
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
-  const pnlColor = v => v > 0 ? '#00ff88' : v < 0 ? '#ff4444' : '#888';
+  // ── Helpers (all colors via CSS variables) ────────────────────────────────
+  const pnlCssColor = v => v > 0 ? 'var(--success)' : v < 0 ? 'var(--error)' : 'var(--text-muted)';
+  // SVG can't resolve CSS vars in presentation attrs — use site's actual hex values
+  const pnlSvgColor = v => v >= 0 ? '#6dd49c' : '#e07060';
   const fmtPnl = v => v == null ? '—' : (v >= 0 ? '+' : '') + '$' + Math.abs(v).toFixed(2);
+
+  // Status badge styles using site color tokens
   const SC = {
-    ACTIVE:  { bg: '#0d2d1a', border: '#00ff88', text: '#00ff88' },
-    WATCH:   { bg: '#2d2200', border: '#ffa500', text: '#ffa500' },
-    ALERT:   { bg: '#2d0d0d', border: '#ff4444', text: '#ff4444' },
-    MONITOR: { bg: '#0d1a2d', border: '#00c8ff', text: '#00c8ff' },
+    ACTIVE:  { bg: 'rgba(109,212,156,0.10)', border: 'rgba(109,212,156,0.30)', text: 'var(--success)' },
+    WATCH:   { bg: 'rgba(232,201,106,0.10)', border: 'rgba(232,201,106,0.30)', text: 'var(--warning)' },
+    ALERT:   { bg: 'rgba(224,112,96,0.10)',  border: 'rgba(224,112,96,0.30)',  text: 'var(--error)' },
+    MONITOR: { bg: 'rgba(126,196,224,0.10)', border: 'rgba(126,196,224,0.30)', text: 'var(--cyan)' },
   };
-  const PC = { P0: '#ff4444', P1: '#ff8c44', P2: '#ffa500', P3: '#888888' };
+  // Priority colors — P0 = error, P1 = between error/warning, P2 = warning, P3 = muted
+  const PC = {
+    P0: 'var(--error)',
+    P1: 'var(--warning)',
+    P2: 'var(--accent)',
+    P3: 'var(--text-muted)',
+  };
 
   function deriveStatus(s) {
     if (s.winRate < 40 || s.pnl < -5) return 'ALERT';
@@ -1420,31 +1436,41 @@ function renderAetherDashboard(container, agent) {
 
   function wrBar(wins, total) {
     const wr = total === 0 ? 0 : (wins / total) * 100;
-    const col = wr >= 75 ? '#00ff88' : wr >= 60 ? '#ffa500' : '#ff4444';
-    return `<div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden"><div style="width:${wr.toFixed(1)}%;height:100%;background:${col};border-radius:3px"></div></div><span style="color:${col};font-family:monospace;font-size:12px">${Math.round(wr)}%</span></div>`;
+    const col = wr >= 75 ? 'var(--success)' : wr >= 60 ? 'var(--warning)' : 'var(--error)';
+    return `<div style="display:flex;align-items:center;gap:8px">
+      <div style="width:72px;height:5px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+        <div style="width:${wr.toFixed(1)}%;height:100%;background:${col};border-radius:3px;transition:width 0.4s"></div>
+      </div>
+      <span style="color:${col};font-family:var(--font-mono);font-size:11px;min-width:32px">${Math.round(wr)}%</span>
+    </div>`;
   }
 
   function statusBadge(status) {
     const c = SC[status] || SC.MONITOR;
-    return `<span style="padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:0.08em;font-family:monospace;background:${c.bg};border:1px solid ${c.border};color:${c.text}">${status}</span>`;
+    return `<span style="padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:0.06em;font-family:var(--font-mono);background:${c.bg};border:1px solid ${c.border};color:${c.text}">${status}</span>`;
   }
 
   function netCell(v) {
-    return `<span style="color:${pnlColor(v)};font-family:monospace;font-weight:700;font-size:13px">${fmtPnl(v)}</span>`;
+    return `<span style="color:${pnlCssColor(v)};font-family:var(--font-mono);font-weight:600;font-size:13px">${fmtPnl(v)}</span>`;
   }
 
   function sparkline(pts) {
     if (!pts || pts.length < 2) return '';
     const mn = Math.min(...pts), mx = Math.max(...pts), rng = mx - mn || 1;
-    const W = 60, H = 20;
+    const W = 52, H = 18;
     const coords = pts.map((v, i) => `${((i / (pts.length - 1)) * W).toFixed(1)},${(H - ((v - mn) / rng) * H).toFixed(1)}`).join(' ');
-    const dots = pts.map((v, i) => `<circle cx="${((i / (pts.length - 1)) * W).toFixed(1)}" cy="${(H - ((v - mn) / rng) * H).toFixed(1)}" r="2" fill="${v >= 0 ? '#00ff88' : '#ff4444'}"/>`).join('');
-    return `<svg width="${W}" height="${H}" style="overflow:visible"><polyline points="${coords}" fill="none" stroke="#00ff8866" stroke-width="1.5"/>${dots}</svg>`;
+    const dots = pts.map((v, i) => `<circle cx="${((i / (pts.length - 1)) * W).toFixed(1)}" cy="${(H - ((v - mn) / rng) * H).toFixed(1)}" r="2" fill="${pnlSvgColor(v)}"/>`).join('');
+    // stroke uses site success hex with alpha
+    return `<svg width="${W}" height="${H}" style="overflow:visible;display:block"><polyline points="${coords}" fill="none" stroke="#6dd49c66" stroke-width="1.5"/>${dots}</svg>`;
   }
 
   function sortTH(label, key, currentSort, fn) {
     const active = currentSort === key;
-    return `<th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f"><span onclick="${fn}('${key}')" style="cursor:pointer;color:${active ? '#00c8ff' : '#555'};font-size:10px;font-family:monospace;letter-spacing:0.06em;user-select:none">${label}${active ? ' ↓' : ''}</span></th>`;
+    return `<th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color)">
+      <span onclick="${fn}('${key}')" style="cursor:pointer;color:${active ? 'var(--accent)' : 'var(--text-muted)'};font-size:10px;font-family:var(--font-mono);letter-spacing:0.06em;user-select:none;text-transform:uppercase">
+        ${label}${active ? ' ↓' : ''}
+      </span>
+    </th>`;
   }
 
   // ── Enriched strategies ───────────────────────────────────────────────────
@@ -1471,20 +1497,20 @@ function renderAetherDashboard(container, agent) {
 
   // ── Strategy rows ─────────────────────────────────────────────────────────
   const stratRows = sortedStrats.map((s, i) => `
-    <tr style="background:${i % 2 === 0 ? 'transparent' : '#0d0d0d'};border-bottom:1px solid #161616">
+    <tr style="border-bottom:1px solid var(--border-color)">
       <td style="padding:10px 10px">
-        <div style="font-family:monospace;font-size:12px;color:#ddd;font-weight:600">${s.name}</div>
+        <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-primary);font-weight:500">${s.name}</div>
       </td>
       <td style="padding:10px 10px">
-        <div style="color:#888;font-family:monospace;font-size:12px">${s.trades}</div>
-        <div style="color:#444;font-size:10px">${s.wins}W / ${s.losses}L</div>
+        <div style="color:var(--text-secondary);font-family:var(--font-mono);font-size:12px">${s.trades}</div>
+        <div style="color:var(--text-muted);font-size:10px;margin-top:2px">${s.wins}W / ${s.losses}L</div>
       </td>
       <td style="padding:10px 10px">${wrBar(s.wins, s.trades)}</td>
-      <td style="padding:10px 10px"><span style="color:#00ff8899;font-family:monospace;font-size:12px">—</span></td>
-      <td style="padding:10px 10px"><span style="color:${s.losses > 0 ? '#ff444499' : '#888'};font-family:monospace;font-size:12px">—</span></td>
+      <td style="padding:10px 10px"><span style="color:var(--text-muted);font-family:var(--font-mono);font-size:12px">—</span></td>
+      <td style="padding:10px 10px"><span style="color:var(--text-muted);font-family:var(--font-mono);font-size:12px">—</span></td>
       <td style="padding:10px 10px">${netCell(s.pnl)}</td>
       <td style="padding:10px 10px">${statusBadge(s.derivedStatus)}</td>
-      <td style="padding:10px 10px;width:70px;opacity:0.8">${s.trades >= 2 ? sparkline(s.sparkPts) : ''}</td>
+      <td style="padding:10px 10px;width:64px;opacity:0.85">${s.trades >= 2 ? sparkline(s.sparkPts) : ''}</td>
     </tr>`).join('');
 
   // ── Daily feed cards ──────────────────────────────────────────────────────
@@ -1492,100 +1518,116 @@ function renderAetherDashboard(container, agent) {
     const isPos = d.pnl >= 0;
     const isSelected = _aetherSelectedDay === i;
     const isLast = i === 0;
-    const borderLeft = isLast ? '#00c8ff' : isPos ? '#00ff88' : '#ff4444';
+    const accentBorder = isLast ? 'var(--cyan)' : isPos ? 'var(--success)' : 'var(--error)';
     const stratBreakdown = Object.entries(d.strategies || {}).map(([sn, sv]) =>
-      `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:10px;font-family:monospace"><span style="color:#555">${sn}</span><span style="color:${sv.pnl >= 0 ? '#00ff8888' : '#ff444488'}">${fmtPnl(sv.pnl)}</span></div>`
+      `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:11px;font-family:var(--font-mono)"><span style="color:var(--text-muted)">${sn}</span><span style="color:${pnlCssColor(sv.pnl)}">${fmtPnl(sv.pnl)}</span></div>`
     ).join('');
     return `
-      <div onclick="aetherToggleDay(${i})" style="background:${isSelected ? '#1a1a1a' : '#111'};border:1px solid ${isSelected ? '#333' : '#1f1f1f'};border-left:3px solid ${borderLeft};border-radius:6px;padding:12px 14px;cursor:pointer;margin-bottom:8px;transition:all 0.2s">
+      <div onclick="aetherToggleDay(${i})" style="background:${isSelected ? 'var(--bg-tertiary)' : 'var(--bg-secondary)'};border:1px solid ${isSelected ? 'var(--border-hover)' : 'var(--border-color)'};border-left:3px solid ${accentBorder};border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;margin-bottom:8px;transition:all 0.2s">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div>
-            <span style="color:#888;font-family:monospace;font-size:11px">${d.day || ''} ·</span>
-            <span style="color:#ccc;font-family:monospace;font-size:11px;margin-left:4px">${d.date}</span>
-            ${isLast ? '<span style="margin-left:8px;font-size:9px;font-weight:700;color:#00c8ff;border:1px solid #00c8ff33;border-radius:2px;padding:1px 5px;font-family:monospace">LIVE</span>' : ''}
+            <span style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">${d.day || ''}</span>
+            <span style="color:var(--text-secondary);font-size:12px;margin-left:6px">${d.date}</span>
+            ${isLast ? '<span style="margin-left:8px;font-size:9px;font-weight:600;color:var(--cyan);border:1px solid rgba(126,196,224,0.3);border-radius:3px;padding:1px 5px;font-family:var(--font-mono)">LIVE</span>' : ''}
           </div>
           <div style="text-align:right">
-            <div style="color:${pnlColor(d.pnl)};font-family:monospace;font-weight:700;font-size:14px">${fmtPnl(d.pnl)}</div>
-            <div style="color:#555;font-size:10px;font-family:monospace">${d.trades} trades</div>
+            <div style="color:${pnlCssColor(d.pnl)};font-family:var(--font-mono);font-weight:600;font-size:14px">${fmtPnl(d.pnl)}</div>
+            <div style="color:var(--text-muted);font-size:11px;margin-top:1px">${d.trades} trades</div>
           </div>
         </div>
-        ${isSelected ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #222">
-          <div style="display:flex;gap:16px;margin-bottom:10px">
-            <div><div style="color:#555;font-size:10px;font-family:monospace">OPEN</div><div style="color:#888;font-family:monospace;font-size:12px">$${(d.balanceStart || 0).toFixed(2)}</div></div>
-            <div><div style="color:#555;font-size:10px;font-family:monospace">CLOSE</div><div style="color:#888;font-family:monospace;font-size:12px">$${(d.balanceEnd || 0).toFixed(2)}</div></div>
-            <div><div style="color:#555;font-size:10px;font-family:monospace">WIN RATE</div><div style="color:#888;font-family:monospace;font-size:12px">${(d.winRate || 0).toFixed(1)}% (${d.wins}W/${d.losses}L)</div></div>
+        ${isSelected ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color)">
+          <div style="display:flex;gap:20px;margin-bottom:10px">
+            <div>
+              <div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);text-transform:uppercase;margin-bottom:2px">Open</div>
+              <div style="color:var(--text-secondary);font-family:var(--font-mono);font-size:12px">$${(d.balanceStart || 0).toFixed(2)}</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);text-transform:uppercase;margin-bottom:2px">Close</div>
+              <div style="color:var(--text-secondary);font-family:var(--font-mono);font-size:12px">$${(d.balanceEnd || 0).toFixed(2)}</div>
+            </div>
+            <div>
+              <div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);text-transform:uppercase;margin-bottom:2px">Win Rate</div>
+              <div style="color:var(--text-secondary);font-family:var(--font-mono);font-size:12px">${(d.winRate || 0).toFixed(1)}%</div>
+            </div>
           </div>
-          <div style="color:#555;font-size:10px;font-family:monospace;margin-bottom:4px">STRATEGY BREAKDOWN</div>
-          ${stratBreakdown || '<div style="color:#444;font-size:10px">no breakdown available</div>'}
+          <div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Strategy Breakdown</div>
+          ${stratBreakdown || '<div style="color:var(--text-muted);font-size:11px">no breakdown available</div>'}
         </div>` : ''}
       </div>`;
   }).join('');
 
   // ── Balance ledger ────────────────────────────────────────────────────────
   const startEntry = week.startingBalance ? `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #161616">
-      <div><span style="color:#888;font-family:monospace;font-size:12px">${week.start || 'Week Start'}</span><span style="margin-left:6px;font-size:9px;color:#555;font-family:monospace">START</span></div>
-      <div style="text-align:right"><div style="font-family:monospace;font-size:13px;color:#ddd">$${(week.startingBalance || 0).toFixed(2)}</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
+      <div>
+        <span style="color:var(--text-tertiary);font-family:var(--font-mono);font-size:12px">${week.start || 'Week Start'}</span>
+        <span style="margin-left:6px;font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">start</span>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-secondary)">$${(week.startingBalance || 0).toFixed(2)}</div>
+      </div>
     </div>` : '';
 
   const ledgerRows = dailyPnl.map((d, i, arr) => {
     const isLast = i === arr.length - 1;
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #161616">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color)">
         <div>
-          <span style="color:#888;font-family:monospace;font-size:12px">${d.date}</span>
-          ${isLast ? '<span style="margin-left:6px;font-size:9px;color:#00c8ff;border:1px solid #00c8ff33;padding:1px 4px;border-radius:2px">LIVE</span>' : '<span style="margin-left:6px;font-size:9px;color:#555;font-family:monospace">confirmed</span>'}
+          <span style="color:var(--text-secondary);font-family:var(--font-mono);font-size:12px">${d.date}</span>
+          ${isLast
+            ? '<span style="margin-left:6px;font-size:9px;font-weight:600;color:var(--cyan);border:1px solid rgba(126,196,224,0.3);padding:1px 4px;border-radius:3px;font-family:var(--font-mono)">LIVE</span>'
+            : '<span style="margin-left:6px;font-size:10px;color:var(--text-muted)">confirmed</span>'}
         </div>
         <div style="text-align:right">
-          <div style="font-family:monospace;font-size:13px;color:#ddd">$${(d.balanceEnd || 0).toFixed(2)}</div>
-          <div style="font-size:10px;font-family:monospace;color:${pnlColor(d.pnl)}">${fmtPnl(d.pnl)}</div>
+          <div style="font-family:var(--font-mono);font-size:13px;color:var(--text-primary)">$${(d.balanceEnd || 0).toFixed(2)}</div>
+          <div style="font-size:11px;font-family:var(--font-mono);color:${pnlCssColor(d.pnl)}">${fmtPnl(d.pnl)}</div>
         </div>
       </div>`;
   }).join('');
 
   // ── Open issues ───────────────────────────────────────────────────────────
   const issueRows = openIssues.map(issue => {
-    const pc = PC[issue.priority] || '#888';
+    const pc = PC[issue.priority] || 'var(--text-muted)';
     const label = issue.title || issue.label || '';
     return `
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid #161616">
-        <span style="font-size:10px;font-weight:700;font-family:monospace;color:${pc};min-width:24px;padding-top:1px">${issue.priority}</span>
-        <span style="color:#bbb;font-size:12px;flex:1;line-height:1.4">${label}</span>
-        <span style="font-size:10px;font-family:monospace;color:${issue.status === 'ACTIVE' ? '#00c8ff' : '#666'};min-width:60px;text-align:right">${issue.status || ''}</span>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-color)">
+        <span style="font-size:10px;font-weight:700;font-family:var(--font-mono);color:${pc};min-width:24px;padding-top:2px">${issue.priority}</span>
+        <span style="color:var(--text-secondary);font-size:12px;flex:1;line-height:1.5">${label}</span>
+        <span style="font-size:10px;font-family:var(--font-mono);color:${issue.status === 'ACTIVE' ? 'var(--cyan)' : 'var(--text-muted)'};min-width:70px;text-align:right">${issue.status || ''}</span>
       </div>`;
   }).join('');
 
   // ── Build full HTML ───────────────────────────────────────────────────────
   const html = `
-    <div style="background:#0d0d0d;min-height:100%;color:#e0e0e0;font-family:'JetBrains Mono',monospace;padding:20px;border-radius:8px">
+    <div class="aether-v2">
 
       <!-- HEADER -->
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid #1f1f1f">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border-color)">
         <div>
-          <div style="display:flex;align-items:baseline;gap:12px">
-            <h1 style="margin:0;font-size:20px;font-weight:700;letter-spacing:0.05em;color:#00c8ff;font-family:monospace">AETHERBOT</h1>
-            <span style="color:#333;font-size:13px">${data.agent || 'aether.hyo'}</span>
-            <span style="font-size:9px;font-weight:700;letter-spacing:0.15em;color:#00ff88;border:1px solid #00ff8844;padding:2px 8px;border-radius:2px">RUNNING</span>
+          <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
+            <h2 style="margin:0;font-size:18px;font-weight:700;letter-spacing:0.04em;color:var(--cyan);font-family:var(--font-mono)">AETHERBOT</h2>
+            <span style="color:var(--text-muted);font-size:12px;font-family:var(--font-mono)">${data.agent || 'aether.hyo'}</span>
+            <span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--success);border:1px solid rgba(109,212,156,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RUNNING</span>
           </div>
-          <div style="color:#555;font-size:11px;margin-top:4px">Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN</div>
+          <div style="color:var(--text-muted);font-size:11px;margin-top:5px">Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN</div>
         </div>
         <div style="text-align:right">
-          <div style="font-size:26px;font-weight:700;color:#00ff88;letter-spacing:-0.02em;font-family:monospace">$${currentBalance.toFixed(2)}</div>
-          <div style="color:#555;font-size:11px">current balance</div>
+          <div style="font-size:24px;font-weight:700;color:var(--success);letter-spacing:-0.01em;font-family:var(--font-mono)">$${currentBalance.toFixed(2)}</div>
+          <div style="color:var(--text-muted);font-size:11px;margin-top:2px">current balance</div>
         </div>
       </div>
 
       <!-- 5-METRIC ROW -->
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">
         ${[
-          { label: '4-DAY NET',     value: fmtPnl(totalNet),            color: pnlColor(totalNet) },
-          { label: 'OVERALL WR',    value: overallWR.toFixed(1) + '%',  color: overallWR >= 70 ? '#00ff88' : '#ffa500' },
-          { label: 'TOTAL TRADES',  value: totalTrades,                  color: '#e0e0e0' },
-          { label: 'RECORD',        value: totalWins + 'W / ' + totalLosses + 'L', color: '#888' },
-          { label: 'OPEN ISSUES',   value: openIssues.length,           color: '#ff8c44' },
-        ].map(m => `<div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:12px 14px">
-          <div style="color:#555;font-size:9px;letter-spacing:0.1em;margin-bottom:6px">${m.label}</div>
-          <div style="font-size:18px;font-weight:700;color:${m.color};font-family:monospace">${m.value}</div>
+          { label: '4-Day Net',     value: fmtPnl(totalNet),                        color: pnlCssColor(totalNet) },
+          { label: 'Win Rate',      value: overallWR.toFixed(1) + '%',              color: overallWR >= 70 ? 'var(--success)' : 'var(--warning)' },
+          { label: 'Total Trades',  value: totalTrades,                              color: 'var(--text-primary)' },
+          { label: 'Record',        value: totalWins + 'W / ' + totalLosses + 'L',  color: 'var(--text-secondary)' },
+          { label: 'Open Issues',   value: openIssues.length,                        color: openIssues.length > 0 ? 'var(--warning)' : 'var(--text-muted)' },
+        ].map(m => `<div class="aether-card" style="border-left:3px solid var(--border-hover)">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:6px">${m.label}</div>
+          <div style="font-size:18px;font-weight:700;color:${m.color};font-family:var(--font-mono)">${m.value}</div>
         </div>`).join('')}
       </div>
 
@@ -1596,34 +1638,34 @@ function renderAetherDashboard(container, agent) {
         <div>
 
           <!-- STRATEGY TABLE -->
-          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;margin-bottom:14px;overflow:hidden">
-            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f;display:flex;justify-content:space-between;align-items:center">
+          <div class="aether-strategies" style="margin-bottom:14px;padding:0">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center">
               <div>
-                <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">STRATEGY PERFORMANCE</span>
-                <span style="color:#333;font-size:10px;margin-left:8px">click headers to sort</span>
+                <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Strategy Performance</span>
+                <span style="color:var(--text-muted);font-size:10px;margin-left:8px">click headers to sort</span>
               </div>
-              <span style="color:#333;font-size:10px">${totalTrades} trades total</span>
+              <span style="color:var(--text-muted);font-size:11px;font-family:var(--font-mono)">${totalTrades} trades</span>
             </div>
             <table style="width:100%;border-collapse:collapse;font-size:12px">
-              <thead style="background:#0d0d0d">
-                <tr>
-                  ${sortTH('FAMILY',   'name',   _aetherStratSort, 'aetherSortStrat')}
-                  ${sortTH('TRADES',   'trades', _aetherStratSort, 'aetherSortStrat')}
-                  ${sortTH('WIN RATE', 'wr',     _aetherStratSort, 'aetherSortStrat')}
-                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace;letter-spacing:0.06em">AVG WIN</th>
-                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace;letter-spacing:0.06em">AVG LOSS</th>
-                  ${sortTH('NET P&amp;L', 'net', _aetherStratSort, 'aetherSortStrat')}
-                  <th style="padding:8px 10px;border-bottom:1px solid #1f1f1f"></th>
-                  <th style="padding:8px 10px;border-bottom:1px solid #1f1f1f"></th>
+              <thead>
+                <tr style="background:var(--bg-secondary)">
+                  ${sortTH('Family',   'name',   _aetherStratSort, 'aetherSortStrat')}
+                  ${sortTH('Trades',   'trades', _aetherStratSort, 'aetherSortStrat')}
+                  ${sortTH('Win Rate', 'wr',     _aetherStratSort, 'aetherSortStrat')}
+                  <th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.06em">Avg Win</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.06em">Avg Loss</th>
+                  ${sortTH('Net P&amp;L', 'net', _aetherStratSort, 'aetherSortStrat')}
+                  <th style="padding:8px 10px;border-bottom:1px solid var(--border-color)"></th>
+                  <th style="padding:8px 10px;border-bottom:1px solid var(--border-color)"></th>
                 </tr>
               </thead>
               <tbody>
                 ${stratRows}
               </tbody>
               <tfoot>
-                <tr style="background:#0a0a0a;border-top:1px solid #252525">
-                  <td style="padding:10px;color:#666;font-size:11px;font-family:monospace">TOTAL</td>
-                  <td style="padding:10px;color:#888;font-family:monospace;font-size:12px">${totalTrades}</td>
+                <tr style="background:var(--bg-secondary);border-top:1px solid var(--border-color)">
+                  <td style="padding:10px;color:var(--text-muted);font-size:11px;font-family:var(--font-mono)">TOTAL</td>
+                  <td style="padding:10px;color:var(--text-secondary);font-family:var(--font-mono);font-size:12px">${totalTrades}</td>
                   <td style="padding:10px">${wrBar(totalWins, totalWins + totalLosses)}</td>
                   <td colspan="2"></td>
                   <td style="padding:10px">${netCell(totalNet)}</td>
@@ -1633,47 +1675,44 @@ function renderAetherDashboard(container, agent) {
             </table>
           </div>
 
-          <!-- SESSION WINDOWS NOTE -->
-          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;margin-bottom:14px;overflow:hidden">
-            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f;display:flex;justify-content:space-between;align-items:center">
-              <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">SESSION WINDOWS · MTN</span>
-              <span style="font-size:9px;color:#333;font-family:monospace">EU_MORNING · ASIA_OPEN · NY_PRIME · EVENING</span>
+          <!-- SESSION WINDOWS -->
+          <div class="aether-strategies" style="margin-bottom:14px;padding:0">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Session Windows · MTN</span>
+              <span style="font-size:10px;color:var(--text-muted)">v254 will add per-window P&amp;L</span>
             </div>
             <table style="width:100%;border-collapse:collapse;font-size:12px">
-              <thead style="background:#0d0d0d">
-                <tr>
-                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">SESSION</th>
-                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">WINDOW (MTN)</th>
-                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">NET P&amp;L</th>
-                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">STATUS</th>
+              <thead>
+                <tr style="background:var(--bg-secondary)">
+                  <th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.06em">Session</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.06em">Window</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.06em">Net P&amp;L</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:500;border-bottom:1px solid var(--border-color);color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.06em">Note</th>
                 </tr>
               </thead>
               <tbody>
                 ${[
-                  { name: 'NY_PRIME',    window: '09:00–15:00', note: 'Profit engine — largest positions' },
-                  { name: 'EVENING',     window: '17:00–22:00', note: '⚠ Regime-sensitive — monitor BTC direction' },
-                  { name: 'EU_MORNING',  window: '03:00–05:00', note: 'Monitor post-04:15 losses' },
-                  { name: 'ASIA_OPEN',   window: '00:00–03:00', note: 'Overnight — typically small' },
-                ].map((s, i) => `<tr style="background:${i % 2 === 0 ? 'transparent' : '#0d0d0d'};border-bottom:1px solid #161616">
-                    <td style="padding:10px;font-family:monospace;font-size:12px;color:#ddd;font-weight:600">${s.name}</td>
-                    <td style="padding:10px;color:#555;font-family:monospace;font-size:11px">${s.window}</td>
-                    <td style="padding:10px;color:#444;font-family:monospace;font-size:11px">—</td>
-                    <td style="padding:10px;color:#555;font-size:11px">${s.note}</td>
+                  { name: 'NY_PRIME',   window: '09:00–15:00', note: 'Profit engine — largest positions' },
+                  { name: 'EVENING',    window: '17:00–22:00', note: 'Regime-sensitive — monitor BTC direction' },
+                  { name: 'EU_MORNING', window: '03:00–05:00', note: 'Monitor post-04:15 losses' },
+                  { name: 'ASIA_OPEN',  window: '00:00–03:00', note: 'Overnight — typically small' },
+                ].map(s => `<tr style="border-bottom:1px solid var(--border-color)">
+                    <td style="padding:10px;font-family:var(--font-mono);font-size:12px;color:var(--text-primary);font-weight:500">${s.name}</td>
+                    <td style="padding:10px;color:var(--text-muted);font-family:var(--font-mono);font-size:11px">${s.window}</td>
+                    <td style="padding:10px;color:var(--text-muted);font-family:var(--font-mono);font-size:11px">—</td>
+                    <td style="padding:10px;color:var(--text-tertiary);font-size:11px">${s.note}</td>
                   </tr>`).join('')}
               </tbody>
             </table>
-            <div style="padding:10px 14px;background:#0a0a0a;border-top:1px solid #1f1f1f">
-              <span style="color:#333;font-size:10px;font-family:monospace">⚙ Window P&amp;L requires TICKER CLOSE timestamp parsing — pending v254 log instrumentation</span>
-            </div>
           </div>
 
           <!-- OPEN ISSUES -->
-          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;overflow:hidden">
-            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f">
-              <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">OPEN ISSUES · v254 SCOPE</span>
+          <div class="aether-strategies" style="padding:0">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-color)">
+              <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Open Issues · v254 Scope</span>
             </div>
-            <div style="padding:8px 0">
-              ${issueRows || '<div style="padding:16px;color:#444;font-size:12px">No open issues</div>'}
+            <div>
+              ${issueRows || `<div style="padding:16px;color:var(--text-muted);font-size:12px">No open issues</div>`}
             </div>
           </div>
         </div>
@@ -1682,31 +1721,37 @@ function renderAetherDashboard(container, agent) {
         <div>
 
           <!-- DAILY FEED -->
-          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;overflow:hidden;margin-bottom:14px">
-            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f">
-              <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">DAILY REPORT FEED</span>
+          <div class="aether-strategies" style="padding:0;margin-bottom:14px">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-color)">
+              <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Daily Report Feed</span>
             </div>
             <div style="padding:10px">
-              ${feedCards || '<div style="color:#444;font-size:12px;padding:12px">No daily data available</div>'}
+              ${feedCards || `<div style="color:var(--text-muted);font-size:12px;padding:12px">No daily data available</div>`}
             </div>
           </div>
 
           <!-- BALANCE LEDGER -->
-          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:14px 16px">
-            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888;margin-bottom:12px">BALANCE LEDGER</div>
-            ${startEntry}
-            ${ledgerRows}
-            <div style="margin-top:10px;padding:8px 0;border-top:1px solid #252525;display:flex;justify-content:space-between">
-              <span style="color:#555;font-size:11px">Week P&amp;L</span>
-              <span style="font-family:monospace;font-size:12px;color:${pnlColor(totalNet)}">${fmtPnl(totalNet)} (${(week.pnlPercent || 0).toFixed(1)}%)</span>
+          <div class="aether-strategies" style="padding:0">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--border-color)">
+              <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Balance Ledger</span>
             </div>
-            <div style="padding:6px 0;display:flex;justify-content:space-between">
-              <span style="color:#555;font-size:11px">Starting balance</span>
-              <span style="color:#555;font-family:monospace;font-size:12px">$${(week.startingBalance || 0).toFixed(2)}</span>
+            <div style="padding:0 16px">
+              ${startEntry}
+              ${ledgerRows}
             </div>
-            <div style="padding:6px 0;display:flex;justify-content:space-between">
-              <span style="color:#555;font-size:11px">Next build</span>
-              <span style="color:#00c8ff;font-family:monospace;font-size:12px">v254</span>
+            <div style="padding:10px 16px;border-top:1px solid var(--border-color)">
+              <div style="display:flex;justify-content:space-between;padding:4px 0">
+                <span style="color:var(--text-muted);font-size:11px">Week P&amp;L</span>
+                <span style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:${pnlCssColor(totalNet)}">${fmtPnl(totalNet)} (${(week.pnlPercent || 0).toFixed(1)}%)</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0">
+                <span style="color:var(--text-muted);font-size:11px">Starting balance</span>
+                <span style="color:var(--text-muted);font-family:var(--font-mono);font-size:12px">$${(week.startingBalance || 0).toFixed(2)}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:4px 0">
+                <span style="color:var(--text-muted);font-size:11px">Next build</span>
+                <span style="color:var(--cyan);font-family:var(--font-mono);font-size:12px;font-weight:500">v254</span>
+              </div>
             </div>
           </div>
         </div>
