@@ -89,20 +89,30 @@ cmd_deploy() {
 
   local timestamp=$(date '+%Y-%m-%dT%H:%M:%SZ')
 
+  # 0. Pre-deploy: sync dual-path files
+  hdr "0/6 Sync website paths"
+  if [[ -x "$ROOT/bin/sync-website.sh" ]]; then
+    bash "$ROOT/bin/sync-website.sh"
+    ok "dual-path synced"
+  else
+    warn "sync-website.sh not found — skipping"
+  fi
+  echo ""
+
   # 1. Check git status
-  hdr "1/5 Git status"
+  hdr "1/6 Git status"
   cd "$ROOT"
   git status --short
   echo ""
 
   # 2. Stage all changes
-  hdr "2/5 Stage changes"
+  hdr "2/6 Stage changes"
   git add -A
   ok "staged"
   echo ""
 
   # 3. Commit
-  hdr "3/5 Create commit"
+  hdr "3/6 Create commit"
   local msg="Sam deployment: $timestamp"
   if git commit -m "$msg"; then
     ok "committed"
@@ -112,7 +122,7 @@ cmd_deploy() {
   echo ""
 
   # 4. Push to origin
-  hdr "4/5 Push to origin"
+  hdr "4/6 Push to origin"
   if git push origin "$(git branch --show-current)"; then
     ok "pushed"
   else
@@ -122,23 +132,42 @@ cmd_deploy() {
   echo ""
 
   # 5. Verify deployment live
-  hdr "5/5 Verify deployment live"
+  hdr "5/6 Verify deployment live"
   sleep 5
   local retry=0
   while [[ $retry -lt 10 ]]; do
     if curl -sf "$API_BASE/api/health" > /dev/null 2>&1; then
       ok "API is live at $API_BASE"
-      log_activity "deploy" "success" "Git commit and push completed. Vercel deployment verified live."
-      return 0
+      break
     fi
     warn "Deployment check $((retry+1))/10 — waiting..."
     sleep 3
     ((retry++))
   done
 
-  err "Deployment verification timeout — check Vercel dashboard"
-  log_activity "deploy" "timeout" "Git operations succeeded but Vercel deployment verification failed after 10 attempts."
-  return 1
+  if [[ $retry -ge 10 ]]; then
+    err "Deployment verification timeout — check Vercel dashboard"
+    log_activity "deploy" "timeout" "Git operations succeeded but Vercel deployment verification failed after 10 attempts."
+    return 1
+  fi
+  echo ""
+
+  # 6. Post-deploy: render verification
+  hdr "6/6 Render verification"
+  if [[ -x "$ROOT/bin/verify-render.sh" ]]; then
+    if bash "$ROOT/bin/verify-render.sh"; then
+      ok "all render checks passed"
+      log_activity "deploy" "success" "Full deployment pipeline: sync → commit → push → verify API → verify render."
+    else
+      err "render verification detected failures — check output above"
+      log_activity "deploy" "render-fail" "API live but render verification found issues."
+      return 1
+    fi
+  else
+    warn "verify-render.sh not found — skipping render check"
+    log_activity "deploy" "success" "Git commit and push completed. Vercel deployment verified live."
+  fi
+  return 0
 }
 
 # ---- test -------------------------------------------------------------------

@@ -6,20 +6,25 @@ import { getStore } from './_hq-store.js';
 import { verifyToken } from './hq-auth.js';
 
 export default function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ ok: false, error: 'GET only' });
-  }
+  try {
+    if (req.method !== 'GET') {
+      return res.status(405).json({ ok: false, error: 'GET only' });
+    }
 
-  // verify session token
-  const token = req.headers['authorization']?.replace('Bearer ', '');
-  if (!verifyToken(token)) {
-    return res.status(401).json({ ok: false, error: 'unauthorized' });
-  }
+    // verify session token
+    const token = req.headers['authorization']?.replace('Bearer ', '');
+    if (!verifyToken(token)) {
+      return res.status(401).json({ ok: false, error: 'unauthorized' });
+    }
 
-  const store = getStore();
-  res.status(200).json({
-    ok: true,
-    ts: new Date().toISOString(),
-    ...store,
-  });
+    const store = getStore();
+    res.status(200).json({
+      ok: true,
+      ts: new Date().toISOString(),
+      ...store,
+    });
+  } catch (err) {
+    console.error('[hq-data] Error:', err.message, err.stack);
+    res.status(500).json({ ok: false, error: 'internal error', detail: err.message });
+  }
 }

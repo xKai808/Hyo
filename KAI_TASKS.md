@@ -29,6 +29,28 @@
 - [x] **[K]** **Correct GPT prompts in gpt_crosscheck.py.** 2026-04-14. Fixed 4 locations (Phase 1 recommendation, Phase 1 output format, Phase 2 action classification, Phase 2 critical recommendation). Parameter changes labeled LAST RESORT. Syntax validated.
 - [x] **[K]** **Root pattern analysis of session 10 errors.** 2026-04-14. All 14 errors trace to "execute before understand" — assumptions, skip-verification, reinterpret-instructions are all variants of going input→output without the understanding step.
 
+## P0 — Session 12 SHIPPED (2026-04-16)
+
+- [x] **[K]** **Aether extraction rewrite: BUY SNAPSHOT + TICKER CLOSE.** Fixed SETTLED-only counting (32 trades, 28.1% WR → 120 trades, 69.2% WR). aether.sh now uses BUY SNAPSHOT for trade counts, TICKER CLOSE for outcomes, balance math for P&L. Rebuild script (kai/tools/rebuild_aether_complete.py) for full recompute. SE-012-005 logged.
+- [x] **[K]** **hq.html renderer cleanup.** Removed settledTrades/totalTradeEvents legacy fields. Trades card now reads `week.trades` (BUY SNAPSHOT count).
+- [x] **[K]** **Render verification script (bin/verify-render.sh).** Post-deploy verification that fetches live HQ and validates: aether-metrics.json fields, feed.json, API health, HTML pages, dual-path consistency. Logs to kai/ledger/render-verification.jsonl.
+- [x] **[K]** **API error handling.** Added try/catch to hq-push.js, hq-data.js, health.js (the 3 unprotected endpoints). All 9 endpoints now have structured error responses.
+- [x] **[K]** **Dual-path sync guard (bin/sync-website.sh).** Syncs agents/sam/website/ → website/ for all tracked files. Wired into sam.sh deploy (Phase 0). Prevents the invisible drift that caused 3+ days of stale production data.
+- [x] **[K]** **Sam deploy pipeline upgraded (6 phases).** 0: sync → 1: git status → 2: stage → 3: commit → 4: push → 5: API verify → 6: render verify. Render failures now block deploy success.
+
+## P0 — Research-Driven Action Items (from ops-audit, QA architecture, growth plans)
+
+These items emerged from Ra/Nel/Sam research output. Research without action is waste. Execute now.
+
+- [ ] **[K]** **Nel QA Phase 1: Install Lychee + TruffleHog + Semgrep.** Industry-standard tools identified by Nel's QA architecture research. Install via Homebrew on Mini, wire into nel.sh. Transforms Nel from passive reporter to active guardian. _(nel-qa-architecture-research.md)_
+- [ ] **[K]** **Sam W1: Performance regression baseline.** Lighthouse audit post-deploy, API response time tracking, bundle size monitoring. Sam identified this as P1 weakness — no performance baseline exists. Regressions ship undetected. _(agents/sam/GROWTH.md W1)_
+- [ ] **[K→Sam]** **Sam W2: Vercel KV migration.** Provision Vercel KV, migrate HQ state (globalThis → KV). Eliminates cold-start data loss. Sam's P0 weakness — every push can lose state. _(agents/sam/GROWTH.md W2)_
+- [ ] **[K]** **Fix 9 stale simulation render failures.** Same 9 failures for 3 consecutive days (2026-04-14/15/16). Data files exist but HQ doesn't display them. Now that verify-render.sh exists, diagnose each failure and fix the render path.
+- [ ] **[K]** **Dispatch auto-escalation.** When Nel detects issues, auto-create tickets (not just log). Nel currently writes reports nobody reads. Wire `dispatch flag` into Nel findings → automatic P1/P2 ticket creation. _(ops-audit B4-B5)_
+- [ ] **[K]** **ARIC cycle enforcement.** Agent research cycle has zero triggering mechanism despite being constitutional. agent-growth.sh has check_aric_day() but agent-research.sh execution is inconsistent (0 Nel research entries in 4+ days). Diagnose and fix.
+- [ ] **[K]** **Nel CVE follow-ups.** 8 overdue follow-ups from 2026-04-13. 2 real CVEs found (CVE-2025-0520, CVE-2026-33032). Convert to automated checks, close the follow-ups.
+- [ ] **[K]** **Dex pattern deduplication.** 162+ recurrent detections (Nel security folder flagged 35+ times, 401 API flagged 40+ times). Same issue, same flag, no resolution. Build dedup + auto-resolve for known false positives.
+
 ## P0 — OVERNIGHT (do before 05:00 MT 2026-04-13)
 
 - [x] **[K]** **Aether migration + GPT integration.** COMPLETE 2026-04-13. Migrated all AetherBot data to `agents/aether/`. GPT daily log review wired into `aether.sh` — auto-sends raw log to GPT-4o for independent analysis + fact-checking (triggers once/day after 500+ lines). `gpt_factcheck.py` rewritten with dual-mode. PLAYBOOK rewritten (460 lines), PRIORITIES rewritten (204 lines). Real data live on HQ ($90.25 balance). All committed + pushed (c2a88fb).
@@ -71,8 +93,8 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 
 ## P1 — This week
 
-- [ ] **[K]** [AUTOMATE] **Fix website/ vs agents/sam/website/ divergence PERMANENTLY.** Session 10 root cause: these are SEPARATE directories in git. Vercel serves from `website/`. Options: (a) change Vercel root directory to `agents/sam/website/` via dashboard, (b) delete `agents/sam/website/` and use only `website/`. INTERIM: `kai/protocols/sync-website-data.sh` syncs data files. MUST fix before next data update. _(Audit B9, SE-010-011)_
-- [ ] **[K]** **Update aether-metrics.json balance to $107.36.** Raw log shows $107.36 final (21:29 MT), not $103.67. Must update BOTH `website/data/` and `agents/sam/website/data/` until divergence is fixed. Run sync script after.
+- [x] **[K]** [AUTOMATE] **Fix website/ vs agents/sam/website/ divergence — INTERIM FIX SHIPPED.** 2026-04-16. `bin/sync-website.sh` syncs all tracked files agents/sam/website/ → website/. Wired into sam.sh deploy Phase 0. PERMANENT fix still needed: consolidate to single directory or change Vercel root. _(Audit B9, SE-010-011)_
+- [x] **[K]** **Aether-metrics.json balance correct.** 2026-04-16. Balance $114.33 from raw log balance math. Full rebuild from BUY SNAPSHOT + TICKER CLOSE. Both paths synced.
 - [ ] **[K]** [AUTOMATE] **Add post-deploy API test via MCP.** After git push succeeds, auto-run `sam.sh test-api` on Mini. If any test fails, auto-flag. _(Audit B7 — after MCP is live)_
 - [ ] **[K]** [AUTOMATE] **Add "no newsletter by 06:00 MT" sentinel check.** In nel.sh Phase 1, check if today's newsletter .md exists. If not by 06:00, flag P1. _(Audit B12 detection gap)_
 - [ ] **[K]** [AUTOMATE] **Build kai-context-save scheduled task.** Runs every 30 min during active sessions. If files changed since last save, run `kai save`. Prevents memory loss on session crash. _(Audit B3)_
