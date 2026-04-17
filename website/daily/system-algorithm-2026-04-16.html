@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Algorithm Report — 2026-04-16</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #f9f9f9;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 60px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-radius: 8px;
+        }
+        
+        .header {
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            color: #0066cc;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .meta {
+            display: flex;
+            gap: 30px;
+            font-size: 0.95em;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #0066cc;
+            border-left: 4px solid #0066cc;
+            padding-left: 15px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        h4 {
+            font-size: 1.05em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .section-intro {
+            background: #f0f6ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        
+        .algorithm-box {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        
+        .algorithm-box.decision-tree {
+            background: #f5f5f5;
+        }
+        
+        .strength {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        
+        .weakness {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        
+        .critical {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+        }
+        
+        th {
+            background: #0066cc;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .metric {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #0066cc;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin: 2px;
+        }
+        
+        .status-ok {
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        .status-warning {
+            color: #ff9800;
+            font-weight: 600;
+        }
+        
+        .status-critical {
+            color: #f44336;
+            font-weight: 600;
+        }
+        
+        .toc {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 40px;
+            border-radius: 4px;
+        }
+        
+        .toc h3 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            margin-bottom: 0;
+        }
+        
+        .toc a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        .flow-diagram {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            text-align: center;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+        }
+        
+        .agent-card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-left: 4px solid #0066cc;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .agent-card h4 {
+            color: #0066cc;
+            margin-top: 0;
+        }
+        
+        .improvement-ticket {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 3px;
+        }
+        
+        .source {
+            background: #f0f0f0;
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 3px solid #999;
+            font-size: 0.9em;
+            border-radius: 3px;
+        }
+        
+        .sources-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+            text-align: center;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+            }
+            .container {
+                max-width: 100%;
+                box-shadow: none;
+                padding: 40px;
+            }
+            a {
+                color: #0066cc;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>System Algorithm Report</h1>
+            <p class="subtitle">Hyo.world — Comprehensive Algorithm Documentation</p>
+            <div class="meta">
+                <div class="meta-item">📅 Generated: 2026-04-16</div>
+                <div class="meta-item">🏢 Organization: hyo.world</div>
+                <div class="meta-item">👤 CEO: Kai</div>
+                <div class="meta-item">👥 Agents: 5 (Nel, Sam, Ra, Aether, Dex)</div>
+            </div>
+        </div>
+        
+        <div class="toc">
+            <h3>📋 Contents</h3>
+            <ul>
+                <li><a href="#part1">Part 1: System Overview & Architecture</a></li>
+                <li><a href="#part2">Part 2: Kai's Algorithm — The CEO</a></li>
+                <li><a href="#part3">Part 3: Nel's Algorithm — QA & Security</a></li>
+                <li><a href="#part4">Part 4: Sam's Algorithm — Engineering & Deployment</a></li>
+                <li><a href="#part5">Part 5: Ra's Algorithm — Content & Intelligence</a></li>
+                <li><a href="#part6">Part 6: Aether's Algorithm — Trading Analytics</a></li>
+                <li><a href="#part7">Part 7: Dex's Algorithm — Operations & Integrity</a></li>
+                <li><a href="#part8">Part 8: Integration & Handoff Protocols</a></li>
+                <li><a href="#sources">Sources & Research</a></li>
+            </ul>
+        </div>
+        
+        <h2 id="part1">Part 1: System Overview & Architecture</h2>
+        
+        <div class="section-intro">
+            <strong>Executive Summary:</strong> Hyo.world is a multi-agent system where Kai (CEO) orchestrates five specialized agents — Nel (Quality/Security), Sam (Engineering), Ra (Content), Aether (Trading), and Dex (Operations) — through a centralized control loop with distributed autonomy. Every agent owns its domain while remaining accountable to constitution-based boundaries.
+        </div>
+        
+        <h3>System Hierarchy & Decision Flow</h3>
+        
+        <p>The system operates as a three-tier hierarchy:</p>
+        
+        <div class="flow-diagram">
+            <strong>TIER 1: Operator (Hyo)</strong><br>
+            Sets vision, priorities, approves cross-system changes<br>
+            ↓<br>
+            <strong>TIER 2: CEO (Kai)</strong><br>
+            Hydrates on system state, delegates work, verifies outcomes<br>
+            ↓<br>
+            <strong>TIER 3: Agents (Nel, Sam, Ra, Aether, Dex)</strong><br>
+            Execute domain work, report outcomes, propose improvements
+        </div>
+        
+        <h3>Core Operating Principles</h3>
+        
+        <ol>
+            <li><strong>Closed-Loop Integrity:</strong> Every delegation gets an ACK. Every task gets a REPORT. Every flag gets addressed. No silent drops.</li>
+            <li><strong>Memory is Sacred:</strong> Every session reads and writes memory (KAI_BRIEF.md, KAI_TASKS.md, agent GROWTH.md files). Failures are logged to session-errors.jsonl to prevent repetition.</li>
+            <li><strong>Agent Autonomy:</strong> Agents decide for themselves. They assess situations, act, and report to Kai — they don't ask permission for routine work. Kai maintains evolving memory and guards cross-agent interfaces.</li>
+            <li><strong>Constitution Over Convenience:</strong> AGENT_ALGORITHMS.md is immutable law. Agents have their own PLAYBOOK.md but cannot override the constitution.</li>
+            <li><strong>Execution Before Memory:</strong> Actions run through EXECUTION_GATE.md (5 questions before every action) and VERIFICATION_PROTOCOL.md (proof after every action).</li>
+            <li><strong>Two-Version Outputs:</strong> Every report, simulation, and consolidation has two versions: (a) technical for agents/ledgers, (b) human-readable for HQ/Hyo.</li>
+        </ol>
+        
+        <h3>The Operating Loop</h3>
+        
+        <div class="algorithm-box decision-tree">
+START: Kai enters session
+  ├─ HYDRATION PHASE (mandatory, every session)
+  │  ├─ Read KAI_BRIEF.md (current state, blockers, shipped items)
+  │  ├─ Read KAI_TASKS.md (priority queue)
+  │  ├─ Read kai/ledger/known-issues.jsonl (patterns to watch)
+  │  ├─ Read kai/ledger/session-errors.jsonl (recent mistakes)
+  │  ├─ Read kai/protocols/EXECUTION_GATE.md (pre-action checklist)
+  │  ├─ Read kai/protocols/VERIFICATION_PROTOCOL.md (post-action proof)
+  │  ├─ Read agents/*/ACTIVE.md (open tasks per agent)
+  │  └─ STATUS: Ready to execute
+  │
+  ├─ DELEGATION CHECKLIST
+  │  ├─ Is this CEO-level work? → Kai does it
+  │  ├─ Is this execution work? → Delegate to right agent
+  │  │  ├─ Nel: QA, security, link validation, API health
+  │  │  ├─ Sam: Code, deployment, testing, infrastructure
+  │  │  ├─ Ra: Content, newsletter, research, synthesis
+  │  │  ├─ Aether: Trading analysis, dashboard, metrics
+  │  │  └─ Dex: Operational integrity, drift detection, audits
+  │  └─ STATUS: Work distributed
+  │
+  ├─ EXECUTION PHASE (per task)
+  │  ├─ Pre-action gate: Answer 5 questions from EXECUTION_GATE
+  │  ├─ Scan session-errors.jsonl for matching error patterns
+  │  ├─ Execute action (commit, deploy, call API, generate report)
+  │  ├─ Post-action verification: Fetch/render/verify proof
+  │  ├─ Update ledgers (tickets, activity, success/failure)
+  │  └─ STATUS: Action complete with proof
+  │
+  ├─ AGENT REPORTING (every 6-24h)
+  │  ├─ Each agent updates their ACTIVE.md with current status
+  │  ├─ Agents append to evolution.jsonl with what they learned
+  │  ├─ Agents update GROWTH.md with new weaknesses/improvements found
+  │  ├─ Dex consolidates all agent reports → morning report JSON
+  │  └─ STATUS: Knowledge captured
+  │
+  └─ SESSION END
+     ├─ Update KAI_BRIEF.md (current state, shipped items, next priorities)
+     ├─ Update KAI_TASKS.md (move done items to history, add new tasks)
+     ├─ Git commit all changes
+     ├─ Run `dispatch simulate` to verify delegation lifecycle
+     ├─ Run `dispatch health` to check system state
+     └─ Status: Session complete, memory preserved
+        </div>
+        
+        <h3>System Architecture Diagram</h3>
+        
+        <p>Each agent runs on a scheduled cycle (launchd daemons on the Mini, scheduled tasks in Cowork) with dedicated responsibilities:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Agent</th>
+                    <th>Domain</th>
+                    <th>Schedule</th>
+                    <th>Key Output</th>
+                    <th>Status (as of 2026-04-16)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Nel</strong></td>
+                    <td>QA, Security, Link Validation</td>
+                    <td>Every 6 hours (q6h)</td>
+                    <td>Security scan, API health, data integrity reports</td>
+                    <td><span class="status-warning">⚠ Degraded</span> — Some checks failing consistently</td>
+                </tr>
+                <tr>
+                    <td><strong>Sam</strong></td>
+                    <td>Engineering, Deployment, Testing</td>
+                    <td>Per-deployment + daily smoke tests</td>
+                    <td>Build validation, deployment logs, test results</td>
+                    <td><span class="status-warning">⚠ Silent</span> — No logs for 4 consecutive days</td>
+                </tr>
+                <tr>
+                    <td><strong>Ra</strong></td>
+                    <td>Newsletter, Content, Curation</td>
+                    <td>Daily (24h cycle)</td>
+                    <td>Newsletter.html, source health, subscriber records</td>
+                    <td><span class="status-warning">⚠ Blocked</span> — Source failures breaking pipeline</td>
+                </tr>
+                <tr>
+                    <td><strong>Aether</strong></td>
+                    <td>Trading Analysis, Metrics Collection</td>
+                    <td>Every 15 minutes + daily analysis</td>
+                    <td>Dashboard JSON, trade ledger, performance analysis</td>
+                    <td><span class="status-ok">✓ Healthy</span> — Real data, GPT cross-checks wired</td>
+                </tr>
+                <tr>
+                    <td><strong>Dex</strong></td>
+                    <td>Operations, Data Integrity, Audits</td>
+                    <td>Nightly (23:00 MT) + on-demand</td>
+                    <td>Consolidation reports, audit logs, morning brief</td>
+                    <td><span class="status-warning">⚠ Partial</span> — Detection working, remediation incomplete</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2 id="part2">Part 2: Kai's Algorithm — The CEO</h2>
+        
+        <div class="section-intro">
+            <strong>Role:</strong> Kai is the CEO and operator of the autonomous system. Kai makes high-level decisions, delegates work, maintains system memory, verifies outcomes, and guards the constitution. Kai runs in two contexts: Cowork Pro (on Hyo's machine) and Claude Code on the Mini (server-side). Same identity, different runtimes — synchronized via KAI_BRIEF.md and KAI_TASKS.md.
+        </div>
+        
+        <h3>Kai's Primary Responsibilities</h3>
+        
+        <ul>
+            <li><strong>Hydration & Orientation:</strong> Every session starts with mandatory hydration (read 10 key files) to understand current state, blockers, and shipped items.</li>
+            <li><strong>Delegation Management:</strong> Route work to appropriate agents (Nel, Sam, Ra, Aether, Dex), set expectations, collect results.</li>
+            <li><strong>Memory Stewardship:</strong> Maintain KAI_BRIEF.md (state), KAI_TASKS.md (queue), and error ledgers (session-errors.jsonl, known-issues.jsonl).</li>
+            <li><strong>Verification & Proof:</strong> Never assume work is done. Fetch URLs, read files, run functions. Proof is required before marking tasks complete.</li>
+            <li><strong>Constitution Guardianship:</strong> AGENT_ALGORITHMS.md is immutable law. Kai can veto agent changes to cross-system interfaces.</li>
+            <li><strong>Feedback & Guidance:</strong> When agents are stuck, ask open-ended questions to help them find answers — don't do the work for them.</li>
+        </ul>
+        
+        <h3>Kai's Execution Algorithm</h3>
+        
+        <div class="algorithm-box">
+EVERY SESSION:
+  ├─ HYDRATION (mandatory, first 5 minutes)
+  │  ├─ Start: `cd ~/Documents/Projects/Hyo`
+  │  ├─ Read KAI_BRIEF.md (sections: Shipped today, Current state, Blockers)
+  │  ├─ Read KAI_TASKS.md (items marked pending/active/blocked)
+  │  ├─ Scan kai/ledger/known-issues.jsonl (first 20 lines for P0/P1)
+  │  ├─ Scan kai/ledger/session-errors.jsonl (recent failures)
+  │  ├─ Read kai/protocols/EXECUTION_GATE.md (5-question pre-action checklist)
+  │  ├─ Read kai/protocols/VERIFICATION_PROTOCOL.md (post-action proof requirements)
+  │  ├─ Scan agents/*/ACTIVE.md (work in flight per agent)
+  │  ├─ Run: `dispatch health` (check system state, flag issues)
+  │  ├─ Run: `dispatch status` (show pending queue)
+  │  └─ Assessment: Ready to execute
+  │
+  ├─ DECISION TREE (what should I do right now?)
+  │  ├─ Are there P0 issues in KAI_BRIEF? 
+  │  │  └─ YES → Investigate + remediate immediately
+  │  ├─ Are there P1 issues past SLA?
+  │  │  └─ YES → Escalate or assign to agent
+  │  ├─ What's at the top of KAI_TASKS?
+  │  │  └─ Is it blocked? → Unblock it. Is it ready? → Delegate.
+  │  ├─ Did agents report? (check agents/*/logs/)
+  │  │  └─ YES → Review reports, update memory
+  │  ├─ Are there agent GROWTH proposals? (check agents/*/GROWTH.md)
+  │  │  └─ YES → Review, approve/veto/guide
+  │  └─ No P0, all agents reporting, tasks clear → Execute top task
+  │
+  ├─ DELEGATION (for any task not Kai's own)
+  │  ├─ Identify owning agent (Nel/Sam/Ra/Aether/Dex or Kai)
+  │  ├─ Create ticket: `kai ticket create --agent <name> --title "..." --priority P1/P2`
+  │  ├─ Call: `dispatch delegate <agent> "<task description>"`
+  │  ├─ Set SLA: P1=1h, P2=4h, P3=24h auto-escalation
+  │  └─ ACK received from agent? → Task in flight
+  │
+  ├─ EXECUTION (for Kai's own tasks)
+  │  ├─ Before ANY action:
+  │  │  ├─ Question 1: What am I achieving? (state outcome in one sentence)
+  │  │  ├─ Question 2: Who consumes output? (trace full path to user)
+  │  │  ├─ Question 3: Have I seen this fail before? (check session-errors)
+  │  │  ├─ Question 4: What would Hyo ask? (anticipate concerns)
+  │  │  ├─ Question 5: What's the proof? (how will I verify?)
+  │  │  └─ All questions answered? → Proceed. Blocked? → Escalate.
+  │  │
+  │  ├─ Execute action (git push, deploy, call API, write file, commit)
+  │  │
+  │  ├─ After action, VERIFY proof:
+  │  │  ├─ If committed: `git log -1` (show commit)
+  │  │  ├─ If deployed: fetch URL, render page, confirm data
+  │  │  ├─ If data file: read file back, confirm change
+  │  │  ├─ If API call: check response code + structure
+  │  │  └─ Evidence in hand? → Mark task complete
+  │  │
+  │  └─ Update ledgers:
+  │     ├─ kai ticket close <id> --evidence "<proof>" --summary "<what happened>"
+  │     ├─ KAI_BRIEF.md "Shipped today" section
+  │     ├─ session-errors.jsonl if issue found
+  │     └─ Task complete
+  │
+  ├─ AGENT FEEDBACK (every 12h or when stuck)
+  │  ├─ If agent is stuck (same assessment 3+ cycles):
+  │  │  ├─ Ask: "What would happen if you tried X?"
+  │  │  ├─ Ask: "What are you assuming about Y?"
+  │  │  ├─ Ask: "What would you do if X wasn't true?"
+  │  │  └─ DON'T: Provide answers. Guide to answers.
+  │  ├─ If agent found improvement:
+  │  │  ├─ Review proposal in agents/<name>/GROWTH.md
+  │  │  ├─ Ask questions: "Why this? What's the evidence? What breaks?"
+  │  │  ├─ Approve if aligned with strategy, veto if not
+  │  │  └─ Agent executes (they own implementation)
+  │  └─ If agent succeeded:
+  │     └─ Acknowledge, log to KAI_BRIEF "Shipped today"
+  │
+  ├─ SESSION END (before signing off)
+  │  ├─ Update KAI_BRIEF.md:
+  │  │  ├─ Move "Shipped today" items to history
+  │  │  ├─ Update "Current state" section
+  │  │  ├─ List any remaining blockers
+  │  │  └─ Set "Next session priorities"
+  │  ├─ Update KAI_TASKS.md:
+  │  │  ├─ Move completed items to "Done" with date
+  │  │  ├─ Add new tasks discovered this session
+  │  │  └─ Re-sort by priority
+  │  ├─ Run: `dispatch health` (final health check)
+  │  ├─ Git commit: `git add -A && git commit -m "session 11 continuation 3 end-of-session"`
+  │  ├─ Git push: `git push origin main` (NEVER skip this)
+  │  └─ Session complete, context preserved
+        </div>
+        
+        <h3>Kai's Decision Trees for Common Scenarios</h3>
+        
+        <h4>Scenario 1: Agent Reports a Blocker</h4>
+        
+        <div class="algorithm-box decision-tree">
+Agent reports: "I can't proceed, I need X from Hyo/Mini"
+  ├─ Is X something ONLY Hyo can provide?
+  │  ├─ Biometric approval? → Ask Hyo directly, they approve/deny
+  │  ├─ GUI password entry? → Ask Hyo, they enter it
+  │  ├─ Physical hardware (plugging in device)? → Ask Hyo
+  │  ├─ API key generation on Mini? → Try via queue first
+  │  └─ If queue worker is down → Escalate to Hyo with evidence
+  │
+  ├─ Is X something the queue can do?
+  │  ├─ Run command: `kai exec "<command>"` (use queue)
+  │  ├─ If succeeds → Share result with agent, unblock
+  │  └─ If fails → Diagnose queue issue, fix, retry
+  │
+  ├─ Is X something Kai can do?
+  │  ├─ Fix gitignore? → Kai does it
+  │  ├─ Create file? → Kai does it
+  │  └─ After fix → Agent retries
+  │
+  └─ Root cause analysis:
+     ├─ Why did agent hit this blocker?
+     ├─ Is this a known pattern? (check known-issues.jsonl)
+     ├─ How do we prevent this next time?
+     └─ Log to evolution.jsonl
+        </div>
+        
+        <h4>Scenario 2: Agent Is Stuck (Same Issue 3+ Cycles)</h4>
+        
+        <div class="algorithm-box decision-tree">
+Agent keeps reporting same failure: "API key missing" (day 3)
+  ├─ This is a dead-loop. Kai intervention required.
+  │
+  ├─ Step 1: Diagnose root cause
+  │  ├─ Is the API key actually missing? (check file)
+  │  ├─ Is it missing because of permissions? (check .secrets/)
+  │  ├─ Is it missing because of a build step? (check deployment)
+  │  └─ Root cause identified?
+  │
+  ├─ Step 2: Fix the root cause (not just the symptom)
+  │  ├─ If missing: Create the key via queue (`kai exec "echo ... > .secrets/key"`)
+  │  ├─ If permission: Fix permission (`kai exec "chmod 600 .secrets/key"`)
+  │  ├─ If build step: Update deployment script
+  │  └─ Fix verified? (test agent can now read key)
+  │
+  ├─ Step 3: Prevent recurrence
+  │  ├─ Add this to pre-flight checklist (agents/<name>/PLAYBOOK.md)?
+  │  ├─ Add gate question to EXECUTION_GATE.md?
+  │  ├─ Add test to verify.sh to catch next time?
+  │  └─ Prevention wired?
+  │
+  └─ Step 4: Unblock agent
+     └─ Agent retries, now should succeed
+        </div>
+        
+        <h4>Scenario 3: Verification Fails (Proof Missing)</h4>
+        
+        <div class="algorithm-box decision-tree">
+Kai executed action, but can't fetch proof:
+  "Pushed to git, but remote HEAD hasn't updated"
+  ├─ Is the push actually complete?
+  │  ├─ Check: `git log -1` (local shows commit)
+  │  ├─ Check: `git push origin main` output (any errors?)
+  │  └─ If push succeeds but remote doesn't update → GitHub lag (~30s)
+  │
+  ├─ What's the minimum proof I need?
+  │  ├─ `git log --oneline | head -1` (shows local commit)
+  │  ├─ `git push -u origin main` output (shows remote updated)
+  │  ├─ Fetch the URL (for deployment): `curl -s https://hyo.world/daily | grep 'today'`
+  │  └─ Proof sufficient? If no → Keep investigating
+  │
+  ├─ Root cause unclear? Don't mark done.
+  │  ├─ Flag as P1 (verification failed)
+  │  ├─ Create ticket: "Verify <action> — proof unclear"
+  │  ├─ Delegate to agent or fix self
+  │  └─ Come back when proof found
+  │
+  └─ Proof found? Mark complete + update ledger
+        </div>
+        
+        <h2 id="part3">Part 3: Nel's Algorithm — QA & Security</h2>
+        
+        <div class="agent-card">
+            <h4>Nel — Quality Assurance & Security</h4>
+            <p><strong>Mission:</strong> Nel is the system's immune system. Every 6 hours, Nel executes a 9-phase autonomous QA cycle: link validation, security scanning, API health, data integrity, agent health, deployment verification, research sync, and consolidated reporting. Every finding gets flagged and tracked before it hits production.</p>
+        </div>
+        
+        <h3>Current State & Identified Weaknesses</h3>
+        
+        <div class="strength">
+            <strong>✓ Strength:</strong> Sentinel and cipher scripts execute reliably with persistent memory across runs. Permission audits catch leaks early; security scans stable after false-positive fixes. GitHub secret scanning operational.
+        </div>
+        
+        <div class="weakness">
+            <strong>W1 (P0):</strong> Static Checks Never Adapt — Sentinel runs same 9 checks every cycle. When a check fails 5+ times, Sentinel keeps reporting without deeper diagnosis. No feedback loop to generate targeted investigations.
+        </div>
+        
+        <div class="weakness">
+            <strong>W2 (P1):</strong> Zero Dependency Vulnerability Scanning — Cipher ignores package.json/requirements.txt. No CVE cross-reference against actual dependencies. Unpatched libraries can ship undetected.
+        </div>
+        
+        <div class="weakness">
+            <strong>W3 (P1):</strong> Research Sources Broken — 5 of 6 external security feeds fail from Cowork sandbox. Nel operates on 16% intelligence when network access is blocked.
+        </div>
+        
+        <h3>Nel's 9-Phase QA Cycle Algorithm</h3>
+        
+        <div class="algorithm-box">
+EVERY 6 HOURS (launchd com.hyo.nel-qa):
+  │
+  ├─ PHASE 1: Link Validation
+  │  ├─ Run: `link-check.sh --full`
+  │  ├─ Check all HTML internal links, JS fetch() paths, markdown relative links
+  │  ├─ Verify live HTTP responses for every page on hyo.world
+  │  ├─ Zero tolerance: ANY broken link = P1 flag
+  │  ├─ Output: links-validation-YYYY-MM-DD.jsonl
+  │  └─ SLA: Must complete in <5 minutes
+  │
+  ├─ PHASE 2: Security Scan
+  │  ├─ Grep tracked files for exposed secrets:
+  │  │  ├─ API keys (sk-..., api_key=)
+  │  │  ├─ Passwords (password=, pwd:)
+  │  │  ├─ Tokens (token=, authorization:)
+  │  │  └─ Private keys (.pem, .key, .pk8)
+  │  ├─ Validate .secrets directory permissions = 700
+  │  ├─ Verify gitignore coverage (agents/nel/security, .secrets, *.key)
+  │  ├─ Check for .env files that shouldn't exist
+  │  ├─ Output: security-scan-YYYY-MM-DD.jsonl
+  │  └─ Severity: P0 if secret exposed, P1 if gitignore gap
+  │
+  ├─ PHASE 2.5: GitHub Security Scan
+  │  ├─ Scan public GitHub repo for committed secrets
+  │  ├─ Check git history for leaked credentials
+  │  ├─ Verify all sensitive patterns are gitignored
+  │  ├─ Scan deployed JavaScript for hardcoded credentials
+  │  ├─ Output: github-scan-YYYY-MM-DD.jsonl
+  │  └─ Severity: P0 for any exposed credentials
+  │
+  ├─ PHASE 3: API Health
+  │  ├─ Test endpoints:
+  │  │  ├─ /api/health → must return HTTP 200
+  │  │  ├─ /api/usage → must return HTTP 200 + valid JSON
+  │  │  └─ /api/hq?action=data → must return HTTP 200 + Aether metrics
+  │  ├─ Any non-200 = P1 flag
+  │  ├─ Output: api-health-YYYY-MM-DD.jsonl
+  │  └─ SLA: All endpoints tested within <1 minute
+  │
+  ├─ PHASE 4: Data Integrity
+  │  ├─ Validate every JSONL file parses line-by-line
+  │  ├─ Validate JSON config files (usage-config.json, hq-state.json)
+  │  ├─ Flag any corrupt entries
+  │  ├─ Verify no duplicate IDs in tracking files
+  │  ├─ Output: data-integrity-YYYY-MM-DD.jsonl
+  │  └─ Severity: P1 for any corrupt data
+  │
+  ├─ PHASE 5: Agent Health
+  │  ├─ For each agent (nel, sam, ra, aether, dex):
+  │  │  ├─ Runner exists + executable?
+  │  │  ├─ Recent log <48h old?
+  │  │  ├─ PLAYBOOK.md <14d old?
+  │  │  └─ If ANY check fails = P1 flag
+  │  ├─ Verify all 7+ launchd daemons are running
+  │  ├─ Output: agent-health-YYYY-MM-DD.jsonl
+  │  └─ Severity: P1 for silent/missing agents
+  │
+  ├─ PHASE 6: Deployment Verification
+  │  ├─ Git status: Any uncommitted changes?
+  │  ├─ Local HEAD matches remote?
+  │  ├─ Live site returns HTTP 200?
+  │  ├─ Vercel deployment logs clean (no build errors)?
+  │  ├─ Output: deployment-status-YYYY-MM-DD.jsonl
+  │  └─ Severity: P0 for diverged branches, P1 for 403 responses
+  │
+  ├─ PHASE 7: Research Sync
+  │  ├─ Compare agents/ra/research/ vs website/docs/research/ file counts
+  │  ├─ Auto-fix via sync-research.sh if out of sync >10%
+  │  ├─ Output: research-sync-YYYY-MM-DD.jsonl
+  │  └─ Severity: P2 if unsync detected
+  │
+  ├─ PHASE 8: Report & Dispatch
+  │  ├─ Consolidate all findings from phases 1-7
+  │  ├─ Flag P0/P1 to Kai via `dispatch flag "..."` 
+  │  ├─ Write cycle report: agents/nel/logs/nel-qa-YYYY-MM-DD.md
+  │  ├─ Append to agents/nel/logs/nel-qa.jsonl (ledger)
+  │  ├─ Publish to HQ feed: `dispatch publish nel "QA cycle complete: X issues found"`
+  │  └─ Status: Cycle complete
+  │
+  └─ CYCLE END → Sleep 6 hours → Repeat
+        </div>
+        
+        <h3>Nel's Improvement Plan</h3>
+        
+        <div class="improvement-ticket">
+            <strong>I1: Adaptive Checks</strong><br>
+            When Sentinel detects same failure 5+ consecutive times, auto-generate targeted diagnostic check (e.g., "api-health-green failing? Check if founder token is configured, if queue-worker daemon is alive, if API server responded to ping").
+        </div>
+        
+        <div class="improvement-ticket">
+            <strong>I2: Dependency Vulnerability Scanning</strong><br>
+            Extend cipher.sh to parse package.json + requirements.txt, cross-reference against NIST CVE database. Flag high-severity unpatchable libraries as P0.
+        </div>
+        
+        <div class="improvement-ticket">
+            <strong>I3: Offline Research Mode</strong><br>
+            When external feeds timeout, fall back to cached/local knowledge base. Store recent CVE bulletins locally so Nel can maintain basic threat intelligence without network access.
+        </div>
+        
+        <h2 id="part4">Part 4: Sam's Algorithm — Engineering & Deployment</h2>
+        
+        <div class="agent-card">
+            <h4>Sam — Product Engineering & Deployment</h4>
+            <p><strong>Mission:</strong> Sam builds, tests, deploys, and maintains the Hyo platform (website, API, infrastructure). Sam moves fast with high confidence by testing everything, catching regressions early, and keeping deployment pipelines reliable. Sam eliminates friction between code and production.</p>
+        </div>
+        
+        <h3>Current State & Identified Weaknesses</h3>
+        
+        <div class="strength">
+            <strong>✓ Strength:</strong> Static file test suite comprehensive (HTML, JSON, CSS validation). API endpoints mostly covered; smoke tests passing. Vercel deployment stable; git-to-live pipeline works end-to-end.
+        </div>
+        
+        <div class="weakness">
+            <strong>W1 (P1):</strong> No Automated Regression Detection — No performance baselines, no Lighthouse audits, no response time tracking. If API slows from 200ms to 2s, Sam doesn't notice. Users notice first.
+        </div>
+        
+        <div class="weakness">
+            <strong>W2 (P0):</strong> Ephemeral State Everywhere — Subscriber records, tokens, HQ push data vanish on Vercel function cold start. Data lives in globalThis memory, not persistent KV. Every cold start = data loss.
+        </div>
+        
+        <div class="weakness">
+            <strong>W3 (P1):</strong> Error Handling Incomplete — 3 API endpoints lack try/catch. Errors silently swallowed. No alerting, no recovery. Edge cases unhandled.
+        </div>
+        
+        <h3>Sam's Deployment Algorithm</h3>
+        
+        <div class="algorithm-box">
+EVERY DEPLOYMENT (Sam's Sprint Cycle):
+  │
+  ├─ PHASE 1: Git Status
+  │  ├─ Verify working tree clean (no uncommitted changes)
+  │  ├─ Verify all branches up to date with origin
+  │  └─ Any divergence? → Resolve before proceeding
+  │
+  ├─ PHASE 2: Dependency Check
+  │  ├─ Verify package.json unchanged since last deploy
+  │  ├─ Run: `npm audit` (check for new security warnings)
+  │  └─ Any new vulnerabilities? → Fix before deploy
+  │
+  ├─ PHASE 3: Static File Tests
+  │  ├─ Validate all HTML files (structure, required elements)
+  │  ├─ Validate all JSON files (schema, no syntax errors)
+  │  ├─ Lint CSS (no unused classes, valid syntax)
+  │  ├─ Output: test-static-YYYY-MM-DD.log
+  │  └─ Any failures? → Fix + retry
+  │
+  ├─ PHASE 4: API Smoke Tests
+  │  ├─ Call all documented endpoints via fetch
+  │  ├─ Verify response codes, JSON structure, required fields
+  │  ├─ Test with sample data, verify data structures
+  │  ├─ Output: test-api-smoke-YYYY-MM-DD.log
+  │  └─ Any failures? → Diagnose + fix
+  │
+  ├─ PHASE 5: Manifest Validation
+  │  ├─ Parse all 6 agent manifests (nel.hyo.json, sam.hyo.json, etc.)
+  │  ├─ Verify name, version, description, capabilities keys present
+  │  ├─ Output: manifest-validation-YYYY-MM-DD.log
+  │  └─ Any invalid manifests? → Fix before deploy
+  │
+  ├─ PHASE 6: Build Step
+  │  ├─ Run build processes (if applicable: next build, webpack, etc.)
+  │  ├─ Verify zero build errors
+  │  ├─ Output: build-log-YYYY-MM-DD.log
+  │  └─ Build failed? → Diagnose + fix before deploy
+  │
+  ├─ PHASE 7: Pre-Deploy Validation
+  │  ├─ Run predeploy-validate.py
+  │  ├─ Check: dead links, orphaned IDs, UTC timestamp compliance, handler mismatches
+  │  ├─ Output: predeploy-validation-YYYY-MM-DD.log
+  │  └─ Any issues? → Fix before deploy
+  │
+  ├─ PHASE 8: Deployment
+  │  ├─ Git add, commit, push to origin main
+  │  ├─ Verify push succeeded (no network errors)
+  │  ├─ Wait for Vercel build (max 5 minutes)
+  │  ├─ Poll deployment status: `vercel deploy --prod`
+  │  └─ Deployment succeeds? → Continue to Phase 9
+  │
+  ├─ PHASE 9: Live Verification
+  │  ├─ Re-run API smoke tests against LIVE deployed URL
+  │  ├─ Compare responses with local test results
+  │  ├─ Verify data persistence (fetch same endpoint 3x, verify same response)
+  │  ├─ Check Vercel build logs for runtime errors
+  │  └─ All checks pass? → Deployment verified
+  │
+  ├─ PHASE 10: Performance Check
+  │  ├─ Sample Lighthouse audit on 3 critical pages
+  │  ├─ Compare performance, SEO, accessibility scores vs week-over-week
+  │  ├─ Flag if performance regressed >10%
+  │  ├─ Output: lighthouse-report-YYYY-MM-DD.json
+  │  └─ Any regressions? → Diagnose + consider revert
+  │
+  ├─ PHASE 11: Error Log Review
+  │  ├─ Check Vercel function logs for errors in last 24h
+  │  ├─ Categorize by endpoint and error type
+  │  ├─ New errors since deploy? → Investigate immediately
+  │  └─ Output: error-log-review-YYYY-MM-DD.log
+  │
+  ├─ PHASE 12: Report Generation
+  │  ├─ Write sam-YYYY-MM-DD.md with all test results
+  │  ├─ Include deployment status, new issues found, performance trends
+  │  ├─ Human-readable summary for Kai
+  │  └─ Technical summary for ledgers
+  │
+  ├─ PHASE 13: Dispatch & Escalate
+  │  ├─ For failures: call `dispatch flag sam <severity> "<title>"`
+  │  ├─ For successful deploy: log to kai/queue/activity.jsonl
+  │  ├─ Update agents/sam/logs/sam-YYYY-MM-DD.md
+  │  └─ Status: Deployment cycle complete
+  │
+  └─ END: Sleep until next deployment
+        </div>
+        
+        <h3>Sam's Improvement Plan</h3>
+        
+        <div class="improvement-ticket">
+            <strong>I1: Regression Detection</strong><br>
+            Establish Lighthouse baselines for 5 core pages. Every deploy compares performance/SEO/a11y scores. Regression >10% triggers P1 flag before live deployment.
+        </div>
+        
+        <div class="improvement-ticket">
+            <strong>I2: Persistent State via Vercel KV</strong><br>
+            Migrate from ephemeral globalThis to Vercel KV for founder tokens, subscriber records, HQ push data. Data survives cold starts. Implement transaction semantics for multi-step workflows.
+        </div>
+        
+        <div class="improvement-ticket">
+            <strong>I3: Comprehensive Error Handling</strong><br>
+            Add try/catch to all 12 API endpoints. Implement structured logging (timestamp, endpoint, error type, stack trace). Wire alerts for P1+ errors.
+        </div>
+        
+        <h2 id="part5">Part 5: Ra's Algorithm — Content & Intelligence</h2>
+        
+        <div class="agent-card">
+            <h4>Ra — Content Manager & Intelligence Curator</h4>
+            <p><strong>Mission:</strong> Ra gathers, synthesizes, and distributes knowledge through two products: the CEO brief (internal intelligence) and Aurora Public (consumer newsletter). Ra owns source quality, editorial voice, subscriber experience, and the growing research archive that compounds organizational knowledge.</p>
+        </div>
+        
+        <h3>Current State & Identified Weaknesses</h3>
+        
+        <div class="strength">
+            <strong>✓ Strength:</strong> Pipeline architecture clean (gather → synthesize → render → send). Ra v2 narrative format shipped with distinct voice. Research archive indexed and searchable. Subscriber preference system working.
+        </div>
+        
+        <div class="weakness">
+            <strong>W1 (P1):</strong> Zero Editorial Feedback Loop — No open rates, click rates, or engagement metrics. Quality is a black box. Ra can't measure whether newsletter content is good.
+        </div>
+        
+        <div class="weakness">
+            <strong>W2 (P1):</strong> Source Quality Unverified — 7 of 15 sources return empty/broken data. Yahoo Finance dead for 3+ days. No source health monitoring before each gather.
+        </div>
+        
+        <div class="weakness">
+            <strong>W3 (P2):</strong> Content Diversity Gap — 7 of 30 target topics have zero dedicated sources. Newsletter is 70% tech/crypto/AI because source list is tech/crypto/AI-heavy.
+        </div>
+        
+        <h3>Ra's Newsletter Pipeline Algorithm</h3>
+        
+        <div class="algorithm-box">
+EVERY 24 HOURS (01:00 MT, com.hyo.aurora):
+  │
+  ├─ PHASE 1: Source Health Check
+  │  ├─ For each of 15 sources, make test request with same params as gather
+  │  ├─ Validate: content returned? Parse valid? Content >= 100 chars? Fresh (last 24h)?
+  │  ├─ Score each source 0-100:
+  │  │  ├─ Returns data? → +50
+  │  │  ├─ Parse valid? → +25
+  │  │  └─ Content fresh? → +25
+  │  ├─ If score < 20 for 3 consecutive cycles → Auto-disable + flag P1
+  │  ├─ Output: source-health-YYYY-MM-DD.jsonl
+  │  └─ Update: agents/ra/ledger/sources.jsonl with health scores
+  │
+  ├─ PHASE 2: Gather Pipeline
+  │  ├─ Run gather.py with source health scores as input
+  │  ├─ Fetch from each topic category (tech, AI, crypto, macro, culture, etc.)
+  │  ├─ Validate output structure: { topic, source, title, url, summary, published_date }
+  │  ├─ Deduplicate by URL (same story from multiple sources = 1 entry)
+  │  ├─ Output: gather-YYYY-MM-DD.jsonl (raw collected items)
+  │  └─ Sanity check: >100 items? If <50 → P1 flag (thin day)
+  │
+  ├─ PHASE 3: Subscriber Data Validation
+  │  ├─ Load subscribers.jsonl (persistent on Mini or Vercel KV when wired)
+  │  ├─ Validate email format for each subscriber
+  │  ├─ Load preferences: voice (conversational/academic), depth (6min/12min), length (short/long)
+  │  ├─ Verify subscription status (active/paused/cancelled)
+  │  ├─ Output: subscriber-audit-YYYY-MM-DD.jsonl
+  │  └─ Sanity check: >5 active subscribers? If not → dry-run only
+  │
+  ├─ PHASE 4: Research Archive Integrity
+  │  ├─ Verify entities/, topics/, lab/ have index.md
+  │  ├─ Count entries in each directory
+  │  ├─ Verify all entity/topic files referenced in indices
+  │  ├─ Check for orphaned files (in directory but not indexed)
+  │  ├─ Output: archive-integrity-YYYY-MM-DD.jsonl
+  │  └─ Any orphans? → Auto-index or flag for review
+  │
+  ├─ PHASE 5: PRN Context Loading
+  │  ├─ Run ra_context.py against today's gather
+  │  ├─ Load prior 30 days of briefs from agents/ra/output/
+  │  ├─ For each gathered item, check: is this related to prior context?
+  │  ├─ Generate PRN (as-needed) callback references
+  │  ├─ Output: context-YYYY-MM-DD.jsonl
+  │  └─ No PRN matches? That's okay (briefs stand alone)
+  │
+  ├─ PHASE 6: Synthesis Ready Check
+  │  ├─ Verify synthesize.md prompt exists (not stale >7 days)
+  │  ├─ Test render.py can parse JSON (no malformed frontmatter)
+  │  ├─ Verify GPT API key is configured (if using GPT mode)
+  │  ├─ Output: synthesis-check-YYYY-MM-DD.log
+  │  └─ All ready? → Proceed to Phase 7
+  │
+  ├─ PHASE 7: Newsletter Generation
+  │  ├─ Run newsletter.sh for internal CEO brief
+  │  ├─ Input: gather-YYYY-MM-DD.jsonl, context-YYYY-MM-DD.jsonl
+  │  ├─ Output: newsletter-YYYY-MM-DD.md, newsletter-YYYY-MM-DD.html
+  │  ├─ Validate: markdown parses, HTML renders, all sections present
+  │  ├─ Character count check (target 900-1200 for 6min, 2000-2300 for 12min)
+  │  └─ Quality check: Read first 50 words. Does it make sense?
+  │
+  ├─ PHASE 8: Aurora Public Batch
+  │  ├─ For each subscriber, run aurora_public.sh
+  │  ├─ Input: newsletter.md + subscriber preferences (voice, depth, length)
+  │  ├─ Output: aurora-<subscriber_id>-YYYY-MM-DD.html
+  │  ├─ Variant generation: 6min/12min, conversational/academic
+  │  └─ Sanity check: All variants render? HTML valid?
+  │
+  ├─ PHASE 9: Email Send Readiness
+  │  ├─ Run send_email.py --dry-run
+  │  ├─ Verify HTML + plaintext rendering
+  │  ├─ Verify subject lines derived from frontmatter
+  │  ├─ Check From/Reply-To headers configured
+  │  ├─ Output: send-readiness-YYYY-MM-DD.log
+  │  └─ Anything broken? → Fix before proceeding
+  │
+  ├─ PHASE 10: Output Archival
+  │  ├─ Archive newsletter to agents/ra/output/
+  │  ├─ Verify MD+HTML pairs exist for each variant
+  │  ├─ Index in archives.jsonl: { date, variants, word_count, topic_coverage }
+  │  └─ All archived? → Continue
+  │
+  ├─ PHASE 11: Archive Compaction
+  │  ├─ Run ra_archive.py to update entities/topics/lab indices
+  │  ├─ Deduplicate new entities found in today's gather
+  │  ├─ Link new items to existing topics where applicable
+  │  ├─ Output: archive-update-YYYY-MM-DD.jsonl
+  │  └─ Archive now current?
+  │
+  ├─ PHASE 12: Trends Calculation
+  │  ├─ Scan past 30 days of briefs (agents/ra/output/)
+  │  ├─ Identify emerging entities/topics (frequency increase >3x)
+  │  ├─ Calculate week-over-week topic coverage deltas
+  │  ├─ Update trends.md with trending topics, fading topics
+  │  └─ Output: trends-YYYY-MM-DD.json
+  │
+  ├─ PHASE 13: Report Generation
+  │  ├─ Write ra-YYYY-MM-DD.md with source coverage, subscriber count
+  │  ├─ Include edition count, archive growth, quality metrics
+  │  ├─ Two versions: technical (for ledger) + human-readable (for HQ)
+  │  └─ Output: ra-report-YYYY-MM-DD.md
+  │
+  ├─ PHASE 14: Dispatch & Escalate
+  │  ├─ For source failures: `dispatch flag ra P1 "Source <name> returning 0 records"`
+  │  ├─ For successful newsletter: `dispatch publish ra "Newsletter shipped: YYYY-MM-DD"`
+  │  └─ Log to agents/ra/logs/
+  │
+  └─ CYCLE END → Sleep 24 hours → Repeat
+        </div>
+        
+        <h3>Ra's Improvement Plan</h3>
+        
+        <div class="improvement-ticket">
+            <strong>I1: Source Health Monitoring</strong><br>
+            Before each gather, validate each source (>100 chars, parse valid, recent data). Auto-disable sources with score <20 for 3 consecutive cycles. Automatic replacement recommendations.
+        </div>
+        
+        <div class="improvement-ticket">
+            <strong>I2: Persistent Subscriber Storage</strong><br>
+            Migrate from ephemeral storage to Vercel KV. Implement subscriber preference persistence so voice/depth/length choices survive cold starts.
+        </div>
+        
+        <div class="improvement-ticket">
+            <strong>I3: Source Expansion for Underserved Topics</strong><br>
+            Add dedicated fetchers for culture (3 sources), sports (3 sources), arts (3 sources). Verify diverse topic coverage in each newsletter edition.
+        </div>
+        
+        <h2 id="part6">Part 6: Aether's Algorithm — Trading Analytics</h2>
+        
+        <div class="agent-card">
+            <h4>Aether — Trading Analysis & Metrics</h4>
+            <p><strong>Mission:</strong> Aether provides two parallel services: (1) Trading Intelligence Layer — forensic analysis of daily trading performance, GPT adversarial cross-checking, and strategy validation; (2) Metrics Collection — autonomous 15-minute cycle execution, trade ledger management, and real-time dashboard updates. Aether is the single source of truth for portfolio health, execution quality, and risk exposure.</p>
+        </div>
+        
+        <h3>Current State & Reality</h3>
+        
+        <div class="strength">
+            <strong>✓ Strength:</strong> Real trading data live. Balance $133.11 (as of 2026-04-16 17:00 MT). 30 trades completed. All metrics synchronized to HQ dashboard. GPT dual-phase cross-check wired (independent analysis + fact-check).
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Current Balance (2026-04-16)</td>
+                    <td>$133.11</td>
+                    <td><span class="status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Weekly P&L (Apr 9-16)</td>
+                    <td>+$42.86 (+47.5%)</td>
+                    <td><span class="status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Total Trades (Apr 7-16)</td>
+                    <td>30 trades</td>
+                    <td><span class="status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Strategy Count</td>
+                    <td>6 active</td>
+                    <td><span class="status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>Resolution Rate</td>
+                    <td>92.4% (501 of 542 tickers)</td>
+                    <td><span class="status-ok">✓</span></td>
+                </tr>
+                <tr>
+                    <td>GPT Cross-Check</td>
+                    <td>Wired & automated</td>
+                    <td><span class="status-ok">✓</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Aether's 15-Minute Metrics Cycle</h3>
+        
+        <div class="algorithm-box">
+EVERY 15 MINUTES (com.hyo.aether):
+  │
+  ├─ PHASE 1: Log Parse
+  │  ├─ Read latest AetherBot log file (335K-466K lines)
+  │  ├─ Parse trade events (entry, exit, stop, harvest)
+  │  ├─ Extract: ticker, entry_price, exit_price, pnl, strategy_id, timestamp
+  │  ├─ Validate: no duplicate trade IDs, prices in reasonable range
+  │  └─ Output: trades-YYYY-MM-DD.jsonl (append mode)
+  │
+  ├─ PHASE 2: Balance Reconciliation
+  │  ├─ Enumerate all exits since last balance check
+  │  ├─ Sum P&L of all closed positions
+  │  ├─ Calculate: new_balance = prior_balance + daily_pnl
+  │  ├─ Validate: new_balance >= 0 (catch phantom positions)
+  │  ├─ If gap > $10 → HALT, flag P0 (phantom position detected)
+  │  └─ Output: balance-YYYY-MM-DD.jsonl
+  │
+  ├─ PHASE 3: Strategy Performance
+  │  ├─ Group trades by strategy_id
+  │  ├─ Calculate per-strategy metrics:
+  │  │  ├─ Win rate (exits at profit / total exits)
+  │  │  ├─ Average win / average loss
+  │  │  ├─ Sharpe-like metric (total pnl / max drawdown)
+  │  │  └─ Trade count + days active
+  │  ├─ Flag strategies with <30% win rate (potential to deprecate)
+  │  ├─ Output: strategies-YYYY-MM-DD.jsonl
+  │  └─ All 6 strategies healthy? Continue
+  │
+  ├─ PHASE 4: Risk Exposure
+  │  ├─ Enumerate all OPEN positions (not yet exited)
+  │  ├─ For each: calculate max loss (entry_price - stop_loss) * quantity
+  │  ├─ Sum portfolio max loss = portfolio risk exposure
+  │  ├─ Flag if portfolio risk > 15% of account balance (P1 warning)
+  │  ├─ Output: risk-YYYY-MM-DD.jsonl
+  │  └─ Risk within bounds? Continue
+  │
+  ├─ PHASE 5: Dashboard JSON Update
+  │  ├─ Construct aether-metrics.json with:
+  │  │  ├─ currentBalance: $133.11
+  │  │  ├─ weeklyPnL: { week: "2026-04-09", pnl: 42.86, percent: 47.5 }
+  │  │  ├─ strategies: { id, name, trades, win_rate, avg_win, avg_loss }
+  │  │  ├─ trades: { recent_30_trades_with_pnl }
+  │  │  └─ risk: { open_positions, portfolio_exposure, max_loss }
+  │  ├─ Write to agents/aether/aether-metrics.json
+  │  ├─ Dual-path sync: website/data/aether-metrics.json (for HQ)
+  │  └─ Output: dashboard-sync-YYYY-MM-DD.log
+  │
+  ├─ PHASE 6: HQ Feed Sync
+  │  ├─ Generate aether-analysis entry for feed.json
+  │  ├─ Include: balance, pnl, trades, strategies, risk analysis
+  │  ├─ Call: `dispatch publish aether "Daily metrics: balance $XXX, pnl +/-$YYY"`
+  │  ├─ Output: feed-sync-YYYY-MM-DD.log
+  │  └─ Feed updated? Dashboard live on hyo.world/hq
+  │
+  └─ CYCLE END → Sleep 15 minutes → Repeat
+        </div>
+        
+        <h3>Aether's Daily Analysis Cycle (23:00 MT)</h3>
+        
+        <div class="algorithm-box">
+ONCE DAILY (23:00 MT, com.hyo.aether-daily):
+  │
+  ├─ PHASE 1: Raw Log Review
+  │  ├─ Aggregate all trade events from AetherBot log (May have 100+ trades)
+  │  ├─ Export to raw-log-YYYY-MM-DD.txt for GPT analysis
+  │  ├─ Output: raw log ready for GPT
+  │  └─ Continue
+  │
+  ├─ PHASE 2: GPT Independent Analysis
+  │  ├─ Call: `gpt_factcheck.py --log raw-log-YYYY-MM-DD.txt`
+  │  ├─ GPT prompt: "Analyze this trading log independently. What patterns do you see?
+  │  │             What risks? What went well? What could improve?"
+  │  ├─ GPT output: { patterns, risks, strengths, weaknesses, recommendations }
+  │  ├─ Output: GPT_Independent_YYYY-MM-DD.txt
+  │  └─ Continue
+  │
+  ├─ PHASE 3: GPT Review & Cross-Check
+  │  ├─ Call: `gpt_factcheck.py` (default mode, with prior independent output)
+  │  ├─ GPT prompt: "Review this analysis. What did I miss? What's wrong?
+  │  │             What should the trader focus on next?"
+  │  ├─ GPT output: { agreement, disagreement, gaps, new_insights }
+  │  ├─ Output: GPT_Review_YYYY-MM-DD.txt
+  │  └─ Dual-phase complete
+  │
+  ├─ PHASE 4: Feed Integration
+  │  ├─ Extract key insights from both GPT outputs
+  │  ├─ Generate feed.json entry with GPT intelligence
+  │  ├─ Include analysis, recommendations, confidence level
+  │  └─ Publish to HQ
+  │
+  └─ CYCLE END → Sleep until next day
+        </div>
+        
+        <h2 id="part7">Part 7: Dex's Algorithm — Operations & Integrity</h2>
+        
+        <div class="agent-card">
+            <h4>Dex — Operational Integrity & Data Quality</h4>
+            <p><strong>Mission:</strong> Dex is the system's operational guardian. Dex detects drift, inconsistencies, and anomalies across all agents. Dex runs nightly consolidation, validates closed-loop execution, and generates the daily morning report that Hyo reads at 05:00 MT.</p>
+        </div>
+        
+        <h3>Dex's Nightly Consolidation (23:30 MT)</h3>
+        
+        <div class="algorithm-box">
+EVERY NIGHT (23:30 MT, com.hyo.dex-consolidation):
+  │
+  ├─ PHASE 1: Collect All Agent Artifacts
+  │  ├─ Gather logs from: agents/nel/logs/, agents/sam/logs/, agents/ra/logs/, 
+  │  │                   agents/aether/logs/, agents/dex/logs/
+  │  ├─ Aggregate to consolidation/<agent> directories
+  │  ├─ Output: consolidation/nel/, consolidation/sam/, etc.
+  │  └─ Continue
+  │
+  ├─ PHASE 2: Validate Closed-Loop Execution
+  │  ├─ For each delegation (tracked in kai/queue/running/):
+  │  │  ├─ Was task acknowledged? (status == ACK)
+  │  │  ├─ Was task completed? (status == DONE + evidence provided)
+  │  │  ├─ Was result reported? (log entry exists)
+  │  │  └─ If any NO → Flag as P1 (broken feedback loop)
+  │  ├─ Output: closed-loop-audit-YYYY-MM-DD.jsonl
+  │  └─ Integrity check complete
+  │
+  ├─ PHASE 3: Detect Operational Drift
+  │  ├─ For each agent, check:
+  │  │  ├─ Is PLAYBOOK.md <14 days old? (stale = P1)
+  │  │  ├─ Is ACTIVE.md <24 hours old? (no recent activity = P1)
+  │  │  ├─ Does evolution.jsonl have entry from today? (learning captured?)
+  │  │  ├─ Is GROWTH.md updated with findings? (continuous improvement?)
+  │  │  └─ If drift detected → Flag and alert Kai
+  │  ├─ Output: drift-detection-YYYY-MM-DD.jsonl
+  │  └─ Drift check complete
+  │
+  ├─ PHASE 4: Aggregate Metrics & KPIs
+  │  ├─ Collect metrics from all agents:
+  │  │  ├─ Nel: Links checked, secrets found, API health score
+  │  │  ├─ Sam: Deployments, test pass rate, performance baselines
+  │  │  ├─ Ra: Sources active, newsletter editions, subscriber count
+  │  │  ├─ Aether: Balance, PnL, trades, strategy performance
+  │  │  └─ Dex: Uptime, errors, latency
+  │  ├─ Output: metrics-consolidated-YYYY-MM-DD.json
+  │  └─ Continue
+  │
+  ├─ PHASE 5: Identify Patterns & Trends
+  │  ├─ Compare today's metrics vs 7-day average
+  │  ├─ Flag: improvements, regressions, anomalies
+  │  ├─ Trending up: more tickets closed? Lower error rate?
+  │  ├─ Trending down: more timeouts? Silent agents?
+  │  ├─ Output: patterns-YYYY-MM-DD.jsonl
+  │  └─ Continue
+  │
+  ├─ PHASE 6: Generate Morning Report
+  │  ├─ Synthesize consolidation data → morning-report-YYYY-MM-DD.json
+  │  ├─ Two versions:
+  │  │  ├─ Technical: for Kai (raw metrics, issues, evidence)
+  │  │  └─ Human-readable: for HQ (narrative, accomplishments, next steps)
+  │  ├─ Include:
+  │  │  ├─ What shipped today (per agent)
+  │  │  ├─ What went well (improvements, patterns)
+  │  │  ├─ What didn't work (blockers, regressions)
+  │  │  ├─ Next priorities
+  │  │  └─ Growth trajectory (each agent's improvement progress)
+  │  ├─ Output: morning-report-YYYY-MM-DD.json + .md
+  │  └─ Continue
+  │
+  └─ CYCLE END → Report ready for 05:00 MT HQ publication
+        </div>
+        
+        <h2 id="part8">Part 8: Integration & Handoff Protocols</h2>
+        
+        <h3>Agent Communication & Handoff Flow</h3>
+        
+        <p>Agents communicate through a standardized dispatch protocol. Every delegation, status update, and escalation follows this flow:</p>
+        
+        <div class="algorithm-box">
+HANDOFF PROTOCOL (Agent A → Agent B):
+  │
+  ├─ STEP 1: Create Ticket
+  │  ├─ Caller (Agent A or Kai): `kai ticket create --agent B --title "..." --priority P1`
+  │  ├─ Ticket ID generated: TASK-20260416-B-001
+  │  ├─ Output: ticket stored in kai/tickets/tickets.jsonl
+  │  └─ Status: OPEN
+  │
+  ├─ STEP 2: Dispatch
+  │  ├─ Caller: `dispatch delegate B "Task description, what you need, when due"`
+  │  ├─ Agent B receives notification (via queue, email, HQ feed)
+  │  ├─ Agent B reads task details
+  │  └─ Status: OPEN → ACKNOWLEDGED
+  │
+  ├─ STEP 3: Execute
+  │  ├─ Agent B starts work on ticket
+  │  ├─ Agent B updates ticket: `kai ticket update TASK-20260416-B-001 --status ACTIVE`
+  │  ├─ Agent B works (debugging, implementing, testing)
+  │  └─ Status: ACTIVE (in progress)
+  │
+  ├─ STEP 4: Report Progress
+  │  ├─ If blocked: Agent B calls `dispatch escalate TASK-20260416-B-001 "Reason"`
+  │  ├─ If on track: Agent B logs progress to ticket
+  │  ├─ Status: ACTIVE or BLOCKED
+  │  └─ Continue
+  │
+  ├─ STEP 5: Verify & Close
+  │  ├─ Agent B completes work
+  │  ├─ Agent B runs verify.sh: `agents/B/verify.sh`
+  │  ├─ If verify.sh passes:
+  │  │  └─ Agent B: `kai ticket close TASK-20260416-B-001 --evidence "..." --summary "..."`
+  │  ├─ If verify.sh fails:
+  │  │  └─ Agent B continues work (ticket stays OPEN)
+  │  └─ Status: CLOSED (all gates passed)
+  │
+  ├─ STEP 6: Dispatch Report
+  │  ├─ Agent B: `dispatch report B "Task complete: what was done, evidence, metrics"`
+  │  ├─ Report reaches Kai + HQ feed
+  │  ├─ Output: agents/B/logs/B-YYYY-MM-DD.md
+  │  └─ Status: CLOSED + REPORTED
+  │
+  ├─ SLA & ESCALATION
+  │  ├─ If ticket OPEN >1h and priority P1 → Auto-escalate to P0
+  │  ├─ If ticket OPEN >4h and priority P2 → Auto-escalate to P1
+  │  ├─ If ticket OPEN >24h and priority P3 → Auto-escalate to P2
+  │  ├─ If BLOCKED → Kai investigates immediately
+  │  └─ Auto-escalation enforced by healthcheck (q2h)
+  │
+  └─ HANDOFF COMPLETE → Next task
+        </div>
+        
+        <h3>Error Escalation Pathways</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Error Type</th>
+                    <th>Severity</th>
+                    <th>First Responder</th>
+                    <th>Escalation Path</th>
+                    <th>SLA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Exposed secret (API key, token)</td>
+                    <td>P0</td>
+                    <td>Nel (cipher)</td>
+                    <td>Nel → Kai → Hyo (if rotation needed)</td>
+                    <td>15 min</td>
+                </tr>
+                <tr>
+                    <td>API endpoint returning 403/500</td>
+                    <td>P1</td>
+                    <td>Nel (health check)</td>
+                    <td>Nel → Sam → Kai</td>
+                    <td>1 hour</td>
+                </tr>
+                <tr>
+                    <td>Deployment failed (Vercel build error)</td>
+                    <td>P1</td>
+                    <td>Sam (deploy script)</td>
+                    <td>Sam → Kai → Nel (for security validation)</td>
+                    <td>1 hour</td>
+                </tr>
+                <tr>
+                    <td>Newsletter didn't send (3+ days past deadline)</td>
+                    <td>P1</td>
+                    <td>Ra (newsletter runner)</td>
+                    <td>Ra → Kai (diagnose root cause)</td>
+                    <td>4 hours</td>
+                </tr>
+                <tr>
+                    <td>Trading position phantom (balance mismatch >$10)</td>
+                    <td>P0</td>
+                    <td>Aether (metrics)</td>
+                    <td>Aether → Kai (HALT trading)</td>
+                    <td>5 min</td>
+                </tr>
+                <tr>
+                    <td>Agent silent (no logs >48h)</td>
+                    <td>P1</td>
+                    <td>Dex (healthcheck)</td>
+                    <td>Dex → Kai (investigate + restart)</td>
+                    <td>2 hours</td>
+                </tr>
+                <tr>
+                    <td>Queue worker down (pending not draining)</td>
+                    <td>P0</td>
+                    <td>Kai (queue management)</td>
+                    <td>Kai → Hyo (physical Mini, launchctl restart)</td>
+                    <td>30 min</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Cross-Agent Dependencies</h3>
+        
+        <ul>
+            <li><strong>Kai ↔ All Agents:</strong> Central dispatch hub. Kai hydrates, delegates, verifies. Agents execute, report.</li>
+            <li><strong>Nel ↔ Sam:</strong> Nel validates deployments (post-deploy). Sam requests security scans (pre-deploy).</li>
+            <li><strong>Sam ↔ Ra:</strong> Sam deploys website updates. Ra's newsletter links to website content (must not break).</li>
+            <li><strong>Ra ↔ Dex:</strong> Ra publishes newsletters. Dex aggregates newsletter metrics for morning report.</li>
+            <li><strong>Aether ↔ Dex:</strong> Aether generates dashboard JSON. Dex publishes to HQ feed.</li>
+            <li><strong>Nel ↔ Dex:</strong> Nel detects issues. Dex tracks issue patterns nightly (consolidation).</li>
+            <li><strong>All Agents ↔ Dex:</strong> All agents write logs. Dex consolidates + generates morning report.</li>
+        </ul>
+        
+        <h2 id="sources">Sources & Research</h2>
+        
+        <div class="section-intro">
+            <strong>Research Foundation:</strong> This report synthesizes operating algorithms from 11 core system files, 6 agent playbooks, 5 growth documents, and 3 protocol documents. All algorithms are derived from real-world implementation experience (April 7-16, 2026).
+        </div>
+        
+        <h3>Core System Files</h3>
+        
+        <div class="source">
+            <strong>KAI_BRIEF.md</strong> — CEO persistent memory. Current state, blockers, shipped items, overnight directives. Updated end-of-session, nightly consolidation.
+        </div>
+        
+        <div class="source">
+            <strong>KAI_TASKS.md</strong> — Priority queue. CEO work when not actively prompted. Moved to "Done" with dates. New tasks added as they emerge.
+        </div>
+        
+        <div class="source">
+            <strong>kai/AGENT_ALGORITHMS.md</strong> — The Constitution. Immutable law. Core principles, ticket system, agent autonomy framework, decision trees.
+        </div>
+        
+        <div class="source">
+            <strong>kai/protocols/EXECUTION_GATE.md</strong> — Pre-action checklist. 8 questions every action must answer before execution.
+        </div>
+        
+        <div class="source">
+            <strong>kai/protocols/VERIFICATION_PROTOCOL.md</strong> — Post-action proof requirements. Fetch URL, render output, verify actual change.
+        </div>
+        
+        <h3>Agent Playbooks & Growth Documents</h3>
+        
+        <div class="source">
+            <strong>agents/nel/PLAYBOOK.md</strong> — Nel's operational manual. 9-phase QA cycle, GitHub security scanning, verification requirements.
+        </div>
+        
+        <div class="source">
+            <strong>agents/nel/GROWTH.md</strong> — Nel's weaknesses (W1: static checks, W2: no dependency scanning, W3: research sources broken) and improvement plan.
+        </div>
+        
+        <div class="source">
+            <strong>agents/sam/PLAYBOOK.md</strong> — Sam's deployment pipeline. 14-phase sprint cycle, test suite, improvement queue.
+        </div>
+        
+        <div class="source">
+            <strong>agents/sam/GROWTH.md</strong> — Sam's weaknesses (W1: no regression detection, W2: ephemeral state, W3: incomplete error handling) and improvement roadmap.
+        </div>
+        
+        <div class="source">
+            <strong>agents/ra/PLAYBOOK.md</strong> — Ra's newsletter operations. 16-phase pipeline, source management, subscriber system.
+        </div>
+        
+        <div class="source">
+            <strong>agents/ra/GROWTH.md</strong> — Ra's weaknesses (W1: no editorial feedback, W2: source quality unverified, W3: content diversity gap) and improvements.
+        </div>
+        
+        <div class="source">
+            <strong>agents/aether/PLAYBOOK.md</strong> — Aether's trading analysis. 15-minute metrics cycle, GPT dual-phase cross-check, strategy performance.
+        </div>
+        
+        <h3>Implementation Data (2026-04-16)</h3>
+        
+        <div class="source">
+            <strong>Session 11 Continuation 2 Completion Report</strong> — Aether data rebuilt from raw logs (335K-466K lines parsed). 542 tickers, 92.4% resolution. Real trading: $133.11 balance, +$42.86 weekly PnL (+47.5%). All metrics synchronized to HQ, GPT cross-checks wired.
+        </div>
+        
+        <div class="source">
+            <strong>System Health Status (2026-04-16 20:03 MT)</strong> — 5 P0/P1 issues, 3 P2 issues. Queue worker stalled 10 hours. Api auth (401) + HQ rendering gap both 8 hours unresolved. Nel detected at 12:19 MT, re-flagged at 18:19 MT.
+        </div>
+        
+        <h3>Operating Reality & Constraints</h3>
+        
+        <p>All algorithms presented reflect actual operating conditions as of April 16, 2026:</p>
+        
+        <ul>
+            <li><strong>Cowork Sandbox Limitations:</strong> Network outbound HTTPS restricted (5 of 6 research sources fail). Queue worker on Mini can execute full scope. Sandbox used for planning, planning-execution, and verification only.</li>
+            <li><strong>Ephemeral State Pattern:</strong> Vercel function invocations run in isolation. globalThis memory doesn't persist between cold starts. Production data loss occurs without KV implementation.</li>
+            <li><strong>Real Trading Reality:</strong> Live account on Kalshi BTC 15-minute binary options. Real USD at risk. Daily decision gates (entry/exit logic) execute autonomously via AetherBot daemon.</li>
+            <li><strong>Human in the Loop:</strong> Kai (Claude) operates 2-3h/day. Hyo (human operator) provides strategic input, approval gates, physical access when needed. Rest is autonomous agent execution.</li>
+            <li><strong>Git-as-Memory:</strong> All persistent state (BRIEF, TASKS, ledgers, logs) committed to git. Memory survives session termination, device switches, context compaction.</li>
+        </ul>
+        
+        <div class="sources-section">
+            <h2>📚 Industry Best Practices Referenced</h2>
+            
+            <p>While this report documents Hyo's specific implementation, the algorithms align with industry best practices in:</p>
+            
+            <ul>
+                <li><strong>Automated QA:</strong> Continuous testing frameworks, multi-phase validation (unit → smoke → integration → performance), regression detection baselines.</li>
+                <li><strong>Security Scanning:</strong> OWASP Top 10 defense, dependency vulnerability tracking, secrets detection, supply chain verification.</li>
+                <li><strong>CI/CD Deployment:</strong> Pre-deploy validation, smoke tests, post-deploy verification, rollback capability, staged rollouts.</li>
+                <li><strong>Content & Newsletter Production:</strong> Source health monitoring, multi-variant generation, subscriber preference systems, engagement tracking.</li>
+                <li><strong>Trading Systems:</strong> Position reconciliation, risk exposure calculation, strategy performance measurement, adversarial backtesting.</li>
+                <li><strong>Operational Monitoring:</strong> Health checks, SLA tracking, incident escalation, pattern detection, consolidation reporting.</li>
+                <li><strong>Agent-Based Architecture:</strong> Autonomous agents with defined domains, delegation protocols, closed-loop accountability, continuous learning via evolution logs.</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>System Algorithm Report — Generated 2026-04-16</p>
+            <p>Hyo.world CEO System | Kai, Aurora, Nel, Sam, Ra, Aether, Dex</p>
+            <p>This report documents complete operating algorithms for all system components.</p>
+            <p>For operational questions, consult AGENT_ALGORITHMS.md (constitution) and agents/*/PLAYBOOK.md (domain manuals).</p>
+        </div>
+    </div>
+</body>
+</html>
