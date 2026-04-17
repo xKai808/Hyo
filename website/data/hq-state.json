@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-16T08:00:02Z",
+  "updatedAt": "2026-04-17T08:00:05Z",
   "morningReport": {
-    "date": "2026-04-16",
-    "generatedAt": "2026-04-16T00:12:30-0600",
+    "date": "2026-04-17",
+    "generatedAt": "2026-04-17T00:10:33-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync at 00:12 MT on 2026-04-16. All three agents ran: sentinel (6 pass/3 fail, run #55), cipher (run #187, 2 recurring findings \u2014 gitleaks/trufflehog not installed, 0 verified leaks), nel (score 65, 16 broken links, 5 audit issues, 0 verified leaks, growth phase ran IMP-nel-002). Core blockers unchanged: API health failing 55 consecutive runs (P0 ESCALATION), aurora newsletter missing (scheduled-tasks-fired day 2), task queue overloaded at 17 P0 (threshold 5, day 36). Nel growth phase attempted CVE scanner build \u2014 no package.json at project root. Nel self-delegated broken link fix (nel-002). New ticket TASK-20260416-nel-001 (P2) created. System health below 70 target.",
+    "summary": "Ops sync at 00:10 MT on 2026-04-17. All three agents ran: sentinel (5 pass/4 fail, run #62), cipher (run #213 \u2014 sandbox/gitleaks-not-installed skip, 0 leaks, founder token 600), nel (score 65, 16 broken links, 5 audit issues, growth phase IMP-nel-002 CVE scanner). Core blockers unchanged: API health failing 62 consecutive runs (P0 ESCALATION, day 62), aurora newsletter missing day 4, task queue overloaded at 25 P0 (threshold 5, day 4). Nel self-delegated broken-link fix (nel-002) and regression ticket TASK-20260417-nel-001 filed. Score regression flagged: 85 \u2192 65. System health below 70 target.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,25 +14,42 @@
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint failing \u2014 55 consecutive sentinel runs (P0 ESCALATION)",
-      "Aurora scheduled-tasks-fired \u2014 no aurora logs detected (day 2 recurring)",
-      "Nel health score 65 \u2014 below 70 target. 16 broken doc links (+1 vs yesterday)",
-      "Task queue overloaded \u2014 17 P0 tasks (threshold 5, day 36)",
-      "Cipher tooling gap \u2014 gitleaks/trufflehog not installed on Mini (brew install pending)"
+      "API health endpoint failing \u2014 62 consecutive sentinel runs (P0 ESCALATION)",
+      "Aurora newsletter missing \u2014 2026-04-17.md not generated (day 4 recurring, P0)",
+      "Nel health score 65 \u2014 regression from 85; 16 broken doc links",
+      "Task queue overloaded \u2014 25 P0 tasks (threshold 5, day 4)",
+      "Sensitive files outside .secrets/: 5 detected (.env.local, claude_api_tokens CSVs)"
     ]
   },
   "events": [
     {
-      "ts": "2026-04-16T08:00:02Z",
+      "ts": "2026-04-17T08:00:05Z",
       "agent": "consolidation",
       "msg": "Nightly consolidation \u2014 sam",
-      "doc": "/viewer?agent=consolidation&file=2026-04-16"
+      "doc": "/viewer?agent=consolidation&file=2026-04-17"
     },
     {
-      "ts": "2026-04-16T08:00:02Z",
+      "ts": "2026-04-17T08:00:05Z",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-16",
-      "doc": "/viewer?agent=simulation&file=2026-04-16"
+      "msg": "24h action plan \u2014 2026-04-17",
+      "doc": "/viewer?agent=simulation&file=2026-04-17"
+    },
+    {
+      "ts": "2026-04-17T00:10:33-0600",
+      "agent": "nel",
+      "msg": "System sweep 2026-04-17 \u2014 score 65, 16 broken links, 5 audit issues, sentinel 2p/2f across projects. Growth IMP-nel-002 (CVE scanner). Self-delegated nel-002. TASK-20260417-nel-001 (P2) filed. Regression 85\u219265 logged.",
+      "doc": "/viewer?agent=nel&file=2026-04-17"
+    },
+    {
+      "ts": "2026-04-17T00:10:33-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #62 \u2014 5 passed, 4 failed. P0 api-health-green day 62 (ESCALATED), P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size 25/5 day 4.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-17"
+    },
+    {
+      "ts": "2026-04-17T00:10:33-0600",
+      "agent": "cipher",
+      "msg": "Security scan run #213 \u2014 0 findings, 0 verified leaks. Sandbox skip: gitleaks-not-installed (authoritative scan runs on Mini). Founder token 600, .secrets 700."
     },
     {
       "ts": "2026-04-16T00:12:30-0600",
@@ -92,29 +109,31 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-16T00:12:30-0600",
-    "passed": 6,
-    "failed": 3,
-    "totalRuns": 55,
+    "lastRun": "2026-04-17T00:10:33-0600",
+    "passed": 5,
+    "failed": 4,
+    "totalRuns": 62,
     "findings": [
-      "P0: api-health-green \u2014 endpoint failing (day 55, ESCALATED)",
-      "P1: scheduled-tasks-fired \u2014 no aurora logs detected (day 2)",
-      "P2: task-queue-size \u2014 17 P0 tasks (overload threshold 5, day 36)"
+      "P0: aurora-ran-today \u2014 missing newsletters/2026-04-17.md (day 4)",
+      "P0: api-health-green \u2014 endpoint not green (day 62, ESCALATED)",
+      "P1: scheduled-tasks-fired \u2014 no aurora logs (day 4)",
+      "P2: task-queue-size \u2014 25 P0 tasks / threshold 5 (day 4)"
     ],
     "escalations": [
-      "P0 escalated: api-health-green failing 55 runs in a row",
-      "P2 elevated: task-queue-size failing 36 runs in a row"
+      "P0 escalated: aurora-ran-today failing 4 runs in a row",
+      "P0 escalated: api-health-green failing 62 runs in a row",
+      "P1 elevated: scheduled-tasks-fired failing 4 runs in a row"
     ],
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-15"
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-17"
   },
   "cipher": {
-    "lastRun": "2026-04-16T00:12:30-0600",
-    "secretsDir": "755",
+    "lastRun": "2026-04-17T06:10:33Z",
+    "secretsDir": "700",
     "founderToken": "600",
     "leaks": 0,
-    "notes": "2 recurring findings (gitleaks/trufflehog not installed) \u2014 0 verified credential leaks. secretsDir 755 is on the symlink (target 700). Founder token 600 OK. Install pending: brew install gitleaks && brew install trufflesecurity/trufflehog/trufflehog.",
+    "notes": "Sandbox run skipped gitleaks scan (not installed in sandbox \u2014 authoritative scan runs on Mini). 0 findings, 0 verified leaks. Founder token 600, .secrets 700. brew install gitleaks + trufflehog still pending on Mini.",
     "latestDoc": null,
-    "totalRuns": 187
+    "totalRuns": 213
   },
   "sim": {
     "lastRun": "2026-04-10T16:14:00-06:00",
@@ -122,16 +141,16 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-04-16T08:00:02Z"
+    "lastRun": "2026-04-17T08:00:05Z"
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-16T06:11:15Z",
+    "lastRun": "2026-04-17T06:10:21Z",
     "improvementScore": 65,
     "findingsCount": 2,
     "staleFiles": 0,
     "brokenLinks": 16,
-    "untested": 12,
+    "untested": 14,
     "inefficient": 1,
     "sentinel": {
       "pass": 2,
@@ -139,6 +158,8 @@
     },
     "cipher": {
       "leaks": 0
-    }
+    },
+    "healthScore": 65,
+    "latestDoc": "/viewer?agent=nel&file=2026-04-17"
   }
 }
