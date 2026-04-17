@@ -740,6 +740,23 @@ d['lastUpdated'] = now
 with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
 "
   push_to_hq
+
+  # ─── Git push metrics to Vercel (every 15-min cycle) ─────────────────────
+  # The API push_to_hq is ephemeral (serverless cold starts reset it).
+  # Git push ensures the static site always has fresh metrics.
+  (
+    cd "$ROOT" || exit 1
+    # Remove stale lock files (e.g., from crashed processes)
+    rm -f .git/index.lock 2>/dev/null
+    git add website/data/aether-metrics.json 2>/dev/null
+    if ! git diff --cached --quiet website/data/aether-metrics.json 2>/dev/null; then
+      git commit -m "aether: metrics update $(TZ=America/Denver date +%H:%M)" 2>/dev/null \
+        && git push origin main 2>/dev/null \
+        && log "Git push: metrics deployed to Vercel" \
+        || log "Git push: failed (will retry next cycle)"
+    fi
+  )
+
   verify_dashboard
 
   # ─── Self-Review: Aether Pathway Audit ────────────────────────────────────
