@@ -262,20 +262,24 @@ for t in trades:
 
 _now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 
-# ── Settled P&L is authoritative (sum of all NET values from settled trades) ──
+# ── Settled P&L (sum of WIN/LOSS SETTLED NET values — does NOT include premium collection) ──
 settled_pnl = round(sum(t["net"] for t in trades), 2)
 
 # ── Write back ──
 old_balance = cw.get("currentBalance", 0)
 cw["currentBalance"] = round(latest_balance, 2)
 
-# P&L: use settled trade NET sum as authoritative, NOT balance math.
-# Balance math (currentBalance - startingBalance) drifts with unsettled positions.
-# Settled P&L is provable from WIN/LOSS SETTLED lines.
-cw["pnl"] = settled_pnl
-cw["pnlPercent"] = round((settled_pnl / cw["startingBalance"]) * 100, 2) if cw.get("startingBalance") else 0
+# P&L: balance math is authoritative because it captures EVERYTHING:
+#   - premium collected from selling contracts (no SETTLED line when they expire worthless)
+#   - position entries (money spent)
+#   - settled trades (WIN/LOSS with NET values)
+# Settled P&L alone is misleading — e.g. -$44 settled but +$24 balance = premium dominates.
+# SE-012-002: reverted from settled_pnl to balance math after discovering premium gap.
+cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
+cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw.get("startingBalance") else 0
 
-# Also track total trade events (SETTLED lines only — the ones we can prove)
+# Track both for transparency
+cw["settledPnl"] = settled_pnl
 cw["settledTrades"] = total_trades
 cw["wins"] = wins
 cw["losses"] = losses
