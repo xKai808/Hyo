@@ -1369,8 +1369,26 @@ function getTypeLabel(type) {
   return map[type] || type;
 }
 
+// ═══ AETHER DASHBOARD — STATE ═══
+let _aetherStratSort = 'net';
+let _aetherSelectedDay = null;
+let _aetherContainer = null;
+let _aetherAgentRef = null;
+
+function aetherSortStrat(key) {
+  _aetherStratSort = key;
+  if (_aetherContainer && _aetherAgentRef) renderAetherDashboard(_aetherContainer, _aetherAgentRef);
+}
+function aetherToggleDay(idx) {
+  _aetherSelectedDay = (_aetherSelectedDay === idx) ? null : idx;
+  if (_aetherContainer && _aetherAgentRef) renderAetherDashboard(_aetherContainer, _aetherAgentRef);
+}
+
 // ═══ AETHER DASHBOARD ═══
 function renderAetherDashboard(container, agent) {
+  _aetherContainer = container;
+  _aetherAgentRef = agent;
+
   if (!AETHER_DATA) {
     container.innerHTML = '<div class="empty-state">Aether metrics not loaded</div>';
     return;
@@ -1378,188 +1396,323 @@ function renderAetherDashboard(container, agent) {
 
   const data = AETHER_DATA;
   const week = data.currentWeek || {};
-  const allTime = data.allTimeStats || {};
+  const dailyPnl = week.dailyPnl || [];
+  const openIssues = data.openIssues || [];
   const strategies = week.strategies || [];
-  const btcContext = data.btcMarketContext || {};
 
-  // Get all reports by Aether, organized by month
-  const agentReports = (FEED_DATA.reports || [])
-    .filter(r => r.author.toLowerCase() === 'aether')
-    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  const pnlColor = v => v > 0 ? '#00ff88' : v < 0 ? '#ff4444' : '#888';
+  const fmtPnl = v => v == null ? '—' : (v >= 0 ? '+' : '') + '$' + Math.abs(v).toFixed(2);
+  const SC = {
+    ACTIVE:  { bg: '#0d2d1a', border: '#00ff88', text: '#00ff88' },
+    WATCH:   { bg: '#2d2200', border: '#ffa500', text: '#ffa500' },
+    ALERT:   { bg: '#2d0d0d', border: '#ff4444', text: '#ff4444' },
+    MONITOR: { bg: '#0d1a2d', border: '#00c8ff', text: '#00c8ff' },
+  };
+  const PC = { P0: '#ff4444', P1: '#ff8c44', P2: '#ffa500', P3: '#888888' };
 
-  const months = {};
-  for (const r of agentReports) {
-    const m = r.date.slice(0, 7); // YYYY-MM
-    if (!months[m]) months[m] = [];
-    months[m].push(r);
+  function deriveStatus(s) {
+    if (s.winRate < 40 || s.pnl < -5) return 'ALERT';
+    if (s.winRate < 60 || s.pnl < 0) return 'WATCH';
+    if (s.trades < 5) return 'MONITOR';
+    return 'ACTIVE';
   }
-  const monthKeys = Object.keys(months).sort().reverse();
 
-  let html = `
-    <div class="agent-profile">
-      <div class="agent-profile-header">
-        <div class="ap-icon">${agent.icon}</div>
-        <div class="ap-info">
-          <h2>${agent.name}</h2>
-          <div class="ap-role">${agent.role}</div>
-        </div>
-      </div>
-      <div class="ap-responsibilities">"${agent.responsibilities}"</div>
-    </div>
+  function wrBar(wins, total) {
+    const wr = total === 0 ? 0 : (wins / total) * 100;
+    const col = wr >= 75 ? '#00ff88' : wr >= 60 ? '#ffa500' : '#ff4444';
+    return `<div style="display:flex;align-items:center;gap:8px"><div style="width:80px;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden"><div style="width:${wr.toFixed(1)}%;height:100%;background:${col};border-radius:3px"></div></div><span style="color:${col};font-family:monospace;font-size:12px">${Math.round(wr)}%</span></div>`;
+  }
 
-    <div class="aether-dashboard">
-      <!-- Portfolio Summary Cards -->
-      <div class="aether-summary">
-        <div class="aether-card metric">
-          <div class="label">Current Balance</div>
-          <div class="value">$${(week.currentBalance || 0).toFixed(2)}</div>
-          <div class="subtext">Week Starting: ${week.start}</div>
-        </div>
+  function statusBadge(status) {
+    const c = SC[status] || SC.MONITOR;
+    return `<span style="padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:0.08em;font-family:monospace;background:${c.bg};border:1px solid ${c.border};color:${c.text}">${status}</span>`;
+  }
 
-        <div class="aether-card metric">
-          <div class="label">Week P&L</div>
-          <div class="value ${week.pnl >= 0 ? 'aether-pnl-positive' : 'aether-pnl-negative'}">
-            ${week.pnl >= 0 ? '+' : ''}$${(week.pnl || 0).toFixed(2)}
+  function netCell(v) {
+    return `<span style="color:${pnlColor(v)};font-family:monospace;font-weight:700;font-size:13px">${fmtPnl(v)}</span>`;
+  }
+
+  function sparkline(pts) {
+    if (!pts || pts.length < 2) return '';
+    const mn = Math.min(...pts), mx = Math.max(...pts), rng = mx - mn || 1;
+    const W = 60, H = 20;
+    const coords = pts.map((v, i) => `${((i / (pts.length - 1)) * W).toFixed(1)},${(H - ((v - mn) / rng) * H).toFixed(1)}`).join(' ');
+    const dots = pts.map((v, i) => `<circle cx="${((i / (pts.length - 1)) * W).toFixed(1)}" cy="${(H - ((v - mn) / rng) * H).toFixed(1)}" r="2" fill="${v >= 0 ? '#00ff88' : '#ff4444'}"/>`).join('');
+    return `<svg width="${W}" height="${H}" style="overflow:visible"><polyline points="${coords}" fill="none" stroke="#00ff8866" stroke-width="1.5"/>${dots}</svg>`;
+  }
+
+  function sortTH(label, key, currentSort, fn) {
+    const active = currentSort === key;
+    return `<th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f"><span onclick="${fn}('${key}')" style="cursor:pointer;color:${active ? '#00c8ff' : '#555'};font-size:10px;font-family:monospace;letter-spacing:0.06em;user-select:none">${label}${active ? ' ↓' : ''}</span></th>`;
+  }
+
+  // ── Enriched strategies ───────────────────────────────────────────────────
+  const enriched = strategies.map(s => ({
+    ...s,
+    derivedStatus: deriveStatus(s),
+    sparkPts: dailyPnl.map(d => ((d.strategies || {})[s.name] || {}).pnl || 0)
+  }));
+
+  const sortedStrats = [...enriched].sort((a, b) => {
+    if (_aetherStratSort === 'net')    return b.pnl - a.pnl;
+    if (_aetherStratSort === 'wr')     return b.winRate - a.winRate;
+    if (_aetherStratSort === 'trades') return b.trades - a.trades;
+    return 0;
+  });
+
+  // ── Top-level metrics ─────────────────────────────────────────────────────
+  const totalNet = week.pnl || 0;
+  const currentBalance = week.currentBalance || 0;
+  const overallWR = week.winRate || 0;
+  const totalTrades = week.trades || 0;
+  const totalWins = week.wins || 0;
+  const totalLosses = week.losses || 0;
+
+  // ── Strategy rows ─────────────────────────────────────────────────────────
+  const stratRows = sortedStrats.map((s, i) => `
+    <tr style="background:${i % 2 === 0 ? 'transparent' : '#0d0d0d'};border-bottom:1px solid #161616">
+      <td style="padding:10px 10px">
+        <div style="font-family:monospace;font-size:12px;color:#ddd;font-weight:600">${s.name}</div>
+      </td>
+      <td style="padding:10px 10px">
+        <div style="color:#888;font-family:monospace;font-size:12px">${s.trades}</div>
+        <div style="color:#444;font-size:10px">${s.wins}W / ${s.losses}L</div>
+      </td>
+      <td style="padding:10px 10px">${wrBar(s.wins, s.trades)}</td>
+      <td style="padding:10px 10px"><span style="color:#00ff8899;font-family:monospace;font-size:12px">—</span></td>
+      <td style="padding:10px 10px"><span style="color:${s.losses > 0 ? '#ff444499' : '#888'};font-family:monospace;font-size:12px">—</span></td>
+      <td style="padding:10px 10px">${netCell(s.pnl)}</td>
+      <td style="padding:10px 10px">${statusBadge(s.derivedStatus)}</td>
+      <td style="padding:10px 10px;width:70px;opacity:0.8">${s.trades >= 2 ? sparkline(s.sparkPts) : ''}</td>
+    </tr>`).join('');
+
+  // ── Daily feed cards ──────────────────────────────────────────────────────
+  const feedCards = [...dailyPnl].reverse().map((d, i) => {
+    const isPos = d.pnl >= 0;
+    const isSelected = _aetherSelectedDay === i;
+    const isLast = i === 0;
+    const borderLeft = isLast ? '#00c8ff' : isPos ? '#00ff88' : '#ff4444';
+    const stratBreakdown = Object.entries(d.strategies || {}).map(([sn, sv]) =>
+      `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:10px;font-family:monospace"><span style="color:#555">${sn}</span><span style="color:${sv.pnl >= 0 ? '#00ff8888' : '#ff444488'}">${fmtPnl(sv.pnl)}</span></div>`
+    ).join('');
+    return `
+      <div onclick="aetherToggleDay(${i})" style="background:${isSelected ? '#1a1a1a' : '#111'};border:1px solid ${isSelected ? '#333' : '#1f1f1f'};border-left:3px solid ${borderLeft};border-radius:6px;padding:12px 14px;cursor:pointer;margin-bottom:8px;transition:all 0.2s">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <span style="color:#888;font-family:monospace;font-size:11px">${d.day || ''} ·</span>
+            <span style="color:#ccc;font-family:monospace;font-size:11px;margin-left:4px">${d.date}</span>
+            ${isLast ? '<span style="margin-left:8px;font-size:9px;font-weight:700;color:#00c8ff;border:1px solid #00c8ff33;border-radius:2px;padding:1px 5px;font-family:monospace">LIVE</span>' : ''}
           </div>
-          <div class="subtext">${(week.pnlPercent || 0).toFixed(2)}% return</div>
+          <div style="text-align:right">
+            <div style="color:${pnlColor(d.pnl)};font-family:monospace;font-weight:700;font-size:14px">${fmtPnl(d.pnl)}</div>
+            <div style="color:#555;font-size:10px;font-family:monospace">${d.trades} trades</div>
+          </div>
         </div>
+        ${isSelected ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #222">
+          <div style="display:flex;gap:16px;margin-bottom:10px">
+            <div><div style="color:#555;font-size:10px;font-family:monospace">OPEN</div><div style="color:#888;font-family:monospace;font-size:12px">$${(d.balanceStart || 0).toFixed(2)}</div></div>
+            <div><div style="color:#555;font-size:10px;font-family:monospace">CLOSE</div><div style="color:#888;font-family:monospace;font-size:12px">$${(d.balanceEnd || 0).toFixed(2)}</div></div>
+            <div><div style="color:#555;font-size:10px;font-family:monospace">WIN RATE</div><div style="color:#888;font-family:monospace;font-size:12px">${(d.winRate || 0).toFixed(1)}% (${d.wins}W/${d.losses}L)</div></div>
+          </div>
+          <div style="color:#555;font-size:10px;font-family:monospace;margin-bottom:4px">STRATEGY BREAKDOWN</div>
+          ${stratBreakdown || '<div style="color:#444;font-size:10px">no breakdown available</div>'}
+        </div>` : ''}
+      </div>`;
+  }).join('');
 
-        <div class="aether-card metric">
-          <div class="label">Win Rate</div>
-          <div class="value">${(week.winRate || 0).toFixed(1)}%</div>
-          <div class="subtext">${week.wins || 0}W / ${week.losses || 0}L</div>
+  // ── Balance ledger ────────────────────────────────────────────────────────
+  const startEntry = week.startingBalance ? `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #161616">
+      <div><span style="color:#888;font-family:monospace;font-size:12px">${week.start || 'Week Start'}</span><span style="margin-left:6px;font-size:9px;color:#555;font-family:monospace">START</span></div>
+      <div style="text-align:right"><div style="font-family:monospace;font-size:13px;color:#ddd">$${(week.startingBalance || 0).toFixed(2)}</div></div>
+    </div>` : '';
+
+  const ledgerRows = dailyPnl.map((d, i, arr) => {
+    const isLast = i === arr.length - 1;
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #161616">
+        <div>
+          <span style="color:#888;font-family:monospace;font-size:12px">${d.date}</span>
+          ${isLast ? '<span style="margin-left:6px;font-size:9px;color:#00c8ff;border:1px solid #00c8ff33;padding:1px 4px;border-radius:2px">LIVE</span>' : '<span style="margin-left:6px;font-size:9px;color:#555;font-family:monospace">confirmed</span>'}
         </div>
+        <div style="text-align:right">
+          <div style="font-family:monospace;font-size:13px;color:#ddd">$${(d.balanceEnd || 0).toFixed(2)}</div>
+          <div style="font-size:10px;font-family:monospace;color:${pnlColor(d.pnl)}">${fmtPnl(d.pnl)}</div>
+        </div>
+      </div>`;
+  }).join('');
 
-        <div class="aether-card metric">
-          <div class="label">Trades (Week)</div>
-          <div class="value">${week.trades || 0}</div>
-          <div class="subtext">BUY SNAPSHOT count</div>
+  // ── Open issues ───────────────────────────────────────────────────────────
+  const issueRows = openIssues.map(issue => {
+    const pc = PC[issue.priority] || '#888';
+    const label = issue.title || issue.label || '';
+    return `
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid #161616">
+        <span style="font-size:10px;font-weight:700;font-family:monospace;color:${pc};min-width:24px;padding-top:1px">${issue.priority}</span>
+        <span style="color:#bbb;font-size:12px;flex:1;line-height:1.4">${label}</span>
+        <span style="font-size:10px;font-family:monospace;color:${issue.status === 'ACTIVE' ? '#00c8ff' : '#666'};min-width:60px;text-align:right">${issue.status || ''}</span>
+      </div>`;
+  }).join('');
+
+  // ── Build full HTML ───────────────────────────────────────────────────────
+  const html = `
+    <div style="background:#0d0d0d;min-height:100%;color:#e0e0e0;font-family:'JetBrains Mono',monospace;padding:20px;border-radius:8px">
+
+      <!-- HEADER -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid #1f1f1f">
+        <div>
+          <div style="display:flex;align-items:baseline;gap:12px">
+            <h1 style="margin:0;font-size:20px;font-weight:700;letter-spacing:0.05em;color:#00c8ff;font-family:monospace">AETHERBOT</h1>
+            <span style="color:#333;font-size:13px">${data.agent || 'aether.hyo'}</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:0.15em;color:#00ff88;border:1px solid #00ff8844;padding:2px 8px;border-radius:2px">RUNNING</span>
+          </div>
+          <div style="color:#555;font-size:11px;margin-top:4px">Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:26px;font-weight:700;color:#00ff88;letter-spacing:-0.02em;font-family:monospace">$${currentBalance.toFixed(2)}</div>
+          <div style="color:#555;font-size:11px">current balance</div>
         </div>
       </div>
 
-      <!-- Strategy Performance -->
-      <div class="aether-strategies">
-        <h4>Strategy Performance</h4>
-        <table>
-          <thead>
-            <tr>
-              <th>Strategy</th>
-              <th style="text-align: right;">Status</th>
-              <th style="text-align: right;">P&L</th>
-              <th style="text-align: right;">Trades</th>
-              <th style="text-align: right;">Win Rate</th>
-              <th style="text-align: right;">Last Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${strategies.map(s => {
-              const statusClass = `status-${s.status.toLowerCase().replace(' ', '-')}`;
-              const pnlClass = s.pnl >= 0 ? 'aether-pnl-positive' : 'aether-pnl-negative';
-              const lastAction = new Date(s.lastAction).toLocaleString('en-US', {
-                timeZone: 'America/Denver',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
-              });
-              return `
+      <!-- 5-METRIC ROW -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">
+        ${[
+          { label: '4-DAY NET',     value: fmtPnl(totalNet),            color: pnlColor(totalNet) },
+          { label: 'OVERALL WR',    value: overallWR.toFixed(1) + '%',  color: overallWR >= 70 ? '#00ff88' : '#ffa500' },
+          { label: 'TOTAL TRADES',  value: totalTrades,                  color: '#e0e0e0' },
+          { label: 'RECORD',        value: totalWins + 'W / ' + totalLosses + 'L', color: '#888' },
+          { label: 'OPEN ISSUES',   value: openIssues.length,           color: '#ff8c44' },
+        ].map(m => `<div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:12px 14px">
+          <div style="color:#555;font-size:9px;letter-spacing:0.1em;margin-bottom:6px">${m.label}</div>
+          <div style="font-size:18px;font-weight:700;color:${m.color};font-family:monospace">${m.value}</div>
+        </div>`).join('')}
+      </div>
+
+      <!-- MAIN GRID -->
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:14px">
+
+        <!-- LEFT COLUMN -->
+        <div>
+
+          <!-- STRATEGY TABLE -->
+          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;margin-bottom:14px;overflow:hidden">
+            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">STRATEGY PERFORMANCE</span>
+                <span style="color:#333;font-size:10px;margin-left:8px">click headers to sort</span>
+              </div>
+              <span style="color:#333;font-size:10px">${totalTrades} trades total</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead style="background:#0d0d0d">
                 <tr>
-                  <td><span class="strategy-name">${s.name}</span></td>
-                  <td style="text-align: right;"><span class="status-badge ${statusClass}">${s.status}</span></td>
-                  <td style="text-align: right;"><span class="metric-num ${pnlClass}">$${(s.pnl || 0).toFixed(2)}</span></td>
-                  <td style="text-align: right;"><span class="metric-num">${s.trades || 0}</span></td>
-                  <td style="text-align: right;"><span class="metric-num">${(s.winRate || 0).toFixed(1)}%</span></td>
-                  <td style="text-align: right; color: var(--text-tertiary); font-size: 12px;">${lastAction}</td>
+                  ${sortTH('FAMILY',   'name',   _aetherStratSort, 'aetherSortStrat')}
+                  ${sortTH('TRADES',   'trades', _aetherStratSort, 'aetherSortStrat')}
+                  ${sortTH('WIN RATE', 'wr',     _aetherStratSort, 'aetherSortStrat')}
+                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace;letter-spacing:0.06em">AVG WIN</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace;letter-spacing:0.06em">AVG LOSS</th>
+                  ${sortTH('NET P&amp;L', 'net', _aetherStratSort, 'aetherSortStrat')}
+                  <th style="padding:8px 10px;border-bottom:1px solid #1f1f1f"></th>
+                  <th style="padding:8px 10px;border-bottom:1px solid #1f1f1f"></th>
                 </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                ${stratRows}
+              </tbody>
+              <tfoot>
+                <tr style="background:#0a0a0a;border-top:1px solid #252525">
+                  <td style="padding:10px;color:#666;font-size:11px;font-family:monospace">TOTAL</td>
+                  <td style="padding:10px;color:#888;font-family:monospace;font-size:12px">${totalTrades}</td>
+                  <td style="padding:10px">${wrBar(totalWins, totalWins + totalLosses)}</td>
+                  <td colspan="2"></td>
+                  <td style="padding:10px">${netCell(totalNet)}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
 
-      <!-- Market Context -->
-      <div class="aether-card" style="padding: 20px;">
-        <h4 style="margin-bottom: 12px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">BTC Market Context</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; font-size: 13px;">
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Period</div>
-            <div style="color: var(--text-primary);">${btcContext.period || 'N/A'}</div>
-          </div>
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Low Price</div>
-            <div style="color: var(--text-primary);">$${(btcContext.lowPrice || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-          </div>
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">High Price</div>
-            <div style="color: var(--text-primary);">$${(btcContext.highPrice || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-          </div>
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Volatility</div>
-            <div style="color: var(--text-primary);">${btcContext.volatility || 'N/A'}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- All-Time Stats -->
-      <div class="aether-card" style="padding: 20px;">
-        <h4 style="margin-bottom: 12px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">All-Time Statistics</h4>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px;">
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total P&L</div>
-            <div style="font-size: 20px; font-weight: 700; color: ${allTime.totalPnl >= 0 ? 'var(--success)' : 'var(--error)'};">
-              ${allTime.totalPnl >= 0 ? '+' : ''}$${(allTime.totalPnl || 0).toFixed(2)}
+          <!-- SESSION WINDOWS NOTE -->
+          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;margin-bottom:14px;overflow:hidden">
+            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">SESSION WINDOWS · MTN</span>
+              <span style="font-size:9px;color:#333;font-family:monospace">EU_MORNING · ASIA_OPEN · NY_PRIME · EVENING</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:12px">
+              <thead style="background:#0d0d0d">
+                <tr>
+                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">SESSION</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">WINDOW (MTN)</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">NET P&amp;L</th>
+                  <th style="padding:8px 10px;text-align:left;font-weight:400;border-bottom:1px solid #1f1f1f;color:#555;font-size:10px;font-family:monospace">STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${[
+                  { name: 'NY_PRIME',    window: '09:00–15:00', note: 'Profit engine — largest positions' },
+                  { name: 'EVENING',     window: '17:00–22:00', note: '⚠ Regime-sensitive — monitor BTC direction' },
+                  { name: 'EU_MORNING',  window: '03:00–05:00', note: 'Monitor post-04:15 losses' },
+                  { name: 'ASIA_OPEN',   window: '00:00–03:00', note: 'Overnight — typically small' },
+                ].map((s, i) => `<tr style="background:${i % 2 === 0 ? 'transparent' : '#0d0d0d'};border-bottom:1px solid #161616">
+                    <td style="padding:10px;font-family:monospace;font-size:12px;color:#ddd;font-weight:600">${s.name}</td>
+                    <td style="padding:10px;color:#555;font-family:monospace;font-size:11px">${s.window}</td>
+                    <td style="padding:10px;color:#444;font-family:monospace;font-size:11px">—</td>
+                    <td style="padding:10px;color:#555;font-size:11px">${s.note}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>
+            <div style="padding:10px 14px;background:#0a0a0a;border-top:1px solid #1f1f1f">
+              <span style="color:#333;font-size:10px;font-family:monospace">⚙ Window P&amp;L requires TICKER CLOSE timestamp parsing — pending v254 log instrumentation</span>
             </div>
           </div>
-          <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Total Trades</div>
-            <div style="font-size: 20px; font-weight: 700; color: var(--text-primary);">${(allTime.totalTrades || 0).toLocaleString()}</div>
+
+          <!-- OPEN ISSUES -->
+          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;overflow:hidden">
+            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f">
+              <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">OPEN ISSUES · v254 SCOPE</span>
+            </div>
+            <div style="padding:8px 0">
+              ${issueRows || '<div style="padding:16px;color:#444;font-size:12px">No open issues</div>'}
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+
+          <!-- DAILY FEED -->
+          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;overflow:hidden;margin-bottom:14px">
+            <div style="padding:12px 14px;border-bottom:1px solid #1f1f1f">
+              <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888">DAILY REPORT FEED</span>
+            </div>
+            <div style="padding:10px">
+              ${feedCards || '<div style="color:#444;font-size:12px;padding:12px">No daily data available</div>'}
+            </div>
+          </div>
+
+          <!-- BALANCE LEDGER -->
+          <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:14px 16px">
+            <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:#888;margin-bottom:12px">BALANCE LEDGER</div>
+            ${startEntry}
+            ${ledgerRows}
+            <div style="margin-top:10px;padding:8px 0;border-top:1px solid #252525;display:flex;justify-content:space-between">
+              <span style="color:#555;font-size:11px">Week P&amp;L</span>
+              <span style="font-family:monospace;font-size:12px;color:${pnlColor(totalNet)}">${fmtPnl(totalNet)} (${(week.pnlPercent || 0).toFixed(1)}%)</span>
+            </div>
+            <div style="padding:6px 0;display:flex;justify-content:space-between">
+              <span style="color:#555;font-size:11px">Starting balance</span>
+              <span style="color:#555;font-family:monospace;font-size:12px">$${(week.startingBalance || 0).toFixed(2)}</span>
+            </div>
+            <div style="padding:6px 0;display:flex;justify-content:space-between">
+              <span style="color:#555;font-size:11px">Next build</span>
+              <span style="color:#00c8ff;font-family:monospace;font-size:12px">v254</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 
-  // Add Report History
-  html += `<div class="history-section" style="margin-top: 32px;">
-    <h3>Report History</h3>`;
-
-  if (monthKeys.length === 0) {
-    html += '<div class="empty-state">No reports from Aether yet.</div>';
-  } else {
-    // Month tabs
-    html += '<div class="month-tabs">';
-    for (const mk of monthKeys) {
-      const label = formatMonthLabel(mk);
-      const active = mk === currentMonth ? ' active' : '';
-      html += `<div class="month-tab${active}" onclick="selectMonth('${mk}')">${label}</div>`;
-    }
-    html += '</div>';
-
-    // Reports for selected month
-    const monthReports = months[currentMonth || monthKeys[0]] || [];
-    html += '<div class="history-feed">';
-    if (monthReports.length === 0) {
-      html += '<div class="empty-state">No reports this month.</div>';
-    } else {
-      // Group by week
-      const weeks = {};
-      for (const r of monthReports) {
-        const weekNum = getWeekLabel(r.date);
-        if (!weeks[weekNum]) weeks[weekNum] = [];
-        weeks[weekNum].push(r);
-      }
-      for (const [weekLabel, reports] of Object.entries(weeks)) {
-        html += `<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin:20px 0 12px;">${weekLabel}</div>`;
-        for (const r of reports) {
-          html += renderReport(r);
-        }
-      }
-    }
-    html += '</div>';
-  }
-
-  html += '</div>';
   container.innerHTML = html;
 }
 
