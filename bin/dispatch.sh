@@ -962,8 +962,7 @@ PYEOF
   # Enumerate agent tools that scan filesystem
   local scan_bins=()
   command -v gitleaks  >/dev/null 2>&1 && scan_bins+=("gitleaks")
-  command -v trufflehog >/dev/null 2>&1 && scan_bins+=("trufflehog")
-  # Add any other security scanners here as they're installed
+  # trufflehog removed (SE-011-007). Add future scanners here.
 
   for bin_name in "${scan_bins[@]}"; do
     local bin_path; bin_path=$(command -v "$bin_name" 2>/dev/null || true)

@@ -30,6 +30,17 @@ HOURLY_LOG="$LOGS/cipher-$(date +%Y-%m-%dT%H).log"
 
 mkdir -p "$LOGS" "$MEMORY"
 
+# Sandbox detection: when cipher runs inside a Cowork sandbox (ROOT under
+# /sessions/*), scanner binaries (gitleaks) aren't available in
+# the sandbox image even though they're installed on the Mini. Suppress the
+# "*-not-installed" P2 findings in that case so runHistory isn't polluted with
+# known-environment noise; the authoritative scan runs on the Mini via cron.
+# See KAI_BRIEF 2026-04-16 "Last cipher scan" note (SE recommendation).
+IS_SANDBOX=0
+if [[ "$ROOT" == /sessions/* ]]; then
+  IS_SANDBOX=1
+fi
+
 # ---- portable stat wrapper (macOS BSD vs Linux GNU) ------------------------
 # Probe once: GNU stat supports -c, BSD stat supports -f.
 if stat -c %a / >/dev/null 2>&1; then
@@ -54,7 +65,7 @@ if [[ ! -f "$STATE" ]]; then
   "permFixHistory": [],
   "trendCounters": {
     "gitleaks_not_installed_runs_in_a_row": 0,
-    "trufflehog_not_installed_runs_in_a_row": 0,
+    "trufflehog_not_installed_runs_in_a_row": 0,  # deprecated — trufflehog removed
     "perm_drift_events": 0
   },
   "escalationState": {
@@ -91,26 +102,17 @@ if command -v gitleaks >/dev/null 2>&1; then
     rm -f /tmp/gitleaks-cipher.json
   fi
 else
-  fail "P2|gitleaks-not-installed|brew install gitleaks"
+  if [[ $IS_SANDBOX -eq 1 ]]; then
+    log "skip: gitleaks-not-installed (sandbox $ROOT; authoritative scan runs on Mini)"
+  else
+    fail "P2|gitleaks-not-installed|brew install gitleaks"
+  fi
 fi
 
-# ---- Layer 2: trufflehog verified scan --------------------------------------
+# ---- Layer 2: (removed) trufflehog — uninstalled per Hyo directive SE-011-007
+# gitleaks covers secret detection. trufflehog removed because it triggered
+# macOS TCC prompts without advance notice. gitleaks alone is sufficient.
 TRUFFLEHOG_INSTALLED=0
-if command -v trufflehog >/dev/null 2>&1; then
-  TRUFFLEHOG_INSTALLED=1
-  log "running trufflehog with --only-verified"
-  TH_OUT=$(trufflehog filesystem "$ROOT" --only-verified --no-update --json 2>/dev/null || true)
-  if [[ -n "$TH_OUT" ]]; then
-    echo "$TH_OUT" >> "$HOURLY_LOG"
-    # Count lines as a proxy for verified findings
-    TH_COUNT=$(echo "$TH_OUT" | grep -c '"SourceMetadata"' 2>/dev/null || echo 0)
-    if [[ "$TH_COUNT" -gt 0 ]]; then
-      fail "P0|trufflehog-verified-leak|trufflehog found $TH_COUNT VERIFIED live credential(s) — rotate immediately"
-    fi
-  fi
-else
-  fail "P2|trufflehog-not-installed|brew install trufflesecurity/trufflehog/trufflehog"
-fi
 
 # ---- Layer 3: Filesystem hygiene (auto-fix) ---------------------------------
 if [[ -d "$ROOT/.secrets" ]]; then
