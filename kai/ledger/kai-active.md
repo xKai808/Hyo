@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-04-16T18:56:27-0600
+**Last updated:** 2026-04-16T19:11:29-0600
 
 ## System Health
 - Status: ISSUES (6 P0/P1)
@@ -16,4 +16,5 @@
 - sam: updated 0h ago
 
 ## Top Issues
-
+- [P1] flags: 3 unaddressed P0/P1 flags in last 2h
+- [P0] morning-report: Morning report JSON exists but hq.html has NO rendering code

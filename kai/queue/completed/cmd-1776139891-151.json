@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776139891-151",
-  "ts": "2026-04-14T04:11:32Z",
-  "command": "cd ~/Documents/Projects/Hyo && python3 << 'PY'\nimport json\n\nwith open('website/data/feed.json') as f:\n    feed = json.load(f)\n\n# Keep only: the latest Nel research (220933), the Nel QA report (215516),\n# the nel-test morning report, and remove all stale/duplicate/template reports\nkeep_ids = {\n    'agent-reflection-nel-2026-04-13-220933',  # Latest real thinking report\n    'agent-reflection-nel-2026-04-13-215516',  # Nel QA cycle report (real data)\n    'mr-nel-test-2026-04-13',                   # Morning report (Nel test)\n}\n\nremoved = []\nkept = []\nfor r in feed['reports']:\n    rid = r.get('id', '')\n    if rid in keep_ids:\n        kept.append(r)\n    else:\n        removed.append(rid)\n\nfeed['reports'] = kept\n\n# Update history to match\nfor month, data in feed.get('history', {}).items():\n    if 'reports' in data:\n        data['reports'] = [rid for rid in data['reports'] if rid in keep_ids]\n\nwith open('website/data/feed.json', 'w') as f:\n    json.dump(feed, f, indent=2)\n\nprint(f'Kept {len(kept)} reports, removed {len(removed)}:')\nfor rid in removed:\n    print(f'  - {rid}')\nPY",
-  "exit_code": 0,
-  "stdout": "Kept 3 reports, removed 10:\n  - agent-reflection-nel-2026-04-13-220755\n  - agent-reflection-aether-2026-04-13-220444\n  - agent-reflection-aether-2026-04-13-220443\n  - agent-reflection-nel-2026-04-13-220112\n  - agent-reflection-nel-2026-04-13-215515\n  - mr-2026-04-13\n  - kai-ceo-2026-04-13\n  - aether-reflection-2026-04-13\n  - nel-reflection-2026-04-13\n  - ra-reflection-2026-04-13\n",
-  "stderr": "",
-  "duration_s": 0
-}

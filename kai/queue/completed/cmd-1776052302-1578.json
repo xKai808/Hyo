@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776052302-1578",
-  "ts": "2026-04-13T03:51:44Z",
-  "command": "curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c \"import json,sys; d=json.load(sys.stdin); print(f'Balance: ${ d.get(\\\"currentPeriod\\\",{}).get(\\\"currentBalance\\\", d.get(\\\"currentWeek\\\",{}).get(\\\"currentBalance\\\",\\\"?\\\"))}'); print(f'Updated: {d.get(\\\"updatedAt\\\",\\\"?\\\")}')\" 2>&1",
-  "exit_code": 0,
-  "stdout": "",
-  "stderr": "bash: import json,sys; d=json.load(sys.stdin); print(f'Balance: ${ d.get(\\\"currentPeriod\\\",{}).get(\"currentBalance\", d.get(\"currentWeek\",{}).get(\"currentBalance\",\"?\"))}'); print(f'Updated: {d.get(\"updatedAt\",\"?\")}'): bad substitution\n",
-  "duration_s": 0
-}

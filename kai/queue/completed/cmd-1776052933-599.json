@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776052933-599",
-  "ts": "2026-04-13T04:02:15Z",
-  "command": "curl -sf 'https://www.hyo.world/data/aether-metrics.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); cw=d.get(\"currentWeek\",{}); print(\"Balance:\",cw.get(\"currentBalance\")); print(\"PnL:\",cw.get(\"pnl\")); print(\"Trades:\",cw.get(\"trades\")); print(\"Strategies:\",len(cw.get(\"strategies\",[])))'",
-  "exit_code": 0,
-  "stdout": "Balance: None\nPnL: None\nTrades: None\nStrategies: 0\n",
-  "stderr": "",
-  "duration_s": 0
-}

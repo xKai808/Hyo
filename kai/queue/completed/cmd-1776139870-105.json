@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776139870-105",
-  "ts": "2026-04-14T04:11:12Z",
-  "command": "cd ~/Documents/Projects/Hyo && python3 -c \"\nimport json\nwith open('website/data/feed.json') as f:\n    d = json.load(f)\nfor r in d.get('reports', []):\n    print(f'{r[\"id\"]}: {r[\"type\"]} by {r[\"author\"]} \u2014 {r[\"title\"][:60]}')\n\"",
-  "exit_code": 0,
-  "stdout": "",
-  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 6, in <module>\n    print(f'{r[id]}: {r[type]} by {r[author]} \u2014 {r[title][:60]}')\n             ~^^^^\nKeyError: <built-in function id>\n",
-  "duration_s": 0
-}

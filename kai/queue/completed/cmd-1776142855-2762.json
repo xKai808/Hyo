@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776142855-2762",
-  "ts": "2026-04-14T05:00:56Z",
-  "command": "cd /Users/kai/Documents/Projects/Hyo && python3 -c \"\nimport json\nflags = {}\nwith open('kai/ledger/log.jsonl') as f:\n    for l in f:\n        try:\n            e = json.loads(l.strip())\n            if e.get('action') == 'FLAG':\n                flags[e['task_id']] = {'severity': e.get('severity','?'), 'note': e.get('note','')[:80]}\n            if e.get('action') in ('CLOSE','VERIFY') and e.get('task_id','') in flags:\n                del flags[e['task_id']]\n        except: pass\nfor k,v in sorted(flags.items()):\n    print(f'{k} [{v[\\\"severity\\\"]}] {v[\\\"note\\\"]}')\nprint(f'\\nTotal unresolved: {len(flags)}')\n\"",
-  "exit_code": 0,
-  "stdout": "flag-dex-001 [P2] \nflag-nel-001 [P2] \nflag-nel-009 [P1] \nflag-ra-001 [P2] \nflag-ra-002 [P3] \nflag-ra-003 [P3] \nflag-sam-001 [P3] \nflag-sam-002 [P3] \nflag-sam-003 [P3] \n\nTotal unresolved: 9\n",
-  "stderr": "",
-  "duration_s": 0
-}

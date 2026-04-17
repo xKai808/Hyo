@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776143175-3191",
-  "ts": "2026-04-14T05:06:18Z",
-  "command": "curl -s 'https://www.hyo.world/data/feed.json' | python3 -c 'import json,sys; d=json.load(sys.stdin); print(f\"Live: {len(d[\"reports\"])} reports, {len(d[\"agents\"])} agents\"); [print(f\"  {r[\"id\"]} | {r[\"author\"]}\") for r in d[\"reports\"]]'",
-  "exit_code": 0,
-  "stdout": "Live: 5 reports, 7 agents\n  mr-2026-04-13 | Kai\n  kai-ceo-2026-04-13 | Kai\n  aether-reflection-2026-04-13 | Aether\n  nel-reflection-2026-04-13 | Nel\n  ra-reflection-2026-04-13 | Ra\n",
-  "stderr": "",
-  "duration_s": 1
-}

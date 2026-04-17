@@ -1,0 +1,29 @@
+{
+  "agent": "Sam",
+  "cycle_date": "2026-04-16",
+  "weakness_worked": "W1: No Automated Regression Detection — Performance baselines missing, regressions undetected",
+  "research_conducted": [
+    {
+      "source": "https://github.com/GoogleChrome/lighthouse-ci",
+      "finding": "Lighthouse CI (Apache 2.0, 6927 stars) automates running Lighthouse for every commit, views changes, and prevents regressions. Integrates with GitHub CI/CD. Supports baseline comparison, threshold enforcement, and PR comments with performance deltas. Real-world: detects LCP, CLS, FCP regressions automatically on every merge. Strategy: runs in CI pre-deploy, flags regressions as failed checks."
+    },
+    {
+      "source": "https://github.com/GoogleChrome/web-vitals",
+      "finding": "Web Vitals (8471 stars) provides essential metrics for healthy sites: LCP (Largest Contentful Paint), FID (First Input Delay), CLS (Cumulative Layout Shift). Library for instrumenting real user metrics. Can be embedded in API responses to measure actual performance in production. Recommendation: use alongside Lighthouse CI for baseline (synthetic) + real-user (RUM) metrics."
+    },
+    {
+      "source": "https://github.com/sitespeedio/sitespeed.io",
+      "finding": "sitespeed.io (4974 stars, open-source) is comprehensive web performance analysis tool. Tests using real browsers, measures core web vitals, bundle size, and API response times. Supports continuous monitoring with historical trending. Can be run post-deploy to measure baseline and compare to previous versions. Advantage: no external service needed, runs locally or in CI."
+    }
+  ],
+  "improvement_thesis": "If we integrate Lighthouse CI (post-deploy baseline measurement) + Web Vitals (production RUM tracking) + response time instrumentation via curl/k6 (API baseline), then Sam's regression detection will improve from 0% to 100% because: (1) Lighthouse CI detects page performance regressions (LCP, CLS, SEO) on every deploy, (2) Web Vitals captures real user experience degradation, (3) API response time tracking catches backend slowdowns before users notice. Evidence: Lighthouse CI is battle-tested (6927 GH stars), Web Vitals powers Google's CrUX data, sitespeed.io supports continuous monitoring.",
+  "target_condition": "Regression detection rate: 100%. Every deploy is measured against baseline. Performance regressions >15% flag P1 automatically. API response times tracked <500ms p95. Lighthouse score tracked; LCP <2.5s; CLS <0.1; bundle size <500KB.",
+  "actual_condition": "Regression detection rate: 0%. No performance tracking. Smoke tests verify 'page loads' not 'page loads fast.' No API response time monitoring. No bundle size tracking. Silent failures: users notice slowdowns before Sam does.",
+  "next_step": "Phase 1 (this week): Integrate Lighthouse CI into DEPLOY.md Phase 4 (pre-merge). Add GitHub Actions workflow that runs `lhci autorun` on every PR. Store baseline in `agents/sam/ledger/performance-baseline.jsonl`. Phase 2 (next week): Add production RUM via Web Vitals; embed metrics in /api/hq response. Phase 3 (week after): Add curl-based API response time check to post-deploy smoke tests.",
+  "verification": "Deploy a known regression (add 2s delay to API endpoint), run full deploy pipeline, verify: (1) Lighthouse CI detects LCP regression, (2) /api/hq reports increased response time, (3) P1 flag raised automatically, (4) Deploy halts or flags failure. Success = regression caught before reaching production.",
+  "external_opportunity": {
+    "type": "horizontal",
+    "description": "Extend performance monitoring beyond web frontend to all Hyo systems: measure AI model inference latency (for aether), newsletter generation time (for ra), data consolidation duration (for dex). Build unified performance dashboard showing: page performance, API latency, agent execution time, queue processing latency. This positions Hyo as performance-aware infrastructure.",
+    "status": "researched"
+  }
+}

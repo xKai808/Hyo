@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776139500-209",
-  "ts": "2026-04-14T04:05:01Z",
-  "command": "echo 'KEY:' $(echo $ANTHROPIC_API_KEY | head -c 15)...; which claude 2>/dev/null && echo 'claude CLI found' || echo 'no claude CLI'; python3 -c 'import anthropic; print(\"sdk ok\")' 2>/dev/null || echo 'no anthropic sdk'",
-  "exit_code": 0,
-  "stdout": "KEY: ...\nno claude CLI\nno anthropic sdk\n",
-  "stderr": "",
-  "duration_s": 0
-}

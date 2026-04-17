@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776048490-6189",
-  "ts": "2026-04-13T02:48:18Z",
-  "command": "cd ~/Documents/Projects/Hyo && bash bin/kai.sh simulate 2>&1 | tail -30",
-  "exit_code": 0,
-  "stdout": "\t[--null] [pattern] [file ...]\ngrep: invalid option -- P\nusage: grep [-abcdDEFGHhIiJLlMmnOopqRSsUVvwXxZz] [-A num] [-B num] [-C[num]]\n\t[-e pattern] [-f file] [--binary-files=value] [--color=when]\n\t[--context[=num]] [--directories=action] [--label] [--line-buffered]\n\t[--null] [pattern] [file ...]\n  \u2717 nel.sh: exit 1\n/Users/kai/Documents/Projects/Hyo/agents/ra/ra.sh: line 339: TODAY: unbound variable\n  \u2717 ra.sh: exit 1\n  \u2713 sam.sh: exit 0\n\nPhase 4: Cross-reference integrity\n  \u2713 kai \u2194 nel: cross-reference entries exist\n  \u2713 kai \u2194 ra: cross-reference entries exist\n  \u2713 kai \u2194 sam: cross-reference entries exist\n  \u2713 kai: ACTIVE.md + log.jsonl in sync\n  \u2713 nel: ACTIVE.md + log.jsonl in sync\n  \u2713 ra: ACTIVE.md + log.jsonl in sync\n  \u2713 sam: ACTIVE.md + log.jsonl in sync\n\nPhase 5: Known issue regression check\n  \u2713 No regressions detected across known issue patterns\n\n=== Simulation Complete ===\nPass: 24 | Fail: 2 | Duration: 2026-04-13T02:48:12Z \u2192 2026-04-13T02:48:18Z\nOutcome logged to: kai/ledger/simulation-outcomes.jsonl\n\n\u26a0 Failures detected \u2014 checking if safeguard cascade needed...\n  \u2192 Failure: FAIL:runner:nel:exit-1\n  \u2192 Failure: FAIL:runner:ra:exit-1\n",
-  "stderr": "",
-  "duration_s": 6
-}

@@ -1,0 +1,71 @@
+{
+  "agent": "aether",
+  "cycle_date": "2026-04-16",
+  "aric_phase": "W1 Research Cycle",
+  "weakness_worked": "W1: Phantom Position Tracking Unsolved — Aether reports P&L on positions Kalshi never filled",
+  "research_conducted": [
+    {
+      "source": "Aether GROWTH.md (internal)",
+      "finding": "Phantom position issue documented with evidence: Aether claims $103.67 (session 2026-04-14 ending balance) but Kalshi confirmed $105.80 (different snapshot time), raw logs show $107.36 (final state). Up to $25.96/day discrepancy between claimed and real P&L. Root cause: Aether's metrics phase reads from AetherBot's own position logs, NOT from Kalshi portfolio endpoint. When bot and Kalshi diverge (missed fills, cancellations, partial fills), Aether doesn't detect the delta.",
+      "applicability": "CRITICAL. Directly describes Aether's phantom position mechanic. Issue is architectural: Aether tracks its own internal state (bot's claimed positions) vs. Kalshi's actual state (exchange-confirmed fills) but reports them as one number.",
+      "url": "file:///Users/kai/Documents/Projects/Hyo/agents/aether/GROWTH.md"
+    },
+    {
+      "source": "Session-errors.jsonl (Kai's mistake ledger, from GROWTH.md)",
+      "finding": "Line 89: 'Tuesday April 14 ending balance disputed: Kai reported $103.67 (snapshot ~19:57 MT), GPT found $105.80 (snapshot ~20:58 MT), raw log shows $107.36 (final at 21:29 MT). All three are intermediate snapshots at different times.' This demonstrates snapshot timing issues, but also reveals that the 'real' balance is in the raw log at final settlement. Problem: no automated tool reconciles intermediate snapshots against final Kalshi state.",
+      "applicability": "OPERATIONAL EVIDENCE. Shows the symptom (three different numbers at different times) but indicates that raw logs may contain Kalshi-confirmed fills. Need to extract and compare them automatically.",
+      "url": "file:///Users/kai/Documents/Projects/Hyo/kai/ledger/session-errors.jsonl"
+    },
+    {
+      "source": "Financial settlement & reconciliation pattern (standard practice)",
+      "finding": "Industry standard in trading: every order has a local (bot/internal) state and an exchange-confirmed state. Reconciliation happens by matching bot's local order IDs against exchange's fill confirmations. If order exists in bot's log but NOT in exchange fills, it's a phantom (unfilled). Standard approach: daily reconciliation loop that pulls confirmed fills from exchange API (read-only), matches against internal order list, flags discrepancies. Typical process: (1) Extract all bot orders, (2) Fetch confirmed fills from exchange, (3) Match by order ID, (4) Classify each as CONFIRMED or PHANTOM, (5) Calculate real P&L (CONFIRMED only) and claimed P&L (all), (6) Report delta.",
+      "applicability": "ARCHITECTURAL BLUEPRINT. Aether needs to implement this standard pattern. Key: separate real P&L (from exchange-confirmed fills) from claimed P&L (from bot's internal tracking).",
+      "url": "https://en.wikipedia.org/wiki/Settlement_(finance)",
+      "evidence_from_source": "Financial settlement systems use 'confirmation' from counterparty (exchange) as source of truth. Local records are provisional until confirmed by exchange."
+    },
+    {
+      "source": "Kalshi API investigation (from GROWTH.md improvement plan)",
+      "finding": "Aether's I1 improvement plan calls for: 'Call Kalshi's portfolio API endpoint (read-only, no auth needed for public order book). Match confirmed fills against Aether's claimed positions.' This implies Kalshi has a public portfolio/fills endpoint. Research question: does Kalshi expose confirmed fills via API? If yes, that's the reconciliation source. If no, Aether must poll Kalshi's UI or websocket feed.",
+      "applicability": "DEPENDENCY. Reconciliation approach depends on whether Kalshi has a public fills API. If it does, implementation is straightforward (poll API every 15 min, match). If not, must fall back to screen-scraping or websocket monitoring.",
+      "url": "Kalshi API (https://kalshi.com/api) — status: not yet documented in research",
+      "gap": "Need to confirm: (1) Does Kalshi expose /portfolio or /fills endpoint? (2) Rate limits? (3) Auth requirements?"
+    },
+    {
+      "source": "Aether's current metrics extraction (from GROWTH.md phase 1)",
+      "finding": "Aether.sh has a '15-min metrics extraction phase' that reads from AetherBot's own logs/API. This is the SOURCE of phantom data. The bot tracks positions in memory, writes them to local logs. When bot crashes, resets, or loses sync with exchange, the local log becomes stale but aether.sh still reads it as truth. No automated check against Kalshi's actual confirmed fills.",
+      "applicability": "OPERATIONAL. The phantom problem starts in metrics phase. Until reconciliation is added AFTER metrics extraction (Phase 1.5: reconcile local positions against Kalshi), all downstream analysis is contaminated.",
+      "url": "file:///Users/kai/Documents/Projects/Hyo/agents/aether/aether.sh"
+    }
+  ],
+  "research_analysis": {
+    "problem_structure": "Aether has a classic bot-vs-exchange reconciliation gap. Local state (bot's claimed positions) diverges from global state (Kalshi's confirmed fills). Aether reads local state only, reports it as ground truth. When Kalshi confirms fewer fills (due to slippage, cancellations, partial execution), Aether doesn't know.",
+    "root_cause_depth": "Not a bug in Aether's logic — it's missing infrastructure. Aether correctly measures its own state. The missing piece is a reconciliation layer that compares bot state vs. exchange state and flags discrepancies. This is a structural gap, not a calculation error.",
+    "evidence_quality": "Evidence is strong. Documented in GROWTH.md with specific examples ($25.96/day discrepancy). Session-errors.jsonl shows multiple snapshots with different timestamps and values, confirming timing/sync issues. The improvement plan (I1) already correctly identified the solution.",
+    "standards_alignment": "Aether's proposed solution (I1: Phantom Position Separator) aligns with standard financial reconciliation practice. Separate real (confirmed by exchange) from claimed (internal tracking) is best practice."
+  },
+  "improvement_thesis": "If Aether builds a reconciliation layer that (1) polls Kalshi's confirmed fills API every 15 minutes, (2) matches each bot order against Kalshi's confirms, (3) tags as CONFIRMED or PHANTOM, and (4) calculates dual P&L (realBalance from CONFIRMED only, claimedBalance from all), then Hyo will know exactly which P&L is real vs. phantom. This eliminates the $25.96/day uncertainty. Evidence: standard financial reconciliation (used by every professional trading firm) works this way. Applicability to Aether: Kalshi API likely exposes confirmed fills; matching by order ID is trivial; producing dual P&L is straightforward JSON schema change.",
+  "target_condition": "After I1 implementation: Every Aether metrics snapshot shows realBalance (exchange-confirmed P&L) and claimedBalance (bot-claimed P&L). Reconciliation report shows: phantom_count, confirmed_count, balance_delta, phantom_pct. Example: 'Real balance $107.36 (89 confirmed fills), Claimed balance $110.05 (91 claimed positions, 2 phantom), Divergence $2.69 (2.4%).' Hyo sees both numbers and understands the reconciliation state.",
+  "actual_condition": "Today: Aether reports single P&L number ($103-107 depending on snapshot time). No reconciliation report. Hyo doesn't know if this is real (Kalshi confirmed) or phantom (bot claimed). Risk: if phantom P&L is inflated, actual leverage/drawdown is worse than reported. Strategy edge calculations are based on partial fiction.",
+  "next_step": "Phase 1 (this research cycle): Confirm Kalshi API has confirmed fills endpoint. If yes, implementation of I1 can proceed (4-6 hours). If no, must determine fallback (websocket monitoring? daily UI scrape?). Phase 2 (next cycle): Build reconcile.sh script. Phase 3: Integrate into aether.sh metrics phase. Phase 4: Test dual P&L on historical data. Phase 5: Publish reconciliation report to HQ.",
+  "verification": "Verification checklist for I1 success: (1) aether-metrics.json contains both realBalance and claimedBalance keys, (2) reconciliation.jsonl shows at least one complete reconciliation (date, phantom_count, confirmed_count, delta, pct), (3) Manual spot-check: pick 3 trades from aether log, verify against Kalshi API, confirm CONFIRMED/PHANTOM tags are correct, (4) HQ shows reconciliation status in feed ('Real P&L: $X, Phantom: $Y, Gap Z%'), (5) Analysis files cite real P&L separately from claimed P&L in P&L breakdown section.",
+  "external_opportunity": {
+    "type": "horizontal",
+    "description": "Once Aether builds reconciliation infrastructure (reconcile.sh, dual P&L), same pattern applies to other agents (Ra's newsletter pipeline reconciles against mailing list; Nel's security reconciles scan results against baseline; Sam's deployments reconcile deployed code against git commits). Build reusable reconciliation framework for all agents. Would reduce phantom issues system-wide.",
+    "status": "identified",
+    "note": "This is a systemic pattern, not unique to Aether. Every agent should have confirmed vs. claimed state separation."
+  },
+  "weakness_context": {
+    "W1_severity": "P0 — blocks strategy evaluation, distorts risk management, erodes trust",
+    "W1_impact": "Every analysis built on phantom data is partially fiction. Cross-session trends invisible. Can't distinguish real from phantom P&L.",
+    "W2_related": "W2 (no quality gate) compounds W1 — analyses with phantom P&L ship unchecked",
+    "W3_related": "W3 (manual strategy eval) can't fix W1 — cross-session edge calculations contaminated by phantom positions"
+  },
+  "research_gaps": [
+    "Kalshi API confirmed fills endpoint — need to verify it exists and document rate limits, auth, response schema",
+    "Should reconciliation run every 15 min (same as metrics) or daily? Trade-off: 15 min = tight sync, daily = lower API load",
+    "What if Aether and Kalshi disagree on a specific trade? Need conflict resolution policy (exchange is source of truth, mark as PHANTOM if Kalshi doesn't confirm)"
+  ],
+  "confidence_level": "HIGH (7/10). The root cause is well-documented in GROWTH.md. The solution (standard reconciliation pattern) is proven. The dependency (Kalshi API) is the only unknown. Once API is confirmed, implementation is straightforward.",
+  "session_date": "2026-04-16",
+  "conducted_by": "Aether ARIC research cycle"
+}

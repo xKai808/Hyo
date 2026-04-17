@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776177491-226",
-  "ts": "2026-04-14T14:38:12Z",
-  "command": "cd ~/Documents/Projects/Hyo && python3 -c \"\nimport json\nwith open('website/data/feed.json') as f:\n    data = json.load(f)\nprint('today:', data.get('today'))\nprint('reports:', len(data.get('reports',[])))\nfor r in data.get('reports',[]):\n    print(f'  {r[\"id\"]} | {r.get(\"date\")} | {r.get(\"type\")}')\n\"",
-  "exit_code": 0,
-  "stdout": "today: 2026-04-14\nreports: 8\n",
-  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 8, in <module>\n    print(f'  {r[id]} | {r.get(date)} | {r.get(type)}')\n               ~^^^^\nKeyError: <built-in function id>\n",
-  "duration_s": 0
-}

@@ -1,9 +1,0 @@
-{
-  "id": "cmd-1776140796-485",
-  "ts": "2026-04-14T04:26:39Z",
-  "command": "curl -s https://www.hyo.world/data/feed.json | python3 -c \"import json,sys; d=json.load(sys.stdin); print('AGENTS:', list(d.get('agents',{}).keys())); print('REPORTS:'); [print(f'  - {r[\\\"id\\\"]} | {r[\\\"title\\\"]} | {r[\\\"author\\\"]}') for r in d.get('reports',[])]\" 2>&1 || echo 'FETCH FAILED'",
-  "exit_code": 0,
-  "stdout": "AGENTS: ['kai', 'nel', 'sam', 'ra', 'aurora', 'aether', 'dex']\nREPORTS:\n  - agent-reflection-aether-2026-04-13-222001 | Aether \u2014 Research & Reflection | Aether\n  - agent-reflection-aether-2026-04-13-222001 | Aether \u2014 Trading Report | Aether\n  - mr-2026-04-13 | Morning Report | Kai\n  - kai-ceo-2026-04-13 | CEO Report | Kai\n  - aether-reflection-2026-04-13 | Aether \u2014 Market Watch | Aether\n  - nel-reflection-2026-04-13 | Nel \u2014 Overnight Reflection | Nel\n  - ra-reflection-2026-04-13 | Ra \u2014 Content Pipeline Check-in | Ra\n",
-  "stderr": "",
-  "duration_s": 1
-}
