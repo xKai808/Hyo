@@ -1,5 +1,5 @@
 {
-  "ts": "2026-04-17T01:11:28Z",
+  "ts": "2026-04-17T01:26:29Z",
   "status": "ISSUES",
   "issues": 6,
   "warnings": 5,
@@ -61,6 +61,37 @@
     }
   ],
   "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
-  "recent_queue_results": [],
+  "recent_queue_results": [
+    {
+      "id": "cmd-1776389186-523",
+      "status": "ok",
+      "command": "head -c 10 ~/Documents/Projects/Hyo/agents/nel/security/openai.key; echo '...'",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776389179-500",
+      "status": "ok",
+      "command": "ls ~/Documents/Projects/Hyo/agents/nel/security/",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776389140-443",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo/agents/ra/pipeline && python3 synthesize.py --date 2",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776389134-419",
+      "status": "ok",
+      "command": "ls -la ~/Documents/Projects/Hyo/agents/ra/output/2026-04-16.md 2>/dev/null && wc",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776389127-395",
+      "status": "ok",
+      "command": "cat ~/Documents/Projects/Hyo/kai/queue/completed/cmd-1776389056-314.json",
+      "exit_code": 0
+    }
+  ],
   "next_check": "in 2 hours (30min if P0 found)"
 }
