@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-17T08:11:16-06:00",
+  "lastUpdated": "2026-04-17T09:37:54-06:00",
   "today": "2026-04-17",
   "agents": {
     "kai": {
@@ -204,20 +204,37 @@
   },
   "reports": [
     {
+      "id": "morning-report-kai-2026-04-17-093754",
       "type": "morning-report",
-      "date": "2026-04-17",
       "title": "Morning Report \u2014 2026-04-17",
-      "agent": "kai",
-      "summary": "Enabling research access (MCP servers) + monitoring growth cycle execution",
-      "data": {
-        "growth_trajectory": "declining",
-        "agents_expanding": "0/5 agents expanding",
-        "biggest_risk": "nel: No novel work identified \u2014 check if improvement cycle is running.",
-        "biggest_win": "Focus on growth identification",
-        "hyo_attention": "5 agents have no active novel work \u2014 growth cycle may be stalled",
-        "api_spend": "$0.08 (1 calls) \u2014 openai=$0.08"
-      },
-      "createdAt": "2026-04-17T08:11:16-06:00"
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-17T09:37:54-06:00",
+      "date": "2026-04-17",
+      "sections": {
+        "summary": "Growth trajectory declining \u2014 0/5 agents expanding. Focus on growth identification. API spend: $0.08 (1 calls) \u2014 openai=$0.08.",
+        "wentWell": [
+          "Nel completed ARIC research cycle (5 sources)",
+          "Ra completed ARIC research cycle (5 sources)",
+          "Sam completed ARIC research cycle (3 sources)",
+          "Aether completed ARIC research cycle (5 sources)",
+          "Dex completed ARIC research cycle (3 sources)"
+        ],
+        "needsAttention": [
+          "5 agents have no active novel work \u2014 growth cycle may be stalled",
+          "nel: No novel work identified \u2014 check if improvement cycle is running.",
+          "Aether metrics were not auto-deploying to Vercel \u2014 fix shipped (git push added to 15-min cycle)",
+          "Morning report publish pipeline was broken (git lock file + silent error suppression) \u2014 fix shipped"
+        ],
+        "agentHighlights": {
+          "nel": "Researching: W1: Static Checks Never Adapt \u2014 Sentinel runs same 9 checks until failure is deafening. Zero feedback loop. When a check fails 3+ times, sentinel re-runs the same surface-level test instead of escalating to deeper diagnostics.. 5 sources analyzed. Prometheus alert rules are static templates with fixed thresholds. Community-documented pattern: alertmanager receives alerts from rule engine, but ru...",
+          "ra": "Researching: W1: Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box. 5 sources analyzed. Industry-standard newsletter platforms track: open_rate (pixel tracking via 1x1 transparent GIF), click_rate (URL rewrites with tracking parameters), ...",
+          "sam": "Researching: W1: No Automated Regression Detection \u2014 Performance baselines missing, regressions undetected. 3 sources analyzed. Lighthouse CI (Apache 2.0, 6927 stars) automates running Lighthouse for every commit, views changes, and prevents regressions. Integrates with GitHub ...",
+          "aether": "Researching: W1: Phantom Position Tracking Unsolved \u2014 Aether reports P&L on positions Kalshi never filled. 5 sources analyzed. Phantom position issue documented with evidence: Aether claims $103.67 (session 2026-04-14 ending balance) but Kalshi confirmed $105.80 (different sna...",
+          "dex": "Researching: W1: Detection Without Remediation \u2014 Dex finds issues but only flags them, never fixes them. 3 sources analyzed. jscodeshift (9983 stars, MIT) is a codemod toolkit for deterministic code transformations. Parses source code (JS/TS) into AST, applies targeted trans..."
+        }
+      }
     },
     {
       "id": "agent-reflection-nel-2026-04-17-005902",
