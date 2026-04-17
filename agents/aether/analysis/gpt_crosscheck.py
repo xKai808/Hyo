@@ -87,7 +87,7 @@ if raw_log:
     # The previous approach (keyword filtering to 60K) stripped actual trade data.
     # The new approach: keep ALL lines containing settlements, trades, balances,
     # and P&L — the data GPT actually needs for analysis. Strip only standby/heartbeat noise.
-    MAX_LOG_CHARS = 120000  # ~30K tokens — stay under org TPM limit with room for prompt
+    MAX_LOG_CHARS = 100000  # ~25K tokens — stay under org 30K TPM limit with room for prompt + response
 
     if raw_log_len > MAX_LOG_CHARS:
         lines = full_log_text.splitlines()
