@@ -559,6 +559,10 @@ Every 15 minutes launchd fires aether.sh:
 
 - **2026-04-16:** Researched 7/7 sources. See `research/findings-2026-04-16.md` for details.
 
+- **2026-04-16:** Researched 7/7 sources. See `research/findings-2026-04-16.md` for details.
+
+- **2026-04-16:** Researched 7/7 sources. See `research/findings-2026-04-16.md` for details.
+
 - **2026-04-15:** Researched 7/7 sources. See `research/findings-2026-04-15.md` for details.
 
 - **2026-04-15:** Researched 7/7 sources. See `research/findings-2026-04-15.md` for details.

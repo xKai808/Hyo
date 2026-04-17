@@ -1,11 +1,11 @@
 # Dex Active Tasks
 
-Last updated: 2026-04-17T02:41:40Z
+Last updated: 2026-04-17T03:11:44Z
 
 ## In Progress
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-17T02:41:40Z
+  - Delegated: 2026-04-17T03:11:44Z
   - Status: DELEGATED
 
 ## Queued

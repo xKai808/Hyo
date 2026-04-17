@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-16 ~19:15 MT (session 11 continuation — morning report fix, ARIC cycles ×5, GPT pipeline verified, Aether metrics confirmed)
+**Updated:** 2026-04-16 ~21:00 MT (session 11 continuation 2 — Aether data rebuilt from raw logs, research papers ×6, feed click-to-expand removed)
 **Last healthcheck re-check:** 2026-04-16T20:03Z (14:03 MT, sandbox zealous-determined-clarke). Status: ISSUES (5 P0/P1 + 3 P2) — **P0+ QUEUE WORKER NOW STALLED 10h** (5th consecutive escalation: 2h→4h→6h→8h→10h): cmd-1776333784-340 (cipher.sh, 80s timeout) still in `kai/queue/running/` since 10:03:05Z; worker.log dead; pending still at 6 (including Nel's 12:19Z safeguard cascade, re-flagged at 18:19Z). **P0 (8h unresolved):** 'Aether metrics JSON exists but hq.html has NO rendering code' — Nel detected at 12:19:26Z, re-flagged 18:19:46Z (SE-010-013 pattern). **P1 (8h unresolved):** '/api/hq?action=data returned HTTP 401' — Nel detected at 12:19:25Z, re-flagged 18:19:46Z. Both safeguard DELEGATEs blocked behind stalled worker. **FIRST INTERACTIVE ACTION (CRITICAL — 10h overdue):** `launchctl kickstart gui/<uid>/com.hyo.queue-worker` on the Mini, `mv running/cmd-1776333784-340.json failed/`, drain 6-item pending backlog, then resolve /api/hq 401 + hq.html Aether renderer gap. **Carryover — still unresolved:** (1) P1 Sam 8th consecutive healthcheck with no runner log for 2026-04-16, 9+ DELEGATEs with 0 REPORTs, 4th consecutive day; (2) P1 23+ SLA-breached tickets, frozen; (3) P2 3 MCP install jobs failed w/ null payloads; (4) P2 aether dashboard-mismatch false positive; (5) P2 ra/aether/dex ACTIVE.md now 10h old — past P1 threshold. See `kai/queue/healthcheck-latest.json`.
 **Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
 **Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
@@ -24,12 +24,21 @@
 9. **API usage tracking deployed.** bin/api-usage.sh, wired to all 4 API callers, in morning report.
 10. **Nel reflection gated to nightly window.** q24 00:00-02:59 MT only. Introspection → improvement ticket emission wired.
 
+**Session 11 continuation 2 (Cowork, ~20:30–21:00 MT):**
+11. **ALL Aether data rebuilt from raw logs.** Parsed primary AetherBot log files (335K-466K each) for Apr 12-16. Session boundary at 17:00 MT. No manual numbers. No stale metrics. No shortcuts. Weekly: $90.25 → $132.39, +$42.14 (+46.7%), 106 trade events.
+12. **Session boundary corrected.** Apr 16 report: $115.09 (Apr 15 @ 17:00) → $132.39 (Apr 16 @ 17:00), +$17.30 (+15.0%). Previously showed wrong framing ($132.39 → $123.38).
+13. **aether-metrics.json completely rebuilt.** All data from parsed raw logs. Per-session P&L, per-strategy breakdown, 17:00 boundary balances, weekly compounding table. Dual-path synced.
+14. **Feed.json aether-analysis corrected.** Summary, balance, trades, risk, btc sections all rewritten with correct session boundary data from raw logs.
+15. **daily/aether-2026-04-16.html rewritten.** Executive summary, conclusion, data scope warning all updated to correct $115.09→$132.39 framing.
+16. **Feed click-to-expand REMOVED.** Newsletter now renders full content inline (The Story, Also Moving, The Lab, Worth Sitting With). hq.html renderNewsletter() updated. research-drop type added to FEED_ALLOWED_TYPES.
+17. **6 research papers created.** Separate from reflections. Nel (adaptive security), Ra (newsletter analytics), Sam (regression detection), Aether (phantom reconciliation), Dex (auto-remediation), Kai (Claude platform assessment). Published to feed + daily/ pages.
+18. **Committed + pushed.** 877c9c5 (local) → b857bbb (Mini, pushed to origin).
+
 **Carryover (not resolved this session):**
 - Queue worker on Mini still stalled (cmd-1776333784-340 in running/ since 10:03Z)
-- API 401 on /api/hq (need Vercel KV or env fix on Mini)
-- GPT Independent analysis quality poor (log format doesn't contain per-trade data)
+- Claude Code CLI auth in launchd — needs Sam to diagnose and fix root cause
 - Newsletter pipeline still blocked (aurora sources 403 from sandbox)
-- Sam silent (no runner log for 04-16)
+- Sam silent (no runner log for 04-16, 4th consecutive day)
 
 ## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
 
