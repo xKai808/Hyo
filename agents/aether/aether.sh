@@ -144,13 +144,14 @@ PYEOF
 
 # ─── Extract Metrics from AetherBot Logs ──────────────────────────────────
 extract_aether_metrics_from_logs() {
-  # SE-011-008: Full log extraction — balance, trades, wins, losses, win rate,
-  # AND strategy performance. All updated every 15-min cycle. No shortcuts.
+  # SE-012-005: REWRITTEN — uses BUY SNAPSHOT for trade counts, TICKER CLOSE
+  # for outcomes (wins/losses/strategy P&L), balance math for P&L.
+  # NO SETTLED-only counting. Settled captures a subset; TICKER CLOSE captures all.
   #
-  # Log format:
-  #   WIN SETTLED | PAQ_EARLY_AGG | NO @ 0.63 (7c) | ... | NET +$1.04 | bal $134.69
-  #   LOSS SETTLED | PAQ_STRUCT_GATE | YES @ 0.62 (5c) | ... | NET -$1.75 | bal $133.11
+  # Trade lifecycle:
+  #   BUY SNAPSHOT (trade entry) → position mgmt → TICKER CLOSE (outcome summary)
   #   TICKER CLOSE | 18:00 MTN | 1 trade | NET WIN +1.04 | PAQ_EARLY_AGG +1.04
+  #   BUY SNAPSHOT | Side: NO | Reason: PAQ_EARLY_AGG | Seconds: 210
 
   local log_file=""
   local agents_log="$LOGS/AetherBot_$(date +%Y-%m-%d).txt"
@@ -167,10 +168,10 @@ extract_aether_metrics_from_logs() {
     return 0
   fi
 
-  log "Parsing full metrics from $log_file..."
+  log "Parsing full metrics from $log_file (BUY SNAPSHOT + TICKER CLOSE)..."
 
   python3 - "$METRICS" "$log_file" <<'PYEOF'
-import json, sys, re, os, glob
+import json, sys, re, os
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -188,8 +189,7 @@ week_end = cw.get("end", (datetime.now() + timedelta(days=6)).strftime("%Y-%m-%d
 log_dir = os.path.dirname(today_log_file)
 alt_log_dir = os.path.expanduser("~/Documents/Projects/AetherBot/Logs")
 
-all_log_text = ""
-from datetime import date as _date
+all_lines_by_date = {}
 d = datetime.strptime(week_start, "%Y-%m-%d").date()
 end_d = min(datetime.strptime(week_end, "%Y-%m-%d").date(), datetime.now().date())
 while d <= end_d:
@@ -199,97 +199,91 @@ while d <= end_d:
         if os.path.isfile(candidate):
             try:
                 with open(candidate) as f:
-                    all_log_text += f.read() + "\n"
+                    all_lines_by_date[ds] = f.readlines()
             except Exception:
                 pass
             break
     d += timedelta(days=1)
 
-if not all_log_text:
-    # Fallback to just today
+if not all_lines_by_date:
     with open(today_log_file) as f:
-        all_log_text = f.read()
+        all_lines_by_date[datetime.now().strftime("%Y-%m-%d")] = f.readlines()
 
-log_text = all_log_text
+# ═══ TRADE COUNT: BUY SNAPSHOT (each = one trade entered) ═══
+total_trades = 0
+for ds in all_lines_by_date:
+    for line in all_lines_by_date[ds]:
+        if "BUY SNAPSHOT" in line:
+            total_trades += 1
 
-# Pattern: "WIN SETTLED | STRATEGY_NAME | ..." or "LOSS SETTLED | STRATEGY_NAME | ..."
-settled_pattern = re.compile(
-    r'(WIN|LOSS)\s+SETTLED\s+\|\s+(\S+)\s+\|.*?NET\s+([+-]?\$[\d.]+)\s*\|\s*bal\s+\$([\d.]+)'
+# ═══ OUTCOMES: TICKER CLOSE (authoritative win/loss per interval) ═══
+ticker_close_pattern = re.compile(
+    r'TICKER CLOSE\s*\|\s*(\S+)\s+MTN\s*\|\s*(\d+)\s+trade\w*\s*\|\s*NET\s+(WIN|LOSS)\s+([+-]?[\d.]+)\s*\|\s*(.*)'
 )
 
-trades = []
-for m in settled_pattern.finditer(log_text):
-    wl = m.group(1)        # WIN or LOSS
-    strat = m.group(2)     # strategy name
-    net_str = m.group(3).replace('$', '').replace('+', '')
-    net = float(net_str)
-    bal = float(m.group(4))
-    trades.append({"wl": wl, "strategy": strat, "net": net, "bal": bal})
+all_ticker_closes = []
+for ds in sorted(all_lines_by_date.keys()):
+    for line in all_lines_by_date[ds]:
+        m = ticker_close_pattern.search(line)
+        if m:
+            all_ticker_closes.append({
+                "date": ds, "count": int(m.group(2)),
+                "wl": m.group(3), "pnl": float(m.group(4)),
+                "strats": m.group(5).strip()
+            })
 
-# ── Aggregate ──
-total_trades = len(trades)
-wins = sum(1 for t in trades if t["wl"] == "WIN")
-losses = sum(1 for t in trades if t["wl"] == "LOSS")
-win_rate = round((wins / total_trades) * 100, 1) if total_trades else 0.0
+tc_wins = sum(t["count"] for t in all_ticker_closes if t["wl"] == "WIN")
+tc_losses = sum(t["count"] for t in all_ticker_closes if t["wl"] == "LOSS")
+tc_total = tc_wins + tc_losses
+win_rate = round(tc_wins / tc_total * 100, 1) if tc_total else 0.0
 
-# Latest balance from TODAY's log specifically (most recent bal line)
+# ═══ PER-STRATEGY from TICKER CLOSE ═══
+strat_stats = defaultdict(lambda: {"pnl": 0.0, "trades": 0, "wins": 0, "losses": 0})
+for t in all_ticker_closes:
+    for part in re.finditer(r'(\w+)\s+([+-][\d.]+)', t["strats"]):
+        sname = part.group(1)
+        spnl = float(part.group(2))
+        s = strat_stats[sname]
+        s["pnl"] = round(s["pnl"] + spnl, 2)
+        s["trades"] += 1
+        if spnl >= 0:
+            s["wins"] += 1
+        else:
+            s["losses"] += 1
+
+# ═══ BALANCE: latest from today's log ═══
 try:
     with open(today_log_file) as f:
         today_text = f.read()
     today_bal_match = re.findall(r'bal\s+\$([\d.]+)', today_text)
     latest_balance = float(today_bal_match[-1]) if today_bal_match else cw.get("currentBalance", 0)
 except Exception:
-    latest_bal_match = re.findall(r'bal\s+\$([\d.]+)', log_text)
-    latest_balance = float(latest_bal_match[-1]) if latest_bal_match else cw.get("currentBalance", 0)
-
-# ── Strategy breakdown ──
-strat_stats = defaultdict(lambda: {"pnl": 0.0, "trades": 0, "wins": 0, "losses": 0, "last_bal": 0})
-for t in trades:
-    s = strat_stats[t["strategy"]]
-    s["pnl"] = round(s["pnl"] + t["net"], 2)
-    s["trades"] += 1
-    if t["wl"] == "WIN":
-        s["wins"] += 1
-    else:
-        s["losses"] += 1
-    s["last_bal"] = t["bal"]
-
-# SE-012-001: FIXED — previous version had TWO loops over strategies.
-# Loop 1 (lines 258-291) updated PnL correctly but never wrote back to cw.
-# Loop 2 (lines 306-338) re-read OLD data and only updated if trades==0.
-# Result: strategy PnL was FROZEN after first population. Now single loop,
-# ALWAYS updates from the full week's settled trades. No shortcuts.
+    all_text = "".join("".join(lines) for lines in all_lines_by_date.values())
+    bal_match = re.findall(r'bal\s+\$([\d.]+)', all_text)
+    latest_balance = float(bal_match[-1]) if bal_match else cw.get("currentBalance", 0)
 
 _now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 
-# ── Settled P&L (sum of WIN/LOSS SETTLED NET values — does NOT include premium collection) ──
-settled_pnl = round(sum(t["net"] for t in trades), 2)
-
 # ── Write back ──
-old_balance = cw.get("currentBalance", 0)
 cw["currentBalance"] = round(latest_balance, 2)
 
-# P&L: balance math is authoritative because it captures EVERYTHING:
-#   - premium collected from selling contracts (no SETTLED line when they expire worthless)
-#   - position entries (money spent)
-#   - settled trades (WIN/LOSS with NET values)
-# Settled P&L alone is misleading — e.g. -$44 settled but +$24 balance = premium dominates.
-# SE-012-002: reverted from settled_pnl to balance math after discovering premium gap.
+# P&L: balance math is authoritative (captures premium + settlements + expiries)
+# SE-012-002: never use settled NET sum — it misses premium collection.
 cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
 cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw.get("startingBalance") else 0
 
-# Internal tracking only — settled P&L not shown on dashboard (confusing when premium dominates)
-cw["settledTrades"] = total_trades
-cw["wins"] = wins
-cw["losses"] = losses
+# Trade count = BUY SNAPSHOT count (each snapshot = one trade entered)
+cw["trades"] = total_trades
+# Outcomes from TICKER CLOSE
+cw["wins"] = tc_wins
+cw["losses"] = tc_losses
 cw["winRate"] = win_rate
 
-# ── Strategy merge — ALWAYS update from settled trades (single authoritative loop) ──
+# ── Strategy merge — ALWAYS update from TICKER CLOSE data ──
 existing_strats = {s["name"]: s for s in cw.get("strategies", [])}
 for sname, ss in strat_stats.items():
     if sname in existing_strats:
         es = existing_strats[sname]
-        # ALWAYS overwrite from settled trade data — no stale guards
         es["pnl"] = ss["pnl"]
         es["trades"] = ss["trades"]
         es["wins"] = ss["wins"]
@@ -298,7 +292,6 @@ for sname, ss in strat_stats.items():
         es["status"] = "active"
         es["lastAction"] = _now
     else:
-        # New strategy not previously tracked
         existing_strats[sname] = {
             "name": sname,
             "status": "active",
@@ -310,15 +303,20 @@ for sname, ss in strat_stats.items():
             "lastAction": _now,
         }
 
-# Mark strategies not seen in any log this week as idle
 for sname, es in existing_strats.items():
     if sname not in strat_stats:
         es["status"] = "idle this week"
 
 cw["strategies"] = sorted(existing_strats.values(), key=lambda x: x.get("pnl", 0), reverse=True)
 
+# Clean up legacy fields
+cw.pop("settledTrades", None)
+cw.pop("totalTradeEvents", None)
+cw.pop("settledPnl", None)
+
 data["updatedAt"] = _now
-data["lastUpdated"] = _now  # SE-011-002: HQ reads lastUpdated
+data["lastUpdated"] = _now
+data["dataSource"] = "BUY SNAPSHOT for trades, TICKER CLOSE for outcomes, balance math for P&L"
 
 with open(metrics_file, "w") as f:
     json.dump(data, f, indent=2)
@@ -327,7 +325,8 @@ with open(metrics_file, "w") as f:
 pnl_val = round(latest_balance - cw["startingBalance"], 2)
 print(f"Metrics: bal ${latest_balance} (start ${cw['startingBalance']}), "
       f"PnL ${pnl_val} ({round(pnl_val/cw['startingBalance']*100,1) if cw['startingBalance'] else 0}%), "
-      f"{total_trades} settled ({wins}W/{losses}L), {len(strat_stats)} strategies")
+      f"{total_trades} trades (BUY SNAPSHOT), {tc_wins}W/{tc_losses}L (TICKER CLOSE), "
+      f"{len(strat_stats)} strategies")
 PYEOF
 
   # Sync to dual path
@@ -338,7 +337,9 @@ PYEOF
 
   local ticker_closes=""
   ticker_closes=$(grep -c "TICKER CLOSE" "$log_file" 2>/dev/null || echo "0")
-  log "Tickers closed today: $ticker_closes"
+  local buy_snapshots=""
+  buy_snapshots=$(grep -c "BUY SNAPSHOT" "$log_file" 2>/dev/null || echo "0")
+  log "Today: $buy_snapshots trades (BUY SNAPSHOT), $ticker_closes ticker closes"
 }
 
 # ─── GPT Daily Log Review ────────────────────────────────────────────────────

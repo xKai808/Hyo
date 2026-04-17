@@ -2,10 +2,9 @@
   "agent": "aether.hyo",
   "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
   "status": "active",
-  "lastUpdated": "2026-04-16T22:17:34-06:00",
-  "updatedAt": "2026-04-16T22:17:34-06:00",
-  "dataSource": "RAW AetherBot logs \u2014 ~/Documents/Projects/AetherBot/Logs/AetherBot_YYYY-MM-DD.txt",
-  "sessionBoundary": "17:00 MT daily",
+  "lastUpdated": "2026-04-16T22:28:57-06:00",
+  "updatedAt": "2026-04-16T22:28:57-06:00",
+  "dataSource": "RAW AetherBot logs \u2014 BUY SNAPSHOT for trades, TICKER CLOSE for outcomes, bal for P&L",
   "currentWeek": {
     "start": "2026-04-13",
     "end": "2026-04-19",
@@ -13,12 +12,31 @@
     "currentBalance": 114.33,
     "pnl": 24.08,
     "pnlPercent": 26.68,
-    "totalTradeEvents": 116,
-    "settledTrades": 32,
+    "trades": 120,
     "wins": 9,
     "losses": 23,
     "winRate": 28.1,
     "strategies": [
+      {
+        "name": "bps_late",
+        "status": "idle this week",
+        "pnl": 2.98,
+        "trades": 4,
+        "wins": 4,
+        "losses": 0,
+        "winRate": 100.0,
+        "lastAction": "2026-04-16T22:27:31-06:00"
+      },
+      {
+        "name": "BCDP_FAST_COMMIT",
+        "status": "idle this week",
+        "pnl": 1.02,
+        "trades": 1,
+        "wins": 1,
+        "losses": 0,
+        "winRate": 100.0,
+        "lastAction": "2026-04-16T22:27:31-06:00"
+      },
       {
         "name": "WES_EARLY",
         "status": "active",
@@ -27,7 +45,7 @@
         "wins": 1,
         "losses": 1,
         "winRate": 50.0,
-        "lastAction": "2026-04-16T22:17:34-06:00"
+        "lastAction": "2026-04-16T22:28:56-06:00"
       },
       {
         "name": "bps_premium",
@@ -37,7 +55,7 @@
         "wins": 3,
         "losses": 7,
         "winRate": 30.0,
-        "lastAction": "2026-04-16T22:17:34-06:00"
+        "lastAction": "2026-04-16T22:28:56-06:00"
       },
       {
         "name": "PAQ_STRUCT_GATE",
@@ -47,7 +65,7 @@
         "wins": 0,
         "losses": 4,
         "winRate": 0.0,
-        "lastAction": "2026-04-16T22:17:34-06:00"
+        "lastAction": "2026-04-16T22:28:56-06:00"
       },
       {
         "name": "PAQ_EARLY_AGG",
@@ -57,153 +75,186 @@
         "wins": 5,
         "losses": 11,
         "winRate": 31.2,
-        "lastAction": "2026-04-16T22:17:34-06:00"
+        "lastAction": "2026-04-16T22:28:56-06:00"
       }
     ],
     "dailyPnl": [
       {
         "date": "2026-04-13",
         "day": "Monday",
+        "trades": 26,
         "balanceStart": 90.25,
         "balanceEnd": 86.44,
         "pnl": -3.81,
         "pnlPct": -4.2,
-        "settledTrades": 6,
-        "tradeEvents": 25,
-        "wins": 2,
-        "losses": 4,
-        "winRate": 33.3,
+        "wins": 19,
+        "losses": 7,
+        "winRate": 73.1,
         "strategies": {
           "PAQ_EARLY_AGG": {
-            "trades": 2,
-            "wins": 0,
+            "trades": 10,
+            "wins": 8,
             "losses": 2,
-            "net": -0.46
+            "pnl": 22.44
+          },
+          "PAQ_STRUCT_GATE": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "pnl": 3.57
           },
           "WES_EARLY": {
             "trades": 1,
             "wins": 1,
             "losses": 0,
-            "net": 0.8
+            "pnl": 0.8
+          },
+          "bps_late": {
+            "trades": 2,
+            "wins": 2,
+            "losses": 0,
+            "pnl": 1.84
           },
           "bps_premium": {
-            "trades": 3,
-            "wins": 1,
-            "losses": 2,
-            "net": -2.02
+            "trades": 12,
+            "wins": 8,
+            "losses": 4,
+            "pnl": -8.48
           }
         },
-        "source": "raw AetherBot log"
+        "source": "raw AetherBot log (BUY SNAPSHOT + TICKER CLOSE)"
       },
       {
         "date": "2026-04-14",
         "day": "Tuesday",
+        "trades": 29,
         "balanceStart": 86.44,
         "balanceEnd": 108.91,
         "pnl": 22.47,
         "pnlPct": 26.0,
-        "settledTrades": 9,
-        "tradeEvents": 29,
-        "wins": 4,
-        "losses": 5,
-        "winRate": 44.4,
+        "wins": 23,
+        "losses": 6,
+        "winRate": 79.3,
         "strategies": {
           "PAQ_EARLY_AGG": {
-            "trades": 4,
-            "wins": 2,
+            "trades": 8,
+            "wins": 6,
             "losses": 2,
-            "net": 0.37
+            "pnl": 4.15
           },
           "PAQ_STRUCT_GATE": {
-            "trades": 1,
-            "wins": 0,
+            "trades": 2,
+            "wins": 1,
             "losses": 1,
-            "net": -0.25
+            "pnl": 8.18
+          },
+          "WES_EARLY": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "pnl": 2.28
+          },
+          "bps_late": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "pnl": 0.66
           },
           "bps_premium": {
-            "trades": 4,
-            "wins": 2,
-            "losses": 2,
-            "net": -3.18
+            "trades": 17,
+            "wins": 14,
+            "losses": 3,
+            "pnl": 10.0
           }
         },
-        "source": "raw AetherBot log"
+        "source": "raw AetherBot log (BUY SNAPSHOT + TICKER CLOSE)"
       },
       {
         "date": "2026-04-15",
         "day": "Wednesday",
+        "trades": 36,
         "balanceStart": 108.91,
         "balanceEnd": 116.16,
         "pnl": 7.25,
         "pnlPct": 6.7,
-        "settledTrades": 9,
-        "tradeEvents": 36,
-        "wins": 1,
-        "losses": 8,
-        "winRate": 11.1,
+        "wins": 25,
+        "losses": 11,
+        "winRate": 69.4,
         "strategies": {
-          "PAQ_EARLY_AGG": {
-            "trades": 4,
+          "BCDP_FAST_COMMIT": {
+            "trades": 1,
             "wins": 1,
-            "losses": 3,
-            "net": -3.39
+            "losses": 0,
+            "pnl": 1.02
+          },
+          "PAQ_EARLY_AGG": {
+            "trades": 16,
+            "wins": 12,
+            "losses": 4,
+            "pnl": 26.51
           },
           "PAQ_STRUCT_GATE": {
             "trades": 2,
             "wins": 0,
             "losses": 2,
-            "net": -11.88
+            "pnl": -11.88
           },
           "WES_EARLY": {
             "trades": 1,
             "wins": 0,
             "losses": 1,
-            "net": -1.0
+            "pnl": -1.0
+          },
+          "bps_late": {
+            "trades": 1,
+            "wins": 1,
+            "losses": 0,
+            "pnl": 0.48
           },
           "bps_premium": {
-            "trades": 2,
-            "wins": 0,
-            "losses": 2,
-            "net": -0.92
+            "trades": 15,
+            "wins": 11,
+            "losses": 4,
+            "pnl": 9.43
           }
         },
-        "source": "raw AetherBot log"
+        "source": "raw AetherBot log (BUY SNAPSHOT + TICKER CLOSE)"
       },
       {
         "date": "2026-04-16",
         "day": "Thursday",
+        "trades": 29,
         "balanceStart": 116.16,
         "balanceEnd": 114.33,
         "pnl": -1.83,
         "pnlPct": -1.6,
-        "settledTrades": 8,
-        "tradeEvents": 26,
-        "wins": 2,
-        "losses": 6,
-        "winRate": 25.0,
+        "wins": 14,
+        "losses": 12,
+        "winRate": 53.8,
         "strategies": {
           "PAQ_EARLY_AGG": {
-            "trades": 6,
-            "wins": 2,
-            "losses": 4,
-            "net": -18.1
+            "trades": 15,
+            "wins": 10,
+            "losses": 5,
+            "pnl": 13.36
           },
           "PAQ_STRUCT_GATE": {
-            "trades": 1,
-            "wins": 0,
-            "losses": 1,
-            "net": -1.75
+            "trades": 4,
+            "wins": 1,
+            "losses": 3,
+            "pnl": -8.71
           },
           "bps_premium": {
-            "trades": 1,
-            "wins": 0,
-            "losses": 1,
-            "net": -2.42
+            "trades": 7,
+            "wins": 3,
+            "losses": 4,
+            "pnl": -13.7
           }
         },
-        "source": "raw AetherBot log"
+        "source": "raw AetherBot log (BUY SNAPSHOT + TICKER CLOSE)"
       }
-    ]
+    ],
+    "settledTrades": 32
   },
   "btcMarketContext": {
     "period": "2026-04-13 to 2026-04-16",
@@ -214,41 +265,27 @@
   },
   "allTimeStats": {
     "totalPnl": 24.08,
-    "totalTrades": 32,
-    "totalWins": 9,
-    "totalLosses": 23,
+    "totalTrades": 120,
+    "totalWins": 81,
+    "totalLosses": 36,
     "weeklyHistory": [
       {
         "start": "2026-04-13",
         "end": "2026-04-19",
         "pnl": 24.08,
-        "trades": 32,
-        "winRate": 28.1
+        "trades": 120,
+        "winRate": 69.2
       }
     ],
-    "note": "Tracking since 2026-04-13. Prior weeks not yet imported."
+    "note": "Tracking since 2026-04-13."
   },
   "openIssues": [
     {
       "id": 1,
-      "title": "bps_premium Net Negative ($-8.54 weekly)",
+      "title": "PAQ_STRUCT_GATE Net Negative ($-8.84 weekly)",
       "priority": "P2",
       "status": "ACTIVE",
-      "detail": "10 settled trades, 3W/7L (30.0% WR) this week."
-    },
-    {
-      "id": 2,
-      "title": "PAQ_STRUCT_GATE Net Negative ($-13.88 weekly)",
-      "priority": "P1",
-      "status": "ACTIVE",
-      "detail": "4 settled trades, 0W/4L (0.0% WR) this week."
-    },
-    {
-      "id": 3,
-      "title": "PAQ_EARLY_AGG Net Negative ($-21.58 weekly)",
-      "priority": "P1",
-      "status": "ACTIVE",
-      "detail": "16 settled trades, 5W/11L (31.2% WR) this week."
+      "detail": "9 trades, 3W/6L (33.3% WR)."
     },
     {
       "id": 1,
