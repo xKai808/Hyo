@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+# bin/aether-publish-analysis.sh — Publish an aether-analysis entry to the HQ feed
+#
+# Reads an Analysis_YYYY-MM-DD.txt file, builds an aether-analysis feed entry
+# (summary, trades, risk, balance, btc, readLink), and appends it to
+# website/data/feed.json. Idempotent: if an entry with the same id already
+# exists it is replaced.
+#
+# Usage:
+#   bash bin/aether-publish-analysis.sh <date> <analysis-file>
+#
+# Example:
+#   bash bin/aether-publish-analysis.sh 2026-04-15 \
+#     /Users/kai/Documents/Projects/Hyo/agents/aether/analysis/Analysis_2026-04-15.txt
+
+set -uo pipefail
+
+ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+FEED_LIVE="$ROOT/website/data/feed.json"
+FEED_GIT="$ROOT/agents/sam/website/data/feed.json"
+
+DATE="${1:?Usage: aether-publish-analysis.sh <YYYY-MM-DD> <analysis-file>}"
+ANALYSIS_FILE="${2:?Missing analysis file path}"
+
+if [[ ! -f "$ANALYSIS_FILE" ]]; then
+  echo "ERROR: Analysis file not found: $ANALYSIS_FILE" >&2
+  exit 1
+fi
+
+NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
+MONTH_KEY=$(echo "$DATE" | cut -c1-7)
+
+# Generate entry via Python (reliable JSON handling + text extraction)
+python3 - "$FEED_GIT" "$FEED_LIVE" "$DATE" "$NOW_MT" "$MONTH_KEY" "$ANALYSIS_FILE" <<'PYEOF'
+import json, os, re, sys
+
+feed_git, feed_live, date, now_mt, month_key, analysis_path = sys.argv[1:7]
+entry_id = f"aether-analysis-{date}"
+
+with open(analysis_path, "r", errors="replace") as f:
+    text = f.read()
+
+# Helper — extract a section between CLAUDE PRIMARY / GPT CRITIQUE / FINAL SYNTHESIS
+def slice_section(t, start_markers, end_markers=None):
+    start = -1
+    for m in start_markers:
+        i = t.find(m)
+        if i >= 0:
+            start = i + len(m)
+            break
+    if start < 0:
+        return ""
+    end = len(t)
+    if end_markers:
+        for m in end_markers:
+            j = t.find(m, start)
+            if j >= 0 and j < end:
+                end = j
+    return t[start:end].strip()
+
+final = slice_section(text,
+    ["=== FINAL SYNTHESIS ===", "FINAL SYNTHESIS", "Final Synthesis"],
+    ["=== END", "END OF ANALYSIS"])
+primary = slice_section(text,
+    ["=== CLAUDE PRIMARY ANALYSIS ===", "CLAUDE PRIMARY ANALYSIS"],
+    ["=== GPT CRITIQUE ===", "GPT CRITIQUE", "GPT Critique", "=== FINAL"])
+if not primary:
+    primary = text[:4000]
+
+# Pick a summary — prefer the first 1-2 non-empty paragraphs of FINAL or PRIMARY
+def first_para(t, limit=600):
+    for p in re.split(r"\n\s*\n", t.strip()):
+        p = p.strip()
+        if len(p) > 60 and not p.startswith("==="):
+            return p[:limit]
+    return t[:limit].strip()
+
+summary_src = final or primary
+summary = first_para(summary_src, 800)
+
+# Simple section extractors — scan known keywords in text
+def grab_line(patterns, t, max_len=600):
+    for pat in patterns:
+        m = re.search(pat, t, re.IGNORECASE)
+        if m:
+            # capture from match start to end of paragraph
+            start = m.start()
+            end = t.find("\n\n", start)
+            if end < 0:
+                end = min(start + max_len, len(t))
+            return t[start:end].strip()[:max_len]
+    return ""
+
+trades  = grab_line([r"trades?\s*[:\-]", r"trade\s*ledger", r"by strategy", r"strategy family"], text)
+risk    = grab_line([r"risk\b", r"phantom", r"harvest miss", r"stop(?:/harvest)? event"], text)
+balance = grab_line([r"balance\b", r"net p&?l", r"end balance", r"start(ing)?\s*balance"], text)
+btc     = grab_line([r"\bbtc\b", r"bitcoin"], text)
+
+# Derive title suffix from balance if we can parse it
+title_suffix = ""
+bal_match = re.search(r"\$([\d\.,]+)\s*(?:→|->|to)\s*\$([\d\.,]+)", text)
+if bal_match:
+    try:
+        a = float(bal_match.group(1).replace(",", ""))
+        b = float(bal_match.group(2).replace(",", ""))
+        diff = b - a
+        sign = "+" if diff >= 0 else "-"
+        title_suffix = f" ({sign}${abs(diff):.2f})"
+    except Exception:
+        pass
+
+# Day-of-week friendly title
+import datetime
+try:
+    dt = datetime.datetime.strptime(date, "%Y-%m-%d")
+    day_name = dt.strftime("%a %b %-d")
+except Exception:
+    day_name = date
+
+title = f"AetherBot Daily Analysis — {day_name}{title_suffix}"
+
+new_entry = {
+    "id": entry_id,
+    "type": "aether-analysis",
+    "title": title,
+    "author": "Aether",
+    "authorIcon": "📈",
+    "authorColor": "#e8c96a",
+    "timestamp": now_mt,
+    "date": date,
+    "sections": {
+        "summary": summary or "(no summary extracted)",
+        "trades":  trades  or "See full analysis for trade-by-trade breakdown.",
+        "risk":    risk    or "See full analysis for risk events.",
+        "balance": balance or "See full analysis for balance ledger update.",
+        "btc":     btc     or "See full analysis for BTC context.",
+        "readLink": f"/daily/aether-{date}"
+    }
+}
+
+def upsert(path):
+    if not os.path.exists(path):
+        print(f"[publish] WARN feed missing at {path}", file=sys.stderr)
+        return False
+    with open(path) as f:
+        data = json.load(f)
+    reports = data.setdefault("reports", [])
+    # Remove existing entry with same id (idempotent)
+    reports[:] = [r for r in reports if r.get("id") != entry_id]
+    # Insert near the front so it shows up on HQ
+    reports.insert(0, new_entry)
+    data["lastUpdated"] = now_mt
+    data["today"] = date
+    # Also record in history if the structure exists
+    hist = data.get("history")
+    if isinstance(hist, dict):
+        month = hist.setdefault(month_key, {})
+        daylist = month.setdefault(date, [])
+        daylist[:] = [r for r in daylist if r.get("id") != entry_id]
+        daylist.insert(0, new_entry)
+    with open(path, "w") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    return True
+
+ok_git  = upsert(feed_git)
+ok_live = upsert(feed_live)
+
+print(f"[publish] feed_git={ok_git} feed_live={ok_live} id={entry_id}")
+if not (ok_git or ok_live):
+    sys.exit(1)
+PYEOF
+PUB_RC=$?
+
+if [[ $PUB_RC -ne 0 ]]; then
+  echo "[publish] ERROR: feed update failed" >&2
+  exit $PUB_RC
+fi
+
+# Verify by re-reading feed.json and confirming the id exists
+python3 - "$FEED_GIT" "$DATE" <<'VERIFY'
+import json, sys
+feed, date = sys.argv[1:3]
+with open(feed) as f:
+    d = json.load(f)
+want = f"aether-analysis-{date}"
+ids = [r.get("id") for r in d.get("reports", [])]
+if want not in ids:
+    print(f"[publish] VERIFY FAILED: {want} not in feed", file=sys.stderr)
+    sys.exit(1)
+print(f"[publish] VERIFY OK: {want} present in feed")
+VERIFY
+VERIFY_RC=$?
+
+exit $VERIFY_RC

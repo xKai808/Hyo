@@ -1,6 +1,6 @@
 # Ra Research Archive — Trends
 
-*Auto-generated 2026-04-15T10:03:47Z · reference date 2026-04-15. Counts are briefs-mentioning-entity over the given window.*
+*Auto-generated 2026-04-16T04:19:17Z · reference date 2026-04-15. Counts are briefs-mentioning-entity over the given window.*
 
 **Legend:**
 - **rising** — 7-day pace exceeds 30-day pace by ≥25%

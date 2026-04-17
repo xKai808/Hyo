@@ -2,18 +2,18 @@
   "agent": "aether.hyo",
   "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
   "status": "active",
-  "lastUpdated": "2026-04-15T22:26:47-06:00",
+  "lastUpdated": "2026-04-16T19:03:30-06:00",
   "currentWeek": {
     "start": "2026-04-13",
     "end": "2026-04-19",
     "startingBalance": 90.25,
-    "currentBalance": 116.16,
-    "pnl": 25.91,
-    "pnlPercent": 28.71,
-    "trades": 44,
-    "wins": 33,
-    "losses": 11,
-    "winRate": 75.0,
+    "currentBalance": 133.11,
+    "pnl": 42.86,
+    "pnlPercent": 47.49,
+    "trades": 30,
+    "wins": 9,
+    "losses": 21,
+    "winRate": 30.0,
     "stoplossTriggers": 11,
     "harvestEvents": 54,
     "harvestDone": 54,
@@ -21,34 +21,8 @@
     "phantomWarnings": 62,
     "strategies": [
       {
-        "name": "bps_premium",
-        "status": "active",
-        "pnl": -4.67,
-        "trades": 25,
-        "wins": 19,
-        "losses": 6,
-        "winRate": 76.0,
-        "stoplossTriggers": 6,
-        "harvests": 22,
-        "entryRange": "0.72-0.88",
-        "lastAction": "2026-04-14T19:30:00-06:00"
-      },
-      {
-        "name": "PAQ_EARLY_AGG",
-        "status": "active",
-        "pnl": 25.29,
-        "trades": 13,
-        "wins": 9,
-        "losses": 4,
-        "winRate": 69.2,
-        "stoplossTriggers": 4,
-        "harvests": 19,
-        "entryRange": "0.54-0.89",
-        "lastAction": "2026-04-14T19:30:00-06:00"
-      },
-      {
         "name": "bps_late",
-        "status": "active",
+        "status": "idle this week",
         "pnl": 2.5,
         "trades": 3,
         "wins": 3,
@@ -61,7 +35,7 @@
       },
       {
         "name": "BCDP_FAST_COMMIT",
-        "status": "inactive",
+        "status": "idle this week",
         "pnl": 0.0,
         "trades": 0,
         "wins": 0,
@@ -73,30 +47,56 @@
         "lastAction": "2026-04-10T04:30:00-06:00"
       },
       {
-        "name": "PAQ_STRUCT_GATE",
-        "status": "active",
-        "pnl": 11.75,
-        "trades": 3,
-        "wins": 2,
-        "losses": 1,
-        "winRate": 66.7,
-        "stoplossTriggers": 1,
-        "harvests": 20,
-        "entryRange": "0.47-0.49",
-        "lastAction": "2026-04-14T16:00:00-06:00"
-      },
-      {
         "name": "WES_EARLY",
         "status": "active",
-        "pnl": 2.28,
-        "trades": 1,
+        "pnl": -0.2,
+        "trades": 2,
         "wins": 1,
         "losses": 0,
-        "winRate": 100.0,
+        "winRate": 50.0,
         "stoplossTriggers": 0,
         "harvests": 0,
         "entryRange": "0.43",
-        "lastAction": "2026-04-14T19:00:00-06:00"
+        "lastAction": "2026-04-16T19:03:30-06:00"
+      },
+      {
+        "name": "bps_premium",
+        "status": "active",
+        "pnl": -6.12,
+        "trades": 9,
+        "wins": 19,
+        "losses": 6,
+        "winRate": 33.3,
+        "stoplossTriggers": 6,
+        "harvests": 22,
+        "entryRange": "0.72-0.88",
+        "lastAction": "2026-04-16T19:03:30-06:00"
+      },
+      {
+        "name": "PAQ_STRUCT_GATE",
+        "status": "active",
+        "pnl": -13.88,
+        "trades": 4,
+        "wins": 2,
+        "losses": 1,
+        "winRate": 0.0,
+        "stoplossTriggers": 1,
+        "harvests": 20,
+        "entryRange": "0.47-0.49",
+        "lastAction": "2026-04-16T19:03:30-06:00"
+      },
+      {
+        "name": "PAQ_EARLY_AGG",
+        "status": "active",
+        "pnl": -19.54,
+        "trades": 15,
+        "wins": 9,
+        "losses": 4,
+        "winRate": 33.3,
+        "stoplossTriggers": 4,
+        "harvests": 19,
+        "entryRange": "0.54-0.89",
+        "lastAction": "2026-04-16T19:03:30-06:00"
       }
     ],
     "dailyPnl": [
@@ -345,5 +345,5 @@
     "phantomWarning": "Monday P&L figures UNRELIABLE (phantom gap ~$23). Tuesday figures PLAUSIBLE (gap +$1.21).",
     "note": "Strategy P&L aggregates are sum of claimed settlements. Only balance change is ground truth."
   },
-  "updatedAt": "2026-04-15T22:26:47-06:00"
+  "updatedAt": "2026-04-16T19:03:30-06:00"
 }

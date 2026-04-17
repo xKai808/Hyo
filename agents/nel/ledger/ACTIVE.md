@@ -1,21 +1,21 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-15T23:00:28Z
+Last updated: 2026-04-17T00:41:25Z
 
 ## In Progress
 
-- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-15T23:00:01Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-16 — past 06:00 MT deadline
+  - Delegated: 2026-04-17T00:41:25Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
-  - Delegated: 2026-04-15T08:06:09Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
+  - Delegated: 2026-04-16T08:04:35Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T02:11:42Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS
+  - Delegated: 2026-04-16T08:05:53Z
   - Method: grep -rn for /Documents/Projects/Hyo, /sessions/, /home/ in all shell/python scripts
   - Status: DELEGATED — All scripts use HYO_ROOT with fallback to $HOME/Documents/Projects/Hyo — correct pattern for Mini+Cowork portability. No /sessions/ paths hardcoded in scripts. Two pipeline scripts (newsletter.sh, aurora_public.sh) source $HOME/Documents/Projects/Hyo/.secrets/env which resolves correctly on Mini. Comments referencing old paths are cosmetic only. No breaking hardcoded paths found.
 

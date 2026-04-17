@@ -100,7 +100,7 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 ## P2 — Near-term
 
 - [ ] **[K]** [AUTOMATE] **Convert watch-deploy.sh to launchd agent** with KeepAlive. If fswatch process dies, it auto-restarts. _(Audit B8)_
-- [ ] **[K]** [AUTOMATE] **Reduce cipher to daily** (from hourly) — or wait for Hyo to install gitleaks/trufflehog. 51 runs, 0 findings. _(Audit B6)_
+- [x] **2026-04-16** [AUTOMATE] ~~Reduce cipher to daily (from hourly) — or wait for Hyo to install gitleaks/trufflehog. 51 runs, 0 findings.~~ **Superseded:** cipher.sh patched this date to suppress `*-not-installed` P2 findings when `$ROOT == /sessions/*` (sandbox); root cause is sandbox lacks binaries, not cadence. Mini-side scan remains authoritative. _(Audit B6 — closed by cipher.sh patch)_
 - [ ] **[K]** **Clean up disabled scheduled tasks** — remove nightly-consolidation, nightly-simulation, kai-ops, daily-aether-analysis from Cowork. Dead entries.
 - [ ] **[K]** [AUTOMATE] **Add UTC timestamp check to Nel.** Nel should flag any Z-suffix timestamps in hq-state.json during its nightly audit.
 
@@ -396,3 +396,14 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/modest-funny-goldberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:74bfd26f] _(filed 2026-04-15)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/modest-funny-goldberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:74bfd26f:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/inspiring-funny-clarke/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6b0b62a9] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/beautiful-wizardly-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:be5e0cab] _(filed 2026-04-15)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/clever-dazzling-gauss/mnt/Hyo/newsletters/2026-04-16.md [sentinel:aurora-ran-today:f7e7cb1b] _(filed 2026-04-16)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/clever-dazzling-gauss/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e05a9cc4] _(filed 2026-04-16)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/clever-dazzling-gauss/mnt/Hyo/newsletters/2026-04-16.md [sentinel:aurora-ran-today:f7e7cb1b:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/clever-dazzling-gauss/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e05a9cc4:escalated]

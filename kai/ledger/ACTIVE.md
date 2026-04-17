@@ -1,26 +1,26 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-16T01:43:02Z
+Last updated: 2026-04-17T01:03:38Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-15T23:00:01Z
+  - Delegated: 2026-04-17T00:35:38Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): Daily audit: 1 critical issues found
-  - Delegated: 2026-04-15T08:06:09Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit: 1 critical issues found
+  - Delegated: 2026-04-16T08:04:35Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-04-14 — past 06:00 MT deadline
-  - Delegated: 2026-04-14T21:53:41Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS
+  - Delegated: 2026-04-16T08:05:53Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 
-- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-004): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T03:30:09Z
+- **sam-004** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS (flagged by kai, cascade flag-kai-003)
+  - Delegated: 2026-04-16T08:05:53Z
   - Method: Included viewer.html in sam-002 batch edit
   - Status: DELEGATED — viewer.html already added in sam-002 batch. Test confirms it passes.
 
@@ -29,18 +29,18 @@ Last updated: 2026-04-16T01:43:02Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-15T23:00:01Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-16 — past 06:00 MT deadline
+  - Delegated: 2026-04-17T00:41:25Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
-  - Delegated: 2026-04-15T08:06:09Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
+  - Delegated: 2026-04-16T08:04:35Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-016) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T02:11:42Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS
+  - Delegated: 2026-04-16T08:05:53Z
   - Method: grep -rn for /Documents/Projects/Hyo, /sessions/, /home/ in all shell/python scripts
   - Status: DELEGATED — All scripts use HYO_ROOT with fallback to $HOME/Documents/Projects/Hyo — correct pattern for Mini+Cowork portability. No /sessions/ paths hardcoded in scripts. Two pipeline scripts (newsletter.sh, aurora_public.sh) source $HOME/Documents/Projects/Hyo/.secrets/env which resolves correctly on Mini. Comments referencing old paths are cosmetic only. No breaking hardcoded paths found.
 
@@ -59,7 +59,7 @@ Last updated: 2026-04-16T01:43:02Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-16T01:43:02Z
+  - Delegated: 2026-04-17T00:56:26Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -109,19 +109,19 @@ Last updated: 2026-04-16T01:43:02Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-16T01:43:02Z
+  - Delegated: 2026-04-17T00:56:26Z
   - Status: DELEGATED
 
-- **kai-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by kai)
-  - Delegated: 2026-04-16T00:57:57Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-16 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-04-17T00:56:27Z
   - Status: DELEGATED
 
-- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-16T01:43:02Z
+- **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
+  - Delegated: 2026-04-17T00:56:26Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-001)
-  - Delegated: 2026-04-15T08:06:09Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-002)
+  - Delegated: 2026-04-16T08:04:35Z
   - Status: DELEGATED
 
 ## Queued
@@ -140,6 +140,12 @@ Last updated: 2026-04-16T01:43:02Z
 
 - **flag-kai-001** [P2] Daily audit: 1 critical issues found
   - Created: 2026-04-15T08:06:09Z
+
+- **flag-kai-002** [P2] Daily audit: 1 critical issues found
+  - Created: 2026-04-16T08:04:35Z
+
+- **flag-kai-003** [P2] Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS
+  - Created: 2026-04-16T08:05:53Z
 
 ## Recently Completed
 

@@ -1,26 +1,26 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-15T23:00:01Z
+Last updated: 2026-04-17T00:35:38Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-15T23:00:01Z
+  - Delegated: 2026-04-17T00:35:38Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): Daily audit: 1 critical issues found
-  - Delegated: 2026-04-15T08:06:09Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit: 1 critical issues found
+  - Delegated: 2026-04-16T08:04:35Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-04-14 — past 06:00 MT deadline
-  - Delegated: 2026-04-14T21:53:41Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS
+  - Delegated: 2026-04-16T08:05:53Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 
-- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-004): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T03:30:09Z
+- **sam-004** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS (flagged by kai, cascade flag-kai-003)
+  - Delegated: 2026-04-16T08:05:53Z
   - Method: Included viewer.html in sam-002 batch edit
   - Status: DELEGATED — viewer.html already added in sam-002 batch. Test confirms it passes.
 
