@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-17T00:41:25Z
+Last updated: 2026-04-17T19:37:49Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-16 — past 06:00 MT deadline
-  - Delegated: 2026-04-17T00:41:25Z
+- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-17T19:37:49Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

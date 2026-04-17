@@ -2,30 +2,40 @@
   "agent": "aether.hyo",
   "description": "Live Kalshi BTC 15-minute binary options trading bot. Continuous operation, real capital at risk.",
   "status": "active",
-  "lastUpdated": "2026-04-16T23:29:35-06:00",
-  "updatedAt": "2026-04-16T23:29:35-06:00",
+  "lastUpdated": "2026-04-17T13:25:50-06:00",
+  "updatedAt": "2026-04-17T13:25:50-06:00",
   "dataSource": "BUY SNAPSHOT for trades, TICKER CLOSE for outcomes, balance math for P&L",
   "currentWeek": {
     "start": "2026-04-13",
     "end": "2026-04-19",
     "startingBalance": 90.25,
-    "currentBalance": 114.33,
-    "pnl": 24.08,
-    "pnlPercent": 26.68,
-    "trades": 121,
-    "wins": 82,
-    "losses": 36,
-    "winRate": 69.5,
+    "currentBalance": 115.72,
+    "pnl": 25.47,
+    "pnlPercent": 28.22,
+    "trades": 141,
+    "wins": 96,
+    "losses": 41,
+    "winRate": 70.1,
     "strategies": [
       {
         "name": "PAQ_EARLY_AGG",
         "status": "active",
-        "pnl": 66.82,
-        "trades": 50,
-        "wins": 37,
-        "losses": 13,
-        "winRate": 74.0,
-        "lastAction": "2026-04-16T23:29:35-06:00"
+        "pnl": 62.17,
+        "trades": 57,
+        "wins": 41,
+        "losses": 16,
+        "winRate": 71.9,
+        "lastAction": "2026-04-17T13:25:50-06:00"
+      },
+      {
+        "name": "bps_premium",
+        "status": "active",
+        "pnl": 5.99,
+        "trades": 61,
+        "wins": 45,
+        "losses": 16,
+        "winRate": 73.8,
+        "lastAction": "2026-04-17T13:25:50-06:00"
       },
       {
         "name": "bps_late",
@@ -35,7 +45,7 @@
         "wins": 4,
         "losses": 0,
         "winRate": 100.0,
-        "lastAction": "2026-04-16T23:29:35-06:00"
+        "lastAction": "2026-04-17T13:25:50-06:00"
       },
       {
         "name": "WES_EARLY",
@@ -45,37 +55,27 @@
         "wins": 2,
         "losses": 1,
         "winRate": 66.7,
-        "lastAction": "2026-04-16T23:29:35-06:00"
+        "lastAction": "2026-04-17T13:25:50-06:00"
       },
       {
         "name": "BCDP_FAST_COMMIT",
         "status": "active",
-        "pnl": 1.02,
-        "trades": 1,
+        "pnl": 0.78,
+        "trades": 2,
         "wins": 1,
-        "losses": 0,
-        "winRate": 100.0,
-        "lastAction": "2026-04-16T23:29:35-06:00"
-      },
-      {
-        "name": "bps_premium",
-        "status": "active",
-        "pnl": -2.75,
-        "trades": 51,
-        "wins": 36,
-        "losses": 15,
-        "winRate": 70.6,
-        "lastAction": "2026-04-16T23:29:35-06:00"
+        "losses": 1,
+        "winRate": 50.0,
+        "lastAction": "2026-04-17T13:25:50-06:00"
       },
       {
         "name": "PAQ_STRUCT_GATE",
         "status": "active",
-        "pnl": -8.84,
-        "trades": 9,
-        "wins": 3,
+        "pnl": -4.43,
+        "trades": 10,
+        "wins": 4,
         "losses": 6,
-        "winRate": 33.3,
-        "lastAction": "2026-04-16T23:29:35-06:00"
+        "winRate": 40.0,
+        "lastAction": "2026-04-17T13:25:50-06:00"
       }
     ],
     "dailyPnl": [
@@ -324,12 +324,12 @@
       "title": "EU_MORNING Post-04:15 Loss Clustering",
       "priority": "P2",
       "status": "MONITORING",
-      "detail": "3 sessions of data show losses cluster in trades opened after 04:15 MTN. Pre-04:15 trades are net positive across sessions. Post-04:15 trades are net negative. Need 2-3 more sessions to confirm pattern. Next trigger: pattern holds in 2+ more sessions → session gate decision. Do NOT gate on current data.",
+      "detail": "3 sessions of data show losses cluster in trades opened after 04:15 MTN. Pre-04:15 trades are net positive across sessions. Post-04:15 trades are net negative. Need 2-3 more sessions to confirm pattern. Next trigger: pattern holds in 2+ more sessions \u2192 session gate decision. Do NOT gate on current data.",
       "source": "Hyo feedback 2026-04-16, Issue 4"
     },
     {
       "id": 7,
-      "title": "Weekend Risk Profile — Reduced Exposure",
+      "title": "Weekend Risk Profile \u2014 Reduced Exposure",
       "priority": "P3",
       "status": "PENDING",
       "detail": "Target: $5 flat max, PAQ_MIN=4, disable confirm_late/confirm_standard Sat/Sun. Not built. Pending 2-3 more clean weekend sessions. Do not build without Hyo approval and sufficient session data.",
@@ -340,7 +340,7 @@
     "currentVersion": "v253",
     "nextBuild": "v254",
     "v254Scope": "Harvest order-path instrumentation, BDI=0 time gate (skip when secs_left<=120), POS WARNING logging",
-    "v254Status": "HOLD — awaiting end-of-week data + Hyo approval. Do not build early.",
+    "v254Status": "HOLD \u2014 awaiting end-of-week data + Hyo approval. Do not build early.",
     "balanceLedgerNote": "All-time start 2026-03-28: $101.38. All-time net through Apr 16 confirmed: +$12.58.",
     "roleNote": "Kai is orchestrator, not CEO. Hyo is CEO. All build decisions require Hyo approval before execution."
   }
