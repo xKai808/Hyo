@@ -156,10 +156,10 @@ def _log_api_usage(provider, model, in_tok, out_tok, notes=""):
         pass
 
 
-def call_gpt(system_prompt, user_msg, max_tokens=4000):
-    """Call GPT-4o and return the response text."""
+def call_gpt(system_prompt, user_msg, max_tokens=4000, model="gpt-4o"):
+    """Call GPT and return the response text. Model selectable for cost efficiency."""
     payload = {
-        "model": "gpt-4o",
+        "model": model,
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_msg}
@@ -268,7 +268,10 @@ RAW LOG:
 {raw_log_text}"""
 
     try:
-        phase1_output = call_gpt(phase1_system, phase1_user, max_tokens=4000)
+        # Use gpt-4o-mini for Phase 1: higher TPM limit (200K vs 30K), 128K context,
+        # 60% cheaper ($0.15/$0.60 vs $2.50/$10 per M tokens). Data-heavy analysis
+        # where token throughput matters more than peak reasoning.
+        phase1_output = call_gpt(phase1_system, phase1_user, max_tokens=4000, model="gpt-4o-mini")
         print(phase1_output)
 
         # Save Phase 1 output
