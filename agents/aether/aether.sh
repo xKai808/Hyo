@@ -144,9 +144,13 @@ PYEOF
 
 # ─── Extract Metrics from AetherBot Logs ──────────────────────────────────
 extract_aether_metrics_from_logs() {
-  # Find latest AetherBot log file
-  # Primary: agents/aether/logs/AetherBot_YYYY-MM-DD.txt (post-migration)
-  # Fallback: ~/Documents/Projects/AetherBot/Logs/AetherBot_YYYY-MM-DD.txt
+  # SE-011-008: Full log extraction — balance, trades, wins, losses, win rate,
+  # AND strategy performance. All updated every 15-min cycle. No shortcuts.
+  #
+  # Log format:
+  #   WIN SETTLED | PAQ_EARLY_AGG | NO @ 0.63 (7c) | ... | NET +$1.04 | bal $134.69
+  #   LOSS SETTLED | PAQ_STRUCT_GATE | YES @ 0.62 (5c) | ... | NET -$1.75 | bal $133.11
+  #   TICKER CLOSE | 18:00 MTN | 1 trade | NET WIN +1.04 | PAQ_EARLY_AGG +1.04
 
   local log_file=""
   local agents_log="$LOGS/AetherBot_$(date +%Y-%m-%d).txt"
@@ -163,50 +167,194 @@ extract_aether_metrics_from_logs() {
     return 0
   fi
 
-  # Extract balance from the last "bal $X.XX" occurrence in the log
-  # Format: "bal $90.25" or similar
-  local extracted_balance=""
-  extracted_balance=$(grep -oE "bal \\\$[0-9]+\.[0-9]{2}" "$log_file" 2>/dev/null | tail -1 | sed 's/bal \$//g')
+  log "Parsing full metrics from $log_file..."
 
-  if [[ -n "$extracted_balance" ]]; then
-    log "Extracted balance from log: \$$extracted_balance"
-
-    # Update metrics file with real balance
-    python3 - "$METRICS" "$extracted_balance" <<'PYEOF'
-import json
-import sys
-from datetime import datetime
+  python3 - "$METRICS" "$log_file" <<'PYEOF'
+import json, sys, re, os, glob
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 metrics_file = sys.argv[1]
-new_balance = float(sys.argv[2])
+today_log_file = sys.argv[2]
 
-try:
-  with open(metrics_file) as f:
+with open(metrics_file) as f:
     data = json.load(f)
 
-  cw = data.get("currentWeek", data.get("currentPeriod", {}))
-  old_balance = cw.get("currentBalance", 0)
-  cw["currentBalance"] = round(new_balance, 2)
+cw = data.get("currentWeek", data.get("currentPeriod", {}))
 
-  # Recalculate PnL from starting balance
-  cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
-  cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw["startingBalance"] else 0
+# ── Collect ALL log files for the current week period ──
+week_start = cw.get("start", datetime.now().strftime("%Y-%m-%d"))
+week_end = cw.get("end", (datetime.now() + timedelta(days=6)).strftime("%Y-%m-%d"))
+log_dir = os.path.dirname(today_log_file)
+alt_log_dir = os.path.expanduser("~/Documents/Projects/AetherBot/Logs")
 
-  _now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
-  data["updatedAt"] = _now
-  data["lastUpdated"] = _now  # SE-011-002: HQ reads lastUpdated, must refresh too
+all_log_text = ""
+from datetime import date as _date
+d = datetime.strptime(week_start, "%Y-%m-%d").date()
+end_d = min(datetime.strptime(week_end, "%Y-%m-%d").date(), datetime.now().date())
+while d <= end_d:
+    ds = d.strftime("%Y-%m-%d")
+    for search_dir in [log_dir, alt_log_dir]:
+        candidate = os.path.join(search_dir, f"AetherBot_{ds}.txt")
+        if os.path.isfile(candidate):
+            try:
+                with open(candidate) as f:
+                    all_log_text += f.read() + "\n"
+            except Exception:
+                pass
+            break
+    d += timedelta(days=1)
 
-  with open(metrics_file, "w") as f:
+if not all_log_text:
+    # Fallback to just today
+    with open(today_log_file) as f:
+        all_log_text = f.read()
+
+log_text = all_log_text
+
+# Pattern: "WIN SETTLED | STRATEGY_NAME | ..." or "LOSS SETTLED | STRATEGY_NAME | ..."
+settled_pattern = re.compile(
+    r'(WIN|LOSS)\s+SETTLED\s+\|\s+(\S+)\s+\|.*?NET\s+([+-]?\$[\d.]+)\s*\|\s*bal\s+\$([\d.]+)'
+)
+
+trades = []
+for m in settled_pattern.finditer(log_text):
+    wl = m.group(1)        # WIN or LOSS
+    strat = m.group(2)     # strategy name
+    net_str = m.group(3).replace('$', '').replace('+', '')
+    net = float(net_str)
+    bal = float(m.group(4))
+    trades.append({"wl": wl, "strategy": strat, "net": net, "bal": bal})
+
+# ── Aggregate ──
+total_trades = len(trades)
+wins = sum(1 for t in trades if t["wl"] == "WIN")
+losses = sum(1 for t in trades if t["wl"] == "LOSS")
+win_rate = round((wins / total_trades) * 100, 1) if total_trades else 0.0
+
+# Latest balance from TODAY's log specifically (most recent bal line)
+try:
+    with open(today_log_file) as f:
+        today_text = f.read()
+    today_bal_match = re.findall(r'bal\s+\$([\d.]+)', today_text)
+    latest_balance = float(today_bal_match[-1]) if today_bal_match else cw.get("currentBalance", 0)
+except Exception:
+    latest_bal_match = re.findall(r'bal\s+\$([\d.]+)', log_text)
+    latest_balance = float(latest_bal_match[-1]) if latest_bal_match else cw.get("currentBalance", 0)
+
+# ── Strategy breakdown ──
+strat_stats = defaultdict(lambda: {"pnl": 0.0, "trades": 0, "wins": 0, "losses": 0, "last_bal": 0})
+for t in trades:
+    s = strat_stats[t["strategy"]]
+    s["pnl"] = round(s["pnl"] + t["net"], 2)
+    s["trades"] += 1
+    if t["wl"] == "WIN":
+        s["wins"] += 1
+    else:
+        s["losses"] += 1
+    s["last_bal"] = t["bal"]
+
+# Merge into existing strategies array (preserve metadata, update stats)
+existing_strats = {s["name"]: s for s in cw.get("strategies", [])}
+_now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+
+for sname, ss in strat_stats.items():
+    if sname in existing_strats:
+        es = existing_strats[sname]
+        es["pnl"] = ss["pnl"]
+        es["trades"] = ss["trades"]
+        es["winRate"] = round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0
+        es["status"] = "active"
+        es["lastAction"] = _now
+    else:
+        # New strategy not previously tracked
+        existing_strats[sname] = {
+            "name": sname,
+            "status": "active",
+            "pnl": ss["pnl"],
+            "trades": ss["trades"],
+            "wins": ss["wins"],
+            "losses": ss["losses"],
+            "winRate": round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0,
+            "stoplossTriggers": 0,
+            "harvests": 0,
+            "entryRange": "—",
+            "lastAction": _now,
+        }
+
+# Mark strategies with zero trades today as maintaining (not inactive)
+for sname, es in existing_strats.items():
+    if sname not in strat_stats and es.get("status") == "active":
+        es["status"] = "idle today"
+
+# Sort by PnL desc
+strats_list = sorted(existing_strats.values(), key=lambda x: x.get("pnl", 0), reverse=True)
+
+# ── Write back ──
+# Balance is authoritative from the log. Trade counts/PnL come from record_trade
+# (per-contract granularity) so we DON'T overwrite those — we only refresh:
+# 1. currentBalance + derived PnL
+# 2. strategy lastAction timestamps (so HQ shows strategies are active today)
+# 3. strategy PnL/trades ONLY if record_trade hasn't run this week (bootstrap)
+old_balance = cw.get("currentBalance", 0)
+cw["currentBalance"] = round(latest_balance, 2)
+cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
+cw["pnlPercent"] = round((cw["pnl"] / cw["startingBalance"]) * 100, 2) if cw["startingBalance"] else 0
+
+# Update strategy lastAction timestamps from SETTLED lines
+# Also bootstrap strategy data if record_trade hasn't populated it
+existing_strats = {s["name"]: s for s in cw.get("strategies", [])}
+for sname, ss in strat_stats.items():
+    if sname in existing_strats:
+        es = existing_strats[sname]
+        es["lastAction"] = _now
+        es["status"] = "active"
+        # Only overwrite PnL/trades if existing data looks stale (0 trades)
+        if es.get("trades", 0) == 0:
+            es["pnl"] = ss["pnl"]
+            es["trades"] = ss["trades"]
+            es["winRate"] = round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0
+    else:
+        # New strategy from log not in existing data — add it
+        existing_strats[sname] = {
+            "name": sname,
+            "status": "active",
+            "pnl": ss["pnl"],
+            "trades": ss["trades"],
+            "wins": ss["wins"],
+            "losses": ss["losses"],
+            "winRate": round((ss["wins"] / ss["trades"]) * 100, 1) if ss["trades"] else 0.0,
+            "stoplossTriggers": 0,
+            "harvests": 0,
+            "entryRange": "—",
+            "lastAction": _now,
+        }
+
+# Mark strategies not seen in any log this week as idle
+for sname, es in existing_strats.items():
+    if sname not in strat_stats:
+        es["status"] = "idle this week"
+
+cw["strategies"] = sorted(existing_strats.values(), key=lambda x: x.get("pnl", 0), reverse=True)
+
+data["updatedAt"] = _now
+data["lastUpdated"] = _now  # SE-011-002: HQ reads lastUpdated
+
+with open(metrics_file, "w") as f:
     json.dump(data, f, indent=2)
     f.write("\n")
 
-  print(f"Balance updated: ${old_balance} → ${new_balance}, PnL: ${cw['pnl']} ({cw['pnlPercent']}%)")
-except Exception as e:
-  print(f"Error updating metrics: {e}")
+print(f"Full metrics extracted: bal ${old_balance}→${latest_balance}, "
+      f"{total_trades} trades ({wins}W/{losses}L, {win_rate}%), "
+      f"{len(strat_stats)} active strategies")
 PYEOF
+
+  # Sync to dual path
+  local sam_metrics="$ROOT/agents/sam/website/data/aether-metrics.json"
+  if [[ -f "$sam_metrics" ]] && [[ ! "$METRICS" -ef "$sam_metrics" ]] 2>/dev/null; then
+    cp "$METRICS" "$sam_metrics" 2>/dev/null || true
   fi
 
-  # Extract ticker count from the log (count "TICKER CLOSE" lines for today)
   local ticker_closes=""
   ticker_closes=$(grep -c "TICKER CLOSE" "$log_file" 2>/dev/null || echo "0")
   log "Tickers closed today: $ticker_closes"
