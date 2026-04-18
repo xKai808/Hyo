@@ -23,6 +23,26 @@
 **Last sentinel run:** 2026-04-18 ~04:05 MT (run #70, scheduled task `sentinel-hyo-daily`, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix shipped this run: **`manifest-valid-json` RESOLVED** — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json` (was missing 4 required keys since hyo agent scaffolded in session 18, day 4 recurring). Remaining findings (all sandbox-environmental, documented carryover): **P0** `api-health-green` day 69 — Mini health endpoint unreachable from Cowork sandbox. **P1** `scheduled-tasks-fired` day 5 — no aurora logs in this sandbox's `agents/nel/logs/` (aurora runs on Mini, not in Cowork). **P2** `task-queue-size` day 11 — 25 P0 tasks vs. threshold 5 (ticket backlog carryover; active close-down is S17-007). No new P0 surfaced; sentinel auto-filed recurring findings to KAI_TASKS.md. Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation of api-health + aurora-ran-today requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-18.md`.
 **Prior sentinel run:** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
 
+## Shipped today (2026-04-18 — Session 19)
+
+**Session 19 (Cowork, ~14:30 MT):**
+- **S19-005 RESOLVED:** Removed `agent-daily` from `FEED_ALLOWED_TYPES` in hq.html — hyo-daily no longer appears on the main feed. Synced both paths.
+- **S19-007 RESOLVED:** All aether-analysis readLinks in feed.json updated from `/aether-analysis?date=DATE` to `/daily/aether-DATE` — restoring the original rich static page format. aether-publish-analysis.sh updated to use same logic going forward.
+- **S19-004 RESOLVED:** aether-publish-analysis.sh now reads GPT_Independent_DATE.txt and GPT_CrossCheck_DATE.txt and writes `gptIndependent`/`gptReview` into feed.json sections. Existing entries backfilled where real GPT content exists (Apr 13, 14, 15, 16). PENDING stubs excluded.
+- **S19-006 RESOLVED:** newsletter.sh now auto git-adds the daily HTML + feed.json and commits+pushes after copy. Future `/daily/DATE` readLinks will never 404 on Vercel.
+- **Daemon fixes (Session 19 earlier):** caffeinate -i daemon + kai-bridge TCC fix (/opt/homebrew/python3 + WorkingDirectory=/tmp) both installed and confirmed running.
+- **Ant bookkeeper fixed:** ant-update.sh now reads Aether P&L as income ($24.94), adds Claude Max ($200) + GPT Plus ($20) subscription expenses. Income/expenses dashboard live.
+- **Podcast updated:** GPT-4o-mini expansion pass added to podcast.py. Result: 1,102 words / 7.3 min (up from 1.4 min). Vale voice permanent.
+- **Pushed:** 8ea1b3d → GitHub → Vercel deploying.
+- **Tickets closed:** S19-004, S19-005, S19-006, S19-007
+
+**NEXT SESSION FIRST ACTIONS:**
+1. Verify Vercel deployment — check /daily/aether-2026-04-18 loads the rich static page
+2. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
+3. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
+4. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
+5. dex schema-validation gate at JSONL append (chronic P1)
+
 ## Shipped today (2026-04-18 — Session 18, overnight autonomous)
 
 **Session 18 (Cowork, overnight autonomous ~00:00–08:00 MT):**
