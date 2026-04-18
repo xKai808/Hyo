@@ -1180,6 +1180,49 @@ PYEOF
 }
 
 # ── Dispatch ──
+# ── Hyo → Kai message sync ──
+cmd_hyo_sync() {
+  local sync_script="$ROOT/kai/queue/dispatch-sync-hyo-messages.sh"
+  if [[ ! -f "$sync_script" ]]; then
+    echo "ERROR: $sync_script not found" >&2
+    return 1
+  fi
+  HYO_ROOT="$ROOT" bash "$sync_script"
+}
+
+# ── Hyo inbox: show unread messages ──
+cmd_hyo_inbox() {
+  local inbox="$ROOT/kai/ledger/hyo-inbox.jsonl"
+  if [[ ! -f "$inbox" ]]; then
+    echo "No hyo-inbox.jsonl found"
+    return
+  fi
+  python3 -c "
+import json, sys
+unread = []
+all_msgs = []
+with open('$inbox') as f:
+    for line in f:
+        line = line.strip()
+        if not line: continue
+        try:
+            e = json.loads(line)
+            all_msgs.append(e)
+            if e.get('status') == 'unread':
+                unread.append(e)
+        except: pass
+
+print(f'=== Hyo Inbox ({len(unread)} unread / {len(all_msgs)} total) ===')
+if not all_msgs:
+    print('  No messages yet.')
+else:
+    for m in all_msgs[-20:]:  # last 20
+        status = '● UNREAD' if m.get('status') == 'unread' else '  read  '
+        ts = m.get('ts','')[:16].replace('T',' ')
+        print(f'  [{status}] {ts}  {m.get(\"message\",\"\")}')
+"
+}
+
 cmd="${1:-status}"
 shift 2>/dev/null || true
 
@@ -1200,6 +1243,8 @@ case "$cmd" in
   list)           cmd_list "$@" ;;
   log)            cmd_log "$@" ;;
   status)         cmd_status ;;
+  hyo-sync)       cmd_hyo_sync ;;
+  hyo-inbox)      cmd_hyo_inbox ;;
   *)  echo "Unknown: $cmd"
-      echo "Usage: dispatch {delegate|ack|report|verify|close|flag|escalate|self-delegate|safeguard|health|simulate|simulate-review|memory|list|log|status}" ;;
+      echo "Usage: dispatch {delegate|ack|report|verify|close|flag|escalate|self-delegate|safeguard|health|simulate|simulate-review|memory|list|log|status|hyo-sync|hyo-inbox}" ;;
 esac
