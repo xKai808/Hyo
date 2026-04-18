@@ -30,27 +30,25 @@ openai_client     = OpenAI(api_key=OPENAI_API_KEY)
 BALANCE_LEDGER = """
 Date            End Balance     Day Net
 -----------     -----------     -------
-3/28 (Sat)      $89.87          —
-3/29 (Sun)      $101.25         —
-3/30 (Mon)      $90.18          +$6.05
-3/31 (Tue)      $110.32         +$33.83
-4/1  (Wed)      $119.02         +$13.08
-4/2  (Thu)      $121.02         -$8.56
-4/3  (Fri)      $111.55         -$7.12
-4/4  (Sat)      $107.30         —
-4/5  (Sun)      $76.18          —
-4/6  (Mon)      $93.04          +$16.86
-4/7  (Tue)      $104.02         +$10.98
+4/13 (Sun)      $86.44          -$3.81
+4/14 (Mon)      $108.91         +$22.47
+4/15 (Tue)      $116.16         +$7.25
+4/16 (Wed)      $114.33         -$1.83
+4/17 (Thu)      $113.88 (live)  in progress
 
-Start (3/28):   $101.38
-Goal:           >$10-20/day (path to >$100/day)
+Start (4/13):   $90.25 (est)
+Weekly goal:    >$10-20/day sustained (path to >$100/day)
 """
 
 OPEN_ISSUES = """
-1. EU_MORNING (03:00-05:00 MTN): Track WR, net P&L, losses after 04:15 MTN.
-2. PAQ_EARLY_AGG BDI=0 stop hold: confirmed problem, needs more evidence.
-3. Harvest miss: fix is gate on anchor +/-0.02 depth, not held_px +/-0.05.
-4. Weekend risk profile: $5 flat, PAQ_MIN=4, no confirm_late or confirm_standard.
+P0 ACTIVE  — Phantom Position Investigation (v254): phantom warnings at 39 and climbing. \
+Local/API state drift degrades execution quality. Root cause: each failed harvest sync creates a new phantom.
+P1 ACTIVE  — BDI=0 Hold Time Gate: <120s expiry losses confirmed pattern, gate not yet shipped.
+P1 ACTIVE  — Harvest Miss Dual-Mode Fix: gate on anchor +/-0.02 depth, not held_px +/-0.05.
+P2 MONITOR — PAQ_STRUCT_GATE: 3W/6L (33% WR), -$7.84 net. Watch for continued degradation.
+P2 MONITOR — EVENING bps_premium regime sensitivity: performance varies with BTC direction.
+P2 MONITOR — EU_MORNING post-04:15 loss clustering: track WR and net P&L for this window.
+P3 PENDING — Weekend risk profile: reduced exposure, PAQ_MIN=4, no confirm_late.
 """
 
 CLAUDE_SYSTEM = f"""You are the primary analyst for AetherBot, an automated trading bot on Kalshi
@@ -77,10 +75,31 @@ Open issues:
 {OPEN_ISSUES}
 """
 
-GPT_SYSTEM = """You are Aether, fact-checker for AetherBot analysis.
-Find logical errors, math errors, missed patterns, and simulation gaps.
-Check primary, secondary, and tertiary effects. Be direct. Find gaps, not validation.
-"""
+GPT_SYSTEM = """You are the adversarial analyst for AetherBot — a Kalshi prediction market trading bot \
+that generates the revenue sustaining multiple active projects. This analysis is a lifeline, not a report.
+
+Your job is NOT to validate. Your job is to find what the primary analyst missed.
+
+Interrogate these dimensions specifically:
+1. STRATEGY DRIFT — Did any family's win rate, avg win, or avg loss shift >10% vs its trailing 5-session baseline? \
+If yes, name it and explain what's changing.
+2. RISK CONCENTRATION — Are >40% of trades or >50% of P&L exposure concentrated in one strategy or one session window? \
+Name the concentration and the single-event risk it creates.
+3. ENTRY QUALITY DEGRADATION — Are stop events increasing as a % of total trades? Is average hold time shortening? \
+Are harvests executing at lower premiums than last week? Flag any degradation trend.
+4. HARVEST EFFICIENCY — What % of harvests executed at max premium vs settled early? \
+Any pattern of early exits costing recoverable P&L?
+5. TIMING REGRESSION — Compare today's session window P&L vs the 5-session trailing average per window. \
+Which windows are degrading? Which are improving? Is the pattern consistent with prior regressions?
+6. OPEN ISSUE PROGRESS — For each open issue in the primary analysis: is the evidence confirming, disconfirming, \
+or inconclusive vs prior sessions? State which.
+7. SIMULATION GAPS — Did the primary analysis propose a change? If so: what second-order effect was not modeled? \
+What would have to be true for the proposed change to backfire?
+8. WHAT WOULD BREAK TOMORROW — Given today's data, what is the single highest-probability failure mode \
+in the next 24h session? Be specific: which strategy, which session window, which condition.
+
+Format: 8 numbered sections matching the above. No preamble. No agreement with the primary analysis unless \
+you have tested it against the data. Every claim needs a number from the log."""
 
 # ── HELPERS ───────────────────────────────────────────────────────────────────
 
