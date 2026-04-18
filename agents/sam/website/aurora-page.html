@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Aurora — your morning brief</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #0a0a12;
+      --bg-deep:       #050509;
+      --bg-card:       #0f0f1a;
+      --bg-card-hover: #13131f;
+      --bg-reader:     #0d0d18;
+      --fg:            #f2e2c4;
+      --muted:         rgba(242, 226, 196, 0.55);
+      --dim:           rgba(242, 226, 196, 0.32);
+      --faint:         rgba(242, 226, 196, 0.16);
+      --border:        rgba(242, 226, 196, 0.10);
+      --border-hover:  rgba(242, 226, 196, 0.18);
+      --accent:        #e8b877;
+      --accent-bright: #f6c98a;
+      --accent-dim:    rgba(232, 184, 119, 0.08);
+      --accent-line:   rgba(232, 184, 119, 0.30);
+      --ok:            #a3c98a;
+      --err:           #e89070;
+      --font-d:  'Syne', sans-serif;
+      --font-b:  'Inter', sans-serif;
+      --font-m:  'DM Mono', monospace;
+      --ease:    cubic-bezier(0.16, 1, 0.3, 1);
+      --radius:  12px;
+      --radius-sm: 8px;
+    }
+
+    html { background: var(--bg); height: 100%; }
+    body {
+      min-height: 100%; color: var(--fg);
+      font-family: var(--font-b);
+      position: relative; overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(232,184,119,0.07), transparent 60%),
+        radial-gradient(ellipse 50% 30% at 90% 10%, rgba(232,184,119,0.03), transparent 55%);
+    }
+
+    /* ── mast bar ── */
+    .mast {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 28px;
+      background: rgba(10, 10, 18, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .mast-logo {
+      font-family: var(--font-d); font-weight: 700; font-size: 18px;
+      color: var(--accent); letter-spacing: 0.04em; text-decoration: none;
+    }
+    .mast-right {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .mast-label {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .mast-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); opacity: 0.7;
+    }
+
+    /* ── loading / error states ── */
+    .state-overlay {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 60vh; padding: 60px 24px; text-align: center;
+    }
+    .state-overlay.hidden { display: none; }
+    .spinner {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .state-text {
+      font-family: var(--font-m); font-size: 12px; letter-spacing: 0.1em;
+      color: var(--dim); text-transform: uppercase;
+    }
+    .state-err { color: var(--err); font-size: 14px; line-height: 1.6; }
+
+    /* ── page content ── */
+    #page { display: none; position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 40px 28px 80px; }
+    #page.show { display: block; animation: rise 0.5s var(--ease) both; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── greeting header ── */
+    .greeting {
+      margin-bottom: 36px;
+    }
+    .greeting-sup {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+    .greeting-title {
+      font-family: var(--font-d); font-weight: 700;
+      font-size: clamp(26px, 4vw, 38px); line-height: 1.2;
+      color: var(--fg); letter-spacing: -0.02em;
+    }
+    .greeting-date {
+      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--dim); margin-top: 6px;
+    }
+
+    /* ── settings strip ── */
+    .settings-strip {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .settings-pill .pill-key { color: var(--faint); }
+    .settings-pill .pill-val { color: var(--accent); }
+    .topics-wrap {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .topic-chip {
+      padding: 5px 12px; border-radius: 999px;
+      border: 1px solid var(--accent-line);
+      color: var(--accent-bright);
+      font-family: var(--font-b); font-size: 12px;
+    }
+
+    /* ── section heading ── */
+    .section-heading {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim);
+      margin-bottom: 20px;
+    }
+
+    /* ── empty state ── */
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+    .empty-sun {
+      display: inline-block; width: 16px; height: 16px; border-radius: 50%;
+      background: var(--accent); opacity: 0.4;
+      box-shadow: 0 0 30px rgba(232,184,119,0.3);
+      margin-bottom: 20px;
+    }
+    .empty-title {
+      font-family: var(--font-d); font-size: 18px; color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .empty-body { font-size: 13px; color: var(--dim); line-height: 1.65; }
+
+    /* ── brief cards ── */
+    .brief-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .brief-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      cursor: pointer;
+      transition: all 0.2s var(--ease);
+      position: relative; overflow: hidden;
+    }
+    .brief-card::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
+      background: linear-gradient(90deg, transparent 0%, rgba(232,184,119,0) 0%, transparent 100%);
+      transition: background 0.3s var(--ease);
+    }
+    .brief-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+    .brief-card:hover::before {
+      background: linear-gradient(90deg, transparent 0%, rgba(232,184,119,0.35) 25%, rgba(232,184,119,0.55) 50%, rgba(232,184,119,0.35) 75%, transparent 100%);
+    }
+    .brief-card.today {
+      border-color: var(--accent-line);
+    }
+    .brief-card.today::before {
+      background: linear-gradient(90deg, transparent 0%, var(--accent-line) 25%, rgba(232,184,119,0.55) 50%, var(--accent-line) 75%, transparent 100%);
+    }
+
+    .brief-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px; margin-bottom: 10px;
+    }
+    .brief-subject {
+      font-family: var(--font-d); font-weight: 600; font-size: 17px;
+      color: var(--fg); line-height: 1.3; letter-spacing: -0.01em;
+      flex: 1;
+    }
+    .brief-card.today .brief-subject { color: var(--accent-bright); }
+    .brief-meta {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+      flex-shrink: 0;
+    }
+    .brief-date {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .brief-today-badge {
+      display: none;
+      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--bg);
+      background: var(--accent); padding: 2px 8px; border-radius: 4px;
+    }
+    .brief-card.today .brief-today-badge { display: block; }
+
+    .brief-preview {
+      font-size: 13px; line-height: 1.65; color: var(--muted);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .brief-footer {
+      display: flex; align-items: center; gap: 10px;
+      margin-top: 14px; padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .brief-wc {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.08em;
+      color: var(--faint);
+    }
+    .brief-read-more {
+      margin-left: auto;
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .brief-card:hover .brief-read-more { opacity: 1; }
+
+    /* ── inline reader ── */
+    .reader-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: var(--bg-reader);
+      transform: translateY(100%);
+      transition: transform 0.3s var(--ease);
+      overflow-y: auto; overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      display: flex; flex-direction: column;
+    }
+    .reader-overlay.open { transform: translateY(0); }
+
+    .reader-bar {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(13, 13, 24, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: max(14px, env(safe-area-inset-top, 14px)) 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .reader-back {
+      display: flex; align-items: center; gap: 8px;
+      min-height: 44px; padding: 0 12px 0 4px;
+      border: none; background: none;
+      color: var(--accent); font-family: var(--font-b);
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: color 0.2s;
+    }
+    .reader-back:hover { color: var(--accent-bright); }
+    .reader-title {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--dim);
+      position: absolute; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .reader-body {
+      padding: 32px 24px 80px;
+      max-width: 680px; margin: 0 auto; width: 100%;
+    }
+    .reader-brief-date {
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 28px;
+    }
+    .reader-loading {
+      text-align: center; padding: 60px 20px;
+      color: var(--dim); font-family: var(--font-m); font-size: 12px;
+    }
+    .reader-err { color: var(--err); text-align: center; padding: 40px 20px; font-size: 14px; }
+
+    /* Brief markdown typography */
+    .brief-md h1 { display: none; } /* frontmatter title — hide */
+    .brief-md p {
+      font-family: var(--font-b); font-size: 16px; line-height: 1.82;
+      color: var(--muted); margin: 0 0 22px;
+    }
+    .brief-md p em { font-style: italic; color: var(--accent-bright); }
+    .brief-md p strong { color: var(--fg); font-weight: 600; }
+    .brief-md h2 {
+      font-family: var(--font-d); font-size: 18px; font-weight: 700;
+      color: var(--fg); margin: 36px 0 14px;
+      padding-top: 20px; border-top: 1px solid var(--border);
+      letter-spacing: -0.01em;
+    }
+    .brief-md h3 {
+      font-family: var(--font-d); font-size: 15px; font-weight: 600;
+      color: var(--fg); margin: 28px 0 10px;
+    }
+    .brief-md h4 {
+      font-family: var(--font-m); font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--accent); margin: 28px 0 10px;
+    }
+    .brief-md hr {
+      border: none; border-top: 1px solid var(--border); margin: 32px 0;
+    }
+    .brief-md blockquote {
+      border-left: 3px solid var(--accent-line);
+      margin: 0 0 22px; padding: 8px 0 8px 20px;
+      background: var(--accent-dim); border-radius: 0 8px 8px 0;
+    }
+    .brief-md blockquote p { color: var(--muted); font-style: italic; margin-bottom: 8px; }
+    .brief-md ul, .brief-md ol { padding-left: 22px; margin: 0 0 22px; }
+    .brief-md li {
+      font-size: 15px; line-height: 1.75; color: var(--muted); margin-bottom: 8px;
+    }
+    .brief-md li::marker { color: var(--accent); }
+    .brief-md a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid var(--accent-line);
+      transition: border-color 0.2s;
+    }
+    .brief-md a:hover { border-bottom-color: var(--accent); }
+    .brief-md code {
+      font-family: var(--font-m); background: rgba(232,226,214,0.05);
+      padding: 2px 7px; border-radius: 4px; font-size: 13px; color: var(--accent);
+    }
+
+    /* Aurora branding corner */
+    .aurora-corner {
+      position: fixed; bottom: 24px; right: 24px; z-index: 50;
+      display: flex; align-items: center; gap: 8px;
+      pointer-events: none;
+    }
+    .aurora-corner-sun {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); opacity: 0.4;
+      box-shadow: 0 0 12px rgba(232,184,119,0.5);
+    }
+    .aurora-corner-text {
+      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--dim);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .mast { padding: 16px 18px; }
+      #page { padding: 28px 18px 80px; }
+      .brief-card { padding: 20px 20px; }
+      .brief-subject { font-size: 15px; }
+      .reader-body { padding: 24px 18px 80px; }
+      .aurora-corner { bottom: 16px; right: 16px; }
+      .settings-strip { gap: 6px; }
+      .reader-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mast -->
+  <nav class="mast">
+    <a href="/" class="mast-logo">hyo</a>
+    <div class="mast-right">
+      <span class="mast-label">Aurora &#9737;</span>
+      <div class="mast-dot"></div>
+    </div>
+  </nav>
+
+  <!-- Loading state -->
+  <div class="state-overlay" id="stateLoading">
+    <div class="spinner"></div>
+    <div class="state-text">loading your briefs</div>
+  </div>
+
+  <!-- Error state -->
+  <div class="state-overlay hidden" id="stateError">
+    <div class="state-err" id="errorMsg">Something went wrong. Check the link and try again.</div>
+  </div>
+
+  <!-- Main page -->
+  <div id="page">
+
+    <!-- Greeting -->
+    <div class="greeting">
+      <div class="greeting-sup">&#9737; aurora</div>
+      <div class="greeting-title" id="greetingTitle">Good morning.</div>
+      <div class="greeting-date" id="greetingDate"></div>
+    </div>
+
+    <!-- Settings strip -->
+    <div class="settings-strip" id="settingsStrip"></div>
+
+    <!-- Topics -->
+    <div class="topics-wrap" id="topicsWrap"></div>
+
+    <!-- Brief feed -->
+    <div class="section-heading" id="briefsHeading">Your briefs</div>
+    <div class="brief-list" id="briefList"></div>
+
+  </div>
+
+  <!-- Inline reader -->
+  <div class="reader-overlay" id="readerOverlay" role="dialog" aria-modal="true">
+    <div class="reader-bar">
+      <button class="reader-back" id="readerBack" onclick="closeReader()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back
+      </button>
+      <span class="reader-title" id="readerBarTitle">Aurora</span>
+    </div>
+    <div class="reader-body">
+      <div class="reader-brief-date" id="readerDate"></div>
+      <div id="readerContent"></div>
+    </div>
+  </div>
+
+  <!-- Aurora branding -->
+  <div class="aurora-corner">
+    <div class="aurora-corner-sun"></div>
+    <span class="aurora-corner-text">hyo.world / aurora</span>
+  </div>
+
+  <script>
+  // ── Markdown parser (minimal, no external deps) ──
+  // Handles: frontmatter strip, headers, paragraphs, bold, italic,
+  // hr, blockquote, lists, inline code, links.
+  function parseMd(raw) {
+    // Strip YAML frontmatter
+    let text = raw.replace(/^---[\s\S]*?---\n?/, '').trim();
+
+    const lines = text.split('\n');
+    let html = '';
+    let i = 0;
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function inlineMarkup(s) {
+      // Bold **text** or __text__
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+      // Italic *text* or _text_
+      s = s.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+      s = s.replace(/_([^_\n]+)_/g, '<em>$1</em>');
+      // Inline code `code`
+      s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+      // Links [text](url)
+      s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      return s;
+    }
+
+    while (i < lines.length) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // Headings
+      const hm = trimmed.match(/^(#{1,6})\s+(.*)/);
+      if (hm) {
+        const level = hm[1].length;
+        html += `<h${level}>${inlineMarkup(escHtml(hm[2]))}</h${level}>\n`;
+        i++; continue;
+      }
+
+      // HR
+      if (/^[-*_]{3,}$/.test(trimmed)) {
+        html += '<hr>\n'; i++; continue;
+      }
+
+      // Blockquote
+      if (trimmed.startsWith('> ')) {
+        let bq = '';
+        while (i < lines.length && lines[i].trim().startsWith('> ')) {
+          bq += inlineMarkup(escHtml(lines[i].trim().slice(2))) + ' ';
+          i++;
+        }
+        html += `<blockquote><p>${bq.trim()}</p></blockquote>\n`;
+        continue;
+      }
+
+      // Unordered list
+      if (/^[-*+]\s/.test(trimmed)) {
+        html += '<ul>\n';
+        while (i < lines.length && /^[-*+]\s/.test(lines[i].trim())) {
+          html += `<li>${inlineMarkup(escHtml(lines[i].trim().slice(2)))}</li>\n`;
+          i++;
+        }
+        html += '</ul>\n';
+        continue;
+      }
+
+      // Ordered list
+      if (/^\d+\.\s/.test(trimmed)) {
+        html += '<ol>\n';
+        while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
+          html += `<li>${inlineMarkup(escHtml(lines[i].trim().replace(/^\d+\.\s/, '')))}</li>\n`;
+          i++;
+        }
+        html += '</ol>\n';
+        continue;
+      }
+
+      // Empty line
+      if (trimmed === '') { i++; continue; }
+
+      // Paragraph — collect until blank line or block element
+      let para = '';
+      while (i < lines.length && lines[i].trim() !== '' &&
+             !lines[i].trim().match(/^(#{1,6}\s|[-*_]{3,}$|>|[-*+]\s|\d+\.\s)/)) {
+        para += lines[i].trim() + ' ';
+        i++;
+      }
+      if (para.trim()) html += `<p>${inlineMarkup(escHtml(para.trim()))}</p>\n`;
+    }
+
+    return html;
+  }
+
+  // ── URL params ──
+  const params = new URLSearchParams(window.location.search);
+  const subId  = params.get('id');
+  const token  = params.get('token');
+
+  // ── DOM refs ──
+  const stateLoading  = document.getElementById('stateLoading');
+  const stateError    = document.getElementById('stateError');
+  const errorMsg      = document.getElementById('errorMsg');
+  const page          = document.getElementById('page');
+  const greetingTitle = document.getElementById('greetingTitle');
+  const greetingDate  = document.getElementById('greetingDate');
+  const settingsStrip = document.getElementById('settingsStrip');
+  const topicsWrap    = document.getElementById('topicsWrap');
+  const briefsHeading = document.getElementById('briefsHeading');
+  const briefList     = document.getElementById('briefList');
+  const readerOverlay = document.getElementById('readerOverlay');
+  const readerDate    = document.getElementById('readerDate');
+  const readerContent = document.getElementById('readerContent');
+  const readerBarTitle = document.getElementById('readerBarTitle');
+
+  function showError(msg) {
+    stateLoading.classList.add('hidden');
+    stateError.classList.remove('hidden');
+    errorMsg.textContent = msg;
+  }
+
+  function showPage() {
+    stateLoading.classList.add('hidden');
+    stateError.classList.add('hidden');
+    page.classList.add('show');
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + (iso.length === 10 ? 'T12:00:00' : ''));
+    return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  function todayIso() {
+    // Approximate MT (UTC-6). Won't be perfect at DST boundaries but fine for a badge.
+    const d = new Date(Date.now() - 6 * 3600 * 1000);
+    return d.toISOString().slice(0, 10);
+  }
+
+  // ── Reader ──
+  let readerOpen = false;
+
+  function openReader(brief) {
+    readerDate.textContent = fmtDate(brief.date);
+    readerBarTitle.textContent = brief.subject || 'Aurora';
+    readerContent.innerHTML = '<div class="reader-loading">loading brief\u2026</div>';
+    readerOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    readerOpen = true;
+
+    // Fetch the full markdown
+    const url = `/api/aurora-data?id=${encodeURIComponent(subId)}&token=${encodeURIComponent(token)}&brief=${encodeURIComponent(brief.date)}`;
+    fetch(url)
+      .then(r => r.json())
+      .then(j => {
+        if (!j.ok) throw new Error(j.error || 'load failed');
+        const html = parseMd(j.body);
+        readerContent.innerHTML = `<div class="brief-md">${html}</div>`;
+      })
+      .catch(err => {
+        readerContent.innerHTML = `<div class="reader-err">Could not load brief: ${err.message}</div>`;
+      });
+  }
+
+  function closeReader() {
+    readerOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    readerOpen = false;
+  }
+
+  // Close reader on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && readerOpen) closeReader();
+  });
+
+  // ── Render subscriber data ──
+  function render(subscriber, briefs) {
+    const name = subscriber.name || '';
+    const hour = new Date().getHours();
+    const timeOfDay = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+
+    greetingTitle.textContent = name
+      ? `Good ${timeOfDay}, ${name}.`
+      : `Good ${timeOfDay}.`;
+    greetingDate.textContent = fmtDate(new Date().toISOString().slice(0, 10));
+
+    // Settings strip
+    const interests = subscriber.interests || {};
+    const pills = [
+      { key: 'voice',  val: interests.voice  || 'balanced' },
+      { key: 'depth',  val: interests.depth  || 'balanced' },
+      { key: 'length', val: interests.length || '6min'     },
+    ];
+    settingsStrip.innerHTML = pills.map(p =>
+      `<div class="settings-pill"><span class="pill-key">${p.key}</span><span class="pill-val">${p.val}</span></div>`
+    ).join('');
+
+    // Topics
+    const topics = interests.topics || [];
+    if (topics.length > 0) {
+      topicsWrap.innerHTML = topics.map(t =>
+        `<span class="topic-chip">${t.replace(/-/g,' ')}</span>`
+      ).join('');
+    } else {
+      topicsWrap.style.display = 'none';
+    }
+
+    // Brief feed
+    if (!briefs || briefs.length === 0) {
+      briefsHeading.textContent = '';
+      briefList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-sun"></div>
+          <div class="empty-title">Nothing yet.</div>
+          <p class="empty-body">Your first Aurora brief will appear here tomorrow morning.<br>Check back around 6:30 AM MT.</p>
+        </div>`;
+      return;
+    }
+
+    const today = todayIso();
+    briefsHeading.textContent = `Your briefs (${briefs.length})`;
+
+    briefList.innerHTML = briefs.map(brief => {
+      const isToday = brief.date === today;
+      return `
+        <div class="brief-card${isToday ? ' today' : ''}" onclick='openReader(${JSON.stringify(brief)})'>
+          <div class="brief-top">
+            <div class="brief-subject">${escHtml(brief.subject || 'Aurora brief')}</div>
+            <div class="brief-meta">
+              <span class="brief-date">${fmtDate(brief.date)}</span>
+              <span class="brief-today-badge">Today</span>
+            </div>
+          </div>
+          <div class="brief-preview">${escHtml(brief.preview || '')}</div>
+          <div class="brief-footer">
+            <span class="brief-wc">${brief.wordCount ? brief.wordCount + ' words' : ''}</span>
+            <span class="brief-read-more">Read &rarr;</span>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Boot ──
+  (function boot() {
+    if (!subId || !token) {
+      showError('This link is invalid or incomplete. Check your welcome email for the correct URL.');
+      return;
+    }
+
+    const url = `/api/aurora-data?id=${encodeURIComponent(subId)}&token=${encodeURIComponent(token)}`;
+
+    fetch(url)
+      .then(r => {
+        if (r.status === 401) throw new Error('Invalid or expired link. Your URL may have changed — contact support at hyo.world.');
+        if (r.status === 404) throw new Error('Subscriber not found. Check your link or re-subscribe at hyo.world/aurora.');
+        if (!r.ok) throw new Error('Server error (' + r.status + '). Try again in a moment.');
+        return r.json();
+      })
+      .then(j => {
+        if (!j.ok) throw new Error(j.error || 'Unknown error');
+        render(j.subscriber, j.briefs);
+        showPage();
+      })
+      .catch(err => {
+        showError(err.message);
+      });
+  })();
+  </script>
+
+</body>
+</html>

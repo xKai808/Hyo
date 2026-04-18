@@ -71,6 +71,12 @@ INTELLIGENCE = Path(
 RESEARCH = HYO_ROOT / "kai" / "research"
 CONTEXT_FILE = RESEARCH / ".context.md"
 
+# Website data directories — dual-path (agents/sam/website AND website/ symlink)
+# aurora_public writes here so the Vercel deployment can serve briefs via aurora-data.js
+WEBSITE_DATA = HYO_ROOT / "agents" / "sam" / "website" / "data"
+AURORA_SUBS_DIR   = WEBSITE_DATA / "aurora-subscribers"
+AURORA_BRIEFS_DIR = WEBSITE_DATA / "aurora-briefs"
+
 # ---------------------------------------------------------------------------
 # topic → keyword map
 # ---------------------------------------------------------------------------
@@ -317,6 +323,125 @@ def load_all_records(date: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# publish to subscriber page (replaces email delivery)
+# ---------------------------------------------------------------------------
+
+def extract_frontmatter_field(text: str, field: str) -> str | None:
+    """Return value of a YAML frontmatter field, or None."""
+    m = re.search(rf'^{re.escape(field)}:\s*"?([^"\n]+)"?\s*$', text, re.MULTILINE)
+    return m.group(1).strip() if m else None
+
+
+def extract_preview(text: str, max_chars: int = 200) -> str:
+    """Extract first meaningful non-frontmatter paragraph as preview text."""
+    # Strip frontmatter
+    body = re.sub(r'^---[\s\S]*?---\n?', '', text).strip()
+    # Remove markdown headers, emphasis markers
+    body = re.sub(r'^#+\s+.*$', '', body, flags=re.MULTILINE)
+    # Collapse
+    lines = [l.strip() for l in body.splitlines() if l.strip()]
+    for line in lines:
+        # Skip lines that look like frontmatter leftovers or pure punctuation
+        if len(line) > 40:
+            clean = re.sub(r'[*_`]', '', line)
+            return clean[:max_chars]
+    return ''
+
+
+def count_words(text: str) -> int:
+    """Rough word count — strip frontmatter then count whitespace-separated tokens."""
+    body = re.sub(r'^---[\s\S]*?---\n?', '', text)
+    return len(body.split())
+
+
+def publish_to_page(sub_id: str, brief_md: str, date: str) -> dict:
+    """
+    Publish a generated Aurora brief to the subscriber's personal page data.
+
+    Steps:
+      1. Save the full markdown to data/aurora-briefs/{sub_id}/{date}.md
+      2. Load (or create) data/aurora-subscribers/{sub_id}.json
+      3. Append a brief index entry (subject, preview, wordCount, date, file)
+      4. Save the subscriber JSON back
+
+    Returns a dict with keys: sub_id, date, path, words, subject, ok (bool), error (str|None)
+
+    Does NOT send email. Email delivery has been replaced by this page-based model.
+    """
+    result: dict = {"sub_id": sub_id, "date": date, "ok": False, "error": None}
+
+    try:
+        # 1. Save markdown brief
+        brief_dir = AURORA_BRIEFS_DIR / sub_id
+        brief_dir.mkdir(parents=True, exist_ok=True)
+        brief_path = brief_dir / f"{date}.md"
+        brief_path.write_text(brief_md.strip() + "\n")
+        result["path"] = str(brief_path)
+
+        # 2. Extract metadata from frontmatter
+        subject  = extract_frontmatter_field(brief_md, "subject_line") or f"Your Aurora brief for {date}"
+        preview  = extract_preview(brief_md)
+        wc       = count_words(brief_md)
+        result["subject"] = subject
+        result["words"]   = wc
+
+        # 3. Load or create subscriber JSON
+        AURORA_SUBS_DIR.mkdir(parents=True, exist_ok=True)
+        sub_path = AURORA_SUBS_DIR / f"{sub_id}.json"
+
+        if sub_path.exists():
+            try:
+                sub_data = json.loads(sub_path.read_text())
+            except json.JSONDecodeError:
+                sub_data = {"id": sub_id, "briefs": []}
+        else:
+            # Subscriber record doesn't exist yet — create a minimal shell.
+            # Full record is written by aurora-subscribe.js on first subscribe;
+            # this covers the case where the Mini hasn't synced yet.
+            sub_data = {
+                "id":     sub_id,
+                "status": "active",
+                "created": date + "T06:30:00-06:00",
+                "briefs": [],
+            }
+
+        if "briefs" not in sub_data:
+            sub_data["briefs"] = []
+
+        # 4. Remove existing entry for same date (idempotent re-publish)
+        sub_data["briefs"] = [b for b in sub_data["briefs"] if b.get("date") != date]
+
+        # Append new entry
+        sub_data["briefs"].append({
+            "date":      date,
+            "subject":   subject,
+            "preview":   preview,
+            "wordCount": wc,
+            "file":      f"aurora-briefs/{sub_id}/{date}.md",
+        })
+
+        # Sort by date descending
+        sub_data["briefs"].sort(key=lambda b: b.get("date", ""), reverse=True)
+
+        # Update lastBriefDate
+        sub_data["lastBriefDate"] = date
+
+        # Atomic write
+        tmp = sub_path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(sub_data, indent=2))
+        tmp.replace(sub_path)
+
+        result["ok"] = True
+        print(f"[aurora_public] publish_to_page {sub_id} {date} · {wc} words → {brief_path}")
+
+    except Exception as e:
+        result["error"] = str(e)
+        print(f"[aurora_public] publish_to_page {sub_id} FAILED: {e}", file=sys.stderr)
+
+    return result
+
+
+# ---------------------------------------------------------------------------
 # generation loop
 # ---------------------------------------------------------------------------
 
@@ -347,7 +472,21 @@ def generate_for_sub(sub: dict, records: list[dict], date: str,
 
     out_file.write_text(text.strip() + "\n")
     print(f"[aurora_public] {sub['id']} · ok · {len(text)} chars · {took:.1f}s → {out_file}")
-    return {"id": sub["id"], "path": str(out_file), "matched": len(matched), "bytes": len(text)}
+
+    # Publish to subscriber's personal page (replaces email delivery)
+    pub = publish_to_page(sub["id"], text, date)
+    if not pub["ok"]:
+        print(f"[aurora_public] {sub['id']} publish_to_page failed: {pub.get('error')}", file=sys.stderr)
+
+    return {
+        "id":        sub["id"],
+        "path":      str(out_file),
+        "matched":   len(matched),
+        "bytes":     len(text),
+        "published": pub["ok"],
+        "subject":   pub.get("subject"),
+        "words":     pub.get("words"),
+    }
 
 
 def main() -> int:

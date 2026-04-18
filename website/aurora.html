@@ -496,11 +496,12 @@
       <div class="done-sun"></div>
       <div class="done-title">You're in.</div>
       <p class="done-body">
-        Your first Aurora brief lands in your inbox tomorrow morning.
-        Check spam for the first one &mdash; after that she'll be where you expect.
-        <br /><br />
-        Want to tune her later? The first email has a one-tap link.
+        Your Aurora page is ready. Bookmark it &mdash; your briefs will appear there each morning around 6:30 AM.
       </p>
+      <a href="#" class="btn btn-primary" id="pageLink" style="margin-top:28px;display:none;text-decoration:none;">
+        Open your page
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </div>
 
@@ -727,6 +728,12 @@
       const r = await fetch('/api/aurora-subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
       const j = await r.json();
       if (!r.ok || !j.ok) throw new Error(j.error || ('HTTP ' + r.status));
+      // Show personal page link if returned
+      if (j.pageUrl) {
+        const link = document.getElementById('pageLink');
+        link.href = j.pageUrl;
+        link.style.display = 'inline-flex';
+      }
       document.getElementById('layout').innerHTML = '';
       document.getElementById('done').classList.add('show');
       document.getElementById('layout').appendChild(document.getElementById('done'));

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Voice Algorithms for AI-Generated Briefs: A Formal Implementation Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0d14; --bg-card: #12141e; --fg: #e8e2d6; --fg-body: rgba(232,226,214,0.88);
+    --muted: rgba(232,226,214,0.50); --accent: #d4a853; --accent-soft: rgba(212,168,83,0.15);
+    --rule: rgba(212,168,83,0.12); --code-bg: rgba(232,226,214,0.05);
+    --gentle: #7eb8a0; --gentle-soft: rgba(126,184,160,0.12);
+    --balanced: #7a9fc4; --balanced-soft: rgba(122,159,196,0.12);
+    --sharp: #c47a7a; --sharp-soft: rgba(196,122,122,0.12);
+    --font-body: 'Plus Jakarta Sans', sans-serif; --font-mono: 'JetBrains Mono', monospace;
+  }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(32px, 5.5vw, 48px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; color: var(--muted); margin-top: 16px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); font-weight: 700; }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; font-weight: 700; }
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); }
+  article strong { color: var(--fg); font-weight: 600; }
+  article ul { margin: 12px 0 20px 20px; }
+  article ol { margin: 12px 0 20px 24px; }
+  article li { font-size: 15px; line-height: 1.7; color: var(--fg-body); margin-bottom: 8px; }
+  article a { color: var(--accent); text-decoration: none; }
+  article a:hover { text-decoration: underline; }
+  .voice-card { border-radius: 10px; padding: 24px 28px; margin: 28px 0; }
+  .voice-card.gentle { background: var(--gentle-soft); border: 1px solid rgba(126,184,160,0.25); }
+  .voice-card.balanced { background: var(--balanced-soft); border: 1px solid rgba(122,159,196,0.25); }
+  .voice-card.sharp { background: var(--sharp-soft); border: 1px solid rgba(196,122,122,0.25); }
+  .voice-card .label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
+  .voice-card.gentle .label { color: var(--gentle); }
+  .voice-card.balanced .label { color: var(--balanced); }
+  .voice-card.sharp .label { color: var(--sharp); }
+  .voice-card .title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  .voice-card p { margin-bottom: 12px; }
+  .voice-card ul { margin: 8px 0 12px 18px; }
+  .algo-block { background: var(--code-bg); border: 1px solid var(--rule); border-radius: 8px; padding: 20px 24px; margin: 20px 0; font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: var(--fg-body); }
+  .algo-block .gate-yes { color: #7eb8a0; }
+  .algo-block .gate-no { color: #c47a7a; }
+  .metric-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  .metric-table th { text-align: left; padding: 10px 14px; background: var(--code-bg); color: var(--muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid var(--rule); }
+  .metric-table td { padding: 10px 14px; border-bottom: 1px solid rgba(212,168,83,0.06); color: var(--fg-body); vertical-align: top; }
+  .metric-table tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; padding: 3px 9px; border-radius: 4px; margin: 2px; }
+  .tag.gentle { background: var(--gentle-soft); color: var(--gentle); }
+  .tag.balanced { background: var(--balanced-soft); color: var(--balanced); }
+  .tag.sharp { background: var(--sharp-soft); color: var(--sharp); }
+  .callout { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 16px 20px; margin: 24px 0; border-radius: 0 6px 6px 0; }
+  .callout p { margin-bottom: 0; font-size: 15px; color: var(--fg); }
+  @media (max-width: 560px) { body { padding: 40px 20px 80px; } header.meta h1 { font-size: 28px; } .algo-block { font-size: 12px; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Kai Research Report — Aurora Voice System</div>
+    <h1>Voice Algorithms for AI-Generated Briefs</h1>
+    <div class="sub">A formal implementation guide for Gentle, Balanced, and Sharp voice modes in Aurora personalized morning briefs. April 18, 2026.</div>
+  </header>
+
+  <article>
+
+    <h2>Overview</h2>
+    <p>Aurora delivers personalized morning briefs in three voice settings: <strong>Gentle</strong>, <strong>Balanced</strong>, and <strong>Sharp</strong>. These are not aesthetic preferences — they are fundamentally different cognitive contracts with the reader. Gentle says: "I'm with you." Balanced says: "Here is what happened." Sharp says: "Here is what you're missing."</p>
+    <p>This report synthesizes research across major publications, AI product implementations, academic NLP literature, and top Substack writers to produce formal voice algorithms with measurable outputs. The goal is not a style guide for human writers. It is a specification for an LLM-driven system that must produce <em>verifiably distinct</em> output on each run.</p>
+    <p>Each section ends with a YES/NO gate algorithm. If a generated brief does not pass its gate, it must be rewritten — not adjusted. The voice is either present or it isn't.</p>
+
+    <h2>Section 1: How Major Publications Create Consistent Voice</h2>
+    <p>Every durable publication has a voice that survives staff turnover because the voice is encoded in structure, not personality. The constraint systems these publications use are directly applicable to LLM generation.</p>
+
+    <h3>The New York Times: Authority Through Restraint</h3>
+    <p>The NYT Manual of Style and Usage (first published 1895, updated through 2015) encodes a voice of measured authority. The core structural rules: avoid starting consecutive sentences with the same article, use "said" almost exclusively for attribution (never "opined," "claimed," or "argued"), and recast passive constructions wherever possible. The NYT does not use contractions in news writing. Sentences average 18–22 words in news sections. The register is formal but not academic — vocabulary is chosen for clarity, not demonstration of knowledge. The voice effect is one of confident distance: the paper knows what happened and will tell you precisely, without editorializing.</p>
+
+    <h3>The Economist: Sharp Through Compression</h3>
+    <p>The Economist's style guide is available publicly and is unusually explicit. Its first rule: "The first requirement is to be readily understandable. Clear writing is the key to clear thinking." The guide prohibits jargon, euphemism, and filler phrases. Every sentence must earn its place. The Economist writes in the first person plural ("we believe") but never hedges — it makes declarative claims and defends them. Sentences are short (12–16 words average). The vocabulary is precise but not technical. The effect is one of institutional intelligence: the publication has a considered view and states it without apology. This is the publication most structurally aligned with the Sharp voice — not because it is harsh, but because it refuses to waste the reader's time with uncertainty theater.</p>
+
+    <h3>Axios: Balanced Through Constraint</h3>
+    <p>Axios invented "Smart Brevity" as a formal writing algorithm. The structure has four immutable components: (1) a headline of no more than six words, (2) a single strong first sentence stating the most essential fact, (3) a bolded "Why it matters:" line followed by no more than two declarative sentences, and (4) an optional "Go deeper" section. Axios explicitly prohibits SAT vocabulary, humor, irony, and longer words. Every story must answer: "What is new?" before anything else. This is the most formal writing algorithm in journalism. It produces text that is clean, neutral, and completely unemotional — the structural model for Balanced voice.</p>
+
+    <h3>Morning Brew: Gentle Through Warmth and Wit</h3>
+    <p>Morning Brew's editorial guidelines, as described by Managing Editor Neal Freyman, require that each edition read "like a sharp, slightly sarcastic friend who happens to know what they're talking about." The rules are: be empathetic, do not be condescending, do not be cheesy. Formatting uses sparing bolding (bolding everything means bolding nothing). Each issue opens with a friendly editorial note before the news. Complex business and finance topics are introduced through pop culture references or humor before delivering the substance. Sentences are shorter and more conversational than NYT. The register is warm and collegial. This voice says: "You don't need to know this already — we're going to figure it out together."</p>
+
+    <h3>The Hustle: Gentle-to-Conversational Through Persona</h3>
+    <p>Sam Parr's guidelines for The Hustle specify: conversational but informed, clever but not forced, data-driven but accessible, personal but universal. Headlines must be 7–10 words, use casual language, and avoid clickbait while maintaining intrigue. The Hustle focuses on unexpected business angles — finding the surprising implication inside a mundane topic. The writing style treats the reader as an equal who is discovering something together with the writer, not being lectured to. The persona is distinctly human.</p>
+
+    <h3>TLDR and 1440: Balanced Through Technical Credibility</h3>
+    <p>TLDR explicitly positions itself as "written by engineers for engineers." Every summary is crisply structured: a headline, then a two-to-three sentence summary that leads with the most important technical fact. No editorializing, no humor, no empathy — purely informational. 1440, which reaches over 3.5 million subscribers with 55–60% open rates, uses a similar model: short summaries, active voice, factual framing. Both represent a pure information-delivery contract with the reader.</p>
+
+    <div class="callout">
+      <p>Key insight: Every publication's voice is an implicit contract. Gentle says "I care how you feel reading this." Balanced says "I respect your time." Sharp says "I assume you can handle a hard question." Violating the contract — mixing warm hedging into a sharp piece, or inserting provocative claims into a balanced brief — destroys reader trust faster than bad information.</p>
+    </div>
+
+    <h2>Section 2: How AI Products Handle Voice</h2>
+    <p>Current AI news products are early-stage on voice differentiation. Most have solved personalization through topic filtering, not register control. The few that have addressed voice reveal instructive approaches.</p>
+
+    <h3>Artifact (2023–2024): Voice as Audio Style</h3>
+    <p>Artifact, built by Instagram co-founders Kevin Systrom and Mike Krieger, implemented voice primarily as an audio feature: users could have articles read aloud in 30+ AI voices including celebrity voice clones (Snoop Dogg, Gwyneth Paltrow). Artifact also implemented AI summary rewriting: "explain like I'm five," emoji summaries, and clickbait headline rewriting. These are voice-register changes applied post-hoc to existing content. Artifact shut down in January 2024 due to low engagement — a signal that surface-level voice features without deep content generation do not hold users.</p>
+
+    <h3>Perplexity Discover Daily: Voice Through Format</h3>
+    <p>Perplexity's podcast product uses ElevenLabs voice synthesis on top of AI-curated content. The voice differentiation is auditory, not textual. The written product (Perplexity Discover) uses a single consistent register — neutral and informative — without user-selectable voice modes. The personalization is topic-based (the algorithm learns what you read and how long you spend on it) rather than register-based.</p>
+
+    <h3>Google Discover and Apple News+: Behavioral Personalization</h3>
+    <p>Both platforms personalize through behavioral signals — click-through rates, time spent reading, topic categories — and surface existing articles rather than generating new content in different registers. There is no voice-level customization. The "voice" is whatever voice the source publication uses.</p>
+
+    <h3>What the AI Product Landscape Reveals</h3>
+    <p>No current AI news product systematically implements different text registers for different user preferences. This is Aurora's differentiated position. The academic research (see Section 3) confirms that LLMs are capable of register-controlled generation when given formal constraints. The gap is not capability — it is specification. No one has written the algorithm.</p>
+
+    <h2>Section 3: Academic and NLP Research on Voice Consistency</h2>
+
+    <h3>Style Transfer in LLMs</h3>
+    <p>A 2024 IEEE study "LLM-Based Text Style Transfer: Have We Taken a Step Backward?" found that while LLMs support both zero-shot and fine-tuning-based style transfer, the results vary significantly based on how constraints are specified. The ZeroStylus framework (2024) proposes a hierarchical approach: sentence-level stylistic adaptation combined with paragraph-level structural coherence. The key finding is that effective style transfer requires both local constraints (how individual sentences are formed) and global constraints (how the piece is structured overall). Prompting for tone alone produces surface-level changes. Prompting for structural rules produces genuine register shifts.</p>
+    <p>A separate 2025 paper "Catch Me If You Can? LLMs Still Struggle to Imitate the Implicit Writing Styles of Everyday Authors" found that few-shot prompting (providing 3–5 reference examples) consistently outperforms zero-shot settings for stylistic alignment. This has a direct implementation implication: each voice setting needs reference examples, not just rules.</p>
+
+    <h3>Persona Consistency</h3>
+    <p>The Persona-Aware Contrastive Learning (PCL) framework (2025) proposes a "role chain" method: the model self-questions based on the role's characteristics before generating text. Applied to voice: before generating a Sharp brief, the system should ask "What would a sharp, analytical reader already know?" before producing text. This pre-generation interrogation step dramatically improves register consistency.</p>
+
+    <h3>Readability Metrics and Voice Correlation</h3>
+    <p>Readability formulas provide quantitative grounding for voice differentiation. Three metrics are directly applicable:</p>
+    <ul>
+      <li><strong>Flesch Reading Ease:</strong> Scores 0–100. Higher = easier. Calculated from syllables per word and words per sentence. 90–100: very easy (5th grade); 60–70: standard (8th–9th grade); 30–50: difficult (college level); below 30: very difficult (academic/professional). Morning Brew targets approximately 65–75. The Economist typically scores 40–55. Academic papers score below 30.</li>
+      <li><strong>Flesch-Kincaid Grade Level:</strong> Inverse of Reading Ease. Targets: Gentle = Grade 6–8; Balanced = Grade 9–11; Sharp = Grade 12–14.</li>
+      <li><strong>SMOG Index:</strong> Counts polysyllabic words (3+ syllables) per 30 sentences. Calibrated for 100% comprehension. Targets: Gentle = SMOG 6–8; Balanced = SMOG 9–11; Sharp = SMOG 12–14. Research shows SMOG correlates 0.985 with reader comprehension levels.</li>
+    </ul>
+    <p>Research on word concreteness is particularly relevant. One study found that analytical texts show only 14% concrete words while narrative texts show 78% concreteness. Gentle voice should maximize concrete, sensory-adjacent language. Sharp voice is permitted to use abstract framing when it serves the analytical argument.</p>
+
+    <h3>Type-Token Ratio and Vocabulary Richness</h3>
+    <p>The Type-Token Ratio (TTR) measures lexical diversity: unique words divided by total words, expressed as a percentage. A higher TTR indicates more varied vocabulary. Research using TTR for authorship attribution and genre analysis finds that Sharp/analytical text tends toward higher TTR (more varied vocabulary per unit of text) while Gentle/narrative text is lower (more repetition of familiar, accessible terms). For comparable-length briefs: Gentle should target TTR of 0.55–0.65; Balanced 0.65–0.75; Sharp 0.75–0.85.</p>
+
+    <h3>Sentence Length and Burstiness</h3>
+    <p>A critical finding from human writing research: humans write with "burstiness" — irregular cadence of short and long sentences. AI-generated text tends toward uniform sentence length, producing monotony. This is algorithmically correctable: each voice specification should include a sentence-length variance requirement, not just an average. Research on education research articles found average sentence lengths of 24.7 words in analytical sections. General-audience journalism targets 15–20 words. Conversational/gentle writing targets 10–16 words with high variance (mix of 6-word and 22-word sentences in the same paragraph).</p>
+
+    <h2>Section 4: Best Practices by Voice Type</h2>
+
+    <div class="voice-card gentle">
+      <div class="label">Voice Mode</div>
+      <div class="title">Gentle</div>
+      <p><strong>Core contract:</strong> The reader does not need to know anything before starting. The brief meets them where they are and walks alongside them.</p>
+      <p><strong>Sentence length:</strong> Average 10–15 words. High variance required — mix of 5-word anchors ("Here's what happened.") with 20-word elaborations. Never three consecutive sentences of similar length.</p>
+      <p><strong>Vocabulary:</strong> Flesch-Kincaid Grade 6–8. No jargon unless immediately defined in the same sentence. Prefer concrete, sensory language: "the company cut 2,000 jobs" over "the organization reduced headcount by 2,000 FTEs." Prefer common over technical: "said" not "stated," "used" not "utilized," "showed" not "demonstrated."</p>
+      <p><strong>Hedging language:</strong> Intentional and strategic. Modal verbs (might, could, may) soften claims. Epistemic adverbs (perhaps, likely, apparently) acknowledge uncertainty. But: do not over-hedge — this signals anxiety, not warmth. One hedge per 3–4 sentences is the target range.</p>
+      <p><strong>Structural patterns:</strong> Lead with a human-level observation before the data point. ("A lot of people woke up this morning to find their apps weren't working. Here's why.") Use "you" and "we" to create inclusion. Avoid "one must" or "it is important to" — these are lectures. End with forward-looking framing: what this means for the reader's day, not just what happened.</p>
+      <p><strong>Prohibited patterns:</strong> Rhetorical questions as provocations, contrarian opening claims, technical vocabulary without definition, passive voice, impersonal constructions ("It has been reported that...").</p>
+    </div>
+
+    <div class="voice-card balanced">
+      <div class="label">Voice Mode</div>
+      <div class="title">Balanced</div>
+      <p><strong>Core contract:</strong> The reader wants the facts, organized efficiently. The brief does not waste their time or push a perspective.</p>
+      <p><strong>Sentence length:</strong> Average 15–20 words. Moderate variance. No sentence should exceed 30 words (split it). No more than two consecutive sentences under 10 words (they create a staccato effect that reads as emotional).</p>
+      <p><strong>Vocabulary:</strong> Flesch-Kincaid Grade 9–11. AP Style conventions apply. Prefer "said" for attribution. Use active voice. Cut adverbs. No hedging language unless factually required (known uncertainty in the story itself). Use industry-standard terms without definition when audience would know them; define when they wouldn't.</p>
+      <p><strong>Structural pattern — Inverted Pyramid:</strong> Lead sentence answers Who, What, When, Where. Second sentence answers Why and/or How. Third sentence provides context or significance. Optional fourth sentence introduces a contrasting data point. The Axios "Why it matters:" bolded sub-heading is the structural ideal — it forces the writer to articulate significance before elaborating.</p>
+      <p><strong>Attribution discipline:</strong> Any claim that is not universally established needs a named source. "Analysts say" is insufficient. "Three analysts interviewed by Reuters said" is acceptable. "The company said in a statement" is the AP standard.</p>
+      <p><strong>Prohibited patterns:</strong> First-person ("I think"), second-person as address ("you should know"), emotional adjectives ("alarming," "exciting," "shocking"), hedging language for non-factual claims, editorializing in the news summary itself.</p>
+    </div>
+
+    <div class="voice-card sharp">
+      <div class="label">Voice Mode</div>
+      <div class="title">Sharp</div>
+      <p><strong>Core contract:</strong> The reader can handle complexity and welcomes intellectual challenge. The brief does not baby them — it respects their intelligence by refusing to be obvious.</p>
+      <p><strong>Sentence length:</strong> Average 16–22 words. Low variance is acceptable — analytical density is permitted. But avoid monotony: vary paragraph length aggressively (one-sentence paragraphs are powerful rhetorical tools in this voice).</p>
+      <p><strong>Vocabulary:</strong> Flesch-Kincaid Grade 12–14. Technical terms are permitted and expected when they carry precision. High TTR (0.75–0.85) — varied vocabulary signals analytical rigor. Avoid both jargon-for-jargon's-sake and artificial simplification. The register is a sophisticated reader talking to a sophisticated reader.</p>
+      <p><strong>Lead sentence requirement:</strong> The opening sentence must make a claim most readers would not already hold. It is not a summary — it is a thesis. Ben Thompson's Stratechery model: open with a framework claim ("The history of the internet is a history of aggregators winning by controlling demand"), then prove it. The Economist model: state a surprising fact or an inconvenient tension in the first sentence, then explain it. Packy McCormick's Not Boring model: begin with a historical analogy or pattern that reframes the current event.</p>
+      <p><strong>Structural patterns:</strong> Socratic questioning embedded in the text ("The obvious question is X. But X is not actually the question."). Contrarian framing: acknowledge the consensus view, then dismantle it. Use of statistical or historical evidence to establish the scale of what is actually happening. Frameworks and named concepts ("aggregation theory," "Jevons paradox") that give the reader analytical tools, not just facts.</p>
+      <p><strong>Prohibited patterns:</strong> Hedging language except where factually required, emotional appeals, "you should feel" framings, redundancy, filler phrases ("it is worth noting that," "needless to say"), passive voice.</p>
+    </div>
+
+    <h2>Section 5: Measurable Criteria — How to Verify Voice</h2>
+    <p>A brief is not Sharp because it uses hard words. It is not Gentle because it says "let's." Voice must be verifiable through quantitative scoring, not intuition. The following metrics constitute the verification framework.</p>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th><span class="tag gentle">Gentle</span></th>
+          <th><span class="tag balanced">Balanced</span></th>
+          <th><span class="tag sharp">Sharp</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Flesch-Kincaid Grade</strong></td>
+          <td>6–8</td>
+          <td>9–11</td>
+          <td>12–14</td>
+        </tr>
+        <tr>
+          <td><strong>Flesch Reading Ease</strong></td>
+          <td>65–80</td>
+          <td>50–65</td>
+          <td>30–50</td>
+        </tr>
+        <tr>
+          <td><strong>SMOG Index</strong></td>
+          <td>6–8</td>
+          <td>9–11</td>
+          <td>12–14</td>
+        </tr>
+        <tr>
+          <td><strong>Avg sentence length (words)</strong></td>
+          <td>10–15</td>
+          <td>15–20</td>
+          <td>16–22</td>
+        </tr>
+        <tr>
+          <td><strong>Sentence length std deviation</strong></td>
+          <td>&gt;6 (high variance)</td>
+          <td>4–6 (moderate)</td>
+          <td>3–7 (any)</td>
+        </tr>
+        <tr>
+          <td><strong>Type-Token Ratio (TTR)</strong></td>
+          <td>0.55–0.65</td>
+          <td>0.65–0.75</td>
+          <td>0.75–0.85</td>
+        </tr>
+        <tr>
+          <td><strong>Hedge word density</strong> (per 100 words)</td>
+          <td>2–4 hedges</td>
+          <td>0–1 hedge</td>
+          <td>0 hedges</td>
+        </tr>
+        <tr>
+          <td><strong>Second-person rate</strong> ("you/your")</td>
+          <td>3–6 per 300 words</td>
+          <td>0–2 per 300 words</td>
+          <td>0–2 per 300 words</td>
+        </tr>
+        <tr>
+          <td><strong>Lead sentence type</strong></td>
+          <td>Human observation or narrative scene</td>
+          <td>Who/What/When fact</td>
+          <td>Thesis or contrarian claim</td>
+        </tr>
+        <tr>
+          <td><strong>Attribution style</strong></td>
+          <td>Informal ("reports suggest")</td>
+          <td>Formal named source</td>
+          <td>Named source or framework</td>
+        </tr>
+        <tr>
+          <td><strong>Question density</strong></td>
+          <td>0–1 rhetorical per piece</td>
+          <td>0 questions</td>
+          <td>1–3 Socratic questions</td>
+        </tr>
+        <tr>
+          <td><strong>Polysyllabic word rate</strong> (3+ syllables)</td>
+          <td>&lt;12% of words</td>
+          <td>12–18% of words</td>
+          <td>18–25% of words</td>
+        </tr>
+        <tr>
+          <td><strong>Passive voice rate</strong></td>
+          <td>&lt;15% of sentences</td>
+          <td>&lt;10% of sentences</td>
+          <td>&lt;5% of sentences</td>
+        </tr>
+        <tr>
+          <td><strong>Concrete word ratio</strong></td>
+          <td>&gt;60% concrete</td>
+          <td>40–60% concrete</td>
+          <td>20–40% concrete</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Hedge words to count:</strong> perhaps, might, could, may, possibly, probably, appears to, seems to, suggests, indicates, reportedly, apparently, arguably, according to some, in some ways, to some extent, generally, often, typically, tends to, somewhat, relatively.</p>
+
+    <h2>Section 6: Formal Algorithms — YES/NO Gate Systems</h2>
+    <p>The following gate systems are run after generation. Any NO answer triggers a full rewrite of the relevant section, not a superficial edit. The gates are ordered by severity: Gate 1 failures are disqualifying. Gate 2 failures require structural revision. Gate 3 failures require sentence-level edits.</p>
+
+    <div class="voice-card gentle">
+      <div class="label">Gate Algorithm</div>
+      <div class="title">Gentle Voice — Verification Gates</div>
+    </div>
+
+    <div class="algo-block">
+GENTLE VOICE GATE SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+GATE 1 — DISQUALIFYING (any NO = full rewrite)
+
+G1.1 Does the opening sentence describe a human experience, observable
+     situation, or accessible concrete moment?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → rewrite lead entirely</span>
+
+G1.2 Is the Flesch-Kincaid Grade Level ≤ 8?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → rewrite with shorter sentences and simpler vocabulary</span>
+
+G1.3 Does the piece contain zero technical terms that are not
+     immediately defined in the same sentence?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → define every undefined term</span>
+
+GATE 2 — STRUCTURAL (any NO = revise structure)
+
+G2.1 Does the piece use "you" or "we" at least 3 times in 300 words?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → rewrite to include reader in narrative</span>
+
+G2.2 Does sentence length standard deviation exceed 6 words?
+     (i.e., high variance — not all sentences are similar length)
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → rewrite to vary rhythm — add short anchors, expand elaborations</span>
+
+G2.3 Does the piece contain at least 1 but no more than 4 hedge
+     words per 100 words?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → adjust hedging density to target range</span>
+
+G2.4 Does the piece end with a forward-looking statement
+     (what this means for today) rather than just restating what happened?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → add forward-looking closing sentence</span>
+
+GATE 3 — SENTENCE LEVEL (any NO = targeted edits)
+
+G3.1 Does any sentence exceed 30 words?
+     <span class="gate-yes">NO such sentence → proceed</span>  |  <span class="gate-no">YES → split all offending sentences</span>
+
+G3.2 Does any sentence use passive voice?
+     <span class="gate-yes">&lt;15% of sentences → proceed</span>  |  <span class="gate-no">≥15% → rewrite to active</span>
+
+G3.3 Are there any adjectives that convey the writer's emotion
+     rather than describing facts? ("alarming," "exciting," "worrying")
+     <span class="gate-yes">NONE → proceed</span>  |  <span class="gate-no">FOUND → replace with concrete description</span>
+    </div>
+
+    <div class="voice-card balanced">
+      <div class="label">Gate Algorithm</div>
+      <div class="title">Balanced Voice — Verification Gates</div>
+    </div>
+
+    <div class="algo-block">
+BALANCED VOICE GATE SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GATE 1 — DISQUALIFYING (any NO = full rewrite)
+
+B1.1 Does the opening sentence answer at least three of the five Ws
+     (Who, What, When, Where, Why)?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → rewrite lead as a news lede</span>
+
+B1.2 Does the piece contain zero first-person pronouns (I, we, our)?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → remove all first-person constructions</span>
+
+B1.3 Is every factual claim attributed to a specific named source
+     or to universally established fact?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → add named attribution to all floating claims</span>
+
+GATE 2 — STRUCTURAL (any NO = revise structure)
+
+B2.1 Is the Flesch-Kincaid Grade Level between 9 and 11?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → adjust sentence length and vocabulary to target</span>
+
+B2.2 Does the most important information appear in the first
+     two sentences (inverted pyramid structure)?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → restructure: pull key facts to top</span>
+
+B2.3 Does the piece contain zero emotional adjectives
+     (shocking, alarming, exciting, incredible)?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → replace with factual description</span>
+
+B2.4 Does the piece contain zero hedge words for non-factual claims?
+     (Hedges are only acceptable when factual uncertainty exists in the story)
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → remove hedges from analytical claims</span>
+
+GATE 3 — SENTENCE LEVEL (any NO = targeted edits)
+
+B3.1 Does any sentence exceed 30 words?
+     <span class="gate-yes">NO → proceed</span>  |  <span class="gate-no">YES → split</span>
+
+B3.2 Does passive voice appear in ≥10% of sentences?
+     <span class="gate-yes">NO → proceed</span>  |  <span class="gate-no">YES → rewrite to active</span>
+
+B3.3 Are there three or more consecutive sentences of similar length
+     (within 4 words of each other)?
+     <span class="gate-yes">NO → proceed</span>  |  <span class="gate-no">YES → vary lengths to break staccato</span>
+    </div>
+
+    <div class="voice-card sharp">
+      <div class="label">Gate Algorithm</div>
+      <div class="title">Sharp Voice — Verification Gates</div>
+    </div>
+
+    <div class="algo-block">
+SHARP VOICE GATE SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━
+
+GATE 1 — DISQUALIFYING (any NO = full rewrite)
+
+S1.1 Does the opening sentence make a claim that most readers
+     would NOT already hold as their default view?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → rewrite lead as a thesis, not a summary</span>
+
+S1.2 Does the piece contain a named framework, pattern, or concept
+     that gives the reader an analytical tool?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → add an explanatory framework or named concept</span>
+
+S1.3 Does the Flesch-Kincaid Grade Level fall between 12 and 14?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → increase analytical density and vocabulary precision</span>
+
+GATE 2 — STRUCTURAL (any NO = revise structure)
+
+S2.1 Does the piece acknowledge the conventional view of the story
+     BEFORE presenting the sharper interpretation?
+     (The structure: "Most people think X. But X misses Y.")
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → add a tension-establishing paragraph before the analysis</span>
+
+S2.2 Does the piece contain 1–3 Socratic or rhetorical questions
+     that deepen the reader's thinking rather than signal uncertainty?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → add at least one well-placed analytical question</span>
+
+S2.3 Does the piece contain zero hedge words?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → remove all hedges; replace with direct claims or flagged uncertainty</span>
+
+S2.4 Is the Type-Token Ratio (TTR) ≥ 0.75 for the piece?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → replace repeated vocabulary with more precise alternatives</span>
+
+GATE 3 — SENTENCE LEVEL (any NO = targeted edits)
+
+S3.1 Does the piece use passive voice in ≥5% of sentences?
+     <span class="gate-yes">NO → proceed</span>  |  <span class="gate-no">YES → convert to active</span>
+
+S3.2 Are there any filler phrases present?
+     ("it is worth noting," "needless to say," "as we all know,"
+      "it is important to understand that")
+     <span class="gate-yes">NONE → proceed</span>  |  <span class="gate-no">FOUND → delete entirely; restructure sentence</span>
+
+S3.3 Does the polysyllabic word rate fall between 18–25%?
+     <span class="gate-yes">YES → proceed</span>  |  <span class="gate-no">NO → adjust vocabulary precision upward or trim unnecessary complexity</span>
+    </div>
+
+    <h2>Section 7: Substack Writer Analysis by Voice Category</h2>
+    <p>These three categories represent real practitioners whose work has been studied and reverse-engineered. Each set of three writers demonstrates consistent patterns that formalize the voice algorithms above.</p>
+
+    <h3>Gentle Voice Writers</h3>
+    <p><strong>Maria Popova — The Marginalian:</strong> Popova's writing is the canonical example of gentle intellectual voice. Her structure: open with a quote or historical figure's observation, then expand it into an essay that connects multiple disciplines. She uses phrases like "It seems to me," "what strikes me about this," and "I have long believed" — personal epistemic markers that position her as a fellow thinker, not an authority. Sentences are medium-length (16–18 words average) but the vocabulary is literary, not technical. She coins new phrases ("cathedrals of understanding") to describe abstract concepts concretely. The emotional register is warmth toward ideas. She never tells readers what to think — she walks them to the place where thinking becomes possible.</p>
+    <p><strong>Morgan Housel — Collaborative Fund:</strong> Housel's published philosophy for writing: "nobody likes a lecture. If you give readers enough stories about psychology, they'll figure it out for themselves." His structure is story-first: open with a historical anecdote or observation about human behavior, then extract the financial or investment implication. He uses hedging strategically — "I suspect," "it seems" — because his domain is genuinely uncertain (behavioral psychology). His sentences are shorter than academic finance writing and more concrete. The effect is empathetic authority: he has thought carefully about this and wants to share it, not instruct you.</p>
+    <p><strong>Rae Katz — Inner Workings:</strong> Katz writes about under-discussed health, work, and identity topics with depth and empathy. Her approach leads with personal acknowledgment of complexity before introducing data or research findings. She validates the reader's existing intuitions before expanding them. Second-person address is frequent: "You've probably noticed..." and "If you've ever felt..." serve as on-ramps. The structure is concentric — personal experience, then pattern recognition, then structural analysis — always moving from the familiar outward.</p>
+
+    <h3>Balanced Voice Writers</h3>
+    <p><strong>Axios staff writers — Smart Brevity format:</strong> The Axios model is the most formal implementation of balanced voice. Every piece begins with a declarative Who/What fact. The "Why it matters:" bolded line forces explicit statement of significance. The "Go deeper" section is strictly optional. Sentences average 14 words. Vocabulary is at AP level. No personality, no opinion, no emotion. Axios represents balanced voice as a discipline, not a default.</p>
+    <p><strong>TLDR (Dan Ni and team):</strong> TLDR's balance comes from its editorial credibility: engineers writing for engineers means the vocabulary is technically precise without being performatively complex. The summaries follow a strict structure: lead with the most technically significant fact, follow with the mechanism, conclude with the implication. There is no editorializing in TLDR. The voice is clean signal, zero noise.</p>
+    <p><strong>1440 staff:</strong> 1440's model is the neutral 5-minute brief — topics from science, politics, business, culture, all written in the same register. The voice avoids any affiliation or tilt. Sentences are slightly longer than Axios (16–20 words), vocabulary slightly more elevated. Attribution is careful. The effect is: a well-curated newspaper front page, all in one voice.</p>
+
+    <h3>Sharp Voice Writers</h3>
+    <p><strong>Ben Thompson — Stratechery:</strong> Thompson's structural signature is the frameworks essay. He opens by establishing a named concept (Aggregation Theory, the Smiling Curve, etc.), then applies it to a current event to reveal implications that the daily news cycle misses. The framework IS the voice — it signals that the reader is about to receive analytical tools, not just information. His sentences average 22 words. TTR is high. He uses contrarian framing precisely: not "here is why you are wrong" but "here is what this pattern suggests that the obvious reading misses." Thompson's work has a 0.985 correlation between frameworks used and analysis depth.</p>
+    <p><strong>Packy McCormick — Not Boring:</strong> McCormick synthesizes Thompson's analytical depth with Bill Simmons' pop culture accessibility. His structural model: open with a historical analogy (often from business history or a cultural reference), use it to establish a pattern, then apply that pattern to a current company or event. His pieces run 8,000–12,000 words — an entire opposite of Smart Brevity — but every word is earned. The sharp voice in McCormick comes from his refusal to state the obvious: he assumes the reader already knows the surface story and wants the second-order analysis. Memes and humor are deployed as pressure releases, not as the primary voice.</p>
+    <p><strong>The Economist editorial team:</strong> The sharpest institutional voice in journalism. The Economist's voice is created by constraint: no jargon, no filler, no hedging, no redundancy. The analytical sharpness comes from compression — every claim is load-bearing. The Economist opens editorials with a tension or paradox in the first sentence, then resolves it analytically. There are no rhetorical questions that aren't immediately answered. It writes in the first person plural ("We believe") with complete confidence — the opposite of hedging. SMOG Index on Economist editorials typically scores 12–13.</p>
+
+    <h2>Implementation Notes for Aurora</h2>
+    <p>The voice algorithm must be applied at two levels: the generation prompt (what the LLM is instructed to produce) and the post-generation verification pass (the gate system). These are separate operations. Collapsing them — asking the LLM to "check your own voice" in a single pass — produces unreliable results because LLMs lack consistent self-assessment without structured gate questions.</p>
+
+    <h3>Reference Example Architecture</h3>
+    <p>Each voice should have a library of 5 reference briefs — real Aurora outputs that have passed all gates. New generations are prompted with: "Write in the same voice as the reference examples. The structural rules are X. The gate criteria are Y." Few-shot prompting with reference examples outperforms zero-shot for stylistic alignment.</p>
+
+    <h3>Dual-Pass Generation</h3>
+    <p><strong>Pass 1 — Draft generation:</strong> The LLM generates the brief with voice instructions and reference examples. No self-assessment at this stage.</p>
+    <p><strong>Pass 2 — Gate evaluation:</strong> A separate prompt runs the gate system against the draft. For each gate question, the answer is YES or NO. Any NO triggers a targeted rewrite instruction, not a general "improve this" instruction. The rewrite instruction is specific: "Sentence 3 uses passive voice. Rewrite as active. The subject is [X]."</p>
+
+    <h3>Metrics Computation</h3>
+    <p>Readability metrics (FK Grade, Reading Ease, SMOG, TTR, sentence length variance) can be computed programmatically before the gate evaluation pass. This eliminates subjective judgment from the quantitative gates. Only the structural and semantic gates (lead sentence type, hedge presence, framework presence) require LLM evaluation. Running quantitative gates first means most failures can be caught and corrected without a second LLM call.</p>
+
+    <h3>Drift Detection</h3>
+    <p>Voice drift is the gradual erosion of voice consistency across a sequence of generated briefs. It happens because LLMs weight recent context heavily — if a brief discusses an emotional topic, subsequent sections drift gentle even in a Sharp brief. Prevention: run the gate system on each section independently, not just on the full brief. A Sharp brief about financial markets that includes a human-interest section must still pass Sharp gates in every section.</p>
+
+    <div class="callout">
+      <p><strong>Final principle:</strong> Voice consistency is not about prompting. It is about having gates that make inconsistency measurable and correctable. Every gate question in this document has a binary answer. The binary is the discipline. The discipline is the product.</p>
+    </div>
+
+    <h2>Sources</h2>
+    <ul>
+      <li><a href="https://en.wikipedia.org/wiki/The_New_York_Times_Manual_of_Style_and_Usage">The New York Times Manual of Style and Usage — Wikipedia</a></li>
+      <li><a href="https://cdn.static-economist.com/sites/default/files/pdfs/style_guide_12.pdf">The Economist Style Guide (PDF)</a></li>
+      <li><a href="https://worldecomag.com/5-tips-on-writing-from-the-economist-style-guide/">5 Tips on Writing from The Economist Style Guide</a></li>
+      <li><a href="https://www.axios.com/smart-brevity">Axios Smart Brevity — The Power of Saying More with Less</a></li>
+      <li><a href="https://www.axioshq.com/hubfs/smart-brevity-101.pdf">Smart Brevity 101 — Axios HQ (PDF)</a></li>
+      <li><a href="https://mediamakersmeet.com/why-tone-of-voice-is-vital-to-morning-brews-newsletter-success-the-media-roundup/">Why Tone of Voice Is Vital to Morning Brew's Newsletter Success</a></li>
+      <li><a href="https://theaudiencers.com/deep-dive-into-the-morning-brew-newsletter-andy-griffiths/">Deep Dive into the Morning Brew Newsletter — The Audiencers</a></li>
+      <li><a href="https://thehustle.co/write-like-hustle-boring-stuff-writing-no-one-talks">Write Like The Hustle — Sam Parr</a></li>
+      <li><a href="https://www.paved.com/blog/tldr-newsletter-curation/">TLDR Newsletter and the Art of Content Curation — Paved</a></li>
+      <li><a href="https://arxiv.org/html/2505.07888v1">Implementing Long Text Style Transfer with LLMs — arXiv 2025</a></li>
+      <li><a href="https://arxiv.org/html/2509.14543v1">LLMs Still Struggle to Imitate Implicit Writing Styles — arXiv 2025</a></li>
+      <li><a href="https://arxiv.org/html/2503.17662v1">Enhancing Persona Consistency via Contrastive Learning — arXiv 2025</a></li>
+      <li><a href="https://arxiv.org/html/2408.12599v1">Controllable Text Generation for LLMs: A Survey — arXiv 2024</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests">Flesch-Kincaid Readability Tests — Wikipedia</a></li>
+      <li><a href="https://hsph.harvard.edu/research/health-communication/resources/smog/">SMOG Readability Formula — Harvard T.H. Chan School of Public Health</a></li>
+      <li><a href="https://www.sketchengine.eu/glossary/type-token-ratio-ttr/">Type-Token Ratio (TTR) — Sketch Engine</a></li>
+      <li><a href="https://owl.purdue.edu/owl/subject_specific_writing/journalism_and_journalistic_writing/the_inverted_pyramid.html">The Inverted Pyramid — Purdue OWL</a></li>
+      <li><a href="https://www.nngroup.com/articles/inverted-pyramid/">Inverted Pyramid: Writing for Comprehension — Nielsen Norman Group</a></li>
+      <li><a href="https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2025/how-audiences-think-about-news-personalisation-ai-era">How Audiences Think About News Personalisation in the AI Era — Reuters Institute 2025</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Artifact_(app)">Artifact (app) — Wikipedia</a></li>
+      <li><a href="https://watkinstben.medium.com/contrarian-style-copywriting-how-to-write-disruptive-messages-ad70365f1e41">Contrarian-Style Copywriting: How to Write Disruptive Messages</a></li>
+      <li><a href="https://www.semiconductorthings.com/p/the-genius-of-ben-thompson-10-years">The Genius of Ben Thompson — 10 Years After Stratechery</a></li>
+      <li><a href="https://www.artofsaience.com/un-packy-ng-technical-writing-the-not-boring-style/">Un-Packy-ng Technical Writing — The Not Boring Style</a></li>
+      <li><a href="https://collabfund.substack.com/">Morgan Housel — Collaborative Fund Substack</a></li>
+      <li><a href="https://www.themarginalian.org/about/">The Marginalian — About</a></li>
+      <li><a href="https://human.libretexts.org/Bookshelves/Languages/English_as_a_Second_Language/Reading_Writing_Research_and_Reasoning:_An_Advanced_ESL_Text/05:_Analyzing_Arguments/5.09:_Hedging">Hedging Language — Humanities LibreTexts</a></li>
+      <li><a href="https://www.getfishtank.com/insights/how-to-train-generative-ai-to-speak-in-your-brand-voice">How to Train Generative AI to Speak in Your Brand Voice — Fishtank</a></li>
+      <li><a href="https://www.contentmarketing.ai/blog/strategy/ai-style-guides-ensuring-consistent-brand-voice-at-scale/">AI Style Guides: Ensuring Consistent Brand Voice at Scale</a></li>
+    </ul>
+
+  </article>
+</main>
+</body>
+</html>

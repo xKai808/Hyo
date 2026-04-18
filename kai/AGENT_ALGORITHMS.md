@@ -1851,4 +1851,147 @@ FAILURE MODES:
   - Compaction mismatch → abort, flag P0 "compaction integrity failure"
   - Pattern match false positive → log but don't auto-escalate above P2
   - Research brief missing → skip Phase 6, flag P3 "no brief available"
+
+---
+
+## HQ FEATURE DEPLOYMENT ALGORITHM (v1.0 — 2026-04-18)
+
+**Origin:** Session 17. Hyo reported Ant section missing from HQ four times across two sessions.
+Root causes: stale service worker cache, clean URL not covered by network-first strategy,
+Kai declaring features "live" based on code review instead of visual verification.
+**Purpose:** Ensure any HQ feature is provably visible to the user before declaring done.
+This is a yes/no gate sequence. Every NO stops the process and routes back to fix.
+
+---
+
+### PHASE 0 — BEFORE WRITING ANY CODE
+
+Q1. Do I know what this feature will look like when it's working?
+    → NO: Describe it in one sentence first. "User sees X in Y location showing Z data."
+    → YES: continue
+
+Q2. Do I know exactly where on the page it will appear (nav section, view, section title)?
+    → NO: Check hq.html nav structure before touching anything.
+    → YES: continue
+
+Q3. Does this feature require new data? If yes — does that data exist and is it in the correct structure?
+    → NO: Build the data first. Verify structure matches what the renderer expects.
+    → YES: continue
+
+Q4. Is there an existing service worker (sw.js) that caches this page?
+    → YES: note current CACHE version. Will need to bump it before this task is done.
+    → NO: continue
+
+---
+
+### PHASE 1 — AFTER WRITING CODE, BEFORE COMMITTING
+
+Q5. Does the nav item exist in hq.html with the correct data-view attribute?
+    → NO: add it. Do not proceed.
+    → YES: continue
+
+Q6. Does the render function (renderX) exist and is it wired into the render() dispatcher?
+    → NO: wire it. Do not proceed.
+    → YES: continue
+
+Q7. Does the data file exist at both paths: agents/sam/website/data/ AND website/data/?
+    → NO: sync both paths. Do not proceed.
+    → YES: continue
+
+Q8. Does the data structure in the JSON file exactly match what the render function reads?
+    → Trace: find every field the renderer calls (costs.today, credits.remaining, etc.)
+    → Check: does the JSON have that exact field at that exact path?
+    → NO: fix the JSON structure. Do not proceed.
+    → YES: continue
+
+Q9. Did I bump sw.js CACHE version (e.g. hq-v3 → hq-v4)?
+    → NO: bump it now. Stale cache will hide the feature from the user.
+    → YES: continue
+
+Q10. Are all changed files staged for BOTH paths (agents/sam/website/ AND website/)?
+     → Run: git diff --staged | grep "^diff" to confirm both paths appear
+     → NO: stage the missing path. Do not proceed.
+     → YES: continue
+
+---
+
+### PHASE 2 — AFTER COMMIT AND PUSH
+
+Q11. Did git push exit 0 and confirm the commit SHA reached origin?
+     → NO: diagnose push failure. Do not proceed. Do not start next task.
+     → YES: continue
+
+Q12. Wait 20 seconds. Did Vercel create a new deployment triggered by this commit?
+     → Check via Vercel MCP list_deployments — most recent commit SHA should match
+     → NO: trigger deploy hook. Do not proceed.
+     → YES: continue
+
+Q13. Is the Vercel deployment state READY (not BUILDING or ERROR)?
+     → NO: check build logs via get_deployment_build_logs. Fix errors. Do not proceed.
+     → YES: continue
+
+---
+
+### PHASE 3 — VISUAL VERIFICATION (MANDATORY — CANNOT BE SKIPPED)
+
+Q14. Fetch the live page: web_fetch_vercel_url("https://www.hyo.world/hq.html")
+     Does the response contain the feature's identifying string?
+     Example: grep for "data-view=\"ant\"" or "renderAnt" or section title text
+     → NO: the feature is not in the deployed file. Go back to Phase 0.
+     → YES: continue
+
+Q15. Take a screenshot of the actual HQ page in the browser.
+     Is the feature visible in the sidebar / main area as expected?
+     → NO: investigate. Common causes: service worker still serving old cache (user needs
+       Cmd+Shift+R), CSS hiding the element, JS error in console, wrong view wiring.
+     → YES: continue
+
+Q16. Click the feature (or simulate the user interaction).
+     Does it render the correct data (not $0.00, not empty, not "loading...")?
+     → NO: check the data file at the live URL. Confirm structure matches renderer.
+     → YES: DONE — feature is live and verified.
+
+---
+
+### PHASE 4 — DATA ACCURACY GATE (for data-driven sections like Ant)
+
+Q17. Is the data sourced from a live platform (OpenAI, Anthropic, etc.)?
+     → YES: fetch the actual platform page to confirm numbers match what's in the JSON.
+     → NO: confirm the data source is correct and up to date.
+
+Q18. Are all cost/balance fields labeled correctly (today vs. MTD vs. total)?
+     → Check: does "today" mean today only? Does "month" mean month-to-date?
+     → NO: fix labels and data structure to match actual meaning.
+     → YES: continue
+
+Q19. Is any data field showing a value that contradicts reality?
+     (e.g. "cost per agent today: $0.75" when today's actual cost is $0.00)
+     → YES: fix data structure. Change label OR change data. Never leave wrong labels.
+     → NO: VERIFIED.
+
+---
+
+### WHEN USER REPORTS A VISUAL BUG (override all phases above)
+
+STEP 1: Take a screenshot IMMEDIATELY. Do not read code first.
+STEP 2: What does the user actually see? That is ground truth.
+STEP 3: Does the screenshot show the feature is missing OR showing wrong data?
+         → MISSING: service worker cache, wrong path, or JS error. Check sw.js first.
+         → WRONG DATA: fetch live data file URL. Compare to what renderer expects.
+STEP 4: Fix. Re-run from Phase 2 Q12.
+STEP 5: Take a second screenshot to confirm fix is visible.
+STEP 6: Only after screenshot confirms fix: tell the user it's done.
+
+RULE: "The code is correct" is never a valid response to a visual bug report.
+      The user is looking at the rendered page. That is the truth. Code is a hypothesis.
+
+---
+
+### ANTI-PATTERNS (these are errors, not options)
+
+❌ "The code has the feature, so it must be deployed" — code ≠ deployed
+❌ "Vercel shows READY, so the user can see it" — READY ≠ visible (service worker)
+❌ "I checked the git blame, the feature is there" — git ≠ rendered
+❌ "The data file exists" — exists ≠ correct structure ≠ correct values
+❌ Moving to next task before visual confirmation on the current feature
 ```

@@ -1,13 +1,8 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-17T19:37:49Z
+Last updated: 2026-04-18T02:21:52Z
 
 ## In Progress
-
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-17T19:37:49Z
-  - Method: sim-ack: agent handshake test
-  - Status: DELEGATED — sim-report: all clear
 
 - **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit: 1 critical issues found
   - Delegated: 2026-04-16T08:04:35Z
@@ -76,6 +71,10 @@ Last updated: 2026-04-17T19:37:49Z
 - **sam-008** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): Detected stale path reference in consolidate.sh — 2026-04-12T20:14:16Z (DONE)
 
 - **sam-007** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:33:16Z (DONE)
+  - Result: sim-report: all clear
+  - Notes: sim-verify: nightly handshake passed
+
+- **sam-001** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-18T02:21:52Z (DONE)
   - Result: sim-report: all clear
   - Notes: sim-verify: nightly handshake passed
 

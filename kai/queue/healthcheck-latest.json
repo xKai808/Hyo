@@ -1,23 +1,18 @@
 {
-  "ts": "2026-04-17T19:30:30Z",
+  "ts": "2026-04-18T05:16:22Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 5,
+  "issues": 4,
+  "warnings": 4,
   "findings": [
     {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker last active 493459h ago \u2014 may be dead"
+      "detail": "Worker last active 493469h ago \u2014 may be dead"
     },
     {
       "severity": "P0",
       "area": "morning-report",
       "detail": "Morning report JSON exists but hq.html has NO rendering code"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file aether-daily-sections.json has no reference in hq.html"
     },
     {
       "severity": "P2",
@@ -32,7 +27,7 @@
     {
       "severity": "P2",
       "area": "render-binding",
-      "detail": "Data file usage-config.json has no reference in hq.html"
+      "detail": "Data file remote-access.json has no reference in hq.html"
     },
     {
       "severity": "P1",
@@ -48,14 +43,40 @@
       "severity": "P1",
       "area": "dead-loop",
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
-    },
-    {
-      "severity": "P1",
-      "area": "ticket-sla",
-      "detail": "42 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
-  "recent_queue_results": [],
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "recent_queue_results": [
+    {
+      "id": "cmd-1776489243-269",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main 2>&1 | tail -3",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776489097-2401",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main 2>&1 | tail -3",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776488586-1441",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git log --oneline -5",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776488542-1358",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776485405-147",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
+      "exit_code": 0
+    }
+  ],
   "next_check": "in 2 hours (30min if P0 found)"
 }

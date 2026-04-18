@@ -456,3 +456,9 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[B]** **APP-001: Hyo management app — architecture decision.** App for: (1) management of hyo.world, (2) personal communication with Kai, (3) reading HQ material on the go. Options: PWA (already started — manifest.json + sw.js shipped), React Native, Flutter. Decision gates all other app work. Hyo decides stack.
 - [ ] **[B]** **APP-002: Hyo app MVP shipped.** Based on APP-001 decision: dashboard view (feed, aether, agent status), message Kai interface, newsletter reader. Deployable to Hyo's phone as PWA or installable app.
 
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/optimistic-eager-tesla/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0e638713] _(filed 2026-04-17)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-eager-tesla/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0e638713:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 25 P0 tasks (overload threshold 5) [sentinel:task-queue-size:9de2a565:escalated]

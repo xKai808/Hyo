@@ -1,17 +1,16 @@
-# ra Self-Review — 2026-04-17T00:42
+# ra Self-Review — 2026-04-17T20:22
 
 ## Gate 1: Trigger Validation
-- ✓ 10 files checked, all have triggers.
+- ✗ **2026-04-17-ra-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
 Questions for ra to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
-- ✗ **aether-daily-sections.json**: data exists but is NOT referenced in hq.html — invisible to user
 - ✗ **hq-state.json**: data exists but is NOT referenced in hq.html — invisible to user
 - ✗ **morning-report.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **usage-config.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-007** is relevant to ra
@@ -24,6 +23,9 @@ Questions for ra to answer:
   - This resolution has pending steps. Can ra contribute?
   - Agent: read the resolution and add your findings.
 - Open resolution **RES-015** is relevant to ra
+  - This resolution has pending steps. Can ra contribute?
+  - Agent: read the resolution and add your findings.
+- Open resolution **RES-031** is relevant to ra
   - This resolution has pending steps. Can ra contribute?
   - Agent: read the resolution and add your findings.
 
@@ -46,6 +48,6 @@ Questions for ra to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 10
-- Gate results: trigger=10/10, visibility=checked, resolutions=4, adoption=-1/5
+- Findings: 9
+- Gate results: trigger=17/18, visibility=checked, resolutions=5, adoption=-1/5
 

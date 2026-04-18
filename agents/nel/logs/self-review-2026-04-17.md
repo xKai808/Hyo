@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-04-17T07:16
+# nel Self-Review — 2026-04-17T20:21
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-17-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -9,10 +9,8 @@ Questions for nel to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
-- ✗ **aether-daily-sections.json**: data exists but is NOT referenced in hq.html — invisible to user
 - ✗ **hq-state.json**: data exists but is NOT referenced in hq.html — invisible to user
 - ✗ **morning-report.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **usage-config.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-002** is relevant to nel
@@ -22,6 +20,12 @@ Questions for nel to answer:
   - This resolution has pending steps. Can nel contribute?
   - Agent: read the resolution and add your findings.
 - Open resolution **RES-004** is relevant to nel
+  - This resolution has pending steps. Can nel contribute?
+  - Agent: read the resolution and add your findings.
+- Open resolution **RES-029** is relevant to nel
+  - This resolution has pending steps. Can nel contribute?
+  - Agent: read the resolution and add your findings.
+- Open resolution **RES-030** is relevant to nel
   - This resolution has pending steps. Can nel contribute?
   - Agent: read the resolution and add your findings.
 
@@ -44,6 +48,6 @@ Questions for nel to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 11
-- Gate results: trigger=6/7, visibility=checked, resolutions=3, adoption=-1/5
+- Findings: 9
+- Gate results: trigger=18/19, visibility=checked, resolutions=5, adoption=-1/5
 

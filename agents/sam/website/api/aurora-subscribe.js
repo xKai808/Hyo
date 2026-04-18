@@ -1,20 +1,32 @@
 // /api/aurora-subscribe
 //
 // Accepts interest-intake submissions from website/aurora.html and creates
-// a subscriber record. MVP: validates, normalizes, stamps an id, logs to
-// Vercel function logs, returns {ok, id}.
+// a subscriber record.
 //
-// Follow-up (P1):
-//   - persist to Vercel KV or GitHub via @octokit (same pattern as the
-//     register-founder P1 task)
-//   - send a "welcome, your first brief lands tomorrow" confirmation email
-//   - write to subscribers.jsonl via git commit so the Mini can pull it
+// Returns:
+//   { ok: true, id, pageUrl: "/aurora-page.html?id=sub_...&token=xxxx", token: "xxxx" }
 //
-// Until persistence is wired, the server logs are the source of truth.
-// The Mini syncs subscribers from Vercel logs manually or via a small
-// pull-script that replays the logs into subscribers.jsonl.
+// Token is derived deterministically:
+//   sha256(sub_id + AURORA_TOKEN_SALT)[0:24]
+//   AURORA_TOKEN_SALT must be set as a Vercel env var (matches aurora-data.js).
+//
+// Persistence: logs a structured NEW record line to Vercel function logs.
+// The Mini syncs subscribers from those logs into data/aurora-subscribers/{id}.json
+// via bin/sync-aurora-subscribers.sh (P1 task).
+
+import { createHash } from 'crypto';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Token salt — must match aurora-data.js
+const TOKEN_SALT = process.env.AURORA_TOKEN_SALT || 'hyo-aurora-dev-salt-change-in-prod';
+
+function deriveToken(subId) {
+  return createHash('sha256')
+    .update(subId + TOKEN_SALT)
+    .digest('hex')
+    .slice(0, 24);
+}
 
 const ALLOWED_TOPICS = new Set([
   'politics', 'finance', 'macro', 'stocks', 'crypto', 'startups', 'tech', 'ai',
@@ -89,24 +101,27 @@ export default async function handler(req, res) {
     source,
     interests: { topics, voice, depth, length, freetext },
     delivery: {
-      channel: 'email',
-      cadence: 'daily',
+      channel:  'page',
+      cadence:  'daily',
       sendAt:   '06:30',
       timezone: 'America/Denver',
     },
-    lastSent:    null,
-    lastBriefId: null,
-    history:     [],
+    lastBriefDate: null,
+    briefs:        [],
   };
 
-  // MVP persistence: one structured log line per subscriber. Grep the
-  // Vercel function logs to replay these into newsletter/subscribers.jsonl
-  // on the Mini. See docs/aurora-public.md for the sync plan.
+  // Derive the subscriber's personal page token
+  const token = deriveToken(id);
+  const pageUrl = `/aurora-page.html?id=${encodeURIComponent(id)}&token=${encodeURIComponent(token)}`;
+
+  // Structured log line — the Mini syncs from these into data/aurora-subscribers/{id}.json
   console.log('[aurora-subscribe] NEW ' + JSON.stringify(record));
 
   res.status(200).json({
-    ok: true,
+    ok:      true,
     id,
-    message: 'Subscribed. Your first Aurora brief lands tomorrow morning.',
+    token,
+    pageUrl,
+    message: 'Subscribed. Your Aurora page is ready.',
   });
 }

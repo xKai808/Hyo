@@ -1,7 +1,15 @@
-# aether Self-Review — 2026-04-17T13:25
+# aether Self-Review — 2026-04-17T23:17
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-17-aether-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **ssh-tunnel.sh**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **aurora-overnight.sh**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **sub_example.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **remote-access.json**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
@@ -9,10 +17,9 @@ Questions for aether to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
-- ✗ **aether-daily-sections.json**: data exists but is NOT referenced in hq.html — invisible to user
 - ✗ **hq-state.json**: data exists but is NOT referenced in hq.html — invisible to user
 - ✗ **morning-report.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **usage-config.json**: data exists but is NOT referenced in hq.html — invisible to user
+- ✗ **remote-access.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-004** is relevant to aether
@@ -53,6 +60,6 @@ Questions for aether to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 11
-- Gate results: trigger=6/7, visibility=checked, resolutions=6, adoption=-1/5
+- Findings: 14
+- Gate results: trigger=22/27, visibility=checked, resolutions=6, adoption=-1/5
 
