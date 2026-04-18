@@ -2642,9 +2642,19 @@ async function renderAnt(container) {
   const todayCost = costs.today || {};
   const totalToday = (todayCost.anthropic || 0) + (todayCost.openai || 0);
   const monthCost = costs.month || {};
-  const totalMonth = (monthCost.anthropic || 0) + (monthCost.openai || 0);
+  const totalAPICosts = (monthCost.anthropic || 0) + (monthCost.openai || 0);
 
-  const netMonthly = (revenue.monthly || 0) - totalMonth;
+  // Sum ALL expenses (API + infra + other) for true total burn
+  const expData = data.expenses || {};
+  const allExpItems = [...(expData.api || []), ...(expData.infrastructure || []), ...(expData.other || [])];
+  const totalAllExpenses = allExpItems.length > 0
+    ? allExpItems.reduce((s, e) => s + (e.actual || 0), 0)
+    : totalAPICosts;
+
+  const incomeData = data.income || {};
+  const totalIncomeMTD = incomeData.total_monthly || revenue.monthly || 0;
+
+  const netMonthly = totalIncomeMTD - totalAllExpenses;
   const netColor = netMonthly >= 0 ? 'var(--success)' : 'var(--error)';
 
   // ── HEADER ──
@@ -2658,12 +2668,12 @@ async function renderAnt(container) {
 
   // ── NET POSITION (lead with the thing Hyo cares most about) ──
   html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-    ${antStatBox('Net This Month', antFmt(netMonthly), netMonthly < 0 ? 'expenses exceed revenue' : 'profitable', netColor)}
-    ${antStatBox('Monthly Burn', antFmt(totalMonth), `${antFmt(totalMonth / new Date().getDate())}/day avg`, 'var(--error)')}
+    ${antStatBox('Net This Month', antFmt(netMonthly), netMonthly < 0 ? 'expenses > revenue' : 'profitable', netColor)}
+    ${antStatBox('Total Burn MTD', antFmt(totalAllExpenses), `API + infra + other`, 'var(--error)')}
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-    ${antStatBox('Revenue MTD', antFmt(revenue.monthly || 0), revenue.source || 'all streams', 'var(--success)')}
-    ${antStatBox("Today's Cost", antFmt(totalToday), `Anthropic + OpenAI`, totalToday > (burn.dailyBudget || 50) ? 'var(--error)' : 'var(--text-primary)')}
+    ${antStatBox('Income MTD', antFmt(totalIncomeMTD), totalIncomeMTD === 0 ? 'pre-launch' : 'all streams', 'var(--success)')}
+    ${antStatBox("Today's API Cost", antFmt(totalToday), `Anthropic + OpenAI`, totalToday > (burn.dailyBudget || 50) ? 'var(--error)' : 'var(--text-primary)')}
   </div>`;
 
   // ── CREDIT BALANCES (horizontal bars) ──
@@ -2759,20 +2769,66 @@ async function renderAnt(container) {
     html += antSection('Cost per Agent (Apr MTD)', agentRows);
   }
 
-  // ── REVENUE ──
-  html += antSection('Revenue', `
-    <div style="display:grid;gap:10px;">
-      ${revenue.streams ? revenue.streams.map(s => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+  // ── INFRASTRUCTURE EXPENSES ──
+  const expenses = data.expenses || {};
+  const infraItems = expenses.infrastructure || [];
+  const apiItems = expenses.api || [];
+  const otherItems = expenses.other || [];
+  const allExpenses = [...apiItems, ...infraItems, ...otherItems];
+
+  if (allExpenses.length > 0) {
+    const totalExpenses = allExpenses.reduce((s, e) => s + (e.actual || 0), 0);
+    const expRows = allExpenses.map(e => {
+      const pct = e.budget > 0 ? Math.min((e.actual / e.budget) * 100, 100) : 0;
+      const col = pct > 85 ? 'var(--error)' : pct > 60 ? 'var(--warning)' : 'var(--text-secondary)';
+      const isApi = e.category === 'api';
+      return `<div style="padding:8px 0;border-bottom:1px solid var(--border-color);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+          <span style="font-size:0.875em;font-weight:${isApi ? '600' : '500'};color:var(--text-primary);">${e.name}</span>
+          <span style="font-size:0.875em;font-weight:700;color:${e.actual > 0 ? 'var(--error)' : 'var(--text-muted)'};">${antFmt(e.actual)}</span>
+        </div>
+        ${e.budget > 0 ? `<div style="background:var(--bg-tertiary);border-radius:3px;height:4px;margin-bottom:4px;">
+          <div style="width:${pct.toFixed(0)}%;background:${col};height:100%;border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:0.68em;color:var(--text-muted);">${e.note || ''}</span>
+          <span style="font-size:0.68em;color:var(--text-muted);">${antFmt(e.budget)} budget</span>
+        </div>` : `<div style="font-size:0.68em;color:var(--text-muted);">${e.note || ''}</div>`}
+      </div>`;
+    }).join('');
+    html += antSection('Monthly Expenses', `
+      ${expRows}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;">
+        <span style="font-weight:600;">Total Expenses MTD</span>
+        <span style="font-size:1.1em;font-weight:700;color:var(--error);">${antFmt(totalExpenses)}</span>
+      </div>
+    `);
+  }
+
+  // ── INCOME / REVENUE STREAMS ──
+  const income = data.income || {};
+  const incomeStreams = income.streams || revenue.streams || [];
+  const totalIncome = income.total_monthly || revenue.monthly || 0;
+
+  html += antSection('Income', `
+    <div style="display:grid;gap:4px;">
+      ${incomeStreams.length > 0 ? incomeStreams.map(s => {
+        const amt = s.monthly != null ? s.monthly : (s.amount || 0);
+        const statusColor = s.status === 'active' ? 'var(--success)' : s.status === 'pre-launch' ? 'var(--warning)' : 'var(--text-muted)';
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
           <div>
             <div style="font-size:0.875em;font-weight:600;">${s.name}</div>
-            <div style="font-size:0.75em;color:var(--text-muted);">${s.note || ''}</div>
+            <div style="display:flex;gap:8px;align-items:center;margin-top:2px;">
+              <span style="font-size:0.68em;padding:2px 6px;border-radius:10px;background:var(--bg-tertiary);color:${statusColor};font-weight:600;">${s.status || 'planned'}</span>
+              <span style="font-size:0.72em;color:var(--text-muted);">${s.note || ''}</span>
+            </div>
           </div>
-          <div style="font-weight:700;color:var(--success);">${antFmt(s.amount)}</div>
-        </div>`).join('') : `<div style="font-size:0.875em;color:var(--text-muted);">No revenue streams yet — this is the mission.</div>`}
-      <div style="display:flex;justify-content:space-between;padding-top:8px;">
-        <span style="font-weight:600;">Total MTD</span>
-        <span style="font-weight:700;color:var(--success);">${antFmt(revenue.monthly || 0)}</span>
+          <div style="font-weight:700;color:${amt > 0 ? 'var(--success)' : 'var(--text-muted)'};">${amt > 0 ? antFmt(amt) : '—'}</div>
+        </div>`;
+      }).join('') : `<div style="font-size:0.875em;color:var(--text-muted);padding:8px 0;">No active revenue streams — this is the mission.</div>`}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;">
+        <span style="font-weight:600;">Total Income MTD</span>
+        <span style="font-size:1.1em;font-weight:700;color:${totalIncome > 0 ? 'var(--success)' : 'var(--text-muted)'};">${totalIncome > 0 ? antFmt(totalIncome) : '$0.00'}</span>
       </div>
     </div>
   `);

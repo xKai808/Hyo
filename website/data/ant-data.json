@@ -42,6 +42,30 @@
     "trend": "stable",
     "monthlyProjected": 7.79
   },
+  "expenses": {
+    "_note": "All monthly costs for the full hyo.world business stack. API costs duplicated from costs.month for P&L rollup. Infra costs are fixed monthly. Update actual values when bills come in.",
+    "api": [
+      {"name": "Anthropic API", "category": "api", "actual": 6.62, "budget": 50.00, "type": "variable", "note": "Claude Sonnet/Opus — LLM backbone"},
+      {"name": "OpenAI API", "category": "api", "actual": 0.96, "budget": 10.00, "type": "variable", "note": "GPT-4o — adversarial analysis crosscheck"}
+    ],
+    "infrastructure": [
+      {"name": "Vercel", "category": "infra", "actual": 0.00, "budget": 0.00, "type": "fixed", "note": "Hosting — free tier"},
+      {"name": "Domain (hyo.world)", "category": "infra", "actual": 1.42, "budget": 1.50, "type": "fixed", "note": "$17/yr ÷ 12"},
+      {"name": "bore.pub tunnel", "category": "infra", "actual": 0.00, "budget": 5.00, "type": "fixed", "note": "SSH tunnel to Mac Mini — confirm monthly rate"},
+      {"name": "GitHub", "category": "infra", "actual": 0.00, "budget": 0.00, "type": "fixed", "note": "Free tier"}
+    ],
+    "other": []
+  },
+  "income": {
+    "_note": "All revenue streams — current and projected. Add actual values as they materialize.",
+    "streams": [
+      {"name": "AetherBot", "category": "trading", "monthly": 0, "status": "pre-launch", "note": "Trading P&L from Kraken; target: $500/mo at scale"},
+      {"name": "Aurora Subscriptions", "category": "saas", "monthly": 0, "status": "pre-launch", "note": "Newsletter platform; target: $29/mo × subscribers"},
+      {"name": "hyo.world Newsletter", "category": "media", "monthly": 0, "status": "pre-launch", "note": "Paid subscribers via Ra pipeline"},
+      {"name": "NFT Marketplace Fees", "category": "marketplace", "monthly": 0, "status": "planned", "note": "HyoRegistry transaction fees — TBD"}
+    ],
+    "total_monthly": 0
+  },
   "revenue": {
     "monthly": 0,
     "source": "pre-launch",
