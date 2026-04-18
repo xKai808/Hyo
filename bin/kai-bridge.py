@@ -111,7 +111,8 @@ class BridgeHandler(http.server.BaseHTTPRequestHandler):
             self.send_json(400, {"ok": False, "error": "invalid JSON body"})
             return
 
-        cmd = body.get("cmd", "").strip()
+        # Accept both "cmd" and "command" for compatibility with submit.py
+        cmd = (body.get("cmd") or body.get("command") or "").strip()
         if not cmd:
             self.send_json(400, {"ok": False, "error": "cmd is required"})
             return
