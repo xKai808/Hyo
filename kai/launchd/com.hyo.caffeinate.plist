@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.caffeinate</string>
+
+  <!-- caffeinate -i: prevent idle system sleep indefinitely.
+       This keeps the Mini awake so the queue worker, agents,
+       and Tailscale continue running when Hyo is not present. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/caffeinate</string>
+    <string>-i</string>
+  </array>
+
+  <!-- KeepAlive: restart immediately if caffeinate exits for any reason -->
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/com.hyo.caffeinate.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/tmp/com.hyo.caffeinate.err</string>
+</dict>
+</plist>

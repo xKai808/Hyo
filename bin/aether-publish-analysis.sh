@@ -128,13 +128,13 @@ new_entry = {
     "authorColor": "#e8c96a",
     "timestamp": now_mt,
     "date": date,
+    "readLink": f"/aether-analysis?date={date}",
     "sections": {
         "summary": summary or "(no summary extracted)",
         "trades":  trades  or "See full analysis for trade-by-trade breakdown.",
         "risk":    risk    or "See full analysis for risk events.",
         "balance": balance or "See full analysis for balance ledger update.",
         "btc":     btc     or "See full analysis for BTC context.",
-        "readLink": f"/aether-analysis?date={date}"
     }
 }
 

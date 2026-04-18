@@ -8,12 +8,13 @@
 
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/bin/python3</string>
+    <string>/opt/homebrew/bin/python3</string>
     <string>/Users/kai/Documents/Projects/Hyo/bin/kai-bridge.py</string>
   </array>
 
+  <!-- /tmp avoids macOS TCC block on ~/Documents from launchd context -->
   <key>WorkingDirectory</key>
-  <string>/Users/kai/Documents/Projects/Hyo</string>
+  <string>/tmp</string>
 
   <key>EnvironmentVariables</key>
   <dict>
