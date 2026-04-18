@@ -388,7 +388,8 @@ def run_analysis():
     # Save outputs
     output_dir = os.path.expanduser("~/Documents/Projects/AetherBot/Kai analysis")
     os.makedirs(output_dir, exist_ok=True)
-    output_path = os.path.join(output_dir, f"Analysis_{datetime.datetime.now().strftime('%Y-%m-%d')}.txt")
+    _out_date = os.environ.get("AETHER_LOG_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")
+    output_path = os.path.join(output_dir, f"Analysis_{_out_date}.txt")
     with open(output_path, "w") as f:
         f.write(f"=== CLAUDE PRIMARY ANALYSIS ===\n{claude_analysis}\n\n")
         f.write(f"=== GPT CRITIQUE ===\n{gpt_critique}\n\n")
