@@ -568,6 +568,16 @@ ERROR-TO-GATE PROTOCOL (mandatory — ALL agents, ALL errors):
        - "Should I verify?"
        - "Is everything working?"
 
+  3b. OPEN A TICKET (mandatory — new step, PROTOCOL-002)
+     Every error → one ACTIVE ticket in tickets.jsonl with:
+       - owner (which agent or Kai)
+       - deadline (≤48h for P0/P1, ≤1 week for P2)
+       - gate_question field
+     Gate question: "Is there any session-errors.jsonl entry without a
+     corresponding ACTIVE or RESOLVED ticket?" YES → open it before
+     any other work. A log entry is not a work item. Only a ticket with
+     an owner and deadline creates accountability.
+
   4. PLACE THE GATE in the right location
      Where does the question go? It must live where it will be ASKED,
      not where it will be read. A question in a doc nobody reads is not a gate.
