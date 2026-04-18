@@ -24,7 +24,10 @@ from collections import defaultdict
 from datetime import datetime, date, timedelta, timezone
 
 tz_mt = timezone(timedelta(hours=-6))
+today = date.today()
+today_str = today.isoformat()
 
+# ── Load records ──────────────────────────────────────────────────────────────
 records = []
 with open("$USAGE_FILE") as f:
     for line in f:
@@ -35,29 +38,37 @@ with open("$USAGE_FILE") as f:
             except:
                 pass
 
-# By provider
-by_provider = defaultdict(float)
-for r in records:
-    by_provider[r['provider']] += r['cost_usd']
+# ── Aggregate: provider, date, agent, model ───────────────────────────────────
+by_provider       = defaultdict(float)
+by_date_provider  = defaultdict(lambda: defaultdict(float))
+by_agent          = defaultdict(float)
+by_model          = defaultdict(lambda: {'calls': 0, 'cost': 0.0})
 
-# By date+provider
-by_date_provider = defaultdict(lambda: defaultdict(float))
-for r in records:
-    by_date_provider[r['date']][r['provider']] += r['cost_usd']
+# Cost-per-process: new field (process_name in newer entries)
+by_process        = defaultdict(lambda: {'runs': 0, 'total_cost': 0.0, 'last_run': ''})
 
-# By agent
-by_agent = defaultdict(float)
 for r in records:
-    by_agent[r['agent']] += r['cost_usd']
+    # Normalize field names (older records use 'cost_usd', newer may differ)
+    cost = float(r.get('cost_usd', r.get('estimated_cost_usd', 0.0)))
+    provider = r.get('provider', 'openai' if 'gpt' in r.get('model','') else 'anthropic')
+    d = r.get('date', r.get('ts', today_str)[:10])
+    agent = r.get('agent', 'unknown')
+    model = r.get('model', 'unknown')
+    process = r.get('process_name', agent)  # fallback to agent name
 
-# By model
-by_model = defaultdict(lambda: {'calls': 0, 'cost': 0.0})
-for r in records:
-    by_model[r['model']]['calls'] += 1
-    by_model[r['model']]['cost'] += r['cost_usd']
+    by_provider[provider] += cost
+    by_date_provider[d][provider] += cost
+    by_agent[agent] += cost
+    by_model[model]['calls'] += 1
+    by_model[model]['cost'] += cost
 
-# 14-day history
-today = date.today()
+    by_process[process]['runs'] += 1
+    by_process[process]['total_cost'] += cost
+    ts = r.get('ts', r.get('date', ''))
+    if ts > by_process[process]['last_run']:
+        by_process[process]['last_run'] = ts
+
+# ── 14-day history ────────────────────────────────────────────────────────────
 history = []
 for i in range(13, -1, -1):
     d = (today - timedelta(days=i)).isoformat()
@@ -65,39 +76,84 @@ for i in range(13, -1, -1):
     oai = by_date_provider[d].get('openai', 0.0)
     history.append({"date": d, "anthropic": round(ant, 4), "openai": round(oai, 4), "total": round(ant + oai, 4)})
 
-# Compute daily burn from last 7 days
-recent_days = [(today - timedelta(days=i)).isoformat() for i in range(7)]
+# ── Burn rate ─────────────────────────────────────────────────────────────────
+recent_days  = [(today - timedelta(days=i)).isoformat() for i in range(7)]
 recent_costs = [sum(by_date_provider[d].values()) for d in recent_days if by_date_provider[d]]
-daily_avg = sum(recent_costs) / max(len(recent_costs), 1)
+daily_avg    = sum(recent_costs) / max(len(recent_costs), 1)
 
+# Today's spend
+today_spend = sum(by_date_provider[today_str].values())
+
+# ── Budget alert logic ────────────────────────────────────────────────────────
+DAILY_ALERT_USD = 1.00   # Warn Hyo if any single day exceeds \$1
+PROCESS_ALERT_USD = 0.50 # Warn if any single process run exceeds \$0.50/run
+alerts = []
+
+if today_spend > DAILY_ALERT_USD:
+    alerts.append({
+        "level": "WARNING",
+        "msg": f"Today's API spend (\${today_spend:.4f}) exceeds daily alert threshold (\${DAILY_ALERT_USD:.2f})",
+        "ts": datetime.now(tz_mt).isoformat()
+    })
+
+# Check process-level: if any process has avg cost > threshold
+for proc, stats in by_process.items():
+    avg = stats['total_cost'] / max(stats['runs'], 1)
+    if avg > PROCESS_ALERT_USD:
+        alerts.append({
+            "level": "WARNING",
+            "msg": f"Process '{proc}' avg \${avg:.4f}/run over {stats['runs']} runs — exceeds \${PROCESS_ALERT_USD:.2f} threshold",
+            "ts": datetime.now(tz_mt).isoformat()
+        })
+
+# ── Totals ────────────────────────────────────────────────────────────────────
 total_anthropic = by_provider.get('anthropic', 0.0)
-total_openai = by_provider.get('openai', 0.0)
-total_cost = total_anthropic + total_openai
+total_openai    = by_provider.get('openai', 0.0)
+total_cost      = total_anthropic + total_openai
 
+# ── Build output ──────────────────────────────────────────────────────────────
 data = {
-    "status": "active",
-    "note": "Costs sourced from kai/ledger/api-usage.jsonl. Self-reported via api-usage.sh instrumentation. Admin API key not configured.",
-    "updatedAt": datetime.now(tz_mt).isoformat(),
+    "status":     "active",
+    "note":       "Costs sourced from kai/ledger/api-usage.jsonl. Self-reported per process. Admin API key not configured.",
+    "updatedAt":  datetime.now(tz_mt).isoformat(),
     "dataSource": "api-usage.jsonl",
+    "staleness":  {
+        "lastUpdated": datetime.now(tz_mt).isoformat(),
+        "staleAfterHours": 24,
+        "note": "If updatedAt is >24h ago, Ant data is stale — check ant-update.sh cron"
+    },
+    "alerts": alerts,
     "costs": {
         "anthropic": {"total": round(total_anthropic, 4), "currency": "USD"},
-        "openai": {"total": round(total_openai, 4), "currency": "USD"},
-        "total": round(total_cost, 4)
+        "openai":    {"total": round(total_openai, 4),    "currency": "USD"},
+        "total":     round(total_cost, 4),
+        "today":     round(today_spend, 4)
     },
     "burn": {
-        "daily": round(daily_avg, 4),
+        "daily":       round(daily_avg, 4),
         "dailyBudget": 50,
         "pctOfBudget": round(daily_avg / 50 * 100, 1),
-        "trend": "stable" if len(recent_costs) >= 3 else "insufficient_data"
+        "trend":       "stable" if len(recent_costs) >= 3 else "insufficient_data",
+        "alertThreshold": DAILY_ALERT_USD
     },
+    "byProcess": [
+        {
+            "process":    k,
+            "runs":       v['runs'],
+            "totalCost":  round(v['total_cost'], 6),
+            "avgPerRun":  round(v['total_cost'] / max(v['runs'], 1), 6),
+            "lastRun":    v['last_run']
+        }
+        for k, v in sorted(by_process.items(), key=lambda x: -x[1]['total_cost'])
+    ],
     "revenue": {"monthly": 0, "streams": []},
     "credits": {
         "anthropic": {"available": None, "note": "Admin API key required"},
-        "openai": {"available": None, "note": "Admin API key required"}
+        "openai":    {"available": None, "note": "Admin API key required"}
     },
     "models": [
         {"name": k, "calls": v['calls'], "cost": round(v['cost'], 4)}
-        for k, v in by_model.items()
+        for k, v in sorted(by_model.items(), key=lambda x: -x[1]['cost'])
     ],
     "agents": [
         {"name": k, "cost": round(v, 4)}
@@ -109,15 +165,16 @@ data = {
 out = json.dumps(data, indent=2)
 print(out)
 
-# Write both paths
 for path in ["$ANT_FILE", "$ANT_FILE2"]:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         f.write(out + "\n")
 
 print(f"\n[ant-update] Written to $ANT_FILE", file=sys.stderr)
-print(f"[ant-update] Written to $ANT_FILE2", file=sys.stderr)
-print(f"[ant-update] Total cost: \${data['costs']['total']:.4f}", file=sys.stderr)
+print(f"[ant-update] Today spend: \${today_spend:.4f} | Total: \${total_cost:.4f}", file=sys.stderr)
+if alerts:
+    for a in alerts:
+        print(f"[ant-update] {a['level']}: {a['msg']}", file=sys.stderr)
 PYEOF
 
 echo "[ant-update] Done."
