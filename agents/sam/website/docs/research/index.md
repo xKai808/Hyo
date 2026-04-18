@@ -1,24 +1,6 @@
 # Ra Research Archive — Index
 
-*Auto-generated 2026-04-15T22:30:00Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
-
-## Briefs (13)
-
-| Name | Agent | Date |
-| --- | --- | --- |
-| [Aether Research Findings — 2026-04-15](briefs/aether-2026-04-15.md) | Aether | 2026-04-15 |
-| [Dex Research Findings — 2026-04-15](briefs/dex-2026-04-15.md) | Dex | 2026-04-15 |
-| [Nel Research Findings — 2026-04-15](briefs/nel-2026-04-15.md) | Nel | 2026-04-15 |
-| [Aether Research Findings — 2026-04-14](briefs/aether-2026-04-14.md) | Aether | 2026-04-14 |
-| [Dex Research Findings — 2026-04-14](briefs/dex-2026-04-14.md) | Dex | 2026-04-14 |
-| [Nel Research Findings — 2026-04-14](briefs/nel-2026-04-14.md) | Nel | 2026-04-14 |
-| [Ra Research Findings — 2026-04-14](briefs/ra-2026-04-14.md) | Ra | 2026-04-14 |
-| [Aether Research Findings — 2026-04-13](briefs/aether-2026-04-13.md) | Aether | 2026-04-13 |
-| [Dex Research Findings — 2026-04-13](briefs/dex-2026-04-13.md) | Dex | 2026-04-13 |
-| [Nel Research Findings — 2026-04-13](briefs/nel-2026-04-13.md) | Nel | 2026-04-13 |
-| [Ra Research Findings — 2026-04-13](briefs/ra-2026-04-13.md) | Ra | 2026-04-13 |
-| [Sam Research Findings — 2026-04-13](briefs/sam-2026-04-13.md) | Sam | 2026-04-13 |
-| [Ra brief · 2026-04-11](briefs/2026-04-11.md) | Ra | 2026-04-11 |
+*Auto-generated 2026-04-12T01:22:11Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
 
 ## Entities (5)
 

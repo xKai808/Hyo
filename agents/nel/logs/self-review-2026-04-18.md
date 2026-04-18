@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-04-18T00:30
+# nel Self-Review — 2026-04-18T02:00
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-18-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -36,6 +36,7 @@ Questions for nel to answer:
 ## Gate 5: Gate Adoption
 - ✗ **aether/verify.sh** does not source agent-gates.sh
 - ✗ **dex/repair.sh** does not source agent-gates.sh
+- ✗ **hyo/hyo.sh** does not source agent-gates.sh
 - ✗ **nel/sentinel-adapt.sh** does not source agent-gates.sh
 - ✗ **nel/verify.sh** does not source agent-gates.sh
 - ✗ **ra/verify.sh** does not source agent-gates.sh
@@ -49,6 +50,6 @@ Questions for nel to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 10
-- Gate results: trigger=27/28, visibility=checked, resolutions=5, adoption=-1/5
+- Findings: 11
+- Gate results: trigger=20/21, visibility=checked, resolutions=5, adoption=-2/5
 

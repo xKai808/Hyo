@@ -1,31 +1,36 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-18T06:57:33Z
+Last updated: 2026-04-18T08:14:47Z
 
 ## In Progress
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit: 1 critical issues found
-  - Delegated: 2026-04-16T08:04:35Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
+  - Delegated: 2026-04-18T08:14:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS
-  - Delegated: 2026-04-16T08:05:53Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-004): Daily audit 2026-04-18: 33 stale queued flags >48h across all 5 agents (nel:24, sam:4, ra:3, aether:1, dex:1); aether dashboard-sync drift recurring (flag-aether-001 unresolved since 04-14, new WARN tonight at 01:56); dex Phase 1 JSONL corruption unresolved since 04-14; 6 stale failed queue jobs (oldest 04-12); 8 [K]/[AUTOMATE] items idle >5 days (website sync permanent fix, post-deploy API test, kai-hydrate cmd, context-save task, no-newsletter sentinel, watch-deploy launchd, UTC timestamp check)
+  - Delegated: 2026-04-18T08:07:14Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
+
+- **sam-003** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-18: 33 stale queued flags >48h across all 5 agents (nel:24, sam:4, ra:3, aether:1, dex:1); aether dashboard-sync drift recurring (flag-aether-001 unresolved since 04-14, new WARN tonight at 01:56); dex Phase 1 JSONL corruption unresolved since 04-14; 6 stale failed queue jobs (oldest 04-12); 8 [K]/[AUTOMATE] items idle >5 days (website sync permanent fix, post-deploy API test, kai-hydrate cmd, context-save task, no-newsletter sentinel, watch-deploy launchd, UTC timestamp check) (flagged by kai, cascade flag-kai-004)
+  - Delegated: 2026-04-18T08:07:14Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 
-- **sam-004** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-16: 5 agents have queued items >48h without status update (nel:20+, sam:4, ra:3, aether:1, dex:1); sam evolution.jsonl stale 76h; aether runner no output today; 3 MCP install jobs failed in queue (github,reddit,youtube); 18 [AUTOMATE] items backlogged in KAI_TASKS (flagged by kai, cascade flag-kai-003)
-  - Delegated: 2026-04-16T08:05:53Z
+- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-aether-002): Dashboard sync drift recurring: flag-aether-001 open since 2026-04-14; tonight's runner logged WARN 'Dashboard out of sync local 01:56:18 vs API 01:41:07' — same pattern. Need systemic fix (publish→verify→reconcile loop) not per-cycle WARN.
+  - Delegated: 2026-04-18T08:07:18Z
   - Method: Included viewer.html in sam-002 batch edit
   - Status: DELEGATED — viewer.html already added in sam-002 batch. Test confirms it passes.
 
-- **sam-005** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T03:30:20Z
+- **sam-005** [P1] [AUTO-REMEDIATE] Dashboard sync drift recurring: flag-aether-001 open since 2026-04-14; tonight's runner logged WARN 'Dashboard out of sync local 01:56:18 vs API 01:41:07' — same pattern. Need systemic fix (publish→verify→reconcile loop) not per-cycle WARN. (flagged by aether, cascade flag-aether-002)
+  - Delegated: 2026-04-18T08:07:18Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **sam-006** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-014): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
-  - Delegated: 2026-04-13T03:31:03Z
+- **sam-006** [P1] SAFEGUARD: Add test coverage for issue (flag-dex-002): Phase 1 JSONL corruption unresolved since 2026-04-14 (flag-dex-001): 2 JSONL files have corrupt entries. 4+ days stale as P2 — upgrading to P1. Need root-cause trace of which writer is producing malformed records and a schema-validation gate at append time.
+  - Delegated: 2026-04-18T08:07:23Z
   - Status: DELEGATED
 
 - **sam-009** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-020): No newsletter produced for 2026-04-12 — past 06:00 MT deadline
@@ -71,10 +76,6 @@ Last updated: 2026-04-18T06:57:33Z
 - **sam-008** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): Detected stale path reference in consolidate.sh — 2026-04-12T20:14:16Z (DONE)
 
 - **sam-007** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-13T03:33:16Z (DONE)
-  - Result: sim-report: all clear
-  - Notes: sim-verify: nightly handshake passed
-
-- **sam-001** [P3] SIM-TEST: nightly delegation handshake verification — 2026-04-18T06:30:06Z (DONE)
   - Result: sim-report: all clear
   - Notes: sim-verify: nightly handshake passed
 

@@ -1,5 +1,5 @@
 {
-  "ts": "2026-04-18T07:38:44Z",
+  "ts": "2026-04-18T08:08:48Z",
   "status": "ISSUES",
   "issues": 6,
   "warnings": 4,
@@ -7,12 +7,12 @@
     {
       "severity": "P1",
       "area": "flags",
-      "detail": "1 unaddressed P0/P1 flags in last 2h"
+      "detail": "5 unaddressed P0/P1 flags in last 2h"
     },
     {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker last active 493471h ago \u2014 may be dead"
+      "detail": "Worker last active 493472h ago \u2014 may be dead"
     },
     {
       "severity": "P0",
@@ -58,33 +58,33 @@
   "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776497904-3678",
+      "id": "recheck-flag-dex-002",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull origin main --ff-only 2>&1 | tail -3 && ",
+      "command": "bash /sessions/modest-funny-fermi/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776497771-3549",
+      "id": "event-dex-flag-dex-002",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull origin main --ff-only 2>&1 | tail -3 && ",
+      "command": "bash /sessions/modest-funny-fermi/mnt/Hyo/agents/dex/dex.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776496521-3222",
+      "id": "recheck-flag-aether-002",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && HYO_ROOT=$HOME/Documents/Projects/Hyo python3 bin",
+      "command": "bash /sessions/modest-funny-fermi/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776496152-3198",
+      "id": "event-sam-flag-aether-002",
       "status": "ok",
-      "command": "cp ~/Documents/Projects/Hyo/kai/launchd/com.hyo.podcast.plist ~/Library/LaunchAg",
+      "command": "bash /sessions/modest-funny-fermi/mnt/Hyo/agents/sam/sam.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776496144-3173",
+      "id": "recheck-flag-kai-004",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull origin main --ff-only 2>&1 | tail -3 && ",
+      "command": "bash /sessions/modest-funny-fermi/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     }
   ],
