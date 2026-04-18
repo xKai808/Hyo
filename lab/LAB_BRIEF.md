@@ -63,8 +63,8 @@ This needs to change. Kai's job is to figure out how.
 
 These run autonomously. Kai researches, writes findings, and routes action items to the right place.
 
-- [ ] **RESEARCH-001**: Competitor analysis — what are similar AI/newsletter SaaS products charging? (Substack, Beehiiv, Gamma, similar)
-- [ ] **RESEARCH-002**: Aurora pricing strategy — what's the right price point for a personalized AI newsletter? Survey comparable products.
+- [x] **RESEARCH-001**: Competitor analysis — **DONE 2026-04-18**. See `lab/research/RESEARCH-001-002-aurora-pricing.md`. Key: aurora $19/mo correctly positioned. Competitors: alfred_ $24.99, ChatGPT/Claude $20, Superhuman $14.99-25. Price is right.
+- [x] **RESEARCH-002**: Aurora pricing strategy — **DONE 2026-04-18**. Key finding: price is NOT the issue. AI apps lose 79% of subscribers annually. Fix: extend trial 2→14 days, Day 7 retention email, weekly interest digest. See research doc.
 - [ ] **RESEARCH-003**: AetherBot strategy scaling — what would $1,000 capital at current win rate generate? What's the realistic ceiling?
 - [ ] **RESEARCH-004**: AI automation services market — what do businesses pay for custom AI agents? Who are the buyers?
 - [ ] **RESEARCH-005**: Newsletter monetization models — Substack vs Beehiiv vs Aurora self-hosted. Which maximizes take-home on 100 subscribers?
@@ -77,4 +77,6 @@ These run autonomously. Kai researches, writes findings, and routes action items
 | Date | Research | Finding | Action |
 |------|----------|---------|--------|
 | 2026-04-17 | Initial setup | See above financial picture | Created Lab, queued research |
+| 2026-04-18 | RESEARCH-001: Competitor pricing | Alfred $24.99, ChatGPT/Claude $20, Superhuman $14.99. Aurora $19 is correctly positioned. | No price change needed |
+| 2026-04-18 | RESEARCH-002: Aurora churn risk | AI apps lose 79% of annual subscribers. Current 2-day trial is too short. Day 7 is peak churn moment. | Extend trial 14 days, build Day 7 retention email |
 
