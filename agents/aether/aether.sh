@@ -379,23 +379,21 @@ PYEOF
   log "Today: $buy_snapshots trades (BUY SNAPSHOT), $ticker_closes ticker closes"
 }
 
-# ─── GPT Daily Log Review ────────────────────────────────────────────────────
-# Sends today's AetherBot raw log to GPT-4o for independent analysis,
-# pattern detection, and fact-checking of trading decisions.
-# Runs once per day — skips if GPT_CrossCheck already exists for today.
-# Output: agents/aether/analysis/GPT_CrossCheck_YYYY-MM-DD.txt
+# ─── GPT Two-Phase Analysis — S18-017 Independence Gate ─────────────────────
+# Phase 1: GPT sees raw log ONLY → GPT_Independent_DATE.txt
+# Phase 2: GPT sees Phase1 + Kai analysis → GPT_Review_DATE.txt
+# Gate: Phase 2 ONLY runs if Phase 1 file exists.
+# This prevents GPT from being seeded by Kai's framing before forming its own view.
+#
+# Called as: gpt_daily_log_review (backward-compat name kept for call site below)
 #
 gpt_daily_log_review() {
   local today
   today=$(TZ="America/Denver" date +%Y-%m-%d)
-  local crosscheck_file="$ROOT/agents/aether/analysis/GPT_CrossCheck_${today}.txt"
+  local independent_file="$ROOT/agents/aether/analysis/GPT_Independent_${today}.txt"
+  local review_file="$ROOT/agents/aether/analysis/GPT_Review_${today}.txt"
+  local crosscheck_file="$ROOT/agents/aether/analysis/GPT_CrossCheck_${today}.txt"  # backward compat
   local factcheck_script="$ROOT/agents/aether/analysis/gpt_factcheck.py"
-
-  # Skip if already reviewed today
-  if [[ -f "$crosscheck_file" ]] && ! grep -q "PENDING" "$crosscheck_file" 2>/dev/null; then
-    log "GPT daily log review: already exists for $today, skipping"
-    return 0
-  fi
 
   # Verify factcheck script exists
   if [[ ! -f "$factcheck_script" ]]; then
@@ -403,7 +401,7 @@ gpt_daily_log_review() {
     return 0
   fi
 
-  # Find today's log (same logic as extract_aether_metrics_from_logs)
+  # Find today's log
   local log_file=""
   local agents_log="$LOGS/AetherBot_${today}.txt"
   local aetherbot_log="$HOME/Documents/Projects/AetherBot/Logs/AetherBot_${today}.txt"
@@ -415,7 +413,7 @@ gpt_daily_log_review() {
   fi
 
   if [[ -z "$log_file" ]]; then
-    log "GPT daily log review: no AetherBot log found for $today, skipping"
+    log "GPT analysis: no AetherBot log found for $today, skipping"
     return 0
   fi
 
@@ -423,26 +421,57 @@ gpt_daily_log_review() {
   local line_count
   line_count=$(wc -l < "$log_file" 2>/dev/null || echo "0")
   if [[ "$line_count" -lt 500 ]]; then
-    log "GPT daily log review: log only has $line_count lines, waiting for more data (need 500+)"
+    log "GPT analysis: log only has $line_count lines, waiting for more data (need 500+)"
     return 0
   fi
 
-  log "GPT daily log review: sending $log_file ($line_count lines) to GPT-4o..."
+  # ── Phase 1: Independent Review ───────────────────────────────────────────
+  if [[ -f "$independent_file" ]] && ! grep -q "PENDING" "$independent_file" 2>/dev/null; then
+    log "GPT Phase 1: already complete for $today, skipping"
+  else
+    log "GPT Phase 1 (independent): sending $log_file ($line_count lines) to GPT-4o..."
+    local p1_result
+    if p1_result=$(HYO_ROOT="$ROOT" python3 "$factcheck_script" --phase1 "$today" 2>&1); then
+      log "GPT Phase 1: complete — saved to GPT_Independent_${today}.txt"
+    else
+      log "GPT Phase 1: FAILED — $p1_result"
+      echo "PENDING — Phase 1 failed at $(TZ='America/Denver' date). Will retry next cycle." > "$independent_file"
+      return 0  # Don't attempt Phase 2 if Phase 1 failed
+    fi
+  fi
 
-  # Run the factcheck script in --log mode
-  local result
-  if result=$(HYO_ROOT="$ROOT" python3 "$factcheck_script" --log "$today" 2>&1); then
-    log "GPT daily log review: complete — saved to $crosscheck_file"
+  # ── Phase 2: Cross-Review (Independence Gate) ─────────────────────────────
+  # Gate question: Did Phase 1 complete successfully?
+  if [[ ! -f "$independent_file" ]] || grep -q "PENDING" "$independent_file" 2>/dev/null; then
+    log "GPT Phase 2: GATE BLOCKED — Phase 1 incomplete. Cannot proceed."
+    return 0
+  fi
+
+  if [[ -f "$review_file" ]] && ! grep -q "PENDING" "$review_file" 2>/dev/null; then
+    log "GPT Phase 2: already complete for $today, skipping"
+    return 0
+  fi
+
+  log "GPT Phase 2 (cross-review): sending Phase1 + Kai analysis to GPT-4o..."
+  local p2_result
+  if p2_result=$(HYO_ROOT="$ROOT" python3 "$factcheck_script" --phase2 "$today" 2>&1); then
+    log "GPT Phase 2: complete — saved to GPT_Review_${today}.txt"
 
     # Report to Kai via dispatch
     local dispatch_bin="$ROOT/bin/dispatch.sh"
     if [[ -x "$dispatch_bin" ]]; then
-      bash "$dispatch_bin" report aether "GPT daily log review complete for $today — see GPT_CrossCheck_${today}.txt" 2>> "$LOG" || true
+      bash "$dispatch_bin" report aether \
+        "GPT two-phase analysis complete for $today — Phase1: GPT_Independent_${today}.txt, Phase2: GPT_Review_${today}.txt" \
+        2>> "$LOG" || true
     fi
   else
-    log "GPT daily log review: FAILED — $result"
-    # Write a PENDING marker so we retry next cycle
-    echo "PENDING — GPT review failed at $(TZ='America/Denver' date). Will retry next cycle." > "$crosscheck_file"
+    local exit_code=$?
+    if [[ "$exit_code" -eq 2 ]]; then
+      log "GPT Phase 2: GATE BLOCKED by independence gate (exit 2) — Phase 1 file missing"
+    else
+      log "GPT Phase 2: FAILED — $p2_result"
+      echo "PENDING — Phase 2 failed at $(TZ='America/Denver' date). Will retry next cycle." > "$review_file"
+    fi
   fi
 }
 
@@ -815,9 +844,10 @@ INIT_PYEOF
   # Extract real data from AetherBot logs
   extract_aether_metrics_from_logs
 
-  # ─── GPT Daily Log Review ─────────────────────────────────────────────────
-  # Send today's raw log to GPT-4o for independent analysis + fact-checking.
-  # Runs once per day (checks if GPT_CrossCheck already exists for today).
+  # ─── GPT Two-Phase Analysis (S18-017 Independence Gate) ──────────────────
+  # Phase 1: GPT sees raw log ONLY → GPT_Independent_DATE.txt
+  # Phase 2 (gated): GPT sees Phase1 + Kai analysis → GPT_Review_DATE.txt
+  # Gate: Phase 2 aborts if Phase 1 file is missing (prevents seeding).
   # Hyo directive: "Aether needs to send GPT the day's log so that it can come
   # up with its own analysis and actually factcheck anything that Aether
   # recognizes, wants to change, etc"

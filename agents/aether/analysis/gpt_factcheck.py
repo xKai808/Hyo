@@ -1,18 +1,34 @@
 #!/usr/bin/env python3
 """
-GPT-4o Fact-Check for AetherBot
-================================
-Two modes:
-  1. Analysis fact-check (default): reads today's analysis, sends to GPT-4o
-     for adversarial critique.
-  2. Daily log review (--log): reads today's raw AetherBot log, sends to GPT-4o
-     for independent analysis, pattern detection, and fact-checking of any
-     trading decisions the bot made.
+GPT-4o Fact-Check for AetherBot — Two-Phase Independence Gate
+==============================================================
+S18-017: Guarantees GPT independence before cross-review.
+
+THREE modes:
+  1. --phase1 (alias: --log): GPT sees RAW LOG ONLY.
+     Output: GPT_Independent_DATE.txt
+     Purpose: form an independent view before seeing Kai's analysis.
+
+  2. --phase2: GPT sees Kai's analysis + Phase 1 independent output.
+     Output: GPT_Review_DATE.txt
+     GATE: aborts with exit 2 if GPT_Independent_DATE.txt is missing.
+     Purpose: adversarial cross-check — compare independent view to Kai's.
+
+  3. Default (no flag): legacy analysis fact-check (deprecated, use --phase2).
+     Output: GPT_CrossCheck_DATE.txt
+
+Independence gate rule:
+  Phase 2 NEVER runs without Phase 1 output. This prevents GPT from being
+  seeded with Kai's framing before forming its own view. aether.sh enforces
+  this: run Phase 1 first, check exit code, only then run Phase 2.
 
 Usage:
-  python3 gpt_factcheck.py                   # fact-check today's analysis
-  python3 gpt_factcheck.py --log             # review today's raw log
-  python3 gpt_factcheck.py --log 2026-04-11  # review a specific date's log
+  python3 gpt_factcheck.py --phase1             # Phase 1: raw log → GPT_Independent
+  python3 gpt_factcheck.py --phase1 2026-04-11  # specific date
+  python3 gpt_factcheck.py --phase2             # Phase 2: analysis + Phase1 → GPT_Review
+  python3 gpt_factcheck.py --phase2 2026-04-11  # specific date
+  python3 gpt_factcheck.py --log                # alias for --phase1
+  python3 gpt_factcheck.py                      # legacy: analysis fact-check only
 
 All paths use the post-migration agents/aether/ layout.
 """
@@ -75,6 +91,46 @@ Rules:
 - If the analyst recommended a reactive change, call it out
 - Be direct. Find gaps, not validation.
 - All times MTN."""
+
+# S18-017: Phase 2 — Cross-review prompt. GPT receives BOTH its own independent
+# Phase 1 output AND Kai's analysis. It compares and surfaces divergences.
+SYSTEM_PHASE2_CROSS_REVIEW = """You are Aether's adversarial cross-reviewer. You have two inputs:
+1. Your OWN Phase 1 independent analysis (formed without seeing Kai's work)
+2. Kai's analysis of the same session
+
+Your job: find the GAPS between them.
+
+Specifically:
+- What did you find in Phase 1 that Kai MISSED or downplayed?
+- What did Kai conclude that your Phase 1 analysis CONTRADICTS?
+- Where did Kai frame something correctly that you initially misread?
+- What is the highest-value insight from Phase 1 that Kai should incorporate?
+
+Output structure:
+CROSS-REVIEW VERDICT: [ALIGNED / DIVERGENT / CONTRADICTORY]
+
+SECTION 1: AGREEMENTS
+- List findings where Phase 1 and Kai's analysis agree (briefly)
+
+SECTION 2: KAI MISSED (Phase 1 found this, Kai didn't)
+- For each: quote the specific Phase 1 finding, describe what Kai said/didn't say,
+  state why this matters
+
+SECTION 3: CONTRADICTIONS (Phase 1 vs Kai conflict)
+- For each: state both positions, which is more likely correct and why
+
+SECTION 4: PHASE 1 ERRORS CORRECTED BY KAI
+- Where Kai's deeper analysis reveals a Phase 1 mistake
+
+SECTION 5: ACTION DELTA
+- What Kai should add/change in their analysis based on this cross-review
+- Be specific: "Kai's recommendation to X is [supported/undermined] by Phase 1's finding that Y"
+
+Rules:
+- Do NOT produce arithmetic summaries — find structural insights
+- Every dollar GPT earns must produce something Kai didn't have
+- If Kai and Phase 1 fully agree, say so concisely — don't pad
+- All times MTN"""
 
 SYSTEM_LOG_REVIEW = """You are Aether's daily analyst. You receive a raw AetherBot trading log
 from a Kalshi KXBTC15M binary options session.
@@ -229,10 +285,16 @@ def find_analysis_file(target_date):
     return None
 
 
-# ── Mode: Daily Log Review ────────────────────────────────────────────────────
+# ── Mode: Phase 1 — Independent Log Review ───────────────────────────────────
+# S18-017: GPT sees ONLY the raw log. No Kai analysis. No framing.
+# Output: GPT_Independent_DATE.txt
+# This file is required before Phase 2 can run (independence gate).
 
-def run_log_review(target_date, key):
-    """Send today's raw AetherBot log to GPT for independent analysis + fact-check."""
+def run_phase1_independent(target_date, key):
+    """Phase 1: Send raw AetherBot log to GPT — independent, no Kai analysis seeding.
+    Output: agents/aether/analysis/GPT_Independent_DATE.txt
+    This file MUST exist before Phase 2 runs.
+    """
     log_path = find_log_file(target_date)
     if not log_path:
         print(f"ERROR: No AetherBot log found for {target_date}")
@@ -243,9 +305,8 @@ def run_log_review(target_date, key):
     with open(log_path) as f:
         log_content = f.read()
 
-    # Truncate if enormous (keep last ~80k chars which has recent activity)
+    # Truncate if enormous (keep first 200 lines header + last 2000 lines for recency)
     if len(log_content) > 80000:
-        # Keep header (first 200 lines) + tail (most recent activity)
         lines = log_content.split("\n")
         header = "\n".join(lines[:200])
         tail = "\n".join(lines[-2000:])
@@ -257,15 +318,17 @@ def run_log_review(target_date, key):
         print(f"Log truncated from {len(lines)} lines to ~2200 lines")
 
     user_msg = (
+        f"[PHASE 1 — INDEPENDENT REVIEW]\n"
         f"Review this raw AetherBot log for {target_date}.\n"
+        f"You have NOT seen any other analysis. Form your own view first.\n"
         f"Source file: {os.path.basename(log_path)}\n"
         f"Log size: {len(log_content):,} chars, "
         f"{log_content.count(chr(10))} lines\n\n"
         f"RAW LOG:\n{log_content}"
     )
 
-    print(f"Loaded: {log_path} ({len(log_content):,} chars)")
-    print("Sending to GPT-4o for daily log review...")
+    print(f"[Phase 1] Loaded: {log_path} ({len(log_content):,} chars)")
+    print("[Phase 1] Sending to GPT-4o — INDEPENDENT review (no Kai analysis)...")
 
     try:
         review, usage = call_gpt(user_msg, key, SYSTEM_LOG_REVIEW, max_tokens=12000)
@@ -274,30 +337,146 @@ def run_log_review(target_date, key):
         print(f"API error HTTP {e.code}: {body[:300]}")
         sys.exit(1)
 
-    print(f"GPT-4o response: {len(review):,} chars")
-    print(f"Tokens: in={usage.get('prompt_tokens',0)} out={usage.get('completion_tokens',0)}")
+    print(f"[Phase 1] GPT-4o response: {len(review):,} chars")
+    print(f"[Phase 1] Tokens: in={usage.get('prompt_tokens',0)} out={usage.get('completion_tokens',0)}")
 
-    # Save to GPT_CrossCheck file
+    # Save to GPT_Independent_DATE.txt (independence gate file)
+    independent_path = os.path.join(ANALYSIS_DIR, f"GPT_Independent_{target_date}.txt")
+    # Also maintain backward-compat GPT_CrossCheck file
     crosscheck_path = os.path.join(ANALYSIS_DIR, f"GPT_CrossCheck_{target_date}.txt")
     now_str = datetime.datetime.now().strftime("%H:%M MTN")
 
-    with open(crosscheck_path, "w") as f:
-        f.write(f"{'='*78}\n")
-        f.write(f"GPT-4o DAILY LOG REVIEW + FACT-CHECK -- {target_date}\n")
-        f.write(f"Generated: {now_str}\n")
-        f.write(f"Source: {os.path.basename(log_path)} ({log_content.count(chr(10))} lines)\n")
-        f.write(f"Tokens: in={usage.get('prompt_tokens',0)} out={usage.get('completion_tokens',0)}\n")
-        f.write(f"{'='*78}\n\n")
-        f.write(review)
-        f.write("\n")
+    content = (
+        f"{'='*78}\n"
+        f"GPT-4o PHASE 1 — INDEPENDENT LOG REVIEW -- {target_date}\n"
+        f"Generated: {now_str}\n"
+        f"Source: {os.path.basename(log_path)} ({log_content.count(chr(10))} lines)\n"
+        f"Tokens: in={usage.get('prompt_tokens',0)} out={usage.get('completion_tokens',0)}\n"
+        f"NOTE: This file was generated WITHOUT Kai's analysis (independence gate).\n"
+        f"{'='*78}\n\n"
+        + review + "\n"
+    )
 
-    print(f"Saved: {crosscheck_path}")
+    with open(independent_path, "w") as f:
+        f.write(content)
+    with open(crosscheck_path, "w") as f:
+        f.write(content)
+
+    print(f"[Phase 1] Saved: {independent_path}")
+    print(f"[Phase 1] Also mirrored to: {crosscheck_path}")
     print("\n" + "=" * 60)
-    print("GPT-4o DAILY LOG REVIEW:")
+    print("GPT-4o PHASE 1 — INDEPENDENT REVIEW:")
     print("=" * 60)
     print(review)
 
-    return crosscheck_path
+    return independent_path
+
+
+# ── Mode: Phase 2 — Cross-Review (Independence Gate) ─────────────────────────
+# S18-017: GPT sees BOTH its Phase 1 output AND Kai's analysis.
+# Gate: aborts with exit code 2 if GPT_Independent_DATE.txt doesn't exist.
+# Output: GPT_Review_DATE.txt
+
+def run_phase2_cross_review(target_date, key):
+    """Phase 2: Cross-review using Phase 1 + Kai's analysis.
+    GATE: exits with code 2 if GPT_Independent_DATE.txt is missing.
+    Output: agents/aether/analysis/GPT_Review_DATE.txt
+    """
+    # ── Independence gate ──────────────────────────────────────────────────────
+    independent_path = os.path.join(ANALYSIS_DIR, f"GPT_Independent_{target_date}.txt")
+    if not os.path.exists(independent_path):
+        print(f"[Phase 2] GATE BLOCKED: GPT_Independent_{target_date}.txt not found.")
+        print(f"  Run Phase 1 first: python3 gpt_factcheck.py --phase1 {target_date}")
+        print(f"  Phase 2 requires Phase 1 output to prevent analysis seeding.")
+        sys.exit(2)  # exit 2 = gate blocked (distinct from error exit 1)
+
+    # ── Load Phase 1 output ───────────────────────────────────────────────────
+    with open(independent_path) as f:
+        phase1_content = f.read()
+
+    # ── Load Kai's analysis ───────────────────────────────────────────────────
+    analysis_path = find_analysis_file(target_date)
+    if not analysis_path:
+        print(f"[Phase 2] WARNING: No Kai analysis found for {target_date}")
+        print(f"  Checked candidates: Final_Analysis, Deep_Analysis, Analysis")
+        kai_analysis = "[No Kai analysis available for this date]"
+    else:
+        with open(analysis_path) as f:
+            kai_analysis = f.read()
+        if len(kai_analysis) > 60000:
+            kai_analysis = kai_analysis[:60000] + "\n[TRUNCATED]"
+        print(f"[Phase 2] Loaded Kai analysis: {analysis_path} ({len(kai_analysis):,} chars)")
+
+    print(f"[Phase 2] Loaded Phase 1: {independent_path} ({len(phase1_content):,} chars)")
+
+    user_msg = (
+        f"[PHASE 2 — CROSS-REVIEW] Date: {target_date}\n\n"
+        f"You will compare your own Phase 1 independent analysis with Kai's analysis.\n"
+        f"Find the gaps, contradictions, and missed insights.\n\n"
+        f"{'='*78}\n"
+        f"PHASE 1 — YOUR INDEPENDENT ANALYSIS:\n"
+        f"{'='*78}\n"
+        f"{phase1_content}\n\n"
+        f"{'='*78}\n"
+        f"KAI'S ANALYSIS:\n"
+        f"{'='*78}\n"
+        f"{kai_analysis}\n"
+    )
+
+    print("[Phase 2] Sending cross-review to GPT-4o...")
+
+    try:
+        cross_review, usage = call_gpt(
+            user_msg, key, SYSTEM_PHASE2_CROSS_REVIEW, max_tokens=6000
+        )
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        print(f"API error HTTP {e.code}: {body[:300]}")
+        sys.exit(1)
+
+    print(f"[Phase 2] GPT-4o response: {len(cross_review):,} chars")
+    print(f"[Phase 2] Tokens: in={usage.get('prompt_tokens',0)} out={usage.get('completion_tokens',0)}")
+
+    # Save to GPT_Review_DATE.txt
+    review_path = os.path.join(ANALYSIS_DIR, f"GPT_Review_{target_date}.txt")
+    now_str = datetime.datetime.now().strftime("%H:%M MTN")
+
+    with open(review_path, "w") as f:
+        f.write(f"{'='*78}\n")
+        f.write(f"GPT-4o PHASE 2 — CROSS-REVIEW -- {target_date}\n")
+        f.write(f"Generated: {now_str}\n")
+        f.write(f"Independence gate: passed (GPT_Independent_{target_date}.txt present)\n")
+        f.write(f"Kai analysis: {os.path.basename(analysis_path) if analysis_path else 'NOT FOUND'}\n")
+        f.write(f"Tokens: in={usage.get('prompt_tokens',0)} out={usage.get('completion_tokens',0)}\n")
+        f.write(f"{'='*78}\n\n")
+        f.write(cross_review)
+        f.write("\n")
+
+    # Also append to Kai's analysis file if it exists (so the full picture is in one place)
+    if analysis_path:
+        with open(analysis_path, "a") as f:
+            f.write(f"\n\n{'='*78}\n")
+            f.write(f"GPT-4o PHASE 2 CROSS-REVIEW -- {now_str}\n")
+            f.write(f"[Full review: GPT_Review_{target_date}.txt]\n")
+            f.write(f"{'='*78}\n\n")
+            f.write(cross_review[:3000])  # First 3000 chars inline, full in separate file
+            if len(cross_review) > 3000:
+                f.write(f"\n[... see GPT_Review_{target_date}.txt for complete review ...]\n")
+            f.write("\n")
+
+    print(f"[Phase 2] Saved: {review_path}")
+    print("\n" + "=" * 60)
+    print("GPT-4o PHASE 2 — CROSS-REVIEW:")
+    print("=" * 60)
+    print(cross_review)
+
+    return review_path
+
+
+# ── Backward-compat alias ─────────────────────────────────────────────────────
+def run_log_review(target_date, key):
+    """Backward-compatible alias for run_phase1_independent."""
+    return run_phase1_independent(target_date, key)
 
 
 # ── Mode: Analysis Fact-Check (original) ──────────────────────────────────────
@@ -378,15 +557,27 @@ def main():
         sys.exit(1)
 
     today = datetime.datetime.now().strftime("%Y-%m-%d")
+    args = sys.argv[1:]
 
-    if "--log" in sys.argv:
-        # Daily log review mode
-        idx = sys.argv.index("--log")
-        target_date = sys.argv[idx + 1] if idx + 1 < len(sys.argv) else today
-        run_log_review(target_date, key)
+    # ── S18-017: Two-phase independence gate ──────────────────────────────────
+    if "--phase1" in args or "--log" in args:
+        # Phase 1: GPT sees raw log ONLY → GPT_Independent_DATE.txt
+        flag = "--phase1" if "--phase1" in args else "--log"
+        idx = args.index(flag)
+        target_date = args[idx + 1] if idx + 1 < len(args) and not args[idx + 1].startswith("-") else today
+        run_phase1_independent(target_date, key)
+
+    elif "--phase2" in args:
+        # Phase 2: GPT sees Phase1 + Kai analysis → GPT_Review_DATE.txt
+        # GATE: exits 2 if GPT_Independent_DATE.txt missing
+        idx = args.index("--phase2")
+        target_date = args[idx + 1] if idx + 1 < len(args) and not args[idx + 1].startswith("-") else today
+        run_phase2_cross_review(target_date, key)
+
     else:
-        # Default: analysis fact-check
-        target_date = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else today
+        # Default: legacy analysis fact-check (still supported, use --phase2 for full independence)
+        target_date = args[0] if args and not args[0].startswith("-") else today
+        print(f"[LEGACY] Running analysis fact-check. Use --phase1/--phase2 for full independence.")
         run_analysis_factcheck(target_date, key)
 
 
