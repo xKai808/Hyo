@@ -119,13 +119,17 @@ FEED_LIVE="$HYO_ROOT/website/data/feed.json"
 if [[ -f "$MD_FILE" && $SYNTH_RC -ne 2 ]]; then
   echo "[$STAMP] publishing to HQ feed..."
 
-  # ---- copy HTML to website/daily/ so /daily/DATE resolves on Vercel ----
+  # ---- copy HTML to website/daily/ so /daily/newsletter-DATE resolves on Vercel ----
+  # NOTE: bare YYYY-MM-DD filenames cause Vercel 404; use newsletter-DATE prefix instead
   HTML_SRC="$HYO_ROOT/agents/ra/output/${TODAY_DATE}.html"
   DAILY_DIR="$HYO_ROOT/agents/sam/website/daily"
-  HTML_DST="$DAILY_DIR/${TODAY_DATE}.html"
+  HTML_FILENAME="newsletter-${TODAY_DATE}.html"
+  HTML_DST="$DAILY_DIR/${HTML_FILENAME}"
   if [[ -f "$HTML_SRC" ]]; then
     mkdir -p "$DAILY_DIR"
     cp "$HTML_SRC" "$HTML_DST"
+    # also copy to website/ symlink path for dual-path consistency
+    cp "$HTML_SRC" "$HYO_ROOT/website/daily/${HTML_FILENAME}" 2>/dev/null || true
     echo "[$STAMP] copied HTML → $HTML_DST"
   else
     echo "[$STAMP] WARNING: HTML source not found at $HTML_SRC — skipping copy" >&2
@@ -148,13 +152,13 @@ takes    = re.findall(r'take:\s+"([^"]+)"', text)
 summary  = " | ".join(f"{e}: {t}" for e, t in zip(entities[:3], takes[:3])) or "Today's tech and market intelligence."
 topics   = list(dict.fromkeys(re.findall(r'name:\s+"([^"]+)"', text)))[:6]
 now = subprocess.check_output(["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],text=True).strip()
-# readLink uses /daily/DATE — Vercel cleanUrls serves agents/sam/website/daily/DATE.html at this path
+# readLink uses /daily/newsletter-DATE — bare YYYY-MM-DD causes Vercel 404 (SE-019)
 entry = {"id": f"newsletter-ra-{date}", "type": "newsletter",
          "title": f"Aurora Daily Brief — {date}", "author": "Ra",
          "authorIcon": "📰", "authorColor": "#b49af0",
          "timestamp": now, "date": date,
          "sections": {"summary": summary[:500], "topics": topics,
-                      "readLink": f"/daily/{date}"}}
+                      "readLink": f"/daily/newsletter-{date}"}}
 for path in [feed_git, feed_live]:
     if not os.path.exists(path):
         continue
@@ -172,7 +176,7 @@ PYPUB
 
   # ---- COMMIT & PUSH so Vercel deploys the HTML (fixes /daily/DATE 404) ----
   cd "$HYO_ROOT"
-  git add "agents/sam/website/daily/${TODAY_DATE}.html" \
+  git add "agents/sam/website/daily/${HTML_FILENAME}" \
           "agents/sam/website/data/feed.json" \
           "website/data/feed.json" 2>/dev/null || true
   if git diff --cached --quiet; then
