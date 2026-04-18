@@ -157,9 +157,25 @@ fi
 
 # 2. Newsletter
 NL_ID="newsletter-ra-${TODAY}"
+NL_HTML="$ROOT/agents/sam/website/daily/${TODAY}.html"
 # Newsletter runs at 03:00 — by 08:00 it should exist
 if check_feed_entry "$NL_ID"; then
   pass "newsletter $TODAY"
+  # GATE: also verify the HTML file that readLink points to actually exists
+  if [[ ! -f "$NL_HTML" ]]; then
+    fail "newsletter HTML missing at website/daily/${TODAY}.html — readLink will 404"
+    tid=$(open_ticket "ra" "Newsletter HTML missing for $TODAY" "$NL_ID")
+    # Try to copy from ra/output
+    SRC="$ROOT/agents/ra/output/${TODAY}.html"
+    if [[ -f "$SRC" ]]; then
+      cp "$SRC" "$NL_HTML"
+      pass "newsletter HTML recovered from ra/output"
+      close_ticket "$tid" "Auto-recovered: copied from agents/ra/output/${TODAY}.html"
+    else
+      fail "newsletter HTML UNRECOVERABLE — ra/output/${TODAY}.html also missing"
+      ((FAILURES++)) || true
+    fi
+  fi
 else
   fail "newsletter $TODAY ($NL_ID)"
   tid=$(open_ticket "ra" "Newsletter $TODAY" "$NL_ID")

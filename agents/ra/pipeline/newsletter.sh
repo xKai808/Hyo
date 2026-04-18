@@ -118,6 +118,26 @@ FEED_LIVE="$HYO_ROOT/website/data/feed.json"
 
 if [[ -f "$MD_FILE" && $SYNTH_RC -ne 2 ]]; then
   echo "[$STAMP] publishing to HQ feed..."
+
+  # ---- copy HTML to website/daily/ so /daily/DATE resolves on Vercel ----
+  HTML_SRC="$HYO_ROOT/agents/ra/output/${TODAY_DATE}.html"
+  DAILY_DIR="$HYO_ROOT/agents/sam/website/daily"
+  HTML_DST="$DAILY_DIR/${TODAY_DATE}.html"
+  if [[ -f "$HTML_SRC" ]]; then
+    mkdir -p "$DAILY_DIR"
+    cp "$HTML_SRC" "$HTML_DST"
+    echo "[$STAMP] copied HTML → $HTML_DST"
+  else
+    echo "[$STAMP] WARNING: HTML source not found at $HTML_SRC — skipping copy" >&2
+  fi
+
+  # ---- VERIFICATION GATE: confirm HTML exists at deploy path before publishing ----
+  if [[ ! -f "$HTML_DST" ]]; then
+    echo "[$STAMP] ERROR: HTML not present at $HTML_DST — refusing to publish feed entry with broken readLink" >&2
+    echo "[$STAMP] Fix: ensure render.py produces ${TODAY_DATE}.html in agents/ra/output/, then re-run newsletter.sh --no-gather" >&2
+    exit 1
+  fi
+
   python3 - "$MD_FILE" "$TODAY_DATE" "$FEED_GIT" "$FEED_LIVE" <<'PYPUB'
 import json, re, sys, os, subprocess
 md_path, date, feed_git, feed_live = sys.argv[1:5]
@@ -128,12 +148,13 @@ takes    = re.findall(r'take:\s+"([^"]+)"', text)
 summary  = " | ".join(f"{e}: {t}" for e, t in zip(entities[:3], takes[:3])) or "Today's tech and market intelligence."
 topics   = list(dict.fromkeys(re.findall(r'name:\s+"([^"]+)"', text)))[:6]
 now = subprocess.check_output(["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],text=True).strip()
+# readLink uses /daily/DATE — Vercel cleanUrls serves agents/sam/website/daily/DATE.html at this path
 entry = {"id": f"newsletter-ra-{date}", "type": "newsletter",
          "title": f"Aurora Daily Brief — {date}", "author": "Ra",
          "authorIcon": "📰", "authorColor": "#b49af0",
          "timestamp": now, "date": date,
          "sections": {"summary": summary[:500], "topics": topics,
-                      "readLink": f"/newsletters/{date}.html"}}
+                      "readLink": f"/daily/{date}"}}
 for path in [feed_git, feed_live]:
     if not os.path.exists(path):
         continue
