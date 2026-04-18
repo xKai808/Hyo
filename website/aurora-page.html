@@ -422,6 +422,9 @@
     <!-- Topics -->
     <div class="topics-wrap" id="topicsWrap"></div>
 
+    <!-- Audio player (injected by JS) -->
+    <div id="audioCard" style="display:none;"></div>
+
     <!-- Brief feed -->
     <div class="section-heading" id="briefsHeading">Your briefs</div>
     <div class="brief-list" id="briefList"></div>
@@ -660,6 +663,9 @@
       topicsWrap.style.display = 'none';
     }
 
+    // ── Audio player card (today's podcast) ──
+    injectAudioCard();
+
     // Brief feed
     if (!briefs || briefs.length === 0) {
       briefsHeading.textContent = '';
@@ -697,6 +703,49 @@
 
   function escHtml(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Audio Card ──
+  function injectAudioCard() {
+    // Today's podcast URL follows pattern /daily/podcast-YYYY-MM-DD.mp3
+    const today = todayIso();
+    const mp3Url = `/daily/podcast-${today}.mp3`;
+    const audioCard = document.getElementById('audioCard');
+    if (!audioCard) return;
+
+    // Check if file exists by trying a HEAD request
+    fetch(mp3Url, { method: 'HEAD' })
+      .then(r => {
+        if (!r.ok) return;
+        audioCard.style.display = 'block';
+        audioCard.innerHTML = `
+          <div style="
+            margin: 0 0 24px;
+            background: rgba(232,184,119,0.06);
+            border: 1px solid rgba(232,184,119,0.18);
+            border-radius: 14px;
+            padding: 20px 22px;
+          ">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <div style="font-family:var(--font-d);font-weight:700;font-size:15px;color:var(--fg);letter-spacing:0.01em;">
+                🎙️ Listen to today's brief
+              </div>
+              <div style="font-family:var(--font-m);font-size:10px;color:var(--dim);letter-spacing:0.14em;text-transform:uppercase;">
+                ~2 min
+              </div>
+            </div>
+            <audio
+              controls
+              preload="metadata"
+              style="width:100%;border-radius:8px;accent-color:var(--accent);background:transparent;"
+              src="${mp3Url}"
+            ></audio>
+            <div style="margin-top:10px;font-size:12px;color:var(--dim);font-family:var(--font-b);">
+              Morning highlights · Ra top stories · Aurora brief
+            </div>
+          </div>`;
+      })
+      .catch(() => {/* no audio today */});
   }
 
   // ── Boot ──
