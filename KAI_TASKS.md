@@ -27,14 +27,41 @@
 - [x] **LAB-005 DONE:** Jason Borck OpenClaw competitive intel doc.
 - [x] **Ticket queue:** 91 → 55 open (closed 36 tickets).
 
+## ✅ SHIPPED — Session 19 (2026-04-18, morning)
+
+- [x] **S18-001 IN PROGRESS:** Aurora light/dark mode CSS vars + toggle button — aurora.html, aurora-page.html, app.html. coral on localStorage persist. DEPLOYED.
+- [x] **S18-003/004/005 SHIPPED:** Podcast rewrite — Vale voice (coral, gpt-4o-mini-tts + instructions), vision-focused 10min script (character arc framing, not error logs). 50+ sources researched + published to HQ.
+- [x] **S18-006 SHIPPED:** Podcast API cost logging to api-usage.jsonl. ~$0.000072/run.
+- [x] **S18-015 SHIPPED:** Aether 404 fixed — aether-2026-04-18.html + aether-2026-04-15.html generated.
+- [x] **S18-016 SHIPPED:** Aether summaries fixed — real data replaces bare headings.
+- [x] **S18-019 SHIPPED:** "View formatted version" → "View full brief" globally in hq.html.
+- [x] **S18-020 SHIPPED:** Hyo daily → "UI/UX Surface Audit" in hyo.sh.
+- [x] **S18-021 SHIPPED:** Discrepancy audit gate (5 yes/no questions) added to EXECUTION_GATE.md.
+- [x] **23 tickets filed** (S18-001 through S18-023) — all individual, no grouping.
+- [x] **aurora-success.html:** 2-day → 14-day copy fix.
+- [x] **Podcast research** published to HQ (docs/research/podcast-format-2026-04-18.md).
+
+## P0 — ACTION REQUIRED FROM HYO
+
+- [ ] **[H]** **S18-013: Remote connection (bore.pub) broken.** SSH to bore.pub port 22246 refused. On Mini terminal run: `launchctl list | grep bore` — if not found, restart with: `bore local 22 --to bore.pub`. Note the new port, update SSH config on Pro. Kai cannot execute queue commands without this tunnel. Everything else works via filesystem queue fallback, but bridge latency is 30-120x slower.
+
 ## P1 — NEXT SESSION
 
 - [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Hyo creates Stripe account + product ($19/mo, 14-day trial) + keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel.
-- [ ] **[K]** **Day 7 retention email.** Build aurora-retention.js — on day 7 of trial, trigger personalized "how's your brief?" email via Resend.
-- [ ] **[K]** **BUILD-002 Phase 2.** Aurora app preferences UI (topics, voice, depth) accessible from aurora-page.
-- [ ] **[K]** **BUILD-003 RESEARCH-003.** AetherBot capital scaling — what would $1,000 at current WR generate?
-- [ ] **[K]** **S17-007: Ticket queue.** 55 open. Continue closing. Resolution > creation rate.
-- [ ] **[K]** **LAB-003: YouTube Content Radar.** Wire into Ra — monitor competitor YouTube channels daily.
+- [ ] **[K]** **S18-002: Verify Aurora post-registration flow end-to-end.** aurora-success → aurora-page → magic link. Needs Stripe keys to test real flow.
+- [ ] **[K]** **S18-007/008: Agent goal renewal.** Build daily goal sync — each agent runner updates goals block in feed.json from ACTIVE.md + GROWTH.md. inProcess/pending items linked to tickets.jsonl with last-updated timestamps.
+- [ ] **[K]** **S18-009: Weekly system algorithm report.** Build bin/weekly-system-report.sh, schedule Sunday 06:00 MT. 7 required sections, 3+ external research sources each.
+- [ ] **[K]** **S18-010: Weekly Claude/GPT platform assessment.** Weekly Sunday/Monday. New capabilities, pricing, API limits, hyo.world improvement opportunities. Publish to HQ.
+- [ ] **[K]** **S18-011/012: Ant daily update + cost-per-process table.** Verify ant-update.sh runs daily. Add lastUpdated staleness indicator. Add cost-per-process breakdown (podcast-tts, gpt-crosscheck, ra-synthesis, aurora-synthesis). Surface on HQ Ant view.
+- [ ] **[K]** **S18-014: Aether analysis page.** Build /aether-analysis?date=DATE dedicated page. Link from HQ and feed entries.
+- [ ] **[K]** **S18-017: GPT independence gate in aether.sh.** Verify Phase 1 (raw logs → GPT independent) outputs a separate file. Phase 2 cross-references both. Gate: abort if Phase 1 file missing.
+- [ ] **[K]** **S18-018: Aurora brief pre-publish readLink gate.** newsletter.sh must curl readLink before writing feed entry. Never publish a 404.
+- [ ] **[K]** **S18-022/023: Research publishing + pattern enforcement gates.** Wire to agent runners. Nel: 3+ occurrences in 7 days → auto P0 + 24h SLA.
+- [ ] **[K]** **Day 7 retention email.** Build aurora-retention.js.
+- [ ] **[K]** **BUILD-002 Phase 2.** Aurora app preferences UI.
+- [ ] **[K]** **BUILD-003 RESEARCH-003.** AetherBot capital scaling.
+- [ ] **[K]** **S17-007: Ticket queue.** 55+ open. Continue closing.
+- [ ] **[K]** **LAB-003: YouTube Content Radar.** Wire into Ra.
 
 ## P1 — ONGOING (pre-session 17, still open)
 
