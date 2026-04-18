@@ -1022,5 +1022,8 @@ case "$sub" in
   link-check|lc)      bash "$ROOT/agents/nel/link-check.sh" "$@" ;;
   sync-research)      bash "$ROOT/kai/queue/sync-research.sh" ;;
   ticket|t)           bash "$ROOT/bin/ticket.sh" "$@" ;;
+  podcast)            HYO_ROOT="$ROOT" python3 "$ROOT/bin/podcast.py" "$@" ;;
+  podcast-dry)        HYO_ROOT="$ROOT" python3 "$ROOT/bin/podcast.py" --dry-run "$@" ;;
+  podcast-script)     HYO_ROOT="$ROOT" python3 "$ROOT/bin/podcast.py" --script-only "$@" ;;
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.podcast</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>source ~/.zprofile 2>/dev/null; cd /Users/kai/Documents/Projects/Hyo &amp;&amp; HYO_ROOT=/Users/kai/Documents/Projects/Hyo /opt/homebrew/bin/python3 bin/podcast.py 2&gt;&amp;1 | tee -a /tmp/hyo-podcast.log</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>6</integer>
+    <key>Minute</key>
+    <integer>5</integer>
+  </dict>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>TZ</key>
+    <string>America/Denver</string>
+    <key>HYO_ROOT</key>
+    <string>/Users/kai/Documents/Projects/Hyo</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>WorkingDirectory</key>
+  <string>/Users/kai/Documents/Projects/Hyo</string>
+  <key>StandardOutPath</key>
+  <string>/tmp/hyo-podcast.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/hyo-podcast.log</string>
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>

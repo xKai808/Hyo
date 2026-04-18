@@ -1166,7 +1166,7 @@ function renderFeed(container) {
   // Feed scope: morning-report, newsletter, aether-analysis (daily essentials) +
   // agent-daily (each agent's daily report) + agent-weekly (Saturdays).
   // agent-reflection and research-drop live in Research tab only.
-  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'agent-daily', 'agent-weekly']);
+  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'agent-daily', 'agent-weekly', 'podcast']);
   const todayReports = (FEED_DATA.reports || [])
     .filter(r => r.date === today && FEED_ALLOWED_TYPES.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1596,6 +1596,8 @@ function renderReport(report) {
     body = renderNewsletter(s, report);
   } else if (report.type === 'aether-analysis') {
     body = renderAetherAnalysis(s, report);
+  } else if (report.type === 'podcast') {
+    body = renderPodcast(s, report);
   } else if (report.type === 'research-drop') {
     body = renderResearchDrop(s, report);
   } else if (report.type === 'agent-daily') {
@@ -1707,6 +1709,42 @@ function renderNewsletter(s, report) {
         View formatted version <span style="font-size:1.1em;">→</span>
       </a>
     </div>`;
+  }
+
+  return html;
+}
+
+function renderPodcast(s, report) {
+  const audioUrl = s.audioUrl || '';
+  const summary  = s.summary || '';
+  const duration = s.duration || '';
+  let html = '';
+
+  // Summary line
+  if (summary) {
+    html += `<p style="color:var(--text-secondary);font-size:0.92em;margin:8px 0 12px;">${summary}</p>`;
+  }
+
+  // Audio player
+  if (audioUrl) {
+    html += `
+      <div class="podcast-player" style="background:var(--bg-tertiary);border-radius:12px;padding:16px 20px;margin:4px 0 12px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;color:var(--text-secondary);font-size:0.82em;">
+          <span style="font-size:1.6em;">🎙️</span>
+          <span>Hyo Daily Brief${duration ? ' · ' + duration : ''} · Optimized for commute</span>
+        </div>
+        <audio
+          controls
+          preload="metadata"
+          style="width:100%;border-radius:8px;accent-color:var(--accent);"
+          src="${audioUrl}"
+        ></audio>
+        <div style="font-size:0.78em;color:var(--text-muted);">
+          Morning report highlights + Ra top stories + Aurora brief
+        </div>
+      </div>`;
+  } else {
+    html += `<p style="color:var(--text-muted);font-size:0.85em;font-style:italic;">Audio generating... check back at 06:10 MT.</p>`;
   }
 
   return html;
@@ -1911,6 +1949,7 @@ function getTypeLabel(type) {
     'research-drop': 'Research',
     'newsletter': 'Daily Brief',
     'aether-analysis': 'Trading Analysis',
+    'podcast': '🎙️ Podcast',
   };
   return map[type] || type;
 }
