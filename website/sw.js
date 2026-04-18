@@ -1,7 +1,7 @@
 // hyo hq — service worker
 // Strategy: network-first for HTML/JSON (always fresh data), cache-first for assets
 
-const CACHE = 'hq-v1';
+const CACHE = 'hq-v3';  // bumped: force cache bust — fixes stale /hq clean URL
 const PRECACHE = [
   '/hq.html',
   '/manifest.json',
@@ -34,7 +34,10 @@ self.addEventListener('fetch', e => {
   // Skip cross-origin (Google Fonts, etc.)
   if (url.origin !== self.location.origin) return;
 
-  const isDataOrPage = url.pathname.endsWith('.html') || url.pathname.endsWith('.json');
+  // Network-first for HTML pages (with OR without extension — handles clean URLs like /hq)
+  const isDataOrPage = url.pathname.endsWith('.html') ||
+                       url.pathname.endsWith('.json') ||
+                       !url.pathname.includes('.');  // clean URLs: /hq, /research, etc.
 
   if (isDataOrPage) {
     // Network-first: always try to get fresh data; fall back to cache if offline
