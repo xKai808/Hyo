@@ -722,6 +722,23 @@ with open(sf, "w") as f:
     json.dump(sections, f, indent=2)
 PYEOF
 
+  # ── ANT UPDATE — rebuild financial dashboard from api-usage.jsonl ──
+  if [[ -f "$ROOT/bin/ant-update.sh" ]]; then
+    if bash "$ROOT/bin/ant-update.sh" >> "$LOGS/sam-$(date +%Y-%m-%d).md" 2>&1; then
+      ok "Ant financial data updated"
+      # commit ant-data.json so Vercel serves fresh numbers
+      cd "$ROOT"
+      git add "agents/sam/website/data/ant-data.json" "website/data/ant-data.json" 2>/dev/null || true
+      if ! git diff --cached --quiet; then
+        git commit -m "ant: refresh financial dashboard $(TZ=America/Denver date +%Y-%m-%d)" \
+          --author="Sam <sam@hyo.world>" 2>&1 | tail -1 || true
+      fi
+      cd - >/dev/null
+    else
+      warn "ant-update.sh failed (non-fatal)"
+    fi
+  fi
+
   if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
     bash "$PUBLISH_SCRIPT" "agent-reflection" "sam" "Sam — Engineering Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
     ok "Self-authored report published to HQ feed"
