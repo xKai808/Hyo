@@ -1,7 +1,9 @@
 // /api/aurora-checkout
 //
 // Creates a Stripe Checkout session for Aurora subscriptions.
-// Plan: 2-day free trial → $19/mo recurring.
+// Plan: 14-day free trial → $19/mo recurring.
+// (Changed from 2-day: research shows AI apps lose 79% of annual subscribers;
+//  2 days is insufficient for habit formation. 14 days = 14 briefs = real value assessment.)
 //
 // Flow:
 //   1. aurora.html collects preferences + email
@@ -144,7 +146,7 @@ export default async function handler(req, res) {
         quantity: 1,
       }],
       subscription_data: {
-        trial_period_days: 2,
+        trial_period_days: 14,
         metadata: {
           aurora_sub_id: id,
           aurora_token:  token,
