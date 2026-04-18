@@ -25,25 +25,28 @@ FAILURES=()
 
 check() {
   local name="$1" url="$2" marker="$3"
-  local content
-  # Plain curl — no Cache-Control headers (those bypass CDN edge and hit origin which
-  # returns brotli-compressed content that macOS curl can't decompress without --compressed).
-  # CDN cache refreshes within seconds of deploy (max-age=0, must-revalidate).
-  content=$(curl -sL --max-time 20 "$url" 2>/dev/null || echo "CURL_FAIL")
-  if [[ "$content" == "CURL_FAIL" ]]; then
-    log "FAIL [$name]: could not fetch $url"
+  # Use temp file: avoids bash variable binary/encoding issues with large HTML responses.
+  # Plain curl (no headers): CDN edge cache returns uncompressed, refreshes on max-age=0.
+  local tmpfile
+  tmpfile=$(mktemp /tmp/verify-live-XXXXXX)
+  local http_code
+  http_code=$(curl -sL --max-time 20 -w "%{http_code}" -o "$tmpfile" "$url" 2>/dev/null || echo "000")
+  if [[ "$http_code" == "000" ]] || [[ ! -s "$tmpfile" ]]; then
+    log "FAIL [$name]: could not fetch $url (HTTP $http_code)"
     FAILURES+=("$name: fetch failed ($url)")
     FAIL=$((FAIL+1))
+    rm -f "$tmpfile"
     return
   fi
-  if echo "$content" | grep -q "$marker"; then
+  if grep -q "$marker" "$tmpfile"; then
     log "PASS [$name]: '$marker' found at $url"
     PASS=$((PASS+1))
   else
-    log "FAIL [$name]: '$marker' NOT found at $url"
+    log "FAIL [$name]: '$marker' NOT found at $url (HTTP $http_code, $(wc -c < "$tmpfile")B)"
     FAILURES+=("$name: marker '$marker' missing at $url")
     FAIL=$((FAIL+1))
   fi
+  rm -f "$tmpfile"
 }
 
 check_json() {
