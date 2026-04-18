@@ -191,4 +191,128 @@ print(f"[publish] VERIFY OK: {want} present in feed")
 VERIFY
 VERIFY_RC=$?
 
-exit $VERIFY_RC
+if [[ $VERIFY_RC -ne 0 ]]; then
+  exit $VERIFY_RC
+fi
+
+# ── Write aether-daily-sections.json (binds the HQ dashboard panel) ────────
+SECTIONS_GIT="$ROOT/agents/sam/website/data/aether-daily-sections.json"
+SECTIONS_LIVE="$ROOT/website/data/aether-daily-sections.json"
+
+python3 - "$SECTIONS_GIT" "$SECTIONS_LIVE" "$DATE" "$NOW_MT" "$ANALYSIS_FILE" <<'SECTIONS'
+import json, os, re, sys
+
+sections_git, sections_live, date, now_mt, analysis_path = sys.argv[1:6]
+
+with open(analysis_path, "r", errors="replace") as f:
+    text = f.read()
+
+def slice_section(t, start_markers, end_markers=None):
+    start = -1
+    for m in start_markers:
+        i = t.find(m)
+        if i >= 0:
+            start = i + len(m)
+            break
+    if start < 0:
+        return ""
+    end = len(t)
+    if end_markers:
+        for m in end_markers:
+            j = t.find(m, start)
+            if j >= 0 and j < end:
+                end = j
+    return t[start:end].strip()
+
+def first_paragraphs(t, max_chars=800):
+    for p in re.split(r"\n\s*\n", t.strip()):
+        p = p.strip()
+        if len(p) > 40 and not p.startswith("==="):
+            return p[:max_chars]
+    return t[:max_chars].strip()
+
+final   = slice_section(text, ["=== FINAL SYNTHESIS ===", "FINAL SYNTHESIS"])
+primary = slice_section(text,
+    ["=== CLAUDE PRIMARY ANALYSIS ===", "CLAUDE PRIMARY ANALYSIS"],
+    ["=== GPT CRITIQUE ===", "GPT CRITIQUE", "=== FINAL"])
+if not primary:
+    primary = text[:3000]
+
+introspection = first_paragraphs(final or primary, 900)
+
+# Research — look for a dedicated research section
+research_raw = slice_section(text,
+    ["RESEARCH:", "Research:", "=== RESEARCH ==="],
+    ["\n\n"])
+if not research_raw:
+    # fallback: grab sentences mentioning analysis/research
+    sentences = re.findall(r"[A-Z][^.!?\n]{40,200}[.!?]", text)
+    research_raw = " ".join(s for s in sentences[:5] if any(w in s.lower() for w in ["research", "analyz", "investig", "backtest", "model"]))
+research = research_raw[:600] if research_raw else ""
+
+# Changes — look for changes/shipped section
+changes_raw = slice_section(text,
+    ["CHANGES:", "Changes:", "What Changed:", "shipped", "=== CHANGES"],
+    ["\n\n"])
+if not changes_raw:
+    changes_raw = ""
+changes = changes_raw[:500]
+
+# Follow-ups — look for action items / P0/P1/P2 bullets
+follow_ups = []
+for line in text.split("\n"):
+    line = line.strip()
+    if re.match(r"^(P0|P1|P2|P3)[:\s]", line) or re.match(r"^[-*]\s+(P0|P1|P2|P3)", line):
+        item = re.sub(r"^[-*]\s+", "", line).strip()
+        if len(item) > 10:
+            follow_ups.append(item)
+if not follow_ups:
+    # Fallback: any line starting with - or * that looks like an action item
+    for line in text.split("\n"):
+        line = line.strip()
+        if re.match(r"^[-*]\s+[A-Z]", line) and len(line) > 20:
+            follow_ups.append(re.sub(r"^[-*]\s+", "", line)[:200])
+    follow_ups = follow_ups[:5]
+
+# For Kai — look for "For Kai" section
+for_kai = slice_section(text,
+    ["For Kai:", "FOR KAI:", "=== FOR KAI", "Recommendations for Kai"],
+    ["\n\n", "==="])
+if not for_kai:
+    # Look for recommendations / risk section
+    for_kai = slice_section(text,
+        ["RECOMMENDATION", "Key Takeaway", "ACTION REQUIRED"],
+        ["\n\n"])
+for_kai = for_kai[:700] if for_kai else ""
+
+sections = {
+    "date": date,
+    "generated": now_mt,
+    "introspection": introspection or "(analysis not yet extracted)",
+    "research": research or "",
+    "changes": changes or "",
+    "followUps": follow_ups,
+    "forKai": for_kai or "",
+}
+
+def write_sections(path):
+    if not os.path.exists(os.path.dirname(path)):
+        print(f"[sections] WARN dir missing: {os.path.dirname(path)}", file=sys.stderr)
+        return False
+    with open(path, "w") as f:
+        json.dump(sections, f, ensure_ascii=False, indent=2)
+    return True
+
+ok_git  = write_sections(sections_git)
+ok_live = write_sections(sections_live)
+print(f"[sections] git={ok_git} live={ok_live} date={date}")
+SECTIONS
+SECTIONS_RC=$?
+
+if [[ $SECTIONS_RC -eq 0 ]]; then
+  echo "[publish] aether-daily-sections.json updated for $DATE"
+else
+  echo "[publish] WARN: aether-daily-sections.json update failed (rc=$SECTIONS_RC) — feed entry still published" >&2
+fi
+
+exit 0

@@ -873,6 +873,7 @@
 
 let FEED_DATA = null;
 let AETHER_DATA = null;
+let AETHER_SECTIONS = null;
 let currentView = 'feed';
 let currentMonth = null; // for agent history
 let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
@@ -1078,6 +1079,14 @@ async function boot() {
   } catch (e) {
     console.log('Could not load Aether metrics');
   }
+  try {
+    const resp2 = await fetch('/data/aether-daily-sections.json');
+    if (resp2.ok) {
+      AETHER_SECTIONS = await resp2.json();
+    }
+  } catch (e) {
+    console.log('Could not load Aether daily sections');
+  }
   render();
   // Refresh every 60s
   setInterval(async () => {
@@ -1096,6 +1105,14 @@ async function boot() {
       }
     } catch (e) {
       console.log('Could not load Aether metrics');
+    }
+    try {
+      const resp2 = await fetch('/data/aether-daily-sections.json');
+      if (resp2.ok) {
+        AETHER_SECTIONS = await resp2.json();
+      }
+    } catch (e) {
+      console.log('Could not load Aether daily sections');
     }
     render();
   }, 60000);
@@ -2160,6 +2177,51 @@ function renderAetherDashboard(container, agent) {
           </div>
         </div>
       </div>
+    </div>
+
+    ${(() => {
+      const sec = AETHER_SECTIONS;
+      if (!sec || !sec.date) return '';
+      const followUps = Array.isArray(sec.followUps) ? sec.followUps : [];
+      const fuHtml = followUps.map(f => {
+        const isP0 = f.startsWith('P0');
+        const isP1 = f.startsWith('P1');
+        const color = isP0 ? 'var(--error)' : isP1 ? 'var(--warning)' : 'var(--text-muted)';
+        return `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-color);font-size:12px;line-height:1.5">
+          <span style="color:${color};font-family:var(--font-mono);font-size:10px;padding-top:2px;min-width:20px">▸</span>
+          <span style="color:var(--text-secondary)">${f}</span>
+        </div>`;
+      }).join('');
+      const secBlock = (label, text, accent) => text ? `
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:${accent || 'var(--text-muted)'};margin-bottom:6px;font-family:var(--font-mono)">${label}</div>
+          <div style="color:var(--text-secondary);font-size:12px;line-height:1.6">${text}</div>
+        </div>` : '';
+      return `
+        <div class="aether-strategies" style="padding:0;margin-top:14px">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Aether Self-Assessment · ${sec.date}</span>
+            <span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">daily-sections.json</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0">
+            <div style="padding:16px;border-right:1px solid var(--border-color)">
+              ${secBlock('Introspection', sec.introspection, 'var(--cyan)')}
+              ${secBlock('Research', sec.research, 'var(--accent)')}
+              ${secBlock('Changes', sec.changes, 'var(--success)')}
+            </div>
+            <div style="padding:16px">
+              ${sec.forKai ? `<div style="margin-bottom:16px">
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--warning);margin-bottom:6px;font-family:var(--font-mono)">For Kai</div>
+                <div style="color:var(--text-primary);font-size:12px;line-height:1.6;padding:10px 12px;background:rgba(232,201,106,0.06);border:1px solid rgba(232,201,106,0.2);border-radius:var(--radius-sm)">${sec.forKai}</div>
+              </div>` : ''}
+              ${followUps.length ? `<div>
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:2px;font-family:var(--font-mono)">Follow-Ups (${followUps.length})</div>
+                ${fuHtml}
+              </div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    })()}
     </div>`;
 
   container.innerHTML = html;
