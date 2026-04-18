@@ -293,9 +293,15 @@ def check_execution_layer(root):
     hc = read_json_safe(hc_path)
     if hc:
         issues = hc.get("issues", [])
-        p0_count = sum(1 for i in issues if isinstance(i, dict) and i.get("severity") == "P0")
-        if p0_count > 0:
-            result["detail"] += f" | healthcheck: {p0_count} P0 issue(s)"
+        # issues may be an int (count) or a list of dicts — handle both
+        if isinstance(issues, int):
+            p0_count = issues  # treat count as approximate P0 indicator
+            if p0_count > 0:
+                result["detail"] += f" | healthcheck: {p0_count} issue(s)"
+        elif isinstance(issues, list):
+            p0_count = sum(1 for i in issues if isinstance(i, dict) and i.get("severity") == "P0")
+            if p0_count > 0:
+                result["detail"] += f" | healthcheck: {p0_count} P0 issue(s)"
 
     return result
 
