@@ -15,6 +15,25 @@
 **Last healthcheck:** 2026-04-14T12:20:00-06:00 — **ISSUES: 2 P0, 5 P1, 5 P2.** 13TH CONSECUTIVE UNHEALTHY CHECK — no improvement. Queue pending growing (3→5, worker not picking up). P0: agents/nel/security gitignore gap (nel-001, sim-ack only). P0: HQ rendering disconnected (kai-001, sim-ack only). P1: Newsletter missed THREE consecutive days (04-12, 04-13, 04-14). P1: Aether API key placeholder — root cause of GPT log review failures. P1: ra, aether, dex all in dead-loops. P1: Sam completely silent today (0 logs, 7 P1 tasks unexecuted). P2: Queue stalling — 5 pending, 0 running. P2: Aether flooding log.jsonl with 80+ duplicate entries. P2: All delegations are sim-ack only — no real execution. P2: grep -P macOS compat. P2: 15 broken doc links. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only (sim-ack). Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) fix .gitignore on Mini, (2) set real OpenAI API key in .secrets/env, (3) diagnose + fix API 401, (4) run newsletter pipeline manually, (5) patch aether.sh to dedup flag logging + reduce feed spam, (6) fix grep -P → grep -E for macOS, (7) respond to Aether's inbox items (API keys, threat detection), (8) investigate queue worker stall (5 pending not being processed).
 **Last sentinel run:** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. **P0 ESCALATION: `api-health-green` failing 58 consecutive runs** (health endpoint unreachable or token unconfigured). **P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row** (missing or empty `/sessions/clever-dazzling-gauss/mnt/Hyo/newsletters/2026-04-16.md`). P1 `scheduled-tasks-fired` (no aurora logs in this sandbox session, day 3). P2 `task-queue-size` (17 P0 tasks, threshold 5, day 39). 0 new issues, 4 recurring, 0 resolved. Findings auto-filed to KAI_TASKS.md (lines 404-409). Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-16.md`.
 
+## Shipped today (2026-04-18 — Session 17)
+
+**Session 17 (Cowork, ~23:00 MT):**
+- **Ant P&L dashboard complete.** Full business financials on HQ: subscriptions (Claude Max $200, GPT Plus $20), API credits, infra costs, income streams with AetherBot $24.94 active. Net position live.
+- **Aurora Stripe billing built.** `/api/aurora-checkout.js` (2-day trial → $19/mo), `/api/aurora-webhook.js`, `aurora-success.html`. Flow: form → Stripe hosted checkout → success page. Awaiting Stripe keys from Hyo to go live.
+- **HQ service worker fixed (hq-v6).** sw.js bumped. Clean URL cache bug resolved. All hq.html changes now cache-bust correctly.
+- **The Lab created.** `lab/` directory + `LAB_BRIEF.md`. Autonomous revenue research track. Lab BRIEF.md has 6 research queued. Separate from hyo.world roadmap.
+- **Session-17 tickets filed.** S17-001 through BUILD-004. 11 new tickets covering all session discrepancies + new builds.
+- **KAI_TASKS updated.** Full P0 fix list + P1 build queue at top of file. Podcast + App added as BUILD-001 and BUILD-002.
+- **CEO pattern logged.** SE-017-CEO-001: over-consultation. Gate added: before asking Hyo anything, ask if Kai could research and decide it alone.
+
+**NEXT SESSION FIRST ACTIONS (in order, no exceptions):**
+1. Fix S17-001: Aether daily analysis — patch aether.sh directly, stop re-delegating
+2. Fix S17-002: Regenerate feed.json on Mini so morning report renders on HQ
+3. Fix S17-003: Diagnose Sam silence, fix sam.sh cycle
+4. Fix S17-004: Clear queue worker orphan
+5. Fix S17-005: /api/hq 401
+6. Start BUILD-001: Podcast (OpenAI TTS, morning report + Ra + Aurora → MP3)
+
 ## Shipped today (2026-04-17)
 
 **Session 16 (Cowork, ~14:30 MT — continuation from session 15):**

@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-04-17T23:16:23-0600
+**Last updated:** 2026-04-17T23:46:27-0600
 
 ## System Health
 - Status: ISSUES (4 P0/P1)
@@ -11,9 +11,9 @@
 - dex: updated 0h ago
 - kai: NO ACTIVE.md
 - manifests: NO ACTIVE.md
-- nel: updated 2h ago
+- nel: updated 3h ago
 - ra: updated 0h ago
-- sam: updated 2h ago
+- sam: updated 3h ago
 
 ## Top Issues
-
+- [P0] morning-report: Morning report JSON exists but hq.html has NO rendering code

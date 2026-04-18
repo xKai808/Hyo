@@ -12,6 +12,40 @@
 
 ---
 
+## P0 — FIX FIRST (Session 17 — blocking everything else)
+
+- [ ] **[K]** **S17-001: Fix Aether daily analysis dead-loop.** Patch aether.sh data sync directly — stop re-delegating. aether-analysis-DATE must appear on HQ feed by 23:00 MT every day without exception.
+- [ ] **[K]** **S17-002: Fix morning report render on HQ.** Real cause = stale feed.json. Fix feed.json regeneration on Mini so morning-report.json surfaces on HQ by 05:00 MT daily. No more auto-remediation loops.
+- [ ] **[K]** **S17-003: Fix Sam silence.** Sam has been silent 4+ days. Diagnose why sam.sh isn't running its cycle and fix it. Sam must produce daily logs.
+- [ ] **[K]** **S17-004: Clear queue worker orphan.** `mv running/recheck-flag-dex-001.json failed/` on Mini. Add timeout enforcement so stale jobs never block again.
+- [ ] **[K]** **S17-005: Fix /api/hq 401.** Auth is broken. Diagnose, fix, verify with curl. Blocks HQ dynamic data.
+
+## P1 — BUILD QUEUE (Session 17 — execute in order)
+
+- [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Code is deployed. Hyo creates Stripe account + product ($19/mo) + get keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel. Test with Stripe test keys first.
+- [ ] **[K]** **BUILD-001: Podcast.** Aurora reads daily brief as audio. OpenAI TTS (tts-1-hd). Script = morning report highlights + Ra top stories + Aurora brief. Output: MP3 to website/daily/podcast-DATE.mp3. HQ audio player. Generates 06:00 MT. Hyo listens on commute.
+- [ ] **[K]** **BUILD-002: hyo.world App.** PWA. Magic link auth. User logs in → sees their Aurora brief → read or listen toggle. Phase 1: read + audio. Phase 2: preferences. Phase 3: agent feeds. Mobile-first.
+- [ ] **[K]** **BUILD-003: Lab research.** Real research on net-new revenue — not Aurora/Aether reruns. What's working in AI products in 2026. What our assets (Aether intel, Ra content) could become. One research finding per week minimum, actionable.
+- [ ] **[K]** **BUILD-004: hyo agent (UI/UX).** Owns all user-facing surfaces. Frees Sam from design decisions. Follow AGENT_CREATION_PROTOCOL v3.0.
+- [ ] **[K]** **S17-007: Work the ticket queue.** 37 open tickets. Resolution rate must exceed creation rate. Work tickets every session. Not optional.
+
+## P1 — ONGOING (pre-session 17, still open)
+
+- [ ] **[K]** **Nel QA: Install Lychee + TruffleHog + Semgrep on Mini.** Wire into nel.sh.
+- [ ] **[K]** **Sam W1: Lighthouse performance baseline.** Post-deploy audit, API response tracking.
+- [ ] **[K→Sam]** **Sam W2: Vercel KV migration.** Provision KV, migrate HQ state.
+- [ ] **[K]** **Fix 9 stale simulation render failures.** Feed path issue. Use verify-render.sh output to diagnose.
+- [ ] **[K]** **Dispatch auto-escalation.** Nel findings → auto-create tickets.
+- [ ] **[K]** **ARIC cycle enforcement.** agent-research.sh inconsistent. Fix trigger.
+- [ ] **[K]** **Dex pattern dedup.** 162+ recurrent detections. Build dedup + auto-resolve.
+- [ ] **[K]** **DEPLOY-002.** Change Vercel root dir from website/ to agents/sam/website/. Vercel dashboard API.
+- [ ] **[K]** **Aurora synthesize.py: API key fallback.** ANTHROPIC_API_KEY in launchd plist.
+- [ ] **[K]** **Migrate Aurora off Cowork sandbox onto Mini launchd.** 03:00 MT daily.
+- [ ] **[K]** **Sam launchd trigger.** Sam only runs on-demand. Add launchd plist.
+- [ ] **[K]** **Verify Nel GitHub scan runs autonomously.** Must fire in q6h cycle.
+
+---
+
 ## Recently Completed — Session 10 Continuation 3
 
 - [x] **[K]** **Agent Growth Framework — GROWTH.md × 5.** 2026-04-14. Every agent identifies 3 domain weaknesses + 3 systemic improvements + self-set goals. Nel: static sentinel, no CVE scanning, broken research sources. Ra: no editorial feedback, unverified sources, content diversity gap. Sam: no regression detection, ephemeral state, incomplete error handling. Aether: phantom positions, no quality gate, manual strategy eval. Dex: detection without remediation, counting not analysis, no drift detection.
