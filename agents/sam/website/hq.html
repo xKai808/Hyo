@@ -874,6 +874,7 @@
 let FEED_DATA = null;
 let AETHER_DATA = null;
 let AETHER_SECTIONS = null;
+let RESEARCH_ARCHIVE = null;
 let currentView = 'feed';
 let currentMonth = null; // for agent history
 let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
@@ -1087,6 +1088,10 @@ async function boot() {
   } catch (e) {
     console.log('Could not load Aether daily sections');
   }
+  try {
+    const resp3 = await fetch('/data/research-archive.json');
+    if (resp3.ok) RESEARCH_ARCHIVE = await resp3.json();
+  } catch (e) { console.log('Could not load research archive'); }
   render();
   // Refresh every 60s
   setInterval(async () => {
@@ -1145,11 +1150,10 @@ function render() {
 function renderFeed(container) {
   const today = FEED_DATA.today || new Date().toISOString().slice(0, 10);
   // Show today's reports, most recent first
-  // Feed scope (Hyo directive, 2026-04-15):
-  // The main feed shows ONLY: morning-report, Ra's newsletter, Aether's daily analysis.
-  // Everything else (agent-reflection, ceo-report, research-drop) lives on the
-  // per-agent sub-page, not the feed.
-  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'research-drop']);
+  // Feed scope: morning-report, newsletter, aether-analysis (daily essentials) +
+  // agent-daily (each agent's daily report) + agent-weekly (Saturdays).
+  // agent-reflection and research-drop live in Research tab only.
+  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'agent-daily', 'agent-weekly']);
   const todayReports = (FEED_DATA.reports || [])
     .filter(r => r.date === today && FEED_ALLOWED_TYPES.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1295,8 +1299,8 @@ function renderAgentView(container, agentId) {
 
 // ═══ RESEARCH VIEW (keeps sidebar) ═══
 function renderResearch(container) {
-  // Pull ALL agent reports: reflections, research-drops, and research papers
-  const researchTypes = new Set(['agent-reflection', 'research-drop']);
+  // Pull ALL agent reports for Research tab
+  const researchTypes = new Set(['agent-reflection', 'research-drop', 'agent-daily', 'agent-weekly']);
   const allReports = (FEED_DATA.reports || [])
     .filter(r => researchTypes.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1354,6 +1358,39 @@ function renderResearch(container) {
     <div id="research-list">
       ${reportsHtml}
     </div>
+
+    ${(() => {
+      if (!RESEARCH_ARCHIVE || !Object.keys(RESEARCH_ARCHIVE.agents || {}).length) return '';
+      const arc = RESEARCH_ARCHIVE.agents;
+      const agentNames = Object.keys(arc).sort();
+      let arcHtml = `<div style="margin-top:28px;padding-top:20px;border-top:2px solid var(--border-color)">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:16px;font-family:var(--font-mono)">📦 Archive — By Agent &amp; Month</div>`;
+      for (const agent of agentNames) {
+        const months = arc[agent].months || {};
+        const monthKeys = Object.keys(months).sort().reverse();
+        if (!monthKeys.length) continue;
+        arcHtml += `<div style="margin-bottom:20px">
+          <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;padding:6px 10px;background:var(--bg-secondary);border-radius:var(--radius-sm)">${agent}</div>`;
+        for (const month of monthKeys) {
+          const entries = months[month] || [];
+          arcHtml += `<div style="margin-left:14px;margin-bottom:10px">
+            <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">${month} (${entries.length})</div>`;
+          for (const r of entries) {
+            const rtype = r.type === 'agent-weekly' ? '📊 Weekly' : r.type === 'agent-daily' ? '📋 Daily' : r.type === 'agent-reflection' ? '🔍 Reflection' : '📄';
+            arcHtml += `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--border-color);font-size:11px">
+              <span style="color:var(--text-muted);font-family:var(--font-mono);min-width:72px">${r.date || ''}</span>
+              <span style="color:var(--text-muted);min-width:72px">${rtype}</span>
+              <span style="color:var(--text-secondary);flex:1">${r.title || ''}</span>
+            </div>`;
+          }
+          arcHtml += `</div>`;
+        }
+        arcHtml += `</div>`;
+      }
+      arcHtml += `</div>`;
+      return arcHtml;
+    })()}
+
     <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);">
       <a href="/research.html" target="_blank" style="color:var(--accent);font-size:13px;">View Ra's full research archive →</a>
     </div>
@@ -1548,6 +1585,10 @@ function renderReport(report) {
     body = renderAetherAnalysis(s, report);
   } else if (report.type === 'research-drop') {
     body = renderResearchDrop(s, report);
+  } else if (report.type === 'agent-daily') {
+    body = renderAgentDaily(s, report);
+  } else if (report.type === 'agent-weekly') {
+    body = renderAgentWeekly(s, report);
   } else {
     // Generic
     for (const [key, val] of Object.entries(s)) {
@@ -1712,6 +1753,57 @@ function renderCeoReport(s) {
   return html;
 }
 
+function renderAgentDaily(s, report) {
+  let html = '';
+  if (s.shipped && s.shipped !== 'No new shipments today.') {
+    html += sec('✅ Shipped', `<p style="color:var(--success)">${s.shipped}</p>`);
+  }
+  if (s.executed) {
+    html += sec('Executed', `<p>${s.executed}</p>`);
+  }
+  if (s.active && s.active !== 'Queue clear.') {
+    html += sec('In Progress', `<p style="white-space:pre-line;font-size:12px;color:var(--text-secondary)">${s.active}</p>`);
+  }
+  if (s.tickets) {
+    html += sec('Tickets', `<span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">${s.tickets}</span>`);
+  }
+  if (s.weaknesses) {
+    html += sec('Tracked Weaknesses', `<p style="font-size:12px;color:var(--text-muted)">${s.weaknesses}</p>`);
+  }
+  return html || '<p style="color:var(--text-muted);font-size:12px;">No data extracted for today.</p>';
+}
+
+function renderAgentWeekly(s, report) {
+  let html = '';
+  const verdict = s.verdict || 'unknown';
+  const verdictColor = verdict === 'expanding' ? 'var(--success)' : verdict === 'stable' ? 'var(--warning)' : 'var(--error)';
+  html += `<div style="margin-bottom:14px;padding:10px 14px;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:3px solid ${verdictColor}">
+    <span style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;color:var(--text-muted)">Week Verdict</span>
+    <div style="font-size:18px;font-weight:700;color:${verdictColor};font-family:var(--font-mono);margin-top:2px">${verdict.toUpperCase()}</div>
+  </div>`;
+  if (s.weaknesses?.length) {
+    html += sec('Weaknesses', `<ul>${s.weaknesses.map(w => `<li style="margin-bottom:6px">${w}</li>`).join('')}</ul>`);
+  }
+  if (s.improvements_shipped?.length && s.improvements_shipped[0] !== 'No improvements shipped this week.') {
+    html += sec('✅ Improvements Shipped', `<ul style="color:var(--success)">${s.improvements_shipped.map(i => `<li>${i}</li>`).join('')}</ul>`);
+  } else {
+    html += sec('Improvements Shipped', `<p style="color:var(--error)">None shipped this week.</p>`);
+  }
+  if (s.tickets) {
+    const t = s.tickets;
+    html += sec('Tickets', `
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-family:var(--font-mono)">
+        <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--text-primary)">${t.week_total || 0}</div><div style="font-size:10px;color:var(--text-muted)">TOTAL WEEK</div></div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--success)">${t.week_resolved || 0}</div><div style="font-size:10px;color:var(--text-muted)">RESOLVED</div></div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:${(t.week_pending||0) > 0 ? 'var(--warning)' : 'var(--text-muted)'}">${t.week_pending || 0}</div><div style="font-size:10px;color:var(--text-muted)">PENDING</div></div>
+      </div>
+      ${(t.triggered_for_completion||0) > 0 ? `<p style="font-size:12px;color:var(--warning);margin-top:8px">⚡ ${t.triggered_for_completion} pending ticket(s) triggered for 1hr completion.</p>` : ''}
+      ${t.pending_list?.length ? `<ul style="font-size:11px;color:var(--text-muted);margin-top:6px">${t.pending_list.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+    `);
+  }
+  return html;
+}
+
 function renderAgentReflection(s) {
   let html = '';
   if (s.introspection) {
@@ -1784,6 +1876,8 @@ function getTypeLabel(type) {
     'morning-report': 'Morning Report',
     'ceo-report': 'CEO Report',
     'agent-reflection': 'Agent Reflection',
+    'agent-daily': 'Daily Report',
+    'agent-weekly': 'Weekly Summary',
     'research-drop': 'Research',
     'newsletter': 'Daily Brief',
     'aether-analysis': 'Trading Analysis',

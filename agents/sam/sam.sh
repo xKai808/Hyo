@@ -844,3 +844,10 @@ case "$sub" in
   evolve)          cmd_evolve "$@" ;;
   *)               err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac
+
+# ── Daily report to HQ feed (runs at end of every cycle, weekdays only) ──────
+HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
+  bash "$HYO_ROOT/bin/daily-agent-report.sh" "sam" || true
+fi
+

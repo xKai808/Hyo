@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.sam-daily</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>HYO_ROOT=/Users/kai/Documents/Projects/Hyo HQ_URL=https://hyo.world bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>22</integer>
+    <key>Minute</key><integer>30</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/Users/kai/Documents/Projects/Hyo/kai/ledger/com.hyo.sam-daily.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/kai/Documents/Projects/Hyo/kai/ledger/com.hyo.sam-daily.log</string>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+    <key>HYO_ROOT</key><string>/Users/kai/Documents/Projects/Hyo</string>
+    <key>HQ_URL</key><string>https://hyo.world</string>
+  </dict>
+</dict>
+</plist>

@@ -722,4 +722,11 @@ if [[ -x "$DISPATCH" ]]; then
   ok "Dispatch: findings reported to Kai ledger"
 fi
 
+
+# ── Daily report to HQ feed (runs at end of every cycle, weekdays only) ──────
+HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
+  bash "$HYO_ROOT/bin/daily-agent-report.sh" "ra" || true
+fi
+
 exit $EXIT_CODE

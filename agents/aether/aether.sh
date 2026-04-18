@@ -1130,3 +1130,10 @@ trap_error() {
 trap trap_error ERR
 
 main "$@"
+
+# ── Daily report to HQ feed (weekdays only) ───────────────────────────────────
+_HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+if [[ -x "$_HYO_ROOT/bin/daily-agent-report.sh" ]]; then
+  bash "$_HYO_ROOT/bin/daily-agent-report.sh" aether || true
+fi
+
