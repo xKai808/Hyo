@@ -1,71 +1,62 @@
 {
   "status": "active",
-  "note": "Costs sourced from kai/ledger/api-usage.jsonl. Anthropic Admin API key not yet configured — usage is self-reported from api-usage.sh instrumentation. Wire Ant to HQ via HQ → Message Kai to activate live Admin API pull.",
-  "updatedAt": "2026-04-17T14:30:00-06:00",
+  "note": "Costs sourced from kai/ledger/api-usage.jsonl. Anthropic Admin API key not yet configured — usage is self-reported from api-usage.sh instrumentation.",
+  "updatedAt": "2026-04-17T21:38:00-06:00",
   "dataSource": "api-usage.jsonl",
   "costs": {
-    "anthropic": {
-      "total": 0.1213,
-      "currency": "USD"
+    "today": {
+      "anthropic": 0.0,
+      "openai": 0.0,
+      "byModel": [],
+      "openaiByModel": []
     },
-    "openai": {
-      "total": 0.628,
-      "currency": "USD"
+    "month": {
+      "anthropic": 0.1213,
+      "openai": 0.6280
     },
-    "total": 0.7493
+    "total": 0.7493,
+    "dailyHistory": [
+      {"date": "2026-04-04", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-05", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-06", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-07", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-08", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-09", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-10", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-11", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-12", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-13", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-14", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-15", "anthropic": 0.0, "openai": 0.0},
+      {"date": "2026-04-16", "anthropic": 0.1213, "openai": 0.6280},
+      {"date": "2026-04-17", "anthropic": 0.0, "openai": 0.0}
+    ],
+    "byAgent": {
+      "aether": 0.7493
+    }
   },
   "burn": {
-    "daily": 0.7493,
+    "daily": 0.0535,
     "dailyBudget": 50,
-    "pctOfBudget": 1.5,
-    "trend": "insufficient_data"
+    "pctOfBudget": 0.11,
+    "trend": "stable",
+    "monthlyProjected": 1.61
   },
   "revenue": {
     "monthly": 0,
+    "source": "pre-launch",
     "streams": []
   },
   "credits": {
     "anthropic": {
-      "available": null,
+      "remaining": null,
+      "total": null,
       "note": "Admin API key required for live credit balance"
     },
     "openai": {
-      "available": null,
+      "remaining": null,
+      "total": null,
       "note": "Admin API key required for live credit balance"
     }
-  },
-  "models": [
-    {
-      "name": "claude-sonnet-4-6",
-      "calls": 2,
-      "cost": 0.1213
-    },
-    {
-      "name": "gpt-4o",
-      "calls": 13,
-      "cost": 0.628
-    }
-  ],
-  "agents": [
-    {
-      "name": "aether",
-      "cost": 0.7493
-    }
-  ],
-  "history": [
-    {"date": "2026-04-04", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-05", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-06", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-07", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-08", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-09", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-10", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-11", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-12", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-13", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-14", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-15", "anthropic": 0.0, "openai": 0.0, "total": 0.0},
-    {"date": "2026-04-16", "anthropic": 0.1213, "openai": 0.628, "total": 0.7493},
-    {"date": "2026-04-17", "anthropic": 0.0, "openai": 0.0, "total": 0.0}
-  ]
+  }
 }
