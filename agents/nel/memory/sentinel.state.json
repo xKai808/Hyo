@@ -2,25 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-18T14:09:45Z",
-  "totalRuns": 75,
+  "lastRunAt": "2026-04-18T18:10:18Z",
+  "totalRuns": 77,
   "runHistory": [
-    {
-      "ts": "2026-04-15T18:10:17Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-15T18:10:23Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
     {
       "ts": "2026-04-15T18:10:29Z",
       "passed": 6,
@@ -244,6 +228,22 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-18T18:10:13Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-04-18T18:10:18Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -262,8 +262,8 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-18T14:09:45Z",
-      "daysFailing": 74,
+      "lastSeen": "2026-04-18T18:10:18Z",
+      "daysFailing": 76,
       "status": "open",
       "resolvedAt": "2026-04-18T06:14:01Z"
     },
@@ -774,8 +774,8 @@
       "firstSeen": "2026-04-18T02:09:35Z",
       "lastSeen": "2026-04-18T14:09:45Z",
       "daysFailing": 16,
-      "status": "open",
-      "resolvedAt": "2026-04-18T06:14:01Z"
+      "status": "resolved",
+      "resolvedAt": "2026-04-18T18:10:13Z"
     },
     "aurora-ran-today:e7fccf38": {
       "severity": "P0",
@@ -863,6 +863,25 @@
       "detail": "no aurora logs in /sessions/adoring-nifty-wright/mnt/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-18T14:09:42Z",
       "lastSeen": "2026-04-18T14:09:45Z",
+      "daysFailing": 2,
+      "status": "resolved",
+      "resolvedAt": "2026-04-18T18:10:13Z"
+    },
+    "scheduled-tasks-fired:755c6478": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/dreamy-fervent-keller/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-18T18:10:13Z",
+      "lastSeen": "2026-04-18T18:10:18Z",
+      "daysFailing": 2,
+      "status": "open"
+    },
+    "task-queue-size:40b61f0b": {
+      "severity": "P2",
+      "check_id": "task-queue-size",
+      "detail": "26 P0 tasks (overload threshold 5)",
+      "firstSeen": "2026-04-18T18:10:13Z",
+      "lastSeen": "2026-04-18T18:10:18Z",
       "daysFailing": 2,
       "status": "open"
     }

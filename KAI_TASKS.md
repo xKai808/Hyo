@@ -545,3 +545,6 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/admiring-brave-cannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3dff5398:escalated]
 
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/adoring-nifty-wright/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:b02c4059] _(filed 2026-04-18)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/dreamy-fervent-keller/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:755c6478] _(filed 2026-04-18)_
+- [ ] **[K]** [sentinel] 26 P0 tasks (overload threshold 5) [sentinel:task-queue-size:40b61f0b] _(filed 2026-04-18)_

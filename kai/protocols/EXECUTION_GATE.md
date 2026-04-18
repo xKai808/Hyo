@@ -162,11 +162,16 @@ START → Did I make changes to files?
                                       │          └─ NO → Continue ↓
                                       │
                                       └─ YES ↓
-                                             Did I check the live surface?
-                                               │  (curl the URL, grep for new strings,
-                                               │   confirm data files are correct)
+                                             Did I run bin/verify-live.sh?
+                                               │  (S19-003: mandatory after every push that
+                                               │   changes website files or data. Run via queue:
+                                               │   kai exec "bash ~/Documents/Projects/Hyo/bin/verify-live.sh --quick"
+                                               │   Review output — any FAIL = not done)
                                                │
-                                               ├─ NO → Do it now. Return to verify step.
+                                               ├─ NO → Run it now. Return to verify step.
+                                               │
+                                               ├─ FAIL → Fix the failing check, push,
+                                               │          re-run verify-live.sh. Loop.
                                                │
                                                └─ YES ↓
                                                       Did I update memory?
@@ -240,3 +245,34 @@ These are YES/NO gates. A NO on any question means: stop, fix, verify, then re-r
 - Updated data? → Did I update both paths (agents/sam/website/ AND website/)?
 - Added any API call? → Did I log the cost?
 - Wrote a summary for Hyo? → Is it self-contained without requiring prior context?
+
+---
+
+## On-the-Spot Ticket Gate (S19-004 — added 2026-04-18)
+
+**Fires the moment Kai finds anything unexpected. Before all other action.**
+
+Hyo's directive: every discrepancy gets a ticket immediately when discovered — not in a batch at end of session, not after fixing it, not "noted for later."
+
+```
+DISCREPANCY DISCOVERED:
+  │
+  └─ Open kai/tickets/tickets.jsonl entry NOW. Fields required:
+       id:          next S##-### in sequence
+       ts:          current MT timestamp
+       title:       one sentence, specific (not "bug found")
+       description: what I found, where, what the impact is
+       prevention:  the gate question that would have caught this earlier
+       caught_by:   "kai" (self-found) or "hyo" (Hyo found it)
+       severity:    P0 / P1 / P2
+       status:      open
+  │
+  └─ THEN continue with the task.
+```
+
+**No ticket = the discrepancy didn't happen.** Hyo's trust is built on the ticket log, not on Kai's memory.
+
+**Audit (weekly, every Sunday report):**
+- Count: how many discrepancies did Hyo report this week?
+- Count: how many had a ticket already open when Hyo reported it?
+- Gap = Kai's ticket discipline score. Target: 0 gap.

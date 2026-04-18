@@ -2678,10 +2678,13 @@ async function renderAnt(container) {
   const credits = data.credits || {};
   const burn = data.burn || {};
 
-  const todayCost = costs.today || {};
-  const totalToday = (todayCost.anthropic || 0) + (todayCost.openai || 0);
+  // costs.today is a flat number in ant-data.json (new format) or object (old format)
+  const todayCost = (typeof costs.today === 'object' && costs.today !== null) ? costs.today : {};
+  const totalToday = typeof costs.today === 'number' ? costs.today :
+    (todayCost.anthropic || 0) + (todayCost.openai || 0);
   const monthCost = costs.month || {};
-  const totalAPICosts = (monthCost.anthropic || 0) + (monthCost.openai || 0);
+  const totalAPICosts = (monthCost.anthropic || 0) + (monthCost.openai || 0) ||
+    ((costs.anthropic || {}).total || 0) + ((costs.openai || {}).total || 0);
 
   // Sum ALL expenses (subscriptions + API + infra + other) for true total burn
   const expData = data.expenses || {};
@@ -2794,7 +2797,61 @@ async function renderAnt(container) {
     `);
   }
 
-  // ── COST PER AGENT (MTD) ──
+  // ── ALERTS ──
+  const alerts = data.alerts || [];
+  if (alerts.length > 0) {
+    const alertHtml = alerts.map(a => `
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:rgba(220,60,40,0.08);border:1px solid rgba(220,60,40,0.25);border-radius:8px;margin-bottom:8px;">
+        <span style="font-size:1.1em;">⚠️</span>
+        <div>
+          <div style="font-size:0.8em;font-weight:700;color:var(--error);">${a.level || 'WARNING'}</div>
+          <div style="font-size:0.82em;color:var(--text-primary);margin-top:2px;">${a.msg}</div>
+        </div>
+      </div>`).join('');
+    html += antSection('🚨 Budget Alerts', alertHtml);
+  }
+
+  // ── STALENESS INDICATOR ──
+  const staleness = data.staleness || {};
+  if (staleness.lastUpdated) {
+    const lastUp = new Date(staleness.lastUpdated);
+    const ageHours = (Date.now() - lastUp.getTime()) / 3600000;
+    const staleAfter = staleness.staleAfterHours || 24;
+    const isStale = ageHours > staleAfter;
+    const staleColor = isStale ? 'var(--error)' : ageHours > staleAfter * 0.75 ? 'var(--warning)' : 'var(--success)';
+    const staleLabel = isStale ? `STALE (${ageHours.toFixed(0)}h old — run ant-update.sh)` : `Fresh (${ageHours.toFixed(1)}h ago)`;
+    html += `<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-secondary);border-radius:8px;margin-bottom:14px;border:1px solid var(--border-color);">
+      <div style="width:8px;height:8px;border-radius:50%;background:${staleColor};flex-shrink:0;"></div>
+      <div style="font-size:0.78em;color:var(--text-muted);">Ant data: <span style="color:${staleColor};font-weight:600;">${staleLabel}</span></div>
+    </div>`;
+  }
+
+  // ── COST PER PROCESS (byProcess) ──
+  const byProcess = data.byProcess || [];
+  if (byProcess.length > 0) {
+    const maxCost = byProcess[0].totalCost || 0.01;
+    const processRows = byProcess.map(p => {
+      const pct = (p.totalCost / maxCost) * 100;
+      const lastRun = p.lastRun ? p.lastRun.slice(0, 16).replace('T', ' ') : '—';
+      const avgColor = p.avgPerRun > 0.50 ? 'var(--error)' : p.avgPerRun > 0.10 ? 'var(--warning)' : 'var(--text-secondary)';
+      return `<div style="margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4px;">
+          <span style="font-size:0.875em;font-weight:600;">${p.process}</span>
+          <div style="text-align:right;">
+            <span style="font-size:0.875em;font-weight:700;">${antFmt(p.totalCost)}</span>
+            <span style="font-size:0.72em;color:${avgColor};margin-left:6px;">${antFmt(p.avgPerRun)}/run · ${p.runs} runs</span>
+          </div>
+        </div>
+        <div style="background:var(--bg-tertiary);border-radius:3px;height:4px;margin-bottom:3px;">
+          <div style="width:${pct.toFixed(0)}%;background:var(--accent);height:100%;border-radius:3px;opacity:0.8;"></div>
+        </div>
+        <div style="font-size:0.68em;color:var(--text-muted);">Last run: ${lastRun}</div>
+      </div>`;
+    }).join('');
+    html += antSection('Cost per Process', processRows);
+  }
+
+  // ── COST PER AGENT (MTD) — legacy byAgent field ──
   if (costs.byAgent && Object.keys(costs.byAgent).length > 0) {
     const agents = Object.entries(costs.byAgent).sort((a, b) => b[1] - a[1]);
     const maxAgent = agents[0]?.[1] || 0.01;
@@ -2810,7 +2867,7 @@ async function renderAnt(container) {
         </div>
       </div>`;
     }).join('');
-    html += antSection('Cost per Agent (Apr MTD)', agentRows);
+    html += antSection('Cost per Agent (total)', agentRows);
   }
 
   // ── EXPENSES ──

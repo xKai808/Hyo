@@ -1620,3 +1620,77 @@ Traceback (most recent call last):
     raise JSONDecodeError("Expecting value", s, err.value) from None
 json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 [2026-04-18T11:53:52-06:00] Metrics cycle complete
+[2026-04-18T12:09:04-06:00] === Aether metrics run ===
+[2026-04-18T12:09:04-06:00] Parsing full metrics from /Users/kai/Documents/Projects/AetherBot/Logs/AetherBot_2026-04-18.txt (BUY SNAPSHOT + TICKER CLOSE)...
+[2026-04-18T12:09:04-06:00] Today: 0
+0 trades (BUY SNAPSHOT), 0
+0 ticker closes
+[2026-04-18T12:09:04-06:00] GPT Phase 1 (independent): sending /Users/kai/Documents/Projects/AetherBot/Logs/AetherBot_2026-04-18.txt (    1716 lines) to GPT-4o...
+[2026-04-18T12:09:04-06:00] GPT Phase 1: FAILED — Log truncated from 1717 lines to ~2200 lines
+[Phase 1] Loaded: /Users/kai/Documents/Projects/AetherBot/Logs/AetherBot_2026-04-18.txt (200,179 chars)
+[Phase 1] Sending to GPT-4o — INDEPENDENT review (no Kai analysis)...
+API error HTTP 429: {
+    "error": {
+        "message": "Request too large for gpt-4o in organization org-UzGuNgvcjCXWlTLs23ysZ7UZ on tokens per min (TPM): Limit 30000, Requested 51023. The input or output tokens must be reduced in order to run successfully. Visit https://platform.openai.com/account/rate-limits to lear
+[2026-04-18T12:09:04-06:00] DATA GATE PASS (with warnings): Q4 WARN: strategy sum=76.53 vs week_pnl=24.94 (divergence=207%) — review for uncaptured trades
+{"ok":true,"ts":"2026-04-18T18:09:07.114Z"}[2026-04-18T12:09:04-06:00] HQ push: ok
+[2026-04-18T12:09:04-06:00] Git push: failed (will retry next cycle)
+[2026-04-18T12:09:04-06:00] WARN: Dashboard out of sync — local: 2026-04-18T12:09:06-06:00, API: 2026-04-18T11:53:52-06:00
+Traceback (most recent call last):
+  File "<stdin>", line 65, in <module>
+  File "<stdin>", line 65, in <genexpr>
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2026-04-18T12:09:04-06:00] Self-review: Aether pathway audit...
+[2026-04-18T12:09:04-06:00] Self-review: Aether pathway healthy
+[2026-04-18T12:09:04-06:00] Domain research: skipping publish (already published today). Metrics-only cycle.
+[2026-04-18T12:09:04-06:00] Self-evolution: capturing metrics and learning signals...
+[2026-04-18T12:09:04-06:00] WARN: Dashboard out of sync — local: 2026-04-18T12:09:06-06:00, API: 2026-04-18T11:53:52-06:00
+Traceback (most recent call last):
+  File "<stdin>", line 65, in <module>
+  File "<stdin>", line 65, in <genexpr>
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2026-04-18T12:09:04-06:00] Self-evolution logged: metrics cycle complete; WARNING: dashboard out-of-sync
+[2026-04-18T12:09:04-06:00] Self-authored report: skipping publish (already published today)
+[2026-04-18T12:09:04-06:00] Memory update: ACTIVE.md written
+[2026-04-18T12:09:04-06:00] WARN: Dashboard out of sync — local: 2026-04-18T12:09:06-06:00, API: 2026-04-18T11:53:52-06:00
+Traceback (most recent call last):
+  File "<stdin>", line 65, in <module>
+  File "<stdin>", line 65, in <genexpr>
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+Traceback (most recent call last):
+  File "<stdin>", line 65, in <module>
+  File "<stdin>", line 65, in <genexpr>
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[2026-04-18T12:09:04-06:00] Metrics cycle complete
