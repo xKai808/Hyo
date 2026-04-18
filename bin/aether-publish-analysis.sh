@@ -134,7 +134,7 @@ new_entry = {
         "risk":    risk    or "See full analysis for risk events.",
         "balance": balance or "See full analysis for balance ledger update.",
         "btc":     btc     or "See full analysis for BTC context.",
-        "readLink": f"/daily/aether-{date}"
+        "readLink": f"/aether-analysis?date={date}"
     }
 }
 
