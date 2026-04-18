@@ -26,11 +26,12 @@ FAILURES=()
 check() {
   local name="$1" url="$2" marker="$3"
   local content
-  # Cache-busting: force fresh response past CDN edge cache
-  content=$(curl -sL --max-time 20 \
+  # Note: no ?_v= query param for HTML pages — Vercel static routing breaks with query strings
+  # --compressed handles brotli/gzip from CDN edge
+  content=$(curl -sL --max-time 20 --compressed \
     -H "Cache-Control: no-cache" \
     -H "Pragma: no-cache" \
-    "$url?_v=$(date +%s)" 2>/dev/null || echo "CURL_FAIL")
+    "$url" 2>/dev/null || echo "CURL_FAIL")
   if [[ "$content" == "CURL_FAIL" ]]; then
     log "FAIL [$name]: could not fetch $url"
     FAILURES+=("$name: fetch failed ($url)")
