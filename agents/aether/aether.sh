@@ -267,6 +267,43 @@ _now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 # ── Write back ──
 cw["currentBalance"] = round(latest_balance, 2)
 
+# ── SE-016-001: Backfill dailyPnl from real AetherBot logs every cycle ──
+# This ensures dailyPnl is ALWAYS accurate, not dependent on --record-trade calls.
+try:
+    daily_map = {e["date"]: e for e in cw.get("dailyPnl", [])}
+    week_start_date = cw.get("start", datetime.now().strftime("%Y-%m-%d"))
+    ws = datetime.strptime(week_start_date, "%Y-%m-%d").date()
+    starting_bal = cw.get("startingBalance", 0.0)
+    prev_bal = starting_bal
+    # Build opening balance for each day by chaining from week start
+    for i in range(7):
+        day = ws + timedelta(days=i)
+        ds = day.strftime("%Y-%m-%d")
+        if ds not in daily_map:
+            daily_map[ds] = {"date": ds, "pnl": 0.0, "balance": prev_bal, "trades": 0}
+        for search_dir in [os.path.dirname(today_log_file), alt_log_dir]:
+            candidate = os.path.join(search_dir, f"AetherBot_{ds}.txt")
+            if os.path.isfile(candidate):
+                try:
+                    with open(candidate) as f:
+                        day_text = f.read()
+                    day_bals = re.findall(r'bal\s+\$([\d.]+)', day_text)
+                    day_trades = len(re.findall(r'BUY SNAPSHOT', day_text))
+                    if day_bals:
+                        day_last = float(day_bals[-1])
+                        daily_map[ds]["pnl"] = round(day_last - prev_bal, 2)
+                        daily_map[ds]["balance"] = day_last
+                        daily_map[ds]["trades"] = day_trades
+                        prev_bal = day_last
+                except Exception:
+                    pass
+                break
+    cw["dailyPnl"] = [daily_map.get((ws + timedelta(days=i)).strftime("%Y-%m-%d"),
+                      {"date": (ws + timedelta(days=i)).strftime("%Y-%m-%d"), "pnl": 0.0, "balance": prev_bal, "trades": 0})
+                     for i in range(7)]
+except Exception as e:
+    pass  # non-fatal — existing dailyPnl preserved if backfill fails
+
 # P&L: balance math is authoritative (captures premium + settlements + expiries)
 # SE-012-002: never use settled NET sum — it misses premium collection.
 cw["pnl"] = round(cw["currentBalance"] - cw["startingBalance"], 2)
@@ -660,30 +697,85 @@ main() {
   # Init metrics file if missing
   if [[ ! -f "$METRICS" ]]; then
     log "Creating initial metrics file"
-    python3 -c "
-import json
+    python3 - "$METRICS" <<'INIT_PYEOF'
+import json, re, os, sys
 from datetime import datetime, timedelta
+
+metrics_file = sys.argv[1]
 now = datetime.now()
 monday = now - timedelta(days=now.weekday())
 sunday = monday + timedelta(days=6)
+
+# SE-016-001: Read REAL starting balance from first AetherBot log of the week.
+# NEVER hardcode 1000 — that creates phantom losses when file is recreated mid-week.
+log_dir = os.path.expanduser("~/Documents/Projects/AetherBot/Logs")
+week_opening = None
+d = monday.date()
+while d <= now.date() and week_opening is None:
+    ds = d.strftime("%Y-%m-%d")
+    candidate = os.path.join(log_dir, f"AetherBot_{ds}.txt")
+    if os.path.isfile(candidate):
+        try:
+            with open(candidate) as f:
+                text = f.read()
+            bals = re.findall(r'bal\s+\$([\d.]+)', text)
+            if bals:
+                week_opening = float(bals[0])
+                print(f"[init] week_opening={week_opening} from {candidate}")
+        except Exception:
+            pass
+    d += timedelta(days=1)
+
+if week_opening is None:
+    # Absolute fallback: use current day's balance or 0
+    week_opening = 0.0
+    print("[init] WARN: no AetherBot logs found for this week — startingBalance=0")
+
+# Build daily entries with real balances where logs exist
+daily_entries = []
+prev = week_opening
+for i in range(7):
+    day = monday + timedelta(days=i)
+    ds = day.strftime("%Y-%m-%d")
+    candidate = os.path.join(log_dir, f"AetherBot_{ds}.txt")
+    entry = {'date': ds, 'pnl': 0.0, 'balance': prev, 'trades': 0}
+    if os.path.isfile(candidate):
+        try:
+            with open(candidate) as f:
+                text = f.read()
+            bals = re.findall(r'bal\s+\$([\d.]+)', text)
+            trades = len(re.findall(r'BUY SNAPSHOT', text))
+            if bals:
+                last_bal = float(bals[-1])
+                entry['pnl'] = round(last_bal - prev, 2)
+                entry['balance'] = last_bal
+                entry['trades'] = trades
+                prev = last_bal
+        except Exception:
+            pass
+    daily_entries.append(entry)
+
+current_bal = prev
+
 d = {
   'currentWeek': {
     'start': monday.strftime('%Y-%m-%d'),
     'end': sunday.strftime('%Y-%m-%d'),
-    'startingBalance': 1000.0, 'currentBalance': 1000.0,
-    'pnl': 0.0, 'pnlPercent': 0.0,
+    'startingBalance': week_opening, 'currentBalance': current_bal,
+    'pnl': round(current_bal - week_opening, 2),
+    'pnlPercent': round((current_bal - week_opening) / week_opening * 100, 2) if week_opening else 0.0,
     'trades': 0, 'wins': 0, 'losses': 0, 'winRate': 0.0,
     'stoplossTriggers': 0, 'harvestEvents': 0,
     'strategies': [{'name': 'Grid Bot', 'status': 'standby', 'pnl': 0.0, 'trades': 0, 'winRate': 0.0, 'lastAction': now.strftime('%Y-%m-%dT%H:%M:%S-06:00')}],
-    'dailyPnl': [{'date': (monday + timedelta(days=i)).strftime('%Y-%m-%d'), 'pnl': 0.0, 'balance': 1000.0, 'trades': 0} for i in range(7)],
+    'dailyPnl': daily_entries,
     'recentTrades': [],
   },
   'lastWeek': {'start': '', 'end': '', 'startingBalance': 0, 'endingBalance': 0, 'pnl': 0, 'pnlPercent': 0, 'trades': 0, 'wins': 0, 'losses': 0, 'winRate': 0, 'stoplossTriggers': 0, 'harvestEvents': 0, 'bestStrategy': '—', 'worstStrategy': '—'},
   'allTimeStats': {'totalPnl': 0.0, 'totalTrades': 0, 'weeklyHistory': []},
   'updatedAt': now.strftime('%Y-%m-%dT%H:%M:%S-06:00'),
 }
-with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
-"
+with open(metrics_file, 'w') as f: json.dump(d, f, indent=2); f.write('\n')
+INIT_PYEOF
   fi
 
   # Check for Monday reset
