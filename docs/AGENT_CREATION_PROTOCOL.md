@@ -1,8 +1,9 @@
 # Agent Creation Protocol
 
-**Version:** 2.0 | **Author:** Kai (CEO, hyo.world) | **Date:** 2026-04-13
+**Version:** 3.0 | **Author:** Kai (CEO, hyo.world) | **Date:** 2026-04-17
 **Status:** Battle-tested across 8 agents (Kai, Sam, Nel, Ra, Aurora, Aether, Dex, + Cipher/Sentinel sub-agents)
-**v2.0 changes (session 8):** Added PLAYBOOK.md + evolution.jsonl to file structure. Runner template now includes self-review (agent-gates.sh), self-evolution with reflection block, v2.0 evolution entries. New section 6.5: Agent Autonomy & Growth. Testing protocol expanded to 11 points (PLAYBOOK, evolution, reflection). Post-creation updated for domain growth and proposals.
+**v2.0 changes (session 8):** Added PLAYBOOK.md + evolution.jsonl to file structure. Runner template includes self-review (agent-gates.sh), self-evolution with reflection block. New section 6.5: Agent Autonomy & Growth. Testing protocol expanded to 11 points.
+**v3.0 changes (session 14):** Questions replace reminders throughout. GROWTH.md is now required at creation. Test 12+13 added: simulation gate + live surface verify (PROTOCOL-001 — skipping these caused Hyo to catch errors Kai missed all session). ERROR-TO-GATE step 3b added: every creation error → ACTIVE ticket with owner+deadline (PROTOCOL-002). forKai inbox check wired into runner template. ARIC cycle made explicit in runner structure.
 
 This document is the complete, repeatable protocol for creating, integrating, testing, and operating an autonomous agent within a multi-agent system. It was developed through iterative production use — every step exists because skipping it caused a failure at some point.
 
@@ -460,28 +461,35 @@ FAILURE MODES:
 
 ---
 
-## 6.5. Agent Autonomy & Growth (Session 8 — Fundamental)
+## 6.5. Agent Autonomy & Growth (v3.0 — Sessions 8 + 14)
 
 Agents are NOT runners. They are autonomous AI with domain specialties that must grow over time. This section defines how a new agent is set up for autonomy from day one.
 
-**Core principle:** The agent decides for itself. It reports to Kai for memory and tracking. It does not ask permission except for cross-agent interface changes, spending, or constitutional edits.
+**Core principle (v3.0):** Questions, not reminders. A reminder says "remember to do X." A gate question asks "did I do X?" and blocks until answered YES. Every agent protocol uses gate questions. Reminders get ignored. Gates don't.
+
+The agent decides for itself. It reports to Kai. It does not ask permission except for cross-agent interface changes, spending, or constitutional edits.
 
 **At creation, every agent must have:**
 
 1. **PLAYBOOK.md** — the agent's own operational manual. The agent owns this file and evolves it every cycle. Kai can override but does not write it for the agent. Template in Section 2.
 
-2. **Domain Reasoning questions** — in PLAYBOOK.md under "## Domain Reasoning". Start with 3-5 domain-specific questions the agent should ask every cycle. These extend the universal framework at `kai/protocols/REASONING_FRAMEWORK.md`. The agent adds more as it learns.
+2. **GROWTH.md** (v3.0 — mandatory) — 3 identified weaknesses in the agent's domain, 3 planned systemic improvements with deadlines, self-set goals. The growth phase runs BEFORE main work every cycle (sourced via `bin/agent-growth.sh`). Growth is not optional. Gate: "Does the agent have a GROWTH.md with at least 3 weaknesses and 3 improvements?" NO → create it before declaring production-ready.
 
-3. **Reflection block in evolution entries** — every evolution.jsonl entry must be v2.0 format with a `"reflection"` object. The agent collects evidence-based signals (not canned "none" strings) and answers honestly: bottleneck, symptom-vs-system, artifact alive, domain growth, learning, propagation check, reflection quality.
+3. **Domain Reasoning questions** — in PLAYBOOK.md under "## Domain Reasoning". Start with 3-5 domain-specific questions the agent should ask every cycle. These extend the universal framework at `kai/protocols/REASONING_FRAMEWORK.md`. The agent adds more as it learns. Questions must be yes/no or open-ended — never reminders.
 
-4. **Self-review integration** — the runner sources `kai/protocols/agent-gates.sh` and calls `run_self_review("<name>")`. This provides trigger validation, visibility checks, resolution pickup, recall, and gate adoption. The agent extends with domain-specific logic.
+4. **Reflection block in evolution entries** — every evolution.jsonl entry must be v2.0 format with a `"reflection"` object. Evidence-based signals only — no canned strings. Answers: bottleneck, symptom-vs-system, artifact alive, domain growth, learning, propagation check.
 
-5. **Growth trajectory** — at creation, define: what does "expert level" look like for this agent's domain? What would it know in 30 days that it doesn't know today? This goes in PRIORITIES.md as a research agenda.
+5. **Self-review integration** — runner sources `kai/protocols/agent-gates.sh` and calls `run_self_review("<name>")`. Extends with domain-specific gate questions.
+
+6. **forKai inbox** (v3.0) — runner must check `kai/ledger/forkai-inbox.jsonl` for unreviewed messages addressed to this agent. Gate: "Are there unreviewed forKai messages for this agent?" YES → surface them, respond, mark reviewed before main work.
+
+7. **ERROR-TO-GATE** (v3.0) — when any error is found during creation or operation, the fix MUST include: (a) an ACTIVE ticket in tickets.jsonl with owner + deadline ≤48h for P0/P1, (b) a gate question placed where it will be asked. A log entry without a ticket is not owned. An owned problem without a gate will recur.
 
 **Question framework (built into every agent):**
-- Open-ended questions to EXPLORE: "What would happen if...?", "What am I not seeing?", "What would an expert do differently?"
-- Yes/no questions to DECIDE DIRECTION: "Is this triggered?", "Did this reach the user?", "Am I solving the system?"
-- Pattern: explore → narrow → execute → reflect
+- Open-ended to EXPLORE: "What would happen if...?", "What am I not seeing?", "What would an expert do differently?"
+- Yes/no to DECIDE: "Is this triggered?", "Did this reach the user?", "Am I solving the system or patching a symptom?"
+- Never reminders. Never "remember to X." Always "did I X?" with a blocking NO path.
+- Pattern: explore → narrow → execute → reflect → gate
 
 **Event-driven response:**
 - When dispatch routes a P0/P1 flag to this agent, the agent's runner is queued for immediate execution (not next schedule). The agent picks up the task, acts, and reflects in the same run.
@@ -610,9 +618,10 @@ launchctl list | grep hyo
 
 ---
 
-## 10. Testing Protocol: 8-Point Validation
+## 10. Testing Protocol: 13-Point Validation (v3.0)
 
-Run ALL 8 tests before declaring an agent production-ready. No exceptions.
+Run ALL 13 tests before declaring an agent production-ready. No exceptions.
+Gate question: "Did I pass all 13 tests?" NO → fix failures before shipping.
 
 ### Test 1: Manifest Validation
 ```bash
@@ -684,7 +693,31 @@ grep -q "Decision Log" agents/<name>/PLAYBOOK.md && echo "PASS: decision log" ||
 grep -q "Self-Assessment" agents/<name>/PLAYBOOK.md && echo "PASS: self-assessment" || echo "FAIL: no self-assessment"
 ```
 
-**Scoring:** All 11 must PASS. Any FAIL blocks production deployment.
+### Test 12: Simulation Clean (PROTOCOL-001 — mandatory)
+```bash
+bash bin/dispatch.sh simulate 2>&1 | tail -5
+# Gate: "Are there NEW failures not present before this agent was created?"
+# YES → fix them. NO → continue.
+```
+- Run dispatch simulate after wiring the agent in
+- No new failures introduced by the new agent's files, runners, or data
+- Pre-existing known failures are acceptable (they have tickets)
+- This test must run and pass. "I'll run it later" = FAIL.
+
+### Test 13: Live Surface Verify (PROTOCOL-001 — mandatory)
+```bash
+curl -s https://www.hyo.world/hq | grep -o "<agent-name>\|<agent-output>"
+# Gate: "Does the agent's output appear on the live HQ surface?"
+# NO → trace the path: data file → feed.json entry → HQ renderer → live URL
+```
+- Agent's first report appears in HQ feed
+- readLink resolves (no 404)
+- Report typography matches other reports (Plus Jakarta Sans, JetBrains Mono)
+- Live ETag updated after push
+- "Vercel shows READY" is not sufficient — grep the live content.
+
+**Scoring:** All 13 must PASS. Any FAIL blocks production deployment.
+Tests 12 and 13 are the most commonly skipped — both are mandatory every time, without exception (PROTOCOL-001, session 14).
 
 ---
 
