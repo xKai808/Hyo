@@ -119,7 +119,29 @@ _HR_RE = re.compile(r"^-{3,}\s*$")
 _FENCE_RE = re.compile(r"^```(.*)$")
 
 
+def strip_preamble_code_blocks(md: str) -> str:
+    """Strip fenced code blocks that appear before the first heading.
+
+    synthesize.py outputs a structured ```yaml block containing entity/topic
+    data before the prose newsletter. That block is machine-readable metadata —
+    it should never be rendered to the reader. This strips it along with any
+    other code blocks in the pre-heading preamble.
+
+    Gate question: does the rendered HTML start with a <pre> block instead of
+    a heading? YES → this function wasn't called or the strip failed.
+    """
+    first_heading = re.search(r"^#+\s", md, re.MULTILINE)
+    if not first_heading:
+        return md
+    preamble = md[: first_heading.start()]
+    content = md[first_heading.start() :]
+    # Remove all fenced code blocks from the preamble
+    cleaned_preamble = re.sub(r"```[^\n]*\n[\s\S]*?```\n?", "", preamble)
+    return cleaned_preamble + content
+
+
 def md_to_html_body(md: str) -> str:
+    md = strip_preamble_code_blocks(md)
     lines = md.splitlines()
     i = 0
     out: list[str] = []
