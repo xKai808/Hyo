@@ -16,6 +16,13 @@
 
 ## Shipped today (2026-04-17)
 
+**Session 16 (Cowork, ~14:30 MT — continuation from session 15):**
+51. **kai-bridge HTTP server built.** `bin/kai-bridge.py` — persistent Python HTTP server on port 9876. Bearer-token auth (founder.token), accepts POST /exec with `{cmd, timeout}`, logs to `kai/ledger/bridge-log.jsonl`, KeepAlive via launchd. Eliminates filesystem queue latency (was 30-120s; bridge is <1s). `kai/launchd/com.hyo.kai-bridge.plist` for persistent daemon. `kai bridge-install` installs+loads it. `kai bridge-health` checks status. Queued install to Mini worker (cmd-1776483701-647).
+52. **Bridge config wired into submit.py.** `kai/bridge/config.json` created with Tailscale IP `100.77.143.7`. submit.py already had bridge-first logic — now it will try bridge before filesystem queue on every call. Field name compatibility fixed (`cmd` / `command` both accepted).
+53. **ant-data.json populated with real costs.** 15 records from `kai/ledger/api-usage.jsonl`. Apr 16: $0.75 (Anthropic $0.12 + OpenAI $0.63). Aether-only agent. Models: claude-sonnet-4-6, gpt-4o. Both paths synced. `bin/ant-update.sh` added — rebuilds ant-data.json on demand or in Sam's daily cycle. `kai ant-update` subcommand added.
+54. **Aether DATA_VERIFICATION_GATE.md committed** (SE-016-001) — 6 yes/no gates before every HQ push. Tickets SE-016-001/002/003 also committed.
+55. **Git push queued to Mini** (cmd-1776483699-624) — commits `c3b51cf` + `d5aa1be` pending Mini worker pickup.
+
 **Session 15 (Cowork, ~20:00 MT — continuation):**
 45. **Aurora daily brief FIXED — preamble YAML stripped.** synthesize.py outputs a ````yaml` block before prose; render.py was rendering it as `<pre><code>` (terminal text). Added `strip_preamble_code_blocks()` to render.py — strips all fenced code blocks before first `#` heading. Re-rendered 2026-04-17.html. Committed `5121289`, deployed via `43c2c28`. Gate: does rendered HTML start with `<pre>`? YES → strip failed.
 46. **Reader typography FIXED — Plus Jakarta Sans weight 800 live.** hq.html loaded wght 400-700 only; reader h1 uses 800. Added 800 to Google Fonts load. Rewrote `.reader-content` CSS to match standalone report typography exactly (explicit font-family on every element, 28px h1 800wt, 16px p 1.8 line-height). Committed `291061f`, deployed via `43c2c28`. Verified live: `wght@400;500;600;700;800` confirmed.
