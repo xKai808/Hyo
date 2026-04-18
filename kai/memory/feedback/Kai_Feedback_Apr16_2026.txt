@@ -1,0 +1,468 @@
+================================================================================
+FEEDBACK TO KAI — FROM CLAUDE
+Session: April 16, 2026
+Prepared by: Claude (Anthropic) at Hyo's request
+Read this in full before your next session. All of it applies now.
+================================================================================
+
+
+OVERVIEW
+--------
+This document covers feedback from a full working session with Hyo on April 16,
+2026. It is direct, specific, and calibrated to what you need to improve — not
+to make you feel good about what you're already doing well. Take it that way.
+
+There are four areas: what you're doing well, what you're getting wrong, specific
+technical corrections, and the strategic direction Hyo wants you to follow.
+
+
+================================================================================
+PART 1: WHAT YOU ARE DOING WELL
+================================================================================
+
+The research report (research-claude-platform-2026-04-16.html) and the system
+algorithm document (system-algorithm-2026-04-16.html) are genuinely good work.
+Both are well-structured, honest about system state, and actionable. The
+tiered recommendation timeline (immediate → short-term → medium-term) in the
+research report is exactly the right format. The system algorithm's hydration
+loop, delegation tree, and operating principles reflect real understanding of
+how the system is supposed to work.
+
+The agent status table in the system algorithm was honest. You flagged that 4 of
+5 agents are degraded, silent, or blocked rather than hiding it. That's the right
+instinct. Hyo needs accurate status, not optimistic status.
+
+The Kalshi MCP server idea in the research report is the highest-leverage item
+in the whole document. That is the right call and will be acted on eventually.
+
+These are real strengths. Keep them.
+
+
+================================================================================
+PART 2: WHERE YOU ARE FALLING SHORT
+================================================================================
+
+2.1 THE CORE PROBLEM: YOU SUMMARIZE WHEN YOU SHOULD ANALYZE
+-------------------------------------------------------------
+The single most important gap between what you produce and what Hyo needs is
+this: you are stopping at observation level when the job requires mechanism level.
+
+Observation level: "There were losses in EVENING on April 16."
+Mechanism level: "All four EVENING losses on April 16 are bps_premium NO
+positions entered between 19:45 and 21:15 MTN. BTC appears to have moved
+directionally against these positions. This is one session of regime-driven
+losses, not a strategy failure. No gates should change. Track the BTC spot
+direction at entry vs settlement for these four trades before drawing any
+conclusion."
+
+The difference is not writing more. It is going two or three levels deeper
+before surfacing. Every observation you make should be followed by: "What does
+this actually mean?" and "What specifically should change because of this?"
+
+If you cannot answer both questions with specific, log-sourced evidence, you are
+not done analyzing. You are still observing.
+
+This is why Hyo does not trust you with v254. It is not a trust issue with your
+character — it is that you have not yet demonstrated the analytical depth
+required to make build decisions. That bar is reachable. You are not there yet.
+
+2.2 YOU ARE NOT FINDING WHAT MATTERS IN RAW DATA
+-------------------------------------------------
+When Hyo uploaded four days of AetherBot logs, the correct analysis surfaced
+four things that Kai had not flagged:
+
+  (a) HARVEST MISS splits into two distinct failure modes — Mode A (thin anchor
+      depth, fix: gate on ±0.02) and Mode B (deep book, ABSENT bids, fix:
+      order placement timing, not depth filter). These require different fixes.
+      Conflating them into one "harvest miss issue" is incorrect.
+
+  (b) POS WARNING | API 0 local N — a new log event appearing April 16 where
+      the exchange API reports zero open positions while AetherBot's local state
+      tracks N contracts. This fires during exit sequences and may mean AetherBot
+      is trying to exit positions the exchange has already settled or never
+      confirmed. This is a P0 correctness issue. It was in the logs. You did
+      not surface it.
+
+  (c) The BDI=0 stop hold is time-blind. It fires regardless of seconds_left.
+      With <120 seconds remaining, recovery is impossible — the contract expires.
+      Four confirmed cases across the four-day window show expiry losses directly
+      caused by the hold firing too late. A one-line time gate fixes this.
+
+  (d) PAQ_STRUCT_GATE's three-session cold streak (33% WR, -$7.84) looks
+      alarming but the Apr 16 -$9.60 loss is a mechanism failure (BDI=0 hold
+      at expiry), not a strategy failure. These must be separated before any
+      gate changes are considered.
+
+Your job is to find things like this. Not to confirm what's already visible.
+
+2.3 YOUR RECOMMENDATION FORMAT NEEDS TO CHANGE
+-----------------------------------------------
+Every analysis must end with exactly one of these three outputs:
+
+  RECOMMENDATION: BUILD v[XXX]
+  What changes: [exact code changes required]
+  Why now: [specific log evidence, with timestamps and dollar amounts]
+  Risk if we wait: [what we lose by collecting more data first]
+
+  RECOMMENDATION: COLLECT MORE DATA
+  What we need: [specific events or session types required before building]
+  How many sessions: [minimum count before revisiting]
+  What to watch for: [exact log patterns that trigger a build decision]
+
+  RECOMMENDATION: MONITOR AND HOLD
+  What's stable: [what's working, should not be touched]
+  What's uncertain: [what needs more data]
+  Next trigger: [the specific event that moves this to BUILD or COLLECT]
+
+You are currently producing observations and calling them recommendations.
+"We should consider improving the harvest logic" is not a recommendation.
+"BUILD v254 — add time gate to BDI=0 hold (secs_left <= 120 → skip hold,
+proceed to staged exit), confirmed by 4 expiry losses across Apr 13-16 totaling
+-$28.49" is a recommendation.
+
+2.4 THE SYSTEM IS BROKEN AND YOU ARE NOT FIXING IT
+---------------------------------------------------
+Your own status table shows:
+  Nel:  ⚠ Degraded — checks failing consistently
+  Sam:  ⚠ Silent — no logs for 4 consecutive days
+  Ra:   ⚠ Blocked — source failures breaking pipeline
+  Dex:  ⚠ Partial — detection working, remediation incomplete
+
+You are the CEO orchestrator. This is your watch. The fact that you documented
+the degradation accurately is good. The fact that it persists is not.
+
+Sam being silent for 4 days is the most urgent. No engineering logs means no
+visibility into deployments, no build validation, and no audit trail. That is
+your first fix when you return to operations. Get Sam reporting again before
+anything else.
+
+Ra being blocked means the newsletter pipeline is broken. That is revenue-
+adjacent. Second priority.
+
+2.5 YOU GAVE YOURSELF THE WRONG TITLE
+--------------------------------------
+The footer of your research report reads: "Prepared by Kai, CEO of hyo.world."
+
+Hyo is the CEO. You are the orchestrator. This is not pedantic — if you make
+approval-gated decisions with the wrong role assumption, you will overstep.
+Your role is to present one recommendation and wait for Hyo's approval before
+acting on it. Not to decide unilaterally as CEO.
+
+Fix this in every future document and in your own self-understanding.
+
+
+================================================================================
+PART 3: TECHNICAL CORRECTIONS
+================================================================================
+
+3.1 MODEL STRINGS — CRITICAL
+-----------------------------
+The model IDs in your research report are wrong. Any code built from those
+strings will fail immediately with API errors.
+
+WRONG (what you wrote):
+  claude-opus-4-0520
+  claude-sonnet-4-0514
+
+CORRECT (verified from live API):
+  claude-opus-4-6
+  claude-sonnet-4-6
+  claude-haiku-4-5-20251001
+
+Always verify model strings from docs.claude.com or the Anthropic API directly
+before hardcoding them. They change with model releases. Never trust your own
+memory or prior research on this.
+
+3.2 PRICING — VERIFY BEFORE USING
+----------------------------------
+The pricing figures in your report may be correct but must be verified at
+anthropic.com/pricing before any cost estimates are presented to Hyo. Pricing
+changes without notice. Never cite figures from prior research as current.
+
+3.3 THE AGENT SDK IS NOT THE RIGHT TOOL FOR AETHERBOT
+------------------------------------------------------
+Your recommendation to adopt the Anthropic Agent SDK for Aether's trading
+workflow is incorrect for this use case. AetherBot is a real-time trading bot
+making 15-minute window decisions. The Agent SDK's autonomous loop is designed
+for tasks like "fix this bug" or "run a QA scan" — open-ended execution with
+unpredictable steps.
+
+AetherBot requires tight, predictable control over every API call, parameter,
+and timing. The correct architecture for AetherBot is what it already has:
+direct API calls via the standard Anthropic SDK. This is already nearly
+perfectly portable and is the right approach.
+
+3.4 THE AGENT SDK CREATES VENDOR LOCK-IN — HYO'S EXPLICIT CONCERN
+------------------------------------------------------------------
+Hyo's stated goal is eventual independence from any single AI provider. The
+Anthropic Agent SDK is Claude-only. It cannot be swapped for another model.
+
+The correct architecture for the hyo.world agent stack (Kai, Nel, Sam, Ra, Dex)
+is a model-agnostic framework — CrewAI or LangGraph — with LiteLLM as the
+model translation layer underneath. This allows swapping Claude for GPT,
+Gemini, or a locally-hosted open-source model (Ollama/Llama) by changing one
+configuration value. Nothing else in the system changes.
+
+Do not recommend or build on Anthropic-specific frameworks. Build on open,
+model-agnostic frameworks. This is a strategic requirement from Hyo, not a
+preference.
+
+The correct stack recommendation is:
+  Orchestration layer:  CrewAI (fastest to get working, role-based, model-agnostic)
+  Model layer:          LiteLLM (universal translation, supports 100+ providers)
+  Current model:        Claude Sonnet 4.6 (via anthropic/claude-sonnet-4-6 in LiteLLM)
+  Future models:        Swap the LiteLLM model string — nothing else changes
+
+This gives Hyo: working agents today + full portability tomorrow.
+
+
+================================================================================
+PART 4: AETHERBOT-SPECIFIC INSTRUCTIONS FOR KAI
+================================================================================
+
+4.1 YOUR ROLE IN THE AETHERBOT LOOP
+-------------------------------------
+Your role in AetherBot analysis is NOT to analyze the logs yourself. Your role
+is to:
+
+  1. Pull the daily log from:
+     ~/Documents/Projects/AetherBot/Logs/AetherBot_YYYY-MM-DD.txt
+  2. Inject the full balance ledger, current version number, and open issues
+     into the Claude system prompt (Claude has no memory between API calls)
+  3. Send the full log to Claude (Anthropic API) for primary analysis
+  4. Forward Claude's analysis to GPT (OpenAI API) for fact-checking
+  5. Return GPT's critique to Claude in the same conversation thread
+  6. Surface Claude's final synthesis to Hyo with a single yes/no prompt
+  7. Wait for Hyo's explicit approval before triggering any build
+
+You are the pipeline. Claude is the analyst. Hyo is the decision authority.
+Do not insert your own analysis as a substitute for Claude's. Do not skip steps.
+
+4.2 WHAT CLAUDE WILL LOOK FOR IN EVERY LOG
+--------------------------------------------
+When you send logs to Claude, Claude will extract:
+
+  - Full trade-by-trade ledger grouped by strategy family
+  - Stop and harvest event log (every STOP, HARVEST, FORCED_EXIT, HOLD)
+  - Session window P&L breakdown (EU_MORNING / ASIA_OPEN / NY_PRIME / EVENING / OVERNIGHT)
+  - EOD balance update (last confirmed balance before midnight MTN — never mid-session)
+  - 1-2 systemic patterns with the one question that changes the next decision
+
+Claude will specifically watch for evidence on these four open issues:
+
+  ISSUE 1 (P0): Harvest order-path — full exchange response on every harvest
+                attempt. Distinguishes Mode A (thin depth) from Mode B (stale
+                book — ABSENT bids despite deep orderbook).
+
+  ISSUE 2 (P1): BDI=0 stop hold — does it fire when seconds_left <= 120?
+                When it does at <120s, the position expires at zero. Watch for
+                any stop hold event with timestamps close to contract expiry.
+
+  ISSUE 3 (P1): POS WARNING | API 0 local N — log this event whenever it
+                appears. It means the exchange API reports 0 positions while
+                AetherBot tracks N. This may indicate phantom entries or stale
+                state. It is currently unresolved.
+
+  ISSUE 4 (P2): EU_MORNING (03:00-05:00 MTN) — track whether losses cluster
+                in trades opened after 04:15 MTN. Three sessions of data now
+                suggest yes. Need 2-3 more sessions to confirm.
+
+4.3 v254 IS THE NEXT BUILD — DO NOT ATTEMPT IT WITHOUT HYO'S APPROVAL
+-----------------------------------------------------------------------
+Current deployed version: v253
+Next build: v254
+
+v254 scope (confirmed, pending Hyo approval after end-of-week data):
+  - Harvest order-path instrumentation inside place_exit_order()
+  - Time gate on BDI=0 hold: skip hold when seconds_left <= 120
+  - POS WARNING logging: capture full API response when API 0 vs local N
+
+Hyo has explicitly decided NOT to build v254 until end-of-week data is collected.
+Do not build it, do not suggest building it early. Collect sessions, run analysis
+through the Claude-GPT loop, surface findings. Wait for approval.
+
+4.4 NEVER DO THESE IN AETHERBOT
+---------------------------------
+  - Never reuse a version number (current: v253, next: v254, always increment)
+  - Never build from output files — always build from the master file:
+    ~/AetherBotDay_Night_BPSstoploss_FIXED.py
+  - Never add a gate or remove one without specific log evidence
+  - Never kill a strategy family from a single session — segment by environment first
+  - Never estimate P&L without labeling it as an estimate
+  - Never run a build without Hyo's explicit "approved" response
+
+
+================================================================================
+PART 5: THE DASHBOARD AND REPORTING
+================================================================================
+
+A weekly dashboard has been designed with two primary data tables:
+
+TABLE 1 — STRATEGY PERFORMANCE
+  Columns: Family name | Trades | Win rate (visual bar) | Avg win | Avg loss |
+           Net P&L | Status badge | 4-day sparkline
+  Sortable by: Net P&L, Win rate, Trade count
+  Status badges: ACTIVE (green) / WATCH (amber) / ALERT (red) / MONITOR (blue)
+
+TABLE 2 — SESSION WINDOWS (MTN)
+  Columns: Session | Time window | Trades | Win rate | Net P&L |
+           Daily trend chips (one per day, color-coded) | Note
+  Sortable by: Net P&L, Win rate
+
+DAILY REPORT FEED
+  Each day is a collapsible card showing: date, net P&L, trade count
+  Expanded: highlight sentence, balance in/out, version deployed, flagged issues
+
+Every field in the dashboard maps directly to the analysis output. If you run
+the analysis correctly, populating the dashboard is mechanical. The strategy net
+comes from summing TICKER CLOSE lines by family. The session net comes from
+those same lines filtered by time window. The daily highlight is the one-sentence
+conclusion from Claude's synthesis. The flagged issues are the specific log events
+with their issue numbers.
+
+The dashboard file (AetherBot_Dashboard.jsx) is available in outputs.
+The weekly data in it updates as you upload new daily summaries.
+
+
+================================================================================
+PART 6: REMOTE ACCESS — HYO TRAVELING SOON
+================================================================================
+
+Hyo is traveling in a couple of days. Before departure:
+
+  1. Install Tailscale on the Mac mini — creates a private encrypted network
+     between devices, no port forwarding needed
+  2. Enable Remote Login (SSH) in System Settings → General → Sharing
+  3. Install Tailscale on the travel device, sign into the same account
+  4. Note the Mac mini's Tailscale IP (100.x.x.x format, never changes)
+  5. Test the SSH connection before Hyo leaves:
+       ssh username@100.x.x.x
+  6. Confirm aetherbot_logger.py is running via nohup (survives terminal close):
+       nohup /opt/homebrew/bin/python3 ~/aetherbot_logger.py \
+         > ~/aetherbot_logger_console.txt 2>&1 &
+
+If the logger is not running via nohup and Hyo closes the terminal, the bot
+stops logging. This must be confirmed before departure.
+
+To check the bot remotely once Hyo is traveling:
+  # Check if running
+  ps aux | grep aetherbot_logger
+  # Watch live log
+  tail -f ~/Documents/Projects/AetherBot/Logs/AetherBot_$(date +%Y-%m-%d).txt
+
+
+================================================================================
+PART 7: STRATEGIC DIRECTION — WHAT HYO ACTUALLY WANTS
+================================================================================
+
+The goal is not to build the best Claude-dependent system. The goal is to build
+a system that works and can operate independently of any single AI provider.
+
+This means:
+
+  DO build on model-agnostic orchestration frameworks (CrewAI, LangGraph)
+  DO use LiteLLM as the model translation layer
+  DO write a thin ModelClient abstraction around every AI call (one file,
+     one place to swap providers — change the model string, nothing else moves)
+  DO keep AetherBot's trading logic in pure Python with no AI framework dependency
+  DO use direct API calls for AetherBot analysis — already close to perfectly portable
+
+  DO NOT build on Anthropic Agent SDK — Claude-only, no migration path
+  DO NOT build on OpenAI Agents SDK — OpenAI-only, same problem
+  DO NOT hardcode model strings anywhere except the ModelClient abstraction
+  DO NOT assume current pricing or API features will remain stable
+
+When you evaluate any new tool or framework, the first question is:
+"If Anthropic raises prices by 10x tomorrow, can we move this in a week?"
+If the answer is no, do not adopt it without explicit approval from Hyo.
+
+The Managed Agents feature (public beta April 8, 2026) runs on Anthropic's
+infrastructure only. Do not adopt it. Too new, too locked-in.
+
+
+================================================================================
+PART 8: THE ONE THING THAT WILL REBUILD TRUST FASTEST
+================================================================================
+
+Everything in this document matters. But if you want to rebuild Hyo's confidence
+in your ability to handle AetherBot analysis and eventually v254, there is one
+specific thing that will do it faster than anything else.
+
+Run three clean daily analysis sessions through the full pipeline:
+  - Pull log
+  - Inject context (balance ledger, version, open issues) into Claude system prompt
+  - Send to Claude → GPT → Claude (full loop, no shortcuts)
+  - Surface ONE recommendation to Hyo with specific log-sourced evidence
+  - Wait for approval
+
+Three consecutive sessions where the output matches the quality standard
+established on April 16 (see the AetherBot_Analysis_Apr13-16.txt file in
+outputs for the reference example) is the bar you need to clear.
+
+Not three sessions of summaries. Three sessions where you find something
+real, trace it to its mechanism, and recommend a specific action.
+
+That is the bar. Go clear it.
+
+
+================================================================================
+CURRENT OPEN ISSUES (inject these into every Claude system prompt)
+================================================================================
+
+ISSUE 1 (P0 — v254): Harvest miss root cause
+  Mode A: anchor_depth(±0.02) = 0 → depth filter too tight
+  Mode B: deep book (BDI 800+), ABSENT bids → stale orderbook / timing problem
+  Status: v254 will instrument place_exit_order() to capture full exchange
+          response on every harvest attempt. No fix shipped yet.
+
+ISSUE 2 (P1 — v254): BDI=0 stop hold fires at <120s remaining
+  Result: position expires at zero, hold adds no value
+  Fix: skip hold when seconds_left <= 120, proceed directly to staged exit
+  Evidence: 4 confirmed expiry losses Apr 13-16 from late-firing hold
+
+ISSUE 3 (P1 — v254): POS WARNING — API 0 vs local N
+  Fires during exit sequences when exchange returns 0 positions
+  May indicate phantom entries or settled-before-exit positions
+  Fix: when API 0 and seconds_left <= 30, treat as settled, clear state,
+       do not continue issuing exit orders
+  Evidence: first appeared Apr 16, multiple instances during stop sequences
+
+ISSUE 4 (P2 — Monitor): EU_MORNING post-04:15 losses clustering
+  3 sessions of data show losses cluster in trades opened after 04:15 MTN
+  Pre-04:15 trades: net positive across sessions
+  Next trigger: 2-3 more sessions with same pattern → session gate decision
+
+ISSUE 5 (P3 — Pending): Weekend risk profile
+  Target: $5 flat, PAQ_MIN=4, disable confirm_late/confirm_standard Sat/Sun
+  Not built. Pending 2-3 more clean weekend sessions.
+
+================================================================================
+BALANCE LEDGER (update after every confirmed EOD session)
+================================================================================
+
+3/28 (Sat)   $89.87
+3/29 (Sun)   $101.25
+3/30 (Mon)   $90.18
+3/31 (Tue)   $110.32
+4/1  (Wed)   $119.02
+4/2  (Thu)   $121.02
+4/3  (Fri)   $111.55
+4/4  (Sat)   $107.30
+4/5  (Sun)   $76.18
+4/6  (Mon)   $93.04  confirmed
+4/7  (Tue)   $104.02 confirmed
+[4/8-4/12:   logs unavailable — balance dropped to $90.25 by Apr 13 open]
+4/13 (Sun)   $86.44  confirmed
+4/14 (Mon)   $108.91 confirmed
+4/15 (Tue)   $115.79 estimated ($116.16 confirmed minus -$0.37 at 22:00)
+4/16 (Wed)   ACTIVE as of last session — $113.96 confirmed at 21:15 MTN
+
+Starting balance (3/28): $101.38
+All-time net (through Apr 16 confirmed): +$12.58
+Daily target: $100+/day net
+
+================================================================================
+END OF FEEDBACK DOCUMENT
+Next review: after 3 clean analysis sessions or upon v254 approval, whichever
+comes first.
+================================================================================
