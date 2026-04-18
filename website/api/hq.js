@@ -16,8 +16,11 @@ if (!globalThis.__hq) {
     ra: {}, aurora: {}, sentinel: {}, cipher: {},
     sim: {}, consolidation: {}, aether: {}, health: {},
     credits: {},
+    hyoMessages: [],  // Hyo → Kai inbox (persists during lambda warm period)
   };
 }
+// Ensure hyoMessages exists on older warm lambdas
+if (!globalThis.__hq.hyoMessages) globalThis.__hq.hyoMessages = [];
 function getStore() { return globalThis.__hq; }
 function pushEvent(agent, msg) {
   const store = getStore();
@@ -33,7 +36,30 @@ function updateSection(section, data) {
 
 // ─── Auth helpers ───
 const HQ_PASS_HASH = '0ff6c5c11e95ef67d8ee819553c366dcfa1895cd29592cbd9e4d97b074f0a333';
-const SECRET = process.env.HYO_FOUNDER_TOKEN || 'hq-fallback-secret';
+const SECRET = process.env.HYO_FOUNDER_TOKEN;
+if (!SECRET) {
+  // Fail loud at startup — a missing env var must never silently downgrade security
+  console.error('[hq] FATAL: HYO_FOUNDER_TOKEN env var not set — endpoint refusing all requests');
+}
+
+// ─── Rate limiting (in-memory, per-lambda — Vercel serverless) ───
+// Limits auth attempts to 10/min per IP to prevent brute-force attacks
+if (!globalThis.__hqRateLimit) globalThis.__hqRateLimit = new Map();
+function checkRateLimit(ip, max = 10, windowMs = 60000) {
+  const now = Date.now();
+  const key = `auth:${ip}`;
+  const entry = globalThis.__hqRateLimit.get(key) || { count: 0, reset: now + windowMs };
+  if (now > entry.reset) { entry.count = 0; entry.reset = now + windowMs; }
+  entry.count++;
+  globalThis.__hqRateLimit.set(key, entry);
+  // Prune old entries occasionally
+  if (globalThis.__hqRateLimit.size > 500) {
+    for (const [k, v] of globalThis.__hqRateLimit) {
+      if (now > v.reset) globalThis.__hqRateLimit.delete(k);
+    }
+  }
+  return entry.count <= max;
+}
 
 function sha256(str) {
   return createHash('sha256').update(str).digest('hex');
@@ -58,12 +84,23 @@ function verifyToken(token) {
 
 // ─── Handler ───
 export default function handler(req, res) {
+  // Refuse all requests if secret is not configured
+  if (!SECRET) {
+    return res.status(503).json({ ok: false, error: 'service misconfigured' });
+  }
+
   const action = req.query.action || '';
 
   // ── AUTH ──
   if (action === 'auth' && req.method === 'POST') {
     const { password } = req.body || {};
     if (!password) return res.status(400).json({ ok: false, error: 'missing password' });
+
+    // Rate limit auth attempts by IP
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+    if (!checkRateLimit(ip, 10, 60000)) {
+      return res.status(429).json({ ok: false, error: 'too many requests' });
+    }
 
     const hash = sha256(password);
     const a = Buffer.from(hash, 'hex');
@@ -93,6 +130,50 @@ export default function handler(req, res) {
     if (event) pushEvent(agent, event);
 
     return res.status(200).json({ ok: true, ts: new Date().toISOString() });
+  }
+
+  // ── HYO EXPORT (founder-token gated — Mini pulls messages for persistence) ──
+  if (action === 'hyo-export' && req.method === 'GET') {
+    const token = req.headers['x-founder-token'] || req.headers['authorization']?.replace('Bearer ', '');
+    const expected = process.env.HYO_FOUNDER_TOKEN;
+    if (!expected || token !== expected) {
+      return res.status(401).json({ ok: false, error: 'unauthorized' });
+    }
+    const store = getStore();
+    return res.status(200).json({
+      ok: true,
+      ts: new Date().toISOString(),
+      hyoMessages: store.hyoMessages || [],
+    });
+  }
+
+  // ── HYO MESSAGE (session-token gated POST from HQ) ──
+  if (action === 'hyo-message' && req.method === 'POST') {
+    const token = req.headers['authorization']?.replace('Bearer ', '');
+    if (!verifyToken(token)) {
+      return res.status(401).json({ ok: false, error: 'unauthorized' });
+    }
+
+    const { message } = req.body || {};
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ ok: false, error: 'missing message' });
+    }
+
+    const store = getStore();
+    const entry = {
+      ts: new Date().toISOString(),
+      from: 'hyo',
+      message: message.trim(),
+      status: 'unread',
+    };
+    store.hyoMessages.unshift(entry);
+    // Keep last 200 messages
+    if (store.hyoMessages.length > 200) store.hyoMessages.length = 200;
+
+    // Also push to events feed so it appears in store.events
+    pushEvent('hyo', `[Hyo→Kai] ${message.trim().slice(0, 80)}`);
+
+    return res.status(200).json({ ok: true, ts: entry.ts });
   }
 
   // ── DATA (session-token gated) ──

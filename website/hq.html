@@ -873,6 +873,8 @@
 
 let FEED_DATA = null;
 let AETHER_DATA = null;
+let AETHER_SECTIONS = null;
+let RESEARCH_ARCHIVE = null;
 let currentView = 'feed';
 let currentMonth = null; // for agent history
 let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
@@ -1052,8 +1054,24 @@ async function fetchFeed() {
   return null;
 }
 
+async function fetchHyoMessages() {
+  if (!HQ_TOKEN) return [];
+  try {
+    const r = await fetch('/api/hq?action=data', {
+      headers: { 'authorization': `Bearer ${HQ_TOKEN}` }
+    });
+    if (r.ok) {
+      const j = await r.json();
+      return j.hyoMessages || [];
+    }
+  } catch (e) { /* no-op */ }
+  return [];
+}
+
 async function boot() {
   FEED_DATA = await fetchFeed();
+  if (!FEED_DATA) FEED_DATA = { reports: [], agents: {}, today: new Date().toISOString().slice(0,10) };
+  FEED_DATA._hyoMessages = await fetchHyoMessages();
   try {
     const resp = await fetch('/data/aether-metrics.json');
     if (resp.ok) {
@@ -1062,10 +1080,29 @@ async function boot() {
   } catch (e) {
     console.log('Could not load Aether metrics');
   }
+  try {
+    const resp2 = await fetch('/data/aether-daily-sections.json');
+    if (resp2.ok) {
+      AETHER_SECTIONS = await resp2.json();
+    }
+  } catch (e) {
+    console.log('Could not load Aether daily sections');
+  }
+  try {
+    const resp3 = await fetch('/data/research-archive.json');
+    if (resp3.ok) RESEARCH_ARCHIVE = await resp3.json();
+  } catch (e) { console.log('Could not load research archive'); }
   render();
   // Refresh every 60s
   setInterval(async () => {
+    const prev = FEED_DATA?._hyoMessages || [];
     FEED_DATA = await fetchFeed();
+    if (!FEED_DATA) FEED_DATA = { reports: [], agents: {}, today: new Date().toISOString().slice(0,10) };
+    // Merge: keep locally-added messages + fetch from store
+    const fresh = await fetchHyoMessages();
+    // De-dupe by ts+message
+    const seen = new Set(fresh.map(m => m.ts + m.message));
+    FEED_DATA._hyoMessages = [...fresh, ...prev.filter(m => !seen.has(m.ts + m.message))];
     try {
       const resp = await fetch('/data/aether-metrics.json');
       if (resp.ok) {
@@ -1073,6 +1110,14 @@ async function boot() {
       }
     } catch (e) {
       console.log('Could not load Aether metrics');
+    }
+    try {
+      const resp2 = await fetch('/data/aether-daily-sections.json');
+      if (resp2.ok) {
+        AETHER_SECTIONS = await resp2.json();
+      }
+    } catch (e) {
+      console.log('Could not load Aether daily sections');
     }
     render();
   }, 60000);
@@ -1105,11 +1150,10 @@ function render() {
 function renderFeed(container) {
   const today = FEED_DATA.today || new Date().toISOString().slice(0, 10);
   // Show today's reports, most recent first
-  // Feed scope (Hyo directive, 2026-04-15):
-  // The main feed shows ONLY: morning-report, Ra's newsletter, Aether's daily analysis.
-  // Everything else (agent-reflection, ceo-report, research-drop) lives on the
-  // per-agent sub-page, not the feed.
-  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'research-drop']);
+  // Feed scope: morning-report, newsletter, aether-analysis (daily essentials) +
+  // agent-daily (each agent's daily report) + agent-weekly (Saturdays).
+  // agent-reflection and research-drop live in Research tab only.
+  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'agent-daily', 'agent-weekly']);
   const todayReports = (FEED_DATA.reports || [])
     .filter(r => r.date === today && FEED_ALLOWED_TYPES.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1143,6 +1187,12 @@ function renderAgentView(container, agentId) {
   // Special dashboard for Aether
   if (agentId.toLowerCase() === 'aether') {
     renderAetherDashboard(container, agent);
+    return;
+  }
+
+  // Special inbox for Kai
+  if (agentId === 'kai') {
+    renderKaiView(container, agent);
     return;
   }
 
@@ -1249,8 +1299,8 @@ function renderAgentView(container, agentId) {
 
 // ═══ RESEARCH VIEW (keeps sidebar) ═══
 function renderResearch(container) {
-  // Pull ALL agent reports: reflections, research-drops, and research papers
-  const researchTypes = new Set(['agent-reflection', 'research-drop']);
+  // Pull ALL agent reports for Research tab
+  const researchTypes = new Set(['agent-reflection', 'research-drop', 'agent-daily', 'agent-weekly']);
   const allReports = (FEED_DATA.reports || [])
     .filter(r => researchTypes.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1308,6 +1358,39 @@ function renderResearch(container) {
     <div id="research-list">
       ${reportsHtml}
     </div>
+
+    ${(() => {
+      if (!RESEARCH_ARCHIVE || !Object.keys(RESEARCH_ARCHIVE.agents || {}).length) return '';
+      const arc = RESEARCH_ARCHIVE.agents;
+      const agentNames = Object.keys(arc).sort();
+      let arcHtml = `<div style="margin-top:28px;padding-top:20px;border-top:2px solid var(--border-color)">
+        <div style="font-size:13px;font-weight:700;color:var(--text-secondary);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:16px;font-family:var(--font-mono)">📦 Archive — By Agent &amp; Month</div>`;
+      for (const agent of agentNames) {
+        const months = arc[agent].months || {};
+        const monthKeys = Object.keys(months).sort().reverse();
+        if (!monthKeys.length) continue;
+        arcHtml += `<div style="margin-bottom:20px">
+          <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;padding:6px 10px;background:var(--bg-secondary);border-radius:var(--radius-sm)">${agent}</div>`;
+        for (const month of monthKeys) {
+          const entries = months[month] || [];
+          arcHtml += `<div style="margin-left:14px;margin-bottom:10px">
+            <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">${month} (${entries.length})</div>`;
+          for (const r of entries) {
+            const rtype = r.type === 'agent-weekly' ? '📊 Weekly' : r.type === 'agent-daily' ? '📋 Daily' : r.type === 'agent-reflection' ? '🔍 Reflection' : '📄';
+            arcHtml += `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--border-color);font-size:11px">
+              <span style="color:var(--text-muted);font-family:var(--font-mono);min-width:72px">${r.date || ''}</span>
+              <span style="color:var(--text-muted);min-width:72px">${rtype}</span>
+              <span style="color:var(--text-secondary);flex:1">${r.title || ''}</span>
+            </div>`;
+          }
+          arcHtml += `</div>`;
+        }
+        arcHtml += `</div>`;
+      }
+      arcHtml += `</div>`;
+      return arcHtml;
+    })()}
+
     <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border);">
       <a href="/research.html" target="_blank" style="color:var(--accent);font-size:13px;">View Ra's full research archive →</a>
     </div>
@@ -1324,6 +1407,161 @@ function renderResearch(container) {
       });
     });
   });
+}
+
+// ═══ KAI VIEW — includes Message Kai inbox ═══
+function renderKaiView(container, agent) {
+  // Build the standard agent profile first
+  let html = `
+    <div class="agent-profile">
+      <div class="agent-profile-header">
+        <div class="ap-icon">${agent.icon}</div>
+        <div class="ap-info">
+          <h2>${agent.name}</h2>
+          <div class="ap-role">${agent.role}</div>
+        </div>
+      </div>
+      <div class="ap-responsibilities">"${agent.responsibilities}"</div>
+
+      <div class="goals-grid">
+        <div class="goal-col short">
+          <h4>Short-term</h4>
+          <ul>${(agent.goals?.short || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+        <div class="goal-col medium">
+          <h4>Medium-term</h4>
+          <ul>${(agent.goals?.medium || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+        <div class="goal-col long">
+          <h4>Long-term</h4>
+          <ul>${(agent.goals?.long || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+      </div>
+
+      <div class="status-lists">
+        <div class="status-list in-process">
+          <h4>In Process</h4>
+          <ul>${(agent.inProcess || []).map(t => `<li>${t}</li>`).join('')}</ul>
+          ${(agent.inProcess || []).length === 0 ? '<div style="font-size:13px;color:var(--text-muted);">Nothing active</div>' : ''}
+        </div>
+        <div class="status-list pending">
+          <h4>Pending</h4>
+          <ul>${(agent.pending || []).map(t => `<li>${t}</li>`).join('')}</ul>
+          ${(agent.pending || []).length === 0 ? '<div style="font-size:13px;color:var(--text-muted);">Nothing pending</div>' : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Hyo → Kai inbox section
+  const storedMessages = (FEED_DATA?._hyoMessages || []);
+  const msgItems = storedMessages.length > 0
+    ? storedMessages.map(m => {
+        const t = new Date(m.ts).toLocaleString('en-US', { timeZone: 'America/Denver', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false });
+        const statusDot = m.status === 'unread'
+          ? '<span style="width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:6px;vertical-align:middle;" title="Not yet read by Kai"></span>'
+          : '';
+        return `<div style="padding:10px 12px;border-radius:8px;background:var(--bg-tertiary);margin-bottom:8px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${t} MT${statusDot}</div>
+          <div style="font-size:14px;line-height:1.5;color:var(--text-primary);">${escHtml(m.message)}</div>
+        </div>`;
+      }).join('')
+    : '<div style="font-size:13px;color:var(--text-muted);padding:8px 0;">No messages sent yet. Use the box below to message Kai.</div>';
+
+  html += `
+    <div style="margin-top:28px;">
+      <h3 style="font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:16px;">
+        📬 Message Kai
+      </h3>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;line-height:1.5;">
+        Messages you send here are queued for Kai to read at the start of the next session.
+        Use this to leave instructions, corrections, or context when you're not in an active session.
+      </div>
+      <div style="margin-bottom:16px;">
+        ${msgItems}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <textarea id="hyoMsgInput"
+          placeholder="Leave a message for Kai…"
+          style="width:100%;box-sizing:border-box;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.5;color:var(--text-primary);resize:vertical;min-height:90px;font-family:inherit;outline:none;"
+          oninput="this.style.borderColor = this.value.trim() ? 'var(--accent)' : 'var(--border)';"
+        ></textarea>
+        <button id="hyoMsgSendBtn" onclick="sendHyoMessage()"
+          style="align-self:flex-end;padding:10px 22px;border-radius:8px;background:var(--accent);color:#000;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:opacity 0.15s;"
+          onmousedown="this.style.opacity='0.75'" onmouseup="this.style.opacity='1'" ontouchend="this.style.opacity='1'">
+          Send to Kai
+        </button>
+        <div id="hyoMsgStatus" style="font-size:12px;color:var(--text-muted);min-height:16px;text-align:right;"></div>
+      </div>
+    </div>
+  `;
+
+  // Kai's report history
+  const agentReports = (FEED_DATA.reports || [])
+    .filter(r => r.author?.toLowerCase() === 'kai')
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  html += `<div class="history-section"><h3>Report History</h3>`;
+  if (agentReports.length === 0) {
+    html += '<div class="empty-state">No reports from Kai yet.</div>';
+  } else {
+    html += '<div class="history-feed">';
+    for (const r of agentReports.slice(0, 10)) {
+      html += renderReport(r);
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function sendHyoMessage() {
+  const input = document.getElementById('hyoMsgInput');
+  const btn = document.getElementById('hyoMsgSendBtn');
+  const status = document.getElementById('hyoMsgStatus');
+  const msg = input?.value?.trim();
+  if (!msg) return;
+
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  status.textContent = 'Sending…';
+  status.style.color = 'var(--text-muted)';
+
+  try {
+    const r = await fetch('/api/hq?action=hyo-message', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${HQ_TOKEN}`,
+      },
+      body: JSON.stringify({ message: msg }),
+    });
+    const j = await r.json();
+    if (j.ok) {
+      status.textContent = '✓ Message queued for Kai';
+      status.style.color = 'var(--good)';
+      input.value = '';
+      input.style.borderColor = 'var(--border)';
+      // Re-render to show the new message
+      if (!FEED_DATA._hyoMessages) FEED_DATA._hyoMessages = [];
+      FEED_DATA._hyoMessages.unshift({ ts: j.ts, from: 'hyo', message: msg, status: 'unread' });
+      render();
+    } else {
+      status.textContent = `✗ ${j.error || 'send failed'}`;
+      status.style.color = 'var(--warn)';
+    }
+  } catch (e) {
+    status.textContent = '✗ Network error — try again';
+    status.style.color = 'var(--warn)';
+  } finally {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
 }
 
 // ═══ REPORT RENDERER ═══
@@ -1347,6 +1585,10 @@ function renderReport(report) {
     body = renderAetherAnalysis(s, report);
   } else if (report.type === 'research-drop') {
     body = renderResearchDrop(s, report);
+  } else if (report.type === 'agent-daily') {
+    body = renderAgentDaily(s, report);
+  } else if (report.type === 'agent-weekly') {
+    body = renderAgentWeekly(s, report);
   } else {
     // Generic
     for (const [key, val] of Object.entries(s)) {
@@ -1511,6 +1753,57 @@ function renderCeoReport(s) {
   return html;
 }
 
+function renderAgentDaily(s, report) {
+  let html = '';
+  if (s.shipped && s.shipped !== 'No new shipments today.') {
+    html += sec('✅ Shipped', `<p style="color:var(--success)">${s.shipped}</p>`);
+  }
+  if (s.executed) {
+    html += sec('Executed', `<p>${s.executed}</p>`);
+  }
+  if (s.active && s.active !== 'Queue clear.') {
+    html += sec('In Progress', `<p style="white-space:pre-line;font-size:12px;color:var(--text-secondary)">${s.active}</p>`);
+  }
+  if (s.tickets) {
+    html += sec('Tickets', `<span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">${s.tickets}</span>`);
+  }
+  if (s.weaknesses) {
+    html += sec('Tracked Weaknesses', `<p style="font-size:12px;color:var(--text-muted)">${s.weaknesses}</p>`);
+  }
+  return html || '<p style="color:var(--text-muted);font-size:12px;">No data extracted for today.</p>';
+}
+
+function renderAgentWeekly(s, report) {
+  let html = '';
+  const verdict = s.verdict || 'unknown';
+  const verdictColor = verdict === 'expanding' ? 'var(--success)' : verdict === 'stable' ? 'var(--warning)' : 'var(--error)';
+  html += `<div style="margin-bottom:14px;padding:10px 14px;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:3px solid ${verdictColor}">
+    <span style="font-size:10px;font-family:var(--font-mono);text-transform:uppercase;color:var(--text-muted)">Week Verdict</span>
+    <div style="font-size:18px;font-weight:700;color:${verdictColor};font-family:var(--font-mono);margin-top:2px">${verdict.toUpperCase()}</div>
+  </div>`;
+  if (s.weaknesses?.length) {
+    html += sec('Weaknesses', `<ul>${s.weaknesses.map(w => `<li style="margin-bottom:6px">${w}</li>`).join('')}</ul>`);
+  }
+  if (s.improvements_shipped?.length && s.improvements_shipped[0] !== 'No improvements shipped this week.') {
+    html += sec('✅ Improvements Shipped', `<ul style="color:var(--success)">${s.improvements_shipped.map(i => `<li>${i}</li>`).join('')}</ul>`);
+  } else {
+    html += sec('Improvements Shipped', `<p style="color:var(--error)">None shipped this week.</p>`);
+  }
+  if (s.tickets) {
+    const t = s.tickets;
+    html += sec('Tickets', `
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-family:var(--font-mono)">
+        <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--text-primary)">${t.week_total || 0}</div><div style="font-size:10px;color:var(--text-muted)">TOTAL WEEK</div></div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--success)">${t.week_resolved || 0}</div><div style="font-size:10px;color:var(--text-muted)">RESOLVED</div></div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:700;color:${(t.week_pending||0) > 0 ? 'var(--warning)' : 'var(--text-muted)'}">${t.week_pending || 0}</div><div style="font-size:10px;color:var(--text-muted)">PENDING</div></div>
+      </div>
+      ${(t.triggered_for_completion||0) > 0 ? `<p style="font-size:12px;color:var(--warning);margin-top:8px">⚡ ${t.triggered_for_completion} pending ticket(s) triggered for 1hr completion.</p>` : ''}
+      ${t.pending_list?.length ? `<ul style="font-size:11px;color:var(--text-muted);margin-top:6px">${t.pending_list.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+    `);
+  }
+  return html;
+}
+
 function renderAgentReflection(s) {
   let html = '';
   if (s.introspection) {
@@ -1583,6 +1876,8 @@ function getTypeLabel(type) {
     'morning-report': 'Morning Report',
     'ceo-report': 'CEO Report',
     'agent-reflection': 'Agent Reflection',
+    'agent-daily': 'Daily Report',
+    'agent-weekly': 'Weekly Summary',
     'research-drop': 'Research',
     'newsletter': 'Daily Brief',
     'aether-analysis': 'Trading Analysis',
@@ -1801,14 +2096,32 @@ function renderAetherDashboard(container, agent) {
   }).join('');
 
   // ── Open issues ───────────────────────────────────────────────────────────
+  const issueStatusColor = s => {
+    if (!s) return 'var(--text-muted)';
+    if (s === 'RESOLVED') return 'var(--success)';
+    if (s === 'ACTIVE' || s === 'IN_PROGRESS') return 'var(--cyan)';
+    if (s === 'BLOCKED') return 'var(--error)';
+    if (s === 'MONITORING') return 'var(--warning)';
+    return 'var(--text-muted)';
+  };
   const issueRows = openIssues.map(issue => {
     const pc = PC[issue.priority] || 'var(--text-muted)';
     const label = issue.title || issue.label || '';
+    const progress = issue.progress || issue.notes || '';
+    const updatedAt = issue.updatedAt || issue.lastUpdated || '';
+    const updatedStr = updatedAt ? new Date(updatedAt).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '';
+    const sc = issueStatusColor(issue.status);
     return `
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-color)">
-        <span style="font-size:10px;font-weight:700;font-family:var(--font-mono);color:${pc};min-width:24px;padding-top:2px">${issue.priority}</span>
-        <span style="color:var(--text-secondary);font-size:12px;flex:1;line-height:1.5">${label}</span>
-        <span style="font-size:10px;font-family:var(--font-mono);color:${issue.status === 'ACTIVE' ? 'var(--cyan)' : 'var(--text-muted)'};min-width:70px;text-align:right">${issue.status || ''}</span>
+      <div style="padding:10px 16px;border-bottom:1px solid var(--border-color)">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <span style="font-size:10px;font-weight:700;font-family:var(--font-mono);color:${pc};min-width:24px;padding-top:2px">${issue.priority}</span>
+          <span style="color:var(--text-secondary);font-size:12px;flex:1;line-height:1.5">${label}</span>
+          <div style="text-align:right;min-width:80px">
+            <div style="font-size:10px;font-family:var(--font-mono);color:${sc};font-weight:600">${issue.status || ''}</div>
+            ${updatedStr ? `<div style="font-size:9px;color:var(--text-muted);margin-top:2px">${updatedStr}</div>` : ''}
+          </div>
+        </div>
+        ${progress ? `<div style="margin-top:5px;margin-left:36px;font-size:11px;color:var(--text-muted);line-height:1.5;font-style:italic">${progress}</div>` : ''}
       </div>`;
   }).join('');
 
@@ -1822,9 +2135,20 @@ function renderAetherDashboard(container, agent) {
           <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
             <h2 style="margin:0;font-size:18px;font-weight:700;letter-spacing:0.04em;color:var(--cyan);font-family:var(--font-mono)">AETHERBOT</h2>
             <span style="color:var(--text-muted);font-size:12px;font-family:var(--font-mono)">${data.agent || 'aether.hyo'}</span>
-            <span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--success);border:1px solid rgba(109,212,156,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RUNNING</span>
+            ${(() => {
+              const lu = data.lastUpdated || data.updatedAt;
+              if (!lu) return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--text-muted);border:1px solid var(--border-color);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">UNKNOWN</span>`;
+              const ageMs = Date.now() - new Date(lu).getTime();
+              const ageH = ageMs / 3600000;
+              if (ageH < 6)  return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--success);border:1px solid rgba(109,212,156,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RUNNING</span>`;
+              if (ageH < 24) return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--warning);border:1px solid rgba(255,204,0,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RECENT · ${Math.floor(ageH)}h ago</span>`;
+              return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--error);border:1px solid rgba(224,112,96,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">STALE · ${Math.floor(ageH)}h ago</span>`;
+            })()}
           </div>
-          <div style="color:var(--text-muted);font-size:11px;margin-top:5px">Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN</div>
+          <div style="color:var(--text-muted);font-size:11px;margin-top:5px">
+            Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN
+            ${(data.lastUpdated || data.updatedAt) ? `<span style="margin-left:10px;opacity:0.7">· Updated: ${new Date(data.lastUpdated || data.updatedAt).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'})}</span>` : ''}
+          </div>
         </div>
         <div style="text-align:right">
           <div style="font-size:24px;font-weight:700;color:var(--success);letter-spacing:-0.01em;font-family:var(--font-mono)">$${currentBalance.toFixed(2)}</div>
@@ -1976,6 +2300,51 @@ function renderAetherDashboard(container, agent) {
           </div>
         </div>
       </div>
+    </div>
+
+    ${(() => {
+      const sec = AETHER_SECTIONS;
+      if (!sec || !sec.date) return '';
+      const followUps = Array.isArray(sec.followUps) ? sec.followUps : [];
+      const fuHtml = followUps.map(f => {
+        const isP0 = f.startsWith('P0');
+        const isP1 = f.startsWith('P1');
+        const color = isP0 ? 'var(--error)' : isP1 ? 'var(--warning)' : 'var(--text-muted)';
+        return `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-color);font-size:12px;line-height:1.5">
+          <span style="color:${color};font-family:var(--font-mono);font-size:10px;padding-top:2px;min-width:20px">▸</span>
+          <span style="color:var(--text-secondary)">${f}</span>
+        </div>`;
+      }).join('');
+      const secBlock = (label, text, accent) => text ? `
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:${accent || 'var(--text-muted)'};margin-bottom:6px;font-family:var(--font-mono)">${label}</div>
+          <div style="color:var(--text-secondary);font-size:12px;line-height:1.6">${text}</div>
+        </div>` : '';
+      return `
+        <div class="aether-strategies" style="padding:0;margin-top:14px">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-secondary)">Aether Self-Assessment · ${sec.date}</span>
+            <span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono)">daily-sections.json</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0">
+            <div style="padding:16px;border-right:1px solid var(--border-color)">
+              ${secBlock('Introspection', sec.introspection, 'var(--cyan)')}
+              ${secBlock('Research', sec.research, 'var(--accent)')}
+              ${secBlock('Changes', sec.changes, 'var(--success)')}
+            </div>
+            <div style="padding:16px">
+              ${sec.forKai ? `<div style="margin-bottom:16px">
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--warning);margin-bottom:6px;font-family:var(--font-mono)">For Kai</div>
+                <div style="color:var(--text-primary);font-size:12px;line-height:1.6;padding:10px 12px;background:rgba(232,201,106,0.06);border:1px solid rgba(232,201,106,0.2);border-radius:var(--radius-sm)">${sec.forKai}</div>
+              </div>` : ''}
+              ${followUps.length ? `<div>
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:2px;font-family:var(--font-mono)">Follow-Ups (${followUps.length})</div>
+                ${fuHtml}
+              </div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    })()}
     </div>`;
 
   container.innerHTML = html;

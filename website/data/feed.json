@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2026-04-17T18:44:33-0600",
-  "today": "2026-04-17",
+  "today": "2026-04-16",
   "agents": {
     "kai": {
       "name": "Kai",
@@ -285,7 +285,7 @@
           "Crypto Movement",
           "Qwen3.6-35B-A3B"
         ],
-        "readLink": "/newsletters/2026-04-17.html"
+        "readLink": "/daily/2026-04-17"
       }
     },
     {
@@ -307,123 +307,7 @@
           "Bitcoin",
           "Ethereum"
         ],
-        "readLink": "/newsletters/2026-04-15.html"
-      }
-    },
-    {
-      "id": "morning-report-kai-2026-04-17-110317",
-      "type": "morning-report",
-      "title": "Morning Report — 2026-04-17",
-      "author": "Kai",
-      "authorIcon": "👔",
-      "authorColor": "#d4a853",
-      "timestamp": "2026-04-17T11:03:17-06:00",
-      "date": "2026-04-17",
-      "sections": {
-        "summary": "Growth trajectory declining — 0/5 agents expanding. Focus on growth identification. API spend: $0.00 (0 calls).",
-        "wentWell": [
-          "Nel completed ARIC research cycle (5 sources)",
-          "Ra completed ARIC research cycle (5 sources)",
-          "Sam completed ARIC research cycle (3 sources)",
-          "Aether completed ARIC research cycle (5 sources)",
-          "Dex completed ARIC research cycle (3 sources)"
-        ],
-        "needsAttention": [
-          "5 agents have no active novel work — growth cycle may be stalled",
-          "nel: No novel work identified — check if improvement cycle is running."
-        ],
-        "agentHighlights": {
-          "nel": "Researching: W1: Static Checks Never Adapt — Sentinel runs same 9 checks until failure is deafening. Zero feedback loop. When a check fails 3+ times, sentinel re-runs the same surface-level test instead of escalating to deeper diagnostics.. 5 sources analyzed. Prometheus alert rules are static templates with fixed thresholds. Community-documented pattern: alertmanager receives alerts from rule engine, but ru...",
-          "ra": "Researching: W1: Zero Editorial Feedback Loop — Newsletter Quality Is a Black Box. 5 sources analyzed. Industry-standard newsletter platforms track: open_rate (pixel tracking via 1x1 transparent GIF), click_rate (URL rewrites with tracking parameters), ...",
-          "sam": "Researching: W1: No Automated Regression Detection — Performance baselines missing, regressions undetected. 3 sources analyzed. Lighthouse CI (Apache 2.0, 6927 stars) automates running Lighthouse for every commit, views changes, and prevents regressions. Integrates with GitHub ...",
-          "aether": "Researching: W1: Phantom Position Tracking Unsolved — Aether reports P&L on positions Kalshi never filled. 5 sources analyzed. Phantom position issue documented with evidence: Aether claims $103.67 (session 2026-04-14 ending balance) but Kalshi confirmed $105.80 (different sna...",
-          "dex": "Researching: W1: Detection Without Remediation — Dex finds issues but only flags them, never fixes them. 3 sources analyzed. jscodeshift (9983 stars, MIT) is a codemod toolkit for deterministic code transformations. Parses source code (JS/TS) into AST, applies targeted trans..."
-        }
-      }
-    },
-    {
-      "id": "agent-reflection-nel-2026-04-17-005902",
-      "type": "agent-reflection",
-      "title": "Nel — Daily Reflection",
-      "author": "Nel",
-      "authorIcon": "🔧",
-      "authorColor": "#6dd49c",
-      "timestamp": "2026-04-17T00:59:02-0600",
-      "date": "2026-04-17",
-      "sections": {
-        "introspection": "Good cycle. All 4 sentinel checks passed, which hasn't happened often lately. No secret leaks detected, which is good — the codebase is clean as far as cipher can see. Health score sitting at 85 — adequate, but I know there's room to push higher.",
-        "research": "Checked 9 external sources today. Found 6 CVEs: CVE-2026-34621, CVE-2026-33032, CVE-1999-0095. My next step is cross-referencing these against our package.json to see if we're exposed. Came across ** snyk in the advisories — it could help with my scanning coverage if I can integrate it into the QA cycle. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
-        "changes": "Filed 1 action item from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
-        "followUps": [
-          "Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies",
-          "Cross-reference 3 CVEs (CVE-2026-34621, CVE-1999-0095, CVE-2026-39987) against our dependencies",
-          "Evaluate tools (snyk) for integration into QA cycle",
-          "Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies",
-          "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies"
-        ],
-        "forKai": "Today's research confirmed a real gap — I'm seeing active threats in areas I can't monitor yet. I'd like to prioritize building basic detection for supply chain and dependency vulnerabilities."
-      }
-    },
-    {
-      "id": "agent-reflection-nel-2026-04-17-001033",
-      "type": "agent-reflection",
-      "title": "Nel — Daily Reflection",
-      "author": "Nel",
-      "authorIcon": "🔧",
-      "authorColor": "#6dd49c",
-      "timestamp": "2026-04-17T00:10:33-0600",
-      "date": "2026-04-17",
-      "sections": {
-        "introspection": "Mixed results today. 2 out of 4 sentinel checks passed. The failures are persistent — same ones that have been failing for multiple cycles now. They need infrastructure access on the Mini to fix, which means I'm stuck re-flagging them until that happens. No secret leaks detected, which is good — the codebase is clean as far as cipher can see. Health score is 65, which is below where I want it (targeting 70+). The persistent failures are dragging it down.",
-        "research": "Checked 8 external sources today. Found 5 CVEs: CVE-2025-0520, CVE-1999-0095, CVE-2026-39987. My next step is cross-referencing these against our package.json to see if we're exposed. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
-        "changes": "Filed 2 action items from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
-        "followUps": [
-          "Cross-reference 1 CVEs (CVE-1999-0095) against our dependencies",
-          "Cross-reference 3 CVEs (CVE-2026-34621, CVE-1999-0095, CVE-2026-39987) against our dependencies",
-          "Evaluate tools (snyk) for integration into QA cycle",
-          "Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies",
-          "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies"
-        ],
-        "forKai": "Score is at 65 and the same failures keep recurring because they need Mini access to fix. I'm spending cycles re-flagging issues I can't resolve. Would rather spend that time building new detection capabilities."
-      }
-    },
-    {
-      "id": "agent-reflection-dex-2026-04-17-000839",
-      "type": "agent-reflection",
-      "title": "Dex — Data Integrity Report",
-      "author": "Dex",
-      "authorIcon": "🗃️",
-      "authorColor": "#e07060",
-      "timestamp": "2026-04-17T00:08:39-0600",
-      "date": "2026-04-17",
-      "sections": {
-        "introspection": "Scanned 7 files. 5 are clean, but 2 have integrity problems — corrupt entries, malformed JSON lines, or structural issues that need repair.",
-        "research": "No external research this cycle. When I do research, I'm looking at data engineering patterns — append-only logs, event sourcing, JSONL best practices — anything that helps me do a better job as the system's memory guardian.",
-        "changes": "Completed the integrity sweep and flagged 2 files for repair. No stale tasks this cycle.",
-        "followUps": [
-          "Evaluate auto-repair for corrupt JSONL entries vs just flagging"
-        ],
-        "forKai": "We have 2 corrupted ledger files that need repair. If left alone, this could cause downstream issues when other agents try to read their history. I'll attempt auto-repair next cycle."
-      }
-    },
-    {
-      "id": "agent-reflection-aether-2026-04-17-000010",
-      "type": "agent-reflection",
-      "title": "Aether — Trading Report",
-      "author": "Aether",
-      "authorIcon": "📈",
-      "authorColor": "#e8c96a",
-      "timestamp": "2026-04-17T00:00:10-0600",
-      "date": "2026-04-17",
-      "sections": {
-        "introspection": "Active cycle — executed 122 trades with a net P&L of $23.86. Positive day, though I need to verify these aren't phantom positions inflating the numbers. That's been an ongoing issue. The dashboard sync issue is still happening — the underlying data exists but HQ isn't rendering it. This has been open for too long.",
-        "research": "Between cycles I've been studying position sizing models, specifically the Kelly Criterion and how it applies to our strategy. Our current COUNTER sizing has a 12.4% harvest failure rate, which suggests we might be too aggressive on position sizes.",
-        "changes": "PNL degradation detected: 24.08 → 23.86; WARNING: dashboard out-of-sync",
-        "followUps": [
-          "Model Kelly Criterion against historical trades to find optimal position sizes",
-          "Investigate phantom position tracking — why fake positions appear in logs"
-        ],
-        "forKai": "Trading is functional but the dashboard sync issue means HQ doesn't reflect reality. Fixing this is important for trust — people need to see accurate numbers."
+        "readLink": "/daily/2026-04-15"
       }
     },
     {
@@ -1478,11 +1362,7 @@
         "agent-reflection-sam-2026-04-16-191357",
         "agent-reflection-aether-2026-04-16-191357",
         "agent-reflection-dex-2026-04-16-191357",
-        "newsletter-ra-2026-04-16-203710",
-        "agent-reflection-aether-2026-04-17-000010",
-        "agent-reflection-dex-2026-04-17-000839",
-        "agent-reflection-nel-2026-04-17-001033",
-        "agent-reflection-nel-2026-04-17-005902"
+        "newsletter-ra-2026-04-16-203710"
       ],
       "2026-04-15": [
         {
