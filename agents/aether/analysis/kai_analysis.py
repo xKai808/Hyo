@@ -21,35 +21,96 @@ TELEGRAM_TOKEN    = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID  = os.environ.get("TELEGRAM_CHAT_ID")
 
 LOG_DIR           = os.path.expanduser("~/Documents/Projects/AetherBot/Logs")
-CURRENT_VERSION   = "v253"
-NEXT_VERSION      = "v254"
+HYO_ROOT          = os.environ.get("HYO_ROOT", os.path.expanduser("~/Documents/Projects/Hyo"))
+METRICS_FILE      = os.path.join(HYO_ROOT, "agents/sam/website/data/aether-metrics.json")
+KNOWLEDGE_FILE    = os.path.join(HYO_ROOT, "kai/memory/KNOWLEDGE.md")
 
 anthropic_client  = Anthropic(api_key=ANTHROPIC_API_KEY)
 openai_client     = OpenAI(api_key=OPENAI_API_KEY)
 
-BALANCE_LEDGER = """
-Date            End Balance     Day Net
------------     -----------     -------
-4/13 (Sun)      $86.44          -$3.81
-4/14 (Mon)      $108.91         +$22.47
-4/15 (Tue)      $116.16         +$7.25
-4/16 (Wed)      $114.33         -$1.83
-4/17 (Thu)      $113.88 (live)  in progress
 
-Start (4/13):   $90.25 (est)
-Weekly goal:    >$10-20/day sustained (path to >$100/day)
-"""
+def _load_dynamic_context() -> tuple[str, str, str, str]:
+    """
+    Load balance ledger, open issues, current version, and next version
+    dynamically from aether-metrics.json and KNOWLEDGE.md.
 
-OPEN_ISSUES = """
-P0 ACTIVE  — Phantom Position Investigation (v254): phantom warnings at 39 and climbing. \
-Local/API state drift degrades execution quality. Root cause: each failed harvest sync creates a new phantom.
-P1 ACTIVE  — BDI=0 Hold Time Gate: <120s expiry losses confirmed pattern, gate not yet shipped.
-P1 ACTIVE  — Harvest Miss Dual-Mode Fix: gate on anchor +/-0.02 depth, not held_px +/-0.05.
-P2 MONITOR — PAQ_STRUCT_GATE: 3W/6L (33% WR), -$7.84 net. Watch for continued degradation.
-P2 MONITOR — EVENING bps_premium regime sensitivity: performance varies with BTC direction.
-P2 MONITOR — EU_MORNING post-04:15 loss clustering: track WR and net P&L for this window.
-P3 PENDING — Weekend risk profile: reduced exposure, PAQ_MIN=4, no confirm_late.
-"""
+    Falls back to safe defaults if files are unavailable so the pipeline
+    never fails just because a data file is missing.
+
+    Returns: (current_version, next_version, balance_ledger, open_issues)
+    """
+    current_version = "v253"
+    next_version    = "v254"
+
+    # ── Balance ledger from aether-metrics.json ──────────────────────────────
+    balance_ledger = ""
+    try:
+        with open(METRICS_FILE, "r") as f:
+            m = json.load(f) if hasattr(json, 'load') else {}
+            import json as _json
+            m = _json.load(open(METRICS_FILE))
+        daily = m.get("daily_pnl", {})
+        week_start = m.get("week", {}).get("start_balance", None)
+        current_bal = m.get("week", {}).get("current_balance", None)
+
+        lines = ["Date            End Balance     Day Net",
+                 "-----------     -----------     -------"]
+        for entry in sorted(daily, key=lambda x: x.get("date", "")):
+            d = entry.get("date", "")
+            bal = entry.get("balance", 0)
+            net = entry.get("pnl", 0)
+            sign = "+" if net >= 0 else ""
+            lines.append(f"{d}  ${bal:.2f}{'':8} {sign}${net:.2f}")
+
+        if week_start:
+            lines.append(f"\nStart of week:  ${week_start:.2f}")
+        if current_bal:
+            lines.append(f"Current:        ${current_bal:.2f}")
+        lines.append("Daily target:   $10–20 net (path to $100+/day)")
+        balance_ledger = "\n".join(lines)
+    except Exception as e:
+        print(f"[balance-ledger] Could not load from aether-metrics.json: {e} — using KNOWLEDGE.md fallback")
+
+    # ── Fallback: extract balance ledger from KNOWLEDGE.md ───────────────────
+    if not balance_ledger:
+        try:
+            with open(KNOWLEDGE_FILE, "r") as f:
+                knowledge = f.read()
+            import re
+            section = re.search(r"## BALANCE LEDGER.*?\n([\s\S]+?)(?=\n---|\n##|$)", knowledge)
+            if section:
+                balance_ledger = section.group(1).strip()
+        except Exception as e2:
+            print(f"[balance-ledger] KNOWLEDGE.md fallback also failed: {e2}")
+            balance_ledger = "(Balance ledger unavailable — check aether-metrics.json)"
+
+    # ── Open issues from KNOWLEDGE.md ────────────────────────────────────────
+    open_issues = ""
+    try:
+        with open(KNOWLEDGE_FILE, "r") as f:
+            knowledge = f.read()
+        import re
+        # Extract the open issues section
+        section = re.search(r"### Open AetherBot issues.*?\n([\s\S]+?)(?=\n---|\n###|\n##|$)", knowledge)
+        if section:
+            open_issues = section.group(1).strip()
+        # Also extract version numbers
+        v_match = re.search(r"current deployed version: (v\d+).*?next.*?(v\d+)", knowledge, re.IGNORECASE)
+        if v_match:
+            current_version = v_match.group(1)
+            next_version    = v_match.group(2)
+    except Exception as e:
+        print(f"[open-issues] Could not load from KNOWLEDGE.md: {e}")
+
+    if not open_issues:
+        open_issues = "(Open issues unavailable — check kai/memory/KNOWLEDGE.md)"
+
+    return current_version, next_version, balance_ledger, open_issues
+
+
+# Load dynamic context at startup (refreshed each analysis run)
+import json as _json_mod
+CURRENT_VERSION, NEXT_VERSION, BALANCE_LEDGER, OPEN_ISSUES = _load_dynamic_context()
 
 CLAUDE_SYSTEM = f"""You are the primary analyst for AetherBot, an automated trading bot on Kalshi
 prediction markets trading KXBTC15M (BTC 15-minute contracts).
@@ -117,15 +178,54 @@ def send_telegram(message: str):
         print(f"Telegram error: {e}")
 
 def get_today_log():
-    date = datetime.datetime.now().strftime("%Y-%m-%d")
-    path = os.path.join(LOG_DIR, f"AetherBot_{date}.txt")
-    if not os.path.exists(path):
-        yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-        path = os.path.join(LOG_DIR, f"AetherBot_{yesterday}.txt")
-    if not os.path.exists(path):
-        return None, None
-    with open(path, "r") as f:
-        return f.read(), os.path.basename(path)
+    """
+    Select the best available AetherBot log with sparse-log gate.
+
+    SPARSE LOG GATE (SE-019): If today's log has <100 lines, it's a midnight
+    stub (AetherBot creates next-day file at 23:59:xx). Fall back to yesterday's
+    full log. This mirrors the gate in run_analysis.sh so both paths agree on
+    which log to analyze.
+    """
+    SPARSE_THRESHOLD = 100  # lines
+
+    today_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    yesterday_date = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+
+    today_path = os.path.join(LOG_DIR, f"AetherBot_{today_date}.txt")
+    yesterday_path = os.path.join(LOG_DIR, f"AetherBot_{yesterday_date}.txt")
+
+    def line_count(path):
+        try:
+            with open(path, "r") as f:
+                return sum(1 for _ in f)
+        except Exception:
+            return 0
+
+    # Prefer today's log if it has enough data
+    if os.path.exists(today_path) and line_count(today_path) >= SPARSE_THRESHOLD:
+        chosen = today_path
+    elif os.path.exists(yesterday_path):
+        today_count = line_count(today_path) if os.path.exists(today_path) else 0
+        yesterday_count = line_count(yesterday_path)
+        if yesterday_count > today_count:
+            print(f"[sparse-gate] Today has {today_count} lines < {SPARSE_THRESHOLD} — using yesterday ({yesterday_count} lines)")
+            chosen = yesterday_path
+        elif os.path.exists(today_path):
+            chosen = today_path
+        else:
+            chosen = yesterday_path
+    elif os.path.exists(today_path):
+        chosen = today_path
+    else:
+        # Fall back to most recent available log
+        all_logs = sorted(glob.glob(os.path.join(LOG_DIR, "AetherBot_*.txt")), reverse=True)
+        if not all_logs:
+            return None, None
+        chosen = all_logs[0]
+        print(f"[sparse-gate] No today/yesterday log — using most recent: {os.path.basename(chosen)}")
+
+    with open(chosen, "r") as f:
+        return f.read(), os.path.basename(chosen)
 
 def get_historical_logs(limit=5):
     logs = sorted(glob.glob(os.path.join(LOG_DIR, "AetherBot_*.txt")), reverse=True)

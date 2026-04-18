@@ -172,76 +172,12 @@ REVIEW
 
 log "  Self-review written: $SELF_REVIEW_FILE"
 
-# ── PHASE 5: Publish to HQ Feed ──────────────────────────────────────────────
-log "--- Phase 5: HQ Feed Publish ---"
-
-# Build feed entry
-ISSUES_SUMMARY=""
-if [[ ${#AUDIT_ISSUES[@]} -gt 0 ]]; then
-  ISSUES_SUMMARY="${#AUDIT_ISSUES[@]} issue(s): ${AUDIT_ISSUES[*]:0:2}"
-else
-  ISSUES_SUMMARY="No issues detected"
-fi
-
-PAGES_OK="${#AUDIT_RESULTS[@]}"
-ISSUES_COUNT="${#AUDIT_ISSUES[@]}"
-ISSUES_LIST_JSON="[]"
-if [[ $ISSUES_COUNT -gt 0 ]]; then
-  ISSUES_LIST_JSON=$(python3 -c "import json,sys; items=sys.argv[1:]; print(json.dumps(items))" "${AUDIT_ISSUES[@]}" 2>/dev/null || echo "[]")
-fi
-
-FEED_ENTRY=$(python3 - <<PYEOF
-import json
-
-pages_ok = ${PAGES_OK}
-issues_count = ${ISSUES_COUNT}
-issues_list = ${ISSUES_LIST_JSON}
-
-entry = {
-    "id": "hyo-daily-${TODAY}",
-    "type": "agent-daily",
-    "title": "UI/UX Surface Audit \u2014 ${TODAY}",
-    "author": "hyo (UI/UX Agent)",
-    "authorIcon": "\u2726",
-    "authorColor": "#a78bfa",
-    "timestamp": "${NOW}",
-    "date": "${TODAY}",
-    "sections": {
-        "summary": f"Surface audit: {pages_ok} pages OK. ${ISSUES_SUMMARY}. Podcast: HTTP $podcast_code.",
-        "wentWell": [f"Surface audit completed for {pages_ok} pages"],
-        "needsAttention": issues_list if issues_count > 0 else ["No issues detected"]
-    }
-}
-print(json.dumps(entry))
-PYEOF
-)
-
-if [[ -n "$FEED_ENTRY" ]]; then
-  # Use publish-to-feed.sh if available
-  if [[ -f "$HYO_ROOT/bin/publish-to-feed.sh" ]]; then
-    echo "$FEED_ENTRY" | python3 -c "
-import json, sys
-feed_path_1 = '${HYO_ROOT}/agents/sam/website/data/feed.json'
-feed_path_2 = '${HYO_ROOT}/website/data/feed.json'
-entry = json.loads(sys.stdin.read())
-for path in [feed_path_1, feed_path_2]:
-    try:
-        with open(path) as f:
-            feed = json.load(f)
-        reports = feed.get('reports', [])
-        reports = [r for r in reports if r.get('id') != entry['id']]
-        reports.insert(0, entry)
-        feed['reports'] = reports
-        with open(path, 'w') as f:
-            json.dump(feed, f, indent=2, ensure_ascii=False)
-            f.write('\n')
-        print(f'Feed updated: {path}')
-    except Exception as e:
-        print(f'Feed error: {e}')
-" 2>> "$LOG_FILE" || true
-    log "  Feed updated"
-  fi
-fi
+# ── PHASE 5: HQ Feed Publish — DISABLED ─────────────────────────────────────
+# hyo-daily feed entries removed per Hyo instruction 2026-04-19.
+# The UI/UX audit runs and writes to self-review and log.jsonl — but does NOT
+# publish to the HQ feed. Surface audit results are available in logs only.
+log "--- Phase 5: HQ Feed Publish (DISABLED — audit results in logs only) ---"
+log "  Audit summary: ${#AUDIT_RESULTS[@]} pages OK, ${#AUDIT_ISSUES[@]} issues — see self-review $SELF_REVIEW_FILE"
 
 # ── Update ACTIVE.md timestamp ────────────────────────────────────────────────
 sed -i.bak "s/^\*\*Updated:\*\*.*/\*\*Updated:\*\* ${TODAY}/" "$LEDGER_DIR/ACTIVE.md" 2>/dev/null || true
