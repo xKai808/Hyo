@@ -429,3 +429,30 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/clever-dazzling-gauss/mnt/Hyo/newsletters/2026-04-16.md [sentinel:aurora-ran-today:f7e7cb1b:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/clever-dazzling-gauss/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e05a9cc4:escalated]
+
+- [ ] **[K]** [sentinel] founder.token mode is 0600, want 6xx [sentinel:founder-token-integrity:92e7b89e] _(filed 2026-04-17)_
+- [ ] **[K]** [sentinel] no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a2875b77] _(filed 2026-04-17)_
+- [ ] **[K]** [sentinel] 0755 (want 700) — run: chmod 700 /Users/kai/Documents/Projects/Hyo/.secrets [sentinel:secrets-dir-permissions:6717d4df] _(filed 2026-04-17)_
+- [ ] **[K]** [sentinel] 25 P0 tasks (overload threshold 5) [sentinel:task-queue-size:9de2a565] _(filed 2026-04-17)_
+
+---
+
+## STRATEGIC ROADMAP — Set 2026-04-17 by Hyo
+
+### Next 24h (due by end of 2026-04-18)
+
+- [ ] **[B]** **REMOTE-001: Establish reliable remote access to Mini.** Hyo needs to be able to reach the Mini from any device. Options: Tailscale (recommended — zero config VPN), SSH tunnel, or ngrok. Sam builds the setup script. Kai verifies handshake. This gates all queue-dependent work.
+- [ ] **[B]** **REMOTE-002: Claude app on Pro has access to everything on Pro.** Audit what the Claude desktop app can and cannot access on the Pro machine. Grant folder access to /Documents/Projects/Hyo and any relevant dirs. Test that file tools work end-to-end.
+- [ ] **[K]** **IMPROVEMENT-001: Each agent implements their researched improvement this cycle.** No more research-theater. Every agent with a completed ARIC cycle (has_aric_data=true) must ship their Phase 6 improvement today: Nel → supply chain scanner (TASK-004), Sam → Lighthouse CI regression test (TASK-009), Aether → reconciliation verification (TASK-007), Ra → analytics tracking verification (TASK-008), Dex → repair engine test (TASK-006).
+- [ ] **[K]** **IMPROVEMENT-002: Verify all 5 agent improvements with proof.** Each improvement: commit hash, test result, HQ confirmation. No sim-ack. No "queued." Either it shipped or it didn't.
+
+### <1 Week (due by end of 2026-04-24)
+
+- [ ] **[B]** **AURORA-001: Aurora end-to-end functioning test.** Aurora is the newsletter AI pipeline. Test every avenue: gather.py (sources returning data), synthesize.py (Claude API call returns synthesis), render.py (HTML output), send_email.py (email delivered). Document what's broken, fix each one, verify with sent newsletter.
+- [ ] **[B]** **AURORA-002: Aurora shipped publicly on site.** Newsletter accessible at hyo.world/newsletters or /daily/. Archive browsable. Subscribe flow. Proof: Hyo can read today's newsletter from the public URL.
+- [ ] **[B]** **BLOCKCHAIN-001: HyoRegistry.sol contract complete and deployed.** Read HyoRegistry_Notes.md, HyoRegistry_CreditSystem.md, HyoRegistry_Marketplace.md. Identify gaps vs current implementation. Deploy to testnet (Base Goerli or Polygon Mumbai). Verify mint function works.
+- [ ] **[B]** **BLOCKCHAIN-002: NFT minting integrated with hyo.world.** Mint button on site connects to deployed contract. Hyo can mint an NFT from the site. Proof: transaction hash on testnet explorer.
+- [ ] **[B]** **MARKETPLACE-001: Marketplace and Cafe up and running.** Design: Marketplace = NFT trading/listings on hyo.world. Cafe = community hub (or content area — clarify with Hyo). Both accessible from site nav. MVP: browsable UI, backend stubs, at least 1 working transaction flow.
+- [ ] **[B]** **APP-001: Hyo management app — architecture decision.** App for: (1) management of hyo.world, (2) personal communication with Kai, (3) reading HQ material on the go. Options: PWA (already started — manifest.json + sw.js shipped), React Native, Flutter. Decision gates all other app work. Hyo decides stack.
+- [ ] **[B]** **APP-002: Hyo app MVP shipped.** Based on APP-001 decision: dashboard view (feed, aether, agent status), message Kai interface, newsletter reader. Deployable to Hyo's phone as PWA or installable app.
+
