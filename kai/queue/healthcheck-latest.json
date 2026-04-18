@@ -1,13 +1,18 @@
 {
-  "ts": "2026-04-18T05:46:25Z",
+  "ts": "2026-04-18T07:38:44Z",
   "status": "ISSUES",
-  "issues": 4,
+  "issues": 6,
   "warnings": 4,
   "findings": [
     {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "1 unaddressed P0/P1 flags in last 2h"
+    },
+    {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker last active 493469h ago \u2014 may be dead"
+      "detail": "Worker last active 493471h ago \u2014 may be dead"
     },
     {
       "severity": "P0",
@@ -32,6 +37,11 @@
     {
       "severity": "P1",
       "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
       "detail": "ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)"
     },
     {
@@ -45,36 +55,36 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "commit-lab-init",
+      "id": "cmd-1776497904-3678",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add lab/ agents/sam/website/data/ant-data.jso",
+      "command": "cd ~/Documents/Projects/Hyo && git pull origin main --ff-only 2>&1 | tail -3 && ",
       "exit_code": 0
     },
     {
-      "id": "commit-ant-subscriptions",
+      "id": "cmd-1776497771-3549",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add agents/sam/website/hq.html website/hq.htm",
+      "command": "cd ~/Documents/Projects/Hyo && git pull origin main --ff-only 2>&1 | tail -3 && ",
       "exit_code": 0
     },
     {
-      "id": "commit-ant-pl-dashboard",
+      "id": "cmd-1776496521-3222",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add agents/sam/website/hq.html website/hq.htm",
+      "command": "cd ~/Documents/Projects/Hyo && HYO_ROOT=$HOME/Documents/Projects/Hyo python3 bin",
       "exit_code": 0
     },
     {
-      "id": "commit-algo-session17",
+      "id": "cmd-1776496152-3198",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'feat(kai): HQ Featur",
+      "command": "cp ~/Documents/Projects/Hyo/kai/launchd/com.hyo.podcast.plist ~/Library/LaunchAg",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776489578-246",
+      "id": "cmd-1776496144-3173",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git push origin main 2>&1 | tail -3",
+      "command": "cd ~/Documents/Projects/Hyo && git pull origin main --ff-only 2>&1 | tail -3 && ",
       "exit_code": 0
     }
   ],

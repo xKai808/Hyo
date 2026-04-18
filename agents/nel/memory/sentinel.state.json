@@ -2,17 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-18T02:10:01Z",
-  "totalRuns": 64,
+  "lastRunAt": "2026-04-18T06:14:01Z",
+  "totalRuns": 65,
   "runHistory": [
-    {
-      "ts": "2026-04-15T06:10:20Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
     {
       "ts": "2026-04-15T10:05:10Z",
       "passed": 6,
@@ -244,6 +236,14 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-18T06:14:01Z",
+      "passed": 4,
+      "failed": 5,
+      "newIssues": 5,
+      "recurringIssues": 0,
+      "resolved": 3
     }
   ],
   "knownIssues": {
@@ -264,7 +264,8 @@
       "firstSeen": "2026-04-11T10:04:55Z",
       "lastSeen": "2026-04-18T02:10:01Z",
       "daysFailing": 64,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-18T06:14:01Z"
     },
     "founder-token-integrity:2dffc5f6": {
       "severity": "P0",
@@ -763,7 +764,8 @@
       "firstSeen": "2026-04-18T02:09:35Z",
       "lastSeen": "2026-04-18T02:10:01Z",
       "daysFailing": 6,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-18T06:14:01Z"
     },
     "task-queue-size:9de2a565": {
       "severity": "P2",
@@ -772,6 +774,52 @@
       "firstSeen": "2026-04-18T02:09:35Z",
       "lastSeen": "2026-04-18T02:10:01Z",
       "daysFailing": 6,
+      "status": "resolved",
+      "resolvedAt": "2026-04-18T06:14:01Z"
+    },
+    "aurora-ran-today:e7fccf38": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-18.md",
+      "firstSeen": "2026-04-18T06:14:01Z",
+      "lastSeen": "2026-04-18T06:14:01Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "founder-token-integrity:92e7b89e": {
+      "severity": "P0",
+      "check_id": "founder-token-integrity",
+      "detail": "founder.token mode is 0600, want 6xx",
+      "firstSeen": "2026-04-18T06:14:01Z",
+      "lastSeen": "2026-04-18T06:14:01Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:a2875b77": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-18T06:14:01Z",
+      "lastSeen": "2026-04-18T06:14:01Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "secrets-dir-permissions:6717d4df": {
+      "severity": "P1",
+      "check_id": "secrets-dir-permissions",
+      "detail": "0755 (want 700) \u2014 run: chmod 700 /Users/kai/Documents/Projects/Hyo/.secrets",
+      "firstSeen": "2026-04-18T06:14:01Z",
+      "lastSeen": "2026-04-18T06:14:01Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "task-queue-size:385b8938": {
+      "severity": "P2",
+      "check_id": "task-queue-size",
+      "detail": "30 P0 tasks (overload threshold 5)",
+      "firstSeen": "2026-04-18T06:14:01Z",
+      "lastSeen": "2026-04-18T06:14:01Z",
+      "daysFailing": 1,
       "status": "open"
     }
   },

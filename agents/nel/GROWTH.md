@@ -223,3 +223,4 @@ Nel research phase builds a local cache:
 | 2026-04-17 | IMP-20260414-nel-002 (W2): No package.json found at project root — check website/ or agents/sam/website/ | Automated assessment |
 | 2026-04-17 | IMP-20260414-nel-002 (W2): No package.json found at project root — check website/ or agents/sam/website/ | Automated assessment |
 | 2026-04-17 | IMP-20260414-nel-002 (W2): No package.json found at project root — check website/ or agents/sam/website/ | Automated assessment |
+| 2026-04-18 | IMP-20260414-nel-002 (W2): No package.json found at project root — check website/ or agents/sam/website/ | Automated assessment |

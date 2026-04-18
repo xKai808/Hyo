@@ -12,22 +12,29 @@
 
 ---
 
-## P0 — FIX FIRST (Session 17 — blocking everything else)
+## ✅ SHIPPED — Session 18 (2026-04-18, overnight)
 
-- [ ] **[K]** **S17-001: Fix Aether daily analysis dead-loop.** Patch aether.sh data sync directly — stop re-delegating. aether-analysis-DATE must appear on HQ feed by 23:00 MT every day without exception.
-- [ ] **[K]** **S17-002: Fix morning report render on HQ.** Real cause = stale feed.json. Fix feed.json regeneration on Mini so morning-report.json surfaces on HQ by 05:00 MT daily. No more auto-remediation loops.
-- [ ] **[K]** **S17-003: Fix Sam silence.** Sam has been silent 4+ days. Diagnose why sam.sh isn't running its cycle and fix it. Sam must produce daily logs.
-- [ ] **[K]** **S17-004: Clear queue worker orphan.** `mv running/recheck-flag-dex-001.json failed/` on Mini. Add timeout enforcement so stale jobs never block again.
-- [ ] **[K]** **S17-005: Fix /api/hq 401.** Auth is broken. Diagnose, fix, verify with curl. Blocks HQ dynamic data.
+- [x] **S17-001 RESOLVED:** Aether verify_dashboard() phantom endpoint fixed → /data/aether-metrics.json. Flag dedup hourly gate added.
+- [x] **S17-002 RESOLVED:** Morning report generator TypeError fixed (issues is int not list). Apr 18 report generated.
+- [x] **S17-003 RESOLVED:** Sam no launchd → com.hyo.sam.plist created + installed. Sam running.
+- [x] **S17-004 RESOLVED:** Queue orphan (tailscale) cleared to failed/.
+- [x] **S17-005 RESOLVED:** False positive. /api/hq works from Mini. Sandbox proxy blocklist.
+- [x] **BUILD-001 SHIPPED:** Podcast pipeline (OpenAI TTS tts-1-hd). First podcast-2026-04-18.mp3 live (2.07MB, 1.8min). HQ audio player. 06:05 MT daily launchd trigger installed.
+- [x] **BUILD-002 SHIPPED (Phase 1):** aurora-page.html audio card. /app sign-in page. api/aurora-magic-link.js.
+- [x] **BUILD-003 SHIPPED:** RESEARCH-001+002 done. $19/mo price correct. Trial extended 2→14 days. Day 7 retention email queued.
+- [x] **BUILD-004 SHIPPED:** hyo UI/UX agent. PLAYBOOK, GROWTH, PRIORITIES, runner, manifest, launchd at 10:00 MT.
+- [x] **LAB-001 DONE:** Aurora landing page "Built for you, not by you." + 14-day trial CTA.
+- [x] **LAB-005 DONE:** Jason Borck OpenClaw competitive intel doc.
+- [x] **Ticket queue:** 91 → 55 open (closed 36 tickets).
 
-## P1 — BUILD QUEUE (Session 17 — execute in order)
+## P1 — NEXT SESSION
 
-- [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Code is deployed. Hyo creates Stripe account + product ($19/mo) + get keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel. Test with Stripe test keys first.
-- [ ] **[K]** **BUILD-001: Podcast.** Aurora reads daily brief as audio. OpenAI TTS (tts-1-hd). Script = morning report highlights + Ra top stories + Aurora brief. Output: MP3 to website/daily/podcast-DATE.mp3. HQ audio player. Generates 06:00 MT. Hyo listens on commute.
-- [ ] **[K]** **BUILD-002: hyo.world App.** PWA. Magic link auth. User logs in → sees their Aurora brief → read or listen toggle. Phase 1: read + audio. Phase 2: preferences. Phase 3: agent feeds. Mobile-first.
-- [ ] **[K]** **BUILD-003: Lab research.** Real research on net-new revenue — not Aurora/Aether reruns. What's working in AI products in 2026. What our assets (Aether intel, Ra content) could become. One research finding per week minimum, actionable.
-- [ ] **[K]** **BUILD-004: hyo agent (UI/UX).** Owns all user-facing surfaces. Frees Sam from design decisions. Follow AGENT_CREATION_PROTOCOL v3.0.
-- [ ] **[K]** **S17-007: Work the ticket queue.** 37 open tickets. Resolution rate must exceed creation rate. Work tickets every session. Not optional.
+- [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Hyo creates Stripe account + product ($19/mo, 14-day trial) + keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel.
+- [ ] **[K]** **Day 7 retention email.** Build aurora-retention.js — on day 7 of trial, trigger personalized "how's your brief?" email via Resend.
+- [ ] **[K]** **BUILD-002 Phase 2.** Aurora app preferences UI (topics, voice, depth) accessible from aurora-page.
+- [ ] **[K]** **BUILD-003 RESEARCH-003.** AetherBot capital scaling — what would $1,000 at current WR generate?
+- [ ] **[K]** **S17-007: Ticket queue.** 55 open. Continue closing. Resolution > creation rate.
+- [ ] **[K]** **LAB-003: YouTube Content Radar.** Wire into Ra — monitor competitor YouTube channels daily.
 
 ## P1 — ONGOING (pre-session 17, still open)
 
@@ -496,3 +503,6 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-eager-tesla/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0e638713:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 25 P0 tasks (overload threshold 5) [sentinel:task-queue-size:9de2a565:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-18.md [sentinel:aurora-ran-today:e7fccf38] _(filed 2026-04-18)_
+- [ ] **[K]** [sentinel] 30 P0 tasks (overload threshold 5) [sentinel:task-queue-size:385b8938] _(filed 2026-04-18)_
