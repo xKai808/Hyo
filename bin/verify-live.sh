@@ -26,9 +26,10 @@ FAILURES=()
 check() {
   local name="$1" url="$2" marker="$3"
   local content
-  # Note: no ?_v= query param for HTML pages — Vercel static routing breaks with query strings
-  # --compressed handles brotli/gzip from CDN edge
-  content=$(curl -sL --max-time 20 --compressed \
+  # Note: no ?_v= query param (breaks Vercel static routing) and no --compressed
+  # (macOS curl may not support brotli). Plain curl sends no Accept-Encoding,
+  # server returns uncompressed content which grep can parse.
+  content=$(curl -sL --max-time 20 \
     -H "Cache-Control: no-cache" \
     -H "Pragma: no-cache" \
     "$url" 2>/dev/null || echo "CURL_FAIL")
