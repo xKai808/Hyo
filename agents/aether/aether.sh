@@ -289,11 +289,20 @@ try:
                         day_text = f.read()
                     day_bals = re.findall(r'bal\s+\$([\d.]+)', day_text)
                     day_trades = len(re.findall(r'BUY SNAPSHOT', day_text))
+                    day_wins = len(re.findall(r'TICKER CLOSE.*?NET WIN', day_text))
+                    day_losses = len(re.findall(r'TICKER CLOSE.*?NET LOSS', day_text))
                     if day_bals:
+                        day_first = float(day_bals[0])
                         day_last = float(day_bals[-1])
                         daily_map[ds]["pnl"] = round(day_last - prev_bal, 2)
                         daily_map[ds]["balance"] = day_last
+                        daily_map[ds]["balanceStart"] = prev_bal
+                        daily_map[ds]["balanceEnd"] = day_last
                         daily_map[ds]["trades"] = day_trades
+                        daily_map[ds]["wins"] = day_wins
+                        daily_map[ds]["losses"] = day_losses
+                        closed = day_wins + day_losses
+                        daily_map[ds]["winRate"] = round(day_wins / closed * 100, 1) if closed > 0 else 0.0
                         prev_bal = day_last
                 except Exception:
                     pass
