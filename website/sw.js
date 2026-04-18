@@ -1,7 +1,7 @@
 // hyo hq — service worker
 // Strategy: network-first for HTML/JSON (always fresh data), cache-first for assets
 
-const CACHE = 'hq-v5';  // bumped: full P&L dashboard — expenses + income sections
+const CACHE = 'hq-v6';  // bumped: subscriptions (Claude Max Pro $200 + GPT Plus $20) in expenses
 const PRECACHE = [
   '/hq.html',
   '/manifest.json',
