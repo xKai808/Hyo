@@ -831,7 +831,117 @@ d['updatedAt'] = now
 d['lastUpdated'] = now
 with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
 "
-  push_to_hq
+  # ─── SE-016-001: Data Verification Gate ─────────────────────────────────
+  # Run 6 yes/no gate questions before every HQ push.
+  # Any BLOCK = skip push, open P1 ticket. See protocols/DATA_VERIFICATION_GATE.md
+  gate_result=$(python3 - "$METRICS" <<'GATE_PYEOF'
+import json, sys, os, re
+from pathlib import Path
+
+metrics_file = sys.argv[1]
+with open(metrics_file) as f:
+    data = json.load(f)
+
+cw = data.get("currentWeek", data.get("currentPeriod", {}))
+starting_bal = cw.get("startingBalance", 0)
+current_bal = cw.get("currentBalance", 0)
+daily_pnl = cw.get("dailyPnl", [])
+strategies = cw.get("strategies", [])
+trades = cw.get("trades", 0)
+week_pnl = cw.get("pnl", 0)
+
+gate_pass = True
+blocks = []
+warns = []
+
+# Q1: Starting balance not hardcoded/null/zero
+if starting_bal == 1000.0 or starting_bal <= 0:
+    blocks.append(f"Q1 FAIL: startingBalance={starting_bal} (hardcoded or zero — must be read from AetherBot log)")
+
+# Q2: Balance chain continuity
+chain = starting_bal
+for day in daily_pnl:
+    from datetime import datetime, date
+    try:
+        day_d = datetime.strptime(day["date"], "%Y-%m-%d").date()
+        if day_d <= date.today():
+            chain += day.get("pnl", 0)
+    except Exception:
+        pass
+chain = round(chain, 2)
+if abs(chain - current_bal) > 0.10:
+    blocks.append(f"Q2 FAIL: startingBalance({starting_bal}) + dailyPnl chain={chain} != currentBalance({current_bal}) (drift={abs(chain-current_bal):.2f})")
+
+# Q3: Daily PnL non-zero for days with trades
+log_dir = os.path.expanduser("~/Documents/Projects/AetherBot/Logs")
+for day in daily_pnl:
+    ds = day["date"]
+    log_path = os.path.join(log_dir, f"AetherBot_{ds}.txt")
+    if os.path.isfile(log_path):
+        if day.get("trades", 0) == 0 and day.get("pnl", 0) == 0 and day.get("balance", 0) == 0:
+            blocks.append(f"Q3 FAIL: {ds} has AetherBot log but dailyPnl shows 0/0/0 — backfill missing")
+
+# Q4: Strategy sum sanity (warn only)
+strat_sum = sum(s.get("pnl", 0) for s in strategies)
+if abs(week_pnl) > 5 and trades > 0:
+    divergence = abs(strat_sum - week_pnl) / max(abs(week_pnl), 1)
+    if divergence > 0.20:
+        warns.append(f"Q4 WARN: strategy sum={strat_sum:.2f} vs week_pnl={week_pnl:.2f} (divergence={divergence:.0%}) — review for uncaptured trades")
+
+# Q5: Balance source (warn if no today log)
+from datetime import date as _date
+today_log = os.path.join(log_dir, f"AetherBot_{_date.today().strftime('%Y-%m-%d')}.txt")
+yesterday_log = os.path.join(log_dir, f"AetherBot_{(_date.today().__class__.fromordinal(_date.today().toordinal()-1)).strftime('%Y-%m-%d')}.txt")
+if not os.path.isfile(today_log) and not os.path.isfile(yesterday_log):
+    warns.append(f"Q5 WARN: no recent AetherBot log (today or yesterday) — currentBalance may be stale")
+
+# Q6: Phantom loss gate
+pnl_per_trade = abs(week_pnl) / max(trades, 1)
+if pnl_per_trade > 50:
+    blocks.append(f"Q6 FAIL: pnl_per_trade=${pnl_per_trade:.2f} > $50 threshold — likely data corruption (week_pnl={week_pnl}, trades={trades})")
+
+# Output result
+if blocks:
+    print("BLOCKED:" + "|".join(blocks))
+elif warns:
+    print("PASS_WARN:" + "|".join(warns))
+else:
+    print("PASS")
+GATE_PYEOF
+)
+
+  if [[ "$gate_result" == BLOCKED:* ]]; then
+    gate_reason="${gate_result#BLOCKED:}"
+    log "DATA GATE BLOCKED: $gate_reason"
+    # Open P1 ticket
+    dispatch_bin="$ROOT/bin/kai.sh"
+    if [[ -f "$dispatch_bin" ]]; then
+      bash "$dispatch_bin" exec "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-$(date +%Y%m%d%H%M) --title 'Aether data gate blocked: metrics not published' --body '$gate_reason' --priority P1 --agent aether" 2>>"$LOG" || true
+    fi
+    log "HQ push SKIPPED — gate blocked. Fix data before next cycle."
+    # Write gate status to metrics without pushing
+    python3 -c "
+import json
+with open('$METRICS') as f: d = json.load(f)
+d['dataGateStatus'] = 'BLOCKED'
+d['dataGateReason'] = '$gate_reason'
+with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
+" 2>>"$LOG" || true
+  else
+    if [[ "$gate_result" == PASS_WARN:* ]]; then
+      log "DATA GATE PASS (with warnings): ${gate_result#PASS_WARN:}"
+    else
+      log "DATA GATE PASS: all 6 verification questions passed"
+    fi
+    python3 -c "
+import json
+with open('$METRICS') as f: d = json.load(f)
+d['dataGateStatus'] = 'PASS'
+d.pop('dataGateReason', None)
+with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
+" 2>>"$LOG" || true
+    push_to_hq
+  fi
 
   # ─── Git push metrics to Vercel (every 15-min cycle) ─────────────────────
   # The API push_to_hq is ephemeral (serverless cold starts reset it).
