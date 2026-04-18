@@ -651,14 +651,19 @@ print(json.dumps({
 verify_dashboard() {
   local api_response dashboard_ts local_ts
 
-  # GET metrics from API to verify data landed
-  api_response=$(curl -sf "https://www.hyo.world/api/aether?action=metrics" 2>> "$LOG")
+  # GET metrics from static file on Vercel (api/aether does not exist — use static data path)
+  api_response=$(curl -sf "https://www.hyo.world/data/aether-metrics.json" 2>> "$LOG")
 
   if [[ -z "$api_response" ]]; then
-    log "WARN: Dashboard verification failed (empty API response)"
-    local dispatch_bin="$ROOT/bin/dispatch.sh"
-    if [[ -x "$dispatch_bin" ]]; then
-      bash "$dispatch_bin" flag aether P2 "dashboard data verification failed: empty API response" 2>> "$LOG" || true
+    log "WARN: Dashboard verification failed (empty response from data endpoint)"
+    # Rate-limit this flag to once per hour to avoid spam
+    local flag_marker="/tmp/aether-dashfail-$(TZ=America/Denver date +%Y%m%d%H)"
+    if [[ ! -f "$flag_marker" ]]; then
+      touch "$flag_marker"
+      local dispatch_bin="$ROOT/bin/dispatch.sh"
+      if [[ -x "$dispatch_bin" ]]; then
+        bash "$dispatch_bin" flag aether P2 "dashboard data verification failed: empty response from /data/aether-metrics.json" 2>> "$LOG" || true
+      fi
     fi
     return 1
   fi

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.hyo.sam</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>cd /Users/kai/Documents/Projects/Hyo &amp;&amp; HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash agents/sam/sam.sh evolve 2&gt;&amp;1 | tee -a /tmp/hyo-sam.log</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>4</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HYO_ROOT</key>
+        <string>/Users/kai/Documents/Projects/Hyo</string>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+    </dict>
+    <key>WorkingDirectory</key>
+    <string>/Users/kai/Documents/Projects/Hyo</string>
+    <key>StandardOutPath</key>
+    <string>/tmp/hyo-sam.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/hyo-sam.log</string>
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
