@@ -467,6 +467,16 @@ if [[ -x "$FORKAI_SCRIPT" ]]; then
   bash "$FORKAI_SCRIPT" 2>&1 | tail -15 || true
 fi
 
+# HYO → KAI MESSAGE FETCH
+# Polls Vercel for messages Hyo sent via HQ dispatch interface
+# Persists them to kai/ledger/hyo-inbox.jsonl so Kai reads on hydration
+# ============================================================================
+FETCH_HYO_SCRIPT="$ROOT/kai/queue/fetch-hyo-messages.sh"
+if [[ -f "$FETCH_HYO_SCRIPT" ]]; then
+  log "Fetching Hyo → Kai messages from HQ..."
+  bash "$FETCH_HYO_SCRIPT" 2>&1 | tail -5 || true
+fi
+
 # ============================================================================
 # KAI MEMORY UPDATE (constitutional step 13 — runs q2h with healthcheck)
 # Updates Kai's own memory files so next session/task reads fresh state.

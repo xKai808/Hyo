@@ -16,8 +16,11 @@ if (!globalThis.__hq) {
     ra: {}, aurora: {}, sentinel: {}, cipher: {},
     sim: {}, consolidation: {}, aether: {}, health: {},
     credits: {},
+    hyoMessages: [],  // Hyo → Kai inbox (persists during lambda warm period)
   };
 }
+// Ensure hyoMessages exists on older warm lambdas
+if (!globalThis.__hq.hyoMessages) globalThis.__hq.hyoMessages = [];
 function getStore() { return globalThis.__hq; }
 function pushEvent(agent, msg) {
   const store = getStore();
@@ -93,6 +96,50 @@ export default function handler(req, res) {
     if (event) pushEvent(agent, event);
 
     return res.status(200).json({ ok: true, ts: new Date().toISOString() });
+  }
+
+  // ── HYO EXPORT (founder-token gated — Mini pulls messages for persistence) ──
+  if (action === 'hyo-export' && req.method === 'GET') {
+    const token = req.headers['x-founder-token'] || req.headers['authorization']?.replace('Bearer ', '');
+    const expected = process.env.HYO_FOUNDER_TOKEN;
+    if (!expected || token !== expected) {
+      return res.status(401).json({ ok: false, error: 'unauthorized' });
+    }
+    const store = getStore();
+    return res.status(200).json({
+      ok: true,
+      ts: new Date().toISOString(),
+      hyoMessages: store.hyoMessages || [],
+    });
+  }
+
+  // ── HYO MESSAGE (session-token gated POST from HQ) ──
+  if (action === 'hyo-message' && req.method === 'POST') {
+    const token = req.headers['authorization']?.replace('Bearer ', '');
+    if (!verifyToken(token)) {
+      return res.status(401).json({ ok: false, error: 'unauthorized' });
+    }
+
+    const { message } = req.body || {};
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ ok: false, error: 'missing message' });
+    }
+
+    const store = getStore();
+    const entry = {
+      ts: new Date().toISOString(),
+      from: 'hyo',
+      message: message.trim(),
+      status: 'unread',
+    };
+    store.hyoMessages.unshift(entry);
+    // Keep last 200 messages
+    if (store.hyoMessages.length > 200) store.hyoMessages.length = 200;
+
+    // Also push to events feed so it appears in store.events
+    pushEvent('hyo', `[Hyo→Kai] ${message.trim().slice(0, 80)}`);
+
+    return res.status(200).json({ ok: true, ts: entry.ts });
   }
 
   // ── DATA (session-token gated) ──

@@ -14,6 +14,7 @@ Continuation sessions (context compaction, "continue from where you left off") a
 Read these files in order. Do not skip. Do not skim.
 
 1. `KAI_BRIEF.md` — persistent memory, current state, known blockers
+1.5. `kai/ledger/hyo-inbox.jsonl` — **Hyo's direct messages to Kai** (READ FIRST after brief — may contain urgent instructions). If unread messages exist, surface them immediately in the 4-line status. Mark as read by updating status in the file after reading.
 2. `KAI_TASKS.md` — priority queue; this is what you work on when not actively prompted
 3. `kai/ledger/known-issues.jsonl` — issue patterns to watch for (regressions)
 4. `kai/ledger/session-errors.jsonl` — Kai's own mistakes (RECALL SYSTEM — check before every action)
@@ -28,7 +29,7 @@ Read these files in order. Do not skip. Do not skim.
 
 After hydration, respond with a 4-line status:
 1. What shipped since last session (from KAI_BRIEF "Shipped today" section)
-2. What's at the top of KAI_TASKS
+2. What's at the top of KAI_TASKS (including any urgent Hyo inbox messages)
 3. Your recommendation for the next 15 minutes
 4. "Queue active: [yes/no]" — confirm you can reach the Mini via `kai exec "echo ok"`
 

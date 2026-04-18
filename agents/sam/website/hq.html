@@ -1052,8 +1052,24 @@ async function fetchFeed() {
   return null;
 }
 
+async function fetchHyoMessages() {
+  if (!HQ_TOKEN) return [];
+  try {
+    const r = await fetch('/api/hq?action=data', {
+      headers: { 'authorization': `Bearer ${HQ_TOKEN}` }
+    });
+    if (r.ok) {
+      const j = await r.json();
+      return j.hyoMessages || [];
+    }
+  } catch (e) { /* no-op */ }
+  return [];
+}
+
 async function boot() {
   FEED_DATA = await fetchFeed();
+  if (!FEED_DATA) FEED_DATA = { reports: [], agents: {}, today: new Date().toISOString().slice(0,10) };
+  FEED_DATA._hyoMessages = await fetchHyoMessages();
   try {
     const resp = await fetch('/data/aether-metrics.json');
     if (resp.ok) {
@@ -1065,7 +1081,14 @@ async function boot() {
   render();
   // Refresh every 60s
   setInterval(async () => {
+    const prev = FEED_DATA?._hyoMessages || [];
     FEED_DATA = await fetchFeed();
+    if (!FEED_DATA) FEED_DATA = { reports: [], agents: {}, today: new Date().toISOString().slice(0,10) };
+    // Merge: keep locally-added messages + fetch from store
+    const fresh = await fetchHyoMessages();
+    // De-dupe by ts+message
+    const seen = new Set(fresh.map(m => m.ts + m.message));
+    FEED_DATA._hyoMessages = [...fresh, ...prev.filter(m => !seen.has(m.ts + m.message))];
     try {
       const resp = await fetch('/data/aether-metrics.json');
       if (resp.ok) {
@@ -1143,6 +1166,12 @@ function renderAgentView(container, agentId) {
   // Special dashboard for Aether
   if (agentId.toLowerCase() === 'aether') {
     renderAetherDashboard(container, agent);
+    return;
+  }
+
+  // Special inbox for Kai
+  if (agentId === 'kai') {
+    renderKaiView(container, agent);
     return;
   }
 
@@ -1324,6 +1353,161 @@ function renderResearch(container) {
       });
     });
   });
+}
+
+// ═══ KAI VIEW — includes Message Kai inbox ═══
+function renderKaiView(container, agent) {
+  // Build the standard agent profile first
+  let html = `
+    <div class="agent-profile">
+      <div class="agent-profile-header">
+        <div class="ap-icon">${agent.icon}</div>
+        <div class="ap-info">
+          <h2>${agent.name}</h2>
+          <div class="ap-role">${agent.role}</div>
+        </div>
+      </div>
+      <div class="ap-responsibilities">"${agent.responsibilities}"</div>
+
+      <div class="goals-grid">
+        <div class="goal-col short">
+          <h4>Short-term</h4>
+          <ul>${(agent.goals?.short || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+        <div class="goal-col medium">
+          <h4>Medium-term</h4>
+          <ul>${(agent.goals?.medium || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+        <div class="goal-col long">
+          <h4>Long-term</h4>
+          <ul>${(agent.goals?.long || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+      </div>
+
+      <div class="status-lists">
+        <div class="status-list in-process">
+          <h4>In Process</h4>
+          <ul>${(agent.inProcess || []).map(t => `<li>${t}</li>`).join('')}</ul>
+          ${(agent.inProcess || []).length === 0 ? '<div style="font-size:13px;color:var(--text-muted);">Nothing active</div>' : ''}
+        </div>
+        <div class="status-list pending">
+          <h4>Pending</h4>
+          <ul>${(agent.pending || []).map(t => `<li>${t}</li>`).join('')}</ul>
+          ${(agent.pending || []).length === 0 ? '<div style="font-size:13px;color:var(--text-muted);">Nothing pending</div>' : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Hyo → Kai inbox section
+  const storedMessages = (FEED_DATA?._hyoMessages || []);
+  const msgItems = storedMessages.length > 0
+    ? storedMessages.map(m => {
+        const t = new Date(m.ts).toLocaleString('en-US', { timeZone: 'America/Denver', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:false });
+        const statusDot = m.status === 'unread'
+          ? '<span style="width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin-left:6px;vertical-align:middle;" title="Not yet read by Kai"></span>'
+          : '';
+        return `<div style="padding:10px 12px;border-radius:8px;background:var(--bg-tertiary);margin-bottom:8px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">${t} MT${statusDot}</div>
+          <div style="font-size:14px;line-height:1.5;color:var(--text-primary);">${escHtml(m.message)}</div>
+        </div>`;
+      }).join('')
+    : '<div style="font-size:13px;color:var(--text-muted);padding:8px 0;">No messages sent yet. Use the box below to message Kai.</div>';
+
+  html += `
+    <div style="margin-top:28px;">
+      <h3 style="font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:16px;">
+        📬 Message Kai
+      </h3>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:14px;line-height:1.5;">
+        Messages you send here are queued for Kai to read at the start of the next session.
+        Use this to leave instructions, corrections, or context when you're not in an active session.
+      </div>
+      <div style="margin-bottom:16px;">
+        ${msgItems}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <textarea id="hyoMsgInput"
+          placeholder="Leave a message for Kai…"
+          style="width:100%;box-sizing:border-box;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.5;color:var(--text-primary);resize:vertical;min-height:90px;font-family:inherit;outline:none;"
+          oninput="this.style.borderColor = this.value.trim() ? 'var(--accent)' : 'var(--border)';"
+        ></textarea>
+        <button id="hyoMsgSendBtn" onclick="sendHyoMessage()"
+          style="align-self:flex-end;padding:10px 22px;border-radius:8px;background:var(--accent);color:#000;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:opacity 0.15s;"
+          onmousedown="this.style.opacity='0.75'" onmouseup="this.style.opacity='1'" ontouchend="this.style.opacity='1'">
+          Send to Kai
+        </button>
+        <div id="hyoMsgStatus" style="font-size:12px;color:var(--text-muted);min-height:16px;text-align:right;"></div>
+      </div>
+    </div>
+  `;
+
+  // Kai's report history
+  const agentReports = (FEED_DATA.reports || [])
+    .filter(r => r.author?.toLowerCase() === 'kai')
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  html += `<div class="history-section"><h3>Report History</h3>`;
+  if (agentReports.length === 0) {
+    html += '<div class="empty-state">No reports from Kai yet.</div>';
+  } else {
+    html += '<div class="history-feed">';
+    for (const r of agentReports.slice(0, 10)) {
+      html += renderReport(r);
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function sendHyoMessage() {
+  const input = document.getElementById('hyoMsgInput');
+  const btn = document.getElementById('hyoMsgSendBtn');
+  const status = document.getElementById('hyoMsgStatus');
+  const msg = input?.value?.trim();
+  if (!msg) return;
+
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  status.textContent = 'Sending…';
+  status.style.color = 'var(--text-muted)';
+
+  try {
+    const r = await fetch('/api/hq?action=hyo-message', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${HQ_TOKEN}`,
+      },
+      body: JSON.stringify({ message: msg }),
+    });
+    const j = await r.json();
+    if (j.ok) {
+      status.textContent = '✓ Message queued for Kai';
+      status.style.color = 'var(--good)';
+      input.value = '';
+      input.style.borderColor = 'var(--border)';
+      // Re-render to show the new message
+      if (!FEED_DATA._hyoMessages) FEED_DATA._hyoMessages = [];
+      FEED_DATA._hyoMessages.unshift({ ts: j.ts, from: 'hyo', message: msg, status: 'unread' });
+      render();
+    } else {
+      status.textContent = `✗ ${j.error || 'send failed'}`;
+      status.style.color = 'var(--warn)';
+    }
+  } catch (e) {
+    status.textContent = '✗ Network error — try again';
+    status.style.color = 'var(--warn)';
+  } finally {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
 }
 
 // ═══ REPORT RENDERER ═══
