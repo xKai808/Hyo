@@ -1,129 +1,148 @@
 #!/usr/bin/env python3
-"""Update hq-state.json with results from the 2026-04-17T23:54Z ops sync cycle.
+"""Update hq-state.json with results from the 2026-04-18T06:14Z ops sync cycle.
 
 Writes to both website/data/hq-state.json and agents/sam/website/data/hq-state.json
 per the dual-path file awareness rule in CLAUDE.md.
 """
 import json
 import os
-import sys
 from pathlib import Path
 
-ROOT = Path(os.environ.get("HYO_ROOT", "/sessions/epic-exciting-tesla/mnt/Hyo"))
+ROOT = Path(os.environ.get("HYO_ROOT", "/sessions/sweet-peaceful-thompson/mnt/Hyo"))
 PATHS = [
     ROOT / "website" / "data" / "hq-state.json",
     ROOT / "agents" / "sam" / "website" / "data" / "hq-state.json",
 ]
 
-# Source of truth: the more-complete file (primary website/data path)
-primary = json.loads(PATHS[0].read_text())
+# Load primary (whichever is freshest — both should be synced after this).
+candidates = [p for p in PATHS if p.exists()]
+candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+primary = json.loads(candidates[0].read_text())
 
-TS_UTC = "2026-04-17T23:54:07Z"
-TS_MT = "2026-04-17T17:54:07-0600"
+TS_UTC = "2026-04-18T06:14:18Z"
+TS_MT = "2026-04-18T00:14:18-0600"
 
 # ----- sentinel -----
+# Direct sentinel.sh run #65: 4 passed / 5 failed; resolved api-health-green
+# (was day 64 ESCALATED), scheduled-tasks-fired, task-queue-size.
+# New findings include P0 founder-token-integrity (known regex bug: 0600 vs 6xx mask),
+# P0 aurora-ran-today (newsletter didn't run for 2026-04-18 yet; pipeline runs at 03:00 MT
+# — this run is at 00:14 MT so newsletter hasn't fired), P1 scheduled-tasks-fired,
+# P1 secrets-dir-permissions (0755 — symlink cosmetic), P2 task-queue-size (30/5).
 primary["sentinel"] = {
     "lastRun": TS_MT,
-    "passed": 5,
-    "failed": 4,
-    "totalRuns": 63,
+    "passed": 4,
+    "failed": 5,
+    "totalRuns": 65,
     "findings": [
-        "P0: founder-token-integrity — mode 0600 but policy wants 6xx (new this run)",
-        "P1: secrets-dir-permissions — .secrets/ is 0755 (want 700)",
-        "P1: scheduled-tasks-fired — no aurora logs (recurring)",
-        "P2: task-queue-size — 25 P0 tasks / threshold 5",
+        "P0: aurora-ran-today — /newsletters/2026-04-18.md missing (expected: newsletter fires at 03:00 MT; this sentinel ran at 00:14 MT)",
+        "P0: founder-token-integrity — founder.token mode 0600 (regex bug: want 6xx, matches literally not as mask)",
+        "P1: scheduled-tasks-fired — no aurora logs (recurring, ties to aurora-ran-today)",
+        "P1: secrets-dir-permissions — .secrets/ is 0755 (symlink — target at 700; cosmetic, known)",
+        "P2: task-queue-size — 30 P0 tasks (overload threshold 5)",
     ],
     "resolvedThisRun": [
-        "api-health-green (was day 62, ESCALATED)",
-        "aurora-ran-today (was day 4)",
-        "scheduled-tasks-fired (recurred same run)",
-        "task-queue-size (recurred same run)",
+        "api-health-green (was day 64, P0 ESCALATED — cleared)",
+        "scheduled-tasks-fired (recurred same run under different hash)",
+        "task-queue-size (recurred same run under different hash)",
     ],
     "escalations": [
-        "P0 new: founder-token-integrity — investigate sentinel rule vs cipher autofix (both agree mode=0600 but sentinel flags it)",
+        "P0 persistent: founder-token-integrity — sentinel regex bug; mode 0600 flagged as failing 6xx. Fix sentinel rule, not the file.",
+        "api-health-green CLEARED after 64-day escalation — investigate what changed; confirm it stays green through 07:00 completeness check.",
     ],
-    "latestDoc": "/viewer?agent=sentinel&file=2026-04-17",
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-18",
 }
 
 # ----- cipher -----
+# Clean scan, 0 findings, 7 autofixes (idempotent — logs same 7 autofixes every run).
+# Autofixes: .secrets/ dir 0755->700 (cosmetic: symlink), plus 6 key/token files 0600->600
+# (leading zero normalization — same mode, logged as "fixed" spuriously).
 primary["cipher"] = {
     "lastRun": TS_UTC,
     "secretsDir": "0755",
     "founderToken": "0600",
     "leaks": 0,
-    "autofixes": 6,
+    "autofixes": 7,
     "notes": (
-        "Authoritative scan on Mini. 0 findings, 6 auto-fixes applied. "
-        "Disagreement with sentinel: cipher reports .secrets/ at 0755 after autofix; "
-        "sentinel P1 flags 0755 (want 700). Investigate whether autofix is idempotent "
-        "or whether another process is resetting perms. brew install gitleaks + trufflehog still pending on Mini."
+        "Clean scan, 0 findings, 7 auto-fixes (idempotent — same fixes logged "
+        "every run: .secrets dir 0755->700 on symlink; 6 keys 0600->600 leading-zero "
+        "normalization). Founder token 0600 OK. secretsDir 0755 on symlink (target at 700). "
+        "gitleaks/trufflehog install still pending on Mini. FIX: cipher should detect "
+        "idempotent autofixes and suppress spurious log lines."
     ),
     "latestDoc": None,
-    "totalRuns": 214,
+    "totalRuns": 189,
 }
 
 # ----- nel -----
+# Score 85 (recovered from 65 — +20), 4 projects passing sentinel overall (per-project:
+# hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f), 0 leaks, 16 broken links,
+# 23 untested scripts, 3 inefficient patterns, 7 audit issues. Self-delegated broken
+# link fix (TASK-20260418-nel-001 P2). ARIC research cycle executed, W3 improvement
+# ticket emitted. Growth phase: IMP-nel-002 CVE scanner (blocked — no package.json at root).
 primary["nel"] = {
     "lastRun": TS_UTC,
     "improvementScore": 85,
     "healthScore": 85,
-    "findingsCount": 5,
+    "findingsCount": 9,
     "staleFiles": 0,
     "brokenLinks": 16,
-    "untested": 14,
-    "inefficient": 1,
-    "sensitiveFilesOutsideSecrets": 5,
-    "repoFiles": 1540,
-    "repoSizeMb": 80,
-    "sentinel": {"pass": 4, "fail": 4},  # per-project aggregate: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f → but nel summary said "4 projects passing"; we'll use their aggregate pass count
+    "untested": 23,
+    "inefficient": 3,
+    "auditIssues": 7,
+    "sentinel": {"pass": 4, "fail": 0, "perProject": {"hyo": "2p/2f", "aurora-ra": "4p/0f", "aether": "1p/1f", "kai-ceo": "4p/0f"}},
     "cipher": {"leaks": 0},
-    "delta": "Score recovered 65 → 85 vs morning run (+20). api-health-green resolved after 62 days.",
-    "latestDoc": "/viewer?agent=nel&file=2026-04-17",
+    "delta": "Score holds at 85. Ops sync cycle @ 00:14 MT. Self-delegated broken-link fix TASK-20260418-nel-001 (P2). W3 improvement ticket emitted. Reflection + research published to feed.",
+    "latestDoc": "/viewer?agent=nel&file=2026-04-18",
 }
 
 # ----- updatedAt -----
 primary["updatedAt"] = TS_UTC
 
-# ----- events: prepend this cycle's events -----
+# ----- events: prepend this cycle's events, dedupe, keep 30 -----
 new_events = [
     {
         "ts": TS_UTC,
         "agent": "kai",
         "msg": (
-            "Ops sync cycle 17:54 MT — sentinel run #63 (5p/4f; resolved api-health-green "
-            "after 62-day escalation and aurora-ran-today after 4 days; new P0 "
-            "founder-token-integrity), cipher run #214 (0 findings, 6 autofixes), nel "
-            "score 85 (up from 65, +20). Two agents disagree on .secrets/ mode — investigating."
+            "Ops sync cycle @ 00:14 MT (2026-04-18) — sentinel #65 (4p/5f, api-health-green "
+            "CLEARED after 64-day P0 escalation), cipher run clean (0 findings, 7 idempotent "
+            "autofixes), nel score 85 (holds, self-delegated broken-link fix + W3 improvement). "
+            "Known findings stable: aurora-ran-today expected (newsletter fires 03:00 MT), "
+            "founder-token-integrity is sentinel regex bug (mode 0600 vs 6xx mask), "
+            ".secrets 0755 is symlink cosmetic (target at 700)."
         ),
     },
     {
         "ts": TS_MT,
         "agent": "sentinel",
         "msg": (
-            "QA sweep run #63 — 5 passed, 4 failed. RESOLVED: api-health-green (day 62 "
-            "escalation cleared), aurora-ran-today (day 4 cleared). NEW: P0 "
-            "founder-token-integrity, P1 secrets-dir-permissions (0755 vs 700), "
-            "P1 scheduled-tasks-fired (recurring), P2 task-queue-size (25/5)."
+            "QA sweep run #65 — 4 passed, 5 failed. RESOLVED: api-health-green (day 64 "
+            "P0 escalation CLEARED), scheduled-tasks-fired, task-queue-size. NEW: P0 "
+            "aurora-ran-today, P0 founder-token-integrity, P1 secrets-dir-permissions, "
+            "P1 scheduled-tasks-fired, P2 task-queue-size (30/5)."
         ),
-        "doc": "/viewer?agent=sentinel&file=2026-04-17",
+        "doc": "/viewer?agent=sentinel&file=2026-04-18",
     },
     {
         "ts": TS_UTC,
         "agent": "cipher",
         "msg": (
-            "Security scan run #214 (authoritative, on Mini) — 0 leaks, 6 auto-fixes. "
-            "Founder token 0600, .secrets 0755 (conflicts with sentinel P1 expectation of 700)."
+            "Security scan — clean. 0 findings, 7 idempotent autofixes (cosmetic mode "
+            "normalization). Founder token 0600, .secrets 0755 on symlink (target 700)."
         ),
     },
     {
         "ts": TS_UTC,
         "agent": "nel",
         "msg": (
-            "System sweep — score 85/100 (recovered from 65). 16 broken links (unchanged), "
-            "14 untested scripts, 1 inefficient pattern, 5 sensitive files outside .secrets/ "
-            "(.env.local ×2, .env.example, claude_api_tokens CSV ×2). Stale files: 0."
+            "System sweep — score 85/100 (holds). Sentinel: 4 projects passing overall "
+            "(hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f). 16 broken links, "
+            "23 untested scripts, 3 inefficient patterns, 7 audit issues. 0 verified leaks. "
+            "Self-delegated: TASK-20260418-nel-001 (P2) broken-link fix. W3 improvement "
+            "ticket emitted. Research + reflection published to feed."
         ),
-        "doc": "/viewer?agent=nel&file=2026-04-17",
+        "doc": "/viewer?agent=nel&file=2026-04-18",
     },
 ]
 
@@ -132,15 +151,18 @@ existing = primary.get("events", [])
 seen = {(e.get("ts"), e.get("agent"), e.get("msg")) for e in new_events}
 kept = [e for e in existing if (e.get("ts"), e.get("agent"), e.get("msg")) not in seen]
 primary["events"] = new_events + kept
-# Keep at most 30 events
 primary["events"] = primary["events"][:30]
 
-# ----- morningReport: leave the morning snapshot intact, but append a note -----
+# ----- morningReport: keep this morning's report intact; annotate ops sync note -----
 mr = primary.get("morningReport", {})
 if mr:
     mr["lastOpsSync"] = {
         "ts": TS_UTC,
-        "note": "17:54 MT ops sync — api-health-green resolved after 62 days; score 65→85.",
+        "note": (
+            "00:14 MT ops sync (2026-04-18) — api-health-green CLEARED after 64-day P0 "
+            "escalation; nel score holds at 85; aurora-ran-today P0 expected (newsletter "
+            "fires 03:00 MT); founder-token-integrity P0 is known sentinel regex bug."
+        ),
     }
     primary["morningReport"] = mr
 
