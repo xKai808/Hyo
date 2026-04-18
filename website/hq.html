@@ -2539,13 +2539,37 @@ function antPct(n) {
 
 function antBar(used, total, color) {
   const pct = total > 0 ? Math.min((used / total) * 100, 100) : 0;
-  const col = pct > 85 ? 'var(--error)' : pct > 60 ? 'var(--warning)' : color || 'var(--accent)';
-  return `<div style="background:var(--bg-tertiary);border-radius:4px;height:6px;overflow:hidden;margin-top:6px;">
-    <div style="width:${pct.toFixed(1)}%;background:${col};height:100%;border-radius:4px;transition:width 0.4s var(--ease);"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;margin-top:4px;">
-    <span style="font-size:0.72em;color:var(--text-muted);">${antFmt(used)} used</span>
-    <span style="font-size:0.72em;color:var(--text-muted);">${antFmt(total)} total</span>
+  const remaining = Math.max(total - used, 0);
+  const col = pct > 85 ? 'var(--error)' : pct > 60 ? 'var(--warning, #f59e0b)' : color || 'var(--accent)';
+  return `
+  <div style="margin-top:8px;">
+    <div style="background:var(--bg-tertiary);border-radius:4px;height:8px;overflow:hidden;position:relative;">
+      <div style="width:${pct.toFixed(1)}%;background:${col};height:100%;border-radius:4px;transition:width 0.4s var(--ease);"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px;">
+      <span style="font-size:0.72em;color:var(--text-muted);">${antFmt(used)} used</span>
+      <span style="font-size:0.72em;color:var(--text-muted);">${antFmt(remaining)} left of ${antFmt(total)}</span>
+    </div>
+  </div>`;
+}
+
+function antCreditBar(label, used, remaining, total, color, expires) {
+  const pct = total > 0 ? Math.min((used / total) * 100, 100) : 0;
+  const col = pct > 85 ? 'var(--error)' : pct > 60 ? 'var(--warning, #f59e0b)' : color || 'var(--accent)';
+  const remainingPct = (100 - pct).toFixed(1);
+  return `
+  <div style="margin-bottom:18px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+      <span style="font-size:0.875em;font-weight:600;color:var(--text-primary);">${label}</span>
+      <span style="font-size:1.1em;font-weight:700;color:${col};">$${remaining.toFixed(2)} left</span>
+    </div>
+    <div style="background:var(--bg-tertiary);border-radius:6px;height:10px;overflow:hidden;position:relative;">
+      <div style="width:${pct.toFixed(1)}%;background:${col};height:100%;border-radius:6px;opacity:0.85;transition:width 0.4s var(--ease);"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px;">
+      <span style="font-size:0.72em;color:var(--text-muted);">$${used.toFixed(2)} used (${pct.toFixed(1)}%)</span>
+      <span style="font-size:0.72em;color:var(--text-muted);">$${total.toFixed(2)} total${expires ? ' · expires ' + expires : ''}</span>
+    </div>
   </div>`;
 }
 
@@ -2642,17 +2666,32 @@ async function renderAnt(container) {
     ${antStatBox("Today's Cost", antFmt(totalToday), `Anthropic + OpenAI`, totalToday > (burn.dailyBudget || 50) ? 'var(--error)' : 'var(--text-primary)')}
   </div>`;
 
-  // ── ANTHROPIC CREDITS ──
-  if (credits.anthropic != null) {
-    const credRemaining = credits.anthropic.remaining || 0;
-    const credTotal = credits.anthropic.total || 0;
-    const daysLeft = burn.daily > 0 ? Math.floor(credRemaining / burn.daily) : null;
-    html += antSection('Anthropic Credits', `
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-        <span style="font-size:1.4em;font-weight:700;">${antFmt(credRemaining)}</span>
-        <span style="font-size:0.8em;color:var(--text-muted);">${daysLeft != null ? `~${daysLeft} days remaining` : ''}</span>
-      </div>
-      ${antBar(credTotal - credRemaining, credTotal, 'var(--purple)')}
+  // ── CREDIT BALANCES (horizontal bars) ──
+  const antCred = credits.anthropic || {};
+  const oaiCred = credits.openai || {};
+  const hasAntCred = antCred.remaining != null && antCred.total != null;
+  const hasOaiCred = oaiCred.remaining != null && oaiCred.total != null;
+
+  if (hasAntCred || hasOaiCred) {
+    const antDaysLeft = hasAntCred && burn.daily > 0 ? Math.floor(antCred.remaining / burn.daily) : null;
+    const oaiDaysLeft = hasOaiCred && burn.daily > 0 ? Math.floor(oaiCred.remaining / burn.daily) : null;
+    html += antSection('Credit Balances', `
+      ${hasAntCred ? antCreditBar(
+        'Anthropic',
+        antCred.used || (antCred.total - antCred.remaining),
+        antCred.remaining,
+        antCred.total,
+        'var(--purple)',
+        antCred.expires
+      ) + (antDaysLeft ? `<div style="font-size:0.72em;color:var(--text-muted);margin-top:-10px;margin-bottom:14px;">~${antDaysLeft} days at current burn rate</div>` : '') : ''}
+      ${hasOaiCred ? antCreditBar(
+        'OpenAI',
+        oaiCred.used || (oaiCred.total - oaiCred.remaining),
+        oaiCred.remaining,
+        oaiCred.total,
+        'var(--cyan)',
+        null
+      ) + (oaiDaysLeft ? `<div style="font-size:0.72em;color:var(--text-muted);margin-top:-10px;">~${oaiDaysLeft} days at current burn rate</div>` : '') : ''}
     `);
   }
 
@@ -2701,7 +2740,7 @@ async function renderAnt(container) {
     `);
   }
 
-  // ── COST PER AGENT ──
+  // ── COST PER AGENT (MTD) ──
   if (costs.byAgent && Object.keys(costs.byAgent).length > 0) {
     const agents = Object.entries(costs.byAgent).sort((a, b) => b[1] - a[1]);
     const maxAgent = agents[0]?.[1] || 0.01;
@@ -2710,14 +2749,14 @@ async function renderAnt(container) {
       return `<div style="margin-bottom:10px;">
         <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
           <span style="font-size:0.875em;font-weight:500;">${name}</span>
-          <span style="font-size:0.875em;font-weight:600;">${antFmt(cost)}/day</span>
+          <span style="font-size:0.875em;font-weight:600;">${antFmt(cost)} MTD</span>
         </div>
         <div style="background:var(--bg-tertiary);border-radius:3px;height:4px;">
           <div style="width:${pct.toFixed(0)}%;background:var(--accent);height:100%;border-radius:3px;"></div>
         </div>
       </div>`;
     }).join('');
-    html += antSection('Cost per Agent (today)', agentRows);
+    html += antSection('Cost per Agent (Apr MTD)', agentRows);
   }
 
   // ── REVENUE ──

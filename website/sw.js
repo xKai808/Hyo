@@ -1,7 +1,7 @@
 // hyo hq — service worker
 // Strategy: network-first for HTML/JSON (always fresh data), cache-first for assets
 
-const CACHE = 'hq-v3';  // bumped: force cache bust — fixes stale /hq clean URL
+const CACHE = 'hq-v4';  // bumped: ant credit bars + real platform cost data
 const PRECACHE = [
   '/hq.html',
   '/manifest.json',
