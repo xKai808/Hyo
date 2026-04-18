@@ -119,6 +119,38 @@ except Exception:
 
 title = f"AetherBot Daily Analysis — {day_name}{title_suffix}"
 
+# Read GPT phase files — only include if real content (not PENDING stubs)
+def load_gpt(path, min_chars=200):
+    try:
+        with open(path, "r", errors="replace") as f:
+            content = f.read().strip()
+        if len(content) >= min_chars and not content.startswith("PENDING"):
+            return content
+    except Exception:
+        pass
+    return ""
+
+analysis_dir = os.path.dirname(analysis_path)
+gpt_independent = load_gpt(os.path.join(analysis_dir, f"GPT_Independent_{date}.txt"))
+gpt_review      = load_gpt(os.path.join(analysis_dir, f"GPT_CrossCheck_{date}.txt"))
+
+# readLink: use static rich page if it exists, fall back to dynamic page
+static_html = os.path.join(os.path.dirname(feed_git), "..", "daily", f"aether-{date}.html")
+static_html = os.path.normpath(static_html)
+read_link = f"/daily/aether-{date}" if os.path.exists(static_html) else f"/aether-analysis?date={date}"
+
+sections = {
+    "summary": summary or "(no summary extracted)",
+    "trades":  trades  or "See full analysis for trade-by-trade breakdown.",
+    "risk":    risk    or "See full analysis for risk events.",
+    "balance": balance or "See full analysis for balance ledger update.",
+    "btc":     btc     or "See full analysis for BTC context.",
+}
+if gpt_independent:
+    sections["gptIndependent"] = gpt_independent
+if gpt_review:
+    sections["gptReview"] = gpt_review
+
 new_entry = {
     "id": entry_id,
     "type": "aether-analysis",
@@ -128,14 +160,8 @@ new_entry = {
     "authorColor": "#e8c96a",
     "timestamp": now_mt,
     "date": date,
-    "readLink": f"/aether-analysis?date={date}",
-    "sections": {
-        "summary": summary or "(no summary extracted)",
-        "trades":  trades  or "See full analysis for trade-by-trade breakdown.",
-        "risk":    risk    or "See full analysis for risk events.",
-        "balance": balance or "See full analysis for balance ledger update.",
-        "btc":     btc     or "See full analysis for BTC context.",
-    }
+    "readLink": read_link,
+    "sections": sections,
 }
 
 def upsert(path):

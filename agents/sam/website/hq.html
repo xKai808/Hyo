@@ -1164,10 +1164,11 @@ function renderFeed(container) {
   const today = FEED_DATA.today || new Date().toISOString().slice(0, 10);
   // Show today's reports, most recent first
   // Feed scope: morning-report, newsletter, aether-analysis (daily essentials) +
-  // agent-daily (each agent's daily report) + agent-weekly (Saturdays).
+  // agent-weekly (Saturdays only). agent-daily removed — agent operational
+  // reports are internal; only morning-report, newsletter, aether-analysis, podcast visible.
   // agent-reflection and research-drop live in Research tab only.
   // agent-goals removed — goal data lives in agent ACTIVE.md, not the public feed.
-  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'agent-daily', 'agent-weekly', 'podcast']);
+  const FEED_ALLOWED_TYPES = new Set(['morning-report', 'newsletter', 'aether-analysis', 'agent-weekly', 'podcast']);
   const todayReports = (FEED_DATA.reports || [])
     .filter(r => r.date === today && FEED_ALLOWED_TYPES.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));

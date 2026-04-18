@@ -169,6 +169,21 @@ for path in [feed_git, feed_live]:
 print(f"[feed] published {entry['id']}")
 PYPUB
   [[ $? -ne 0 ]] && echo "[$STAMP] WARNING: feed publish failed" >&2
+
+  # ---- COMMIT & PUSH so Vercel deploys the HTML (fixes /daily/DATE 404) ----
+  cd "$HYO_ROOT"
+  git add "agents/sam/website/daily/${TODAY_DATE}.html" \
+          "agents/sam/website/data/feed.json" \
+          "website/data/feed.json" 2>/dev/null || true
+  if git diff --cached --quiet; then
+    echo "[$STAMP] nothing new to commit (already up to date)"
+  else
+    git commit -m "newsletter: publish ${TODAY_DATE} brief + HTML to daily/" \
+        --author="Ra <ra@hyo.world>" 2>&1 | tail -1
+    git push origin main 2>&1 | tail -1 \
+      && echo "[$STAMP] pushed to Vercel — /daily/${TODAY_DATE} will be live" \
+      || echo "[$STAMP] WARNING: git push failed — HTML not yet on Vercel" >&2
+  fi
 else
   echo "[$STAMP] skipping feed publish (no md or bundle mode)" >&2
 fi
