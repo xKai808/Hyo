@@ -1653,12 +1653,29 @@ function renderNewsletter(s, report) {
   const topics = s.topics || [];
   const readLink = s.readLink || report.readLink || '';
 
+  // Render summary: split pipe-separated items into clean bullets,
+  // or show as a plain paragraph if no pipes present
   if (summary) {
-    html += `<div class="newsletter-summary" style="font-size:1.05em;line-height:1.6;color:var(--text-primary);padding:12px 0 8px;">${summary}</div>`;
+    const items = summary.split('|').map(t => t.trim()).filter(Boolean);
+    if (items.length > 1) {
+      const bullets = items.map(item => {
+        // Bold the label before the first colon if present (e.g. "AI Advancements: ...")
+        const colonIdx = item.indexOf(':');
+        if (colonIdx > 0 && colonIdx < 40) {
+          const label = item.slice(0, colonIdx).trim();
+          const rest = item.slice(colonIdx + 1).trim();
+          return `<li><strong style="color:var(--text-primary)">${label}</strong> — ${rest}</li>`;
+        }
+        return `<li>${item}</li>`;
+      }).join('');
+      html += sec('Today', `<ul style="list-style:none;padding:0;margin:0">${bullets}</ul>`);
+    } else {
+      html += sec('Today', `<p>${summary}</p>`);
+    }
   }
 
   if (topics.length) {
-    html += `<div class="newsletter-topics" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 0;">`;
+    html += `<div class="newsletter-topics" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 8px;">`;
     topics.forEach(t => {
       html += `<span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:3px 10px;border-radius:12px;font-size:0.8em;">${t}</span>`;
     });
