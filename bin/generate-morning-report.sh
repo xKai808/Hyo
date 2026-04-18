@@ -90,6 +90,7 @@ python3 - "$JSON_OUTPUT" "$TODAY" "$NOW_MT" "$ROOT" <<'PYEOF'
 import json, sys, os, re, glob
 from pathlib import Path
 from collections import defaultdict
+from datetime import datetime, timezone
 
 json_output_path = sys.argv[1]
 today = sys.argv[2]
@@ -233,6 +234,118 @@ def extract_external_expansion(aric_data):
     return None
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# STEP 0: EXECUTION LAYER CHECK — leads the report if system is offline
+# Rule: if the execution layer is down, that IS the morning report.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+def check_execution_layer(root):
+    """
+    Returns dict: {alive, stall_hours, queue_depth, last_worker_ts, detail}
+    Checks queue worker log + healthcheck-latest.json
+    """
+    result = {"alive": True, "stall_hours": 0, "queue_depth": 0,
+              "last_worker_ts": None, "detail": ""}
+    now_epoch = datetime.now(timezone.utc).timestamp()
+
+    # Check worker.log last entry
+    worker_log = os.path.join(root, "kai/queue/worker.log")
+    if os.path.exists(worker_log):
+        try:
+            mtime = os.path.getmtime(worker_log)
+            stall_s = now_epoch - mtime
+            stall_h = stall_s / 3600
+            result["last_worker_ts"] = datetime.fromtimestamp(mtime, tz=timezone.utc).strftime("%Y-%m-%dT%H:%M")
+            if stall_h > 3:
+                result["alive"] = False
+                result["stall_hours"] = round(stall_h, 1)
+                result["detail"] = f"Worker log last updated {result['last_worker_ts']}Z ({stall_h:.1f}h ago)"
+        except Exception as e:
+            result["detail"] = f"worker.log unreadable: {e}"
+    else:
+        result["alive"] = False
+        result["detail"] = "worker.log missing"
+
+    # Check running/ directory for orphaned tasks
+    running_dir = os.path.join(root, "kai/queue/running")
+    pending_dir = os.path.join(root, "kai/queue/pending")
+    if os.path.isdir(running_dir):
+        running = [f for f in os.listdir(running_dir) if f.endswith(".json")]
+        if running:
+            # Check how old the running tasks are
+            oldest_h = 0
+            for fn in running:
+                try:
+                    mtime = os.path.getmtime(os.path.join(running_dir, fn))
+                    age_h = (now_epoch - mtime) / 3600
+                    oldest_h = max(oldest_h, age_h)
+                except:
+                    pass
+            if oldest_h > 2:
+                result["alive"] = False
+                result["stall_hours"] = max(result["stall_hours"], round(oldest_h, 1))
+                result["detail"] += f" | {len(running)} task(s) stuck in running/ for {oldest_h:.1f}h"
+    if os.path.isdir(pending_dir):
+        pending = [f for f in os.listdir(pending_dir) if f.endswith(".json")]
+        result["queue_depth"] = len(pending)
+
+    # Read healthcheck-latest.json for additional signals
+    hc_path = os.path.join(root, "kai/queue/healthcheck-latest.json")
+    hc = read_json_safe(hc_path)
+    if hc:
+        issues = hc.get("issues", [])
+        p0_count = sum(1 for i in issues if isinstance(i, dict) and i.get("severity") == "P0")
+        if p0_count > 0:
+            result["detail"] += f" | healthcheck: {p0_count} P0 issue(s)"
+
+    return result
+
+def check_api_spend(root, today):
+    """Returns (total_cost, call_count, by_provider). Cost 0 with any ARIC = simulation."""
+    by_prov = defaultdict(lambda: {"cost": 0.0, "calls": 0})
+    total = 0.0
+    calls = 0
+    ledger = os.path.join(root, "kai", "ledger", "api-usage.jsonl")
+    if not os.path.exists(ledger):
+        return 0.0, 0, {}
+    try:
+        with open(ledger) as f:
+            for line in f:
+                try:
+                    e = json.loads(line)
+                    if e.get("date") != today:
+                        continue
+                    c = float(e.get("cost_usd", 0) or 0)
+                    p = e.get("provider", "?")
+                    by_prov[p]["cost"] += c
+                    by_prov[p]["calls"] += 1
+                    total += c
+                    calls += 1
+                except:
+                    pass
+    except:
+        pass
+    return total, calls, dict(by_prov)
+
+def load_resolved_issues(root):
+    """Load known-issues.jsonl — return set of descriptions marked resolved."""
+    resolved = set()
+    path = os.path.join(root, "kai", "ledger", "known-issues.jsonl")
+    if not os.path.exists(path):
+        return resolved
+    try:
+        with open(path) as f:
+            for line in f:
+                try:
+                    e = json.loads(line)
+                    if e.get("status") in ("resolved", "closed"):
+                        resolved.add(e.get("description", "").lower()[:80])
+                except:
+                    pass
+    except:
+        pass
+    return resolved
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # GATHER DATA PER AGENT
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -263,15 +376,24 @@ for agent_name in agents_list:
             improvement_status = "no active work"
 
     # Track trajectory and risks/wins
-    if "shipped" in improvement_status.lower() or "building" in novel_work.lower():
+    # GATE: "expanding" requires something actually shipped or verifiably building with commit.
+    # Fetching sources alone (ARIC Phase 4) is NOT expanding — it's prerequisite work.
+    actually_shipped = improvement_status.lower() == "shipped"
+    actively_building = (
+        improvement_status.lower() == "in progress"
+        and aric is not None
+        and aric.get("improvement_built", {}).get("files_changed")  # real files, not placeholder
+    )
+    if actually_shipped or actively_building:
         growth_trajectories.append("expanding")
     else:
         growth_trajectories.append("maintaining")
 
     if "no" in novel_work.lower() or "unknown" in novel_work.lower():
-        risks.append(f"{agent_name}: {novel_work}")
+        risks.append(f"{agent_name}: no active novel work")
 
-    if "shipped" in improvement_status.lower():
+    # Only a real win if something shipped with a commit hash
+    if actually_shipped and aric and aric.get("improvement_built", {}).get("commit"):
         wins.append(f"{agent_name}: {novel_work}")
 
     # Compile agent report
@@ -296,65 +418,68 @@ for agent_name in agents_list:
 # BUILD EXECUTIVE SUMMARY
 # ═══════════════════════════════════════════════════════════════════════════════
 
+# Run pre-checks
+exec_layer = check_execution_layer(root)
+api_cost, api_calls, api_by_prov = check_api_spend(root, today)
+resolved_issues = load_resolved_issues(root)
+
+# API spend string + simulation detection
+if api_calls > 0:
+    parts = [f"{p}=${info['cost']:.2f}" for p, info in sorted(api_by_prov.items(), key=lambda x: -x[1]["cost"])]
+    api_spend_summary = f"${api_cost:.2f} ({api_calls} calls)" + (f" — {', '.join(parts)}" if parts else "")
+else:
+    api_spend_summary = "$0.00 (0 calls) — ledger not started" if not os.path.exists(
+        os.path.join(root, "kai", "ledger", "api-usage.jsonl")) else "$0.00 (0 calls)"
+
+# SIMULATION FLAG: $0 spend + ARIC claimed completions = synthesis didn't run
+aric_claimed = sum(1 for a in agents_list if agent_reports[a]["has_aric_data"])
+synthesis_ran = api_calls > 0
+simulation_warning = None
+if aric_claimed > 0 and not synthesis_ran:
+    simulation_warning = (
+        f"⚠️ SIMULATION: {aric_claimed} agent(s) show ARIC data but $0 API spend confirms "
+        f"synthesis phase did not execute. Research output = raw source snippets, not synthesized findings. "
+        f"Agents ran in sandbox context without LLM synthesis path."
+    )
+
 # Growth trajectory
 expanding_count = growth_trajectories.count("expanding")
 trajectory = "expanding" if expanding_count >= 3 else ("maintaining" if expanding_count >= 1 else "declining")
 
-biggest_risk = risks[0] if risks else "No major blockers identified"
-biggest_win = wins[0] if wins else "Focus on growth identification"
+biggest_risk = risks[0] if risks else "No blockers identified"
+biggest_win = wins[0] if wins else "No improvements shipped today"
 
 # Determine if Hyo attention needed
 hyo_attention = None
-no_novel = [a for a in agents_list if "no" in agent_reports[a]["novel_work"].lower()]
-if len(no_novel) > 1:
-    hyo_attention = f"{len(no_novel)} agents have no active novel work — growth cycle may be stalled"
+no_novel = [a for a in agents_list if "no novel" in agent_reports[a]["novel_work"].lower() or
+            "no active" in agent_reports[a]["novel_work"].lower()]
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# GENERATE JSON OUTPUT
-# ═══════════════════════════════════════════════════════════════════════════════
-
-# ── API usage summary (SE-011-003: visibility on daily API spend) ──
-api_spend_summary = ""
-try:
-    from datetime import date as _date
-    ledger = os.path.join(root, "kai", "ledger", "api-usage.jsonl")
-    if os.path.exists(ledger):
-        by_prov = defaultdict(lambda: {"cost": 0.0, "calls": 0})
-        total = 0.0
-        calls = 0
-        with open(ledger) as _f:
-            for _line in _f:
-                try:
-                    _e = json.loads(_line)
-                except Exception:
-                    continue
-                if _e.get("date") != today:
-                    continue
-                _c = float(_e.get("cost_usd", 0) or 0)
-                _p = _e.get("provider", "?")
-                by_prov[_p]["cost"] += _c
-                by_prov[_p]["calls"] += 1
-                total += _c
-                calls += 1
-        parts = [f"{p}=${info['cost']:.2f}" for p, info in sorted(by_prov.items(), key=lambda x: -x[1]["cost"])]
-        api_spend_summary = f"${total:.2f} ({calls} calls)" + (f" — {', '.join(parts)}" if parts else "")
-    else:
-        api_spend_summary = "$0.00 (0 calls) — ledger not started"
-except Exception as _api_err:
-    api_spend_summary = f"error: {_api_err}"
+# EXECUTION LAYER DOWN overrides everything
+if not exec_layer["alive"]:
+    hyo_attention = (
+        f"Execution layer down — queue worker stalled {exec_layer['stall_hours']}h. "
+        f"All agent delegations are sim-ack only. No real work has executed. "
+        f"Fix: restart queue worker on Mini (5 min). "
+        f"{exec_layer['detail']}"
+    )
 
 report = {
     "generated": now_mt,
     "date": today,
-    "version": "v4-growth-driven",
+    "version": "v5-honest-execution-first",
     "executive_summary": {
+        "system_online": exec_layer["alive"],
+        "execution_layer": exec_layer,
+        "simulation_warning": simulation_warning,
         "growth_trajectory": trajectory,
-        "trajectory_confidence": f"{expanding_count}/{len(agents_list)} agents expanding",
+        # Growth trajectory confidence: only count agents with shipped commits
+        "trajectory_confidence": f"{expanding_count}/{len(agents_list)} agents with shipped work",
         "biggest_risk": biggest_risk,
         "biggest_win": biggest_win,
-        "kai_focus": "Enabling research access (MCP servers) + monitoring growth cycle execution",
         "hyo_attention": hyo_attention,
-        "api_spend_today": api_spend_summary
+        "api_spend_today": api_spend_summary,
+        "api_calls_today": api_calls,
+        "synthesis_ran": synthesis_ran,
     },
     "agents": agent_reports
 }
@@ -470,42 +595,65 @@ went_well = []
 needs_attention = []
 highlights = {}
 
+exec_layer_status = exec_summary.get("execution_layer", {})
+simulation_warning = exec_summary.get("simulation_warning")
+
+# EXECUTION LAYER — always first in needs_attention if down
+if exec_summary.get("hyo_attention"):
+    needs_attention.insert(0, exec_summary["hyo_attention"])
+
+# SIMULATION WARNING — second priority
+if simulation_warning:
+    needs_attention.append(simulation_warning)
+
 for name, data in agents.items():
     parts = []
-    w = data.get("weakness_identified", "")
-    if w and w not in ("?", "Unknown"):
-        parts.append(f"Researching: {w}.")
-    rc = data.get("research_count", 0)
-    if rc > 0:
-        parts.append(f"{rc} sources analyzed.")
-    rf = data.get("research_findings", "")
-    if rf and rf not in ("none", "N/A"):
-        parts.append(rf[:150] + "..." if len(rf) > 150 else rf)
     nw = data.get("novel_work", "")
-    if "no novel" not in nw.lower():
-        parts.append(nw)
+    imp_status = data.get("improvement_status", "")
+    rc = data.get("research_count", 0)
+    rf = data.get("research_findings", "")
+    w = data.get("weakness_identified", "")
+
+    # Highlight what actually happened
+    if imp_status == "shipped" and data.get("improvement_description"):
+        parts.append(f"Shipped: {data['improvement_description']}.")
+    elif rc > 0 and data.get("has_aric_data"):
+        parts.append(f"Fetched {rc} sources on: {w[:80] if w else 'unknown weakness'}.")
+        if rf and rf not in ("none", "N/A", "(no ARIC data yet)"):
+            parts.append(rf[:120] + "…" if len(rf) > 120 else rf)
+    else:
+        parts.append("No cycle data.")
     highlights[name] = " ".join(parts) if parts else "No active work this cycle."
 
-    if data.get("research_count", 0) > 0 and data.get("has_aric_data"):
-        went_well.append(f"{name.capitalize()} completed ARIC research cycle ({data['research_count']} sources)")
+    # went_well: ONLY if something shipped with a commit hash
+    if imp_status == "shipped" and data.get("improvement_description"):
+        went_well.append(f"{name.capitalize()}: {data['improvement_description']}")
+
+    # needs_attention: ARIC ran but nothing built (and not already captured)
+    if (data.get("has_aric_data") and rc > 0
+            and imp_status not in ("shipped",)
+            and not exec_summary.get("hyo_attention")):  # don't repeat if exec layer is the headline
+        needs_attention.append(
+            f"{name.capitalize()}: ARIC fetched {rc} sources but no improvement built "
+            f"— research is theater until Phase 6 executes"
+        )
 
 if not went_well:
-    went_well = ["All agents have ARIC data available"]
+    went_well = ["No improvements shipped today — execution blocked or cycle incomplete"]
 
-if exec_summary.get("hyo_attention"):
-    needs_attention.append(exec_summary["hyo_attention"])
-risk = exec_summary.get("biggest_risk", "")
-if risk and "no novel" in risk.lower():
-    needs_attention.append(risk)
 if not needs_attention:
-    needs_attention = ["No critical issues identified"]
+    needs_attention = ["No critical issues"]
 
+# Summary text: honest, execution-first
+system_status = "offline" if exec_layer_status and not exec_layer_status.get("alive", True) else "online"
 summary_text = (
-    f"Growth trajectory {exec_summary.get('growth_trajectory', '?')} "
-    f"— {exec_summary.get('trajectory_confidence', '?')}. "
-    f"{exec_summary.get('biggest_win', '')}. "
+    f"System: {system_status}. "
+    f"Growth: {exec_summary.get('growth_trajectory', '?')} "
+    f"({exec_summary.get('trajectory_confidence', '?')} with actual shipped work). "
     f"API spend: {exec_summary.get('api_spend_today', '?')}."
 )
+if simulation_warning:
+    summary_text += " ⚠️ Synthesis phase did not run."
 
 now_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 entry = {
