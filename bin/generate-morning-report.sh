@@ -610,19 +610,25 @@ for name, data in agents.items():
     parts = []
     nw = data.get("novel_work", "")
     imp_status = data.get("improvement_status", "")
-    rc = data.get("research_count", 0)
-    rf = data.get("research_findings", "")
-    w = data.get("weakness_identified", "")
+    rc = int(data.get("research_count", 0) or 0)  # may be stored as str
+    rf = str(data.get("research_findings", "") or "")
+    w = str(data.get("weakness_identified", "") or "")
+
+    has_aric = data.get("has_aric_data")
+    if isinstance(has_aric, str):
+        has_aric = has_aric.lower() == "true"
 
     # Highlight what actually happened
+    # NOTE: no char limits — full text is displayed in HQ, truncation causes cut-off
     if imp_status == "shipped" and data.get("improvement_description"):
         parts.append(f"Shipped: {data['improvement_description']}.")
-    elif rc > 0 and data.get("has_aric_data"):
-        parts.append(f"Fetched {rc} sources on: {w[:80] if w else 'unknown weakness'}.")
-        if rf and rf not in ("none", "N/A", "(no ARIC data yet)"):
-            parts.append(rf[:120] + "…" if len(rf) > 120 else rf)
+    elif rc > 0 and has_aric:
+        parts.append(f"Identified weakness: {w}." if w and w != "?" else "Weakness unclear.")
+        parts.append(f"Fetched {rc} sources.")
+        if rf and rf not in ("none", "N/A", "(no ARIC data yet)", "(research not completed)"):
+            parts.append(f"Key finding: {rf}")
     else:
-        parts.append("No cycle data.")
+        parts.append(nw if nw and "no novel" not in nw.lower() else "No cycle data — ARIC may not have run.")
     highlights[name] = " ".join(parts) if parts else "No active work this cycle."
 
     # went_well: ONLY if something shipped with a commit hash
@@ -630,7 +636,7 @@ for name, data in agents.items():
         went_well.append(f"{name.capitalize()}: {data['improvement_description']}")
 
     # needs_attention: ARIC ran but nothing built (and not already captured)
-    if (data.get("has_aric_data") and rc > 0
+    if (has_aric and rc > 0
             and imp_status not in ("shipped",)
             and not exec_summary.get("hyo_attention")):  # don't repeat if exec layer is the headline
         needs_attention.append(
