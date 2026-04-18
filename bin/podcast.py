@@ -554,12 +554,65 @@ def push_to_hq(date_str: str, log_output: str):
         log(f"HQ push skipped: {e}")
 
 
+GPT_EXPAND_MODEL = "gpt-4o-mini"
+GPT_EXPAND_PROMPT = """You are a scriptwriter for Vale, the AI host of the hyo.world morning podcast.
+
+You will receive a DRAFT SCRIPT that is too short. Your job is to expand it to a full 10-minute broadcast (approximately 1,400–1,600 words) while staying faithful to Vale's voice and the data provided.
+
+Vale's voice rules:
+- Warm, direct, confident, genuinely curious — never robotic
+- Contractions always. "You'll" not "You will." "It's" not "It is."
+- Address the listener as "you" at least once per section
+- After the most important sentence in a section, let there be a natural pause — mark it with an em-dash (—)
+- Dense with insight, but never rushed
+- Each section should have: an opening hook, a depth sentence (the insight behind the headline), and a forward-looking close
+- No bullet points. Pure spoken prose.
+- No marketing language. No hype. Real analysis.
+
+Expansion rules:
+- Expand every agent section to ~200-250 words — what they're building, why it matters, one analogy or contrast
+- Expand every Ra story to ~150 words — the headline, the context behind it, what to watch for
+- Keep the hook and closing structure but deepen them
+- If data is sparse, add context from general knowledge about that domain (trading, security, AI)
+- Do NOT invent specific numbers or facts — only expand narrative and context
+- Output ONLY the final script. No headers. No meta-commentary. Just the words Vale speaks.
+
+DRAFT SCRIPT:
+{draft}
+
+DATA CONTEXT:
+{context}
+
+Expand to 1,400–1,600 words. Begin directly with the hook."""
+
+
+def expand_script_with_gpt(draft: str, context: str, api_key: str) -> str:
+    """Use GPT-4o-mini to expand the draft script to ~1,500 words."""
+    try:
+        import openai
+        client = openai.OpenAI(api_key=api_key)
+        prompt = GPT_EXPAND_PROMPT.format(draft=draft, context=context[:3000])
+        response = client.chat.completions.create(
+            model=GPT_EXPAND_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=2500,
+        )
+        expanded = response.choices[0].message.content.strip()
+        log(f"GPT expansion: {len(expanded.split())} words")
+        return expanded
+    except Exception as e:
+        log(f"WARN: GPT expansion failed ({e}), using original draft")
+        return draft
+
+
 def main():
     parser = argparse.ArgumentParser(description="Hyo Daily Podcast Generator")
     parser.add_argument("--date", default=None, help="Date YYYY-MM-DD (default: today MT)")
     parser.add_argument("--dry-run", action="store_true", help="Skip actual TTS call")
     parser.add_argument("--voice", default=TTS_VOICE, help=f"OpenAI TTS voice (default: {TTS_VOICE})")
     parser.add_argument("--script-only", action="store_true", help="Print script and exit without TTS")
+    parser.add_argument("--no-expand", action="store_true", help="Skip GPT expansion pass")
     args = parser.parse_args()
 
     # Determine date
@@ -586,8 +639,25 @@ def main():
 
     log(f"Extracted: {len(highlights['agents'])} agent highlights, {len(ra_stories)} Ra stories")
 
-    # Build script
-    script = build_podcast_script(date_str, highlights, ra_stories, aurora_brief_md, ra_newsletter_md)
+    # Build draft script
+    draft = build_podcast_script(date_str, highlights, ra_stories, aurora_brief_md, ra_newsletter_md)
+    log(f"Draft: {len(draft.split())} words")
+
+    # GPT expansion pass — target 1,500 words / 10 minutes
+    api_key = load_openai_key()
+    if not args.no_expand and not args.dry_run and api_key:
+        context = (
+            f"Morning report trajectory: {highlights.get('trajectory','stable')}. "
+            f"Biggest win: {highlights.get('biggest_win','')}. "
+            f"Biggest risk: {highlights.get('biggest_risk','')}. "
+            f"Ra newsletter snippet: {ra_newsletter_md[:1500] if ra_newsletter_md else 'unavailable'}. "
+            f"Aurora brief snippet: {aurora_brief_md[:500] if aurora_brief_md else 'unavailable'}."
+        )
+        log("Expanding draft with GPT-4o-mini...")
+        script = expand_script_with_gpt(draft, context, api_key)
+    else:
+        script = draft
+
     word_count = len(script.split())
     # Estimate ~150 wpm for TTS
     est_minutes = round(word_count / 150, 1)
