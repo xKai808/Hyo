@@ -110,19 +110,46 @@ elif [[ ! -f "$RA_ARCHIVE" ]]; then
   echo "[$STAMP] ra_archive.py not found at $RA_ARCHIVE — skipping" >&2
 fi
 
-# ---- auto-push to HQ -------------------------------------------------------
-KAI="$HYO_ROOT/bin/kai.sh"
-if [[ -x "$KAI" ]]; then
-  # Count sources from today's gather output
-  GATHER_DIR="$HYO_ROOT/newsletter"
-  TODAY_DATE=$(date +%Y-%m-%d)
-  MD_FILE="$HYO_ROOT/newsletters/${TODAY_DATE}.md"
-  WORD_COUNT=0
-  if [[ -f "$MD_FILE" ]]; then
-    WORD_COUNT=$(wc -w < "$MD_FILE" | tr -d ' ')
-  fi
-  "$KAI" push ra "Daily brief — ${WORD_COUNT} words" \
-    --data "{\"wordCount\":$WORD_COUNT,\"status\":\"delivered\"}" 2>/dev/null || true
+# ---- auto-publish to HQ feed -----------------------------------------------
+TODAY_DATE=$(TZ=America/Denver date +%Y-%m-%d)
+MD_FILE="$HYO_ROOT/agents/ra/output/${TODAY_DATE}.md"
+FEED_GIT="$HYO_ROOT/agents/sam/website/data/feed.json"
+FEED_LIVE="$HYO_ROOT/website/data/feed.json"
+
+if [[ -f "$MD_FILE" && $SYNTH_RC -ne 2 ]]; then
+  echo "[$STAMP] publishing to HQ feed..."
+  python3 - "$MD_FILE" "$TODAY_DATE" "$FEED_GIT" "$FEED_LIVE" <<'PYPUB'
+import json, re, sys, os, subprocess
+md_path, date, feed_git, feed_live = sys.argv[1:5]
+with open(md_path) as f:
+    text = f.read()
+entities = re.findall(r'name:\s+"([^"]+)"', text)
+takes    = re.findall(r'take:\s+"([^"]+)"', text)
+summary  = " | ".join(f"{e}: {t}" for e, t in zip(entities[:3], takes[:3])) or "Today's tech and market intelligence."
+topics   = list(dict.fromkeys(re.findall(r'name:\s+"([^"]+)"', text)))[:6]
+now = subprocess.check_output(["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],text=True).strip()
+entry = {"id": f"newsletter-ra-{date}", "type": "newsletter",
+         "title": f"Aurora Daily Brief — {date}", "author": "Ra",
+         "authorIcon": "📰", "authorColor": "#b49af0",
+         "timestamp": now, "date": date,
+         "sections": {"summary": summary[:500], "topics": topics,
+                      "readLink": f"/newsletters/{date}.html"}}
+for path in [feed_git, feed_live]:
+    if not os.path.exists(path):
+        continue
+    with open(path) as f:
+        d = json.load(f)
+    reports = d.setdefault("reports", [])
+    reports[:] = [r for r in reports if r.get("id") != entry["id"]]
+    reports.insert(0, entry)
+    d["lastUpdated"] = now
+    with open(path, "w") as f:
+        json.dump(d, f, ensure_ascii=False, indent=2)
+print(f"[feed] published {entry['id']}")
+PYPUB
+  [[ $? -ne 0 ]] && echo "[$STAMP] WARNING: feed publish failed" >&2
+else
+  echo "[$STAMP] skipping feed publish (no md or bundle mode)" >&2
 fi
 
 echo "[$STAMP] hyo-newsletter: done"

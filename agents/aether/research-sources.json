@@ -1,46 +1,47 @@
 {
+  "_source_audit": "2026-04-17 — CCXT returned 20 chars (JS-rendered, not scrapable), HN Algolia returned 0 hits (query too specific), Investopedia is paywalled. Replaced with reliable open sources.",
   "sources": [
     {
-      "name": "CCXT Documentation",
-      "url": "https://docs.ccxt.com/#/",
+      "name": "Kalshi API Docs",
+      "url": "https://trading-api.readme.io/reference/getmarkets",
       "type": "html",
-      "focus": "Exchange API integration patterns for live trade data — our planned CCXT integration"
+      "focus": "Kalshi market structure, contract specs, API endpoints — direct platform we trade on"
     },
     {
-      "name": "Hacker News Trading",
-      "url": "https://hn.algolia.com/api/v1/search?tags=front_page&query=algorithmic+trading+crypto+position+sizing",
+      "name": "Hacker News Algo Trading",
+      "url": "https://hn.algolia.com/api/v1/search?query=prediction+market+trading+algorithm&numericFilters=created_at_i>1700000000",
       "type": "api",
-      "focus": "Trading algorithm innovations, position sizing models, risk management frameworks"
+      "focus": "Prediction market trading discussions, binary options strategies, algo approaches"
     },
     {
-      "name": "QuantConnect Blog",
-      "url": "https://www.quantconnect.com/blog",
-      "type": "html",
-      "focus": "Quantitative trading strategies, backtesting patterns, algorithm optimization"
+      "name": "arXiv Quantitative Finance",
+      "url": "https://export.arxiv.org/rss/q-fin.TR",
+      "type": "rss",
+      "focus": "Academic trading research: market microstructure, execution algorithms, position sizing"
     },
     {
-      "name": "CoinGecko API Trending",
-      "url": "https://api.coingecko.com/api/v3/search/trending",
+      "name": "Reddit Algotrading Top Week",
+      "url": "https://www.reddit.com/r/algotrading/top.json?limit=10&t=week",
       "type": "api",
-      "focus": "Trending crypto assets — market sentiment for trading signal research"
+      "focus": "Algo trading community — strategies, execution quality, risk management. Weekly top = higher signal"
     },
     {
-      "name": "Reddit Algotrading",
-      "url": "https://www.reddit.com/r/algotrading/.json?limit=10",
+      "name": "Reddit Kalshi",
+      "url": "https://www.reddit.com/r/Kalshi/.json?limit=10",
       "type": "api",
-      "focus": "Algo trading community — strategies, tools, risk management discussions"
+      "focus": "Kalshi-specific discussions — market conditions, contract behavior, platform changes"
     },
     {
-      "name": "Reddit cryptocurrency",
-      "url": "https://www.reddit.com/r/CryptoCurrency/.json?limit=10",
+      "name": "Hacker News Prediction Markets",
+      "url": "https://hn.algolia.com/api/v1/search?query=prediction+markets+kalshi+polymarket&numericFilters=created_at_i>1700000000",
       "type": "api",
-      "focus": "Crypto market sentiment, DeFi developments, exchange news"
+      "focus": "Prediction market meta: platform dynamics, market efficiency, edge identification"
     },
     {
-      "name": "Investopedia Trading Strategies",
-      "url": "https://www.investopedia.com/trading-strategies-4689646",
-      "type": "html",
-      "focus": "Position sizing, Kelly Criterion, stop-loss patterns for our COUNTER strategy refinement"
+      "name": "BTC Volatility Index",
+      "url": "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7&interval=daily",
+      "type": "api",
+      "focus": "BTC 7-day price history — correlate with KXBTC15M trade outcomes, regime detection"
     }
   ],
   "mcp_sources": {

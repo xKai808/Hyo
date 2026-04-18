@@ -36,7 +36,30 @@ function updateSection(section, data) {
 
 // ─── Auth helpers ───
 const HQ_PASS_HASH = '0ff6c5c11e95ef67d8ee819553c366dcfa1895cd29592cbd9e4d97b074f0a333';
-const SECRET = process.env.HYO_FOUNDER_TOKEN || 'hq-fallback-secret';
+const SECRET = process.env.HYO_FOUNDER_TOKEN;
+if (!SECRET) {
+  // Fail loud at startup — a missing env var must never silently downgrade security
+  console.error('[hq] FATAL: HYO_FOUNDER_TOKEN env var not set — endpoint refusing all requests');
+}
+
+// ─── Rate limiting (in-memory, per-lambda — Vercel serverless) ───
+// Limits auth attempts to 10/min per IP to prevent brute-force attacks
+if (!globalThis.__hqRateLimit) globalThis.__hqRateLimit = new Map();
+function checkRateLimit(ip, max = 10, windowMs = 60000) {
+  const now = Date.now();
+  const key = `auth:${ip}`;
+  const entry = globalThis.__hqRateLimit.get(key) || { count: 0, reset: now + windowMs };
+  if (now > entry.reset) { entry.count = 0; entry.reset = now + windowMs; }
+  entry.count++;
+  globalThis.__hqRateLimit.set(key, entry);
+  // Prune old entries occasionally
+  if (globalThis.__hqRateLimit.size > 500) {
+    for (const [k, v] of globalThis.__hqRateLimit) {
+      if (now > v.reset) globalThis.__hqRateLimit.delete(k);
+    }
+  }
+  return entry.count <= max;
+}
 
 function sha256(str) {
   return createHash('sha256').update(str).digest('hex');
@@ -61,12 +84,23 @@ function verifyToken(token) {
 
 // ─── Handler ───
 export default function handler(req, res) {
+  // Refuse all requests if secret is not configured
+  if (!SECRET) {
+    return res.status(503).json({ ok: false, error: 'service misconfigured' });
+  }
+
   const action = req.query.action || '';
 
   // ── AUTH ──
   if (action === 'auth' && req.method === 'POST') {
     const { password } = req.body || {};
     if (!password) return res.status(400).json({ ok: false, error: 'missing password' });
+
+    // Rate limit auth attempts by IP
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+    if (!checkRateLimit(ip, 10, 60000)) {
+      return res.status(429).json({ ok: false, error: 'too many requests' });
+    }
 
     const hash = sha256(password);
     const a = Buffer.from(hash, 'hex');
