@@ -207,3 +207,9 @@ print(f"[daily-report:{agent}] published {entry_id} git={ok1} live={ok2}")
 if not (ok1 or ok2):
     sys.exit(1)
 PYEOF
+
+# S18-007/008: Sync this agent's goals to feed.json after daily report publishes
+if [[ -x "$ROOT/bin/agent-goals-sync.sh" ]]; then
+  HYO_ROOT="$ROOT" bash "$ROOT/bin/agent-goals-sync.sh" "$AGENT" 2>&1 \
+    | sed "s/^/[daily-report:$AGENT] goals: /" || true
+fi

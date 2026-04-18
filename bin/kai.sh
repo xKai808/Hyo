@@ -1016,6 +1016,7 @@ case "$sub" in
   bridge-install)     cmd_bridge_install ;;
   bridge-health)      curl -s "http://100.77.143.7:9876/health" 2>/dev/null | python3 -m json.tool || echo "bridge unreachable" ;;
   ant-update)         bash "$ROOT/bin/ant-update.sh" "$@" ;;
+  agent-goals|goals)  HYO_ROOT="$ROOT" bash "$ROOT/bin/agent-goals-sync.sh" "$@" ;;
   desktop)            ssh -p 22246 -L 5900:localhost:5900 kai@bore.pub -fN 2>/dev/null; sleep 1; open vnc://localhost ;;
   ssh-mini)           ssh -p 22246 kai@bore.pub ;;
   nel-qa)             bash "$ROOT/agents/nel/nel-qa-cycle.sh" "$@" ;;
