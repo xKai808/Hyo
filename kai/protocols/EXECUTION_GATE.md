@@ -202,3 +202,41 @@ The 5 questions are the PRE-action check.
 The completion gate is the POST-action check.
 The verification protocol defines HOW to verify by action type.
 All three run. None is optional.
+
+---
+
+## Discrepancy Audit Gate (S18-021 — added 2026-04-18)
+
+**Mandatory after every unit of work. Kai gates himself on these 5 questions before moving to the next task.**
+
+These are YES/NO gates. A NO on any question means: stop, fix, verify, then re-run.
+
+```
+1. Did this change create a link that might 404?
+   YES → curl the target URL right now. Confirm HTTP 200.
+   NO  → proceed.
+
+2. Did this produce content Hyo would see without understanding?
+   YES → add context, labels, or self-explanatory summaries. No bare headings.
+   NO  → proceed.
+
+3. Did this change a data source without updating every consumer of that data?
+   YES → trace the full consumer chain (data → renderer → user-visible output).
+         Update all consumers.
+   NO  → proceed.
+
+4. Did this add a cost or resource use without tracking it in api-usage.jsonl?
+   YES → add cost logging now.
+   NO  → proceed.
+
+5. Did this claim a task is "done" before the live surface was verified?
+   YES → verify live. Not in the local file — verify the deployed/live version.
+   NO  → DONE. Proceed to next task.
+```
+
+**Gate question for each action type:**
+- Deployed a page? → Did I check the live URL returns 200?
+- Published a feed entry? → Did I check the readLink resolves?
+- Updated data? → Did I update both paths (agents/sam/website/ AND website/)?
+- Added any API call? → Did I log the cost?
+- Wrote a summary for Hyo? → Is it self-contained without requiring prior context?

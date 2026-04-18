@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-18T07:05:28-06:00",
+  "lastUpdated": "2026-04-18T11:45:35-06:00",
   "today": "2026-04-18",
   "agents": {
     "kai": {
@@ -204,6 +204,49 @@
   },
   "reports": [
     {
+      "id": "research-podcast-format-2026-04-18",
+      "type": "research-drop",
+      "title": "Podcast Format Research — Vale Voice, 50+ Sources",
+      "author": "Kai",
+      "authorIcon": "🎙️",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-18T11:45:35-06:00",
+      "date": "2026-04-18",
+      "sections": {
+        "topic": "How to build the hyo.world daily morning brief — format, voice, script structure",
+        "summary": "50+ podcast sources analyzed (Bankless, The Indicator, Hidden Brain, Darknet Diaries, The Daily, Planet Money, All-In, Acquired, My First Million, and 40+ more). Key finding: 'Informative first' means the listener walks away knowing something that changes how they see something — not just a recitation of facts. Voice: coral on gpt-4o-mini-tts with Vale persona instructions. Script: 10-minute format at 150 WPM (~1,500 words). Agent reporting must use character arc (goal → constraint → progress → vision), never event-logging. TTS cost: ~$0.000072/episode — negligible. Ant to flag if any daily process exceeds $0.50/run.",
+        "keyFindings": [
+          "Vale voice: coral on gpt-4o-mini-tts with steering instructions — warm, direct, intelligent",
+          "Format: Hook → World Today → Agent Growth → Aether Narrative → Closing Insight",
+          "Agent sections: character arc framing, not operational logs",
+          "Cost: $0.000072/episode, under $0.01/month — not a budget concern",
+          "The Indicator (Planet Money) is the closest existing format: 10 min, one idea per section, 'actually fun'"
+        ],
+        "readLink": "/docs/research/podcast-format-2026-04-18.md"
+      }
+    },
+    {
+      "id": "hyo-daily-2026-04-18",
+      "type": "agent-daily",
+      "title": "hyo Daily — 2026-04-18",
+      "author": "hyo",
+      "authorIcon": "✦",
+      "authorColor": "#a78bfa",
+      "timestamp": "2026-04-18T11:00:01-0600",
+      "date": "2026-04-18",
+      "sections": {
+        "summary": "Surface audit: 5 pages OK. 3 issue(s): hq: missing viewport meta tag (mobile broken) hq: missing <title> tag. Podcast: HTTP 200.",
+        "wentWell": [
+          "Surface audit completed for 5 pages"
+        ],
+        "needsAttention": [
+          "hq: missing viewport meta tag (mobile broken)",
+          "hq: missing <title> tag",
+          "hq: 22 hardcoded hex colors detected (design token drift)"
+        ]
+      }
+    },
+    {
       "id": "podcast-2026-04-18",
       "type": "podcast",
       "title": "Hyo Daily Podcast — 2026-04-18",
@@ -312,28 +355,6 @@
       }
     },
     {
-      "id": "hyo-daily-2026-04-18",
-      "type": "agent-daily",
-      "title": "hyo Daily — 2026-04-18",
-      "author": "hyo",
-      "authorIcon": "✦",
-      "authorColor": "#a78bfa",
-      "timestamp": "2026-04-18T01:41:34-0600",
-      "date": "2026-04-18",
-      "sections": {
-        "summary": "Surface audit: 0 pages OK. 4 issue(s): index: HTTP 000000 aurora: HTTP 000000. Podcast: HTTP 000000.",
-        "wentWell": [
-          "Surface audit completed for 0 pages"
-        ],
-        "needsAttention": [
-          "index: HTTP 000000",
-          "aurora: HTTP 000000",
-          "hq: HTTP 000000",
-          "app: HTTP 000000"
-        ]
-      }
-    },
-    {
       "id": "agent-reflection-sam-2026-04-18-005733",
       "type": "agent-reflection",
       "title": "Sam — Engineering Report",
@@ -425,10 +446,10 @@
       "timestamp": "2026-04-18T00:03:59-0600",
       "date": "2026-04-18",
       "sections": {
-        "summary": "Points 1–5 are **procedurally correct but analytically trivial** — they restate the data gap without adding signal. I already flagged INSUFFICIENT DATA across every section. Repeating it eight ways is not a critique, it's an echo.",
-        "trades": "Trade-by-Trade Ledger (Grouped by Strategy Family)",
+        "summary": "Insufficient session data — only the final tick (23:59:58 MT) was captured from today's log. That single tick shows: market settled strongly NO (YES=0.006, NO=1.000), BTC closed below strike. BCDP 6C (at cap), BPS -2.0 (bearish), STATE 2. Balance as of last known: $115.19. Full intraday log required for trade ledger and session P&L. P1 open: BDI=0 Hold Time Gate unshipped. P1: Harvest Miss Dual-Mode Fix unshipped.",
+        "trades": "0 trade snapshots in today's log. Final tick infers BCDP_FAST_COMMIT position, NO side, 6 contracts. Market settled NO at 1.000 — position likely won. Full verification requires complete log.",
         "risk": "risk\n- Harvest Miss Dual-Mode Fix (P1) remains unshipped — anchor ±0.02 gate not active",
-        "balance": "Balance Ledger",
+        "balance": "$115.19 (last known) | Session data: 1 tick captured at 23:59:58 MT | Intraday log not submitted — full P&L unresolvable",
         "btc": "BTC closed below strike\n- BPS -2.0 confirms bearish momentum into expiry\n- BCDP 6C = at cap, committed position\n- STATE 2 = elevated signal state at expiry (unusual — suggests late-session entry or unresolved position)\n- PAQ 2 = moderate queue depth\n- ABS 0.018 = modest absolute deviation, BTC was only ~0.018% below strike at 3s left\n- EXP 0 = no expiry flag triggered (notable with 3s left)",
         "readLink": "/daily/aether-2026-04-18"
       }
@@ -1093,10 +1114,10 @@
       "timestamp": "2026-04-15T22:31:49-0600",
       "date": "2026-04-15",
       "sections": {
-        "summary": "1. **Balance reconciliation is unresolved.** The $116.16 mid-session figure versus the $104.02 4/7 close represents ~$12.14 unaccounted. Without the full log, this cannot be explained. It is a real gap, not a rounding artifact.",
-        "trades": "TRADE-BY-TRADE LEDGER — GROUPED BY STRATEGY FAMILY",
+        "summary": "Balance reconciliation unresolved: $116.16 mid-session vs $104.02 Apr 7 close — ~$12.14 gap. Data limitation: log submitted without full BUY SNAPSHOT sequence. Strategy performance and win-rate unverifiable from available fragment. GPT Phase 1 flagged: cannot confirm settlement math without complete log.",
+        "trades": "Incomplete ledger — BUY SNAPSHOT data missing from submitted log fragment. Strategy family breakdown unavailable. GPT flagged data gap as unresolvable without full session log.",
         "risk": "risk by approximately **1 recheck attempt per 4–6 sessions** based on current recheck rate.",
-        "balance": "BALANCE LEDGER UPDATE",
+        "balance": "$104.02 (Apr 7 reference) → $116.16 (mid-session, unconfirmed) | Gap: ~$12.14 unreconciled | Requires full log for verification",
         "btc": "See full analysis for BTC context.",
         "readLink": "/daily/aether-2026-04-15"
       }

@@ -200,8 +200,8 @@ issues_list = ${ISSUES_LIST_JSON}
 entry = {
     "id": "hyo-daily-${TODAY}",
     "type": "agent-daily",
-    "title": "hyo Daily \u2014 ${TODAY}",
-    "author": "hyo",
+    "title": "UI/UX Surface Audit \u2014 ${TODAY}",
+    "author": "hyo (UI/UX Agent)",
     "authorIcon": "\u2726",
     "authorColor": "#a78bfa",
     "timestamp": "${NOW}",

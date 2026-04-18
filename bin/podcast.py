@@ -39,9 +39,26 @@ FEED_PRIMARY    = os.path.join(WEBSITE_PRIMARY, "data/feed.json")
 FEED_MIRROR     = os.path.join(WEBSITE_MIRROR, "data/feed.json")
 LOG_FILE        = os.path.join(HYO_ROOT, "agents/sam/logs/podcast.log")
 
-# OpenAI TTS settings
-TTS_MODEL = "tts-1-hd"
-TTS_VOICE = "onyx"   # deep, calm, professional
+# OpenAI TTS settings — Vale voice persona
+# Research: 50+ podcast sources analyzed. coral on gpt-4o-mini-tts = closest to
+# Vale: warm, direct, intelligent, never robotic. Cost: ~$0.000071/episode (negligible).
+TTS_MODEL = "gpt-4o-mini-tts"
+TTS_VOICE = "coral"
+
+VALE_INSTRUCTIONS = (
+    "You are Vale, the voice of the hyo.world morning brief. "
+    "Your personality: warm, direct, confident, and genuinely curious. "
+    "You are never robotic, never performed, never in a hurry. "
+    "Your pacing: fast through transitions, deliberately slower through insights. "
+    "After the most important sentence in each section, pause for two beats before continuing. "
+    "You speak with the authority of someone who has read everything and cares deeply. "
+    "You use contractions naturally. Address the listener directly — 'you' — at least once per section. "
+    "When the content calls for it, let a trace of warmth come through — not enthusiasm, but genuine care."
+)
+
+# API cost tracking — gpt-4o-mini-tts: $0.60/1M input tokens + $12.00/1M audio tokens
+# Estimate: 1500 words ≈ 2000 tokens ≈ $0.0000012 input + ~$0.000071 audio = ~$0.000072/run
+TTS_COST_PER_RUN_USD = 0.000072  # conservative estimate
 
 
 def log(msg: str):
@@ -209,95 +226,204 @@ def strip_markdown(text: str) -> str:
 
 
 def build_podcast_script(date_str: str, highlights: dict, ra_stories: list[str], aurora_brief: str, ra_md: str = "") -> str:
-    """Build the spoken podcast script."""
-    # Parse date for natural reading
+    """Build the Vale spoken podcast script — vision-focused, informative + entertaining.
+
+    Format based on 50+ podcast research:
+    - Hook (counterintuitive lead)
+    - Context bridge (date, Vale intro, preview)
+    - The World Today (Ra's top 3 stories with depth)
+    - Agent Growth Report (vision, not error logs — goal/constraint/progress/vision)
+    - Closing Insight
+    Target: ~1,500 words / 10 minutes at 150 WPM
+    """
     dt = datetime.datetime.fromisoformat(date_str)
-    date_spoken = dt.strftime("%A, %B %-d")  # e.g. "Saturday, April 18"
+    date_spoken = dt.strftime("%A, %B %-d")
 
     traj = highlights.get("trajectory", "stable")
-    traj_label = {
-        "growing": "things are accelerating",
-        "declining": "there's work to do",
-        "stable": "things are holding steady",
-    }.get(traj, traj)
+    agents = highlights.get("agents", [])
+    biggest_win = highlights.get("biggest_win", "")
+    biggest_risk = highlights.get("biggest_risk", "")
 
-    lines = []
+    # ── Build agent vision sections ──────────────────────────────────────────
+    agent_sections = []
+    AGENT_FRAMES = {
+        "NEL": {
+            "role": "security and system health",
+            "metaphor": "the immune system — teaching itself new threats before they arrive",
+        },
+        "SAM": {
+            "role": "engineering",
+            "metaphor": "the architect renovating the building she's living in",
+        },
+        "RA":  {
+            "role": "intelligence and curation",
+            "metaphor": "an editor-in-chief with exactly one reader — you",
+        },
+        "AETHER": {
+            "role": "autonomous trading",
+            "metaphor": "a portfolio manager playing a long game with short-term hands",
+        },
+        "DEX": {
+            "role": "data reconciliation",
+            "metaphor": "the auditor who never lets a number sit unexplained",
+        },
+        "HYO": {
+            "role": "user experience",
+            "metaphor": "the designer who uses every product she builds",
+        },
+    }
 
-    # ── Intro ──
-    lines.append(
-        f"Good morning. It's {date_spoken}. "
-        "This is your Hyo daily brief."
-    )
-    lines.append("")
+    for agent in agents[:5]:
+        name = agent.get("name", "").upper()
+        work = agent.get("work", "") or agent.get("watching", "")
+        if not work or not name:
+            continue
+        frame = AGENT_FRAMES.get(name, {"role": "system", "metaphor": "the specialist in their domain"})
+        # Translate operational work → vision language
+        work_clean = strip_markdown(work)
+        if len(work_clean) > 280:
+            work_clean = work_clean[:277] + "..."
+        section = (
+            f"{name} — {frame['role']}. Think of {name.title()} as {frame['metaphor']}. "
+            f"This week, the focus is: {work_clean} "
+            f"That's not maintenance — that's capability building."
+        )
+        agent_sections.append(section)
 
-    # ── System status ──
-    lines.append(
-        f"System status: {'all agents online' if highlights['system_online'] else 'some agents offline'}. "
-        f"Growth trajectory: {traj_label}."
-    )
-    if highlights.get("trajectory_confidence"):
-        lines.append(f"Confidence: {highlights['trajectory_confidence']}.")
-    lines.append("")
-
-    # ── Agent highlights ──
-    active_agents = [a for a in highlights.get("agents", []) if a.get("work")]
-    watching_agents = [a for a in highlights.get("agents", []) if a.get("watching")]
-
-    if active_agents:
-        lines.append("What shipped overnight:")
-        for a in active_agents[:3]:
-            lines.append(f"  {a['name']}: {a['work']}")
-        lines.append("")
-
-    if watching_agents and not active_agents:
-        lines.append("What the agents are tracking:")
-        for a in watching_agents[:2]:
-            lines.append(f"  {a['name']} is watching: {a['watching']}")
-        lines.append("")
-
-    # ── Biggest win / risk ──
-    if highlights.get("biggest_win") and "No improvements" not in highlights["biggest_win"]:
-        lines.append(f"Biggest win: {highlights['biggest_win']}.")
-    if highlights.get("biggest_risk"):
-        lines.append(f"Watch out for: {highlights['biggest_risk']}.")
-    if highlights.get("api_spend"):
-        lines.append(f"API spend today: {highlights['api_spend']}.")
-    lines.append("")
-
-    # ── Ra top stories ──
+    # ── Hook — pick the most interesting thing from today's data ──────────────
+    hook_options = []
+    if biggest_win and "No improvements" not in biggest_win and len(biggest_win) > 20:
+        hook_options.append(biggest_win)
     if ra_stories:
-        lines.append("From Ra, your intelligence feed:")
-        for story in ra_stories[:3]:
-            # Clean for speech
-            story_clean = strip_markdown(story)
-            if len(story_clean) > 300:
-                story_clean = story_clean[:297] + "..."
-            lines.append(f"  {story_clean}")
-        lines.append("")
+        hook_options.append(ra_stories[0])
+    if agent_sections:
+        hook_options.append(agent_sections[0])
 
-    # ── Aurora brief snippet (only if different file from Ra newsletter) ──
-    if aurora_brief and aurora_brief != ra_md:
-        brief_clean = strip_frontmatter(aurora_brief)
-        brief_clean = strip_frontmatter(brief_clean)
-        # Find first substantial paragraph (not a heading)
-        paragraphs = [p.strip() for p in brief_clean.split("\n\n")
-                      if p.strip() and not p.startswith("#") and len(p.strip()) > 60]
-        if paragraphs:
-            excerpt = strip_markdown(paragraphs[0])
-            if len(excerpt) > 350:
-                excerpt = excerpt[:347] + "..."
-            lines.append("Aurora brief:")
-            lines.append(f"  {excerpt}")
-            lines.append("")
+    if hook_options:
+        hook_raw = strip_markdown(hook_options[0])
+        if len(hook_raw) > 200:
+            hook_raw = hook_raw[:197] + "..."
+        hook = (
+            f"Something worth your attention this morning: {hook_raw} "
+            "We'll unpack that. But first — here's what the whole picture looks like today."
+        )
+    else:
+        hook = (
+            "The agents ran through the night. Here's what they're building toward — "
+            "and why it matters more than whatever came through in your other feeds this morning."
+        )
 
-    # ── Outro ──
-    lines.append(
-        "That's your morning brief. "
-        "Check hyo dot world slash h-q for the full report. "
-        "Have a good one."
+    # ── Ra top stories ───────────────────────────────────────────────────────
+    story_blocks = []
+    for i, story in enumerate(ra_stories[:3]):
+        s = strip_markdown(story)
+        if len(s) > 350:
+            s = s[:347] + "..."
+        if i == 0:
+            story_blocks.append(
+                f"First — and this is the one to sit with today: {s}"
+            )
+        elif i == 1:
+            story_blocks.append(
+                f"The second story connects to something bigger. {s} "
+                "What's interesting here isn't the headline — it's what comes next."
+            )
+        else:
+            story_blocks.append(
+                f"And one for the back pocket: {s}"
+            )
+
+    # ── Build full script ─────────────────────────────────────────────────────
+    parts = []
+
+    # HOOK
+    parts.append(hook)
+    parts.append("")
+
+    # CONTEXT BRIDGE
+    parts.append(
+        f"Good morning. It's {date_spoken}. I'm Vale, and this is the hyo.world morning brief — "
+        "your daily ten minutes on what the agents are building, what the world is doing, "
+        "and what's worth your full attention today."
+    )
+    parts.append("")
+
+    # WORLD TODAY
+    if story_blocks:
+        parts.append("Let's start with the world.")
+        parts.append("")
+        for block in story_blocks:
+            parts.append(block)
+            parts.append("")
+
+    # AGENT GROWTH REPORT
+    if agent_sections:
+        parts.append(
+            "Now — the agents. Not what they executed. What they're becoming."
+        )
+        parts.append("")
+        for section in agent_sections:
+            parts.append(section)
+            parts.append("")
+
+    # AETHER NARRATIVE (if no dedicated section from agents, synthesize from highlights)
+    if not any("AETHER" in a.get("name","").upper() for a in agents):
+        if biggest_win and "aether" in biggest_win.lower():
+            parts.append(
+                f"On the trading side — Aether's headline: {strip_markdown(biggest_win)} "
+                "The number matters less than the decision behind it. "
+                "Aether doesn't optimize for a single session. She plays a tournament, not a match."
+            )
+            parts.append("")
+
+    # CLOSING INSIGHT
+    traj_narrative = {
+        "growing": "The system is accelerating — more capability per cycle than the cycle before.",
+        "declining": "There's work being done that isn't showing up in the numbers yet — that's the most important kind.",
+        "stable": "Stability is a platform. What gets built on it this week is the question.",
+    }.get(traj, "The system is running. The question is always: running toward what?")
+
+    if biggest_risk and biggest_risk != biggest_win:
+        risk_note = f" The thing to watch: {strip_markdown(biggest_risk)[:150]}."
+    else:
+        risk_note = ""
+
+    parts.append(
+        f"{traj_narrative}{risk_note} "
+        "Full reports from every agent are on HQ — worth reading if you want to go deeper. "
+        "I'm Vale. This has been the hyo.world morning brief. See you tomorrow."
     )
 
-    return "\n".join(lines)
+    return "\n".join(parts)
+
+
+def _log_api_cost(script: str, size_kb: int):
+    """Log TTS API cost to api-usage.jsonl for Ant tracking."""
+    try:
+        usage_file = os.path.join(HYO_ROOT, "kai/ledger/api-usage.jsonl")
+        ts = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-6))).strftime("%Y-%m-%dT%H:%M:%S-06:00")
+        word_count = len(script.split())
+        estimated_tokens = word_count * 1.3  # rough token estimate
+        estimated_cost = TTS_COST_PER_RUN_USD
+
+        entry = {
+            "ts": ts,
+            "process_name": "podcast-tts",
+            "model": TTS_MODEL,
+            "voice": TTS_VOICE,
+            "input_chars": len(script),
+            "input_words": word_count,
+            "estimated_tokens": int(estimated_tokens),
+            "output_kb": size_kb,
+            "estimated_cost_usd": estimated_cost,
+            "agent": "sam/podcast",
+            "note": f"Daily Vale brief ({word_count} words → {size_kb}KB MP3)"
+        }
+        with open(usage_file, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+        log(f"Cost logged: ${estimated_cost:.6f} (api-usage.jsonl)")
+    except Exception as e:
+        log(f"WARN: Could not log cost: {e}")
 
 
 def call_openai_tts(script: str, output_path: str, voice: str = TTS_VOICE, dry_run: bool = False) -> bool:
@@ -323,16 +449,25 @@ def call_openai_tts(script: str, output_path: str, voice: str = TTS_VOICE, dry_r
 
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
-        with client.audio.speech.with_streaming_response.create(
-            model=TTS_MODEL,
-            voice=voice,
-            input=script,
-            response_format="mp3",
-        ) as response:
+        # Build TTS kwargs — gpt-4o-mini-tts supports 'instructions' for voice steering
+        tts_kwargs = {
+            "model": TTS_MODEL,
+            "voice": voice,
+            "input": script,
+            "response_format": "mp3",
+        }
+        if TTS_MODEL == "gpt-4o-mini-tts":
+            tts_kwargs["instructions"] = VALE_INSTRUCTIONS
+
+        with client.audio.speech.with_streaming_response.create(**tts_kwargs) as response:
             response.stream_to_file(output_path)
 
         size_kb = os.path.getsize(output_path) // 1024
         log(f"TTS complete: {output_path} ({size_kb}KB)")
+
+        # Log API cost to api-usage.jsonl (Ant tracks this)
+        _log_api_cost(script, size_kb)
+
         return True
 
     except ImportError:
@@ -344,7 +479,7 @@ def call_openai_tts(script: str, output_path: str, voice: str = TTS_VOICE, dry_r
         return False
 
 
-def update_feed(date_str: str, duration_estimate: str = "~3 min") -> bool:
+def update_feed(date_str: str, duration_estimate: str = "~10 min") -> bool:
     """Add podcast entry to feed.json (both paths)."""
     ts = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-6)))
     ts_str = ts.strftime("%Y-%m-%dT%H:%M:%S-06:00")

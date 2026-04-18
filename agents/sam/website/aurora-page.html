@@ -382,6 +382,34 @@
       .settings-strip { gap: 6px; }
       .reader-title { display: none; }
     }
+
+    /* ── Light mode ── */
+    :root[data-theme="light"] {
+      --bg:       #f8f4ee;
+      --bg-deep:  #ede8df;
+      --bg-card:  #ffffff;
+      --fg:       #1c160f;
+      --muted:    rgba(28, 22, 15, 0.55);
+      --dim:      rgba(28, 22, 15, 0.35);
+      --faint:    rgba(28, 22, 15, 0.18);
+      --border:   rgba(28, 22, 15, 0.12);
+      --border-hover: rgba(28, 22, 15, 0.22);
+      --accent:   #b8741a;
+      --accent-bright: #c8841e;
+      --accent-dim: rgba(184, 116, 26, 0.09);
+      --accent-line: rgba(184, 116, 26, 0.28);
+      --bg-card-hover: #f5f0e8;
+      --bg-reader: #fdfaf5;
+      --ok:       #3a7a28;
+      --err:      #b84030;
+    }
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 100px;
+      color: var(--dim); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: var(--font-m); letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--accent-line); }
   </style>
 </head>
 <body>
@@ -775,5 +803,19 @@
   })();
   </script>
 
+  <script>
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = t === 'light' ? '☾' : '☀';
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('aurora-theme', next);
+      applyTheme(next);
+    }
+    (function() { applyTheme(localStorage.getItem('aurora-theme') || 'dark'); })();
+  </script>
 </body>
 </html>

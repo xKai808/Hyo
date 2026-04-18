@@ -31,6 +31,37 @@
       --ease:     cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    /* ── Light mode ── */
+    :root[data-theme="light"] {
+      --bg:       #f8f4ee;
+      --bg-deep:  #ede8df;
+      --bg-card:  #ffffff;
+      --fg:       #1c160f;
+      --muted:    rgba(28, 22, 15, 0.55);
+      --dim:      rgba(28, 22, 15, 0.35);
+      --border:   rgba(28, 22, 15, 0.12);
+      --accent:   #b8741a;
+      --accent-bright: #c8841e;
+      --accent-dim: rgba(184, 116, 26, 0.09);
+      --accent-line: rgba(184, 116, 26, 0.28);
+      --ok:       #3a7a28;
+      --err:      #b84030;
+    }
+    :root[data-theme="light"] body::before {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(184,116,26,0.07), transparent 65%),
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(184,116,26,0.03), transparent 60%);
+    }
+
+    /* ── Theme toggle button ── */
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 100px;
+      color: var(--dim); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: var(--font-m); letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--accent-line); }
+
     html { height: 100%; background: var(--bg); }
     body {
       min-height: 100%; color: var(--fg); font-family: var(--font-b);
@@ -338,7 +369,10 @@
   <div class="progress" id="progress" style="width: 25%"></div>
   <div class="mast">
     <a href="/" class="logo">hyo</a>
-    <span>&#9737; aurora &middot; beta</span>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span>&#9737; aurora &middot; beta</span>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☀</button>
+    </div>
   </div>
 
   <div class="layout" id="layout">
@@ -738,6 +772,21 @@
       goBtn.disabled = false;
     }
   }
+  </script>
+  <script>
+    // Theme toggle — persisted in localStorage
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = t === 'light' ? '☾' : '☀';
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('aurora-theme', next);
+      applyTheme(next);
+    }
+    (function() { applyTheme(localStorage.getItem('aurora-theme') || 'dark'); })();
   </script>
 </body>
 </html>
