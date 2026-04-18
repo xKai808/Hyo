@@ -311,9 +311,54 @@ def observe_upload(filename: str, description: str, session_id: Optional[str] = 
 
 
 def observe_correction(old: str, new: str, session_id: Optional[str] = None) -> Optional[int]:
-    """Record a Hyo correction. These supersede semantic memory entries."""
+    """
+    Record a Hyo correction. These supersede semantic memory entries.
+
+    IMMEDIATE bypass: corrections skip the 7-day episodic TTL and are written
+    directly to KNOWLEDGE.md and the semantic layer. A Hyo correction is the
+    highest-priority write — it cannot wait 7 days to become permanent.
+    """
     content = f"**[HYO_CORRECTION]** Was: '{old}' → Now: '{new}'"
-    return observe(content, event_type="correction", source="hyo", session_id=session_id)
+    raw_id = observe(content, event_type="correction", source="hyo", session_id=session_id)
+
+    # Immediate semantic write (bypass 7-day promotion)
+    conn = init_db()
+    now = mt_now()
+    fact_key = f"correction:{hashlib.md5(new.encode()).hexdigest()[:12]}"
+    # Supersede any existing semantic fact with the old value
+    existing = conn.execute(
+        "SELECT id FROM semantic_memory WHERE lower(fact_value) LIKE ? AND superseded_by IS NULL",
+        (f"%{old.lower()[:50]}%",)
+    ).fetchone()
+    if existing:
+        conn.execute(
+            "UPDATE semantic_memory SET superseded_by = -1 WHERE id = ?",
+            (existing["id"],)
+        )
+    # Write corrected fact directly to semantic layer
+    conn.execute("""
+        INSERT OR REPLACE INTO semantic_memory
+        (category, fact_key, fact_value, confidence, reinforcement_count, last_reinforced, created_at)
+        VALUES ('CORRECTION', ?, ?, 1.0, 1, ?, ?)
+    """, (fact_key, content, now, now))
+    conn.commit()
+    conn.close()
+
+    # Also append to KNOWLEDGE.md immediately (flat-file layer — survives DB loss)
+    _append_correction_to_knowledge(old, new, now)
+
+    return raw_id
+
+
+def _append_correction_to_knowledge(old: str, new: str, timestamp: str):
+    """Write a correction directly to KNOWLEDGE.md. Bypasses 7-day promotion gate."""
+    knowledge_path = ROOT / "kai/memory/KNOWLEDGE.md"
+    if not knowledge_path.exists():
+        return
+    today = mt_date()
+    entry = f"\n---\n## Hyo Correction — {today}\n\n- **Was:** {old}\n- **Now:** {new}\n- Timestamp: {timestamp[:16]} MT\n"
+    with open(knowledge_path, "a") as f:
+        f.write(entry)
 
 
 # ── QUERY PATH ────────────────────────────────────────────────────────────────

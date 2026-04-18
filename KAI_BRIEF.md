@@ -30,8 +30,9 @@
 - **S19-006 FULLY RESOLVED:** `/daily/2026-04-18` (bare date) caused Vercel 404 — root cause: Vercel 404s on bare `YYYY-MM-DD.html` filenames for today's date. Fix: renamed to `newsletter-2026-04-18.html`, updated feed.json readLink to `/daily/newsletter-2026-04-18`. Verified live: 200 OK. newsletter.sh updated to use `newsletter-{date}.html` prefix going forward.
 - **Ant dashboard fixed:** "changes daily" complaint resolved — income was labeled "Income MTD" but was actually AetherBot weekly P&L (resets Monday, fluctuates with trades). Fixed labels: "AetherBot P&L" with week-start date, explanatory note added. Sam.sh wired to call ant-update.sh every cycle so data stays fresh. Committed + pushed.
 - **Aether analysis sparse log gate (SE-019):** run_analysis.sh now checks if today's log has <100 lines; if so, falls back to yesterday's full log. Root cause: analysis ran at 00:03 MT when AetherBot_2026-04-18.txt had only 1 line (midnight tick from previous contract). Yesterday's 2000+ line log was being ignored. Fixed.
-- **Committed:** `newsletter-2026-04-18.html`, `newsletter.sh`, `run_analysis.sh`, `sam.sh`, `hq.html` — all pushed to Vercel.
-- **Verified live:** `/daily/newsletter-2026-04-18` → 200 OK ✓
+- **Memory System (JordanMcCann/LongMemEval #1 architecture):** 5-layer SQLite engine built at `kai/memory/agent_memory/memory_engine.py`. Write pipeline: SHA-256 dedup → privacy filter → raw store → working memory (24h TTL) → episodic (nightly, LLM-compressed) → semantic (7-day promotion with confidence decay + contradiction detection). `observe_correction()` bypasses 7-day gate and writes directly to semantic layer + KNOWLEDGE.md immediately. Nightly launchd at 01:15 MT. CLAUDE.md updated with step 1.9 (memory engine query).
+- **Aether Daily Analysis Protocol:** `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` — self-contained, 484 lines. Cold 3rd-party agent can execute without any additional context. Covers exact paths, commands, format template, verification criteria, error recovery, failure modes.
+- **Committed:** all memory system files, protocol file, .gitignore updated (memory.db excluded), CLAUDE.md updated, consolidate.sh grep patterns fixed for new HYO_ marker format.
 
 **Hyo's S19 complaints status:**
 1. Aurora full brief 404 → ✅ FIXED (`/daily/newsletter-2026-04-18` live)
@@ -42,11 +43,12 @@
 6. GPT not showing on Aether page → ✅ FIXED (session 19 earlier)
 
 **NEXT SESSION FIRST ACTIONS:**
-1. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
-2. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
-3. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
-4. dex schema-validation gate at JSONL append (chronic P1)
-5. Verify Apr 19 Aether analysis uses full log (run_analysis.sh sparse gate now active)
+1. Run `kai exec "HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/kai/memory/agent_memory/init_protocols.py"` — seeds protocol registry and critical semantic facts (never been run yet)
+2. Verify Aether Apr 19 analysis uses full log (sparse gate now active)
+3. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
+4. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
+5. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
+6. dex schema-validation gate at JSONL append (chronic P1)
 
 ## Shipped today (2026-04-18 — Session 18, overnight autonomous)
 

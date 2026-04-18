@@ -20,9 +20,17 @@ Read these files in order. Do not skip. Do not skim.
 1.8. `kai/memory/TACIT.md` — **Hyo's preferences, patterns, and hard rules.** Layer 3 of the Felix memory model. Read every session. Contains HOW Hyo operates — what's unacceptable, communication patterns, decision authority. Separate from facts (KNOWLEDGE.md) and status (KAI_BRIEF.md).
 1.9. **Memory Engine query at session start** — after reading all files above, query the SQLite memory engine for any recent events not yet in KNOWLEDGE.md:
 ```bash
-python3 kai/memory/agent_memory/memory_engine.py recall "Hyo instruction correction decision" --limit 5
+HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/kai/memory/agent_memory/memory_engine.py recall "Hyo instruction correction decision" --limit 5
 ```
-This surfaces anything from recent sessions that hasn't yet been promoted to KNOWLEDGE.md. If DB doesn't exist yet: `python3 kai/memory/agent_memory/memory_engine.py init` then run init_protocols.py.
+This surfaces anything from recent sessions that hasn't yet been promoted to KNOWLEDGE.md. If DB doesn't exist or returns 0 results:
+```bash
+HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/kai/memory/agent_memory/memory_engine.py init
+HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/kai/memory/agent_memory/init_protocols.py
+```
+In Cowork sandbox sessions, use `kai exec` to run this on the Mini (where the actual DB lives):
+```bash
+kai exec "HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/kai/memory/agent_memory/memory_engine.py recall 'Hyo instruction correction decision' --limit 5"
+```
 
 **MEMORY WRITE RULE (non-negotiable — real-time, not end-of-session):**
 When Hyo uploads a file, gives feedback, makes a correction, or states a decision — write IMMEDIATELY via the memory engine AND the daily note. Both. In that order. Before reading the file, before doing anything else.

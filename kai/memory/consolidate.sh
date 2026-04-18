@@ -36,7 +36,9 @@ for f in "$DAILY_DIR"/*.md; do
   DATE_OF_FILE=$(basename "$f" .md)
   [[ "$DATE_OF_FILE" < "$CUTOFF" ]] && continue
   # Only include entries that look like session notes (not business monitor pings)
-  SESSION_LINES=$(grep -E "^\*\*\[HYO\]\|^\*\*\[KAI\]\|hyo_instruction\|hyo_upload\|hyo_feedback\|hyo_correction\|hyo_decision\|## Session\|## Hyo" "$f" 2>/dev/null || true)
+  # NOTE: matches both old-style **[HYO]** and new-style **[HYO_INSTRUCTION]** markers
+  # -i = case-insensitive so HYO_INSTRUCTION matches hyo_instruction fallback patterns
+  SESSION_LINES=$(grep -Ei "\*\*\[HYO_|\*\*\[KAI_|\*\*\[HYO\]|\*\*\[KAI\]|hyo_instruction|hyo_upload|hyo_feedback|hyo_correction|hyo_decision|## Session|## Hyo" "$f" 2>/dev/null || true)
   if [[ -n "$SESSION_LINES" ]]; then
     NOTES_BUNDLE+="
 === $DATE_OF_FILE ===
@@ -69,7 +71,8 @@ PROMPT
 )" 2>/dev/null || echo "")
 else
   # Fallback: grep-based extraction for lines explicitly marked as Hyo content
-  EXTRACTED=$(echo "$NOTES_BUNDLE" | grep -E "^\- \[HYO\]|hyo_instruction|hyo_upload|hyo_feedback|hyo_correction|hyo_decision" 2>/dev/null || echo "")
+  # -i = case-insensitive; matches **[HYO_INSTRUCTION]**, **[HYO_UPLOAD]**, etc.
+  EXTRACTED=$(echo "$NOTES_BUNDLE" | grep -Ei "\*\*\[HYO_|\*\*\[KAI_|^\- \[HYO\]|hyo_instruction|hyo_upload|hyo_feedback|hyo_correction|hyo_decision" 2>/dev/null || echo "")
 fi
 
 if [[ -z "$EXTRACTED" ]]; then
