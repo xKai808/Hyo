@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Memory Engine Nightly Consolidation
+     Runs at 01:15 MT — after consolidate.sh (01:00), before Ra (03:00)
+     Install: launchctl load ~/Library/LaunchAgents/com.hyo.memory-consolidation.plist
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.memory-consolidation</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/USERNAME/Documents/Projects/Hyo/kai/memory/agent_memory/nightly_consolidation.sh</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HYO_ROOT</key>
+    <string>/Users/USERNAME/Documents/Projects/Hyo</string>
+    <key>TZ</key>
+    <string>America/Denver</string>
+  </dict>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>1</integer>
+    <key>Minute</key>
+    <integer>15</integer>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>/Users/USERNAME/Documents/Projects/Hyo/kai/memory/agent_memory/consolidation.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/USERNAME/Documents/Projects/Hyo/kai/memory/agent_memory/consolidation-err.log</string>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>KeepAlive</key>
+  <false/>
+</dict>
+</plist>
