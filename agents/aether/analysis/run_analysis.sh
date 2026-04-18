@@ -88,8 +88,35 @@ fi
 LINE_COUNT=$(wc -l < "$LATEST_LOG" 2>/dev/null || echo "0")
 log "Latest log: $LATEST_LOG ($LINE_COUNT lines)"
 
+# SPARSE LOG GATE (SE-019): If today's log has <100 lines (midnight startup, partial session,
+# or analysis ran before trading day completed), fall back to yesterday's log.
+# Root cause: analysis at 23:00 MT may coincide with AetherBot's last tick at 23:59 creating
+# a new day-file with 1 line — the yesterday file has the full day's data.
 if [[ "$LINE_COUNT" -lt 100 ]]; then
-  log "WARNING: Log has only $LINE_COUNT lines (need 100+ for meaningful analysis)"
+  YESTERDAY=$(TZ=America/Denver date -d "yesterday" +%Y-%m-%d 2>/dev/null \
+    || TZ=America/Denver date -v-1d +%Y-%m-%d 2>/dev/null \
+    || python3 -c "from datetime import date, timedelta; print((date.today()-timedelta(1)).isoformat())")
+  YESTERDAY_LOG="$AETHER_LOG_DIR/AetherBot_${YESTERDAY}.txt"
+  YESTERDAY_COUNT=$(wc -l < "$YESTERDAY_LOG" 2>/dev/null || echo "0")
+  if [[ "$YESTERDAY_COUNT" -gt "$LINE_COUNT" ]]; then
+    log "SPARSE LOG GATE: today has $LINE_COUNT lines < 100, yesterday has $YESTERDAY_COUNT lines — using yesterday's log"
+    LATEST_LOG="$YESTERDAY_LOG"
+    LINE_COUNT="$YESTERDAY_COUNT"
+    # Adjust TODAY so analysis is filed under the correct date (the date of the data)
+    # Only if today's log is truly a stub (< 10 lines)
+    if [[ "$LINE_COUNT" -gt 100 ]] && python3 -c "
+import sys
+n=$(wc -l < '$(ls -t "$AETHER_LOG_DIR"/AetherBot_*.txt 2>/dev/null | head -1)' 2>/dev/null || echo 0)
+sys.exit(0 if int(n) < 10 else 1)
+" 2>/dev/null; then
+      log "Re-labeling analysis as $YESTERDAY (today's file had <10 lines — stub)"
+      TODAY="$YESTERDAY"
+      REPO_ANALYSIS_FILE="$ANALYSIS_DIR/Analysis_${TODAY}.txt"
+      KAI_ANALYSIS_FILE="$KAI_ANALYSIS_OUTPUT_DIR/Analysis_${TODAY}.txt"
+    fi
+  else
+    log "WARNING: Log has only $LINE_COUNT lines — analysis may be incomplete (both today and yesterday are sparse)"
+  fi
 fi
 
 # Run the analysis unless we're just republishing an existing file
