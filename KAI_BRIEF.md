@@ -24,6 +24,16 @@
 **Last sentinel run:** 2026-04-18 ~04:05 MT (run #70, scheduled task `sentinel-hyo-daily`, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix shipped this run: **`manifest-valid-json` RESOLVED** — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json` (was missing 4 required keys since hyo agent scaffolded in session 18, day 4 recurring). Remaining findings (all sandbox-environmental, documented carryover): **P0** `api-health-green` day 69 — Mini health endpoint unreachable from Cowork sandbox. **P1** `scheduled-tasks-fired` day 5 — no aurora logs in this sandbox's `agents/nel/logs/` (aurora runs on Mini, not in Cowork). **P2** `task-queue-size` day 11 — 25 P0 tasks vs. threshold 5 (ticket backlog carryover; active close-down is S17-007). No new P0 surfaced; sentinel auto-filed recurring findings to KAI_TASKS.md. Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation of api-health + aurora-ran-today requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-18.md`.
 **Prior sentinel run:** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
 
+## Shipped today (2026-04-18 — Session 19 continued, ~15:00-16:00 MT)
+
+**Session 19 final batch:**
+- **5-day simulation (4/19–4/23) completed:** Traced every event hour-by-hour across all 5 days. Confirmed morning report, Aether analysis, AetherBot metrics, Ant metrics all continuous. Agent daily brief is partial (dedicated evening plists were missing). Full report at `kai/ledger/simulation-5day-2026-04-19-to-23.md`.
+- **5 missing plists installed on Mini (P0):** nel-daily (22:00), sam-daily (22:30), aether-daily (22:45), kai-daily (23:30), report-check (07:00). All confirmed via launchctl. Starting tonight these will publish proper agent-daily entries and run the completeness check.
+- **init_protocols.py run on Mini:** Protocol registry seeded with 6 protocols (1 existing: aether-daily-analysis, 5 with missing files logged). 9 critical semantic facts stored in memory.db.
+- **Ant metrics refreshed:** ant-data.json rebuilt from api-usage.jsonl — previous data was 2h stale. AetherBot P&L $24.94 / +27.63% WTD. Both paths updated and pushed.
+- **hyo.sh Phase 5 confirmed disabled on Mini:** Feed publish is DISABLED. Next run at 10:00 MT 4/19 will NOT produce hyo-daily entries.
+- **kai_analysis.py sparse gate + dynamic balance ledger live on Mini:** Both fixes confirmed in Mini's git HEAD.
+
 ## Shipped today (2026-04-18 — Session 19, continuation)
 
 **Session 19 continuation (~19:45 MT):**
@@ -43,12 +53,13 @@
 6. GPT not showing on Aether page → ✅ FIXED (session 19 earlier)
 
 **NEXT SESSION FIRST ACTIONS:**
-1. Run `kai exec "HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/kai/memory/agent_memory/init_protocols.py"` — seeds protocol registry and critical semantic facts (never been run yet)
-2. Verify Aether Apr 19 analysis uses full log (sparse gate now active)
+1. ~~init_protocols.py~~ **DONE 2026-04-18 15:xx MT** — 9 semantic facts seeded, 6 protocols registered
+2. ~~5 missing plists~~ **DONE 2026-04-18** — nel-daily, sam-daily, aether-daily, kai-daily, report-check all installed on Mini
 3. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
 4. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
 5. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
 6. dex schema-validation gate at JSONL append (chronic P1)
+7. Fix chronic DUAL-PATH GATE blocking Mini commits (website/ vs agents/sam/website/ sync issue — many uncommitted changes on Mini)
 
 ## Shipped today (2026-04-18 — Session 18, overnight autonomous)
 
