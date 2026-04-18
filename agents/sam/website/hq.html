@@ -2096,14 +2096,32 @@ function renderAetherDashboard(container, agent) {
   }).join('');
 
   // ── Open issues ───────────────────────────────────────────────────────────
+  const issueStatusColor = s => {
+    if (!s) return 'var(--text-muted)';
+    if (s === 'RESOLVED') return 'var(--success)';
+    if (s === 'ACTIVE' || s === 'IN_PROGRESS') return 'var(--cyan)';
+    if (s === 'BLOCKED') return 'var(--error)';
+    if (s === 'MONITORING') return 'var(--warning)';
+    return 'var(--text-muted)';
+  };
   const issueRows = openIssues.map(issue => {
     const pc = PC[issue.priority] || 'var(--text-muted)';
     const label = issue.title || issue.label || '';
+    const progress = issue.progress || issue.notes || '';
+    const updatedAt = issue.updatedAt || issue.lastUpdated || '';
+    const updatedStr = updatedAt ? new Date(updatedAt).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '';
+    const sc = issueStatusColor(issue.status);
     return `
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-color)">
-        <span style="font-size:10px;font-weight:700;font-family:var(--font-mono);color:${pc};min-width:24px;padding-top:2px">${issue.priority}</span>
-        <span style="color:var(--text-secondary);font-size:12px;flex:1;line-height:1.5">${label}</span>
-        <span style="font-size:10px;font-family:var(--font-mono);color:${issue.status === 'ACTIVE' ? 'var(--cyan)' : 'var(--text-muted)'};min-width:70px;text-align:right">${issue.status || ''}</span>
+      <div style="padding:10px 16px;border-bottom:1px solid var(--border-color)">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <span style="font-size:10px;font-weight:700;font-family:var(--font-mono);color:${pc};min-width:24px;padding-top:2px">${issue.priority}</span>
+          <span style="color:var(--text-secondary);font-size:12px;flex:1;line-height:1.5">${label}</span>
+          <div style="text-align:right;min-width:80px">
+            <div style="font-size:10px;font-family:var(--font-mono);color:${sc};font-weight:600">${issue.status || ''}</div>
+            ${updatedStr ? `<div style="font-size:9px;color:var(--text-muted);margin-top:2px">${updatedStr}</div>` : ''}
+          </div>
+        </div>
+        ${progress ? `<div style="margin-top:5px;margin-left:36px;font-size:11px;color:var(--text-muted);line-height:1.5;font-style:italic">${progress}</div>` : ''}
       </div>`;
   }).join('');
 
@@ -2117,9 +2135,20 @@ function renderAetherDashboard(container, agent) {
           <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">
             <h2 style="margin:0;font-size:18px;font-weight:700;letter-spacing:0.04em;color:var(--cyan);font-family:var(--font-mono)">AETHERBOT</h2>
             <span style="color:var(--text-muted);font-size:12px;font-family:var(--font-mono)">${data.agent || 'aether.hyo'}</span>
-            <span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--success);border:1px solid rgba(109,212,156,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RUNNING</span>
+            ${(() => {
+              const lu = data.lastUpdated || data.updatedAt;
+              if (!lu) return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--text-muted);border:1px solid var(--border-color);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">UNKNOWN</span>`;
+              const ageMs = Date.now() - new Date(lu).getTime();
+              const ageH = ageMs / 3600000;
+              if (ageH < 6)  return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--success);border:1px solid rgba(109,212,156,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RUNNING</span>`;
+              if (ageH < 24) return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--warning);border:1px solid rgba(255,204,0,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">RECENT · ${Math.floor(ageH)}h ago</span>`;
+              return `<span style="font-size:9px;font-weight:600;letter-spacing:0.12em;color:var(--error);border:1px solid rgba(224,112,96,0.30);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">STALE · ${Math.floor(ageH)}h ago</span>`;
+            })()}
           </div>
-          <div style="color:var(--text-muted);font-size:11px;margin-top:5px">Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN</div>
+          <div style="color:var(--text-muted);font-size:11px;margin-top:5px">
+            Kalshi · KXBTC15M · ${week.start || ''} – ${week.end || ''} · MTN
+            ${(data.lastUpdated || data.updatedAt) ? `<span style="margin-left:10px;opacity:0.7">· Updated: ${new Date(data.lastUpdated || data.updatedAt).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'})}</span>` : ''}
+          </div>
         </div>
         <div style="text-align:right">
           <div style="font-size:24px;font-weight:700;color:var(--success);letter-spacing:-0.01em;font-family:var(--font-mono)">$${currentBalance.toFixed(2)}</div>

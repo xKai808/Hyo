@@ -315,4 +315,76 @@ else
   echo "[publish] WARN: aether-daily-sections.json update failed (rc=$SECTIONS_RC) — feed entry still published" >&2
 fi
 
+# ── Update issue progress notes in aether-metrics.json ─────────────────────
+# Scans the analysis text for issue mentions and updates progress field.
+# Also stamps updatedAt on every issue so HQ shows "last changed" date.
+METRICS_GIT="$ROOT/agents/sam/website/data/aether-metrics.json"
+METRICS_LIVE="$ROOT/website/data/aether-metrics.json"
+
+if [[ -f "$ANALYSIS_FILE" ]]; then
+  python3 - "$ANALYSIS_FILE" "$DATE" "$METRICS_GIT" "$METRICS_LIVE" <<'ISSUE_UPDATE'
+import json, re, sys, os
+
+analysis_path, date, *metric_paths = sys.argv[1:]
+with open(analysis_path) as f:
+    text = f.read()
+
+now_cmd = __import__('subprocess').check_output(
+    ["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"], text=True).strip()
+
+# Detect resolved/in-progress mentions by issue ID or keyword
+def infer_status(issue_id, title, text):
+    t = text.lower()
+    title_kw = title.lower()[:30]
+    # Look for explicit RESOLVED mentions near the issue
+    if re.search(rf'(issue {issue_id}|{re.escape(title_kw[:20])}).{{0,200}}(resolved|fixed|shipped|closed)', t, re.DOTALL):
+        return "RESOLVED"
+    if re.search(rf'(issue {issue_id}|{re.escape(title_kw[:20])}).{{0,200}}(in.progress|investigating|testing)', t, re.DOTALL):
+        return "IN_PROGRESS"
+    return None  # don't change if no evidence
+
+# Extract 1-sentence progress snippet from nearby text
+def extract_snippet(issue_id, title, text, max_chars=150):
+    title_kw = title[:25].lower()
+    m = re.search(rf'.{{0,60}}{re.escape(title_kw)}.{{0,200}}', text.lower())
+    if m:
+        snippet = text[m.start():m.end()].strip()
+        # Clean up to first sentence
+        snippet = re.split(r'[.\n]', snippet)[0][:max_chars].strip()
+        return snippet if len(snippet) > 20 else ""
+    return ""
+
+for metrics_path in metric_paths:
+    if not os.path.exists(metrics_path):
+        continue
+    with open(metrics_path) as f:
+        d = json.load(f)
+    changed = False
+    for issue in d.get("openIssues", []):
+        iid = issue.get("id", 0)
+        title = issue.get("title", "")
+        new_status = infer_status(iid, title, text)
+        snippet = extract_snippet(iid, title, text)
+        if new_status and new_status != issue.get("status"):
+            issue["status"] = new_status
+            changed = True
+        if snippet:
+            issue["progress"] = snippet
+            changed = True
+        issue["updatedAt"] = now_cmd  # always stamp analysis date
+    d["lastUpdated"] = now_cmd
+    d["updatedAt"] = now_cmd
+    if changed:
+        with open(metrics_path, "w") as f:
+            json.dump(d, f, ensure_ascii=False, indent=2)
+        print(f"[issues] Updated {metrics_path.split('/')[-3]}/aether-metrics.json")
+    else:
+        # Still write to update timestamps
+        with open(metrics_path, "w") as f:
+            json.dump(d, f, ensure_ascii=False, indent=2)
+        print(f"[issues] Timestamps updated, no status changes detected")
+ISSUE_UPDATE
+  echo "[publish] issue status update complete"
+fi
+
 exit 0
