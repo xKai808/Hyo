@@ -23,25 +23,29 @@
 **Last sentinel run:** 2026-04-18 ~04:05 MT (run #70, scheduled task `sentinel-hyo-daily`, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix shipped this run: **`manifest-valid-json` RESOLVED** — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json` (was missing 4 required keys since hyo agent scaffolded in session 18, day 4 recurring). Remaining findings (all sandbox-environmental, documented carryover): **P0** `api-health-green` day 69 — Mini health endpoint unreachable from Cowork sandbox. **P1** `scheduled-tasks-fired` day 5 — no aurora logs in this sandbox's `agents/nel/logs/` (aurora runs on Mini, not in Cowork). **P2** `task-queue-size` day 11 — 25 P0 tasks vs. threshold 5 (ticket backlog carryover; active close-down is S17-007). No new P0 surfaced; sentinel auto-filed recurring findings to KAI_TASKS.md. Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation of api-health + aurora-ran-today requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-18.md`.
 **Prior sentinel run:** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
 
-## Shipped today (2026-04-18 — Session 19)
+## Shipped today (2026-04-18 — Session 19, continuation)
 
-**Session 19 (Cowork, ~14:30 MT):**
-- **S19-005 RESOLVED:** Removed `agent-daily` from `FEED_ALLOWED_TYPES` in hq.html — hyo-daily no longer appears on the main feed. Synced both paths.
-- **S19-007 RESOLVED:** All aether-analysis readLinks in feed.json updated from `/aether-analysis?date=DATE` to `/daily/aether-DATE` — restoring the original rich static page format. aether-publish-analysis.sh updated to use same logic going forward.
-- **S19-004 RESOLVED:** aether-publish-analysis.sh now reads GPT_Independent_DATE.txt and GPT_CrossCheck_DATE.txt and writes `gptIndependent`/`gptReview` into feed.json sections. Existing entries backfilled where real GPT content exists (Apr 13, 14, 15, 16). PENDING stubs excluded.
-- **S19-006 RESOLVED:** newsletter.sh now auto git-adds the daily HTML + feed.json and commits+pushes after copy. Future `/daily/DATE` readLinks will never 404 on Vercel.
-- **Daemon fixes (Session 19 earlier):** caffeinate -i daemon + kai-bridge TCC fix (/opt/homebrew/python3 + WorkingDirectory=/tmp) both installed and confirmed running.
-- **Ant bookkeeper fixed:** ant-update.sh now reads Aether P&L as income ($24.94), adds Claude Max ($200) + GPT Plus ($20) subscription expenses. Income/expenses dashboard live.
-- **Podcast updated:** GPT-4o-mini expansion pass added to podcast.py. Result: 1,102 words / 7.3 min (up from 1.4 min). Vale voice permanent.
-- **Pushed:** 8ea1b3d → GitHub → Vercel deploying.
-- **Tickets closed:** S19-004, S19-005, S19-006, S19-007
+**Session 19 continuation (~19:45 MT):**
+- **S19-006 FULLY RESOLVED:** `/daily/2026-04-18` (bare date) caused Vercel 404 — root cause: Vercel 404s on bare `YYYY-MM-DD.html` filenames for today's date. Fix: renamed to `newsletter-2026-04-18.html`, updated feed.json readLink to `/daily/newsletter-2026-04-18`. Verified live: 200 OK. newsletter.sh updated to use `newsletter-{date}.html` prefix going forward.
+- **Ant dashboard fixed:** "changes daily" complaint resolved — income was labeled "Income MTD" but was actually AetherBot weekly P&L (resets Monday, fluctuates with trades). Fixed labels: "AetherBot P&L" with week-start date, explanatory note added. Sam.sh wired to call ant-update.sh every cycle so data stays fresh. Committed + pushed.
+- **Aether analysis sparse log gate (SE-019):** run_analysis.sh now checks if today's log has <100 lines; if so, falls back to yesterday's full log. Root cause: analysis ran at 00:03 MT when AetherBot_2026-04-18.txt had only 1 line (midnight tick from previous contract). Yesterday's 2000+ line log was being ignored. Fixed.
+- **Committed:** `newsletter-2026-04-18.html`, `newsletter.sh`, `run_analysis.sh`, `sam.sh`, `hq.html` — all pushed to Vercel.
+- **Verified live:** `/daily/newsletter-2026-04-18` → 200 OK ✓
+
+**Hyo's S19 complaints status:**
+1. Aurora full brief 404 → ✅ FIXED (`/daily/newsletter-2026-04-18` live)
+2. Aether daily analysis horrible → ⚠️ ROOT CAUSE FIXED (sparse log gate in run_analysis.sh) — will show full analysis from TOMORROW's pipeline run onward. Today's existing file has limited data (already committed, can't retroactively fix).
+3. Ant dashboard changes daily → ✅ FIXED (labels corrected, explained as weekly trading P&L)
+4. Feed agent clutter → ✅ FIXED (session 19 earlier)
+5. Aether analysis format changed → ✅ FIXED (session 19 earlier)
+6. GPT not showing on Aether page → ✅ FIXED (session 19 earlier)
 
 **NEXT SESSION FIRST ACTIONS:**
-1. Verify Vercel deployment — check /daily/aether-2026-04-18 loads the rich static page
-2. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
-3. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
-4. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
-5. dex schema-validation gate at JSONL append (chronic P1)
+1. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
+2. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
+3. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
+4. dex schema-validation gate at JSONL append (chronic P1)
+5. Verify Apr 19 Aether analysis uses full log (run_analysis.sh sparse gate now active)
 
 ## Shipped today (2026-04-18 — Session 18, overnight autonomous)
 
