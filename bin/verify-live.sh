@@ -26,7 +26,11 @@ FAILURES=()
 check() {
   local name="$1" url="$2" marker="$3"
   local content
-  content=$(curl -sL --max-time 15 "$url" 2>/dev/null || echo "CURL_FAIL")
+  # Cache-busting: force fresh response past CDN edge cache
+  content=$(curl -sL --max-time 20 \
+    -H "Cache-Control: no-cache" \
+    -H "Pragma: no-cache" \
+    "$url?_v=$(date +%s)" 2>/dev/null || echo "CURL_FAIL")
   if [[ "$content" == "CURL_FAIL" ]]; then
     log "FAIL [$name]: could not fetch $url"
     FAILURES+=("$name: fetch failed ($url)")
@@ -46,7 +50,8 @@ check() {
 check_json() {
   local name="$1" url="$2" jq_expr="$3" expected="$4"
   local content
-  content=$(curl -sL --max-time 15 "$url" 2>/dev/null || echo "CURL_FAIL")
+  content=$(curl -sL --max-time 20 -H "Cache-Control: no-cache" -H "Pragma: no-cache" \
+    "${url}?_v=$(date +%s)" 2>/dev/null || echo "CURL_FAIL")
   if [[ "$content" == "CURL_FAIL" ]]; then
     log "FAIL [$name]: could not fetch $url"
     FAILURES+=("$name: fetch failed ($url)")
@@ -74,7 +79,8 @@ check_json() {
 check_json_contains() {
   local name="$1" url="$2" field="$3"
   local content
-  content=$(curl -sL --max-time 15 "$url" 2>/dev/null || echo "CURL_FAIL")
+  content=$(curl -sL --max-time 20 -H "Cache-Control: no-cache" -H "Pragma: no-cache" \
+    "${url}?_v=$(date +%s)" 2>/dev/null || echo "CURL_FAIL")
   if [[ "$content" == "CURL_FAIL" ]]; then
     FAILURES+=("$name: fetch failed")
     FAIL=$((FAIL+1))
