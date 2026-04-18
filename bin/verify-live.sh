@@ -26,13 +26,10 @@ FAILURES=()
 check() {
   local name="$1" url="$2" marker="$3"
   local content
-  # Note: no ?_v= query param (breaks Vercel static routing) and no --compressed
-  # (macOS curl may not support brotli). Plain curl sends no Accept-Encoding,
-  # server returns uncompressed content which grep can parse.
-  content=$(curl -sL --max-time 20 \
-    -H "Cache-Control: no-cache" \
-    -H "Pragma: no-cache" \
-    "$url" 2>/dev/null || echo "CURL_FAIL")
+  # Plain curl — no Cache-Control headers (those bypass CDN edge and hit origin which
+  # returns brotli-compressed content that macOS curl can't decompress without --compressed).
+  # CDN cache refreshes within seconds of deploy (max-age=0, must-revalidate).
+  content=$(curl -sL --max-time 20 "$url" 2>/dev/null || echo "CURL_FAIL")
   if [[ "$content" == "CURL_FAIL" ]]; then
     log "FAIL [$name]: could not fetch $url"
     FAILURES+=("$name: fetch failed ($url)")
