@@ -10,6 +10,7 @@ ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 USAGE_FILE="$ROOT/kai/ledger/api-usage.jsonl"
 ANT_FILE="$ROOT/agents/sam/website/data/ant-data.json"
 ANT_FILE2="$ROOT/website/data/ant-data.json"
+AETHER_METRICS="$ROOT/agents/sam/website/data/aether-metrics.json"
 
 if [[ ! -f "$USAGE_FILE" ]]; then
     echo "[ant-update] ERROR: $USAGE_FILE not found" >&2
@@ -111,12 +112,54 @@ total_anthropic = by_provider.get('anthropic', 0.0)
 total_openai    = by_provider.get('openai', 0.0)
 total_cost      = total_anthropic + total_openai
 
+# ── Revenue: read Aether's trading P&L as income stream ──────────────────────
+aether_pnl = 0.0
+aether_balance = 0.0
+aether_pnl_pct = 0.0
+aether_week_start = ""
+try:
+    with open("$AETHER_METRICS") as af:
+        am = json.load(af)
+    cw = am.get("currentWeek", {})
+    aether_pnl = cw.get("pnl", 0.0)
+    aether_balance = cw.get("currentBalance", 0.0)
+    aether_pnl_pct = cw.get("pnlPercent", 0.0)
+    aether_week_start = cw.get("start", "")
+except Exception:
+    pass  # aether metrics unavailable — income shows 0
+
+income_streams = []
+if aether_pnl != 0.0:
+    income_streams.append({
+        "name": "AetherBot Trading",
+        "source": "aether-metrics.json",
+        "weekly_pnl": round(aether_pnl, 2),
+        "pnl_pct": round(aether_pnl_pct, 2),
+        "balance": round(aether_balance, 2),
+        "week_start": aether_week_start,
+        "note": "Current week P&L from autonomous trading"
+    })
+income_total = round(aether_pnl, 2)
+
+# ── Known fixed expenses (monthly subscriptions) ──────────────────────────────
+# Update when plans change.
+fixed_subscriptions = [
+    {"name": "Claude Max", "monthly": 200.00, "actual": 200.00, "category": "AI"},
+    {"name": "GPT Plus",   "monthly": 20.00,  "actual": 20.00,  "category": "AI"},
+]
+api_items = [
+    {"name": "Anthropic API", "actual": round(total_anthropic, 4), "category": "API"},
+    {"name": "OpenAI API",    "actual": round(total_openai, 4),    "category": "API"},
+]
+total_fixed = sum(s["actual"] for s in fixed_subscriptions)
+total_all_expenses = total_fixed + total_cost
+
 # ── Build output ──────────────────────────────────────────────────────────────
 data = {
     "status":     "active",
-    "note":       "Costs sourced from kai/ledger/api-usage.jsonl. Self-reported per process. Admin API key not configured.",
+    "note":       "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
     "updatedAt":  datetime.now(tz_mt).isoformat(),
-    "dataSource": "api-usage.jsonl",
+    "dataSource": "api-usage.jsonl + aether-metrics.json",
     "staleness":  {
         "lastUpdated": datetime.now(tz_mt).isoformat(),
         "staleAfterHours": 24,
@@ -146,7 +189,36 @@ data = {
         }
         for k, v in sorted(by_process.items(), key=lambda x: -x[1]['total_cost'])
     ],
-    "revenue": {"monthly": 0, "streams": []},
+    "revenue": {
+        "monthly": income_total,
+        "streams": income_streams
+    },
+    "income": {
+        "total_monthly": income_total,
+        "streams": income_streams
+    },
+    "expenses": {
+        "subscriptions": fixed_subscriptions,
+        "api": api_items,
+        "infrastructure": [],
+        "other": [],
+        "total_fixed": round(total_fixed, 2),
+        "total_api": round(total_cost, 4),
+        "total": round(total_all_expenses, 4)
+    },
+    "income": {
+        "total_monthly": income_total,
+        "streams": income_streams
+    },
+    "expenses": {
+        "subscriptions": fixed_subscriptions,
+        "api": api_items,
+        "infrastructure": [],
+        "other": [],
+        "total_fixed": round(total_fixed, 2),
+        "total_api": round(total_cost, 4),
+        "total": round(total_all_expenses, 4)
+    },
     "credits": {
         "anthropic": {"available": None, "note": "Admin API key required"},
         "openai":    {"available": None, "note": "Admin API key required"}

@@ -1,10 +1,10 @@
 {
   "status": "active",
-  "note": "Costs sourced from kai/ledger/api-usage.jsonl. Self-reported per process. Admin API key not configured.",
-  "updatedAt": "2026-04-18T12:04:17.699303-06:00",
-  "dataSource": "api-usage.jsonl",
+  "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
+  "updatedAt": "2026-04-18T13:15:00.326772-06:00",
+  "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-18T12:04:17.699324-06:00",
+    "lastUpdated": "2026-04-18T13:15:00.326820-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -15,14 +15,14 @@
       "currency": "USD"
     },
     "openai": {
-      "total": 0.7234,
+      "total": 0.7235,
       "currency": "USD"
     },
-    "total": 0.9632,
-    "today": 0.2139
+    "total": 0.9634,
+    "today": 0.2141
   },
   "burn": {
-    "daily": 0.4816,
+    "daily": 0.4817,
     "dailyBudget": 50,
     "pctOfBudget": 1.0,
     "trend": "insufficient_data",
@@ -35,11 +35,75 @@
       "totalCost": 0.963223,
       "avgPerRun": 0.050696,
       "lastRun": "2026-04-18T03:57:52-0600"
+    },
+    {
+      "process": "podcast-tts",
+      "runs": 2,
+      "totalCost": 0.000144,
+      "avgPerRun": 7.2e-05,
+      "lastRun": "2026-04-18T13:09:16-06:00"
     }
   ],
   "revenue": {
-    "monthly": 0,
-    "streams": []
+    "monthly": 24.94,
+    "streams": [
+      {
+        "name": "AetherBot Trading",
+        "source": "aether-metrics.json",
+        "weekly_pnl": 24.94,
+        "pnl_pct": 27.63,
+        "balance": 115.19,
+        "week_start": "2026-04-13",
+        "note": "Current week P&L from autonomous trading"
+      }
+    ]
+  },
+  "income": {
+    "total_monthly": 24.94,
+    "streams": [
+      {
+        "name": "AetherBot Trading",
+        "source": "aether-metrics.json",
+        "weekly_pnl": 24.94,
+        "pnl_pct": 27.63,
+        "balance": 115.19,
+        "week_start": "2026-04-13",
+        "note": "Current week P&L from autonomous trading"
+      }
+    ]
+  },
+  "expenses": {
+    "subscriptions": [
+      {
+        "name": "Claude Max",
+        "monthly": 200.0,
+        "actual": 200.0,
+        "category": "AI"
+      },
+      {
+        "name": "GPT Plus",
+        "monthly": 20.0,
+        "actual": 20.0,
+        "category": "AI"
+      }
+    ],
+    "api": [
+      {
+        "name": "Anthropic API",
+        "actual": 0.2399,
+        "category": "API"
+      },
+      {
+        "name": "OpenAI API",
+        "actual": 0.7235,
+        "category": "API"
+      }
+    ],
+    "infrastructure": [],
+    "other": [],
+    "total_fixed": 220.0,
+    "total_api": 0.9634,
+    "total": 220.9634
   },
   "credits": {
     "anthropic": {
@@ -61,12 +125,21 @@
       "name": "claude-sonnet-4-6",
       "calls": 4,
       "cost": 0.2399
+    },
+    {
+      "name": "gpt-4o-mini-tts",
+      "calls": 2,
+      "cost": 0.0001
     }
   ],
   "agents": [
     {
       "name": "aether",
       "cost": 0.9632
+    },
+    {
+      "name": "sam/podcast",
+      "cost": 0.0001
     }
   ],
   "history": [
@@ -151,8 +224,8 @@
     {
       "date": "2026-04-18",
       "anthropic": 0.1185,
-      "openai": 0.0954,
-      "total": 0.2139
+      "openai": 0.0955,
+      "total": 0.2141
     }
   ]
 }
