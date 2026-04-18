@@ -708,13 +708,13 @@
     });
   }
 
-  // ── submit ──
+  // ── submit → Stripe checkout ──
   async function submit() {
     const goBtn = document.getElementById('go');
     if (goBtn.disabled) return;
     goBtn.disabled = true;
     const st = document.getElementById('status');
-    st.className = 'status'; st.textContent = 'sending Aurora your profile\u2026';
+    st.className = 'status'; st.textContent = 'setting up your free trial\u2026';
     const payload = {
       email: state.email,
       topics: Array.from(state.topics),
@@ -725,19 +725,12 @@
       source: 'aurora.html',
     };
     try {
-      const r = await fetch('/api/aurora-subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
+      const r = await fetch('/api/aurora-checkout', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
       const j = await r.json();
       if (!r.ok || !j.ok) throw new Error(j.error || ('HTTP ' + r.status));
-      // Show personal page link if returned
-      if (j.pageUrl) {
-        const link = document.getElementById('pageLink');
-        link.href = j.pageUrl;
-        link.style.display = 'inline-flex';
-      }
-      document.getElementById('layout').innerHTML = '';
-      document.getElementById('done').classList.add('show');
-      document.getElementById('layout').appendChild(document.getElementById('done'));
-      document.getElementById('progress').style.width = '100%';
+      // Redirect to Stripe hosted checkout
+      st.textContent = 'redirecting to secure checkout\u2026';
+      window.location.href = j.url;
     } catch (err) {
       st.className = 'status err';
       st.textContent = 'something broke: ' + err.message;

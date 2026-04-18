@@ -45,8 +45,8 @@ This needs to change. Kai's job is to figure out how.
 ## Strategic Priorities
 
 ### Tier 1 — Fastest paths (0-30 days)
-1. **Aurora launch with pricing** — platform is built. Sam adds Stripe, we launch with a pricing page. 10 paying subscribers at $25/mo covers Claude Max Pro entirely. This is the single highest-leverage action.
-2. **AetherBot capital optimization** — 70.7% win rate, $24.94 on $90 capital. The % is excellent; the dollar amount is limited by capital. If Aether can sustain this rate, compounding + capital injection is the path.
+1. **Aurora launch** — 2-day free trial → $19/mo. Single tier. No complexity. Platform is built, Sam wires Stripe + trial logic. Ship it, test it, learn. Break-even at 11 subscribers.
+2. **AetherBot capital optimization** — 70.7% win rate, $24.94 on $90 capital. The % is excellent; the dollar amount is limited by capital. Compound returns while researching optimal capital ceiling.
 
 ### Tier 2 — 30-60 days
 3. **Newsletter monetization** — Ra is already producing daily research. Add a paid tier (Substack or Aurora itself). Even 20 paid subscribers at $5/mo = $100/mo with zero additional work.

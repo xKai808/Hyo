@@ -3,12 +3,15 @@
   "version": "1.1.0",
   "private": true,
   "type": "module",
-  "description": "hyo.world — static site + serverless functions",
+  "description": "hyo.world \u2014 static site + serverless functions",
   "scripts": {
     "build": "echo 'hyo-world: static site + api functions, no build step'",
     "dev": "python3 -m http.server 8000"
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "stripe": "^14.0.0"
   }
 }
