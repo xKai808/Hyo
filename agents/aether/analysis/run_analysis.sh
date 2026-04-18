@@ -11,7 +11,8 @@ set -o pipefail
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 ANALYSIS_DIR="$ROOT/agents/aether/analysis"
 LOG_DIR="$ROOT/agents/aether/logs"
-TODAY=$(TZ=America/Denver date +%Y-%m-%d)
+# Support backfill: TODAY_OVERRIDE=2026-04-17 bash run_analysis.sh
+TODAY="${TODAY_OVERRIDE:-$(TZ=America/Denver date +%Y-%m-%d)}"
 
 # Where kai_analysis.py actually writes its output
 KAI_ANALYSIS_OUTPUT_DIR="$HOME/Documents/Projects/AetherBot/Kai analysis"

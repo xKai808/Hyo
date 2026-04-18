@@ -188,8 +188,15 @@ def get_today_log():
     """
     SPARSE_THRESHOLD = 100  # lines
 
-    today_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    yesterday_date = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+    # Support backfill: AETHER_LOG_DATE=2026-04-17 python3 kai_analysis.py
+    _date_override = os.environ.get("AETHER_LOG_DATE")
+    if _date_override:
+        today_date = _date_override
+        _d = datetime.datetime.strptime(_date_override, "%Y-%m-%d")
+        yesterday_date = (_d - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+    else:
+        today_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        yesterday_date = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
     today_path = os.path.join(LOG_DIR, f"AetherBot_{today_date}.txt")
     yesterday_path = os.path.join(LOG_DIR, f"AetherBot_{yesterday_date}.txt")
