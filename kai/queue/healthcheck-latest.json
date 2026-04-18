@@ -1,104 +1,51 @@
 {
-  "ts": "2026-04-18T18:04:11Z",
+  "ts": "2026-04-18T20:31:33Z",
   "status": "ISSUES",
-  "issues": 3,
-  "warnings": 5,
+  "issues": 4,
+  "warnings": 4,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "ra chronic dead-loop since 2026-04-14 (assessment_stuck: health check w/1 warning) — GUIDANCE re-dispatched 18:01:15Z, no breakout"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "aether chronic dead-loop since 2026-04-14 (assessment_stuck: cycle complete + dashboard out-of-sync, 151 trades, PNL=$24.94) — GUIDANCE re-dispatched 18:01:15Z, no breakout"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "dex chronic dead-loop since 2026-04-14 (bottleneck_stuck: 2 corrupt JSONL entries, schema-validation gate at append still missing) — GUIDANCE re-dispatched 18:01:15Z, no breakout"
-    },
     {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker-age math FALSE: prior cycle reported 493482h ago. Worker actually alive — last completed cmd-1776534913-156 at 17:55:15Z (~9 min before this check). Healthcheck.sh time-calc bug, not real worker death."
+      "detail": "Worker last active 493484h ago \u2014 may be dead"
+    },
+    {
+      "severity": "P0",
+      "area": "morning-report",
+      "detail": "Morning report JSON exists but hq.html has NO rendering code"
     },
     {
       "severity": "P2",
       "area": "render-binding",
-      "detail": "FALSE-P0: healthcheck still flags hq.html missing rendering for morning-report.json / hq-state.json / remote-access.json / aether-metrics.json. Prior audit confirmed renderers exist. Healthcheck render-binding check pattern still not patched."
+      "detail": "Data file hq-state.json has no reference in hq.html"
     },
     {
       "severity": "P2",
-      "area": "flag-spam",
-      "detail": "32 P2 flags in last 2h — mostly flag-aether-001 'dashboard data mismatch: local ts X != API ts Y' re-firing every cycle; timestamp-variant dedup gate still not catching the family pattern."
+      "area": "render-binding",
+      "detail": "Data file morning-report.json has no reference in hq.html"
     },
     {
       "severity": "P2",
-      "area": "stale-tasks",
-      "detail": "12 stale ACTIVE tasks >72h (chronic, all already tracked): nel-005/007/010, sam-009, ra-002/003/004/005/006/009, flag-aether-001, flag-dex-001. No net-new stalls."
+      "area": "render-binding",
+      "detail": "Data file remote-access.json has no reference in hq.html"
     },
     {
-      "severity": "P3",
-      "area": "kai-logs",
-      "detail": "agents/kai/logs/ has 0 entries for 2026-04-18 — expected (kai-daily report fires 23:30 MT)."
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "No new auto-remediation dispatched — all 3 P1s already have GUIDANCE in flight; re-firing would be delegation churn. No net-new P0/P1 flags in log.jsonl in last 2h.",
-  "queue": {
-    "pending": 0,
-    "running": 0,
-    "worker_status": "alive (last completed 2026-04-18T17:55:15Z)"
-  },
-  "active_md_freshness_hours": {
-    "kai": 0.07,
-    "nel": 3.6,
-    "sam": 3.6,
-    "ra": 0.07,
-    "aether": 0.07,
-    "dex": 0.07
-  },
-  "today_logs": {
-    "nel": "hourly cipher/sentinel runs",
-    "sam": 1,
-    "ra": 2,
-    "aether": 2,
-    "dex": 3,
-    "kai": 0,
-    "note": "kai-daily fires 23:30 MT"
-  },
-  "flags_last_2h": {
-    "P0": 0,
-    "P1": 0,
-    "P2": 32
-  },
-  "recent_queue_results": [
-    {
-      "id": "cmd-1776534913-156",
-      "ts": "2026-04-18T17:55:15Z",
-      "exit": 0,
-      "summary": "bore tunnel log check — Mini reachable via queue"
-    },
-    {
-      "id": "cmd-1776534892-130",
-      "ts": "2026-04-18T17:54:53Z",
-      "exit": 0,
-      "summary": "bore-tunnel log inspect — listening on bore.pub:22246, prior connect errors recovered"
-    },
-    {
-      "id": "cmd-1776534885-107",
-      "ts": "2026-04-18T17:54:48Z",
-      "exit": 0,
-      "summary": "bore plist + log inspection (KeepAlive=true, RunAtLoad=true)"
-    }
-  ],
-  "next_check": "in 2 hours (30min if P0 found)",
-  "first_interactive_actions_unchanged": [
-    "patch healthcheck.sh worker-age math",
-    "patch healthcheck.sh render-binding to recognize data/morning-report-DATE.json + data/aether-metrics.json refs (kills 2-4 chronic false-P0s)",
-    "patch aether flag-dedup timestamp-variant family",
-    "dex schema-validation gate at JSONL append (closes flag-dex-001 chronic since 04-14)",
-    "resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003"
-  ]
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "recent_queue_results": [],
+  "next_check": "in 2 hours (30min if P0 found)"
 }
