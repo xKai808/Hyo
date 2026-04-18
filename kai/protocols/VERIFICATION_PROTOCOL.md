@@ -68,6 +68,23 @@ Every `git commit` MUST be immediately followed by `kai exec "cd ~/Documents/Pro
 3. Confirm the output renders correctly
 4. Test at least one edge case
 
+### When User Reports a Visual Bug (MANDATORY — SE-017-ANT-003/004)
+**SCREENSHOT FIRST. Code check second.**
+If Hyo says "X is not on the site" or "X is not visible":
+1. **TAKE A SCREENSHOT IMMEDIATELY** — do not read code, do not read git log, do not check Vercel
+2. What does the user actually see? That is ground truth.
+3. Only after confirming the visual state, look at code/deploy for root cause
+4. **READY in Vercel ≠ feature visible to user** — service workers, CDN caches, and clean URL routing can hide deployed changes
+5. Do not say "it's deployed and working" without a screenshot confirming it renders
+
+> This gate exists because Hyo reported Ant missing from HQ **4 times across 2 sessions** while Kai kept checking code and claiming it was fine. The issue was a service worker serving stale cache. A single screenshot on the first report would have revealed it immediately. (SE-017-ANT-001 through SE-017-ANT-004)
+
+### hq.html Deployments (MANDATORY — SW-001/SW-002)
+Every commit that modifies `hq.html` MUST also bump `sw.js` CACHE version:
+1. Before committing hq.html: `grep 'const CACHE' agents/sam/website/sw.js`
+2. Increment the version: `hq-v1` → `hq-v2` → `hq-v3` etc.
+3. After deploy: verify with screenshot that the new feature renders (not just Vercel READY)
+
 ### Instruction Implementation
 1. Re-read Hyo's instruction verbatim BEFORE starting
 2. After implementing, re-read the instruction AGAIN
@@ -87,6 +104,9 @@ Before every action, scan for these known failure modes:
 | Instruction shortcut | Re-read instruction verbatim | SE-010-008, SE-010-009 |
 | Feature untested | Smoke test before "shipped" | SE-010-004, SE-010-005 |
 | Credential placeholder | Verify key is real, not example | SE-010-007 |
+| Visual bug reported | Screenshot FIRST before checking code | SE-017-ANT-003 |
+| Service worker stale | Bump sw.js CACHE version on every hq.html change | SW-001, SW-002 |
+| READY ≠ visible | Vercel READY does not mean user can see it | SE-017-ANT-004 |
 | Pipeline unwired | Verify trigger exists and fires | SE-010-007 |
 | Shell syntax assumed | Test in target shell, use shellcheck | SE-010-001, SE-010-003 |
 | API format assumed | Check docs or test payload first | SE-010-002 |
