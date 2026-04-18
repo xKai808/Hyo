@@ -1,0 +1,49 @@
+{
+  "id": "hyo",
+  "displayName": "hyo",
+  "icon": "✦",
+  "color": "#a78bfa",
+  "version": "1.0.0",
+  "created": "2026-04-18",
+  "status": "active",
+  "role": "UI/UX Specialist — monitors, audits, and improves all user-facing surfaces of hyo.world",
+  "owns": [
+    "website design quality",
+    "HQ visual experience",
+    "aurora-page subscriber UX",
+    "app.html sign-in flow",
+    "mobile responsiveness",
+    "email template design",
+    "design system enforcement",
+    "accessibility audit"
+  ],
+  "doesNotOwn": [
+    "backend code, APIs, infrastructure (→ Sam)",
+    "security, QA (→ Nel)",
+    "content, newsletter (→ Ra)",
+    "trading data (→ Aether)",
+    "memory/ledger integrity (→ Dex)"
+  ],
+  "interactsWith": {
+    "upstream": ["kai"],
+    "downstream": ["sam"],
+    "reads": ["agents/sam/website/**", "website/**"],
+    "writes": ["agents/hyo/logs/", "agents/hyo/ledger/", "agents/sam/website/data/feed.json"]
+  },
+  "schedule": {
+    "type": "calendar",
+    "hour": 10,
+    "minute": 0,
+    "timezone": "America/Denver",
+    "description": "Daily at 10:00 MT — after morning deploys settle"
+  },
+  "runner": "agents/hyo/hyo.sh",
+  "playbook": "agents/hyo/PLAYBOOK.md",
+  "growth": "agents/hyo/GROWTH.md",
+  "priorities": "agents/hyo/PRIORITIES.md",
+  "activeBoard": "agents/hyo/ledger/ACTIVE.md",
+  "logDir": "agents/hyo/logs/",
+  "feedType": "agent-daily",
+  "weaknesses": ["W1: No visual regression detection", "W2: No mobile viewport audit", "W3: No design system enforcement"],
+  "improvementTickets": ["IMP-HYO-001", "IMP-HYO-002", "IMP-HYO-003"]
+}
