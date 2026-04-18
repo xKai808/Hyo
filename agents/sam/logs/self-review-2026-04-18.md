@@ -1,7 +1,8 @@
-# sam Self-Review — 2026-04-18T00:57
+# sam Self-Review — 2026-04-18T05:30
 
 ## Gate 1: Trigger Validation
-- ✓ 30 files checked, all have triggers.
+- ✗ **2026-04-18-sam-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
 Questions for sam to answer:
@@ -21,6 +22,7 @@ Questions for sam to answer:
 ## Gate 5: Gate Adoption
 - ✗ **aether/verify.sh** does not source agent-gates.sh
 - ✗ **dex/repair.sh** does not source agent-gates.sh
+- ✗ **hyo/hyo.sh** does not source agent-gates.sh
 - ✗ **nel/sentinel-adapt.sh** does not source agent-gates.sh
 - ✗ **nel/verify.sh** does not source agent-gates.sh
 - ✗ **ra/verify.sh** does not source agent-gates.sh
@@ -34,6 +36,6 @@ Questions for sam to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 9
-- Gate results: trigger=30/30, visibility=checked, resolutions=0, adoption=-1/5
+- Findings: 11
+- Gate results: trigger=17/18, visibility=checked, resolutions=0, adoption=-2/5
 

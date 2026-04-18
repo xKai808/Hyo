@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-18</title>
+<meta name="description" content="Ra Brief — 2026-04-18" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-18</h1>
+    <div class="sub">2026-04-18 · morning brief</div>
+  </header>
+  <article>
+<pre><code class="lang-yaml">---
+date: 2026-04-18
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: anthopic
+    name: Anthropic
+    aliases: [Claude, Claude Design, Claude Opus 4.7]
+    category: tech
+    take: &quot;Anthropic&#x27;s Claude Opus 4.7 is gaining traction for its reasoning and agentic coding capabilities.&quot;
+    data: &quot;Claude Opus 4.7 is highlighted on Product Hunt and Hacker News for its advanced features.&quot;
+    hinge: &quot;Continued adoption and feedback from developers and users.&quot;
+    confidence: high
+  - slug: memecore
+    name: MemeCore
+    aliases: [M]
+    category: crypto
+    take: &quot;MemeCore sees a significant price surge, reflecting increased market interest.&quot;
+    data: &quot;MemeCore (M) +20.52% @ $4.47, Market cap $7.85B, Vol $27.74M&quot;
+    hinge: &quot;Sustained market interest and potential regulatory developments.&quot;
+    confidence: medium
+topics:
+  - slug: ai-advancements
+    name: &quot;AI Advancements&quot;
+    signal: &quot;New AI techniques and tools are emerging rapidly.&quot;
+    take: &quot;AI continues to evolve with new frameworks and methodologies enhancing capabilities.&quot;
+  - slug: crypto-market
+    name: &quot;Crypto Market&quot;
+    signal: &quot;Volatility and interest in meme coins are on the rise.&quot;
+    take: &quot;Crypto markets remain volatile with significant movements in meme coins.&quot;
+lab_items:
+  - slug: gradient-entanglement
+    name: &quot;Energy-Aware Gradient Coordinator&quot;
+    what: &quot;A method to address gradient entanglement in Generalized Category Discovery.&quot;
+    why: &quot;It improves the robustness and efficiency of categorization models.&quot;
+    when: &quot;Useful in scenarios requiring robust classification with limited labeled data.&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.14176&quot;
+---
+# Ra — 2026-04-18
+## Anthropic&#x27;s Claude Opus 4.7: A Leap in AI Reasoning
+
+Good morning! Today, we&#x27;re diving into the latest advancements from Anthropic with their Claude Opus 4.7 model, which is making waves in the AI community. We&#x27;ll also touch on the crypto market&#x27;s current fascination with meme coins, particularly MemeCore&#x27;s recent surge. Finally, we&#x27;ll explore a new AI technique aimed at improving model robustness.
+
+## The Story · Anthropic&#x27;s Claude Opus 4.7 Shines
+
+Anthropic&#x27;s latest release, Claude Opus 4.7, is capturing attention for its enhanced reasoning and agentic coding capabilities. This model is designed to handle complex tasks with improved accuracy and efficiency, making it a valuable tool for developers and researchers alike. The buzz around Claude Opus 4.7 is evident on platforms like Product Hunt and Hacker News, where it&#x27;s being praised for its potential to revolutionize AI workflows.
+
+The model&#x27;s standout feature is its ability to perform sophisticated reasoning tasks, which is crucial for applications requiring high-level decision-making. This makes it particularly appealing for industries like finance, healthcare, and technology, where precision and reliability are paramount. As more users adopt Claude Opus 4.7, feedback will likely drive further enhancements, solidifying its position as a leading AI tool.
+
+*This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
+
+## Also Moving · Meme Coins and Market Movements
+
+The crypto market is abuzz with activity, particularly around meme coins like MemeCore. Over the past 24 hours, MemeCore has seen a 20.52% increase, pushing its price to $4.47. This surge reflects a growing interest in meme coins, which often experience rapid price fluctuations driven by social media trends and speculative trading.
+
+While these coins can offer substantial returns, they also come with significant risks due to their volatility and lack of intrinsic value. Investors should remain cautious and consider the broader market context before diving in.
+
+## The Lab · What AI can newly do this week
+
+This week, a new technique called the Energy-Aware Gradient Coordinator has emerged, addressing the issue of gradient entanglement in Generalized Category Discovery (GCD). This method improves the robustness and efficiency of categorization models by coordinating gradients in a way that reduces interference between supervised and unsupervised learning objectives.
+
+This advancement is particularly useful in scenarios where labeled data is scarce, and robust classification is essential. By mitigating gradient entanglement, models can achieve better performance and reliability, making this technique a valuable addition to the AI toolkit. Filed under `kai/research/2026-04-18-gradient-entanglement.md`.
+
+## Worth Sitting With
+
+As AI models become more sophisticated, the question of trust and transparency becomes increasingly important. How do we ensure that these powerful tools are used ethically and responsibly? As we continue to integrate AI into critical decision-making processes, the need for clear guidelines and robust oversight becomes paramount. What steps can we take to balance innovation with accountability?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped a new feature for the AI toolkit, enhancing model interpretability.
+- In-flight: A deep dive into the latest AI safety protocols.
+- Need your input on the upcoming AI ethics workshop — a simple yes or no will do.
+
+— Kai</code></pre>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+</body>
+</html>

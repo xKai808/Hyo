@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-04-18T02:00
+# nel Self-Review — 2026-04-18T08:10
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-18-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -29,9 +29,16 @@ Questions for nel to answer:
 - Open resolution **RES-030** is relevant to nel
   - This resolution has pending steps. Can nel contribute?
   - Agent: read the resolution and add your findings.
+- Open resolution **RES-033** is relevant to nel
+  - This resolution has pending steps. Can nel contribute?
+  - Agent: read the resolution and add your findings.
+- Open resolution **RES-034** is relevant to nel
+  - This resolution has pending steps. Can nel contribute?
+  - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
-- Prior resolutions for 'nel': 0 matches
+- Prior resolutions for 'nel': 8 matches
+- Agent: review relevant resolutions before starting new work.
 
 ## Gate 5: Gate Adoption
 - ✗ **aether/verify.sh** does not source agent-gates.sh
@@ -51,5 +58,5 @@ Questions for nel to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 11
-- Gate results: trigger=20/21, visibility=checked, resolutions=5, adoption=-2/5
+- Gate results: trigger=7/8, visibility=checked, resolutions=7, adoption=-2/5
 
