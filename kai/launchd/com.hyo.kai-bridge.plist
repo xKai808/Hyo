@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.kai-bridge</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/kai/Documents/Projects/Hyo/bin/kai-bridge.py</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/kai/Documents/Projects/Hyo</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/kai</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>HYO_ROOT</key>
+    <string>/Users/kai/Documents/Projects/Hyo</string>
+  </dict>
+
+  <!-- Keep alive — restart immediately if it crashes -->
+  <key>KeepAlive</key>
+  <true/>
+
+  <!-- Log stdout/stderr -->
+  <key>StandardOutPath</key>
+  <string>/tmp/kai-bridge.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/tmp/kai-bridge.err</string>
+
+  <!-- Run at load time -->
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- Throttle restarts so we don't spin on crash -->
+  <key>ThrottleInterval</key>
+  <integer>5</integer>
+</dict>
+</plist>

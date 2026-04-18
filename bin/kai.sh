@@ -639,6 +639,43 @@ cmd_tunnel() {
   fi
 }
 
+cmd_bridge_install() {
+  hdr "Installing kai-bridge daemon (launchd)"
+  local plist="$ROOT/kai/launchd/com.hyo.kai-bridge.plist"
+  local target="$HOME/Library/LaunchAgents/com.hyo.kai-bridge.plist"
+
+  [[ ! -f "$plist" ]] && die "plist not found at $plist"
+
+  mkdir -p "$(dirname "$target")"
+  cp "$plist" "$target"
+  chmod 644 "$target"
+  ok "plist installed to $target"
+
+  # Unload if already loaded
+  launchctl unload "$target" 2>/dev/null || true
+  launchctl load "$target"
+  ok "kai-bridge daemon loaded"
+
+  sleep 2
+  say ""
+  hdr "Bridge status"
+  launchctl list com.hyo.kai-bridge 2>/dev/null || warn "daemon not running yet"
+  say ""
+  # Test health endpoint
+  local health
+  health=$(curl -s --max-time 3 "http://localhost:9876/health" 2>/dev/null || echo "")
+  if [[ -n "$health" ]]; then
+    ok "bridge is responding: $health"
+  else
+    warn "bridge not responding yet — check: tail -f /tmp/kai-bridge.log"
+  fi
+  say ""
+  say "Bridge URL:  http://localhost:9876  (local)"
+  say "Tailscale:   http://100.77.143.7:9876  (remote)"
+  say "Logs:        tail -f /tmp/kai-bridge.log"
+  say "Health:      kai bridge-health"
+}
+
 cmd_tunnel_daemon() {
   local sub="${1:-install}"; shift || true
   case "$sub" in
@@ -975,6 +1012,10 @@ case "$sub" in
   queue|q)            cmd_queue "$@" ;;
   audit)              bash "$ROOT/kai/queue/daily-audit.sh" ;;
   exec|x)             bash "$ROOT/kai/queue/exec.sh" "$@" ;;
+  bridge)             bash "$ROOT/bin/kai-bridge-call.sh" "$@" ;;
+  bridge-install)     cmd_bridge_install ;;
+  bridge-health)      curl -s "http://100.77.143.7:9876/health" 2>/dev/null | python3 -m json.tool || echo "bridge unreachable" ;;
+  ant-update)         bash "$ROOT/bin/ant-update.sh" "$@" ;;
   nel-qa)             bash "$ROOT/agents/nel/nel-qa-cycle.sh" "$@" ;;
   link-check|lc)      bash "$ROOT/agents/nel/link-check.sh" "$@" ;;
   sync-research)      bash "$ROOT/kai/queue/sync-research.sh" ;;
