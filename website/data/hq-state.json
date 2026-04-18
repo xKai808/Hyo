@@ -1,0 +1,214 @@
+{
+  "updatedAt": "2026-04-18T02:10:12Z",
+  "morningReport": {
+    "date": "2026-04-17",
+    "generatedAt": "2026-04-17T20:10:12-0600",
+    "dataUrl": "/data/morning-report.json",
+    "summary": "Ops sync cycle @ 20:10 MT on 2026-04-17. Sentinel run #64: 6 pass / 3 fail — P0 api-health-green down day 64 (ESCALATED), P1 scheduled-tasks-fired day 6, P2 task-queue-size day 6. Cipher: clean. 0 findings, 0 verified leaks. Founder token 600 OK. Nel: score 65 (below 70 target), 16 broken doc links, 19 untested scripts, 3 audit issues (3 sensitive files outside .secrets: sam/website/.env.local, newsletter/.env.example, claude_api_tokens_2026_04.csv). Growth phase: IMP-nel-002 CVE scanner blocked — no package.json at root. Self-delegated: broken-link fix, system-health ticket TASK-20260417-nel-001 (P2). Regression logged: score 85 → 65.",
+    "systemStatus": "warnings",
+    "agentStatuses": {
+      "nel": "active",
+      "ra": "active",
+      "sam": "active",
+      "aether": "active",
+      "dex": "active"
+    },
+    "topIssues": [
+      "API health endpoint failing — 64 consecutive sentinel runs (P0 ESCALATION, persistent blocker)",
+      "Aurora scheduled-tasks-fired — no aurora logs detected (day 6 recurring)",
+      "Task queue overloaded — 25 P0 tasks (threshold 5, day 6)",
+      "Nel health score 65 — below 70 target. 16 broken doc links, regression 85→65",
+      "Sensitive files outside .secrets/ — .env.local, .env.example, api_tokens CSV flagged by audit",
+      "Cipher tooling gap — gitleaks/trufflehog install still pending on Mini"
+    ]
+  },
+  "events": [
+    {
+      "ts": "2026-04-17T20:10:12-0600",
+      "agent": "nel",
+      "msg": "System sweep run #2026-04-17 — score 65, 16 broken links, 3 audit issues, 0 verified leaks. Growth phase: IMP-nel-002 (CVE scanner — no package.json at root). Sentinel 2 pass/2 fail across projects. Self-delegated broken link fix. TASK-20260417-nel-001 (P2) filed. Feed entry: agent-reflection-nel-2026-04-17-201026.",
+      "doc": "/viewer?agent=nel&file=2026-04-17"
+    },
+    {
+      "ts": "2026-04-17T20:10:12-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #64 — 6 passed, 3 failed. P0 api-health-green down day 64 (ESCALATED), P1 scheduled-tasks-fired day 6, P2 task-queue-size day 6 (25 P0 tasks vs threshold 5).",
+      "doc": "/viewer?agent=sentinel&file=2026-04-17"
+    },
+    {
+      "ts": "2026-04-17T20:10:12-0600",
+      "agent": "cipher",
+      "msg": "Security scan — clean. 0 findings, 0 autofixes. secretsDir 755 (cosmetic — symlink target 700), founder token 600 OK."
+    },
+    {
+      "ts": "2026-04-16T00:12:30-0600",
+      "agent": "nel",
+      "msg": "System sweep run #2026-04-16 — score 65, 16 broken links, 5 audit issues, 0 verified leaks. Growth phase: IMP-nel-002 (CVE scanner). Self-delegated nel-002 broken link fix. TASK-20260416-nel-001 filed.",
+      "doc": "/viewer?agent=nel&file=2026-04-16"
+    },
+    {
+      "ts": "2026-04-16T00:12:30-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #55 — 6 passed, 3 failed. API health down day 55 (ESCALATED), scheduled-tasks-fired day 2, task-queue-size day 36.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-16T00:12:30-0600",
+      "agent": "cipher",
+      "msg": "Security scan run #187 — 2 recurring findings (gitleaks/trufflehog not installed), 0 verified leaks. secretsDir 755 on symlink (cosmetic — target at 700), founder token 600 OK."
+    },
+    {
+      "ts": "2026-04-15T20:10:50-0600",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T20:10:50-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #53 — 6 passed, 3 failed. API health down day 53 (ESCALATED), scheduled-tasks-fired day 2, task overload day 34.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T20:10:50-0600",
+      "agent": "cipher",
+      "msg": "Security scan — 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
+    {
+      "ts": "2026-04-15T16:11:09-0600",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T16:11:09-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #51 — 6 passed, 3 failed. API health down day 51 (ESCALATED), scheduled-tasks-fired day 3, task overload day 32.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T16:11:09-0600",
+      "agent": "cipher",
+      "msg": "Security scan — 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
+    {
+      "ts": "2026-04-15T12:11:00-0600",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T12:11:00-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #48 — 6 passed, 3 failed. API health down day 48 (ESCALATED), aurora missing day 4, task overload day 29.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T12:11:00-0600",
+      "agent": "cipher",
+      "msg": "Security scan — 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
+    {
+      "ts": "2026-04-15T08:11:13-0600",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target. Regression: 85→65.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T08:11:13-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #44 — 6 passed, 3 failed. API health down day 44 (ESCALATED), aurora missing day 3, task overload day 25.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T08:11:13-0600",
+      "agent": "cipher",
+      "msg": "Security scan — 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+    },
+    {
+      "ts": "2026-04-15T08:00:05Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation — sam",
+      "doc": "/viewer?agent=consolidation&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T08:00:05Z",
+      "agent": "simulation",
+      "msg": "24h action plan — 2026-04-15",
+      "doc": "/viewer?agent=simulation&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T04:11:10-0600",
+      "agent": "nel",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target. Regression: 85→65.",
+      "doc": "/viewer?agent=nel&file=2026-04-15"
+    },
+    {
+      "ts": "2026-04-15T04:11:10-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #41 — 6 passed, 3 failed. API health down day 41 (ESCALATED), aurora missing day 2, task overload day 22.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-15"
+    }
+  ],
+  "ra": {
+    "lastRun": "2026-04-12T12:07:28-06:00",
+    "status": "delivered",
+    "briefCount": 1,
+    "wordCount": 2254,
+    "latestDoc": "/viewer?agent=ra&file=2026-04-11"
+  },
+  "aurora": {
+    "subscribers": []
+  },
+  "sentinel": {
+    "lastRun": "2026-04-17T20:10:12-0600",
+    "passed": 6,
+    "failed": 3,
+    "totalRuns": 64,
+    "findings": [
+      "P0: api-health-green — endpoint failing (day 64, ESCALATED)",
+      "P1: scheduled-tasks-fired — no aurora logs detected (day 6)",
+      "P2: task-queue-size — 25 P0 tasks (overload threshold 5, day 6)"
+    ],
+    "escalations": [
+      "P0 escalated: api-health-green failing 64 runs in a row",
+      "P1 elevated: scheduled-tasks-fired failing 6 runs in a row",
+      "P2 elevated: task-queue-size failing 6 runs in a row"
+    ],
+    "latestDoc": "/viewer?agent=sentinel&file=2026-04-17"
+  },
+  "cipher": {
+    "lastRun": "2026-04-17T20:10:12-0600",
+    "secretsDir": "755",
+    "founderToken": "600",
+    "leaks": 0,
+    "notes": "Clean run. 0 findings, 0 autofixes. secretsDir 755 is on symlink (target 700). Founder token 600 OK. gitleaks/trufflehog install still pending on Mini.",
+    "latestDoc": null,
+    "totalRuns": 188
+  },
+  "sim": {
+    "lastRun": "2026-04-10T16:14:00-06:00",
+    "status": "complete",
+    "latestDoc": "/viewer?agent=sim&file=2026-04-10"
+  },
+  "consolidation": {
+    "lastRun": "2026-04-15T08:00:05Z"
+  },
+  "aether": {},
+  "nel": {
+    "lastRun": "2026-04-18T02:10:12Z",
+    "improvementScore": 65,
+    "findingsCount": 2,
+    "staleFiles": 0,
+    "brokenLinks": 16,
+    "untested": 19,
+    "inefficient": 1,
+    "sentinel": {
+      "pass": 2,
+      "fail": 2
+    },
+    "cipher": {
+      "leaks": 0
+    }
+  }
+}

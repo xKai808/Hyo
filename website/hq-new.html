@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>hq — hyo.world</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --bg-secondary: #161822;
+      --bg-tertiary: #1c1f2e;
+      --bg-card: #181b28;
+      --text-primary: #f0ece4;
+      --text-secondary: rgba(240, 236, 228, 0.72);
+      --text-tertiary: rgba(240, 236, 228, 0.50);
+      --text-muted: rgba(240, 236, 228, 0.32);
+      --border-color: rgba(240, 236, 228, 0.08);
+      --border-hover: rgba(240, 236, 228, 0.14);
+      --accent: #d4a853;
+      --accent-light: #e8b877;
+      --accent-bg: rgba(212, 168, 83, 0.08);
+      --success: #6dd49c;
+      --warning: #e8c96a;
+      --error: #e07060;
+      --purple: #b49af0;
+      --cyan: #7ec4e0;
+      --font-display: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.16);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.24);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html[data-theme="light"] {
+      --bg: #faf9f6;
+      --bg-secondary: #f0ede6;
+      --bg-tertiary: #e8e4dc;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: rgba(26, 26, 46, 0.72);
+      --text-tertiary: rgba(26, 26, 46, 0.50);
+      --text-muted: rgba(26, 26, 46, 0.32);
+      --border-color: rgba(26, 26, 46, 0.10);
+      --border-hover: rgba(26, 26, 46, 0.18);
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+    }
+
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ═══ AUTH ═══ */
+    .auth-gate {
+      position: fixed; inset: 0; z-index: 999;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg);
+    }
+    .auth-box { text-align: center; }
+    .auth-box .logo { font-family: var(--font-display); font-size: 48px; font-weight: 700; color: var(--accent); letter-spacing: -2px; }
+    .auth-box input {
+      display: block; margin: 24px auto 0; width: 240px; padding: 12px 16px;
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); color: var(--text-primary);
+      font-family: var(--font-mono); font-size: 14px; text-align: center;
+      outline: none; transition: border-color 0.2s;
+    }
+    .auth-box input:focus { border-color: var(--accent); }
+    .auth-err { color: var(--error); font-size: 12px; margin-top: 8px; min-height: 18px; }
+
+    /* ═══ SHELL ═══ */
+    .shell { display: flex; height: 100vh; }
+
+    /* ═══ SIDEBAR ═══ */
+    .sidebar {
+      width: 220px; min-width: 220px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex; flex-direction: column;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 12px;
+    }
+    .sidebar-header .logo {
+      font-family: var(--font-display); font-size: 28px; font-weight: 700;
+      color: var(--accent); letter-spacing: -1px;
+    }
+    .sidebar-header .version {
+      font-size: 10px; color: var(--text-muted); font-family: var(--font-mono);
+      margin-top: 2px;
+    }
+
+    .nav-section {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--text-muted); padding: 16px 20px 6px; font-weight: 600;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px; cursor: pointer;
+      font-size: 13px; font-weight: 500; color: var(--text-secondary);
+      transition: all 0.15s var(--ease);
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+    .nav-item.active {
+      background: var(--accent-bg);
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+    .nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+    .nav-dot {
+      width: 6px; height: 6px; border-radius: 50%; margin-left: auto;
+    }
+    .nav-dot.ok { background: var(--success); }
+    .nav-dot.err { background: var(--error); }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 20px 0;
+      border-top: 1px solid var(--border-color);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .clock {
+      font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary);
+      text-align: center;
+    }
+    .theme-toggle {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      background: var(--bg-tertiary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); padding: 6px 12px;
+      color: var(--text-secondary); cursor: pointer; font-size: 13px;
+      transition: all 0.15s;
+    }
+    .theme-toggle:hover { background: var(--bg); border-color: var(--border-hover); }
+
+    /* ═══ MAIN CONTENT ═══ */
+    .main {
+      flex: 1; overflow-y: auto; padding: 32px 40px;
+      max-width: 900px;
+    }
+    @media (min-width: 1400px) { .main { max-width: 960px; } }
+
+    .main-header {
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .main-header h1 {
+      font-family: var(--font-display); font-size: 24px; font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .main-header .sub {
+      font-size: 13px; color: var(--text-tertiary); margin-top: 4px;
+    }
+
+    /* ═══ FEED / REPORT CARDS ═══ */
+    .report {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s;
+    }
+    .report:hover { border-color: var(--border-hover); }
+
+    .report-header {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .report-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+      background: var(--bg-tertiary);
+    }
+    .report-meta { flex: 1; }
+    .report-title {
+      font-family: var(--font-display); font-size: 18px; font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .report-byline {
+      font-size: 12px; color: var(--text-tertiary); margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+    .report-type {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+      padding: 3px 8px; border-radius: 4px; font-weight: 600;
+      background: var(--bg-tertiary); color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .report-section { margin-bottom: 18px; }
+    .report-section:last-child { margin-bottom: 0; }
+    .report-section-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--text-muted); font-weight: 600; margin-bottom: 8px;
+    }
+    .report-section p, .report-section li {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+    }
+    .report-section ul {
+      list-style: none; padding: 0;
+    }
+    .report-section li {
+      padding: 4px 0 4px 18px; position: relative;
+    }
+    .report-section li::before {
+      content: ''; position: absolute; left: 0; top: 12px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text-muted);
+    }
+    .report-section li.good::before { background: var(--success); }
+    .report-section li.warn::before { background: var(--warning); }
+    .report-section li.bad::before { background: var(--error); }
+
+    .report-section .agent-highlight {
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      border-left: 3px solid var(--text-muted);
+    }
+    .report-section .agent-highlight .ah-name {
+      font-weight: 600; font-size: 13px; margin-bottom: 4px;
+    }
+    .report-section .agent-highlight .ah-text {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+    }
+
+    /* ═══ AGENT DETAIL VIEW ═══ */
+    .agent-profile {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+    }
+    .agent-profile-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .agent-profile-header .ap-icon {
+      font-size: 32px; width: 52px; height: 52px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-tertiary); border-radius: 50%;
+    }
+    .agent-profile-header .ap-info h2 {
+      font-family: var(--font-display); font-size: 22px; font-weight: 700;
+    }
+    .agent-profile-header .ap-info .ap-role {
+      font-size: 13px; color: var(--text-tertiary);
+    }
+    .agent-profile .ap-responsibilities {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      font-style: italic;
+    }
+
+    .goals-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .goals-grid { grid-template-columns: 1fr; } }
+    .goal-col {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .goal-col h4 {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 10px; font-weight: 600;
+    }
+    .goal-col.short h4 { color: var(--success); }
+    .goal-col.medium h4 { color: var(--warning); }
+    .goal-col.long h4 { color: var(--purple); }
+    .goal-col li {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+      padding: 4px 0; list-style: none;
+    }
+    .goal-col li::before { content: '→ '; color: var(--text-muted); }
+
+    .status-lists {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) { .status-lists { grid-template-columns: 1fr; } }
+    .status-list {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .status-list h4 {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 10px; font-weight: 600; color: var(--text-muted);
+    }
+    .status-list.in-process h4 { color: var(--accent); }
+    .status-list.pending h4 { color: var(--text-tertiary); }
+    .status-list li {
+      font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+      padding: 3px 0; list-style: none;
+    }
+    .status-list.in-process li::before { content: '◉ '; color: var(--accent); }
+    .status-list.pending li::before { content: '○ '; color: var(--text-muted); }
+
+    /* ═══ HISTORY SECTION ═══ */
+    .history-section {
+      margin-top: 32px;
+    }
+    .history-section h3 {
+      font-family: var(--font-display); font-size: 18px; font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .month-tabs {
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .month-tab {
+      padding: 6px 14px; font-size: 12px; font-weight: 600;
+      background: var(--bg-tertiary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); cursor: pointer;
+      color: var(--text-secondary); transition: all 0.15s;
+    }
+    .month-tab:hover { border-color: var(--border-hover); color: var(--text-primary); }
+    .month-tab.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+    .history-feed { /* reports render here */ }
+
+    /* ═══ EMPTY STATE ═══ */
+    .empty-state {
+      text-align: center; padding: 60px 20px;
+      color: var(--text-muted); font-size: 14px;
+    }
+
+    /* ═══ TOAST ═══ */
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-tertiary); border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm); padding: 10px 20px;
+      font-size: 13px; color: var(--text-secondary);
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none; z-index: 100;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ═══ SCROLLBAR ═══ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+  </style>
+</head>
+<body>
+
+  <!-- AUTH GATE -->
+  <div class="auth-gate" id="authGate">
+    <div class="auth-box">
+      <div class="logo">hq</div>
+      <div style="font-size: 13px; color: var(--text-tertiary); margin-top: 4px;">hyo.world</div>
+      <input type="password" id="authInput" placeholder="password" />
+      <div class="auth-err" id="authErr"></div>
+    </div>
+  </div>
+
+  <!-- SHELL -->
+  <div class="shell" id="shell" style="display: none;">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">hq</div>
+        <div class="version">v9</div>
+      </div>
+
+      <div class="nav-section">Home</div>
+      <div class="nav-item active" data-view="feed"><span class="nav-icon">📡</span><span>Feed</span></div>
+
+      <div class="nav-section">Team</div>
+      <div class="nav-item" data-view="kai"><span class="nav-icon">👔</span><span>Kai</span></div>
+      <div class="nav-item" data-view="nel"><span class="nav-icon">🔧</span><span>Nel</span><div class="nav-dot ok" id="dot-nel"></div></div>
+      <div class="nav-item" data-view="sam"><span class="nav-icon">⚙️</span><span>Sam</span><div class="nav-dot ok" id="dot-sam"></div></div>
+      <div class="nav-item" data-view="ra"><span class="nav-icon">📰</span><span>Ra</span><div class="nav-dot ok" id="dot-ra"></div></div>
+      <div class="nav-item" data-view="aether"><span class="nav-icon">📈</span><span>Aether</span><div class="nav-dot ok" id="dot-aether"></div></div>
+      <div class="nav-item" data-view="dex"><span class="nav-icon">🗃️</span><span>Dex</span><div class="nav-dot ok" id="dot-dex"></div></div>
+
+      <div class="nav-section">Intel</div>
+      <div class="nav-item" data-view="research"><span class="nav-icon">📚</span><span>Research</span></div>
+
+      <div class="sidebar-footer">
+        <div class="clock" id="clock">-- MT</div>
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeIcon">☀️</span>
+          <span style="font-size: 11px;">Mode</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main" id="mainContent">
+      <!-- Content rendered by JS -->
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// HQ v9 — Feed-centric dashboard
+// ═══════════════════════════════════════════════════════════════════
+
+let FEED_DATA = null;
+let currentView = 'feed';
+let currentMonth = null; // for agent history
+let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
+
+// ═══ THEME ═══
+function initTheme() {
+  const saved = localStorage.getItem('hq-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  updateThemeIcon();
+}
+function updateThemeIcon() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  document.getElementById('themeIcon').textContent = theme === 'light' ? '🌙' : '☀️';
+}
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('hq-theme', next);
+  updateThemeIcon();
+});
+initTheme();
+
+// ═══ AUTH ═══
+const authGate = document.getElementById('authGate');
+const authInput = document.getElementById('authInput');
+authInput.addEventListener('keydown', async e => {
+  if (e.key !== 'Enter') return;
+  const pw = authInput.value;
+  if (!pw) return;
+  try {
+    const r = await fetch('/api/hq?action=auth', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    const j = await r.json();
+    if (j.ok && j.token) {
+      HQ_TOKEN = j.token;
+      sessionStorage.setItem('hq_token', HQ_TOKEN);
+      authGate.classList.add('hidden');
+      document.getElementById('shell').style.display = 'flex';
+      boot();
+    } else {
+      document.getElementById('authErr').textContent = j.error || 'wrong password';
+      authInput.value = '';
+    }
+  } catch {
+    document.getElementById('authErr').textContent = 'could not reach server';
+  }
+});
+if (HQ_TOKEN) {
+  authGate.classList.add('hidden');
+  document.getElementById('shell').style.display = 'flex';
+  boot();
+}
+
+// ═══ CLOCK ═══
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US', {
+    timeZone: 'America/Denver', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+  }) + ' MT';
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ═══ TOAST ═══
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ═══ NAV ═══
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const view = item.dataset.view;
+    if (!view) return;
+    if (view === 'research') {
+      // research loads in main content, not new window
+      goView('research');
+      return;
+    }
+    goView(view);
+  });
+});
+
+function goView(name) {
+  currentView = name;
+  currentMonth = null;
+  document.querySelectorAll('.nav-item').forEach(n =>
+    n.classList.toggle('active', n.dataset.view === name)
+  );
+  render();
+}
+
+// ═══ DATA ═══
+async function fetchFeed() {
+  try {
+    const r = await fetch('/data/feed.json?t=' + Date.now());
+    if (r.ok) return await r.json();
+  } catch (e) { console.warn('feed fetch failed:', e); }
+  return null;
+}
+
+async function boot() {
+  FEED_DATA = await fetchFeed();
+  render();
+  // Refresh every 60s
+  setInterval(async () => {
+    FEED_DATA = await fetchFeed();
+    render();
+  }, 60000);
+}
+
+// ═══ RENDER ENGINE ═══
+function render() {
+  const main = document.getElementById('mainContent');
+  if (!FEED_DATA) {
+    main.innerHTML = '<div class="empty-state">Loading feed...</div>';
+    return;
+  }
+  if (currentView === 'feed') {
+    renderFeed(main);
+  } else if (currentView === 'research') {
+    renderResearch(main);
+  } else {
+    renderAgentView(main, currentView);
+  }
+}
+
+// ═══ FEED VIEW ═══
+function renderFeed(container) {
+  const today = FEED_DATA.today || new Date().toISOString().slice(0, 10);
+  // Show today's reports, most recent first
+  const todayReports = (FEED_DATA.reports || [])
+    .filter(r => r.date === today)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  let html = `
+    <div class="main-header">
+      <h1>Feed</h1>
+      <div class="sub">${formatDateFull(today)} — ${todayReports.length} report${todayReports.length !== 1 ? 's' : ''} today</div>
+    </div>
+  `;
+
+  if (todayReports.length === 0) {
+    html += '<div class="empty-state">No reports yet today. Morning report arrives at 05:00 MT.</div>';
+  } else {
+    for (const report of todayReports) {
+      html += renderReport(report);
+    }
+  }
+
+  container.innerHTML = html;
+}
+
+// ═══ AGENT VIEW ═══
+function renderAgentView(container, agentId) {
+  const agent = FEED_DATA.agents?.[agentId];
+  if (!agent) {
+    container.innerHTML = '<div class="empty-state">Agent not found</div>';
+    return;
+  }
+
+  // Get all reports by this agent, organized by month
+  const agentReports = (FEED_DATA.reports || [])
+    .filter(r => r.author.toLowerCase() === agent.name.toLowerCase())
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+  const months = {};
+  for (const r of agentReports) {
+    const m = r.date.slice(0, 7); // YYYY-MM
+    if (!months[m]) months[m] = [];
+    months[m].push(r);
+  }
+  const monthKeys = Object.keys(months).sort().reverse();
+  if (!currentMonth && monthKeys.length > 0) currentMonth = monthKeys[0];
+
+  let html = '';
+
+  // ── Agent Profile ──
+  html += `
+    <div class="agent-profile">
+      <div class="agent-profile-header">
+        <div class="ap-icon">${agent.icon}</div>
+        <div class="ap-info">
+          <h2>${agent.name}</h2>
+          <div class="ap-role">${agent.role}</div>
+        </div>
+      </div>
+      <div class="ap-responsibilities">"${agent.responsibilities}"</div>
+
+      <div class="goals-grid">
+        <div class="goal-col short">
+          <h4>Short-term</h4>
+          <ul>${(agent.goals?.short || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+        <div class="goal-col medium">
+          <h4>Medium-term</h4>
+          <ul>${(agent.goals?.medium || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+        <div class="goal-col long">
+          <h4>Long-term</h4>
+          <ul>${(agent.goals?.long || []).map(g => `<li>${g}</li>`).join('')}</ul>
+        </div>
+      </div>
+
+      <div class="status-lists">
+        <div class="status-list in-process">
+          <h4>In Process</h4>
+          <ul>${(agent.inProcess || []).map(t => `<li>${t}</li>`).join('')}</ul>
+          ${(agent.inProcess || []).length === 0 ? '<div style="font-size:13px;color:var(--text-muted);">Nothing active</div>' : ''}
+        </div>
+        <div class="status-list pending">
+          <h4>Pending</h4>
+          <ul>${(agent.pending || []).map(t => `<li>${t}</li>`).join('')}</ul>
+          ${(agent.pending || []).length === 0 ? '<div style="font-size:13px;color:var(--text-muted);">Nothing pending</div>' : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // ── History ──
+  html += `<div class="history-section">
+    <h3>Report History</h3>`;
+
+  if (monthKeys.length === 0) {
+    html += '<div class="empty-state">No reports from this agent yet.</div>';
+  } else {
+    // Month tabs
+    html += '<div class="month-tabs">';
+    for (const mk of monthKeys) {
+      const label = formatMonthLabel(mk);
+      const active = mk === currentMonth ? ' active' : '';
+      html += `<div class="month-tab${active}" onclick="selectMonth('${mk}')">${label}</div>`;
+    }
+    html += '</div>';
+
+    // Reports for selected month
+    const monthReports = months[currentMonth] || [];
+    html += '<div class="history-feed">';
+    if (monthReports.length === 0) {
+      html += '<div class="empty-state">No reports this month.</div>';
+    } else {
+      // Group by week
+      const weeks = {};
+      for (const r of monthReports) {
+        const weekNum = getWeekLabel(r.date);
+        if (!weeks[weekNum]) weeks[weekNum] = [];
+        weeks[weekNum].push(r);
+      }
+      for (const [weekLabel, reports] of Object.entries(weeks)) {
+        html += `<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin:20px 0 12px;">${weekLabel}</div>`;
+        for (const r of reports) {
+          html += renderReport(r);
+        }
+      }
+    }
+    html += '</div>';
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ═══ RESEARCH VIEW (keeps sidebar) ═══
+function renderResearch(container) {
+  container.innerHTML = `
+    <div class="main-header">
+      <h1>Research Archive</h1>
+      <div class="sub">Intelligence gathered by Ra and the agent network</div>
+    </div>
+    <iframe src="/research.html" style="width:100%;height:calc(100vh - 140px);border:none;border-radius:var(--radius);background:var(--bg-secondary);" sandbox="allow-scripts allow-same-origin"></iframe>
+  `;
+}
+
+// ═══ REPORT RENDERER ═══
+function renderReport(report) {
+  const time = formatTime(report.timestamp);
+  const typeLabel = getTypeLabel(report.type);
+  const borderColor = report.authorColor || 'var(--accent)';
+
+  let body = '';
+  const s = report.sections || {};
+
+  if (report.type === 'morning-report') {
+    body = renderMorningReport(s);
+  } else if (report.type === 'ceo-report') {
+    body = renderCeoReport(s);
+  } else if (report.type === 'agent-reflection') {
+    body = renderAgentReflection(s);
+  } else {
+    // Generic
+    for (const [key, val] of Object.entries(s)) {
+      body += renderGenericSection(key, val);
+    }
+  }
+
+  return `
+    <div class="report" style="border-left: 3px solid ${borderColor};">
+      <div class="report-header">
+        <div class="report-avatar">${report.authorIcon || '📋'}</div>
+        <div class="report-meta">
+          <div class="report-title">${report.title}</div>
+          <div class="report-byline">${report.author} · ${time}</div>
+        </div>
+        <div class="report-type">${typeLabel}</div>
+      </div>
+      ${body}
+    </div>
+  `;
+}
+
+function renderMorningReport(s) {
+  let html = '';
+  if (s.summary) {
+    html += sec('Executive Summary', `<p>${s.summary}</p>`);
+  }
+  if (s.wentWell?.length) {
+    html += sec('What Went Well', `<ul>${s.wentWell.map(w => `<li class="good">${w}</li>`).join('')}</ul>`);
+  }
+  if (s.needsAttention?.length) {
+    html += sec('Needs Attention', `<ul>${s.needsAttention.map(w => `<li class="warn">${w}</li>`).join('')}</ul>`);
+  }
+  if (s.agentHighlights) {
+    let ah = '';
+    for (const [agent, text] of Object.entries(s.agentHighlights)) {
+      const agentData = FEED_DATA?.agents?.[agent];
+      const icon = agentData?.icon || '🤖';
+      const name = agentData?.name || agent;
+      const color = agentData?.color || 'var(--text-muted)';
+      ah += `<div class="agent-highlight" style="border-left-color: ${color};">
+        <div class="ah-name">${icon} ${name}</div>
+        <div class="ah-text">${text}</div>
+      </div>`;
+    }
+    html += sec('Agent Highlights', ah);
+  }
+  return html;
+}
+
+function renderCeoReport(s) {
+  let html = '';
+  if (s.direction) {
+    html += sec('Strategic Direction', `<p>${s.direction}</p>`);
+  }
+  if (s.priorities?.length) {
+    html += sec('Priorities', `<ul>${s.priorities.map(p => `<li>${p}</li>`).join('')}</ul>`);
+  }
+  if (s.agentGrowth) {
+    html += sec('Agent Growth', `<p>${s.agentGrowth}</p>`);
+  }
+  if (s.risks) {
+    html += sec('Risks', `<p>${s.risks}</p>`);
+  }
+  return html;
+}
+
+function renderAgentReflection(s) {
+  let html = '';
+  if (s.introspection) {
+    html += sec('Introspection', `<p>${s.introspection}</p>`);
+  }
+  if (s.research) {
+    html += sec('Research & Exploration', `<p>${s.research}</p>`);
+  }
+  if (s.changes) {
+    html += sec('What I Changed', `<p>${s.changes}</p>`);
+  }
+  if (s.followUps?.length) {
+    html += sec('Following Up On', `<ul>${s.followUps.map(f => `<li>${f}</li>`).join('')}</ul>`);
+  }
+  if (s.forKai) {
+    html += sec('For Kai', `<p style="font-style:italic;color:var(--text-tertiary);">${s.forKai}</p>`);
+  }
+  return html;
+}
+
+function renderGenericSection(key, val) {
+  const title = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+  if (Array.isArray(val)) {
+    return sec(title, `<ul>${val.map(v => `<li>${v}</li>`).join('')}</ul>`);
+  }
+  if (typeof val === 'string') {
+    return sec(title, `<p>${val}</p>`);
+  }
+  if (typeof val === 'object' && val !== null) {
+    let inner = '';
+    for (const [k, v] of Object.entries(val)) {
+      inner += `<div style="margin-bottom:6px;"><strong style="font-size:12px;color:var(--text-muted);text-transform:uppercase;">${k}</strong><div style="font-size:14px;color:var(--text-secondary);">${v}</div></div>`;
+    }
+    return sec(title, inner);
+  }
+  return '';
+}
+
+function sec(title, content) {
+  return `<div class="report-section"><div class="report-section-title">${title}</div>${content}</div>`;
+}
+
+function selectMonth(m) {
+  currentMonth = m;
+  render();
+}
+
+// ═══ HELPERS ═══
+function formatDateFull(d) {
+  return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+function formatTime(ts) {
+  return new Date(ts).toLocaleString('en-US', { timeZone: 'America/Denver', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+}
+function formatMonthLabel(ym) {
+  const [y, m] = ym.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[parseInt(m) - 1] + ' ' + y;
+}
+function getWeekLabel(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const day = d.getDate();
+  if (day <= 7) return 'Week 1';
+  if (day <= 14) return 'Week 2';
+  if (day <= 21) return 'Week 3';
+  return 'Week 4';
+}
+function getTypeLabel(type) {
+  const map = {
+    'morning-report': 'Morning Report',
+    'ceo-report': 'CEO Report',
+    'agent-reflection': 'Agent Reflection',
+    'research-drop': 'Research',
+  };
+  return map[type] || type;
+}
+
+</script>
+</body>
+</html>

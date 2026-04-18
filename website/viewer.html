@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Hyo — Document Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #08080f; --bg-card: #0e0e1c; --fg: #ede4d4;
+      --fg-soft: rgba(237,228,212,0.72); --muted: rgba(237,228,212,0.50);
+      --dim: rgba(237,228,212,0.32); --border: rgba(237,228,212,0.08);
+      --accent: #e8b877; --accent-b: #f6d49a; --ok: #8fd4a1;
+      --err: #e89070; --warn: #e8c96a; --purple: #c4a8f0; --cyan: #8ac9e8;
+    }
+    html, body { min-height: 100vh; background: var(--bg); color: var(--fg); font-family: 'Inter', sans-serif; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 32px; background: rgba(8,8,15,0.92);
+      backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+    }
+    .topbar a { color: var(--accent); text-decoration: none; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; }
+    .topbar a:hover { color: var(--accent-b); }
+    .breadcrumb { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+    .breadcrumb span { color: var(--dim); margin: 0 6px; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 40px 32px 80px; }
+
+    .doc-header { margin-bottom: 32px; }
+    .doc-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 28px; color: var(--fg); margin-bottom: 6px; }
+    .doc-meta { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+    .doc-meta .agent-tag {
+      display: inline-block; padding: 2px 10px; border-radius: 4px;
+      font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-right: 8px;
+    }
+    .tag-ra { color: var(--accent-b); background: rgba(232,184,119,0.14); }
+    .tag-sentinel { color: var(--ok); background: rgba(143,212,161,0.12); }
+    .tag-cipher { color: var(--err); background: rgba(232,144,112,0.12); }
+    .tag-sim { color: var(--warn); background: rgba(232,201,106,0.12); }
+    .tag-consolidation { color: var(--cyan); background: rgba(138,201,232,0.12); }
+    .tag-aether { color: var(--cyan); background: rgba(138,201,232,0.12); }
+
+    /* Markdown rendered content */
+    .doc-body { line-height: 1.75; }
+    .doc-body h1 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 24px; color: var(--fg); margin: 32px 0 12px; }
+    .doc-body h2 { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 20px; color: var(--accent-b); margin: 28px 0 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .doc-body h3 { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 16px; color: var(--fg-soft); margin: 20px 0 8px; }
+    .doc-body p { margin: 12px 0; color: var(--fg-soft); }
+    .doc-body strong { color: var(--fg); font-weight: 600; }
+    .doc-body em { color: var(--accent); font-style: italic; }
+    .doc-body ul, .doc-body ol { padding-left: 24px; margin: 8px 0; }
+    .doc-body li { margin: 6px 0; color: var(--fg-soft); }
+    .doc-body code { font-family: 'DM Mono', monospace; font-size: 13px; background: rgba(237,228,212,0.06); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+    .doc-body pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin: 16px 0; }
+    .doc-body pre code { background: none; padding: 0; font-size: 13px; color: var(--fg-soft); }
+    .doc-body blockquote { border-left: 3px solid var(--accent); padding: 8px 16px; margin: 16px 0; background: rgba(232,184,119,0.04); border-radius: 0 6px 6px 0; }
+    .doc-body blockquote p { color: var(--muted); }
+    .doc-body hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+    .doc-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+    .doc-body a:hover { color: var(--accent-b); }
+
+    /* Log/plaintext content */
+    .doc-body.log-content { font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: var(--fg-soft); }
+
+    /* HTML iframe for rendered briefs */
+    .brief-frame { width: 100%; border: 1px solid var(--border); border-radius: 8px; min-height: 600px; background: #0a0a12; }
+
+    .toggle-row { display: flex; gap: 8px; margin-bottom: 20px; }
+    .toggle-btn {
+      font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+      padding: 6px 16px; border-radius: 20px;
+      border: 1px solid var(--border); background: transparent; color: var(--muted);
+      cursor: pointer; transition: all 0.15s ease;
+    }
+    .toggle-btn:hover { color: var(--fg); border-color: var(--fg-soft); }
+    .toggle-btn.active { color: var(--accent-b); border-color: var(--accent); background: rgba(232,184,119,0.07); }
+
+    .loading { text-align: center; padding: 60px 0; color: var(--dim); font-family: 'DM Mono', monospace; font-size: 13px; }
+    .error-msg { text-align: center; padding: 60px 0; color: var(--err); font-family: 'DM Mono', monospace; font-size: 13px; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 32px; padding: 10px 20px; border: 1px solid var(--border);
+      border-radius: 8px; color: var(--fg-soft); text-decoration: none;
+      font-size: 13px; font-weight: 500; transition: all 0.15s ease;
+    }
+    .back-link:hover { border-color: var(--accent); color: var(--accent-b); background: rgba(232,184,119,0.04); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="/hq">hq</a>
+    <div class="breadcrumb" id="breadcrumb">loading...</div>
+  </div>
+  <div class="container">
+    <div class="doc-header">
+      <div class="doc-title" id="docTitle">Loading...</div>
+      <div class="doc-meta" id="docMeta"></div>
+    </div>
+    <div id="toggleRow" class="toggle-row" style="display:none;"></div>
+    <div id="docContent" class="loading">fetching document...</div>
+    <a href="/hq" class="back-link">&#8592; Back to HQ</a>
+  </div>
+
+  <script>
+  // Parse query params: ?agent=ra&file=2026-04-11
+  const params = new URLSearchParams(location.search);
+  const agent = params.get('agent') || '';
+  const file = params.get('file') || '';
+  const view = params.get('view') || 'rendered'; // rendered | source
+
+  const AGENT_LABELS = {
+    ra: 'Ra — Daily Brief',
+    sentinel: 'Sentinel — QA Report',
+    cipher: 'Cipher — Security Scan',
+    sim: 'Simulations — Nightly Run',
+    consolidation: 'Consolidation — Memory Sync',
+    aether: 'Aether — Analysis'
+  };
+
+  const TAG_CLASS = {
+    ra: 'tag-ra', sentinel: 'tag-sentinel', cipher: 'tag-cipher',
+    sim: 'tag-sim', consolidation: 'tag-consolidation', aether: 'tag-aether'
+  };
+
+  // Set breadcrumb + header
+  document.getElementById('breadcrumb').innerHTML =
+    `docs <span>/</span> ${agent} <span>/</span> ${file}`;
+  document.getElementById('docTitle').textContent =
+    AGENT_LABELS[agent] || (agent + ' — ' + file);
+  document.getElementById('docMeta').innerHTML =
+    `<span class="agent-tag ${TAG_CLASS[agent] || ''}">${agent}</span> ${file}`;
+
+  // Resolve file paths
+  function getFilePaths() {
+    if (agent === 'ra') {
+      return {
+        html: `/docs/ra/${file}.html`,
+        md: `/docs/ra/${file}.md`,
+        hasHTML: true
+      };
+    }
+    if (agent === 'cipher') {
+      return { log: `/docs/cipher/${file}.log`, hasHTML: false };
+    }
+    // sentinel, sim, consolidation, aether — all markdown
+    return { md: `/docs/${agent}/${file}.md`, hasHTML: false };
+  }
+
+  const paths = getFilePaths();
+
+  // For Ra: show toggle between rendered HTML and markdown source
+  if (paths.hasHTML) {
+    const row = document.getElementById('toggleRow');
+    row.style.display = 'flex';
+    row.innerHTML = `
+      <button class="toggle-btn active" data-mode="rendered">Rendered</button>
+      <button class="toggle-btn" data-mode="source">Markdown source</button>
+    `;
+    row.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        row.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        loadContent(btn.dataset.mode);
+      });
+    });
+  }
+
+  // Simple markdown → HTML (no deps)
+  function mdToHTML(md) {
+    let html = md
+      // code blocks
+      .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
+        `<pre><code>${code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`)
+      // headers
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+      // hr
+      .replace(/^---+$/gm, '<hr>')
+      // bold + italic
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // inline code
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // links
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+      // blockquotes
+      .replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>')
+      // unordered list items
+      .replace(/^- (.+)$/gm, '<li>$1</li>');
+
+    // Wrap consecutive <li> in <ul>
+    html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+
+    // Wrap remaining plain lines in <p>
+    html = html.split('\n').map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      if (trimmed.startsWith('<')) return line;
+      return `<p>${line}</p>`;
+    }).join('\n');
+
+    return html;
+  }
+
+  async function loadContent(mode) {
+    const el = document.getElementById('docContent');
+    el.className = 'loading';
+    el.textContent = 'fetching document...';
+
+    try {
+      if (mode === 'rendered' && paths.html) {
+        const r = await fetch(paths.html + '?t=' + Date.now());
+        if (!r.ok) throw new Error(r.status);
+        const html = await r.text();
+        el.className = '';
+        el.innerHTML = `<iframe class="brief-frame" srcdoc="${html.replace(/"/g, '&quot;')}" sandbox="allow-same-origin"></iframe>`;
+        // Auto-size iframe
+        const iframe = el.querySelector('iframe');
+        iframe.onload = () => {
+          try { iframe.style.height = iframe.contentDocument.body.scrollHeight + 40 + 'px'; } catch(e) {}
+        };
+        return;
+      }
+
+      // Markdown or log
+      const url = paths.md || paths.log;
+      if (!url) { el.className = 'error-msg'; el.textContent = 'No document found'; return; }
+
+      const r = await fetch(url + '?t=' + Date.now());
+      if (!r.ok) throw new Error(r.status);
+      const text = await r.text();
+
+      if (paths.log || mode === 'source') {
+        el.className = 'doc-body log-content';
+        el.textContent = text;
+      } else {
+        el.className = 'doc-body';
+        el.innerHTML = mdToHTML(text);
+      }
+    } catch(e) {
+      el.className = 'error-msg';
+      el.textContent = 'Could not load document — ' + e.message;
+    }
+  }
+
+  // Initial load
+  loadContent(paths.hasHTML ? 'rendered' : 'md');
+  </script>
+</body>
+</html>

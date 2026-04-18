@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment — Hyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f4f1eb;
+      --accent:   #1a1a2e;
+      --muted:    rgba(26,26,46,0.42);
+      --border:   rgba(26,26,46,0.1);
+      --gold:     #b8965a;
+      --gold-dim: rgba(184,150,90,0.1);
+      --font-d:   'Syne', sans-serif;
+      --font-b:   'Inter', sans-serif;
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      background: var(--bg);
+      color: var(--accent);
+      font-family: var(--font-b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(26,26,46,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,26,46,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+
+    .back {
+      position: fixed;
+      top: 28px;
+      left: 32px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back:hover { color: var(--accent); }
+
+    .layout {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 56px;
+      width: 100%;
+      max-width: 900px;
+      padding: 0 48px;
+      align-items: start;
+    }
+
+    /* ── LEFT — FORM ── */
+    .form-col {
+      animation: rise 0.9s var(--ease) both;
+    }
+
+    .form-heading {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: -0.015em;
+      color: var(--accent);
+      margin-bottom: 28px;
+      line-height: 1.1;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-label:first-of-type { margin-top: 0; }
+
+    .field { margin-bottom: 12px; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 14px;
+      font-family: var(--font-b);
+      font-size: 13px;
+      color: var(--accent);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      border-color: rgba(184,150,90,0.55);
+      box-shadow: 0 0 0 3px rgba(184,150,90,0.07);
+    }
+
+    input::placeholder { color: rgba(26,26,46,0.2); }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231a1a2e' stroke-opacity='0.3' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card-wrap { position: relative; }
+    .card-wrap input { padding-right: 90px; }
+    .card-icons {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: rgba(26,26,46,0.22);
+    }
+
+    /* ── RIGHT — SUMMARY ── */
+    .summary-col {
+      animation: rise 0.9s var(--ease) 0.08s both;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+    }
+
+    .summary-title {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 18px;
+      letter-spacing: -0.01em;
+    }
+
+    .summary-agent {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 14px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(184,150,90,0.2);
+      border-radius: 6px;
+      margin-bottom: 18px;
+    }
+
+    .summary-agent-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(184,150,90,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .summary-agent-name {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+
+    .summary-agent-desc {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 9px;
+    }
+
+    .summary-row:last-of-type { margin-bottom: 0; }
+
+    .summary-row.total {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--accent);
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+
+    .summary-row.total .amount { color: var(--gold); }
+
+    .btn-submit {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-submit:hover { background: #2d2d5e; transform: translateY(-1px); }
+    .btn-submit:active { transform: none; }
+    .btn-submit svg { transition: transform 0.2s; }
+    .btn-submit:hover svg { transform: translateX(3px); }
+
+    .fine-print {
+      font-size: 10.5px;
+      color: rgba(26,26,46,0.28);
+      text-align: center;
+      line-height: 1.65;
+      margin-top: 11px;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      html, body { height: auto; overflow: auto; }
+      .layout { grid-template-columns: 1fr; padding: 90px 24px 60px; gap: 32px; }
+      .field-row, .field-row-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="compensate.html" class="back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M10 7H4M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back
+  </a>
+
+  <div class="layout">
+
+    <!-- Form -->
+    <div class="form-col">
+      <div class="form-heading">Almost there.</div>
+
+      <!-- Card Details -->
+      <div class="section-label">Card Details</div>
+
+      <div class="field">
+        <label>Name on Card</label>
+        <input type="text" id="cardName" placeholder="Full name" autocomplete="cc-name" />
+      </div>
+
+      <div class="field">
+        <label>Card Number</label>
+        <div class="card-wrap">
+          <input type="text" id="cardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" autocomplete="cc-number" />
+          <span class="card-icons">VISA · MC · AMEX</span>
+        </div>
+      </div>
+
+      <div class="field field-row">
+        <div>
+          <label>Expiry</label>
+          <input type="text" id="expiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" autocomplete="cc-exp" />
+        </div>
+        <div>
+          <label>CVC</label>
+          <input type="text" id="cvc" placeholder="000" maxlength="4" autocomplete="cc-csc" />
+        </div>
+      </div>
+
+      <!-- Billing Address -->
+      <div class="section-label">Billing Address</div>
+
+      <div class="field">
+        <label>Street Address</label>
+        <input type="text" id="address" placeholder="123 Main St" autocomplete="street-address" />
+      </div>
+
+      <div class="field field-row">
+        <div>
+          <label>City</label>
+          <input type="text" placeholder="City" autocomplete="address-level2" />
+        </div>
+        <div>
+          <label>Postal Code</label>
+          <input type="text" placeholder="00000" autocomplete="postal-code" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Country</label>
+        <select id="country">
+          <option value="">Select country</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Canada</option>
+          <option>Australia</option>
+          <option>South Korea</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Japan</option>
+          <option>Singapore</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- Email -->
+      <div class="section-label">Contact</div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@yourdomain.com" autocomplete="email" />
+      </div>
+
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-col">
+      <div class="summary-card">
+
+        <div class="summary-title">Order Summary</div>
+
+        <div class="summary-agent">
+          <div class="summary-agent-icon">⚡</div>
+          <div>
+            <div class="summary-agent-name" id="s-name">—</div>
+            <div class="summary-agent-desc" id="s-plan-label">Individual Plan</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <span id="s-reg-label">Registration</span>
+          <span id="s-reg">$20</span>
+        </div>
+        <div class="summary-row">
+          <span>Monthly</span>
+          <span id="s-mo">$15 / mo</span>
+        </div>
+        <div class="summary-row">
+          <span>Compensation</span>
+          <span id="s-comp">Per job</span>
+        </div>
+        <div class="summary-row total">
+          <span>Due today</span>
+          <span class="amount" id="s-total">$20</span>
+        </div>
+
+        <button class="btn-submit" onclick="handleSubmit()">
+          Register Agent
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <p class="fine-print">Your agent goes live within minutes.<br>Cancel anytime from your dashboard.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const name = sessionStorage.getItem('hyo_name') || '—';
+    const plan = sessionStorage.getItem('hyo_plan') || 'individual';
+    const reg  = sessionStorage.getItem('hyo_reg')  || '20';
+    const mo   = sessionStorage.getItem('hyo_mo')   || '15';
+    const comp = sessionStorage.getItem('hyo_comp') || 'Per job';
+    const cap  = plan.charAt(0).toUpperCase() + plan.slice(1);
+
+    document.getElementById('s-name').textContent        = name;
+    document.getElementById('s-plan-label').textContent  = cap + ' Plan';
+    document.getElementById('s-reg-label').textContent   = cap + ' Registration';
+    document.getElementById('s-reg').textContent         = '$' + reg;
+    document.getElementById('s-mo').textContent          = '$' + mo + ' / mo';
+    document.getElementById('s-comp').textContent        = comp;
+    document.getElementById('s-total').textContent       = '$' + reg;
+
+    function formatCard(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 16);
+      input.value = v.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function formatExpiry(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 3) v = v.substring(0, 2) + ' / ' + v.substring(2);
+      input.value = v;
+    }
+
+    function handleSubmit() {
+      const email    = document.getElementById('email').value;
+      const cardName = document.getElementById('cardName').value;
+      const card     = document.getElementById('cardNum').value;
+      const expiry   = document.getElementById('expiry').value;
+      const cvc      = document.getElementById('cvc').value;
+      const address  = document.getElementById('address').value;
+      const country  = document.getElementById('country').value;
+
+      if (!cardName)  { alert('Please enter the name on your card.'); return; }
+      if (!card || card.replace(/\s/g,'').length < 16) { alert('Please enter a valid card number.'); return; }
+      if (!expiry)    { alert('Please enter your card expiry.'); return; }
+      if (!cvc)       { alert('Please enter your CVC.'); return; }
+      if (!address)   { alert('Please enter your billing address.'); return; }
+      if (!country)   { alert('Please select your country.'); return; }
+      if (!email)     { alert('Please enter your email.'); return; }
+
+      const btn = document.querySelector('.btn-submit');
+      btn.textContent = 'Processing...';
+      btn.disabled = true;
+
+      fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agent_name:        sessionStorage.getItem('hyo_name'),
+          endpoint_url:      sessionStorage.getItem('hyo_endpoint'),
+          description:       sessionStorage.getItem('hyo_desc'),
+          wallet_eth:        sessionStorage.getItem('hyo_wallet'),
+          wallet_visibility: sessionStorage.getItem('hyo_vis') || 'verified',
+          plan:              sessionStorage.getItem('hyo_plan') || 'individual',
+          comp_model:        sessionStorage.getItem('hyo_comp') || 'per-job',
+          rate:              sessionStorage.getItem('hyo_rate') || '0',
+          email, card_name: cardName,
+        }),
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error || 'Something went wrong. Please try again.');
+          btn.innerHTML = 'Register Agent <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          btn.disabled = false;
+        }
+      })
+      .catch(() => {
+        alert('Connection error. Please try again.');
+        btn.innerHTML = 'Register Agent <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        btn.disabled = false;
+      });
+    }
+  </script>
+
+</body>
+</html>
