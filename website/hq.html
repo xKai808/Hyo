@@ -814,6 +814,9 @@
       <div class="nav-item" data-view="aether"><span class="nav-icon">📈</span><span>Aether</span><span class="nav-badge" id="badge-aether">NEW</span><div class="nav-dot ok" id="dot-aether"></div></div>
       <div class="nav-item" data-view="dex"><span class="nav-icon">🗃️</span><span>Dex</span><span class="nav-badge" id="badge-dex">NEW</span><div class="nav-dot ok" id="dot-dex"></div></div>
 
+      <div class="nav-section">Finance</div>
+      <div class="nav-item" data-view="ant"><span class="nav-icon">🐜</span><span>Ant</span><div class="nav-dot ok" id="dot-ant"></div></div>
+
       <div class="nav-section">Intel</div>
       <div class="nav-item" data-view="research"><span class="nav-icon">📚</span><span>Research</span></div>
 
@@ -1149,6 +1152,8 @@ function render() {
     renderFeed(main);
   } else if (currentView === 'research') {
     renderResearch(main);
+  } else if (currentView === 'ant') {
+    renderAnt(main);
   } else {
     renderAgentView(main, currentView);
   }
@@ -2503,6 +2508,239 @@ document.addEventListener('click', function(e) {
     }
   }, { passive: true });
 })();
+
+// ═══ ANT — ACCOUNTANT SECTION ═══
+// Pulls from /data/ant-data.json (daily updated by ant.sh runner)
+// Falls back to graceful "awaiting API key" state if data not yet available
+
+let ANT_DATA = null;
+
+async function loadAntData() {
+  if (ANT_DATA) return ANT_DATA;
+  try {
+    const r = await fetch('/data/ant-data.json?v=' + Date.now());
+    if (r.ok) ANT_DATA = await r.json();
+  } catch (e) {}
+  return ANT_DATA;
+}
+
+function antFmt(n, decimals = 2) {
+  if (n == null || isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  const s = abs >= 1000 ? abs.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})
+           : abs.toFixed(decimals);
+  return (n < 0 ? '-' : '') + '$' + s;
+}
+
+function antPct(n) {
+  if (n == null || isNaN(n)) return '—';
+  return (n >= 0 ? '+' : '') + n.toFixed(1) + '%';
+}
+
+function antBar(used, total, color) {
+  const pct = total > 0 ? Math.min((used / total) * 100, 100) : 0;
+  const col = pct > 85 ? 'var(--error)' : pct > 60 ? 'var(--warning)' : color || 'var(--accent)';
+  return `<div style="background:var(--bg-tertiary);border-radius:4px;height:6px;overflow:hidden;margin-top:6px;">
+    <div style="width:${pct.toFixed(1)}%;background:${col};height:100%;border-radius:4px;transition:width 0.4s var(--ease);"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:4px;">
+    <span style="font-size:0.72em;color:var(--text-muted);">${antFmt(used)} used</span>
+    <span style="font-size:0.72em;color:var(--text-muted);">${antFmt(total)} total</span>
+  </div>`;
+}
+
+function antStatBox(label, value, sub, color) {
+  return `<div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:16px 18px;">
+    <div style="font-size:0.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">${label}</div>
+    <div style="font-size:1.5em;font-weight:700;color:${color || 'var(--text-primary)'};">${value}</div>
+    ${sub ? `<div style="font-size:0.78em;color:var(--text-tertiary);margin-top:3px;">${sub}</div>` : ''}
+  </div>`;
+}
+
+function antSection(title, content) {
+  return `<div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:20px;margin-bottom:14px;">
+    <div style="font-size:0.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;">${title}</div>
+    ${content}
+  </div>`;
+}
+
+async function renderAnt(container) {
+  container.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-tertiary);">Loading financials...</div>`;
+
+  const data = await loadAntData();
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  // If no API key yet or data unavailable, show setup state
+  if (!data || data.status === 'awaiting_key') {
+    container.innerHTML = `
+      <div class="main-header">
+        <h1>🐜 Ant</h1>
+        <div class="sub">Accountant — cost tracking &amp; revenue</div>
+      </div>
+      <div style="padding:0 16px 100px;">
+        ${antSection('Status', `
+          <div style="text-align:center;padding:20px 0;">
+            <div style="font-size:2em;margin-bottom:12px;">🔑</div>
+            <div style="font-weight:600;color:var(--text-primary);margin-bottom:8px;">Awaiting Anthropic Admin API Key</div>
+            <div style="font-size:0.85em;color:var(--text-secondary);line-height:1.6;">
+              To activate live cost tracking:<br>
+              console.anthropic.com → Settings → API Keys → Admin Keys<br>
+              Send key via HQ → Message Kai
+            </div>
+          </div>
+        `)}
+        ${antSection('What Ant will track', `
+          <div style="display:grid;gap:8px;">
+            ${['Daily Anthropic API spend by model (Opus / Sonnet / Haiku)',
+               'Daily OpenAI API spend (GPT-4o usage)',
+               'Credits remaining + days until depletion at current burn',
+               'Monthly burn rate vs budget',
+               'Revenue tracking (AetherBot + future streams)',
+               'Net position — in the hole or profit',
+               '7-day and 30-day cost trend charts',
+               'Cost per agent per day (which agent is most expensive)'
+              ].map(item => `<div style="display:flex;gap:10px;align-items:flex-start;font-size:0.875em;color:var(--text-secondary);">
+                <span style="color:var(--success);flex-shrink:0;">✓</span><span>${item}</span>
+              </div>`).join('')}
+          </div>
+        `)}
+      </div>`;
+    return;
+  }
+
+  // Full dashboard with real data
+  const costs = data.costs || {};
+  const revenue = data.revenue || {};
+  const credits = data.credits || {};
+  const burn = data.burn || {};
+
+  const todayCost = costs.today || {};
+  const totalToday = (todayCost.anthropic || 0) + (todayCost.openai || 0);
+  const monthCost = costs.month || {};
+  const totalMonth = (monthCost.anthropic || 0) + (monthCost.openai || 0);
+
+  const netMonthly = (revenue.monthly || 0) - totalMonth;
+  const netColor = netMonthly >= 0 ? 'var(--success)' : 'var(--error)';
+
+  // ── HEADER ──
+  let html = `
+    <div class="main-header">
+      <h1>🐜 Ant</h1>
+      <div class="sub">Accountant · updated ${data.updatedAt ? data.updatedAt.slice(0, 10) : today}</div>
+    </div>
+    <div style="padding:0 16px 100px;">
+  `;
+
+  // ── NET POSITION (lead with the thing Hyo cares most about) ──
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+    ${antStatBox('Net This Month', antFmt(netMonthly), netMonthly < 0 ? 'expenses exceed revenue' : 'profitable', netColor)}
+    ${antStatBox('Monthly Burn', antFmt(totalMonth), `${antFmt(totalMonth / new Date().getDate())}/day avg`, 'var(--error)')}
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+    ${antStatBox('Revenue MTD', antFmt(revenue.monthly || 0), revenue.source || 'all streams', 'var(--success)')}
+    ${antStatBox("Today's Cost", antFmt(totalToday), `Anthropic + OpenAI`, totalToday > (burn.dailyBudget || 50) ? 'var(--error)' : 'var(--text-primary)')}
+  </div>`;
+
+  // ── ANTHROPIC CREDITS ──
+  if (credits.anthropic != null) {
+    const credRemaining = credits.anthropic.remaining || 0;
+    const credTotal = credits.anthropic.total || 0;
+    const daysLeft = burn.daily > 0 ? Math.floor(credRemaining / burn.daily) : null;
+    html += antSection('Anthropic Credits', `
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span style="font-size:1.4em;font-weight:700;">${antFmt(credRemaining)}</span>
+        <span style="font-size:0.8em;color:var(--text-muted);">${daysLeft != null ? `~${daysLeft} days remaining` : ''}</span>
+      </div>
+      ${antBar(credTotal - credRemaining, credTotal, 'var(--purple)')}
+    `);
+  }
+
+  // ── TODAY'S BREAKDOWN ──
+  html += antSection("Today's API Costs", `
+    <div style="display:grid;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+        <div>
+          <div style="font-size:0.875em;font-weight:600;">Anthropic</div>
+          ${(todayCost.byModel || []).map(m => `<div style="font-size:0.75em;color:var(--text-muted);">${m.model}: ${antFmt(m.cost)}</div>`).join('')}
+        </div>
+        <div style="font-weight:700;color:var(--purple);">${antFmt(todayCost.anthropic || 0)}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
+        <div>
+          <div style="font-size:0.875em;font-weight:600;">OpenAI</div>
+          ${(todayCost.openaiByModel || []).map(m => `<div style="font-size:0.75em;color:var(--text-muted);">${m.model}: ${antFmt(m.cost)}</div>`).join('')}
+        </div>
+        <div style="font-weight:700;color:var(--cyan);">${antFmt(todayCost.openai || 0)}</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border-color);padding-top:10px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-weight:600;">Total</span>
+      <span style="font-size:1.1em;font-weight:700;">${antFmt(totalToday)}</span>
+    </div>
+  `);
+
+  // ── MONTHLY TREND ──
+  if (costs.dailyHistory && costs.dailyHistory.length > 0) {
+    const hist = costs.dailyHistory.slice(-14);
+    const maxCost = Math.max(...hist.map(d => (d.anthropic || 0) + (d.openai || 0)), 0.01);
+    const bars = hist.map(d => {
+      const total = (d.anthropic || 0) + (d.openai || 0);
+      const pct = (total / maxCost) * 100;
+      const label = d.date ? d.date.slice(5) : '';
+      return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div style="font-size:0.62em;color:var(--text-muted);">${antFmt(total, 0)}</div>
+        <div style="width:100%;background:var(--bg-tertiary);border-radius:3px;height:50px;display:flex;align-items:flex-end;">
+          <div style="width:100%;height:${Math.max(pct, 3).toFixed(0)}%;background:var(--accent);border-radius:3px;opacity:0.8;"></div>
+        </div>
+        <div style="font-size:0.62em;color:var(--text-muted);">${label}</div>
+      </div>`;
+    }).join('');
+    html += antSection('14-Day Cost History', `
+      <div style="display:flex;gap:4px;align-items:flex-end;">${bars}</div>
+    `);
+  }
+
+  // ── COST PER AGENT ──
+  if (costs.byAgent && Object.keys(costs.byAgent).length > 0) {
+    const agents = Object.entries(costs.byAgent).sort((a, b) => b[1] - a[1]);
+    const maxAgent = agents[0]?.[1] || 0.01;
+    const agentRows = agents.map(([name, cost]) => {
+      const pct = (cost / maxAgent) * 100;
+      return `<div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+          <span style="font-size:0.875em;font-weight:500;">${name}</span>
+          <span style="font-size:0.875em;font-weight:600;">${antFmt(cost)}/day</span>
+        </div>
+        <div style="background:var(--bg-tertiary);border-radius:3px;height:4px;">
+          <div style="width:${pct.toFixed(0)}%;background:var(--accent);height:100%;border-radius:3px;"></div>
+        </div>
+      </div>`;
+    }).join('');
+    html += antSection('Cost per Agent (today)', agentRows);
+  }
+
+  // ── REVENUE ──
+  html += antSection('Revenue', `
+    <div style="display:grid;gap:10px;">
+      ${revenue.streams ? revenue.streams.map(s => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">
+          <div>
+            <div style="font-size:0.875em;font-weight:600;">${s.name}</div>
+            <div style="font-size:0.75em;color:var(--text-muted);">${s.note || ''}</div>
+          </div>
+          <div style="font-weight:700;color:var(--success);">${antFmt(s.amount)}</div>
+        </div>`).join('') : `<div style="font-size:0.875em;color:var(--text-muted);">No revenue streams yet — this is the mission.</div>`}
+      <div style="display:flex;justify-content:space-between;padding-top:8px;">
+        <span style="font-weight:600;">Total MTD</span>
+        <span style="font-weight:700;color:var(--success);">${antFmt(revenue.monthly || 0)}</span>
+      </div>
+    </div>
+  `);
+
+  html += '</div>';
+  container.innerHTML = html;
+}
 </script>
 <script>
   // Service worker registration — enables offline + "Add to Home Screen"
