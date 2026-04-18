@@ -154,7 +154,22 @@ START → Did I make changes to files?
                              │           └─ YES → Continue ↓
                              │
                              └─ YES ↓
-                                    Did I update memory?
+                                    Did I run dispatch simulate?
+                                      │
+                                      ├─ NO → Run it now: bash bin/dispatch.sh simulate
+                                      │        Are there NEW failures (not pre-existing)?
+                                      │          ├─ YES → Fix them. Return to top.
+                                      │          └─ NO → Continue ↓
+                                      │
+                                      └─ YES ↓
+                                             Did I check the live surface?
+                                               │  (curl the URL, grep for new strings,
+                                               │   confirm data files are correct)
+                                               │
+                                               ├─ NO → Do it now. Return to verify step.
+                                               │
+                                               └─ YES ↓
+                                                      Did I update memory?
                                       │
                                       ├─ NO → Update KAI_BRIEF, KAI_TASKS, relevant
                                       │        ACTIVE.md, tickets. Return to top.
