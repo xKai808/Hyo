@@ -15,6 +15,13 @@
 
 ## Shipped today (2026-04-17)
 
+**Session 14 continuation (Cowork, ~19:00 MT):**
+40. **Newsletter 404 FIXED.** Root cause: `readLink` set to `/newsletters/DATE.html` (path doesn't exist on Vercel). Fixed to `/daily/DATE`. Added HTML copy step (ra/output/ → website/daily/). Added VERIFICATION GATE — newsletter.sh now refuses to publish feed entry if HTML isn't present. Existing Apr 15/17 entries fixed. HTML files deployed. Ticket TASK-20260417-kai-003 opened. No newsletter will ever 404 again.
+41. **report-completeness-check.sh gated on newsletter HTML.** After confirming feed entry exists, also verifies the HTML file is present at website/daily/DATE.html. If missing, auto-copies from ra/output/. If that also missing, opens P1 ticket and fails loudly.
+42. **Morning report text cut-off FIXED.** Root cause: generator had hardcoded `rf[:120]` (findings) and `w[:80]` (weakness) limits causing mid-sentence truncation. Also `research_count` stored as string "5" not int, breaking `rc > 0` comparison. Fixed: removed all char limits, added int() and bool coercions, improved highlight format. Morning report queued for regeneration on Mini.
+43. **97 forKai messages read and responded to.** All messages in `kai/ledger/forkai-inbox.jsonl` marked reviewed with explicit guidance. Key decisions: Nel → build supply chain scanner now (OSV API, TASK-004). Dex → run repair engine now (TASK-005, TASK-006). Aether → reconciliation verification after tonight's analysis (TASK-007). Ra → analytics tracking verification (TASK-008). Sam → Lighthouse CI regression test (TASK-009). No messages left on read.
+44. **6 follow-up tickets opened** (TASK-20260417-kai-004 through 009) from agent forKai requests. All set to ACTIVE status.
+
 **Session 13 continuation (Cowork, ~18:30 MT):**
 36. **Hyo → Kai dispatch channel BUILT.** Three-layer solution: (1) `/api/hq?action=hyo-message` POST endpoint — Hyo sends from HQ, stores in Vercel lambda memory; (2) `/api/hq?action=hyo-export` GET endpoint — founder-token gated, Mini polls this to persist messages; (3) `kai/queue/fetch-hyo-messages.sh` — runs every healthcheck cycle, appends new messages from Vercel to `kai/ledger/hyo-inbox.jsonl`. Hydration protocol updated: `hyo-inbox.jsonl` is now step 1.5, read immediately after KAI_BRIEF. Unread messages surface in 4-line status. SE-013-005 logged.
 37. **HQ "Message Kai" UI added.** New compose section in Kai view on hq.html — textarea + "Send to Kai" button, message history with unread dots, status feedback. fetchHyoMessages() fetches from `/api/hq?action=data` on boot and every 60s. Messages survive page reloads via 60s refresh cycle.
