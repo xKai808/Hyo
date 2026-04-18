@@ -27,19 +27,25 @@
 - [x] **LAB-005 DONE:** Jason Borck OpenClaw competitive intel doc.
 - [x] **Ticket queue:** 91 → 55 open (closed 36 tickets).
 
-## ✅ SHIPPED — Session 19 (2026-04-18, morning)
+## ✅ SHIPPED — Session 19 (2026-04-18, morning + afternoon continuation)
 
 - [x] **S18-001 IN PROGRESS:** Aurora light/dark mode CSS vars + toggle button — aurora.html, aurora-page.html, app.html. coral on localStorage persist. DEPLOYED.
 - [x] **S18-003/004/005 SHIPPED:** Podcast rewrite — Vale voice (coral, gpt-4o-mini-tts + instructions), vision-focused 10min script (character arc framing, not error logs). 50+ sources researched + published to HQ.
 - [x] **S18-006 SHIPPED:** Podcast API cost logging to api-usage.jsonl. ~$0.000072/run.
+- [x] **S18-007/008 SHIPPED:** Agent goal renewal. bin/agent-goals-sync.sh parses ACTIVE.md+GROWTH.md → feed.json agent-goals entries. HQ renderer added. Wired into daily-agent-report.sh. 6/6 agents live. Commit a534b56.
+- [x] **S18-011/012 SHIPPED:** ant-update.sh byProcess/staleness/alerts fields. HQ ant renderer updated. verify-live.sh checks all 3 fields. All PASS.
+- [x] **S18-014 SHIPPED:** /aether-analysis?date=DATE dynamic page. Loads from feed.json, renders all sections incl GPT Phase 1+2 collapsible. All existing readLinks updated. Live. Commit 4d389cd.
 - [x] **S18-015 SHIPPED:** Aether 404 fixed — aether-2026-04-18.html + aether-2026-04-15.html generated.
 - [x] **S18-016 SHIPPED:** Aether summaries fixed — real data replaces bare headings.
+- [x] **S18-017 SHIPPED:** GPT independence gate in gpt_factcheck.py — Phase 1 outputs GPT_Independent_DATE.txt, Phase 2 exits code 2 if Phase 1 missing. aether.sh updated.
 - [x] **S18-019 SHIPPED:** "View formatted version" → "View full brief" globally in hq.html.
 - [x] **S18-020 SHIPPED:** Hyo daily → "UI/UX Surface Audit" in hyo.sh.
 - [x] **S18-021 SHIPPED:** Discrepancy audit gate (5 yes/no questions) added to EXECUTION_GATE.md.
+- [x] **S19-001 through S19-004 TICKETS FILED:** Live verification gap, HQ ant renderer missing, verify-live.sh implementation, Kai ticket-on-spot failure.
 - [x] **23 tickets filed** (S18-001 through S18-023) — all individual, no grouping.
 - [x] **aurora-success.html:** 2-day → 14-day copy fix.
 - [x] **Podcast research** published to HQ (docs/research/podcast-format-2026-04-18.md).
+- [x] **verify-live.sh BUILT + WIRED:** 11-check live verification script. Mandatory after every push. Wired into EXECUTION_GATE.md completion gate. 11/11 PASS confirmed.
 
 ## P0 — ACTION REQUIRED FROM HYO
 
@@ -49,12 +55,9 @@
 
 - [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Hyo creates Stripe account + product ($19/mo, 14-day trial) + keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel.
 - [ ] **[K]** **S18-002: Verify Aurora post-registration flow end-to-end.** aurora-success → aurora-page → magic link. Needs Stripe keys to test real flow.
-- [ ] **[K]** **S18-007/008: Agent goal renewal.** Build daily goal sync — each agent runner updates goals block in feed.json from ACTIVE.md + GROWTH.md. inProcess/pending items linked to tickets.jsonl with last-updated timestamps.
 - [ ] **[K]** **S18-009: Weekly system algorithm report.** Build bin/weekly-system-report.sh, schedule Sunday 06:00 MT. 7 required sections, 3+ external research sources each.
 - [ ] **[K]** **S18-010: Weekly Claude/GPT platform assessment.** Weekly Sunday/Monday. New capabilities, pricing, API limits, hyo.world improvement opportunities. Publish to HQ.
 - [ ] **[K]** **S18-011/012: Ant daily update + cost-per-process table.** Verify ant-update.sh runs daily. Add lastUpdated staleness indicator. Add cost-per-process breakdown (podcast-tts, gpt-crosscheck, ra-synthesis, aurora-synthesis). Surface on HQ Ant view.
-- [ ] **[K]** **S18-014: Aether analysis page.** Build /aether-analysis?date=DATE dedicated page. Link from HQ and feed entries.
-- [ ] **[K]** **S18-017: GPT independence gate in aether.sh.** Verify Phase 1 (raw logs → GPT independent) outputs a separate file. Phase 2 cross-references both. Gate: abort if Phase 1 file missing.
 - [ ] **[K]** **S18-018: Aurora brief pre-publish readLink gate.** newsletter.sh must curl readLink before writing feed entry. Never publish a 404.
 - [ ] **[K]** **S18-022/023: Research publishing + pattern enforcement gates.** Wire to agent runners. Nel: 3+ occurrences in 7 days → auto P0 + 24h SLA.
 - [ ] **[K]** **Day 7 retention email.** Build aurora-retention.js.
