@@ -2,81 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-19T08:02:14Z",
-  "totalRuns": 254,
+  "lastRunAt": "2026-04-19T14:11:01Z",
+  "totalRuns": 263,
   "runHistory": [
-    {
-      "ts": "2026-04-18T08:01:46Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T09:01:30Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T10:01:41Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T10:10:12Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T11:01:38Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 7
-    },
-    {
-      "ts": "2026-04-18T12:01:40Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T13:01:33Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T14:01:29Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
-    {
-      "ts": "2026-04-18T14:10:10Z",
-      "failed": 0,
-      "newIssues": 0,
-      "recurring": 0,
-      "resolved": 0,
-      "autofixes": 0
-    },
     {
       "ts": "2026-04-18T15:01:33Z",
       "failed": 0,
@@ -244,6 +172,78 @@
       "recurring": 0,
       "resolved": 0,
       "autofixes": 0
+    },
+    {
+      "ts": "2026-04-19T09:02:17Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 7
+    },
+    {
+      "ts": "2026-04-19T10:02:18Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 7
+    },
+    {
+      "ts": "2026-04-19T10:10:47Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-19T11:02:22Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-19T11:02:39Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 7
+    },
+    {
+      "ts": "2026-04-19T12:02:11Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-19T13:02:23Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0
+    },
+    {
+      "ts": "2026-04-19T14:02:19Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 7
+    },
+    {
+      "ts": "2026-04-19T14:11:01Z",
+      "failed": 1,
+      "newIssues": 1,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 7
     }
   ],
   "knownIssues": {
@@ -276,6 +276,15 @@
       "runsFailing": 1,
       "status": "resolved",
       "resolvedAt": "2026-04-12T20:05:00Z"
+    },
+    "gitleaks-pattern-match:a0a1c0d7": {
+      "severity": "P1",
+      "check_id": "gitleaks-pattern-match",
+      "detail": "gitleaks found 14 pattern match(es); see /Users/kai/Documents/Projects/Hyo/agents/nel/logs/cipher-2026-04-19T08.log",
+      "firstSeen": "2026-04-19T14:11:01Z",
+      "lastSeen": "2026-04-19T14:11:01Z",
+      "runsFailing": 1,
+      "status": "open"
     }
   },
   "falsePositives": [
@@ -422,12 +431,32 @@
     {
       "ts": "2026-04-19T04:02:13Z",
       "count": 7
+    },
+    {
+      "ts": "2026-04-19T09:02:17Z",
+      "count": 7
+    },
+    {
+      "ts": "2026-04-19T10:02:18Z",
+      "count": 7
+    },
+    {
+      "ts": "2026-04-19T11:02:39Z",
+      "count": 7
+    },
+    {
+      "ts": "2026-04-19T14:02:19Z",
+      "count": 7
+    },
+    {
+      "ts": "2026-04-19T14:11:01Z",
+      "count": 7
     }
   ],
   "trendCounters": {
-    "gitleaks_not_installed_runs_in_a_row": 4,
-    "trufflehog_not_installed_runs_in_a_row": 47,
-    "perm_drift_events": 138
+    "gitleaks_not_installed_runs_in_a_row": 0,
+    "trufflehog_not_installed_runs_in_a_row": 56,
+    "perm_drift_events": 173
   },
   "escalationState": {
     "lastEscalationAt": null,
