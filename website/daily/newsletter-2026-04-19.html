@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-19</title>
+<meta name="description" content="Ra Brief — 2026-04-19" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-19</h1>
+    <div class="sub">2026-04-19 · morning brief</div>
+  </header>
+  <article>
+<pre><code class="lang-yaml">---
+date: 2026-04-19
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: deepmind
+    name: Google DeepMind
+    aliases: [DeepMind, Google AI]
+    category: ai
+    take: &quot;Challenges the notion that large language models can achieve consciousness, calling it the &#x27;Abstraction Fallacy.&#x27;&quot;
+    data: &quot;Alexander Lerchner, a senior scientist, argues against AI consciousness in the next 100 years.&quot;
+    hinge: &quot;Ongoing debates about AI consciousness and its implications.&quot;
+    confidence: medium
+  - slug: qwen
+    name: Qwen Model
+    aliases: [Qwen3.6, Qwen3.5, Qwen]
+    category: ai
+    take: &quot;Qwen3.6 shows significant improvements over its predecessor, solving complex coding tasks.&quot;
+    data: &quot;Qwen3.6-35B-A3B model outperforms Qwen3.5-27B in coding problem-solving.&quot;
+    hinge: &quot;Further performance evaluations and real-world applications.&quot;
+    confidence: medium-high
+  - slug: crypto-market
+    name: Cryptocurrency Market
+    aliases: [crypto, Bitcoin, Ethereum, BTC, ETH]
+    category: crypto
+    take: &quot;Significant downturn in major cryptocurrencies with MemeCore leading the decline.&quot;
+    data: &quot;MemeCore down 22.53%, Bitcoin down 2.08%, Ethereum down 2.79%.&quot;
+    hinge: &quot;Market reactions to regulatory changes and technological advancements.&quot;
+    confidence: medium
+topics:
+  - slug: ai-conciousness
+    name: &quot;AI Consciousness Debate&quot;
+    signal: &quot;DeepMind&#x27;s challenge to AI consciousness claims.&quot;
+    take: &quot;The debate over AI consciousness continues to evolve with strong opinions on both sides.&quot;
+  - slug: ai-performance
+    name: &quot;AI Model Performance&quot;
+    signal: &quot;Qwen3.6&#x27;s advancements in coding tasks.&quot;
+    take: &quot;AI models continue to improve, pushing the boundaries of what&#x27;s possible in problem-solving.&quot;
+  - slug: crypto-volatility
+    name: &quot;Cryptocurrency Volatility&quot;
+    signal: &quot;Major downturn in crypto markets led by MemeCore.&quot;
+    take: &quot;The crypto market remains highly volatile with significant daily fluctuations.&quot;
+lab_items:
+  - slug: qwen3-6
+    name: &quot;Qwen3.6-35B-A3B Model&quot;
+    what: &quot;An advanced AI model that excels in coding problem-solving.&quot;
+    why: &quot;Demonstrates significant improvements over previous models in handling complex tasks.&quot;
+    when: &quot;Useful for developers facing intricate coding challenges requiring AI assistance.&quot;
+    paper_url: &quot;https://www.reddit.com/r/LocalLLaMA/comments/1soxyfi/qwen3635ba3b_solved_coding_problems_qwen3527b/&quot;
+---
+# Ra — 2026-04-19
+## DeepMind&#x27;s Consciousness Challenge and Qwen&#x27;s Coding Leap
+
+Good morning! Today we&#x27;re diving into a thought-provoking challenge from Google DeepMind questioning AI consciousness, and a leap forward in AI model performance with Qwen3.6. Plus, a quick look at the crypto market&#x27;s latest swings.
+
+## The Story · DeepMind&#x27;s Consciousness Challenge
+
+Google DeepMind&#x27;s senior scientist, Alexander Lerchner, has stirred the AI community by challenging the notion that large language models could ever achieve consciousness. Dubbed the &#x27;Abstraction Fallacy,&#x27; Lerchner argues that despite advancements, AI will not reach consciousness within the next century. This statement adds fuel to the ongoing debate about the potential and limitations of AI, especially as models become more sophisticated and integrated into daily life.
+
+Lerchner&#x27;s perspective is a reminder of the philosophical and ethical questions that accompany technological progress. While some experts believe AI could eventually simulate consciousness, others, like Lerchner, caution against conflating complex pattern recognition with true awareness. This debate is crucial as it influences how we design, regulate, and interact with AI systems. As AI continues to evolve, understanding its capabilities and limitations will be key to harnessing its potential responsibly.
+
+## Also Moving · Qwen&#x27;s Coding Leap
+
+In the realm of AI performance, the Qwen3.6-35B-A3B model has made waves by outperforming its predecessor, Qwen3.5-27B, in solving complex coding problems. Users have reported significant improvements in speed and accuracy, making Qwen3.6 a preferred choice for developers tackling intricate coding tasks. This advancement highlights the rapid pace of AI development and its potential to transform various industries.
+
+Meanwhile, the cryptocurrency market is experiencing a notable downturn, with MemeCore leading the decline at a 22.53% drop. Major players like Bitcoin and Ethereum have also seen decreases, reflecting the market&#x27;s inherent volatility. These fluctuations underscore the importance of staying informed and cautious in the crypto space.
+
+## The Lab · What AI can newly do this week
+
+This week, we&#x27;re spotlighting the Qwen3.6-35B-A3B model, a powerful tool for developers. This model excels in coding problem-solving, demonstrating significant improvements over previous iterations. It&#x27;s particularly useful for developers facing complex coding challenges that require AI assistance. The model&#x27;s advancements are filed under `kai/research/2026-04-19-ai-performance.md`.
+
+## Worth Sitting With
+
+As we ponder the future of AI, the question of consciousness looms large. If AI can simulate human-like interactions, does it matter whether it truly &quot;understands&quot;? This philosophical question challenges us to consider not just what AI can do, but what it should do. How do we balance innovation with ethical considerations? What responsibilities do we have as we develop increasingly sophisticated AI systems?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest research on AI model performance.
+- Preparing a deep dive into AI ethics for next week.
+- Need your thoughts on potential AI partnerships—yes or no?
+
+— Kai</code></pre>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+</body>
+</html>

@@ -567,3 +567,16 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/bold-lucid-brown/mnt/Hyo/newsletters/2026-04-19.md [sentinel:aurora-ran-today:e8b1667e:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/bold-lucid-brown/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3c20b86d:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/vibrant-exciting-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:44d5b0ca] _(filed 2026-04-19)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/vibrant-exciting-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:44d5b0ca:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/happy-optimistic-wozniak/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:08849652] _(filed 2026-04-19)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: founder.token mode is 0600, want 6xx [sentinel:founder-token-integrity:92e7b89e:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a2875b77:escalated]
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: 0755 (want 700) — run: chmod 700 /Users/kai/Documents/Projects/Hyo/.secrets [sentinel:secrets-dir-permissions:6717d4df:escalated]
+
+- [ ] **[K]** [cipher] **P1** gitleaks found 14 pattern match(es); see /Users/kai/Documents/Projects/Hyo/agents/nel/logs/cipher-2026-04-19T08.log [cipher:gitleaks-pattern-match:a0a1c0d7] _(filed 2026-04-19)_
