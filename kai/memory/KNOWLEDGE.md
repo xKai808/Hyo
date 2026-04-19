@@ -218,6 +218,7 @@ read the relevant PROTOCOL before touching any agent's code, data, or runner.
 |---------|------------------------------------------------|-----------------|--------------|
 | Aether  | `agents/aether/PROTOCOL_DAILY_ANALYSIS.md`     | v2.5            | Before any analysis, HQ publish, or runner change |
 | Ant     | `agents/ant/PROTOCOL_ANT.md`                   | v1.2            | Before any credit data, ant-update.sh, or hq.html Ant tab work |
+| Podcast | `agents/ra/PROTOCOL_PODCAST.md`                | v1.0            | Before any podcast.py, Vale voice, or script format work |
 
 Kai's rule: **before working on an agent, read its PROTOCOL file first.**
 The protocol tells you: file locations, dual-path rules, field names, failure modes, upgrade steps.
