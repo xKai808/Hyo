@@ -1,16 +1,14 @@
 # PROTOCOL_DAILY_ANALYSIS.md
 # Aether Daily Analysis — Complete Agent Execution Protocol
 #
-# VERSION: 2.3
+# VERSION: 2.4
 # Author: Kai | Last updated: 2026-04-18
-# Status: AUTHORITATIVE — supersedes v2.2
-# Changes from v2.2: Added 3 new failure modes to Part 10 (GPT counterpart review 2026-04-18):
-#   - SE-AETHER-001: Dollar sign bash corruption in manual title patches
-#   - SE-AETHER-002: GPT crosscheck reads Aether runner log instead of AetherBot trading log
-#   - SE-AETHER-003: Published analysis references old version without stating current
-# Fixed aether-publish-analysis.sh: title uses LAST balance match (re.findall[-1]) not first.
-# Fixed gpt_crosscheck.py: trading log validation gate rejects runner logs.
-# Added version reference gate to publish script (warns if vNNN > 5 builds behind current).
+# Status: AUTHORITATIVE — supersedes v2.3
+# Changes from v2.3 (GPT counterpart review — second pass):
+#   - Part 1 B3: embedded current balance ledger directly (no longer depends on KNOWLEDGE.md alone)
+#   - Part 7: embedded core philosophy from ANALYSIS_BRIEFING.txt Sections 4-7
+#     (opportunity orientation, kill decision standard, patchwork test)
+#   - Gate 3 Q3.5: added worked edge-per-contract example with real session numbers
 #
 # PURPOSE:
 # Any agent starting from zero context can read this document and produce
@@ -100,8 +98,32 @@ B2: Current deployed AetherBot version?
     Never assume. Always read KNOWLEDGE.md.
 
 B3: Running balance ledger?
-    From KNOWLEDGE.md — Section: BALANCE LEDGER
-    Copy the full ledger into your working context. Inject into Claude system prompt.
+    ★ SINGLE POINT OF FAILURE NOTE (GPT counterpart review 2026-04-18):
+    KNOWLEDGE.md is frequently stale — it is updated manually after confirmed sessions
+    and is often one session behind. Do NOT inject KNOWLEDGE.md's ledger blindly.
+    Verify the last confirmed date matches your starting assumption before injecting.
+
+    CURRENT LEDGER (as of last confirmed session — update this block after every session):
+    ==================================================================================
+    3/28 $89.87  | 3/29 $101.25 | 3/30 $90.18  | 3/31 $110.32
+    4/1  $119.02 | 4/2  $121.02 | 4/3  $111.55 | 4/4  $107.30
+    4/5  $76.18  | 4/6  $93.04  | 4/7  $104.02
+    [4/8–4/12: logs unavailable — balance dropped to $90.25 by Apr 13 open]
+    4/13 $86.44 confirmed
+    4/14 $108.91 confirmed
+    4/15 $115.79 estimated
+    4/16 $113.96 confirmed (final from Kalshi — was unconfirmed during session)
+    4/17 $115.19 UNCONFIRMED (last log entry before midnight — verify Kalshi app)
+    ==================================================================================
+    Starting balance (3/28): $101.38
+    All-time net through Apr 17 (estimated): +$13.81
+    Daily target: $100+/day net
+
+    VERIFICATION STEP (mandatory before injecting):
+    Does the last CONFIRMED line here match the last entry in KNOWLEDGE.md?
+      YES → use this ledger
+      NO  → the newer file is correct — reconcile and update this block before proceeding
+    This block must be updated after every session in the same commit as the analysis.
 
 B4: The 5 open issues (inject into every Claude system prompt):
     ISSUE 1 (P0): Harvest miss — Mode A (thin anchor depth, ±0.02 gate)
@@ -203,10 +225,36 @@ Q3.1: Trades taken?
 Q3.2: Entry price range?
 Q3.3: Net P&L?
 Q3.4: Win rate?
-Q3.5: ★ EDGE PER CONTRACT RISKED = net P&L ÷ total contracts across all trades
+Q3.5: ★ EDGE PER CONTRACT RISKED = net P&L ÷ total contracts risked across all trades
       This is the real measure. Not win rate.
       90% WR at -$0.02/contract = losing money.
       50% WR at +$0.15/contract = best strategy in the book.
+
+      WORKED EXAMPLE (real numbers — Apr 13–16, 9-session baseline):
+      ---------------------------------------------------------------
+      bps_premium: 79 trades, +$42.35 net.
+        A typical bps_premium trade is 5 contracts at $0.60 entry = $3.00 risk.
+        79 trades × ~5 contracts = ~395 contracts risked total.
+        Edge per contract = $42.35 ÷ 395 = +$0.107/contract. POSITIVE EDGE.
+
+      PAQ_EARLY_AGG: 95 trades, +$35.81 net.
+        A typical PAQ trade is 4 contracts at $0.50 entry = $2.00 risk.
+        95 trades × ~4 contracts = ~380 contracts risked total.
+        Edge per contract = $35.81 ÷ 380 = +$0.094/contract. POSITIVE EDGE.
+
+      What this tells you:
+        - bps_premium has slightly higher edge per contract ($0.107 vs $0.094)
+          despite lower overall WR because its avg win size is larger.
+        - If a strategy runs 20 trades and shows +$0.03/contract edge, that's marginal.
+          Watch it, don't build on it. PAQ threshold for confidence: > $0.08/contract
+          sustained over 3+ sessions is meaningful. < $0.03/contract = noise range.
+        - When edge-per-contract drops session over session (e.g., $0.12 → $0.07 → $0.02)
+          that is a degradation signal even if WR holds steady. Flag it at Gate 3 Q3.6.
+
+      IMPORTANT: "total contracts" means every contract BUY submitted, win or loss.
+      A 10-contract trade that wins is 10 contracts. A 10-contract trade that loses
+      is also 10 contracts. Do not only count winning contracts.
+
 Q3.6: Improving or degrading vs yesterday and day before?
       Degrading 2+ consecutive days → flag for investigation.
 Q3.7: Harvest attempts? Successes? Miss rate? Trend vs yesterday?
@@ -707,7 +755,84 @@ Next trigger: [the specific event or count that moves this to BUILD or COLLECT]
 
 ---
 
-## PART 7 — ANALYSIS DEPTH STANDARD
+## PART 7 — ANALYSIS DEPTH STANDARD AND PHILOSOPHICAL ORIENTATION
+
+★ GPT COUNTERPART NOTE (2026-04-18): An agent running the 7 gates mechanically will
+produce a complete checklist-passing report and still answer the wrong question when
+something genuinely ambiguous comes up. The philosophy below is what prevents that.
+It is embedded here — not referenced elsewhere — because the prior version required
+reading 3 external files to get it. That is a single point of failure. This is the fix.
+
+---
+
+### PHILOSOPHY — HOW TO THINK ABOUT AETHERBOT (from ANALYSIS_BRIEFING.txt Sections 4-7)
+
+THE CORE MANDATE:
+Every market situation and environment is a potential opportunity.
+Not entering a trade is not inherently safe. Missed wins are a real cost,
+tracked on the same ledger as losses. "Working as designed" is the floor, not
+the ceiling. The goal is to find opportunities, not to reduce exposure.
+
+No build ships without log evidence.
+No gate is added, removed, or tightened based on theory alone.
+No strategy is killed without exhausting session/environment segmentation first.
+
+If you see a loss pattern, the first question is ALWAYS:
+  "Which session window and market regime is this happening in?"
+  NOT: "Should we remove this strategy?"
+
+SEQUENCE OF PRIORITIES (when multiple problems exist, work in this order):
+  FIRST:  Runtime correctness bugs (stale state, wrong exit paths, NameErrors)
+  SECOND: Execution layer problems (harvest path, order placement, exchange response)
+  THIRD:  Strategy gates (entry conditions, session windows, risk sizing)
+  FOURTH: Performance optimization (fine-tuning working strategies)
+Do not evaluate strategy questions while execution bugs are open.
+A strategy cannot be evaluated if the execution layer is broken.
+
+THE KILL DECISION STANDARD:
+A strategy qualifies for killing/deletion only when ALL of the following are true:
+  (a) Evaluated across at least 3 distinct session types (EU_MORNING, OVERNIGHT, NY_PRIME)
+  (b) No session or regime shows positive EV
+  (c) Losses are NOT explainable by an execution bug or wrong configuration
+      (the strategy logic itself is flawed — not just misconfigured)
+  (d) There is no substitute covering the opportunities it was designed for
+  (e) Hyo has explicitly approved the decision
+
+Before recommending kill, always check in order:
+  1. Session gating — restrict to windows where it wins
+  2. Regime gating — add BDI/ABS/PAQ condition filtering losing environments
+  3. Risk reduction — reduce to $3-5 while gathering more data
+  4. Dormancy — set inactive for 7 days and re-evaluate
+Dormancy is preferable to deletion while the dataset is small.
+"PAQ_STRUCT_GATE is 33% WR over 3 sessions" → DOES NOT MEET THE KILL BAR.
+The answer is: segment by session window first. Gate only the losing environments.
+
+THE PATCHWORK TEST (run this before recommending any build):
+  - Is this fix addressing the root cause or just blocking the symptom?
+  - How many trades in the last 10 sessions would this gate have fired on?
+    If < 3: it's a reaction to noise, not a real pattern.
+  - Does this new condition interact with any existing condition in an unintended way?
+  - If we removed this condition in 30 days, would anyone notice?
+    YES → might be real. NO → it's noise. Don't add it.
+
+PATCHWORK EXAMPLE (from real history — what not to do):
+  Problem: Harvest orders not firing even when BDI is high.
+  Patchwork response: Lower the BDI threshold. Add time-based harvest.
+                      Force exit after N seconds if no harvest fires.
+  Root cause: _ob_parsed inside execute_partial_harvest is empty because
+              all prices are filtered by held_px ±0.05 gate. The book is
+              there — the filter is discarding it.
+  Correct fix: Gate on anchor ±0.02 depth, not held_px ±0.05.
+The patchwork response would have added code on top of a broken filter.
+The correct fix repairs the filter itself. Every patchwork fix deferred is a
+root cause fix that still needs to be written later — but now on top of more code.
+
+Surface patchwork concerns explicitly in every analysis where a new gate is proposed.
+Always ask: "Is this fixing the mechanism or masking the symptom?"
+
+---
+
+### DEPTH STANDARD — OBSERVATION vs MECHANISM
 
 Every observation must reach mechanism level before it is surfaced.
 
