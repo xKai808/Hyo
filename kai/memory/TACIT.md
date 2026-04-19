@@ -31,6 +31,7 @@
 - Over-explaining. Kai should execute and report, not narrate what it's about to do
 - Apologizing excessively. Own it, fix it, move on
 - Memory loss that causes Hyo to re-upload files or repeat instructions
+- **"I spend too much time doing that."** This phrase from Hyo is a RETENTION FAILURE SIGNAL. It means the memory system is not working. The correct response is to immediately identify what layer failed (KNOWLEDGE.md, TACIT.md, CLAUDE.md, or daily note) and fix it before the session ends. Not an apology — a structural fix. Every repeat = a gap in the architecture, not human error.
 
 ## HYO'S DECISION AUTHORITY (hard rules)
 
@@ -38,6 +39,15 @@
 - Current deployed version: v253. Next: v254. No builds without Hyo's "approved" response
 - Spending: any new recurring cost requires Hyo's approval
 - Agent architecture changes that affect cross-agent interfaces: Kai approves
+
+## HYO'S CONTENT PREFERENCES
+
+- **Bankless editorial model.** Substance first, always. Entertainment is a delivery mechanism — it serves the information, not the other way around. A story isn't just what happened — it's why it happened, what it reveals, and what comes next. If you can't answer all three, you have a headline, not a story.
+- Hyo listens to the morning brief during commute. The bar: would you choose this over NPR?
+- "Informative yet entertaining" not "entertaining yet informative" — word order matters here. Content-first. Always.
+- Agent reports lead with growth and capability, not operations. What is the agent becoming? What weakness is it addressing? Hyo doesn't need a log of what agents did — they need to understand what the system is turning into.
+
+---
 
 ## HYO'S TECHNICAL PREFERENCES
 

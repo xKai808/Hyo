@@ -1,7 +1,7 @@
 # PROTOCOL_PODCAST.md
 # Vale — Daily Morning Brief Protocol
 #
-# VERSION: 1.1
+# VERSION: 1.2
 # Author: Kai | Created: 2026-04-19
 # Canonical location: agents/ra/PROTOCOL_PODCAST.md
 #
@@ -18,6 +18,10 @@
 #                      TTS fail, dual-path mismatch, push fail; minimum content
 #                      threshold (skip if 0 sources); [pause] markers removed from
 #                      spec — use em-dash rhythm only; ant-gate.py pattern adopted
+#   v1.2 (2026-04-19): Cold-start reproduction section (Part 11) — exact commands,
+#                      file paths, and verification checklist for any agent with
+#                      wiped memory; Ra authorship section (Part 12) — feed entry
+#                      must show author="Ra", authorColor="#b49af0"
 
 ---
 
@@ -321,6 +325,7 @@ to the output before committing. Voice changes require Hyo approval.
 |---------|------------|--------|
 | 1.0     | 2026-04-19 | Initial protocol. GPT expansion upgraded gpt-4o-mini → gpt-4o. Voice spec locked. |
 | 1.1     | 2026-04-19 | Bankless/informative-first editorial model. Hard gate in podcast.py (exit 1). Deterministic script path (agents/ra/output/script-DATE.txt). Aether always included (zero-skip removed). Telegram alerts wired (gate fail, TTS fail, dual-path, push fail). [pause] markers removed from spec. Minimum content threshold. |
+| 1.2     | 2026-04-19 | Cold-start reproduction section (Part 11) — full 6-step guide for any agent with wiped memory. Ra authorship section (Part 12) — podcast must appear under Ra (author="Ra", authorColor="#b49af0"), canonical agent color table. |
 
 ---
 
@@ -374,3 +379,218 @@ to the output before committing. Voice changes require Hyo approval.
 - Latest output: `agents/sam/website/daily/podcast-YYYY-MM-DD.mp3`
 - Log: `agents/sam/logs/podcast.log`
 - HQ feed type: `"type": "podcast"` in feed.json
+
+---
+
+## PART 11 — COLD-START REPRODUCTION (for any agent with wiped memory)
+
+**Context:** This section exists so that a brand-new agent — or one whose memory was fully
+wiped — can reproduce the 06:05 MT daily podcast publication without any prior context.
+Follow these steps exactly. Do not skip verification.
+
+---
+
+### Step 1: Confirm prerequisites (read these files first)
+
+```bash
+# Working directory must be the project root
+cd ~/Documents/Projects/Hyo
+
+# Confirm the generator exists
+ls bin/podcast.py
+
+# Confirm the launchd plist is loaded (exit 0 means loaded, active on Mini)
+launchctl list com.hyo.podcast
+```
+
+Expected: launchctl returns a line with `com.hyo.podcast` and exit code 0.
+If not loaded: `launchctl load kai/launchd/com.hyo.podcast.plist`
+
+---
+
+### Step 2: Understand what inputs the podcast reads
+
+The podcast needs at least ONE of these three sources to run:
+
+| Source | Path | What it contains | Produced by |
+|--------|------|------------------|-------------|
+| Ra newsletter | `agents/ra/output/YYYY-MM-DD.md` | Top 3 curated stories, markdown format | Ra pipeline (03:00 MT) |
+| Morning report | `agents/sam/website/data/morning-report.json` | Agent highlights, trajectory summaries | Morning report runner (05:00 MT) |
+| Aurora brief | `newsletters/YYYY-MM-DD.md` | Aurora's newsletter | Aurora pipeline |
+
+**Ra newsletter format** — what it looks like when healthy:
+```
+---
+date: YYYY-MM-DD
+kind: hyo-daily
+---
+```yaml
+---
+date: YYYY-MM-DD
+kind: ra-daily
+...entities...
+```
+## Story 1: [Headline]
+[Body paragraph — 2-4 sentences, insight-driven]
+
+## Story 2: [Headline]
+...
+```
+
+The podcast calls `extract_ra_stories()` in podcast.py to pull headings + bodies.
+A healthy extraction yields 2-5 stories, each with ≥50 words.
+
+**Morning report format** — what it looks like when healthy:
+```json
+{
+  "date": "YYYY-MM-DD",
+  "agents": {
+    "Nel": { "summary": "...", "highlights": [...] },
+    "Ra":  { "summary": "...", "highlights": [...] },
+    "Sam": { "summary": "...", "highlights": [...] }
+  },
+  "aether": { "summary": "...", "balance": "...", "pnl": "..." }
+}
+```
+
+---
+
+### Step 3: Run the podcast manually
+
+```bash
+cd ~/Documents/Projects/Hyo
+
+# Dry run — generates script only, no TTS, no commit (use to verify content)
+python3 bin/podcast.py --script-only --no-expand
+
+# Full run with GPT expansion, no TTS (script verification)
+python3 bin/podcast.py --script-only
+
+# Full run (script + TTS + feed update + commit/push)
+python3 bin/podcast.py
+```
+
+**Expected output (healthy run):**
+```
+[podcast] Loading sources for YYYY-MM-DD...
+[podcast] Morning report loaded. Ra newsletter loaded.
+[podcast] Building script draft... 520 words
+[podcast] Expanding script with GPT (gpt-4o)... 1,487 words
+[podcast] Quality gate: PASS (1487 words)
+[podcast] Script saved: agents/ra/output/script-YYYY-MM-DD.txt
+[podcast] Calling TTS (coral)...
+[podcast] MP3 saved: agents/sam/website/daily/podcast-YYYY-MM-DD.mp3 (6.1MB)
+[podcast] Mirror synced: website/daily/podcast-YYYY-MM-DD.mp3
+[podcast] Feed updated: podcast-YYYY-MM-DD added
+[podcast] Committed and pushed.
+```
+
+---
+
+### Step 4: Verify the publication
+
+Run all four checks. Each must pass before declaring success.
+
+```bash
+DATE=$(date +%Y-%m-%d)  # or set manually: DATE="2026-04-19"
+cd ~/Documents/Projects/Hyo
+
+# CHECK 1: Script was generated and has content
+wc -w agents/ra/output/script-${DATE}.txt
+# Expected: 1200–1900 words
+
+# CHECK 2: MP3 exists in both required paths
+ls -lh agents/sam/website/daily/podcast-${DATE}.mp3 website/daily/podcast-${DATE}.mp3
+# Expected: both files, roughly same size (within a few KB)
+
+# CHECK 3: Feed entry exists with correct author
+python3 -c "
+import json
+f = json.load(open('agents/sam/website/data/feed.json'))
+entry = next((r for r in f.get('reports',[]) if r.get('id') == 'podcast-${DATE}'), None)
+if not entry:
+    print('FAIL: entry not in feed')
+elif entry.get('author') != 'Ra':
+    print(f'FAIL: wrong author → {entry.get(\"author\")} (must be Ra)')
+elif entry.get('authorColor') != '#b49af0':
+    print(f'FAIL: wrong authorColor → {entry.get(\"authorColor\")}')
+else:
+    print(f'PASS: feed entry OK — author={entry[\"author\"]}, audioUrl={entry.get(\"audioUrl\")}')
+"
+
+# CHECK 4: Committed and pushed (git log shows today's podcast commit)
+git log --oneline -3
+# Expected: "podcast: daily brief YYYY-MM-DD" in recent commits
+```
+
+---
+
+### Step 5: If something fails
+
+| Symptom | Check |
+|---------|-------|
+| `SKIP — no content sources` | Is `agents/ra/output/DATE.md` present? Did 03:00 Ra pipeline run? |
+| `Quality gate FAIL — NNN words` | Did GPT expansion run? Check OPENAI_API_KEY in `agents/nel/security/env` |
+| TTS error / no MP3 | Same key check. Also verify gpt-4o-mini-tts model is available for the account. |
+| MP3 exists but not in feed | `update_feed()` failed. Run `python3 bin/podcast.py --feed-only --date ${DATE}` |
+| Feed entry shows `author: Kai` | Bug: `update_feed()` has wrong author. See Part 12. Fix in podcast.py then re-run. |
+| Push failed | Check git remote: `git remote -v`. Run push manually via `kai exec "cd ~/Documents/Projects/Hyo && git push origin main"` |
+| Script gate: frontier script in `agents/ra/output/script-DATE.txt` | Manual TTS: `python3 bin/podcast.py --tts-only --date ${DATE}` |
+
+---
+
+### Step 6: What the automated schedule does
+
+The launchd plist at `kai/launchd/com.hyo.podcast.plist` fires at **Hour=6, Minute=5 MT**
+every day. It runs: `cd ~/Documents/Projects/Hyo && python3 bin/podcast.py`
+
+When this runs successfully:
+- Script is at `agents/ra/output/script-DATE.txt`
+- MP3 is at `agents/sam/website/daily/podcast-DATE.mp3` AND `website/daily/podcast-DATE.mp3`
+- Feed entry is in both `agents/sam/website/data/feed.json` AND `website/data/feed.json`
+- A git commit titled `"podcast: daily brief DATE"` is pushed to `origin main`
+- HQ at hyo.world renders the entry under Ra's section with a playable audio player
+
+The 07:00 MT report completeness check (`bin/report-completeness-check.sh`) verifies the
+podcast entry exists. If it's missing by 07:00, a P1 ticket is auto-opened and Telegram
+alert is sent.
+
+---
+
+## PART 12 — RA AUTHORSHIP (CRITICAL — affects HQ feed rendering)
+
+**The podcast feed entry MUST show `author: "Ra"` and `authorColor: "#b49af0"`.**
+
+HQ uses the `author` field to determine which agent's section the podcast appears under.
+If `author` is `"Kai"` or `"Sam"` or anything other than `"Ra"`, the podcast will appear
+under the wrong agent's section — or not appear under Ra at all.
+
+**Canonical feed entry structure for podcast:**
+```json
+{
+  "id": "podcast-YYYY-MM-DD",
+  "date": "YYYY-MM-DD",
+  "type": "podcast",
+  "author": "Ra",
+  "authorColor": "#b49af0",
+  "title": "Morning Brief — YYYY-MM-DD",
+  "summary": "Daily spoken brief narrated by Vale.",
+  "audioUrl": "/daily/podcast-YYYY-MM-DD.mp3"
+}
+```
+
+**`authorColor` for all agents (canonical — do not guess):**
+| Agent | Color     |
+|-------|-----------|
+| Ra    | `#b49af0` |
+| Kai   | `#d4a853` |
+| Nel   | `#60a5fa` |
+| Sam   | `#4ade80` |
+| Aether| `#f97316` |
+
+**Gate question:** Before committing any feed update — does `entry["author"] == "Ra"` and
+`entry["authorColor"] == "#b49af0"`?
+
+This is defined in `update_feed()` in `bin/podcast.py`. If it ever drifts, fix it there.
+The feed.json entries at `agents/sam/website/data/feed.json` AND `website/data/feed.json`
+must both be corrected (dual-path rule).
