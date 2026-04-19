@@ -27,6 +27,12 @@
 **Last sentinel run:** 2026-04-18 ~04:05 MT (run #70, scheduled task `sentinel-hyo-daily`, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix shipped this run: **`manifest-valid-json` RESOLVED** — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json` (was missing 4 required keys since hyo agent scaffolded in session 18, day 4 recurring). Remaining findings (all sandbox-environmental, documented carryover): **P0** `api-health-green` day 69 — Mini health endpoint unreachable from Cowork sandbox. **P1** `scheduled-tasks-fired` day 5 — no aurora logs in this sandbox's `agents/nel/logs/` (aurora runs on Mini, not in Cowork). **P2** `task-queue-size` day 11 — 25 P0 tasks vs. threshold 5 (ticket backlog carryover; active close-down is S17-007). No new P0 surfaced; sentinel auto-filed recurring findings to KAI_TASKS.md. Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation of api-health + aurora-ran-today requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-18.md`.
 **Prior sentinel run:** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
 
+## Shipped today (2026-04-18 — Hyo analysis protocol session)
+
+- **Apr 17 analysis published to HQ:** Corrected (stolen-winner claim removed, GPT cross-check applied). Commit `0939ee0`. Feed entry `aether-analysis-2026-04-17` verified in both feed.json paths.
+- **PROTOCOL_DAILY_ANALYSIS.md v2.1:** Full simulation run against Apr 14–18 analyses. 9 gaps found and fixed: trade ledger section placement, GPT critique synthesis rule, typography (no markdown), recommendation label enforcement, 2-day window format, instrumentation-build "risk if we wait" format, canonical template conflict note, Part 9 checklist updates, Part 13 simulation results recorded. Commit `c69e41d`.
+- **ANALYSIS_ALGORITHM.md:** Phase 0 reference to protocol added. Protocol is now the authoritative spec; algorithm is subordinate.
+
 ## Shipped today (2026-04-18 — Session 19 continued, ~15:00-16:00 MT)
 
 **Session 19 final batch:**
