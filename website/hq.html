@@ -2983,9 +2983,8 @@ async function renderAnt(container) {
   }
 
   // ── INCOME / REVENUE STREAMS ──
-  const income = data.income || {};
-  const incomeStreams = income.streams || revenue.streams || [];
-  const totalIncome = income.total_monthly || revenue.monthly || 0;
+  // Note: incomeStreams already declared above (line ~2769) from data.income.streams
+  const totalIncome = incomeData.total_monthly || revenue.monthly || 0;
 
   html += antSection('Income', `
     <div style="display:grid;gap:4px;">
