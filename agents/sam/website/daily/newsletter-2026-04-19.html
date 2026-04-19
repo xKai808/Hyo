@@ -88,33 +88,88 @@
     <div class="sub">2026-04-19 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-19</h1>
-<h2>AI Consciousness Debate and Laser Innovation</h2>
-<p>Good morning! Today, we're diving into a heated debate sparked by Google DeepMind's stance on AI consciousness, alongside a groundbreaking laser innovation from NIST. We'll also explore the latest advancements in AI model performance with Qwen3.6. Let's get started.</p>
-<h2>The Story · AI Consciousness: A Fallacy?</h2>
-<p>Google DeepMind's Senior Scientist, Alexander Lerchner, has stirred the pot by challenging the idea that large language models could ever achieve consciousness. He calls this the 'Abstraction Fallacy,' arguing that while AI can simulate human-like responses, it lacks the intrinsic qualities of consciousness. This perspective is gaining traction in academic circles and could influence future AI ethical guidelines.</p>
-<p>Lerchner's argument centers on the notion that AI, no matter how advanced, operates on abstractions that mimic understanding but do not equate to genuine awareness or self-perception. This challenges the optimistic views held by some that AI could one day become sentient. The debate is not just academic; it has real-world implications for how we develop and deploy AI technologies.</p>
-<p>As AI continues to integrate into our daily lives, understanding its limitations is crucial. The ethical considerations surrounding AI consciousness could shape regulatory frameworks and public perception. This isn't just a philosophical exercise—it's about setting realistic expectations and ensuring responsible AI development.</p>
-<h2>Also Moving · Tech Innovations and AI Advancements</h2>
-<p>In the realm of tech innovation, NIST scientists have created lasers capable of emitting any wavelength. This breakthrough could revolutionize fields ranging from telecommunications to medical imaging. The ability to tailor laser wavelengths opens up new possibilities for precision applications, potentially transforming industries that rely on laser technology.</p>
-<p>Meanwhile, the AI model Qwen3.6-35B-A3B is making waves with its impressive performance in coding tasks. Users report that it solves problems that previous models like Qwen3.5-27B couldn't tackle. This leap in capability underscores the rapid pace of AI development and its potential to enhance productivity in software development and beyond.</p>
-<h2>The Lab · What AI can newly do this week</h2>
-<h3>Qwen3.6-35B-A3B</h3>
-<ul>
-<li><strong>What it is</strong>: An advanced AI model that excels in coding tasks.</li>
-<li><strong>Why it's interesting</strong>: It improves upon previous models by solving complex coding problems that were previously unsolvable.</li>
-<li><strong>When we'd reach for it</strong>: This model is particularly useful for software development and automation tasks where coding efficiency and accuracy are paramount.</li>
-<li><strong>Where it's filed</strong>: <code>kai/research/2026-04-19-ai-performance.md</code></li>
-</ul>
-<h2>Worth Sitting With</h2>
-<p>The debate over AI consciousness raises a profound question: What does it mean to be conscious? As we push the boundaries of AI capabilities, we must also reflect on the nature of consciousness itself. Is it merely a byproduct of complex computations, or is there something inherently human that machines cannot replicate? This question invites us to ponder the essence of our own awareness and the ethical implications of creating machines that mimic it.</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped the latest brief on AI consciousness and tech innovations.</li>
-<li>In-flight: Deep dive into AI ethical guidelines.</li>
-<li>Need your thoughts on the potential impact of NIST's laser technology on our projects.</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-19
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: deepmind
+    name: Google DeepMind
+    aliases: [DeepMind, Google AI]
+    category: ai
+    take: &quot;Challenges the notion that large language models can achieve consciousness, calling it the &#x27;Abstraction Fallacy.&#x27;&quot;
+    data: &quot;Alexander Lerchner, a senior scientist, argues against AI consciousness in the next 100 years.&quot;
+    hinge: &quot;Ongoing debates about AI consciousness and its implications.&quot;
+    confidence: medium
+  - slug: qwen
+    name: Qwen Model
+    aliases: [Qwen3.6, Qwen3.5, Qwen]
+    category: ai
+    take: &quot;Qwen3.6 shows significant improvements over its predecessor, solving complex coding tasks.&quot;
+    data: &quot;Qwen3.6-35B-A3B model outperforms Qwen3.5-27B in coding problem-solving.&quot;
+    hinge: &quot;Further performance evaluations and real-world applications.&quot;
+    confidence: medium-high
+  - slug: crypto-market
+    name: Cryptocurrency Market
+    aliases: [crypto, Bitcoin, Ethereum, BTC, ETH]
+    category: crypto
+    take: &quot;Significant downturn in major cryptocurrencies with MemeCore leading the decline.&quot;
+    data: &quot;MemeCore down 22.53%, Bitcoin down 2.08%, Ethereum down 2.79%.&quot;
+    hinge: &quot;Market reactions to regulatory changes and technological advancements.&quot;
+    confidence: medium
+topics:
+  - slug: ai-conciousness
+    name: &quot;AI Consciousness Debate&quot;
+    signal: &quot;DeepMind&#x27;s challenge to AI consciousness claims.&quot;
+    take: &quot;The debate over AI consciousness continues to evolve with strong opinions on both sides.&quot;
+  - slug: ai-performance
+    name: &quot;AI Model Performance&quot;
+    signal: &quot;Qwen3.6&#x27;s advancements in coding tasks.&quot;
+    take: &quot;AI models continue to improve, pushing the boundaries of what&#x27;s possible in problem-solving.&quot;
+  - slug: crypto-volatility
+    name: &quot;Cryptocurrency Volatility&quot;
+    signal: &quot;Major downturn in crypto markets led by MemeCore.&quot;
+    take: &quot;The crypto market remains highly volatile with significant daily fluctuations.&quot;
+lab_items:
+  - slug: qwen3-6
+    name: &quot;Qwen3.6-35B-A3B Model&quot;
+    what: &quot;An advanced AI model that excels in coding problem-solving.&quot;
+    why: &quot;Demonstrates significant improvements over previous models in handling complex tasks.&quot;
+    when: &quot;Useful for developers facing intricate coding challenges requiring AI assistance.&quot;
+    paper_url: &quot;https://www.reddit.com/r/LocalLLaMA/comments/1soxyfi/qwen3635ba3b_solved_coding_problems_qwen3527b/&quot;
+---
+# Ra — 2026-04-19
+## DeepMind&#x27;s Consciousness Challenge and Qwen&#x27;s Coding Leap
+
+Good morning! Today we&#x27;re diving into a thought-provoking challenge from Google DeepMind questioning AI consciousness, and a leap forward in AI model performance with Qwen3.6. Plus, a quick look at the crypto market&#x27;s latest swings.
+
+## The Story · DeepMind&#x27;s Consciousness Challenge
+
+Google DeepMind&#x27;s senior scientist, Alexander Lerchner, has stirred the AI community by challenging the notion that large language models could ever achieve consciousness. Dubbed the &#x27;Abstraction Fallacy,&#x27; Lerchner argues that despite advancements, AI will not reach consciousness within the next century. This statement adds fuel to the ongoing debate about the potential and limitations of AI, especially as models become more sophisticated and integrated into daily life.
+
+Lerchner&#x27;s perspective is a reminder of the philosophical and ethical questions that accompany technological progress. While some experts believe AI could eventually simulate consciousness, others, like Lerchner, caution against conflating complex pattern recognition with true awareness. This debate is crucial as it influences how we design, regulate, and interact with AI systems. As AI continues to evolve, understanding its capabilities and limitations will be key to harnessing its potential responsibly.
+
+## Also Moving · Qwen&#x27;s Coding Leap
+
+In the realm of AI performance, the Qwen3.6-35B-A3B model has made waves by outperforming its predecessor, Qwen3.5-27B, in solving complex coding problems. Users have reported significant improvements in speed and accuracy, making Qwen3.6 a preferred choice for developers tackling intricate coding tasks. This advancement highlights the rapid pace of AI development and its potential to transform various industries.
+
+Meanwhile, the cryptocurrency market is experiencing a notable downturn, with MemeCore leading the decline at a 22.53% drop. Major players like Bitcoin and Ethereum have also seen decreases, reflecting the market&#x27;s inherent volatility. These fluctuations underscore the importance of staying informed and cautious in the crypto space.
+
+## The Lab · What AI can newly do this week
+
+This week, we&#x27;re spotlighting the Qwen3.6-35B-A3B model, a powerful tool for developers. This model excels in coding problem-solving, demonstrating significant improvements over previous iterations. It&#x27;s particularly useful for developers facing complex coding challenges that require AI assistance. The model&#x27;s advancements are filed under `kai/research/2026-04-19-ai-performance.md`.
+
+## Worth Sitting With
+
+As we ponder the future of AI, the question of consciousness looms large. If AI can simulate human-like interactions, does it matter whether it truly &quot;understands&quot;? This philosophical question challenges us to consider not just what AI can do, but what it should do. How do we balance innovation with ethical considerations? What responsibilities do we have as we develop increasingly sophisticated AI systems?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest research on AI model performance.
+- Preparing a deep dive into AI ethics for next week.
+- Need your thoughts on potential AI partnerships—yes or no?
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
