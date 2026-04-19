@@ -1,10 +1,10 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-18T23:42:11.226006-06:00",
+  "updatedAt": "2026-04-19T00:45:03.156620-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-18T23:42:11.226009-06:00",
+    "lastUpdated": "2026-04-19T00:45:03.156624-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -19,7 +19,7 @@
       "currency": "USD"
     },
     "total": 1.1253,
-    "today": 0.376
+    "today": 0
   },
   "burn": {
     "daily": 0.5627,
@@ -98,7 +98,7 @@
       "used": 9.21,
       "used_mtd": 0.2399,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (screen-scraped, scraped 0h ago)",
+      "source": "console.anthropic.com (screen-scraped, scraped 2h ago)",
       "scraped_at": "2026-04-18T23:13:41.287965-06:00",
       "note": "Real account balance from Anthropic console."
     },
@@ -108,7 +108,7 @@
       "used": 1.36,
       "used_mtd": 0.8854,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (screen-scraped, scraped 0h ago)",
+      "source": "platform.openai.com (screen-scraped, scraped 2h ago)",
       "scraped_at": "2026-04-18T23:13:41.287965-06:00",
       "note": "Real account balance from OpenAI platform."
     }
@@ -141,12 +141,6 @@
     }
   ],
   "history": [
-    {
-      "date": "2026-04-05",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
     {
       "date": "2026-04-06",
       "anthropic": 0.0,
@@ -224,6 +218,12 @@
       "anthropic": 0.1185,
       "openai": 0.2575,
       "total": 0.376
+    },
+    {
+      "date": "2026-04-19",
+      "anthropic": 0.0,
+      "openai": 0.0,
+      "total": 0.0
     }
   ]
 }
