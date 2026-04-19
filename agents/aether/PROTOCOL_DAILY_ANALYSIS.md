@@ -1115,6 +1115,22 @@ The 6 gates and what they catch:
 *Exit condition: live URL returns feed entry with clean title, trades, GPT sections.*
 
 ```bash
+# Step 5.5: VERIFY THE ARCHIVE — confirm the canonical record is in place BEFORE publishing
+# Canonical analysis archive: agents/aether/analysis/Analysis_YYYY-MM-DD.txt
+# This is the permanent record. Every analysis must be here before it reaches the feed.
+ARCHIVE_FILE="agents/aether/analysis/Analysis_${DATE}.txt"
+if [[ ! -f "$ARCHIVE_FILE" ]]; then
+  echo "ARCHIVE MISSING: $ARCHIVE_FILE not found — do NOT proceed to publish"
+  echo "Check: ~/Documents/Projects/AetherBot/Kai analysis/Analysis_${DATE}.txt"
+  echo "Copy with: cp \"~/Documents/Projects/AetherBot/Kai analysis/Analysis_${DATE}.txt\" $ARCHIVE_FILE"
+  exit 1
+fi
+
+# GPT output files are also part of the archive record:
+#   agents/aether/analysis/GPT_Independent_YYYY-MM-DD.txt  ← Phase 1 GPT output
+#   agents/aether/analysis/GPT_Review_YYYY-MM-DD.txt       ← Phase 2 GPT output
+# These are committed in Step 7 along with the main analysis.
+
 # Step 6: Publish (gate runs again internally as hard block)
 cd ~/Documents/Projects/Hyo
 bash bin/aether-publish-analysis.sh "$DATE" \

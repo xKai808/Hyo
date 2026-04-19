@@ -1016,6 +1016,17 @@ case "$sub" in
   bridge-install)     cmd_bridge_install ;;
   bridge-health)      curl -s "http://100.77.143.7:9876/health" 2>/dev/null | python3 -m json.tool || echo "bridge unreachable" ;;
   ant-update)         bash "$ROOT/bin/ant-update.sh" "$@" ;;
+  ant-install)        cp "$ROOT/agents/ant/com.hyo.ant-daily.plist" ~/Library/LaunchAgents/ && launchctl load ~/Library/LaunchAgents/com.hyo.ant-daily.plist && echo "[ant-install] Ant daily schedule installed (23:45 MT)" ;;
+  ant-monthly-close)  python3 -c "
+import json, os, datetime
+prev = (datetime.date.today().replace(day=1) - datetime.timedelta(days=1)).strftime('%Y-%m')
+path = os.path.join('$ROOT', 'agents/ant/ledger', f'monthly-{prev}.json')
+if not os.path.exists(path): print(f'No ledger for {prev}'); exit(0)
+with open(path) as f: d = json.load(f)
+d['status'] = 'closed'; d['closed_at'] = datetime.datetime.utcnow().isoformat() + 'Z'
+with open(path, 'w') as f: json.dump(d, f, indent=2)
+print(f'Closed {path}')
+" ;;
   agent-goals|goals)  HYO_ROOT="$ROOT" bash "$ROOT/bin/agent-goals-sync.sh" "$@" ;;
   desktop)            ssh -p 22246 -L 5900:localhost:5900 kai@bore.pub -fN 2>/dev/null; sleep 1; open vnc://localhost ;;
   ssh-mini)           ssh -p 22246 kai@bore.pub ;;

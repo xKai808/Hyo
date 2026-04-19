@@ -1,8 +1,23 @@
 #!/usr/bin/env bash
 # ant-update.sh — Rebuild ant-data.json from kai/ledger/api-usage.jsonl
-# Runs as part of Sam's daily report cycle and on-demand via: kai ant-update
+# Runs nightly via launchd (23:45 MT) and on-demand via: kai ant-update
+# Also writes monthly ledger to agents/ant/ledger/monthly-YYYY-MM.json
 #
-# Output: agents/sam/website/data/ant-data.json + website/data/ant-data.json
+# Output (DUAL-PATH — both must be updated):
+#   agents/sam/website/data/ant-data.json  ← read by HQ via /data/ant-data.json
+#   website/data/ant-data.json             ← Vercel mirror
+#
+# PROTOCOL: PROTOCOL_ANT.md (agents/ant/) — read before modifying this script
+# CREDIT BARS: credits.anthropic and credits.openai are populated from
+#   api-usage.jsonl MTD spend vs ANT_MONTHLY_BUDGET_* config below.
+#   No admin API key required — budget-based tracking.
+#
+# MONTHLY BUDGET CONFIG (update when plans change):
+#   ANT_MONTHLY_BUDGET_ANTHROPIC: metered API credit budget per month ($USD)
+#   ANT_MONTHLY_BUDGET_OPENAI:    metered API credit budget per month ($USD)
+#   These appear as "total" in the credit bars on HQ Ant page.
+ANT_MONTHLY_BUDGET_ANTHROPIC="${ANT_MONTHLY_BUDGET_ANTHROPIC:-10.00}"
+ANT_MONTHLY_BUDGET_OPENAI="${ANT_MONTHLY_BUDGET_OPENAI:-10.00}"
 
 set -euo pipefail
 
@@ -10,6 +25,7 @@ ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 USAGE_FILE="$ROOT/kai/ledger/api-usage.jsonl"
 ANT_FILE="$ROOT/agents/sam/website/data/ant-data.json"
 ANT_FILE2="$ROOT/website/data/ant-data.json"
+ANT_MONTHLY_FILE="$ROOT/agents/ant/ledger/monthly-$(date +%Y-%m).json"
 AETHER_METRICS="$ROOT/agents/sam/website/data/aether-metrics.json"
 
 if [[ ! -f "$USAGE_FILE" ]]; then
@@ -27,6 +43,11 @@ from datetime import datetime, date, timedelta, timezone
 tz_mt = timezone(timedelta(hours=-6))
 today = date.today()
 today_str = today.isoformat()
+this_month_prefix = today.strftime("%Y-%m")
+
+# Monthly budget config from env (set in ant-update.sh header)
+MONTHLY_BUDGET_ANTHROPIC = float(os.environ.get("ANT_MONTHLY_BUDGET_ANTHROPIC", "10.00"))
+MONTHLY_BUDGET_OPENAI    = float(os.environ.get("ANT_MONTHLY_BUDGET_OPENAI", "10.00"))
 
 # ── Load records ──────────────────────────────────────────────────────────────
 records = []
@@ -44,6 +65,7 @@ by_provider       = defaultdict(float)
 by_date_provider  = defaultdict(lambda: defaultdict(float))
 by_agent          = defaultdict(float)
 by_model          = defaultdict(lambda: {'calls': 0, 'cost': 0.0})
+by_month_provider = defaultdict(lambda: defaultdict(float))  # MTD per month
 
 # Cost-per-process: new field (process_name in newer entries)
 by_process        = defaultdict(lambda: {'runs': 0, 'total_cost': 0.0, 'last_run': ''})
@@ -62,12 +84,42 @@ for r in records:
     by_agent[agent] += cost
     by_model[model]['calls'] += 1
     by_model[model]['cost'] += cost
+    # MTD per month (for credit bar tracking)
+    month_key = d[:7]  # "YYYY-MM"
+    by_month_provider[month_key][provider] += cost
 
     by_process[process]['runs'] += 1
     by_process[process]['total_cost'] += cost
     ts = r.get('ts', r.get('date', ''))
     if ts > by_process[process]['last_run']:
         by_process[process]['last_run'] = ts
+
+# ── MTD credit usage (this calendar month) ───────────────────────────────────
+mtd_anthropic = by_month_provider[this_month_prefix].get('anthropic', 0.0)
+mtd_openai    = by_month_provider[this_month_prefix].get('openai', 0.0)
+
+credits_data = {
+    "anthropic": {
+        "monthly_budget": MONTHLY_BUDGET_ANTHROPIC,
+        "used_mtd":       round(mtd_anthropic, 4),
+        "remaining":      round(max(MONTHLY_BUDGET_ANTHROPIC - mtd_anthropic, 0), 4),
+        "total":          MONTHLY_BUDGET_ANTHROPIC,
+        "used":           round(mtd_anthropic, 4),
+        "source":         "api-usage.jsonl MTD",
+        "note":           f"Budget-based. MTD spend for {this_month_prefix}. For exact account balance, add Anthropic admin API key.",
+        "expires":        None
+    },
+    "openai": {
+        "monthly_budget": MONTHLY_BUDGET_OPENAI,
+        "used_mtd":       round(mtd_openai, 4),
+        "remaining":      round(max(MONTHLY_BUDGET_OPENAI - mtd_openai, 0), 4),
+        "total":          MONTHLY_BUDGET_OPENAI,
+        "used":           round(mtd_openai, 4),
+        "source":         "api-usage.jsonl MTD",
+        "note":           f"Budget-based. MTD spend for {this_month_prefix}. For exact balance, add OpenAI billing API key.",
+        "expires":        None
+    }
+}
 
 # ── 14-day history ────────────────────────────────────────────────────────────
 history = []
@@ -219,10 +271,9 @@ data = {
         "total_api": round(total_cost, 4),
         "total": round(total_all_expenses, 4)
     },
-    "credits": {
-        "anthropic": {"available": None, "note": "Admin API key required"},
-        "openai":    {"available": None, "note": "Admin API key required"}
-    },
+    # credits: populated from MTD spend vs configurable monthly budget
+    # HQ uses remaining/total to draw horizontal bars — no admin API key needed
+    "credits": credits_data,
     "models": [
         {"name": k, "calls": v['calls'], "cost": round(v['cost'], 4)}
         for k, v in sorted(by_model.items(), key=lambda x: -x[1]['cost'])
@@ -235,14 +286,51 @@ data = {
 }
 
 out = json.dumps(data, indent=2)
-print(out)
 
 for path in ["$ANT_FILE", "$ANT_FILE2"]:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w") as f:
         f.write(out + "\n")
 
-print(f"\n[ant-update] Written to $ANT_FILE", file=sys.stderr)
+# ── Write monthly ledger record ───────────────────────────────────────────────
+# agents/ant/ledger/monthly-YYYY-MM.json — persistent record for this month.
+# Kept as a running snapshot; closed (status: "closed") on the 1st of next month.
+monthly_record = {
+    "month":        this_month_prefix,
+    "generated_at": datetime.now(tz_mt).isoformat(),
+    "status":       "open",
+    "income": {
+        "trading_pnl_wtd": round(aether_pnl, 2),
+        "trading_balance":  round(aether_balance, 2),
+        "week_start":       aether_week_start,
+        "streams":          income_streams,
+        "total_income_mtd": round(income_total, 2)
+    },
+    "expenses": {
+        "subscriptions":    fixed_subscriptions,
+        "api_anthropic_mtd": round(mtd_anthropic, 4),
+        "api_openai_mtd":   round(mtd_openai, 4),
+        "total_fixed":      round(total_fixed, 2),
+        "total_api_mtd":    round(mtd_anthropic + mtd_openai, 4),
+        "total_expenses":   round(total_fixed + mtd_anthropic + mtd_openai, 4)
+    },
+    "net_position": round(income_total - total_fixed - mtd_anthropic - mtd_openai, 4),
+    "api_credits": {
+        "anthropic": credits_data["anthropic"],
+        "openai":    credits_data["openai"]
+    },
+    "notes": []
+}
+
+monthly_path = "$ANT_MONTHLY_FILE"
+os.makedirs(os.path.dirname(monthly_path), exist_ok=True)
+with open(monthly_path, "w") as f:
+    json.dump(monthly_record, f, indent=2)
+    f.write("\n")
+
+print(f"[ant-update] Written to $ANT_FILE", file=sys.stderr)
+print(f"[ant-update] Monthly ledger: {monthly_path}", file=sys.stderr)
+print(f"[ant-update] MTD — Anthropic \${mtd_anthropic:.4f} / OpenAI \${mtd_openai:.4f}", file=sys.stderr)
 print(f"[ant-update] Today spend: \${today_spend:.4f} | Total: \${total_cost:.4f}", file=sys.stderr)
 if alerts:
     for a in alerts:

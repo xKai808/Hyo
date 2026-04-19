@@ -1,10 +1,10 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-18T15:13:44.995585-06:00",
+  "updatedAt": "2026-04-18T23:03:42.671577-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-18T15:13:44.995617-06:00",
+    "lastUpdated": "2026-04-18T23:03:42.671593-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -15,26 +15,26 @@
       "currency": "USD"
     },
     "openai": {
-      "total": 0.7235,
+      "total": 0.8854,
       "currency": "USD"
     },
-    "total": 0.9634,
-    "today": 0.2141
+    "total": 1.1253,
+    "today": 0.376
   },
   "burn": {
-    "daily": 0.4817,
+    "daily": 0.5627,
     "dailyBudget": 50,
-    "pctOfBudget": 1.0,
+    "pctOfBudget": 1.1,
     "trend": "insufficient_data",
     "alertThreshold": 1.0
   },
   "byProcess": [
     {
       "process": "aether",
-      "runs": 19,
-      "totalCost": 0.963223,
-      "avgPerRun": 0.050696,
-      "lastRun": "2026-04-18T03:57:52-0600"
+      "runs": 21,
+      "totalCost": 1.125163,
+      "avgPerRun": 0.053579,
+      "lastRun": "2026-04-18T22:09:06-0600"
     },
     {
       "process": "podcast-tts",
@@ -95,31 +95,43 @@
       },
       {
         "name": "OpenAI API",
-        "actual": 0.7235,
+        "actual": 0.8854,
         "category": "API"
       }
     ],
     "infrastructure": [],
     "other": [],
     "total_fixed": 220.0,
-    "total_api": 0.9634,
-    "total": 220.9634
+    "total_api": 1.1253,
+    "total": 221.1253
   },
   "credits": {
     "anthropic": {
-      "available": null,
-      "note": "Admin API key required"
+      "monthly_budget": 10.0,
+      "used_mtd": 0.2399,
+      "remaining": 9.7601,
+      "total": 10.0,
+      "used": 0.2399,
+      "source": "api-usage.jsonl MTD",
+      "note": "Budget-based. MTD spend for 2026-04. For exact account balance, add Anthropic admin API key.",
+      "expires": null
     },
     "openai": {
-      "available": null,
-      "note": "Admin API key required"
+      "monthly_budget": 10.0,
+      "used_mtd": 0.8854,
+      "remaining": 9.1146,
+      "total": 10.0,
+      "used": 0.8854,
+      "source": "api-usage.jsonl MTD",
+      "note": "Budget-based. MTD spend for 2026-04. For exact balance, add OpenAI billing API key.",
+      "expires": null
     }
   },
   "models": [
     {
       "name": "gpt-4o",
-      "calls": 15,
-      "cost": 0.7234
+      "calls": 17,
+      "cost": 0.8853
     },
     {
       "name": "claude-sonnet-4-6",
@@ -135,7 +147,7 @@
   "agents": [
     {
       "name": "aether",
-      "cost": 0.9632
+      "cost": 1.1252
     },
     {
       "name": "sam/podcast",
@@ -224,8 +236,8 @@
     {
       "date": "2026-04-18",
       "anthropic": 0.1185,
-      "openai": 0.0955,
-      "total": 0.2141
+      "openai": 0.2575,
+      "total": 0.376
     }
   ]
 }

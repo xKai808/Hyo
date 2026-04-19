@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Ant daily update — runs at 23:45 MT nightly
+     Rebuilds ant-data.json from api-usage.jsonl (credit bars, monthly ledger).
+     Must run AFTER aether-daily (23:00) so today's API costs are captured.
+     Install: cp agents/ant/com.hyo.ant-daily.plist ~/Library/LaunchAgents/
+              launchctl load ~/Library/LaunchAgents/com.hyo.ant-daily.plist
+     Manual:  launchctl start com.hyo.ant-daily
+     Protocol: agents/ant/PROTOCOL_ANT.md
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.ant-daily</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/ant-update.sh &gt;&gt; /Users/kai/Documents/Projects/Hyo/agents/ant/logs/ant-$(date +%Y-%m-%d).log 2&gt;&amp;1</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>23</integer>
+    <key>Minute</key><integer>45</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/Users/kai/Documents/Projects/Hyo/kai/ledger/com.hyo.ant-daily.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/kai/Documents/Projects/Hyo/kai/ledger/com.hyo.ant-daily.log</string>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+    <key>HYO_ROOT</key><string>/Users/kai/Documents/Projects/Hyo</string>
+    <key>ANT_MONTHLY_BUDGET_ANTHROPIC</key><string>10.00</string>
+    <key>ANT_MONTHLY_BUDGET_OPENAI</key><string>10.00</string>
+  </dict>
+</dict>
+</plist>
