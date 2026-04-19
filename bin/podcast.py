@@ -199,15 +199,41 @@ def load_aurora_brief(date_str: str) -> str:
 
 
 def strip_frontmatter(md_text: str) -> str:
-    """Aggressively strip all YAML/frontmatter from markdown."""
-    # Strip outer ---...--- frontmatter
-    md_text = re.sub(r"^\s*---\s*\n.*?\n---\s*\n", "", md_text, flags=re.DOTALL)
-    # Strip fenced ```yaml ... ``` blocks at the start
-    md_text = re.sub(r"^\s*```yaml\s*\n.*?\n```\s*\n", "", md_text, flags=re.DOTALL)
-    # Strip remaining ```...``` code fences at start (any lang)
-    md_text = re.sub(r"^\s*```\w*\s*\n.*?\n```\s*\n", "", md_text, flags=re.DOTALL)
-    # Strip lone backtick lines
-    md_text = re.sub(r"^\s*`{1,3}\s*$", "", md_text, flags=re.MULTILINE)
+    """Aggressively strip all YAML/frontmatter and code fences from markdown.
+
+    Handles:
+    - Outer ---...--- YAML frontmatter
+    - Nested ```yaml ... ``` blocks (Ra newsletter double-frontmatter format)
+    - Any leading code fences before real prose content
+    - Falls back to first line starting with # or prose if nothing else works
+    """
+    # Strip all ---...--- YAML blocks (greedy pass, handles nested)
+    for _ in range(3):
+        md_text = re.sub(r"^\s*---\s*\n.*?---\s*\n", "", md_text, flags=re.DOTALL)
+        md_text = md_text.strip()
+
+    # Strip all leading ```yaml...``` and ```...``` fenced blocks (multiple passes)
+    for _ in range(3):
+        md_text = re.sub(r"^\s*```[a-zA-Z0-9_-]*\s*\n.*?```\s*\n?", "", md_text, flags=re.DOTALL)
+        md_text = md_text.strip()
+
+    # Strip lone backtick/fence lines
+    md_text = re.sub(r"^`{1,3}\s*$", "", md_text, flags=re.MULTILINE)
+
+    # Final fallback: if text still starts with YAML-like content (key: value),
+    # skip forward to the first line that looks like prose (# heading or long sentence)
+    lines = md_text.split("\n")
+    start = 0
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        # Consider this "prose" if it starts with # (heading) or is a long non-YAML line
+        if stripped.startswith("#") or (len(stripped) > 40 and ":" not in stripped[:20]):
+            start = i
+            break
+
+    if start > 0:
+        md_text = "\n".join(lines[start:])
+
     return md_text.strip()
 
 
@@ -247,7 +273,13 @@ def extract_ra_stories(md_text: str) -> list[str]:
                 break
         body = " ".join(body_lines)
         body = strip_markdown(body)
+        # Reject sections that are still YAML/frontmatter/code-fence (Ra double-frontmatter)
+        if body.startswith("---") or body.startswith("```") or body.startswith("date:") or body.startswith("kind:"):
+            continue
         if body and heading and len(body) > 20:
+            # Reject headings that look like YAML keys
+            if heading.startswith("---") or heading.startswith("```") or ":" in heading[:8]:
+                continue
             # Truncate to ~250 chars for natural speech
             if len(body) > 250:
                 body = body[:247] + "..."
@@ -571,10 +603,10 @@ def update_feed(date_str: str, duration_estimate: str = "~10 min") -> bool:
     entry = {
         "id": f"podcast-{date_str}",
         "type": "podcast",
-        "title": f"Hyo Daily Podcast — {date_str}",
-        "author": "Kai",
+        "title": f"Morning Brief — {date_str}",
+        "author": "Ra",
         "authorIcon": "🎙️",
-        "authorColor": "#d4a853",
+        "authorColor": "#b49af0",
         "timestamp": ts_str,
         "date": date_str,
         "sections": {
