@@ -1,11 +1,11 @@
 # Dex Active Tasks
 
-Last updated: 2026-04-18T20:31:33Z
+Last updated: 2026-04-19T02:32:19Z
 
 ## In Progress
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-18T20:31:33Z
+  - Delegated: 2026-04-19T02:32:19Z
   - Status: DELEGATED
 
 - **dex-002** [P1] [AUTO-REMEDIATE] Phase 1 JSONL corruption unresolved since 2026-04-14 (flag-dex-001): 2 JSONL files have corrupt entries. 4+ days stale as P2 — upgrading to P1. Need root-cause trace of which writer is producing malformed records and a schema-validation gate at append time. (flagged by dex, cascade flag-dex-002)

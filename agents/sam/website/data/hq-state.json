@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-18T14:11:19Z",
+  "updatedAt": "2026-04-19T02:11:00Z",
   "morningReport": {
     "date": "2026-04-18",
     "generatedAt": "2026-04-18T04:10:16-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync cycle @ 08:11 MT on 2026-04-18 (hq-ops-sync scheduled task). Sentinel run #75: 6 pass / 3 fail \u2014 P0 api-health-green day 74 (sandbox carryover \u2014 Mini unreachable from sandbox), P1 scheduled-tasks-fired day 2 (no aurora logs in sandbox \u2014 aurora runs on Mini), P2 task-queue-size day 16 (25 P0 tasks vs threshold 5). Cipher: clean. 0 findings, 0 autofixes. Founder token 600 OK, .secrets 755 (symlink cosmetic, target 700). Nel: score 65 (below 70 target), 2 project test failures (hyo 2p/2f, aether 1p/1f), 16 broken doc links, 23 untested scripts, 3 inefficient patterns, 5 audit issues, 1 untriggered file (self-review), 0 verified leaks. Flags emitted: nel-007..nel-011 (4 P2 + 1 P3). Self-delegated: nel-004 (P2) broken-link fix, nel-005 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked \u2014 no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox, aurora runs on Mini (not sandbox).",
+    "summary": "Ops sync cycle @ 20:11 MT on 2026-04-18 (hq-ops-sync scheduled task). Sentinel run #85: 6 pass / 3 fail \u2014 P0 api-health-green day 84 (sandbox carryover \u2014 Mini API unreachable from Cowork), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox \u2014 aurora runs on Mini), P2 task-queue-size day 10 (26 P0 tasks vs threshold 5). Cipher: clean. 0 findings, 0 autofixes. Founder token 600 OK, .secrets 755 (symlink cosmetic, target 700). Nel: score 65/100 (below 70 target), 2 project test failures (hyo 2p/2f, aether 1p/1f), 16 broken doc links, 25 untested scripts (+2 vs prior run), 3 inefficient patterns, 5 audit issues, 1 untriggered file (self-review), 0 verified leaks. Flags emitted: nel-007 (P2 sentinel failures), nel-008 (P2 broken links), nel-009 (P3 code optimization), nel-010 (P2 audit), nel-011 (P2 untriggered file). Self-delegated: nel-004 (P2) broken-link fix, nel-005 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked \u2014 no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox, aurora runs on Mini (not sandbox).",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,19 +14,41 @@
       "dex": "active"
     },
     "topIssues": [
-      "API health endpoint P0 day 74 (sandbox-environmental \u2014 Mini unreachable from Cowork; real health status requires Mini-side check)",
-      "Nel health score 65/100 (below 70 target) \u2014 16 broken doc links, 23 untested scripts, 5 audit issues unchanged vs prior run",
-      "Task queue overloaded \u2014 25 P0 tasks vs threshold 5 (day 16 overload; S17-007 close-down in flight)",
-      "Aurora scheduled-tasks-fired \u2014 no aurora logs in Cowork sandbox (day 2 recurring; aurora fires on Mini, not sandbox)",
+      "API health endpoint P0 day 84 (sandbox-environmental \u2014 Mini unreachable from Cowork; real health status requires Mini-side check)",
+      "Nel health score 65/100 (below 70 target) \u2014 16 broken doc links, 25 untested scripts (+2 vs prior run), 5 audit issues unchanged",
+      "Task queue overloaded \u2014 26 P0 tasks vs threshold 5 (day 10 overload; +1 since morning sync)",
+      "Aurora scheduled-tasks-fired \u2014 no aurora logs in Cowork sandbox (day 3 recurring; aurora fires on Mini, not sandbox)",
       "Sensitive files outside .secrets/ \u2014 5 audit issues (.env.local, .env.example, api_tokens CSV carryover)",
       "Growth phase blocked \u2014 IMP-nel-002 CVE scanner needs package.json at project root"
     ],
     "lastOpsSync": {
-      "ts": "2026-04-18T14:11:19Z",
-      "note": "08:11 MT ops sync cycle (2026-04-18) \u2014 sentinel #75 6p/3f (P0/P1/P2 all recurring sandbox-environmental), cipher clean, nel score 65 (16 broken links, 5 audit issues, 0 leaks). No new issues; all findings are known carryovers."
+      "ts": "2026-04-19T02:11:00Z",
+      "note": "20:11 MT ops sync cycle (2026-04-18) \u2014 sentinel #85 6p/3f (P0/P1/P2 all recurring sandbox-environmental), cipher clean, nel score 65 (16 broken links, 5 audit issues, 0 leaks, 25 untested +2). No new issues; all findings are known carryovers."
     }
   },
   "events": [
+    {
+      "ts": "2026-04-19T02:11:00Z",
+      "agent": "kai",
+      "msg": "Ops sync cycle @ 20:11 MT (2026-04-18) \u2014 sentinel #85 (6p/3f, P0 api-health-green day 84, P1 scheduled-tasks-fired day 3, P2 task-queue-size day 10 at 26 P0 tasks). Cipher clean (0 findings, 0 autofixes). Nel score 65/100; 16 broken links, 25 untested (+2 vs prior), 5 audit issues, 0 leaks; 4 P2 flags (nel-007/008/010/011) + 1 P3 (nel-009); self-delegated nel-004 (broken-link fix) + nel-005 (cycle summary). Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini."
+    },
+    {
+      "ts": "2026-04-18T20:11:00-0600",
+      "agent": "sentinel",
+      "msg": "QA sweep run #85 \u2014 6 passed, 3 failed. Recurring: P0 api-health-green (day 84), P1 scheduled-tasks-fired (day 3), P2 task-queue-size (26 P0 tasks, day 10). 0 new issues, 3 recurring, 0 resolved.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-18"
+    },
+    {
+      "ts": "2026-04-19T02:11:00Z",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 clean. 0 findings, 0 autofixes. Founder token 600 OK, secretsDir 755 (cosmetic \u2014 symlink target at 700). HQ push succeeded."
+    },
+    {
+      "ts": "2026-04-19T02:11:00Z",
+      "agent": "nel",
+      "msg": "System sweep \u2014 score 65/100 (below 70 target). 2 project test failures (hyo 2p/2f, aether 1p/1f). 16 broken links, 25 untested scripts (+2 vs prior), 3 inefficient patterns, 5 audit issues, 1 untriggered file, 0 verified leaks. Flags emitted: nel-007 (P2 sentinel failures), nel-008 (P2 broken links), nel-009 (P3 code optimization), nel-010 (P2 audit issues), nel-011 (P2 untriggered file). Self-delegated: nel-004 (P2) broken-link fix, nel-005 (P3) cycle summary. Growth phase: IMP-nel-002 CVE scanner still blocked \u2014 no package.json at root.",
+      "doc": "/viewer?agent=nel&file=2026-04-18"
+    },
     {
       "ts": "2026-04-18T14:11:19Z",
       "agent": "kai",
@@ -231,31 +253,32 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-18T04:10:16-0600",
+    "lastRun": "2026-04-18T20:11:00-0600",
     "passed": 6,
     "failed": 3,
-    "totalRuns": 73,
+    "totalRuns": 85,
     "findings": [
-      "P0: api-health-green \u2014 health endpoint not green or token unconfigured (day 72, REGRESSED from run #65 clear)",
-      "P1: scheduled-tasks-fired \u2014 no aurora logs (day 3; newsletter fires 03:00 MT)",
-      "P2: task-queue-size \u2014 25 P0 tasks (overload threshold 5, day 14)"
+      "P0: api-health-green \u2014 health endpoint not green or token unconfigured (day 84)",
+      "P1: scheduled-tasks-fired \u2014 no aurora logs (day 3; aurora runs on Mini, not sandbox)",
+      "P2: task-queue-size \u2014 26 P0 tasks (overload threshold 5, day 10)"
     ],
     "resolvedThisRun": [],
     "escalations": [
-      "P0 persistent \u2014 72 consecutive runs: api-health-green. Regressed after run #65 brief clear. Investigate what changed.",
-      "P2 elevated \u2014 14 consecutive runs: task-queue-size at 25 P0 tasks vs threshold 5."
+      "P0 persistent \u2014 84 consecutive runs: api-health-green. Environmental (Mini unreachable from Cowork sandbox). Real health requires Mini-side check.",
+      "P1 elevated \u2014 3 consecutive runs: scheduled-tasks-fired (aurora logs missing in sandbox).",
+      "P2 elevated \u2014 10 consecutive runs: task-queue-size at 26 P0 tasks vs threshold 5."
     ],
     "latestDoc": "/viewer?agent=sentinel&file=2026-04-18"
   },
   "cipher": {
-    "lastRun": "2026-04-18T10:10:16Z",
+    "lastRun": "2026-04-19T02:11:00Z",
     "secretsDir": "755",
     "founderToken": "600",
     "leaks": 0,
     "autofixes": 0,
     "notes": "Clean scan \u2014 0 findings, 0 autofixes. Founder token 600 OK. secretsDir 755 is cosmetic (symlink; target at 700). gitleaks/trufflehog install still pending on Mini.",
     "latestDoc": null,
-    "totalRuns": 190
+    "totalRuns": 191
   },
   "sim": {
     "lastRun": "2026-04-10T16:14:00-06:00",
@@ -267,7 +290,7 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-18T22:10:38Z",
+    "lastRun": "2026-04-19T02:11:00Z",
     "improvementScore": 65,
     "findingsCount": 2,
     "staleFiles": 0,
