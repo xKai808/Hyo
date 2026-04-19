@@ -85,29 +85,13 @@
   .report-badge.ok { background: rgba(102,201,134,0.1); color: var(--ok); border-color: rgba(102,201,134,0.2); }
   .report-badge.err { background: rgba(245,80,102,0.1); color: var(--err); border-color: rgba(245,80,102,0.2); }
 
-  /* ── Full-width sections ───────────────────── */
-  .section { margin-bottom: 40px; }
+  /* ── Sections ──────────────────────────────── */
+  .section { margin-bottom: 48px; }
   .section-heading {
     font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent);
     padding-bottom: 10px; margin-bottom: 18px; border-bottom: 1px solid var(--rule);
-    display: flex; align-items: center; justify-content: space-between;
   }
   .section-body { font-size: 15px; line-height: 1.78; color: var(--fg-body); font-family: var(--font-body); }
-
-  /* ── GPT collapsible ───────────────────────── */
-  .gpt-block { margin-bottom: 28px; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
-  .gpt-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px; background: var(--bg-card); cursor: pointer;
-    user-select: none; transition: background 0.15s;
-  }
-  .gpt-header:hover { background: rgba(18,20,30,0.95); }
-  .gpt-header .gpt-title { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
-  .gpt-header .gpt-model { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
-  .gpt-chevron { font-size: 14px; color: var(--muted); transition: transform 0.2s; }
-  .gpt-block.expanded .gpt-chevron { transform: rotate(180deg); }
-  .gpt-content { display: none; padding: 20px 24px; border-top: 1px solid var(--rule); background: rgba(12,13,20,0.6); }
-  .gpt-block.expanded .gpt-content { display: block; }
 
   /* ── Typography within free-text sections ─── */
   .rich-text p { font-size: 15px; line-height: 1.78; color: var(--fg-body); margin-bottom: 16px; }
@@ -117,9 +101,6 @@
   .rich-text li::marker { color: var(--accent); }
   .rich-text h3, .rich-text h4 { color: var(--fg); font-weight: 700; margin: 24px 0 10px; font-size: 16px; }
   .rich-text code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 6px; border-radius: 3px; font-size: 13px; color: var(--accent); }
-
-  /* ── No GPT data placeholder ───────────────── */
-  .no-gpt { font-family: var(--font-mono); font-size: 12px; color: var(--dim); letter-spacing: 0.06em; padding: 14px 0; }
 
   /* ── Footer ────────────────────────────────── */
   footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
@@ -183,47 +164,34 @@
     </div>
   </div>
 
-  <!-- Trade breakdown -->
+  <!-- Analysis (Kai's integrated final synthesis) -->
+  <div class="section" id="summarySection">
+    <div class="section-heading">Analysis</div>
+    <div class="section-body rich-text" id="rSummary"></div>
+  </div>
+
+  <!-- Balance -->
+  <div class="section" id="balanceSection">
+    <div class="section-heading">Balance</div>
+    <div class="section-body rich-text" id="rBalanceText"></div>
+  </div>
+
+  <!-- Market Context -->
+  <div class="section" id="btcSection">
+    <div class="section-heading">Market Context</div>
+    <div class="section-body rich-text" id="rBtc"></div>
+  </div>
+
+  <!-- Trade Breakdown -->
   <div class="section" id="tradesSection">
-    <div class="section-heading">
-      <span>Trade Breakdown</span>
-    </div>
+    <div class="section-heading">Trade Breakdown</div>
     <div class="section-body rich-text" id="rTrades"></div>
   </div>
 
-  <!-- GPT Analysis -->
-  <div class="section">
-    <div class="section-heading">
-      <span>GPT Analysis</span>
-      <span style="font-size:10px; color:var(--dim)">Click to expand</span>
-    </div>
-
-    <!-- Phase 1 -->
-    <div class="gpt-block expanded" id="gptPhase1Block">
-      <div class="gpt-header" onclick="toggleGpt(this)">
-        <span class="gpt-title">Phase 1 — Independent Analysis</span>
-        <span class="gpt-model" id="gptPhase1Model">gpt-4o</span>
-        <span class="gpt-chevron">▼</span>
-      </div>
-      <div class="gpt-content">
-        <div class="rich-text" id="rGptIndependent"></div>
-      </div>
-    </div>
-
-    <!-- Phase 2 -->
-    <div class="gpt-block" id="gptPhase2Block">
-      <div class="gpt-header" onclick="toggleGpt(this)">
-        <span class="gpt-title">Phase 2 — Comparative Review</span>
-        <span class="gpt-model" id="gptPhase2Model">gpt-4o</span>
-        <span class="gpt-chevron">▼</span>
-      </div>
-      <div class="gpt-content">
-        <div class="rich-text" id="rGptReview"></div>
-      </div>
-    </div>
-
-    <!-- No GPT data -->
-    <div id="noGptMsg" class="no-gpt" style="display:none">No GPT analysis available for this date.</div>
+  <!-- GPT Review -->
+  <div class="section" id="gptSection">
+    <div class="section-heading">GPT Review</div>
+    <div class="section-body rich-text" id="rGptReview"></div>
   </div>
 
   <footer>
@@ -263,12 +231,6 @@ function fmtShort(dateStr) {
 
 function show(id) { document.getElementById(id).style.display = ''; }
 function hide(id) { document.getElementById(id).style.display = 'none'; }
-
-function toggleGpt(header) {
-  const block = header.closest('.gpt-block');
-  block.classList.toggle('expanded');
-}
-
 function el(id) { return document.getElementById(id); }
 
 // Convert plain text with markdown-ish formatting to HTML
@@ -341,6 +303,29 @@ function renderReport(report) {
     el('rBalance').style.display = 'none';
   }
 
+  // Analysis section (Kai's final integrated synthesis)
+  const summaryText = s.summary || '';
+  if (summaryText && summaryText.trim() !== '—') {
+    el('rSummary').innerHTML = textToHtml(summaryText);
+  } else {
+    hide('summarySection');
+  }
+
+  // Balance section
+  if (balText && balText.trim() !== '—') {
+    el('rBalanceText').innerHTML = textToHtml(balText);
+  } else {
+    hide('balanceSection');
+  }
+
+  // Market context (BTC)
+  const btcText = s.btc || '';
+  if (btcText && btcText.trim() !== '—') {
+    el('rBtc').innerHTML = textToHtml(btcText);
+  } else {
+    hide('btcSection');
+  }
+
   // Trades section
   const tradesText = s.trades || '';
   if (tradesText && tradesText.trim() !== '—') {
@@ -349,28 +334,12 @@ function renderReport(report) {
     hide('tradesSection');
   }
 
-  // GPT sections
-  const gptInd = s.gptIndependent || '';
-  const gptRev = s.gptReview || '';
-
-  if (!gptInd && !gptRev) {
-    hide('gptPhase1Block');
-    hide('gptPhase2Block');
-    show('noGptMsg');
+  // GPT Review (flat, non-collapsible)
+  const gptText = s.gptReview || s.gptIndependent || '';
+  if (gptText && gptText.trim() !== '—') {
+    el('rGptReview').innerHTML = textToHtml(gptText);
   } else {
-    if (gptInd) {
-      el('rGptIndependent').innerHTML = textToHtml(gptInd);
-      show('gptPhase1Block');
-    } else {
-      hide('gptPhase1Block');
-    }
-    if (gptRev) {
-      el('rGptReview').innerHTML = textToHtml(gptRev);
-      show('gptPhase2Block');
-    } else {
-      hide('gptPhase2Block');
-    }
-    hide('noGptMsg');
+    hide('gptSection');
   }
 }
 
