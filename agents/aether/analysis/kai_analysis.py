@@ -112,28 +112,42 @@ def _load_dynamic_context() -> tuple[str, str, str, str]:
 import json as _json_mod
 CURRENT_VERSION, NEXT_VERSION, BALANCE_LEDGER, OPEN_ISSUES = _load_dynamic_context()
 
-CLAUDE_SYSTEM = f"""You are the primary analyst for AetherBot, an automated trading bot on Kalshi
-prediction markets trading KXBTC15M (BTC 15-minute contracts).
+# ── Load the protocol (SE-AETHER-PROTOCOL-001) ───────────────────────────────
+# The protocol defines the COMPLETE execution spec for AetherBot daily analysis.
+# It must be injected into every Claude system prompt so the automated pipeline
+# follows the same standards as manual/interactive sessions.
+# Canonical location: agents/aether/PROTOCOL_DAILY_ANALYSIS.md (root is a symlink)
+_PROTOCOL_FILE = os.path.join(HYO_ROOT, "agents/aether/PROTOCOL_DAILY_ANALYSIS.md")
+try:
+    with open(_PROTOCOL_FILE, "r") as _f:
+        _PROTOCOL_CONTENT = _f.read()
+    _protocol_lines = len(_PROTOCOL_CONTENT.splitlines())
+    print(f"[protocol] Loaded {_PROTOCOL_FILE} ({_protocol_lines} lines)")
+except Exception as _pe:
+    _PROTOCOL_CONTENT = "(PROTOCOL FILE UNAVAILABLE — kai_analysis.py could not load agents/aether/PROTOCOL_DAILY_ANALYSIS.md)"
+    print(f"[protocol] WARNING: Could not load protocol: {_pe!r} — using fallback instructions only")
 
-Analyze the daily session log and provide:
-1. Full trade-by-trade ledger grouped by strategy family.
-2. Stop/harvest event log.
-3. Session window P&L: OVERNIGHT | EU_MORNING | NY_OPEN | NY_PRIME | NY_CLOSE | EVENING (all MTN).
-4. Net P&L for the day. Update the balance ledger.
-5. Simulation of any proposed change: primary, secondary, and tertiary effects against historical data.
-6. ONE conclusion. ONE recommended action.
+CLAUDE_SYSTEM = f"""MANDATORY: You are executing the AetherBot daily analysis pipeline.
+Follow PROTOCOL_DAILY_ANALYSIS.md (loaded below) exactly for all output format, section markers,
+trade ledger structure, GPT critique requirements, and the 25-point completion checklist.
 
-Rules:
-- Come with a position, not a report.
-- Never kill strategies from single-session data.
-- All times MTN. Never UTC.
-- Current version {CURRENT_VERSION}. Next build {NEXT_VERSION}.
+{_PROTOCOL_CONTENT}
+
+=== AUTOMATED PIPELINE DYNAMIC CONTEXT ===
+Current deployed version: {CURRENT_VERSION}
+Next build: {NEXT_VERSION}
 
 Balance ledger:
 {BALANCE_LEDGER}
 
 Open issues:
 {OPEN_ISSUES}
+
+REMINDER: Output MUST include all three section markers:
+  === CLAUDE PRIMARY ANALYSIS ===
+  === GPT CRITIQUE ===
+  === FINAL SYNTHESIS ===
+The post-publish quality gate (analysis-gate.py) blocks publishing if these are absent.
 """
 
 GPT_SYSTEM = """You are the adversarial analyst for AetherBot — a Kalshi prediction market trading bot \

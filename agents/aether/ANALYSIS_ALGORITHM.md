@@ -4,7 +4,7 @@
 
 **Trigger:** Daily at 23:00 MT after raw log is complete.
 **Owner:** Aether (self-managed), reviewed by Kai
-**Last updated:** 2026-04-18 (v2.1 — Phase 0 added, protocol reference wired)
+**Last updated:** 2026-04-18 (v2.5 — aligned with PROTOCOL_DAILY_ANALYSIS.md v2.5)
 
 ---
 
@@ -13,8 +13,10 @@
 **Before opening the log, before answering any gate question:**
 
 ```
-READ: agents/aether/PROTOCOL_DAILY_ANALYSIS.md (VERSION 2.1)
+READ: agents/aether/PROTOCOL_DAILY_ANALYSIS.md (VERSION 2.5)
 ```
+NOTE: In the automated nightly pipeline (run_analysis.sh → kai_analysis.py), this protocol
+is injected automatically into the Claude system prompt. For manual sessions, read it explicitly.
 
 This protocol is the complete execution specification. It defines:
 - What 7 files to read before starting (Part 0)

@@ -173,6 +173,31 @@ Not summaries. Sessions where you find something real, trace it to its mechanism
 
 ---
 
+## PROTOCOL FILE — TWO-COPY SYNC (CRITICAL — READ EVERY SESSION)
+
+`PROTOCOL_DAILY_ANALYSIS.md` exists at TWO locations:
+- **Canonical (write here):** `agents/aether/PROTOCOL_DAILY_ANALYSIS.md`
+- **Root copy (symlink):** `Hyo/PROTOCOL_DAILY_ANALYSIS.md` → points to canonical above
+
+**THE ROOT COPY IS A SYMLINK.** Both are physically the same file. You cannot make them
+drift by editing one — any write to either path edits the one canonical file.
+
+Rules for upgrades (enforced by Part 13-14 of the protocol itself):
+1. Always edit `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` — the root symlink follows automatically
+2. Run `analysis-gate.py` on a real analysis to verify the gate still passes BEFORE bumping version
+3. Bump VERSION in the file header, update ANALYSIS_ALGORITHM.md to match
+4. Commit with both paths staged (git sees them as different entries — stage both: `git add PROTOCOL_DAILY_ANALYSIS.md agents/aether/PROTOCOL_DAILY_ANALYSIS.md`)
+
+**AUTOMATED PIPELINE (kai_analysis.py):** The protocol is injected into the Claude system prompt
+automatically at startup. `run_analysis.sh` also runs `analysis-gate.py` before any feed write.
+The protocol is NOT just documentation — it is loaded into every analysis call.
+
+**Current version: 2.5** (updated 2026-04-18)
+
+Logged: SE-AETHER-PROTOCOL-001 (two-copy drift caused Hyo to see v2.4 in Finder while canonical was v2.5)
+
+---
+
 ## MEMORY FAILURE LOG (so this never happens again)
 
 2026-04-18: Hyo re-uploaded Kai_Feedback_Apr16_2026.txt and AetherBot_Analysis_Apr13-16.txt because

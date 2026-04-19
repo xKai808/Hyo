@@ -216,6 +216,12 @@ Hyo/
 │   ├── HyoRegistry_Marketplace.md
 │   └── HyoRegistry_Reviews.md
 ├── docs/                        ← general + legacy docs
+├── PROTOCOL_DAILY_ANALYSIS.md → agents/aether/PROTOCOL_DAILY_ANALYSIS.md  ← SYMLINK (v2.5)
+│   # THE ROOT COPY IS A SYMLINK. Canonical is agents/aether/PROTOCOL_DAILY_ANALYSIS.md.
+│   # Always edit the canonical path — the root symlink follows automatically.
+│   # NEVER copy/paste between them — symlink makes that impossible by design.
+│   # Upgrade path: edit agents/aether/ copy → run analysis-gate.py to verify → bump VERSION.
+│   # kai_analysis.py injects this protocol into every Claude call automatically.
 ├── .secrets/ → agents/nel/security/  ← symlink for backward compat
 ├── website/ → agents/sam/website/    ← symlink for Vercel compat
 ├── newsletter/ → agents/ra/pipeline/ ← symlink for backward compat

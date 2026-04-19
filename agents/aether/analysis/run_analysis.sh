@@ -159,6 +159,27 @@ if [[ ! -f "$REPO_ANALYSIS_FILE" ]]; then
   exit 1
 fi
 
+# ── Pre-publish quality gate (SE-AETHER-GATE-001) ────────────────────────────
+# Hard block before any feed write. Gate validates: bash corruption, trading log
+# validity, section markers, GPT synthesis quality, version refs, trade data.
+# analysis-gate.py exits 1 on any failure → this script exits 1 → publish blocked.
+# Note: aether-publish-analysis.sh also runs this gate as a secondary safety net.
+GATE_SCRIPT="$ROOT/bin/analysis-gate.py"
+if [[ -f "$GATE_SCRIPT" ]]; then
+  log "Running pre-publish quality gate..."
+  python3 "$GATE_SCRIPT" "$TODAY" "$REPO_ANALYSIS_FILE"
+  GATE_RC=$?
+  if [[ $GATE_RC -ne 0 ]]; then
+    log "GATE FAILED (rc=$GATE_RC) — analysis exists but publish is BLOCKED"
+    log "Fix the gate failures listed above, then re-run: bash run_analysis.sh"
+    log "Or republish manually: bash $ROOT/bin/aether-publish-analysis.sh $TODAY $REPO_ANALYSIS_FILE"
+    exit $GATE_RC
+  fi
+  log "Gate passed — cleared for publishing"
+else
+  log "WARNING: Gate script not found at $GATE_SCRIPT — skipping gate (add bin/analysis-gate.py)"
+fi
+
 # ── Publish to HQ feed as aether-analysis entry ────────────────────────────
 log "Publishing aether-analysis-$TODAY to HQ feed..."
 PUBLISH_SH="$ROOT/bin/aether-publish-analysis.sh"
