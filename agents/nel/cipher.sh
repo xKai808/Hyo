@@ -65,7 +65,7 @@ if [[ ! -f "$STATE" ]]; then
   "permFixHistory": [],
   "trendCounters": {
     "gitleaks_not_installed_runs_in_a_row": 0,
-    "trufflehog_not_installed_runs_in_a_row": 0,  # deprecated — trufflehog removed
+    "trufflehog_not_installed_runs_in_a_row": 0,
     "perm_drift_events": 0
   },
   "escalationState": {

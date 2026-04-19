@@ -1,0 +1,33 @@
+[growth] 23:30:05 [sam] Starting growth phase
+[growth] 23:30:05 [sam] Next improvement: IMP-20260414-sam-001 — Build performance baseline + regression detection (addresses W1)
+[growth] 23:30:05 [sam] No executable steps for current ticket — needs Kai session for LLM reasoning
+[growth] 23:30:05 [sam] Growth phase complete
+sam — master coder agent dispatcher
+
+Subcommands
+  kai sam deploy       Git add, commit, push → Vercel deploy, verify live
+  kai sam test         Run all tests (API endpoints, static files, JSON)
+  kai sam build        Run build steps (npm install, npm run build, etc.)
+  kai sam fix <issue>  Accept issue description, output fix command for Mini
+  kai sam review       Scan recent changes, check for common issues
+
+Running on the Mini
+  Sam runs on Claude Code CLI where there is full network + filesystem access.
+  To invoke Sam from the Mini:
+
+    claude -p "Read KAI_TASKS.md, pick the top [K] code task, implement it, test it, deploy it, update KAI_TASKS.md"
+
+  This launches a full Claude Code session on the Mini where Sam can:
+  - Read and understand the codebase
+  - Implement changes
+  - Run tests locally
+  - Deploy to Vercel
+  - Update task tracking
+
+Activity logging
+  All Sam operations are logged to: /Users/kai/Documents/Projects/Hyo/agents/nel/logs/sam-YYYY-MM-DD.md
+
+HQ state tracking
+  Sam updates hq-state.json with deployment status and activity.
+
+[daily-report:sam] Weekend — skipping daily report

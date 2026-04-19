@@ -232,3 +232,5 @@ Build a new checker (Phase 6: Constitution Drift Detection) that runs daily:
 | 2026-04-16 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
 | 2026-04-18 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
 | 2026-04-18 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
+| 2026-04-19 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
+| 2026-04-19 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |

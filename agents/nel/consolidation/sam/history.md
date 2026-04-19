@@ -122,3 +122,8 @@ See tasks.md for pending API endpoints, subscriber persistence, and feature back
 
 **Sentinel:** passed=6 failed=0
 **Cipher:** leaks=0 in agents/sam/sam.sh
+
+## 2026-04-19 — nightly consolidation
+
+**Sentinel:** passed=6 failed=0
+**Cipher:** leaks=0 in agents/sam/sam.sh

@@ -560,3 +560,10 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/blissful-gracious-bohr/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6ace22d3] _(filed 2026-04-18)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/blissful-gracious-bohr/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6ace22d3:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/bold-lucid-brown/mnt/Hyo/newsletters/2026-04-19.md [sentinel:aurora-ran-today:e8b1667e] _(filed 2026-04-19)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/bold-lucid-brown/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3c20b86d] _(filed 2026-04-19)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/bold-lucid-brown/mnt/Hyo/newsletters/2026-04-19.md [sentinel:aurora-ran-today:e8b1667e:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/bold-lucid-brown/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3c20b86d:escalated]
