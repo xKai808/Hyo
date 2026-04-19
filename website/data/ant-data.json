@@ -1,10 +1,10 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-18T23:03:42.671577-06:00",
+  "updatedAt": "2026-04-18T23:20:47.654682-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-18T23:03:42.671593-06:00",
+    "lastUpdated": "2026-04-18T23:20:47.654694-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -44,20 +44,6 @@
       "lastRun": "2026-04-18T13:09:16-06:00"
     }
   ],
-  "revenue": {
-    "monthly": 24.94,
-    "streams": [
-      {
-        "name": "AetherBot Trading",
-        "source": "aether-metrics.json",
-        "weekly_pnl": 24.94,
-        "pnl_pct": 27.63,
-        "balance": 115.19,
-        "week_start": "2026-04-13",
-        "note": "Current week P&L from autonomous trading"
-      }
-    ]
-  },
   "income": {
     "total_monthly": 24.94,
     "streams": [
@@ -107,24 +93,24 @@
   },
   "credits": {
     "anthropic": {
-      "monthly_budget": 10.0,
+      "remaining": 30.79,
+      "total": 40.0,
+      "used": 9.21,
       "used_mtd": 0.2399,
-      "remaining": 9.7601,
-      "total": 10.0,
-      "used": 0.2399,
-      "source": "api-usage.jsonl MTD",
-      "note": "Budget-based. MTD spend for 2026-04. For exact account balance, add Anthropic admin API key.",
-      "expires": null
+      "expires": "2027-04-09",
+      "source": "console.anthropic.com (screen-scraped, scraped 0h ago)",
+      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
+      "note": "Real account balance from Anthropic console."
     },
     "openai": {
-      "monthly_budget": 10.0,
+      "remaining": 18.64,
+      "total": 20.0,
+      "used": 1.36,
       "used_mtd": 0.8854,
-      "remaining": 9.1146,
-      "total": 10.0,
-      "used": 0.8854,
-      "source": "api-usage.jsonl MTD",
-      "note": "Budget-based. MTD spend for 2026-04. For exact balance, add OpenAI billing API key.",
-      "expires": null
+      "expires": "2027-04-30",
+      "source": "platform.openai.com (screen-scraped, scraped 0h ago)",
+      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
+      "note": "Real account balance from OpenAI platform."
     }
   },
   "models": [

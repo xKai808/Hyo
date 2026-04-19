@@ -2840,24 +2840,37 @@ async function renderAnt(container) {
     </div>
   `);
 
-  // ── MONTHLY TREND ──
-  if (costs.dailyHistory && costs.dailyHistory.length > 0) {
-    const hist = costs.dailyHistory.slice(-14);
+  // ── DAILY CREDIT USAGE (14 days) — reads from data.history (top-level) ──
+  // Field was previously read from costs.dailyHistory (wrong path — never rendered).
+  // Fixed 2026-04-18: now reads data.history which is the correct field from ant-update.sh.
+  const dailyHist = data.history || [];
+  if (dailyHist.length > 0) {
+    const hist = dailyHist.slice(-14);
     const maxCost = Math.max(...hist.map(d => (d.anthropic || 0) + (d.openai || 0)), 0.01);
     const bars = hist.map(d => {
-      const total = (d.anthropic || 0) + (d.openai || 0);
-      const pct = (total / maxCost) * 100;
-      const label = d.date ? d.date.slice(5) : '';
+      const antAmt  = d.anthropic || 0;
+      const oaiAmt  = d.openai    || 0;
+      const total   = antAmt + oaiAmt;
+      const antPct  = (antAmt / maxCost) * 100;
+      const oaiPct  = (oaiAmt / maxCost) * 100;
+      const label   = d.date ? d.date.slice(5) : '';
+      const hasData = total > 0;
       return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
-        <div style="font-size:0.62em;color:var(--text-muted);">${antFmt(total, 0)}</div>
-        <div style="width:100%;background:var(--bg-tertiary);border-radius:3px;height:50px;display:flex;align-items:flex-end;">
-          <div style="width:100%;height:${Math.max(pct, 3).toFixed(0)}%;background:var(--accent);border-radius:3px;opacity:0.8;"></div>
+        <div style="font-size:0.60em;color:${hasData ? 'var(--text-primary)' : 'var(--text-muted)'};">${hasData ? '$' + total.toFixed(2) : ''}</div>
+        <div style="width:100%;background:var(--bg-tertiary);border-radius:3px;height:52px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;">
+          <div style="width:100%;height:${Math.max(oaiPct, hasData ? 2 : 0).toFixed(1)}%;background:var(--cyan, #22d3ee);opacity:0.85;min-height:${oaiAmt > 0 ? 2 : 0}px;"></div>
+          <div style="width:100%;height:${Math.max(antPct, hasData ? 2 : 0).toFixed(1)}%;background:var(--purple, #a855f7);opacity:0.85;min-height:${antAmt > 0 ? 2 : 0}px;border-radius:3px 3px 0 0;"></div>
         </div>
-        <div style="font-size:0.62em;color:var(--text-muted);">${label}</div>
+        <div style="font-size:0.60em;color:var(--text-muted);">${label}</div>
       </div>`;
     }).join('');
-    html += antSection('14-Day Cost History', `
-      <div style="display:flex;gap:4px;align-items:flex-end;">${bars}</div>
+    html += antSection('Daily Credit Usage', `
+      <div style="display:flex;gap:2px;align-items:flex-end;margin-bottom:10px;">${bars}</div>
+      <div style="display:flex;gap:14px;font-size:0.72em;color:var(--text-muted);">
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--purple,#a855f7);opacity:0.85;margin-right:4px;vertical-align:middle;"></span>Anthropic</span>
+        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--cyan,#22d3ee);opacity:0.85;margin-right:4px;vertical-align:middle;"></span>OpenAI</span>
+        <span style="margin-left:auto;">stacked by provider · last 14 days</span>
+      </div>
     `);
   }
 

@@ -1,7 +1,7 @@
 # PROTOCOL_ANT.md
 # Ant — Complete Agent Execution Protocol
 #
-# VERSION: 1.0
+# VERSION: 1.1
 # Author: Kai | Created: 2026-04-18
 # Canonical location: agents/ant/PROTOCOL_ANT.md
 #
@@ -10,6 +10,8 @@
 #
 # CHANGE HISTORY:
 #   v1.0 (2026-04-18): Initial — credit bars, monthly ledger, report archiving, schedule
+#   v1.1 (2026-04-18): Added screen-scrape workflow (Part 9), daily usage chart (Part 6 update),
+#                      heredoc fix in ant-update.sh (quoted heredoc + env-var paths)
 
 ---
 
@@ -250,14 +252,16 @@ When ant-update.sh, PROTOCOL_ANT.md, or the HQ render function changes:
 | Version | Date       | Change |
 |---------|------------|--------|
 | 1.0     | 2026-04-18 | Initial — credit bars, monthly ledger, report archive, schedule |
+| 1.1     | 2026-04-18 | Screen-scrape workflow, daily usage chart, heredoc fix |
 
 ---
 
 ## PART 8 — KNOWN LIMITATIONS
 
-1. **Budget-based credits, not account-balance.** The credit bars show spend vs. monthly budget,
-   not the actual account credit balance. To fix: add Anthropic admin API key + OpenAI billing key
-   to `~/security/hyo.env` and update ant-update.sh to fetch real balances.
+1. **Budget-based credits, not account-balance.** ~~The credit bars show spend vs. monthly budget.~~
+   **RESOLVED v1.1:** `scraped-credits.json` now provides real account balances from Anthropic and
+   OpenAI billing consoles (via `kai ant-scrape`). Budget-based tracking is the fallback only when
+   the scrape file is missing or >48h old.
 
 2. **No subscription detection.** Claude Max ($200) and GPT Plus ($20) are hardcoded in
    ant-update.sh. If plans change, update `fixed_subscriptions` in the script manually.
@@ -265,3 +269,92 @@ When ant-update.sh, PROTOCOL_ANT.md, or the HQ render function changes:
 3. **AetherBot P&L is weekly, not monthly.** The trading P&L resets every Monday. Monthly net
    position therefore understates total trading income in months where multiple weeks were profitable.
    Fix: accumulate weekly P&L snapshots into the monthly ledger when each week closes.
+
+---
+
+## PART 9 — SCREEN-SCRAPE WORKFLOW (real credit balances)
+
+Ant uses browser automation via Cowork computer-use to scrape real credit balances from
+the Anthropic and OpenAI billing consoles. This replaces budget-based estimates with
+actual account balances — required for accurate bookkeeping.
+
+### 9.1 Trigger
+
+Run `kai ant-scrape` from a Cowork session with computer-use access. Schedule: nightly
+before `com.hyo.ant-daily` (23:45 MT) — ideally around 23:30 MT so fresh values are
+picked up by the daily update. Currently manual; automate when stable.
+
+### 9.2 Anthropic credits
+
+Navigate to: `https://console.anthropic.com/settings/credits`
+
+Capture:
+- Total credit balance (USD)
+- Credits used (USD)
+- Credits remaining (USD)
+- Expiry date of each grant
+- Grant amounts and dates
+
+### 9.3 OpenAI credits
+
+Navigate to: `https://platform.openai.com/settings/organization/billing/credit-grants`
+
+Capture:
+- Total granted (USD)
+- Remaining balance (USD)
+- Grant expiry dates
+
+### 9.4 Output format
+
+Write to `agents/ant/ledger/scraped-credits.json`:
+
+```json
+{
+  "scraped_at": "2026-04-18T23:30:00-06:00",
+  "scraped_by": "computer_use_browser",
+  "anthropic": {
+    "remaining": 30.79,
+    "total": 40.00,
+    "used": 9.21,
+    "expires": "2027-04-09",
+    "grants": [{"amount": 20.00, "date": "2026-04-08"}, {"amount": 20.00, "date": "2026-04-08"}]
+  },
+  "openai": {
+    "remaining": 18.64,
+    "total": 20.00,
+    "used": 1.36,
+    "expires": "2027-04-30",
+    "grants": [{"amount": 20.00, "received": "2026-03-31", "state": "Available", "expires": "2027-04-30"}]
+  }
+}
+```
+
+### 9.5 Freshness rule
+
+`ant-update.sh` uses scraped values if `scraped_at` is within 48 hours of run time.
+If stale or missing: logs a WARNING and falls back to budget-based tracking.
+**No silent failures** — the source is always labeled in `credits.*.source` in ant-data.json.
+
+### 9.6 Daily credit usage chart
+
+The `history` field in ant-data.json contains 14 days of per-provider daily API costs
+from `api-usage.jsonl`. HQ renders these as stacked bars (Anthropic=purple, OpenAI=cyan)
+in the "Daily Credit Usage" section of the Ant tab. This shows how much API credit was
+consumed each day — equivalent to the usage dashboards on Anthropic and OpenAI consoles.
+
+**Field path:** `data.history[]` — NOT `data.costs.dailyHistory` (old bug, fixed 2026-04-18).
+Each entry: `{ date, anthropic, openai, total }` (all in USD).
+
+---
+
+## PART 10 — TECHNICAL NOTES
+
+### ant-update.sh heredoc pattern
+
+`ant-update.sh` uses a **quoted heredoc** (`<< 'PYEOF'`) to embed the Python script.
+This prevents bash from expanding `${var:format}` inside Python f-strings, which
+would cause `bad substitution` errors. All bash variables are exported as env vars
+(`ANT_ROOT`, `ANT_USAGE_FILE`, etc.) and read in Python via `os.environ`.
+
+When modifying ant-update.sh, always use `<< 'PYEOF'` (quoted). Never use `<< PYEOF`
+(unquoted) — it breaks any Python f-string containing `{var:.Nf}` format specs.
