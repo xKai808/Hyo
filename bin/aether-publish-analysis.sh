@@ -91,7 +91,22 @@ def grab_line(patterns, t, max_len=600):
             return t[start:end].strip()[:max_len]
     return ""
 
-trades  = grab_line([r"trades?\s*[:\-]", r"trade\s*ledger", r"by strategy", r"strategy family"], text)
+def grab_section(patterns, t, max_len=1200):
+    """Like grab_line but captures multi-paragraph content: match to next === header."""
+    for pat in patterns:
+        m = re.search(pat, t, re.IGNORECASE)
+        if m:
+            start = m.start()
+            # find next section boundary (=== header or PART N: heading)
+            end_m = re.search(r'\n={4,}|\nPART \d+:', t[start+len(m.group()):])
+            if end_m:
+                end = start + len(m.group()) + end_m.start()
+            else:
+                end = min(start + max_len, len(t))
+            return t[start:end].strip()[:max_len]
+    return ""
+
+trades  = grab_section([r"PART 3:.*STRATEGY FAMILY", r"STRATEGY FAMILY PERFORMANCE"], text)
 risk    = grab_line([r"risk\b", r"phantom", r"harvest miss", r"stop(?:/harvest)? event"], text)
 balance = grab_line([r"balance\b", r"net p&?l", r"end balance", r"start(ing)?\s*balance"], text)
 btc     = grab_line([r"\bbtc\b", r"bitcoin"], text)
@@ -158,7 +173,10 @@ def load_gpt(path, min_chars=200):
 
 analysis_dir = os.path.dirname(analysis_path)
 gpt_independent = load_gpt(os.path.join(analysis_dir, f"GPT_Independent_{date}.txt"))
-gpt_review      = load_gpt(os.path.join(analysis_dir, f"GPT_CrossCheck_{date}.txt"))
+# Try both filenames: gpt_crosscheck.py now writes GPT_Review_DATE.txt; older runs wrote GPT_CrossCheck_DATE.txt
+gpt_review = load_gpt(os.path.join(analysis_dir, f"GPT_Review_{date}.txt"))
+if not gpt_review:
+    gpt_review = load_gpt(os.path.join(analysis_dir, f"GPT_CrossCheck_{date}.txt"))
 
 # readLink: use static rich page if it exists, fall back to dynamic page
 static_html = os.path.join(os.path.dirname(feed_git), "..", "daily", f"aether-{date}.html")
