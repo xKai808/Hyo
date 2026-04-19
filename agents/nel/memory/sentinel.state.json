@@ -2,41 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-19T14:10:52Z",
-  "totalRuns": 95,
+  "lastRunAt": "2026-04-19T18:10:51Z",
+  "totalRuns": 99,
   "runHistory": [
-    {
-      "ts": "2026-04-18T10:04:41Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 2,
-      "recurringIssues": 2,
-      "resolved": 5
-    },
-    {
-      "ts": "2026-04-18T10:04:44Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-18T10:04:46Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-18T10:04:49Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
     {
       "ts": "2026-04-18T10:05:52Z",
       "passed": 6,
@@ -244,6 +212,38 @@
       "newIssues": 0,
       "recurringIssues": 4,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-19T18:10:32Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 1,
+      "recurringIssues": 2,
+      "resolved": 3
+    },
+    {
+      "ts": "2026-04-19T18:10:35Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-19T18:10:42Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-19T18:10:51Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -252,9 +252,9 @@
       "check_id": "api-health-green",
       "detail": "health endpoint not green or token unconfigured",
       "firstSeen": "2026-04-11T10:04:55Z",
-      "lastSeen": "2026-04-19T10:10:37Z",
-      "daysFailing": 92,
-      "status": "resolved",
+      "lastSeen": "2026-04-19T18:10:51Z",
+      "daysFailing": 96,
+      "status": "open",
       "resolvedAt": "2026-04-19T14:10:48Z"
     },
     "aurora-ran-today:0c142622": {
@@ -754,8 +754,8 @@
       "firstSeen": "2026-04-18T06:14:01Z",
       "lastSeen": "2026-04-19T14:10:52Z",
       "daysFailing": 3,
-      "status": "open",
-      "resolvedAt": "2026-04-18T10:04:41Z"
+      "status": "resolved",
+      "resolvedAt": "2026-04-19T18:10:32Z"
     },
     "scheduled-tasks-fired:a2875b77": {
       "severity": "P1",
@@ -764,8 +764,8 @@
       "firstSeen": "2026-04-18T06:14:01Z",
       "lastSeen": "2026-04-19T14:10:52Z",
       "daysFailing": 3,
-      "status": "open",
-      "resolvedAt": "2026-04-18T10:04:41Z"
+      "status": "resolved",
+      "resolvedAt": "2026-04-19T18:10:32Z"
     },
     "secrets-dir-permissions:6717d4df": {
       "severity": "P1",
@@ -774,8 +774,8 @@
       "firstSeen": "2026-04-18T06:14:01Z",
       "lastSeen": "2026-04-19T14:10:52Z",
       "daysFailing": 3,
-      "status": "open",
-      "resolvedAt": "2026-04-18T10:04:41Z"
+      "status": "resolved",
+      "resolvedAt": "2026-04-19T18:10:32Z"
     },
     "task-queue-size:385b8938": {
       "severity": "P2",
@@ -842,8 +842,8 @@
       "check_id": "task-queue-size",
       "detail": "26 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-18T18:10:13Z",
-      "lastSeen": "2026-04-19T14:10:52Z",
-      "daysFailing": 20,
+      "lastSeen": "2026-04-19T18:10:51Z",
+      "daysFailing": 24,
       "status": "open"
     },
     "scheduled-tasks-fired:4ceeed88": {
@@ -905,6 +905,15 @@
       "daysFailing": 2,
       "status": "resolved",
       "resolvedAt": "2026-04-19T14:10:48Z"
+    },
+    "scheduled-tasks-fired:1bb68c20": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/gifted-wonderful-gates/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-19T18:10:32Z",
+      "lastSeen": "2026-04-19T18:10:51Z",
+      "daysFailing": 4,
+      "status": "open"
     }
   },
   "falsePositives": [],

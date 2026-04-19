@@ -580,3 +580,7 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: 0755 (want 700) — run: chmod 700 /Users/kai/Documents/Projects/Hyo/.secrets [sentinel:secrets-dir-permissions:6717d4df:escalated]
 
 - [ ] **[K]** [cipher] **P1** gitleaks found 14 pattern match(es); see /Users/kai/Documents/Projects/Hyo/agents/nel/logs/cipher-2026-04-19T08.log [cipher:gitleaks-pattern-match:a0a1c0d7] _(filed 2026-04-19)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/gifted-wonderful-gates/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1bb68c20] _(filed 2026-04-19)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gifted-wonderful-gates/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1bb68c20:escalated]
