@@ -1,13 +1,14 @@
 # PROTOCOL_DAILY_ANALYSIS.md
 # Aether Daily Analysis — Complete Agent Execution Protocol
 #
-# VERSION: 2.1
+# VERSION: 2.2
 # Author: Kai | Last updated: 2026-04-18
-# Status: AUTHORITATIVE — supersedes v2.0
-# Changes from v2.0: Added trade ledger to report format (Gap 1), clarified
-# recommendation format for instrumentation builds (Gap 6), added 2-day window
-# guidance (Gap 4), clarified canonical template vs protocol conflict (Gap 5),
-# added SESSION NET TABLE placement rule (Gap 3). ANALYSIS_ALGORITHM.md updated.
+# Status: AUTHORITATIVE — supersedes v2.1
+# Changes from v2.1: Added DISCREPANCY → TICKET → PROTOCOL UPDATE rule to Part 14
+# (Hyo request: fixes must be logged and never recur). Added 2-day analysis title
+# bug to Part 10 failure modes. Added P8 checklist item (title verification).
+# Added DISCREPANCY RESOLUTION PROTOCOL to ANALYSIS_ALGORITHM.md.
+# Ticket filed for Apr 16-17 title error (discovered 2026-04-18).
 #
 # PURPOSE:
 # Any agent starting from zero context can read this document and produce
@@ -794,6 +795,10 @@ PUBLISHING
 [ ] P5: Vercel deploy confirmed live (fetch the URL, not just "should work")
 [ ] P6: Commit pushed to origin main (not just committed locally)
 [ ] P7: aether-metrics.json updated with today's confirmed EOD balance
+[ ] P8: Feed entry title reflects correct date range and net P&L
+        For 2-day analyses: title must show "Apr N-N+1" and 2-day net
+        For single-day: title must show correct day's net (not prior day's)
+        Verify by reading the title from the feed entry after publish
 
 OPEN ISSUES UPDATE
 [ ] I1: KNOWLEDGE.md balance ledger updated with today's confirmed EOD
@@ -833,6 +838,22 @@ both days. If directional pattern matches both days → regime event. If no patt
 
 **More than 3 consecutive sessions: same P0 issue with no fix deployed:**
 Activate HALT condition (F3). Recommend pausing trading until fix ships.
+
+**2-day analysis: feed entry title shows wrong P&L:**
+The publish script (aether-publish-analysis.sh) derives the title suffix from the FIRST
+balance → balance pattern in the file. For 2-day analyses, this matches Day 1's net,
+not Day 2's. Fix: After running aether-publish-analysis.sh on a 2-day analysis, manually
+patch the title in both feed.json paths:
+  python3 -c "
+  import json
+  for p in ['agents/sam/website/data/feed.json', 'website/data/feed.json']:
+      d = json.load(open(p)); r = d['reports']
+      e = next(x for x in r if x['id'] == 'aether-analysis-YYYY-MM-DD')
+      e['title'] = 'AetherBot Daily Analysis — Apr N-N+1 (±$X.XX 2-day | Apr N+1 ±$X.XX)'
+      json.dump(d, open(p,'w'), indent=2)
+  "
+Add P8 checklist item: "Title reflects correct date range and P&L for the report window."
+(Added 2026-04-18 — discovered during Apr 16-17 analysis publication.)
 
 ---
 
@@ -987,7 +1008,38 @@ Next simulation should run against the first analysis written using this protoco
 
 This document is only updated by Kai. It grows — it never shrinks requirements.
 
-When to update:
+### MANDATORY: Discrepancy → Ticket → Protocol Update (non-negotiable)
+
+**If ANY discrepancy, bug, or incorrect output is found at ANY point in the pipeline:**
+
+```
+1. FILE A TICKET IMMEDIATELY
+   bash ~/Documents/Projects/Hyo/bin/ticket.sh \
+     --type bug \
+     --title "[AETHER-PUBLISH] <description>" \
+     --severity P1 \
+     --description "<what failed, what the correct behavior is>"
+
+2. FIX THE ISSUE
+   Re-run Part 9 checklist. Every item must pass before declaring fixed.
+
+3. UPDATE THIS PROTOCOL
+   Add the failure to Part 10 (if a new failure mode).
+   Add the anti-pattern to Part 8 (if a new class of error).
+   Add/update checklist item in Part 9 (if the checklist would have caught it).
+   Add simulation results to Part 13 (if tested against existing analyses).
+   Bump the VERSION number above.
+
+4. COMMIT PROTOCOL UPDATE WITH THE FIX
+   git add agents/aether/PROTOCOL_DAILY_ANALYSIS.md agents/aether/ANALYSIS_ALGORITHM.md
+   Include in the SAME commit as the fix — not a separate commit.
+
+The goal: agent starting from zero next session reads this protocol
+and cannot make the same mistake. A fix without a protocol update
+is a temporary patch. It will recur. This is why we don't do it.
+```
+
+### When to update (non-discrepancy):
 - A new open issue is confirmed → add to B4 in Part 1
 - A new failure mode is discovered → add to Part 10
 - Format changes (approved by Hyo) → update Part 5

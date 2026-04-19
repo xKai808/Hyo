@@ -331,6 +331,58 @@ S8: Would Hyo look at this and ask "why didn't you verify?" → If yes, you're n
 
 ---
 
+## DISCREPANCY RESOLUTION PROTOCOL (Mandatory — run whenever anything is wrong)
+
+**Every problem found during publishing MUST do three things. Not one. Not two. All three.**
+
+```
+IF any discrepancy, bug, or incorrect output is found at any point in the pipeline:
+
+STEP 1: TICKET
+  Open a ticket immediately:
+    bash ~/Documents/Projects/Hyo/bin/ticket.sh \
+      --type bug \
+      --title "[AETHER-PUBLISH] <description>" \
+      --severity P1 \
+      --description "<what failed, what was found, what was corrected>"
+  Do not continue to Step 2 until the ticket is filed.
+
+STEP 2: FIX AND VERIFY
+  Fix the issue. Run the Part 9 checklist again from the beginning.
+  Do not declare fixed until every item passes.
+
+STEP 3: UPDATE PROTOCOL
+  After fixing, open PROTOCOL_DAILY_ANALYSIS.md and add:
+    - The failure mode to Part 10 (Failure Modes and Recovery) if not there
+    - The anti-pattern to Part 8 if it is a new class of error
+    - A new checklist item to Part 9 if the checklist would have caught it
+    - Simulation results to Part 13 if a simulation was run
+  Bump the version number at the top of PROTOCOL_DAILY_ANALYSIS.md.
+  Commit the protocol update in the same push as the fix.
+
+The goal: an agent starting from zero next session reads the updated protocol
+and the same mistake cannot happen again. A fix without a protocol update
+is not a fix — it is a temporary patch that will recur on the next reset.
+```
+
+**What counts as a discrepancy:**
+- Feed entry exists but sections are empty
+- Analysis content differs from what was in the analysis file
+- Title shows wrong date, wrong P&L, wrong day count
+- Section markers missing from analysis file
+- GPT pipeline files missing or empty stubs
+- Any checklist item in Part 9 fails after publishing
+- Any mismatch between sandbox verification and Mini live state
+- "VERIFY OK" claimed but actual content not checked
+
+**What does NOT count:**
+- Sparse log handled correctly by the gate (expected behavior, not a bug)
+- GPT API failure when API is down (log it, label it, move on — known failure mode)
+
+**Ticket + protocol update is non-negotiable. No exceptions.**
+
+---
+
 ## ANTI-PATTERNS (Things This Algorithm Prevents)
 
 | Anti-pattern | How this algorithm prevents it |
