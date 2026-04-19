@@ -1,0 +1,273 @@
+================================================================================
+AETHERBOT SESSION ANALYSIS | APR 16–17, 2026
+Analyst: Kai (Claude primary + GPT cross-check applied)
+Key correction: Apr 17 09:33 stolen-winner claim removed — see Part 5.
+================================================================================
+
+BALANCE LEDGER:
+  Apr 16: $116.16 → $114.33  net -$1.83  (confirmed)
+  Apr 17: $114.33 → $115.19  net +$0.86  (UNCONFIRMED — verify Kalshi app)
+
+All-time net through Apr 16 (confirmed): +$12.95
+Apr 17 EOD must be verified against Kalshi before being entered as confirmed.
+
+
+================================================================================
+=== CLAUDE PRIMARY ANALYSIS ===
+================================================================================
+
+PART 1: THE REAL STORY OF THESE TWO DAYS
+
+Apr 16 peaked at $134.69 intraday. That means $20.36 of real P&L was on the
+table before EVENING. EU_MORNING was clean (+$3.61), NY_PRIME was marginally
+positive despite two large losses (+$0.65), and then BTC ran from 74,750 to
+74,800+ between 19:45 and 21:15 EVENING. Four bps_premium losses during that
+window totaled -$16.98. The net -$1.83 day is almost entirely that BTC regime
+event — not strategy failure.
+
+Apr 17 is the proof. BTC stable at 77,000–77,500 through EVENING. Same
+families, same windows, result: EVENING +$5.14. NY_PRIME was the profit engine
+at +$6.93 (14 trades, 79% WR). ASIA_OPEN was a clean 3W/0L sweep (+$2.50).
+The difference between these two days is regime, not edge.
+
+Two-day session breakdown:
+  EU_MORNING  +$3.61  /  -$0.65  =  +$2.96
+  ASIA_OPEN   $0.00   /  +$2.50  =  +$2.50
+  NY_PRIME    +$0.65  /  +$6.93  =  +$7.58  ← profit engine intact
+  EVENING    -$12.99  /  +$5.14  =  -$7.85
+
+EVENING is the only negative 2-day session, and Apr 17 already partially
+reversed it. Do not gate EVENING. Do not touch bps_premium.
+
+
+PART 2: IMPORTANT WINDOWS
+
+APR 16 03:00 — PAQ_EARLY_AGG NO, 6c, +$3.28
+The bot found the correct side and held to settlement for a clean win. The
+only note: strength was visible from 03:03–03:06 before entry at 03:06:51 —
+ABS/BCDP blocked several earlier READY states. The trade won, but the window
+wasn't fully captured. This late-arrival pattern is recurring and worth
+tracking, but it does not indicate PAQ is broken.
+
+APR 16 03:30 — PAQ_EARLY_AGG NO, 6c, +$0.90 (harvested)
+Multiple PHI harvests executed at 0.94 and 0.98. Earlier harvest attempts hit
+BDI=0 skips near the held price, but later stages cleared. The harvest path
+worked when the book cooperated. This is evidence that harvest is inconsistent,
+not universally dead. Do not overgeneralize from a later miss.
+
+APR 16 19:53–19:55 — NO position near 0.929–0.977, harvest miss
+Strong NO position with int_bdi in the 222–317 range, anchor_depth 172–204,
+meaningful parsed levels and rung_depth. Harvest still missed — yes_bids and
+no_bids were absent in the exchange response despite the internal book showing
+real depth. This is a clean Mode B case: the depth filter fix handles thin
+anchor (Mode A) but does nothing when the bids have been consumed between poll
+and order submission. Not an entry problem, not a signal problem, not a
+liquidity-detection problem. The execution path is the failure point.
+
+APR 16 EVENING 19:45–21:15 — bps_premium regime losses
+Both YES and NO positions lost in the same window. That is the signature of a
+high-volatility directional regime — BTC moved against NO positions and
+triggered YES exits simultaneously. bps_premium EVENING was -$16.98 on Apr 16
+and +$5.14 on Apr 17. The variable is BTC regime, not strategy. Do not gate
+bps_premium EVENING based on this session.
+
+APR 17 00:06 — bps_premium YES @ 0.86, +$0.84
+Clean backbone winner. The premium family found the correct side and held
+to settlement with no incident. This is what bps_premium looks like when the
+regime is stable. Preserve the family exactly as is.
+
+APR 17 01:21–01:30 — bps_premium NO @ 0.80, +$0.70 (harvested)
+PHI harvests cleared at 0.86, 0.91, 0.93, 0.94. Multiple stages executed
+and confirmed. The harvest path can work. The Mode B problem is specific to
+near-certain high-price contracts where bids vanish between poll and order —
+it is not a reason to conclude harvest is broken across the board.
+
+APR 17 09:10–09:15 — bps_premium NO, HOLD1 → STAGED_EXIT, net +$0.12
+This is the V247 validation. TIME_BDI_LOW fired, Stage 1 partial exit filled,
+HOLD1 triggered, STAGED_EXIT_AFTER_HOLD1 engaged, EXIT_ESCALATED_AFTER_BDI0
+fired, and the trade settled +$0.12 instead of becoming an uncontrolled loss.
+The containment path is live and working. v247 is now live-confirmed. This is
+a structural repair, not a cosmetic improvement. Say so clearly and preserve
+every piece of it.
+
+APR 17 09:33 — PAQ_EARLY_AGG YES @ 0.64, -$4.48
+GPT CORRECTION: The original Claude analysis claimed this was a stolen winner —
+that holding the YES position to expiry would have resulted in a YES win because
+BTC was running upward. The raw log shows the opposite: YES was at 0.081 by
+09:42, at 0.011 by 09:43, and at 0.001 at expiry. The contract resolved NO.
+BTC rose intraday but the contract struck below BTC close. The -$4.48 was a
+legitimate market loss. This claim is removed.
+
+What is still true: the exit chain was chaotic. 9 consecutive POS WARNINGs
+immediately after BUY SNAPSHOT (API 0, local 7), then FLIP, FLIP_EMERGENCY,
+STOP UNFILLED, and multiple fallback stops. The control flow on a confirmed-
+losing position was messy and produced execution chaos on top of a market loss.
+POS WARNING on entry is a real new pattern that deserves instrumentation.
+But the position was a loser. The exit chain did not cause the loss.
+
+APR 17 12:57–12:58 and 18:37 — harvest misses on near-certain NO
+int_bdi 280–1003, anchor_depth 58–695, real parsed levels and rung_depth.
+yes_bids and no_bids still ABSENT when the order lands. The strategy was right,
+the detection was right, the internal book looked deep — and the order still
+failed to monetize. This is Mode B at its clearest. The recommendation is to
+instrument place_exit_order() and the exchange response path, not to tighten
+entries, delete families, or lower PHI thresholds.
+
+APR 17 13:02 — PAQ_EARLY_AGG YES @ 0.68, BDI 34, MID+BDI_CLAMP5
+The log explicitly shows MID+BDI_CLAMP5 — the bot sized to 5 contracts against
+a thin book at entry. This is the entry risk control working correctly. Note it,
+preserve it, and do not let it get loosened because of losses elsewhere.
+
+
+PART 3: STRATEGY FAMILY PERFORMANCE (2-DAY)
+
+PAQ_EARLY_AGG — 24 trades, 14W/10L, 58% WR, +$10.32 net
+The -$14.96 (Apr 16) and -$4.48 (Apr 17) losses share the same mechanism:
+emergency exit sequences on YES positions during BDI=0 cascades. The +$19.27
+(Apr 16) is the largest single trade of the period. The directional read is
+working. The execution path after the read has instrumentation gaps.
+Do not gate PAQ.
+
+bps_premium — 20 trades, 14W/6L, 70% WR, +$0.75 net
+Apr 16 EVENING was a regime event. Apr 17 shows the backbone producing +$14.45
+in the same session. 70% WR across a volatile two-day period including a
+-$16.98 EVENING disaster confirms the edge is real.
+Do not touch bps_premium.
+
+PAQ_STRUCT_GATE — 5 trades, 2W/3L, 40% WR, -$4.30 net
+The Apr 17 win (PAQ 4, abs 0.046%, 655s remaining) confirms the logic is sound
+when conditions align. Apr 16 losses were mechanism-adjacent (BDI=0 expiry
+failures, not strategy failures). Hold status, no changes.
+
+
+PART 4: EU_MORNING — 4-SESSION ASSESSMENT
+
+bps_premium in EU_MORNING is 3W/2L across 4 sessions. The EU_MORNING question
+is not a window-level issue — it is PAQ-specific.
+
+PAQ_EARLY_AGG EU_MORNING net is actually positive over 4 sessions (+$3.67)
+despite consistent small losses after 04:15. The issue is narrower than the
+original framing. Accumulate 2 more sessions before any gate decision.
+
+
+PART 5: STOP AND HARVEST EVENTS
+
+5.1 MODE B CONFIRMED — 4 CLEAR INSTANCES (APR 17)
+  #1: int_bdi 280,  anchor_depth 58  — yes_bids ABSENT, no_bids ABSENT
+  #2: int_bdi 708,  anchor_depth 291 — yes_bids ABSENT, no_bids ABSENT
+  #3: int_bdi 676,  anchor_depth 285 — yes_bids ABSENT, no_bids ABSENT
+  #4: int_bdi 1003, anchor_depth 695 — yes_bids ABSENT, no_bids ABSENT
+
+BDI 1003 with anchor_depth 695 at ±0.02 is an unambiguously deep book. The
+order is failing after poll. v254 must capture the time delta between last OB
+poll and order placement. If delta is consistently >500ms when ABSENT fires
+versus <100ms when HARVEST DONE fires, Mode B root cause is confirmed.
+
+5.2 POS WARNING ON ENTRY — NEW PATTERN (APR 17)
+Prior to Apr 17, POS WARNING fired only during EXIT sequences. Apr 17 shows
+it firing immediately after BUY SNAPSHOT:
+  03:00: API 0 local 7, ×2
+  03:15: API 0 local 4, ×2
+  03:45: API 0 local 5, ×2
+  09:00: API 0 local 6 then local 3, ×3
+  09:33: API 0 local 7, ×9 (worst observed)
+
+Settled P&L confirms the positions were real — most likely Scenario C (API
+polling lag after fill). But the bot currently treats API 0 as "no position
+exists" and fires every emergency exit path. v254 must add an entry-
+confirmation hold: if POS WARNING fires in BUY_SNAPSHOT context with >300s
+remaining, wait 2 poll cycles before initiating exit logic.
+
+5.3 BDI=0 TIME GATE STATUS
+The 120s gate (secs_left ≤ 120 → skip hold) addresses worst expiry cases but
+does not cover BDI=0 cascades at 192s, 258s seen in Apr 17. The 120s gate
+ships in v254 as designed. Any direction-aware extension needs 2–3 more sessions
+of data. Do not build it yet.
+
+
+================================================================================
+=== GPT CRITIQUE ===
+================================================================================
+
+VERDICT: Claude's analysis was directionally correct on the major business
+story but contained one material overclaim and one hypothesis not yet strong
+enough to build from.
+
+CORRECTIONS APPLIED:
+1. Apr 17 09:33 stolen-winner claim: REMOVED. Raw log showed YES at 0.001
+   at expiry (resolved NO). The market moved against the position. The
+   -$4.48 was a legitimate loss. The exit chain was messy on a losing trade,
+   not the cause of the loss.
+
+2. BDI=0 direction-aware logic: MOVED TO MONITOR. Interesting observation,
+   insufficient data. Two days is not enough to build direction-aware BDI
+   interpretation. Collect 2–3 more sessions.
+
+CONFIRMED CORRECT:
+- Apr 16 EVENING was regime, not strategy failure. Same families, opposite
+  result next day. Do not gate.
+- Harvest is an execution-path problem. Mode B instances with int_bdi up to
+  1003 confirm the depth detection is working — the failure is downstream.
+- POS WARNING on entry is a real new pattern requiring instrumentation.
+- EU_MORNING handling: backing off the stronger claim and monitoring is right.
+- v247 containment validation at Apr 17 09:10–09:15: confirmed.
+
+DISCIPLINE GPT APPLIED: Keep the signal, kill the overreach. A claim must be
+supported by data, not just consistent with the story the data is telling.
+The 09:33 trade fit the narrative of "POS WARNING caused a bad exit on a
+winning position" — but the raw prices at expiry (0.001) don't support it.
+That is the correct standard.
+
+
+================================================================================
+=== FINAL SYNTHESIS ===
+================================================================================
+
+AetherBot has a functioning directional edge. Two days of data show +$10.32
+from PAQ, +$0.75 from bps_premium despite a regime disaster, and a live-
+confirmed v247 containment fix. The net -$1.83 on Apr 16 is explained by a
+single BTC directional event in EVENING. Apr 17 partially recovered (+$0.86
+unconfirmed). The reads are right. The entries are mostly appropriate. The
+execution path downstream of a correct read is the engineering problem.
+
+CONFIRMED v254 SCOPE:
+
+P0: POS WARNING full exchange response logging
+    Separate entry-time vs exit-time context. Log: API response body, whether
+    position appears on NEXT poll, time delta BUY order → first POS WARNING.
+    Entry-confirmation hold: POS WARNING in BUY_SNAPSHOT context with >300s
+    remaining → wait 2 poll cycles before initiating any exit logic.
+
+P1: Time gate on BDI=0 hold
+    secs_left ≤ 120 → skip hold. Ships as designed. No direction-aware
+    extension yet.
+
+P2: Harvest Mode B timing instrumentation
+    Log time delta: last OB poll → order placement on every harvest attempt.
+    If delta >500ms consistently when ABSENT fires: root cause confirmed.
+
+MONITOR — not build-ready:
+- BDI=0 direction-aware behavior on high-priced YES (2–3 more sessions)
+- EU_MORNING PAQ-specific negative EV post-04:15 (2 more sessions)
+- POS WARNING Scenario A/B vs C determination (v254 logging resolves this)
+- Whether ABS/gating is systematically causing late entries in clean windows
+
+DO NOT CHANGE:
+- bps_premium (regime event in EVENING, not strategy failure)
+- PAQ_EARLY_AGG (correct reads, +$10.32 2-day net)
+- PAQ_STRUCT_GATE (Apr 17 win confirms logic is sound)
+- v247 containment logic (confirmed working Apr 17 09:10)
+- BDI entry size clamp (confirmed working Apr 17 13:02)
+
+NEXT DECISION POINT after v254 logs arrive:
+"Does POS WARNING on entry consistently indicate Scenario C (API lag)?"
+→ YES: ship entry-confirmation hold, stop firing exits on fresh-entry warnings
+→ Any Scenario B confirmed: treat as P0 state bug, prioritize immediately
+
+LEDGER NOTE:
+Apr 17 EOD at $115.19 is unconfirmed. Verify Kalshi app. Do not enter into
+the confirmed ledger until ground truth is established.
+
+================================================================================
+END OF ANALYSIS
+================================================================================

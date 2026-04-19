@@ -85,18 +85,6 @@
   .report-badge.ok { background: rgba(102,201,134,0.1); color: var(--ok); border-color: rgba(102,201,134,0.2); }
   .report-badge.err { background: rgba(245,80,102,0.1); color: var(--err); border-color: rgba(245,80,102,0.2); }
 
-  /* ── Section cards ─────────────────────────── */
-  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 48px; }
-  @media (max-width: 600px) { .section-grid { grid-template-columns: 1fr; } }
-
-  .stat-card {
-    background: var(--bg-card); border: 1px solid var(--rule); border-radius: 10px;
-    padding: 18px 20px;
-  }
-  .stat-card .sc-label { font-family: var(--font-mono); font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 8px; }
-  .stat-card .sc-value { font-size: 15px; line-height: 1.6; color: var(--fg-body); font-weight: 400; }
-  .stat-card .sc-value strong { color: var(--fg); font-weight: 600; }
-
   /* ── Full-width sections ───────────────────── */
   .section { margin-bottom: 40px; }
   .section-heading {
@@ -147,7 +135,6 @@
     nav { padding: 0 16px; }
     .toolbar { padding: 10px 16px; }
     .page { padding: 32px 16px 80px; }
-    .section-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -194,26 +181,6 @@
     <div class="report-meta">
       <span id="rDate" class="report-badge"></span>
       <span id="rBalance" class="report-badge"></span>
-    </div>
-  </div>
-
-  <!-- Stats grid -->
-  <div class="section-grid">
-    <div class="stat-card">
-      <div class="sc-label">Session Summary</div>
-      <div class="sc-value" id="rSummary"></div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">Balance</div>
-      <div class="sc-value" id="rBalance2"></div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">BTC Context</div>
-      <div class="sc-value" id="rBtc"></div>
-    </div>
-    <div class="stat-card">
-      <div class="sc-label">Risk</div>
-      <div class="sc-value" id="rRisk"></div>
     </div>
   </div>
 
@@ -374,12 +341,6 @@ function renderReport(report) {
   } else {
     el('rBalance').style.display = 'none';
   }
-
-  // Stat cards
-  el('rSummary').innerHTML = textToHtml(s.summary || '—');
-  el('rBalance2').innerHTML = textToHtml(balText || '—');
-  el('rBtc').innerHTML = textToHtml(s.btc || '—');
-  el('rRisk').innerHTML = textToHtml(s.risk || '—');
 
   // Trades section
   const tradesText = s.trades || '';
