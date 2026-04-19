@@ -4,7 +4,31 @@
 
 **Trigger:** Daily at 23:00 MT after raw log is complete.
 **Owner:** Aether (self-managed), reviewed by Kai
-**Last updated:** 2026-04-14 (session 10 — rewritten from task-list to question-driven)
+**Last updated:** 2026-04-18 (v2.1 — Phase 0 added, protocol reference wired)
+
+---
+
+## PHASE 0 — READ THE PROTOCOL FIRST (MANDATORY)
+
+**Before opening the log, before answering any gate question:**
+
+```
+READ: agents/aether/PROTOCOL_DAILY_ANALYSIS.md (VERSION 2.1)
+```
+
+This protocol is the complete execution specification. It defines:
+- What 7 files to read before starting (Part 0)
+- What to inject into every Claude system prompt (Part 1)
+- All gate questions with output formats (Part 2 = this file, expanded)
+- GPT dual-phase requirements (Part 3)
+- Exact report format and section markers (Part 5)
+- The 35-item completion checklist that must pass before publishing (Part 9)
+
+**Do not treat this algorithm as the complete spec.** This file is the gate questions.
+The protocol is the complete execution context. Both must be read.
+
+If there is any conflict between this file and PROTOCOL_DAILY_ANALYSIS.md:
+the PROTOCOL wins. This file is subordinate to the protocol.
 
 ---
 
