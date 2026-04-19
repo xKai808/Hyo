@@ -198,6 +198,49 @@ Logged: SE-AETHER-PROTOCOL-001 (two-copy drift caused Hyo to see v2.4 in Finder 
 
 ---
 
+## AGENT EXECUTION PROTOCOLS (CRITICAL — READ BEFORE WORKING ON ANY AGENT)
+
+Every agent has a canonical PROTOCOL file. These are NOT just documentation — they are the
+single source of truth for how to run, upgrade, and debug that agent. A fresh Kai **must**
+read the relevant PROTOCOL before touching any agent's code, data, or runner.
+
+### Protocol registry
+
+| Agent   | Protocol file                                  | Current version | When to read |
+|---------|------------------------------------------------|-----------------|--------------|
+| Aether  | `agents/aether/PROTOCOL_DAILY_ANALYSIS.md`     | v2.5            | Before any analysis, HQ publish, or runner change |
+| Ant     | `agents/ant/PROTOCOL_ANT.md`                   | v1.2            | Before any credit data, ant-update.sh, or hq.html Ant tab work |
+
+Kai's rule: **before working on an agent, read its PROTOCOL file first.**
+The protocol tells you: file locations, dual-path rules, field names, failure modes, upgrade steps.
+
+### When to upgrade a protocol
+
+Upgrade (bump version in file header) when ANY of the following change:
+- A field name or file path that the protocol references
+- The HQ display format or section layout
+- A runner script (ant-update.sh, run_analysis.sh, etc.)
+- A schedule change (launchd plist time)
+- A new failure mode is discovered this session
+- Hyo asks for a behavior change
+
+After upgrading: update this table's "Current version" column and commit.
+
+### Ant protocol quick reference (agents/ant/PROTOCOL_ANT.md v1.2)
+
+- **Nightly run:** 23:45 MT via `com.hyo.ant-daily.plist` → `bash bin/ant-update.sh`
+- **Dual-path:** ALWAYS stage both `agents/sam/website/data/ant-data.json` AND `website/data/ant-data.json`
+- **Heredoc:** ALWAYS `<< 'PYEOF'` (quoted) — unquoted breaks Python f-strings
+- **history[] field:** top-level in ant-data.json, NOT under costs.dailyHistory (that path does not exist)
+- **HQ colors:** Anthropic = purple `#a855f7`, OpenAI = cyan `#06b6d4` — never swap
+- **Credit source tiers:** Tier 1 (automated, headless) = MTD spend from api-usage.jsonl; Tier 2 (requires screen or Admin API key) = real account balance
+- **After every run:** update `agents/ant/ACTIVE.md` + write log to `agents/ant/logs/ant-YYYY-MM-DD.log`
+- **Git push:** run via Mini (`mcp__claude-code-mini__Bash` or `kai exec`) — Cowork sandbox has 403 proxy block
+- **Open tickets:** ANT-GAP-001 (Admin API key), ANT-GAP-002 (monthly close job), ANT-GAP-003 (failure alert)
+- **17 failure modes documented** in Part 13 — check before any Ant work
+
+---
+
 ## MEMORY FAILURE LOG (so this never happens again)
 
 2026-04-18: Hyo re-uploaded Kai_Feedback_Apr16_2026.txt and AetherBot_Analysis_Apr13-16.txt because

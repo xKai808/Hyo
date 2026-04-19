@@ -66,6 +66,11 @@ See `kai/memory/MEMORY_SYSTEM.md` for full architecture.
 7. `kai/ledger/simulation-outcomes.jsonl` — last nightly sim result (check for failures)
 8. `kai/AGENT_ALGORITHMS.md` — execution protocols for all agents (follow these exactly)
 9. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
+   **Agent protocol files (read before working on that agent — these are the single source of truth):**
+   - Aether: `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` (v2.5) — analysis runner, HQ publish, dual-path
+   - Ant: `agents/ant/PROTOCOL_ANT.md` (v1.2) — credit data, ant-update.sh, HQ Ant tab, 17 failure modes
+   Rule: read the protocol FIRST. It contains file locations, field names, failure modes, and upgrade steps.
+   When any agent behavior changes, bump the protocol version. See KNOWLEDGE.md "Agent Execution Protocols".
 10. `NFT/HyoRegistry_Notes.md` — canonical architecture notes
 11. Any file in `agents/manifests/` relevant to the current task
 12. Latest log in `agents/nel/logs/` if one exists
