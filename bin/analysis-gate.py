@@ -147,6 +147,13 @@ elif trading_log_fallback.exists():
     # In Cowork sandbox: primary log lives on Mini, fallback is the runner log.
     # If gpt_crosscheck.py was run on the Mini (via kai exec), GPT_Review file proves
     # it ran against the real log. Accept GPT output as alternative evidence.
+    #
+    # KNOWN LIMITATION (confirmed 2026-04-18):
+    # This Cowork fallback is weaker than the Mini path. On the Mini, Gate 2 validates
+    # the actual trading log directly (≥15 TICKER CLOSEs, ≥1000 lines). In Cowork, we
+    # infer log validity from GPT output files — if they exist, we assume gpt_crosscheck.py
+    # ran correctly on the Mini. That assumption holds as long as gpt_crosscheck.py's own
+    # Gate 2 fired. The REAL guarantee is on the Mini. Cowork is infrastructure-constrained.
     gpt_review_file  = ROOT / "agents" / "aether" / "analysis" / f"GPT_Review_{date}.txt"
     gpt_review_alt   = ROOT / "agents" / "aether" / "analysis" / f"GPT_CrossCheck_{date}.txt"
     gpt_indep_file   = ROOT / "agents" / "aether" / "analysis" / f"GPT_Independent_{date}.txt"
