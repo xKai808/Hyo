@@ -1,14 +1,16 @@
 # PROTOCOL_DAILY_ANALYSIS.md
 # Aether Daily Analysis — Complete Agent Execution Protocol
 #
-# VERSION: 2.2
+# VERSION: 2.3
 # Author: Kai | Last updated: 2026-04-18
-# Status: AUTHORITATIVE — supersedes v2.1
-# Changes from v2.1: Added DISCREPANCY → TICKET → PROTOCOL UPDATE rule to Part 14
-# (Hyo request: fixes must be logged and never recur). Added 2-day analysis title
-# bug to Part 10 failure modes. Added P8 checklist item (title verification).
-# Added DISCREPANCY RESOLUTION PROTOCOL to ANALYSIS_ALGORITHM.md.
-# Ticket filed for Apr 16-17 title error (discovered 2026-04-18).
+# Status: AUTHORITATIVE — supersedes v2.2
+# Changes from v2.2: Added 3 new failure modes to Part 10 (GPT counterpart review 2026-04-18):
+#   - SE-AETHER-001: Dollar sign bash corruption in manual title patches
+#   - SE-AETHER-002: GPT crosscheck reads Aether runner log instead of AetherBot trading log
+#   - SE-AETHER-003: Published analysis references old version without stating current
+# Fixed aether-publish-analysis.sh: title uses LAST balance match (re.findall[-1]) not first.
+# Fixed gpt_crosscheck.py: trading log validation gate rejects runner logs.
+# Added version reference gate to publish script (warns if vNNN > 5 builds behind current).
 #
 # PURPOSE:
 # Any agent starting from zero context can read this document and produce
@@ -839,21 +841,59 @@ both days. If directional pattern matches both days → regime event. If no patt
 **More than 3 consecutive sessions: same P0 issue with no fix deployed:**
 Activate HALT condition (F3). Recommend pausing trading until fix ships.
 
-**2-day analysis: feed entry title shows wrong P&L:**
-The publish script (aether-publish-analysis.sh) derives the title suffix from the FIRST
-balance → balance pattern in the file. For 2-day analyses, this matches Day 1's net,
-not Day 2's. Fix: After running aether-publish-analysis.sh on a 2-day analysis, manually
-patch the title in both feed.json paths:
-  python3 -c "
+**2-day analysis: feed entry title shows wrong P&L (FIXED in v2.2):**
+Root cause: publish script used re.search (FIRST balance match = Day 1). Fixed in v2.3
+to re.findall[-1] (LAST match = most recent day). No manual patching required.
+If title still looks wrong: check that the FINAL SYNTHESIS has an explicit session balance
+line (e.g. "$114.33 → $115.19") that is the LAST such line in the file.
+(First logged 2026-04-18. Fixed in aether-publish-analysis.sh.)
+
+**SE-AETHER-001: Dollar sign corruption when manually patching titles via bash:**
+NEVER manually set dollar amounts in bash-interpolated strings passed to scripts.
+`$0.97` in a double-quoted bash string expands `$0` to the script/program name (e.g. "bash"),
+producing "bash.97" on the live site. If a manual title patch is absolutely required:
+  python3 - <<'PYEOF'
   import json
-  for p in ['agents/sam/website/data/feed.json', 'website/data/feed.json']:
-      d = json.load(open(p)); r = d['reports']
-      e = next(x for x in r if x['id'] == 'aether-analysis-YYYY-MM-DD')
-      e['title'] = 'AetherBot Daily Analysis — Apr N-N+1 (±$X.XX 2-day | Apr N+1 ±$X.XX)'
-      json.dump(d, open(p,'w'), indent=2)
-  "
-Add P8 checklist item: "Title reflects correct date range and P&L for the report window."
-(Added 2026-04-18 — discovered during Apr 16-17 analysis publication.)
+  correct_title = "AetherBot Daily Analysis — Apr 16-17 (-$0.97 2-day | Apr 17 +$0.86)"
+  for p in ["agents/sam/website/data/feed.json", "website/data/feed.json"]:
+      d = json.load(open(p))
+      for r in d["reports"]:
+          if r["id"] == "aether-analysis-YYYY-MM-DD":
+              r["title"] = correct_title
+      json.dump(d, open(p,"w"), indent=2)
+  PYEOF
+Use a Python heredoc with single-quoted <<'PYEOF' so bash cannot expand anything inside.
+(Logged 2026-04-18 from GPT counterpart review. SE-AETHER-001.)
+
+**SE-AETHER-002: GPT crosscheck reads Aether runner log instead of AetherBot trading log:**
+CRITICAL — this is the most dangerous failure mode. The fallback logs directory
+(agents/aether/logs/) contains TWO types of files:
+  - aether-YYYY-MM-DD.log → Aether RUNNER log (cron/self-review daemon output, NO trade data)
+  - AetherBot_YYYY-MM-DD.txt → AetherBot TRADING log (PRIMARY, only on Mini)
+Pattern `*{date}*.log` in the fallback matches the runner log. GPT receives 1K lines of
+metrics/self-review output, sees "4 trades" from the 00:15 metrics cycle, and reports
+"NY_PRIME: No trades recorded" and "EVENING: No trades recorded" — factually wrong.
+This produces false confidence: a GPT crosscheck on half the data is worse than no check.
+
+FIX (deployed v2.3): gpt_crosscheck.py now has a trading log validation gate. If the
+found log has < 5 lines containing KXBTC15M/PAQ_/BDI=/TICKER CLOSE, it refuses to run
+and prints the correct command for running on the Mini.
+
+GATE QUESTION: Before running gpt_crosscheck.py, answer: "Is this running on the Mini
+where ~/Documents/Projects/AetherBot/Logs/ exists?" If NO → run via kai exec.
+  kai exec "python3 ~/Documents/Projects/Hyo/agents/aether/analysis/gpt_crosscheck.py YYYY-MM-DD"
+(Logged 2026-04-18 from GPT counterpart review. SE-AETHER-002.)
+
+**SE-AETHER-003: Published analysis only references old version without stating current:**
+Every published analysis must state the current deployed bot version explicitly. If the
+analysis discusses historical context (e.g., "v247 containment fix"), it must also state:
+"Current deployed version: v253" in the report header or balance section. A report that
+only says "v247 is live-confirmed" looks like a stale template to any reader and erodes
+trust in the data quality.
+Gate in aether-publish-analysis.sh (v2.3): version reference gate logs a WARNING if the
+highest version referenced in the analysis is more than 5 builds behind the configured
+CURRENT_VERSION constant. Update that constant when a new version deploys.
+(Logged 2026-04-18 from GPT counterpart review. SE-AETHER-003.)
 
 ---
 

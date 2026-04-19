@@ -78,6 +78,47 @@ if raw_log:
     full_log_text = raw_log.read_text()
     raw_log_len = len(full_log_text)
 
+    # SE-AETHER-002: TRADING LOG VALIDATION GATE (mandatory — do not skip)
+    # The fallback LOGS_DIR (agents/aether/logs/) contains Aether RUNNER logs
+    # (cron/self-review output), not AetherBot TRADING logs. Runner logs have
+    # ~1K lines of metrics/self-review entries with 0 trade data. GPT analyzing
+    # a runner log sees "4 trades" at 00:15 and misses all of NY_PRIME/EVENING.
+    # This is worse than no crosscheck — it creates false confidence on incomplete data.
+    #
+    # DETECTION: Trading logs contain KXBTC15M + TICKER CLOSE + BUY SNAPSHOT.
+    # Runner logs contain "=== Aether metrics run ===" and "Domain research:".
+    # Minimum bar: at least 5 lines must contain a trading keyword.
+    TRADING_KEYWORDS = [
+        "KXBTC15M", "TICKER CLOSE", "BUY SNAPSHOT", "SETTLE", "HARVEST",
+        "PAQ_", "bps_premium", "WES_EARLY", "BCDP", "STRUCT_GATE",
+        "yes_bids", "BDI=", "CONTRACTS"
+    ]
+    RUNNER_KEYWORDS = ["=== Aether metrics run ===", "Domain research:", "Self-review:"]
+
+    trade_line_count = sum(
+        1 for line in full_log_text.splitlines()
+        if any(kw in line for kw in TRADING_KEYWORDS)
+    )
+    is_runner_log = any(kw in full_log_text for kw in RUNNER_KEYWORDS)
+
+    if trade_line_count < 5 or is_runner_log:
+        print(f"\n{'!' * 70}")
+        print(f"LOG VALIDATION FAILED: {raw_log.name}")
+        print(f"  Trading keyword lines found: {trade_line_count} (need ≥5)")
+        print(f"  Runner log markers present: {is_runner_log}")
+        print(f"  This appears to be the Aether RUNNER log, not the AetherBot TRADING log.")
+        print(f"  The runner log (agents/aether/logs/aether-*.log) records cron/self-review")
+        print(f"  output — it contains NO trading data. GPT analyzing it is worse than useless.")
+        print(f"")
+        print(f"  REQUIRED: Run gpt_crosscheck.py on the Mini where the primary trading log")
+        print(f"  exists at ~/Documents/Projects/AetherBot/Logs/AetherBot_{date_arg}.txt")
+        print(f"  Use: kai exec 'python3 ~/Documents/Projects/Hyo/agents/aether/analysis/gpt_crosscheck.py {date_arg}'")
+        print(f"{'!' * 70}\n")
+        raw_log = None
+        raw_log_text = None
+    else:
+        print(f"Log validation OK: {trade_line_count} trading-keyword lines found in {raw_log.name}")
+
     # SE-011-014: GPT must receive the full log. Period.
     # GPT-4o has 128K context but org TPM limit may be 30K tokens (~120K chars).
     # If full log exceeds ~100K chars (~25K tokens), we need smart handling:

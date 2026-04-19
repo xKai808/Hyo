@@ -96,13 +96,17 @@ risk    = grab_line([r"risk\b", r"phantom", r"harvest miss", r"stop(?:/harvest)?
 balance = grab_line([r"balance\b", r"net p&?l", r"end balance", r"start(ing)?\s*balance"], text)
 btc     = grab_line([r"\bbtc\b", r"bitcoin"], text)
 
-# Derive title suffix from balance if we can parse it
+# Derive title suffix from balance — use LAST match (most recent day for multi-day analyses).
+# BUG FIX (SE-AETHER-001): re.search returns FIRST match. For 2-day analyses this picks Day 1's
+# balance, producing wrong title. re.findall captures ALL matches; [-1] is the most recent.
+# NEVER use bash string interpolation to patch dollar amounts — $0.97 becomes bash.97 ($0=script).
 title_suffix = ""
-bal_match = re.search(r"\$([\d\.,]+)\s*(?:→|->|to)\s*\$([\d\.,]+)", text)
-if bal_match:
+bal_matches = re.findall(r"\$([\d\.,]+)\s*(?:→|->|to)\s*\$([\d\.,]+)", text)
+if bal_matches:
     try:
-        a = float(bal_match.group(1).replace(",", ""))
-        b = float(bal_match.group(2).replace(",", ""))
+        last = bal_matches[-1]  # most recent balance pair
+        a = float(last[0].replace(",", ""))
+        b = float(last[1].replace(",", ""))
         diff = b - a
         sign = "+" if diff >= 0 else "-"
         title_suffix = f" ({sign}${abs(diff):.2f})"
@@ -118,6 +122,28 @@ except Exception:
     day_name = date
 
 title = f"AetherBot Daily Analysis — {day_name}{title_suffix}"
+
+# SE-AETHER-003: VERSION REFERENCE GATE
+# Published reports must state the current deployed version (v253).
+# Reports that only reference old versions (e.g. v247) mislead readers into thinking
+# old code is still in production. This gate: (1) detects any vNNN reference in the
+# analysis, (2) warns if the highest referenced version is more than 5 builds behind
+# the assumed current (v253). Does NOT block publishing — logs a warning only.
+CURRENT_VERSION = 253  # update this when a new version is deployed
+version_refs = [int(m) for m in re.findall(r'\bv(\d{3})\b', text) if 200 <= int(m) <= 999]
+if version_refs:
+    max_ref = max(version_refs)
+    if max_ref < CURRENT_VERSION - 5:
+        print(f"[publish] VERSION WARNING: highest version referenced is v{max_ref}, "
+              f"but current deployed is v{CURRENT_VERSION}. "
+              f"If this is historical context, ensure the report also states v{CURRENT_VERSION}.",
+              file=sys.stderr)
+    elif CURRENT_VERSION not in version_refs and max_ref < CURRENT_VERSION:
+        print(f"[publish] VERSION NOTICE: v{CURRENT_VERSION} not mentioned in analysis. "
+              f"Highest seen: v{max_ref}. Consider stating current deployed version.",
+              file=sys.stderr)
+else:
+    print(f"[publish] VERSION NOTICE: No vNNN version references found in analysis.", file=sys.stderr)
 
 # Read GPT phase files — only include if real content (not PENDING stubs)
 def load_gpt(path, min_chars=200):
