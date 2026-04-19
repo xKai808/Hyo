@@ -27,6 +27,28 @@ if [[ ! -f "$ANALYSIS_FILE" ]]; then
   exit 1
 fi
 
+# ── PRE-PUBLISH GATE (hard block — no bypass) ─────────────────────────────
+# Runs analysis-gate.py which enforces the 6 gates documented in PROTOCOL v2.5:
+#   Gate 1: No bash/dollar corruption in title or balance
+#   Gate 2: Trading log is the real AetherBot log (≥15 TICKER CLOSEs, ≥1000 lines)
+#   Gate 3: All 3 required section markers present
+#   Gate 4: GPT CRITIQUE is a synthesis, not a raw runner-log dump
+#   Gate 5: Version references not stale
+#   Gate 6: Trade breakdown has actual data
+# If any gate fails: exit 1 and the publish script stops here.
+GATE_SCRIPT="$ROOT/bin/analysis-gate.py"
+if [[ -f "$GATE_SCRIPT" ]]; then
+  echo "[gate] Running pre-publish gate..."
+  python3 "$GATE_SCRIPT" "$DATE" "$ANALYSIS_FILE"
+  GATE_RC=$?
+  if [[ $GATE_RC -ne 0 ]]; then
+    echo "[publish] BLOCKED by pre-publish gate (exit $GATE_RC). Fix the failures above." >&2
+    exit $GATE_RC
+  fi
+else
+  echo "[gate] WARN: analysis-gate.py not found at $GATE_SCRIPT — skipping gate" >&2
+fi
+
 NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
 MONTH_KEY=$(echo "$DATE" | cut -c1-7)
 

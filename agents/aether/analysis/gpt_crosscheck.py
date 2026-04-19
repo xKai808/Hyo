@@ -81,34 +81,49 @@ if raw_log:
     # SE-AETHER-002: TRADING LOG VALIDATION GATE (mandatory — do not skip)
     # The fallback LOGS_DIR (agents/aether/logs/) contains Aether RUNNER logs
     # (cron/self-review output), not AetherBot TRADING logs. Runner logs have
-    # ~1K lines of metrics/self-review entries with 0 trade data. GPT analyzing
+    # ~500 lines of metrics/self-review entries with 0 trade data. GPT analyzing
     # a runner log sees "4 trades" at 00:15 and misses all of NY_PRIME/EVENING.
     # This is worse than no crosscheck — it creates false confidence on incomplete data.
     #
     # DETECTION: Trading logs contain KXBTC15M + TICKER CLOSE + BUY SNAPSHOT.
     # Runner logs contain "=== Aether metrics run ===" and "Domain research:".
-    # Minimum bar: at least 5 lines must contain a trading keyword.
-    TRADING_KEYWORDS = [
-        "KXBTC15M", "TICKER CLOSE", "BUY SNAPSHOT", "SETTLE", "HARVEST",
-        "PAQ_", "bps_premium", "WES_EARLY", "BCDP", "STRUCT_GATE",
-        "yes_bids", "BDI=", "CONTRACTS"
-    ]
+    #
+    # THRESHOLDS (strengthened from v1 — Hyo feedback 2026-04-18):
+    #   MINIMUM_TICKER_CLOSES = 15  (v1 used trade_line_count < 5, too loose)
+    #   MINIMUM_TOTAL_LINES = 1000  (runner logs ~500 lines, trading logs thousands)
+    # Both conditions must pass. Either failure blocks GPT.
+    MINIMUM_TICKER_CLOSES = 15    # Any real session has many TICKER CLOSE events
+    MINIMUM_TOTAL_LINES   = 1000  # Runner logs ~500 lines; trading logs are thousands
     RUNNER_KEYWORDS = ["=== Aether metrics run ===", "Domain research:", "Self-review:"]
 
-    trade_line_count = sum(
-        1 for line in full_log_text.splitlines()
-        if any(kw in line for kw in TRADING_KEYWORDS)
-    )
+    log_lines     = full_log_text.splitlines()
+    total_lines   = len(log_lines)
+    ticker_closes = sum(1 for l in log_lines if "TICKER CLOSE" in l)
     is_runner_log = any(kw in full_log_text for kw in RUNNER_KEYWORDS)
 
-    if trade_line_count < 5 or is_runner_log:
+    gate_errors = []
+    if ticker_closes < MINIMUM_TICKER_CLOSES:
+        gate_errors.append(
+            f"  TICKER CLOSE lines: {ticker_closes} (need ≥{MINIMUM_TICKER_CLOSES})"
+        )
+    if total_lines < MINIMUM_TOTAL_LINES:
+        gate_errors.append(
+            f"  Total log lines: {total_lines} (need ≥{MINIMUM_TOTAL_LINES})"
+        )
+    if is_runner_log:
+        gate_errors.append(
+            f"  Runner log markers detected ('=== Aether metrics run ===' or 'Domain research:')"
+        )
+
+    if gate_errors:
         print(f"\n{'!' * 70}")
         print(f"LOG VALIDATION FAILED: {raw_log.name}")
-        print(f"  Trading keyword lines found: {trade_line_count} (need ≥5)")
-        print(f"  Runner log markers present: {is_runner_log}")
+        for e in gate_errors:
+            print(e)
+        print(f"")
         print(f"  This appears to be the Aether RUNNER log, not the AetherBot TRADING log.")
-        print(f"  The runner log (agents/aether/logs/aether-*.log) records cron/self-review")
-        print(f"  output — it contains NO trading data. GPT analyzing it is worse than useless.")
+        print(f"  Runner logs record cron/self-review output — NO trading data.")
+        print(f"  GPT analyzing a runner log reports 0 NY_PRIME / EVENING trades (factually wrong).")
         print(f"")
         print(f"  REQUIRED: Run gpt_crosscheck.py on the Mini where the primary trading log")
         print(f"  exists at ~/Documents/Projects/AetherBot/Logs/AetherBot_{date_arg}.txt")
@@ -117,6 +132,7 @@ if raw_log:
         raw_log = None
         raw_log_text = None
     else:
+        print(f"Log validation OK: {ticker_closes} TICKER CLOSE lines, {total_lines} total lines in {raw_log.name}")
         print(f"Log validation OK: {trade_line_count} trading-keyword lines found in {raw_log.name}")
 
     # SE-011-014: GPT must receive the full log. Period.

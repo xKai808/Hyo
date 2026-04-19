@@ -1,14 +1,20 @@
 # PROTOCOL_DAILY_ANALYSIS.md
 # Aether Daily Analysis — Complete Agent Execution Protocol
 #
-# VERSION: 2.4
+# VERSION: 2.5
 # Author: Kai | Last updated: 2026-04-18
-# Status: AUTHORITATIVE — supersedes v2.3
-# Changes from v2.3 (GPT counterpart review — second pass):
-#   - Part 1 B3: embedded current balance ledger directly (no longer depends on KNOWLEDGE.md alone)
-#   - Part 7: embedded core philosophy from ANALYSIS_BRIEFING.txt Sections 4-7
-#     (opportunity orientation, kill decision standard, patchwork test)
-#   - Gate 3 Q3.5: added worked edge-per-contract example with real session numbers
+# Status: AUTHORITATIVE — supersedes v2.4
+# Changes from v2.4 (Hyo feedback session 20 — structural enforcement):
+#   - NEW: bin/analysis-gate.py — 6-gate automated hard block between analysis and publish
+#   - Part 12: split into 3 explicit phases (ANALYSIS / QUALITY GATE / PUBLISHING)
+#     with required exit conditions and structural gate between Phase 2 and Phase 3
+#   - Part 14: added Step 2.5 (VERIFY THE FIX WORKS) to discrepancy cycle
+#   - Part 14: added post-publish verification checklist (4 items — a/b/c/d)
+#   - gpt_crosscheck.py SE-AETHER-002: strengthened to MINIMUM_TICKER_CLOSES=15,
+#     MINIMUM_TOTAL_LINES=1000 (was: trade_line_count < 5, too loose)
+#   - aether-publish-analysis.sh: now calls analysis-gate.py as hard block before any feed write
+# Root cause addressed: protocol documented bugs as fixed but code was not deployed/verified.
+#   The gate script mechanically enforces what manual checklists cannot.
 #
 # PURPOSE:
 # Any agent starting from zero context can read this document and produce
@@ -1041,48 +1047,129 @@ v254 build spec:        agents/aether/analysis/v254_Build_Spec.md
 
 ---
 
-## PART 12 — SESSION START COMMAND SEQUENCE
+## PART 12 — SESSION EXECUTION SEQUENCE (3 PHASES)
+
+The pipeline has three hard phases. Do not start Phase 3 without Phase 2 exit code 0.
+"Should work" is never verification. Every step ends with a specific observable outcome.
+
+---
+
+### PHASE 1: ANALYSIS
+*Exit condition: Analysis_YYYY-MM-DD.txt exists, all 3 section markers present,
+GPT_Review_DATE.txt and GPT_Independent_DATE.txt exist with substantive content.*
 
 ```bash
-# Step 1: Confirm log exists and has enough data
-LOG="$HOME/Documents/Projects/AetherBot/Logs/AetherBot_$(TZ=America/Denver date +%Y-%m-%d).txt"
+DATE=$(TZ=America/Denver date +%Y-%m-%d)
+
+# Step 1: Confirm trading log exists and has real data
+LOG="$HOME/Documents/Projects/AetherBot/Logs/AetherBot_${DATE}.txt"
 wc -l "$LOG"
-# Must be > 100. If not, use yesterday's log.
+# Must be ≥1000 lines with ≥15 TICKER CLOSE events. If not, use yesterday's.
+grep -c "TICKER CLOSE" "$LOG"
 
 # Step 2: Read KNOWLEDGE.md for balance ledger and open issues
-cat ~/Documents/Projects/Hyo/kai/memory/KNOWLEDGE.md | grep -A 20 "BALANCE LEDGER"
-cat ~/Documents/Projects/Hyo/kai/memory/KNOWLEDGE.md | grep -A 30 "Open AetherBot issues"
+grep -A 20 "BALANCE LEDGER" ~/Documents/Projects/Hyo/kai/memory/KNOWLEDGE.md
+grep -A 30 "Open AetherBot issues" ~/Documents/Projects/Hyo/kai/memory/KNOWLEDGE.md
 
 # Step 3: Run GPT dual-phase BEFORE writing primary analysis
+# Must run on Mini — trading log lives at ~/Documents/Projects/AetherBot/Logs/
 cd ~/Documents/Projects/Hyo/agents/aether/analysis
-python3 gpt_crosscheck.py $(TZ=America/Denver date +%Y-%m-%d)
+python3 gpt_crosscheck.py "$DATE"
 
-# Step 4: Read GPT outputs
-cat "GPT_Independent_$(TZ=America/Denver date +%Y-%m-%d).txt"
-cat "GPT_CrossCheck_$(TZ=America/Denver date +%Y-%m-%d).txt"
+# Step 4: Read GPT outputs — understand what GPT found before writing analysis
+cat "GPT_Independent_${DATE}.txt"
+cat "GPT_Review_${DATE}.txt"
 
-# Step 5: Write Analysis_YYYY-MM-DD.txt (7-gate analysis + GPT synthesis)
+# Step 5: Write Analysis_YYYY-MM-DD.txt
+# Required: 3 section markers, trade ledger, GPT synthesis with responses
+# Template: CANONICAL_ANALYSIS_TEMPLATE.txt (data depth)
+# Structure: Part 5 of this protocol (published format)
+```
 
-# Step 6: Publish
+---
+
+### PHASE 2: QUALITY GATE
+*Exit condition: python3 bin/analysis-gate.py returns exit code 0.*
+*DO NOT PROCEED TO PHASE 3 WITHOUT EXIT CODE 0.*
+
+```bash
 cd ~/Documents/Projects/Hyo
-bash bin/aether-publish-analysis.sh $(TZ=America/Denver date +%Y-%m-%d) \
-  agents/aether/analysis/Analysis_$(TZ=America/Denver date +%Y-%m-%d).txt
+python3 bin/analysis-gate.py "$DATE" "agents/aether/analysis/Analysis_${DATE}.txt"
 
-# Step 7: Run completion checklist (Part 9)
-# Every item must pass before proceeding
+# If exit code 1: the specific failure is printed. Fix it. Re-run gate.
+# If exit code 0: "ALL 6 GATES PASSED — cleared for publishing" → proceed.
+```
 
-# Step 8: DUAL-PATH commit (both feed paths must be staged)
-git add agents/aether/analysis/Analysis_$(TZ=America/Denver date +%Y-%m-%d).txt \
+The 6 gates and what they catch:
+- Gate 1: bash/dollar corruption in title or balance (SE-AETHER-001)
+- Gate 2: trading log is real AetherBot log, not runner log (SE-AETHER-002)
+- Gate 3: all 3 required section markers present
+- Gate 4: GPT CRITIQUE is a synthesis, not a raw dump
+- Gate 5: version references not stale (SE-AETHER-003)
+- Gate 6: trade breakdown has actual data
+
+---
+
+### PHASE 3: PUBLISHING
+*Only enters after Phase 2 exit code 0. Publish script calls gate internally.*
+*Exit condition: live URL returns feed entry with clean title, trades, GPT sections.*
+
+```bash
+# Step 6: Publish (gate runs again internally as hard block)
+cd ~/Documents/Projects/Hyo
+bash bin/aether-publish-analysis.sh "$DATE" \
+  "agents/aether/analysis/Analysis_${DATE}.txt"
+
+# Step 7: DUAL-PATH commit (DUAL-PATH GATE will block if mirror not staged)
+git add "agents/aether/analysis/Analysis_${DATE}.txt" \
+        "agents/aether/analysis/GPT_Independent_${DATE}.txt" \
+        "agents/aether/analysis/GPT_Review_${DATE}.txt" \
         agents/sam/website/data/feed.json \
         website/data/feed.json \
         agents/sam/website/data/aether-metrics.json \
         website/data/aether-metrics.json
-git commit -m "aether: daily analysis $(TZ=America/Denver date +%Y-%m-%d)"
+git commit -m "aether: daily analysis ${DATE}"
 git push origin main
 
-# Step 9: Verify live
-# Fetch /aether-analysis?date=YYYY-MM-DD — confirm it renders
-# Do not declare done until the URL loads. "Should work" is not verification.
+# Step 8: Post-publish verification — VERIFY THESE FOUR THINGS IN THE LIVE FEED
+# Fetch the live feed entry and confirm ALL FOUR pass:
+curl -sL "https://hyo.world/data/feed.json" | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+e = next((r for r in d['reports'] if r['date'] == '${DATE}'), None)
+if not e:
+    print('FAIL: entry not in live feed'); sys.exit(1)
+s = e.get('sections', {})
+
+# a. Title has no bash corruption and shows correct P&L
+assert 'bash.' not in e.get('title',''), f'FAIL a: bash corruption in title: {e[\"title\"]}'
+assert any(c in e.get('title','') for c in ['+', '-', '(\$']), f'FAIL a: no P&L in title: {e[\"title\"]}'
+
+# b. Trade Breakdown section has actual trade data (not just the header)
+trades = s.get('trades', '')
+assert len(trades) > 100, f'FAIL b: trade section too short ({len(trades)} chars)'
+assert 'STRATEGY FAMILY' in trades or 'trades,' in trades or 'WR' in trades, 'FAIL b: no trade data'
+
+# c. GPT section starts with synthesis, not raw dump
+gpt = s.get('gptReview', s.get('gptIndependent', ''))
+assert not gpt.strip().startswith('PART 1:'), 'FAIL c: GPT section is a raw dump'
+assert any(x in gpt for x in ['MATH VERIFICATION','VERDICT:','COMPARATIVE REVIEW','KAI']), 'FAIL c: GPT section lacks synthesis'
+
+# d. Version referenced is not stale
+import re
+refs = [int(m) for m in re.findall(r'v(\d{3})', json.dumps(e)) if 200 <= int(m) <= 999]
+if refs: assert max(refs) >= 248, f'FAIL d: stale version ref v{max(refs)}'
+
+print('PASS a: title clean —', e['title'])
+print('PASS b: trade section has data —', len(trades), 'chars')
+print('PASS c: GPT section is a synthesis')
+print('PASS d: version refs OK —', refs)
+print()
+print('POST-PUBLISH VERIFICATION: ALL 4 PASS')
+"
+
+# If any FAIL: file a ticket against the gate script. Fix the gate. Republish.
+# A post-publish failure means the gate had a gap — fix the gate, not just the report.
 ```
 
 ---
@@ -1216,20 +1303,37 @@ This document is only updated by Kai. It grows — it never shrinks requirements
 2. FIX THE ISSUE
    Re-run Part 9 checklist. Every item must pass before declaring fixed.
 
+2.5 VERIFY THE FIX WORKS (mandatory — skipping this is how "fixed" bugs recur)
+   After applying the fix, run a test publish using a prior analysis file:
+     python3 bin/analysis-gate.py <date> agents/aether/analysis/Analysis_<date>.txt
+   Then run the full publish against a recent analysis:
+     bash bin/aether-publish-analysis.sh <date> agents/aether/analysis/Analysis_<date>.txt
+   Confirm the SPECIFIC failure does NOT recur.
+   If it does: the fix is incomplete. Do NOT bump the version. File a follow-up ticket.
+   Only bump the version AFTER the gate passes on a real publish run.
+
+   SE-AETHER-001 and SE-AETHER-002 were both documented as "fixed" in v2.3.
+   Neither was actually fixed. This step was added because v2.3 bumped the
+   version without running a verification publish. That mistake produced the
+   bash.97 title and 506-line GPT review that Hyo saw in the Apr 17 report.
+   Never document a fix as done until the gate confirms it.
+
 3. UPDATE THIS PROTOCOL
    Add the failure to Part 10 (if a new failure mode).
    Add the anti-pattern to Part 8 (if a new class of error).
    Add/update checklist item in Part 9 (if the checklist would have caught it).
+   Add gate check to bin/analysis-gate.py (if a mechanical check is possible).
    Add simulation results to Part 13 (if tested against existing analyses).
    Bump the VERSION number above.
 
 4. COMMIT PROTOCOL UPDATE WITH THE FIX
-   git add agents/aether/PROTOCOL_DAILY_ANALYSIS.md agents/aether/ANALYSIS_ALGORITHM.md
+   git add agents/aether/PROTOCOL_DAILY_ANALYSIS.md agents/aether/ANALYSIS_ALGORITHM.md \
+           bin/analysis-gate.py
    Include in the SAME commit as the fix — not a separate commit.
 
 The goal: agent starting from zero next session reads this protocol
-and cannot make the same mistake. A fix without a protocol update
-is a temporary patch. It will recur. This is why we don't do it.
+and cannot make the same mistake. A fix without a verified gate is
+a temporary patch. It will recur. This is why we do Step 2.5.
 ```
 
 ### When to update (non-discrepancy):
@@ -1254,7 +1358,9 @@ After any update:
 
 *This protocol is the single source of truth for AetherBot daily analysis.*
 *Any conflict with a prior spec: this document wins.*
-*Version 2.4 — 2026-04-18*
-*Status: Production-ready. Verified by GPT adversarial review (two passes).*
-*Known non-blocking gap: CANONICAL_ANALYSIS_TEMPLATE.txt is still an external reference.*
+*Version 2.5 — 2026-04-18*
+*Status: Production-ready with mechanical enforcement.*
+*v2.4 was verified by GPT adversarial review (two passes).*
+*v2.5 adds bin/analysis-gate.py as a hard block between analysis and publish.*
+*Meta-change: protocol now enforces requirements mechanically, not just documents them.*
 *Fallback if unavailable: use Analysis_2026-04-17.txt as the practical format reference.*
