@@ -1169,6 +1169,34 @@ Next simulation should run against the first analysis written using this protoco
 
 ---
 
+**GPT counterpart verification — v2.3 review (2026-04-18):**
+
+GPT reviewed v2.3 and identified 3 remaining gaps:
+  Gap A: Philosophy from ANALYSIS_BRIEFING.txt Sections 4-7 not embedded — referenced only
+  Gap B: Balance ledger in Part 1 B3 pointed to KNOWLEDGE.md (frequently stale)
+  Gap C: Gate 3 Q3.5 edge-per-contract metric had no worked example or threshold guidance
+
+**Protocol v2.4 applied all three fixes:**
+  - Part 7: Full philosophy embedded (opportunity mandate, kill standard, patchwork test)
+  - Part 1 B3: Balance ledger embedded with verification step and staleness warning
+  - Gate 3 Q3.5: Worked example with real numbers, thresholds, degradation signal pattern
+
+**GPT counterpart final verdict on v2.4:**
+  "Yes, with this version an agent starting from zero context can reproduce analysis
+   at the gold standard level for the mechanical and philosophical components. This is
+   production-ready as a standalone document."
+
+**One remaining non-blocking gap noted:**
+  CANONICAL_ANALYSIS_TEMPLATE.txt (FILE 1 in Part 0) is still an external dependency.
+  An agent without access to it relies on the Part 7 depth standard examples alone.
+  Those examples are good but can't fully substitute for a complete gold standard analysis.
+  Assessment: Non-blocking. Protocol is functional without it. The depth standard
+  examples in Part 7 provide sufficient orientation for a capable agent.
+  Mitigation: If FILE 1 is unavailable, the agent should use Analysis_2026-04-17.txt
+  (the most recent full-format analysis) as the practical reference instead.
+
+---
+
 ## PART 14 — PROTOCOL UPDATE RULES
 
 This document is only updated by Kai. It grows — it never shrinks requirements.
@@ -1226,4 +1254,7 @@ After any update:
 
 *This protocol is the single source of truth for AetherBot daily analysis.*
 *Any conflict with a prior spec: this document wins.*
-*Version 2.1 — 2026-04-18*
+*Version 2.4 — 2026-04-18*
+*Status: Production-ready. Verified by GPT adversarial review (two passes).*
+*Known non-blocking gap: CANONICAL_ANALYSIS_TEMPLATE.txt is still an external reference.*
+*Fallback if unavailable: use Analysis_2026-04-17.txt as the practical format reference.*
