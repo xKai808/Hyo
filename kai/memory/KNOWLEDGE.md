@@ -140,21 +140,29 @@ Reference analysis example: `kai/memory/feedback/AetherBot_Analysis_Apr13-16_ref
 
 ---
 
-## REMOTE ACCESS — HYO TRAVELING SOON
+## REMOTE ACCESS — CURRENT STATE (updated 2026-04-18)
 
-Before departure:
-1. Install Tailscale on Mac mini (private encrypted network, no port forwarding)
-2. Enable Remote Login (SSH): System Settings → General → Sharing
-3. Install Tailscale on travel device, sign into same account
-4. Note Mac mini's Tailscale IP (100.x.x.x format)
-5. Test SSH: `ssh username@100.x.x.x`
-6. Confirm aetherbot_logger.py is running via nohup (survives terminal close):
-   `nohup /opt/homebrew/bin/python3 ~/aetherbot_logger.py > ~/aetherbot_logger_console.txt 2>&1 &`
+### What works RIGHT NOW (Hyo traveling week of 2026-04-19)
 
-Remote check once traveling:
-- `ps aux | grep aetherbot_logger`
-- `tail -f ~/Documents/Projects/AetherBot/Logs/AetherBot_$(date +%Y-%m-%d).txt`
-- Source: Kai_Feedback_Apr16_2026.txt, Part 6
+**Primary: Chrome Remote Desktop** ✅ WORKING
+- Full GUI screen control of Mini from any device
+- Access: open Chrome on Pro → remotedesktop.google.com/access → click "mini"
+- No ports, no tunnels, no rotating anything
+- Runs as background service on Mini automatically
+
+**SSH `mini` shortcut: BROKEN** ⚠️
+- Was using bore tunnel to bore.pub — bore.pub is unreliable (exit 1, "No route to host on bore.pub:7835")
+- Tailscale: installed on Mini (IP 100.77.143.7) but NOT working — exhausted 3+ hours on 2026-04-18, do not attempt again
+- Cloudflared: installed on Mini but requires domain on Cloudflare — hyo.world not registered on Cloudflare
+- **Fix when Hyo returns:** replace bore plist with Serveo tunnel (zero install, key-based fixed subdomain) or ZeroTier
+
+### Screen Sharing
+- `com.apple.screensharing.agent` is running on Mini (Screen Sharing enabled)
+- Once SSH is fixed: `ssh -L 5900:localhost:5900 mini` then Finder > Go > Connect to Server > `vnc://localhost`
+- Or via Chrome Remote Desktop (already working)
+
+### What NOT to try again
+- Tailscale — spent 3+ hours, does not work for this setup. Do not suggest.
 
 ---
 
