@@ -68,8 +68,8 @@ See `kai/memory/MEMORY_SYSTEM.md` for full architecture.
 9. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
    **Agent protocol files (read before working on that agent — these are the single source of truth):**
    - Aether: `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` (v2.5) — analysis runner, HQ publish, dual-path
-   - Ant: `agents/ant/PROTOCOL_ANT.md` (v1.2) — credit data, ant-update.sh, HQ Ant tab, 17 failure modes
-   - Podcast: `agents/ra/PROTOCOL_PODCAST.md` (v1.0) — Vale voice spec, script architecture, GPT model
+   - Ant: `agents/ant/PROTOCOL_ANT.md` (v1.3) — credit data, ant-update.sh, ant-gate.py hard block, 20 failure modes
+   - Podcast: `agents/ra/PROTOCOL_PODCAST.md` (v1.1) — Vale voice, Bankless model, hard gate, Telegram alerts
    Rule: read the protocol FIRST. It contains file locations, field names, failure modes, and upgrade steps.
    When any agent behavior changes, bump the protocol version. See KNOWLEDGE.md "Agent Execution Protocols".
 10. `NFT/HyoRegistry_Notes.md` — canonical architecture notes

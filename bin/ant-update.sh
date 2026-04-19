@@ -367,4 +367,149 @@ print(f"[ant-update] Today: ${today_spend:.4f} | All-time: ${total_cost:.4f}", f
 print(f"[ant-update] Credits — Anthropic ${credits_data['anthropic']['remaining']}/{credits_data['anthropic']['total']} | OpenAI ${credits_data['openai']['remaining']}/{credits_data['openai']['total']}", file=sys.stderr)
 PYEOF
 
-echo "[ant-update] Done."
+# ── Phase 2: Quality gate (hard block — ant-gate.py) ─────────────────────────
+echo "[ant-update] Running quality gate (ant-gate.py)..."
+python3 "$ROOT/bin/ant-gate.py"
+GATE_STATUS=$?
+
+if [ $GATE_STATUS -ne 0 ]; then
+    echo "[ant-update] ERROR: Quality gate failed — aborting commit. Check Telegram alert." >&2
+    # Write failure to log before exiting
+    LOG_DIR="$ROOT/agents/ant/logs"
+    LOG_FILE="$LOG_DIR/ant-$(date +%Y-%m-%d).log"
+    mkdir -p "$LOG_DIR"
+    echo "[ant] $(date -u +%Y-%m-%dT%H:%M:%S%z) GATE FAIL — commit aborted. See ant-gate.py output above." >> "$LOG_FILE"
+    exit 1
+fi
+
+# ── Phase 3: Daily log ────────────────────────────────────────────────────────
+LOG_DIR="$ROOT/agents/ant/logs"
+LOG_FILE="$LOG_DIR/ant-$(date +%Y-%m-%d).log"
+mkdir -p "$LOG_DIR"
+
+if [ $GATE_STATUS -eq 0 ]; then
+    GATE_LINE="PASS"
+else
+    GATE_LINE="FAIL"
+fi
+
+{
+    echo "[ant] $(date -u +%Y-%m-%dT%H:%M:%S%z) START"
+    python3 -c "
+import json
+with open('${ANT_FILE}') as f: d = json.load(f)
+cr = d.get('credits', {})
+ant = cr.get('anthropic', {})
+oai = cr.get('openai', {})
+hist = d.get('history', [])
+max_day = max((h.get('total', 0) for h in hist), default=0)
+net = d.get('expenses', {}).get('total', 0) - d.get('income', {}).get('total_monthly', 0)
+print(f\"[ant] MTD Anthropic: \${ant.get('used_mtd', 0):.4f} | OpenAI: \${oai.get('used_mtd', 0):.4f}\")
+print(f\"[ant] Credits: Anthropic \${ant.get('remaining')} remaining of \${ant.get('total')} ({ant.get('source','?').split('(')[0].strip()}) | OpenAI \${oai.get('remaining')} remaining of \${oai.get('total')}\")
+print(f\"[ant] History: {len(hist)} days loaded, max single-day \${max_day:.4f}\")
+print(f\"[ant] Monthly ledger: ${ANT_MONTHLY_FILE}\")
+"
+    echo "[ant] Dual-path write: OK"
+    echo "[ant] Gate: $GATE_LINE"
+} >> "$LOG_FILE" 2>&1
+
+# ── Phase 4: Update ACTIVE.md ────────────────────────────────────────────────
+ACTIVE_FILE="$ROOT/agents/ant/ACTIVE.md"
+RUN_TS=$(date +%Y-%m-%dT%H:%M:%S%z)
+NEXT_TS=$(date -v+1d +%Y-%m-%d 2>/dev/null && echo "$(date -v+1d +%Y-%m-%d)T23:45:00$(date +%z)" || date -d "tomorrow" +%Y-%m-%dT23:45:00%z 2>/dev/null || echo "tomorrow 23:45 MT")
+
+python3 -c "
+import json
+with open('${ANT_FILE}') as f: d = json.load(f)
+cr = d.get('credits', {})
+ant = cr.get('anthropic', {})
+oai = cr.get('openai', {})
+net = d.get('income', {}).get('total_monthly', 0) - d.get('expenses', {}).get('total', 0)
+src_ant = ant.get('source', '?').split('(')[0].strip()
+src_oai = oai.get('source', '?').split('(')[0].strip()
+print(f'''# Ant — Active Ledger
+# Updated automatically by ant-update.sh
+
+**Agent:** Ant (Accountant)
+**Last run:** ${RUN_TS}
+**Status:** $GATE_LINE
+**Protocol version:** 1.2
+
+## Credit status (as of last run)
+
+| Provider   | Remaining | Total | Used MTD | Source |
+|------------|-----------|-------|----------|--------|
+| Anthropic  | \${ant.get(\"remaining\", \"?\")} | \${ant.get(\"total\", \"?\")} | \${ant.get(\"used_mtd\", 0):.4f} | {src_ant} |
+| OpenAI     | \${oai.get(\"remaining\", \"?\")} | \${oai.get(\"total\", \"?\")} | \${oai.get(\"used_mtd\", 0):.4f} | {src_oai} |
+
+## Net position (this month)
+
+- Income: \${d.get(\"income\", {}).get(\"total_monthly\", 0):.2f}
+- Expenses: \${d.get(\"expenses\", {}).get(\"total\", 0):.2f}
+- **Net: \${net:.2f}**
+
+## Open tickets
+
+| Ticket       | Priority | Description                                          |
+|--------------|----------|------------------------------------------------------|
+| ANT-GAP-001  | P2       | Screen-scrape requires Cowork; needs Admin API key   |
+| ANT-GAP-002  | P3       | No launchd job for monthly close (1st of month)      |
+| ANT-GAP-003  | P3       | No failure alert if ant-daily fails overnight        |
+
+## Next scheduled run
+
+${NEXT_TS} (via com.hyo.ant-daily launchd)
+''')
+" > "$ACTIVE_FILE" 2>/dev/null
+
+echo "[ant] ACTIVE.md: updated" >> "$LOG_FILE"
+echo "[ant] $(date -u +%Y-%m-%dT%H:%M:%S%z) END" >> "$LOG_FILE"
+
+# ── Phase 5: Commit and push ──────────────────────────────────────────────────
+cd "$ROOT"
+MONTH_TAG=$(date +%Y-%m)
+git add \
+    agents/sam/website/data/ant-data.json \
+    website/data/ant-data.json \
+    "agents/ant/ledger/monthly-${MONTH_TAG}.json" \
+    agents/ant/ACTIVE.md \
+    "$LOG_FILE" 2>/dev/null || true
+
+if git diff --cached --quiet; then
+    echo "[ant-update] Nothing to commit."
+else
+    if git commit -m "ant: daily update $(date +%Y-%m-%d)"; then
+        if git push origin main; then
+            echo "[ant-update] Committed and pushed."
+            echo "[ant] $(date -u +%Y-%m-%dT%H:%M:%S%z) Committed and pushed." >> "$LOG_FILE"
+        else
+            echo "[ant-update] WARNING: git push failed — sending Telegram alert." >&2
+            echo "[ant] $(date -u +%Y-%m-%dT%H:%M:%S%z) GIT PUSH FAILED — manual push required via kai exec." >> "$LOG_FILE"
+            python3 -c "
+import sys
+sys.path.insert(0, '${ROOT}/bin')
+try:
+    from ant_gate import send_telegram_alert
+    send_telegram_alert('ant-update.sh: git push failed on $(date +%Y-%m-%d). Run: kai exec \"cd ~/Documents/Projects/Hyo && git push origin main\"')
+except Exception as e:
+    import urllib.request, json, os
+    # Inline fallback alert
+    env_file = '${ROOT}/agents/nel/security/env'
+    token = ''; chat_id = ''
+    try:
+        for line in open(env_file):
+            k, _, v = line.strip().partition('=')
+            if k.strip() == 'TELEGRAM_BOT_TOKEN': token = v.strip()
+            if k.strip() == 'TELEGRAM_CHAT_ID': chat_id = v.strip()
+    except: pass
+    if token and chat_id:
+        payload = json.dumps({'chat_id': chat_id, 'text': '[ANT] git push failed on $(date +%Y-%m-%d). Manual push needed.'}).encode()
+        urllib.request.urlopen(urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=payload, headers={'Content-Type': 'application/json'}), timeout=10)
+" 2>/dev/null || true
+        fi
+    else
+        echo "[ant-update] WARNING: git commit failed." >&2
+    fi
+fi
+
+echo "[ant-update] Done. Gate: $GATE_LINE | Log: $LOG_FILE"

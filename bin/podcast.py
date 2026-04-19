@@ -38,6 +38,7 @@ MORNING_REPORT  = os.path.join(WEBSITE_PRIMARY, "data/morning-report.json")
 FEED_PRIMARY    = os.path.join(WEBSITE_PRIMARY, "data/feed.json")
 FEED_MIRROR     = os.path.join(WEBSITE_MIRROR, "data/feed.json")
 LOG_FILE        = os.path.join(HYO_ROOT, "agents/sam/logs/podcast.log")
+SCRIPT_OUT_DIR  = os.path.join(HYO_ROOT, "agents/ra/output")
 
 # OpenAI TTS settings — Vale voice persona
 # Research: 50+ podcast sources analyzed. coral on gpt-4o-mini-tts = closest to
@@ -77,6 +78,75 @@ def log(msg: str):
             f.write(line + "\n")
     except Exception:
         pass
+
+
+def _load_telegram_creds() -> tuple[str, str]:
+    """Load TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID from secrets env file or environment."""
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if token and chat_id:
+        return token, chat_id
+    # Try secrets env file
+    env_file = os.path.join(SECRETS_DIR, "env")
+    if os.path.exists(env_file):
+        try:
+            with open(env_file) as f:
+                for line in f:
+                    line = line.strip()
+                    if "=" not in line or line.startswith("#"):
+                        continue
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip()
+                    if k == "TELEGRAM_BOT_TOKEN" and not token:
+                        token = v
+                    elif k == "TELEGRAM_CHAT_ID" and not chat_id:
+                        chat_id = v
+        except Exception:
+            pass
+    # Fallback: try Kai project .env
+    if not token or not chat_id:
+        kai_env = os.path.expanduser("~/Documents/Projects/Kai/.env")
+        if os.path.exists(kai_env):
+            try:
+                with open(kai_env) as f:
+                    for line in f:
+                        line = line.strip()
+                        if "=" not in line or line.startswith("#"):
+                            continue
+                        k, v = line.split("=", 1)
+                        k = k.strip(); v = v.strip()
+                        if k == "TELEGRAM_BOT_TOKEN" and not token:
+                            token = v
+                        elif k == "TELEGRAM_CHAT_ID" and not chat_id:
+                            chat_id = v
+            except Exception:
+                pass
+    return token, chat_id
+
+
+def send_telegram_alert(msg: str):
+    """Send a Telegram alert to Hyo. Non-blocking — failure is logged, not raised."""
+    try:
+        import urllib.request
+        token, chat_id = _load_telegram_creds()
+        if not token or not chat_id:
+            log("WARN: Telegram creds not found — skipping alert")
+            return
+        payload = json.dumps({"chat_id": chat_id, "text": f"[PODCAST] {msg}"}).encode()
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            result = json.loads(resp.read())
+            if result.get("ok"):
+                log(f"Telegram alert sent: {msg[:80]}")
+            else:
+                log(f"Telegram alert failed: {result}")
+    except Exception as e:
+        log(f"WARN: Telegram alert error: {e}")
 
 
 def load_openai_key() -> str:
@@ -372,15 +442,23 @@ def build_podcast_script(date_str: str, highlights: dict, ra_stories: list[str],
             parts.append(section)
             parts.append("")
 
-    # AETHER NARRATIVE (if no dedicated section from agents, synthesize from highlights)
-    if not any("AETHER" in a.get("name","").upper() for a in agents):
+    # AETHER NARRATIVE — always present, even if P&L is near zero (flat weeks have a story too)
+    aether_from_agents = next(
+        (a for a in agents if "AETHER" in a.get("name", "").upper()), None
+    )
+    if not aether_from_agents:
+        # Synthesize from highlights — even flat P&L gets a section
         if biggest_win and "aether" in biggest_win.lower():
-            parts.append(
-                f"On the trading side — Aether's headline: {strip_markdown(biggest_win)} "
-                "The number matters less than the decision behind it. "
-                "Aether doesn't optimize for a single session. She plays a tournament, not a match."
-            )
-            parts.append("")
+            aether_narrative = strip_markdown(biggest_win)
+        else:
+            aether_narrative = "markets ran quiet"
+        parts.append(
+            f"On the trading side — {aether_narrative}. "
+            "The number matters less than the decision behind it. "
+            "Aether doesn't optimize for a single session — she plays a tournament, not a match. "
+            "A quiet day is data too."
+        )
+        parts.append("")
 
     # CLOSING INSIGHT
     traj_narrative = {
@@ -565,29 +643,36 @@ GPT_EXPAND_PROMPT = """You are Vale — the host of the hyo.world morning brief.
 
 You will receive a DRAFT SCRIPT. Expand it to a full 10-minute broadcast: 1,400–1,600 words of pure spoken prose.
 
+EDITORIAL PHILOSOPHY — this is the most important thing:
+The podcast is about substance first. Every second of airtime must justify itself with information the listener can use, remember, or act on. Entertainment is a delivery mechanism — it serves the information; the information does not serve it. The gold standard is Bankless: conviction, depth, stakes. Not hype. Not color commentary. The listener is here because they want to understand what's actually happening. Give them that. Then make it worth their commute.
+
+A story isn't just what happened — it's why it happened, what it reveals, and what comes next. If you can't answer all three, you don't have a story, you have a headline.
+
 VALE'S VOICE — internalize this before writing a single word:
 Vale is the smartest colleague the listener has. Warm. Direct. Has opinions. Never robotic, never a status report, never a morning-show DJ. Vale speaks the way a person talks when they've read everything and actually care about what they're saying. The listener is an intelligent adult. Do not explain things down to them.
+
+Vale's opinions are intellectual, not performative. "Here's what I find most interesting about this" signals a perspective, not a talking point. Opinion earns trust when it's backed by reasoning — never assert without evidence, never editorialize without context.
 
 SPOKEN PROSE RULES — these are not suggestions:
 - Contractions. Always. "It's" not "It is." "She didn't" not "She did not." "You'll" not "You will." Every single time.
 - Short sentences hit hard. Use them after something important. Like this.
 - Longer sentences carry the listener through a chain of reasoning — using clauses to walk them up the stairs one step at a time, the way a good teacher does.
 - Vary sentence length deliberately. Never three long sentences in a row. Never four short ones without a breather.
-- Questions as transitions. "So what does that mean for you? Here's the thing."
-- Em-dash (—) after the most important line in each section. That pause is the listener catching up.
+- Questions as transitions. "So what does that mean? Here's the thing."
+- Em-dash (—) for the natural pause after the most important line. That's the listener catching up.
 - "You" at least once per major section. Create intimacy.
 - Sentence fragments work. When used intentionally. They punch.
 - No bullet points. No numbered lists. No headers. This is audio — none of those exist.
 - No markdown formatting whatsoever. Plain text only.
 
-EXPANSION RULES:
-- Hook: 100–120 words. Start mid-thought. The most interesting thing from today. Never start with the date. Never start with "Welcome." Never start with "Good morning."
-- Context bridge: 80–100 words. After the hook, THEN the date and intro.
-- Each Ra story: 120–150 words. Not a summary — the insight behind the headline. What most people won't notice. What to watch.
-- Each agent section: 180–220 words. Goal → Constraint → Progress → Vision. Never report what they did. Report what they're becoming.
-- Aether section: 220–260 words. Story structure: market context → decision → outcome → insight. The number is not the story. The decision is the story.
-- Closing: 100–120 words. One synthesis observation connecting agents + world + market. End with CTA to HQ then sign off.
-- If data is sparse: add context from genuine domain knowledge (trading mechanics, AI security, content curation). Do NOT invent specific numbers.
+SECTION EXPANSION RULES:
+- Hook: 100–120 words. Start mid-thought. The single most important or revealing thing from today — not the most dramatic, the most meaningful. Never start with the date. Never "Welcome." Never "Good morning." Open with the insight, not the preamble.
+- Context bridge: 80–100 words. After the hook, THEN the date, Vale intro, and section preview.
+- Each Ra story: 120–150 words. Lead with the mechanism, not the event. What most people won't notice. What it reveals about the larger trend. What you'd tell a smart friend over coffee that they wouldn't get from the headline.
+- Each agent section: 180–220 words. Goal → Constraint → Progress → Vision. Don't report what they executed — report what they're building toward and why it's harder than it looks. Make the listener root for the agent.
+- Aether section: 220–260 words. ALWAYS include this section regardless of P&L size. Market context → decision → outcome → what it reveals about strategy. A near-flat week still has a story — the story of discipline, or of waiting, or of a market that didn't give clean signals. The number is never the story. The decision is.
+- Closing: 100–120 words. One synthesis observation that connects agents + world + market. Something the listener couldn't have assembled themselves from the individual parts. End with CTA to HQ, then sign off as Vale.
+- If data is sparse: add context from genuine domain knowledge (trading mechanics, AI security, content curation, market structure). Do NOT invent specific numbers or trades.
 
 OUTPUT: Only the words Vale speaks. No meta-commentary. No section labels. No "HOOK:" headers. Start immediately with the first word of the hook.
 
@@ -597,7 +682,7 @@ DRAFT SCRIPT:
 DATA CONTEXT:
 {context}
 
-Write 1,400–1,600 words. Begin with the hook, mid-thought, right now."""
+Write 1,400–1,600 words. Lead with substance. Begin with the hook, mid-thought, right now."""
 
 
 def expand_script_with_gpt(draft: str, context: str, api_key: str) -> str:
@@ -647,6 +732,18 @@ def main():
         f"ra_newsletter={'yes' if ra_newsletter_md else 'no'}, "
         f"aurora={'yes' if aurora_brief_md else 'no'}")
 
+    # ── Minimum content gate ────────────────────────────────────────────────────
+    sources_available = sum([
+        bool(morning_report),
+        bool(ra_newsletter_md),
+        bool(aurora_brief_md),
+    ])
+    if sources_available == 0:
+        msg = f"SKIP {date_str}: no content sources available (morning_report, ra_newsletter, aurora all missing)"
+        log(msg)
+        send_telegram_alert(msg)
+        sys.exit(1)
+
     # Extract content
     highlights = extract_morning_highlights(morning_report)
     ra_stories = extract_ra_stories(ra_newsletter_md)
@@ -655,9 +752,17 @@ def main():
 
     # Build draft script
     draft = build_podcast_script(date_str, highlights, ra_stories, aurora_brief_md, ra_newsletter_md)
-    log(f"Draft: {len(draft.split())} words")
+    draft_wc = len(draft.split())
+    log(f"Draft: {draft_wc} words")
 
-    # GPT expansion pass — target 1,500 words / 10 minutes
+    # Single-source minimum threshold — if only one source and draft is thin, skip
+    if sources_available == 1 and draft_wc < 200:
+        msg = f"SKIP {date_str}: single data source and draft too thin ({draft_wc} words) — wait for more data"
+        log(msg)
+        send_telegram_alert(msg)
+        sys.exit(1)
+
+    # ── GPT expansion pass — target 1,400-1,600 words / 10 minutes ─────────────
     api_key = load_openai_key()
     if not args.no_expand and not args.dry_run and api_key:
         context = (
@@ -667,7 +772,7 @@ def main():
             f"Ra newsletter snippet: {ra_newsletter_md[:1500] if ra_newsletter_md else 'unavailable'}. "
             f"Aurora brief snippet: {aurora_brief_md[:500] if aurora_brief_md else 'unavailable'}."
         )
-        log("Expanding draft with GPT-4o-mini...")
+        log("Expanding draft with GPT-4o (informative-first, Bankless model)...")
         script = expand_script_with_gpt(draft, context, api_key)
     else:
         script = draft
@@ -675,14 +780,40 @@ def main():
     word_count = len(script.split())
     # Estimate ~150 wpm for TTS
     est_minutes = round(word_count / 150, 1)
-
     log(f"Script: {word_count} words, est. {est_minutes} min")
+
+    # ── Save script to deterministic path (not /tmp) ────────────────────────────
+    script_path = os.path.join(SCRIPT_OUT_DIR, f"script-{date_str}.txt")
+    try:
+        Path(script_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(script_path, "w") as f:
+            f.write(script)
+        log(f"Script saved: {script_path}")
+    except Exception as e:
+        log(f"WARN: Could not save script to {script_path}: {e}")
 
     if args.script_only:
         print("\n" + "=" * 60)
         print(script)
         print("=" * 60)
         return
+
+    # ── Hard quality gate — exit 1 blocks TTS and commit ───────────────────────
+    gate_failures = []
+    if word_count < 1200:
+        gate_failures.append(f"script too short: {word_count} words (min 1200) — sounds like status report")
+    if word_count > 1900:
+        gate_failures.append(f"script too long: {word_count} words (max 1900) — may exceed 12 min")
+
+    if gate_failures:
+        for gf in gate_failures:
+            log(f"GATE FAIL: {gf}")
+        alert = f"GATE FAIL {date_str}: " + "; ".join(gate_failures) + f" | script at {script_path}"
+        send_telegram_alert(alert)
+        log("HARD GATE: aborting — no TTS, no commit. Fix the script and re-run.")
+        sys.exit(1)
+
+    log("GATE PASS: script quality OK")
 
     # Output paths
     mp3_primary = os.path.join(WEBSITE_PRIMARY, f"daily/podcast-{date_str}.mp3")
@@ -691,37 +822,71 @@ def main():
     # Generate TTS
     success = call_openai_tts(script, mp3_primary, args.voice, args.dry_run)
     if not success:
-        log("FAILED: TTS generation failed")
+        msg = f"TTS FAILED {date_str} — script saved at {script_path}"
+        log(f"FAILED: TTS generation failed")
+        send_telegram_alert(msg)
         sys.exit(1)
 
     # Sync to mirror
     if not args.dry_run:
         sync_mp3(mp3_primary, mp3_mirror)
+        # Verify dual-path sync
+        if os.path.exists(mp3_primary) and os.path.exists(mp3_mirror):
+            size_primary = os.path.getsize(mp3_primary)
+            size_mirror  = os.path.getsize(mp3_mirror)
+            if size_primary != size_mirror:
+                msg = f"DUAL-PATH MISMATCH {date_str}: primary={size_primary}B mirror={size_mirror}B"
+                log(f"WARN: {msg}")
+                send_telegram_alert(msg)
+            else:
+                log(f"Dual-path sync verified: {size_primary}B")
+        elif os.path.exists(mp3_primary) and not os.path.exists(mp3_mirror):
+            msg = f"DUAL-PATH FAIL {date_str}: mirror MP3 missing after sync"
+            log(f"WARN: {msg}")
+            send_telegram_alert(msg)
 
     # Update feed.json
-    update_feed(date_str, f"~{est_minutes} min")
+    feed_ok = update_feed(date_str, f"~{est_minutes} min")
+    if not feed_ok:
+        log("WARN: feed.json update returned no success — check feed paths")
+
+    # Also stage script alongside MP3 for version history
+    if os.path.exists(script_path):
+        script_rel = os.path.relpath(script_path, HYO_ROOT)
+    else:
+        script_rel = None
 
     # Commit and push
     if not args.dry_run:
         try:
             mp3_rel_primary = os.path.relpath(mp3_primary, HYO_ROOT)
             mp3_rel_mirror  = os.path.relpath(mp3_mirror, HYO_ROOT)
-            subprocess.run([
-                "git", "add",
+            files_to_add = [
                 mp3_rel_primary,
                 mp3_rel_mirror,
                 "agents/sam/website/data/feed.json",
-                "website/data/feed.json"
-            ], cwd=HYO_ROOT, capture_output=True)
+                "website/data/feed.json",
+            ]
+            if script_rel:
+                files_to_add.append(script_rel)
+            subprocess.run(["git", "add"] + files_to_add, cwd=HYO_ROOT, capture_output=True)
             subprocess.run([
                 "git", "commit", "-m",
                 f"podcast: daily brief {date_str} ({est_minutes}min, voice={args.voice})"
             ], cwd=HYO_ROOT, capture_output=True)
-            subprocess.run(["git", "push", "origin", "main"],
-                           cwd=HYO_ROOT, capture_output=True, timeout=60)
-            log("Committed and pushed")
+            push_result = subprocess.run(
+                ["git", "push", "origin", "main"],
+                cwd=HYO_ROOT, capture_output=True, timeout=60
+            )
+            if push_result.returncode == 0:
+                log("Committed and pushed")
+            else:
+                err = (push_result.stderr or b"").decode()[:200]
+                msg = f"GIT PUSH FAILED {date_str}: {err}"
+                log(f"ERROR: {msg}")
+                send_telegram_alert(msg)
         except Exception as e:
-            log(f"Git operations: {e}")
+            log(f"Git operations error: {e}")
 
     log(f"=== Podcast complete: podcast-{date_str}.mp3 ===")
     print(f"PODCAST_URL=/daily/podcast-{date_str}.mp3")

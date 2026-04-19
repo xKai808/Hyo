@@ -1,8 +1,8 @@
 # PROTOCOL_ANT.md
 # Ant — Complete Agent Execution Protocol
 #
-# VERSION: 1.2
-# Author: Kai | Created: 2026-04-18 | Updated: 2026-04-18
+# VERSION: 1.3
+# Author: Kai | Created: 2026-04-18 | Updated: 2026-04-19
 # Canonical location: agents/ant/PROTOCOL_ANT.md
 #
 # PURPOSE: Every execution of Ant — automated or manual — follows this protocol.
@@ -16,6 +16,11 @@
 #                      schedule table verified from real plists (Part 11); agent independence
 #                      tiers documented (Part 12); known failure modes with gates (Part 13);
 #                      git push rule, ACTIVE.md update, log-writing requirement, 17 holes closed
+#   v1.3 (2026-04-19): ant-gate.py standalone hard-block script (bin/ant-gate.py, 5 gates,
+#                      exit 1 on fail, Telegram alert); ant-update.sh Phase 2 now calls
+#                      ant-gate.py instead of inline Python; git push failure sends Telegram
+#                      alert; scraped-credits >24h staleness flagged in gate; ANT-GAP-003
+#                      (failure alert) resolved via Telegram integration
 
 ---
 
@@ -145,45 +150,29 @@ What happens inside:
 12. Write daily log to `agents/ant/logs/ant-YYYY-MM-DD.log`
 13. Update `agents/ant/ACTIVE.md` with run timestamp and status
 
-### Phase 2: Quality gate
+### Phase 2: Quality gate (ant-gate.py — HARD BLOCK)
 
-After ant-update.sh runs, verify:
+**The quality gate is `bin/ant-gate.py` — a standalone hard-block script (v1.3).**
+It is called by ant-update.sh Phase 2. On failure: exits 1, sends Telegram alert,
+ant-update.sh aborts before commit. No broken data reaches HQ.
 
-```python
-import json
-with open("agents/sam/website/data/ant-data.json") as f:
-    d = json.load(f)
-
-# Gate 1: credits populated (not null)
-assert d['credits']['anthropic']['remaining'] is not None, "FAIL: Anthropic credits null"
-assert d['credits']['openai']['remaining'] is not None, "FAIL: OpenAI credits null"
-
-# Gate 2: monthly ledger written
-import os
-from datetime import date
-month = date.today().strftime("%Y-%m")
-assert os.path.exists(f"agents/ant/ledger/monthly-{month}.json"), "FAIL: monthly ledger missing"
-
-# Gate 3: staleness < 25h
-from datetime import datetime, timezone, timedelta
-updated = datetime.fromisoformat(d['updatedAt'])
-age_h = (datetime.now(timezone.utc) - updated.astimezone(timezone.utc)).total_seconds() / 3600
-assert age_h < 25, f"FAIL: ant-data.json is {age_h:.1f}h old"
-
-# Gate 4: dual-path consistency
-import filecmp
-assert filecmp.cmp(
-    "agents/sam/website/data/ant-data.json",
-    "website/data/ant-data.json"
-), "FAIL: dual-path files are out of sync"
-
-# Gate 5: history array present and non-empty
-assert len(d.get('history', [])) > 0, "FAIL: history array empty — chart will be blank"
-
-print("ALL GATES PASS")
+```bash
+# ant-update.sh calls this automatically — manual invocation for debugging:
+python3 bin/ant-gate.py
 ```
 
-If any gate fails: re-run `bash bin/ant-update.sh`. If still failing: file ANT-P1 ticket.
+**5 gates (all must pass):**
+
+| Gate | Check                                        | Failure action                        |
+|------|----------------------------------------------|---------------------------------------|
+| 1    | credits.anthropic.remaining and .openai.remaining not null | Telegram alert + exit 1 |
+| 2    | history[] array is non-empty                 | Telegram alert + exit 1               |
+| 3    | updatedAt is within last 60 minutes          | Telegram alert + exit 1               |
+| 4    | Both ant-data.json paths exist, sizes match  | Telegram alert + exit 1               |
+| 5    | At least one history day has non-zero values | Telegram alert + exit 1               |
+
+If gate fails: check Telegram alert. Then re-run `bash bin/ant-update.sh`. If still
+failing: file ANT-P1 ticket and check api-usage.jsonl for valid records.
 
 ### Phase 3: Commit and push
 
@@ -722,6 +711,9 @@ Before any Ant-related work, scan this list.
 | ANT-F-015  | Commit without push                          | Did I confirm push with `git log origin/main..HEAD` returning empty? |
 | ANT-F-016  | hq.html JS SyntaxError crashes entire tab    | Did I open browser console and check for SyntaxError before declaring done? |
 | ANT-F-017  | Tab context stale in browser MCP             | Did I call tabs_context_mcp before browser_batch to refresh context? |
+| ANT-F-018  | Quality gate fails but commit still happens  | Was `python3 bin/ant-gate.py` returning exit 1? ant-update.sh must abort on non-zero. |
+| ANT-F-019  | Telegram alert not sent on gate failure      | Is TELEGRAM_BOT_TOKEN in agents/nel/security/env? Check ant-gate.py can read it. |
+| ANT-F-020  | git push fails silently overnight            | ant-update.sh now sends Telegram alert on push failure. Check Telegram. |
 
 ---
 
@@ -733,7 +725,9 @@ Open tickets related to Ant. Keep this section current.
 |--------------|----------|----------|------------------------------------------------------------------|
 | ANT-GAP-001  | OPEN     | P2       | Screen-scrape requires Cowork session; needs Admin API key for full automation |
 | ANT-GAP-002  | OPEN     | P3       | No launchd job for monthly close (1st of month) — currently manual |
-| ANT-GAP-003  | OPEN     | P3       | No failure alert if ant-daily fails overnight                    |
+| ANT-GAP-003  | RESOLVED | P3→done  | Failure alert on ant-daily fail — resolved v1.3 via ant-gate.py Telegram integration |
+| ANT-GAP-004  | OPEN     | P3       | No weekly P&L accumulation — detect Monday rollover, archive prior week to monthly ledger |
+| ANT-GAP-005  | OPEN     | P3       | scraped-credits >24h staleness not surfaced in 07:00 report-completeness-check.sh |
 | ANT-BUG-001  | RESOLVED | —        | Duplicate incomeStreams SyntaxError (fixed commit 79cae18)       |
 | ANT-BUG-002  | RESOLVED | —        | Daily chart used wrong field path costs.dailyHistory (fixed commit 34e8263) |
 | ANT-BUG-003  | RESOLVED | —        | Unquoted heredoc bad substitution (fixed in ant-update.sh rewrite) |

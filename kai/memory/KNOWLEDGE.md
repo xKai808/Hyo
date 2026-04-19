@@ -217,8 +217,8 @@ read the relevant PROTOCOL before touching any agent's code, data, or runner.
 | Agent   | Protocol file                                  | Current version | When to read |
 |---------|------------------------------------------------|-----------------|--------------|
 | Aether  | `agents/aether/PROTOCOL_DAILY_ANALYSIS.md`     | v2.5            | Before any analysis, HQ publish, or runner change |
-| Ant     | `agents/ant/PROTOCOL_ANT.md`                   | v1.2            | Before any credit data, ant-update.sh, or hq.html Ant tab work |
-| Podcast | `agents/ra/PROTOCOL_PODCAST.md`                | v1.0            | Before any podcast.py, Vale voice, or script format work |
+| Ant     | `agents/ant/PROTOCOL_ANT.md`                   | v1.3            | Before any credit data, ant-update.sh, or hq.html Ant tab work |
+| Podcast | `agents/ra/PROTOCOL_PODCAST.md`                | v1.1            | Before any podcast.py, Vale voice, or script format work |
 
 Kai's rule: **before working on an agent, read its PROTOCOL file first.**
 The protocol tells you: file locations, dual-path rules, field names, failure modes, upgrade steps.
@@ -245,7 +245,8 @@ After upgrading: update this table's "Current version" column and commit.
 - **Credit source tiers:** Tier 1 (automated, headless) = MTD spend from api-usage.jsonl; Tier 2 (requires screen or Admin API key) = real account balance
 - **After every run:** update `agents/ant/ACTIVE.md` + write log to `agents/ant/logs/ant-YYYY-MM-DD.log`
 - **Git push:** run via Mini (`mcp__claude-code-mini__Bash` or `kai exec`) — Cowork sandbox has 403 proxy block
-- **Open tickets:** ANT-GAP-001 (Admin API key), ANT-GAP-002 (monthly close job), ANT-GAP-003 (failure alert)
+- **Quality gate:** `python3 bin/ant-gate.py` — hard-block, 5 gates, exit 1 on fail, Telegram alert auto-sent. ant-update.sh calls this; no commit on failure.
+- **Open tickets:** ANT-GAP-001 (Admin API key), ANT-GAP-002 (monthly close job), ANT-GAP-003 (RESOLVED via ant-gate.py Telegram), ANT-GAP-004 (weekly P&L rollover), ANT-GAP-005 (scraped-credits staleness in report-check)
 - **17 failure modes documented** in Part 13 — check before any Ant work
 
 ---
