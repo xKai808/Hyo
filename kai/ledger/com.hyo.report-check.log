@@ -1,2 +1,62 @@
 [check 08:00:04] === Completeness check 2026-04-19 (dow=7) ===
 [check 08:00:04] Sunday — no reports required.
+[check 08:00:00] === Completeness check 2026-04-20 (dow=1) ===
+[check 08:00:00] FAIL: morning-report 2026-04-20 (morning-report-2026-04-20)
+[check 08:00:00] Remediating: kai morning-report
+[morning-report-v4] 08:00:00 Generating morning report v4 (growth-driven) for 2026-04-20
+✓ JSON report written: /Users/kai/Documents/Projects/Hyo/website/data/morning-report.json
+
+================================================================================
+MORNING REPORT — 2026-04-20
+================================================================================
+
+Growth trajectory: declining (0/5 expanding)
+Biggest risk: nel: no active novel work
+Biggest win: No improvements shipped today
+API spend today: $0.09 (2 calls) — openai=$0.09
+
+**NEL** has no active novel work — No novel work identified — check if improvement cycle is running..
+
+**RA** has no active novel work — No novel work identified — check if improvement cycle is running..
+
+**SAM** has no active novel work — No novel work identified — check if improvement cycle is running..
+
+**AETHER** has no active novel work — No novel work identified — check if improvement cycle is running..
+
+**DEX** has no active novel work — No novel work identified — check if improvement cycle is running..
+
+================================================================================
+[morning-report-v4] 08:00:00 Mirror synced: /Users/kai/Documents/Projects/Hyo/agents/sam/website/data/morning-report.json
+[morning-report-v4] 08:00:00 Adding morning report to feed.json...
+Morning report added to feed.json for 2026-04-20
+[morning-report-v4] 08:00:00 Feed entry created
+[DUAL-PATH GATE] BLOCKED: website/data/feed.json staged but agents/sam/website/data/feed.json is NOT staged.
+  Fix: git add agents/sam/website/data/feed.json
+
+[DUAL-PATH GATE] Commit blocked. Mirror the files above, then retry.
+[morning-report-v4] 08:00:00 ERROR: git commit failed — morning report NOT published.
+[morning-report-v4] 08:00:00 Done — v4 morning report generated
+[check 08:00:00] OK: newsletter 2026-04-20
+[check 08:00:00] FAIL: newsletter HTML missing at website/daily/2026-04-20.html — readLink will 404
+[check 08:00:00] OK: newsletter HTML recovered from ra/output
+[check 08:00:00] FAIL: daily nel (nel-daily-2026-04-20)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:00] Remediating: nel daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:00] FAIL: daily ra (ra-daily-2026-04-20)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:00] Remediating: ra daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:00] FAIL: daily sam (sam-daily-2026-04-20)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:00] Remediating: sam daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:00] FAIL: daily kai (kai-daily-2026-04-20)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:00] Remediating: kai daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[main 97aa3df] chore: completeness check 2026-04-20 — failures=0
+ 5 files changed, 99 insertions(+), 13 deletions(-)
+To https://github.com/xKai808/Hyo.git
+   032173a..97aa3df  main -> main
+[check 08:00:05] === Completeness check done. Failures: 0 ===

@@ -51,6 +51,8 @@
 
 - [ ] **[H]** **S18-013: Remote connection (bore.pub) broken.** SSH to bore.pub port 22246 refused. On Mini terminal run: `launchctl list | grep bore` — if not found, restart with: `bore local 22 --to bore.pub`. Note the new port, update SSH config on Pro. Kai cannot execute queue commands without this tunnel. Everything else works via filesystem queue fallback, but bridge latency is 30-120x slower.
 
+- [ ] **[K]** **S20-001: `/api/health` returns empty JSON in production.** Sentinel run #106 (2026-04-20) hit `https://www.hyo.world/api/health` and got HTTP 200 with body `{}` — no `ok` field, no `founderTokenConfigured` field. This is DIFFERENT from "sandbox can't reach Mini" (the curl succeeded). The endpoint is reachable but the handler is returning an empty object. Next Mini interactive session: (1) check `agents/sam/website/api/health.js` handler — is the response body actually being populated? (2) verify `FOUNDER_TOKEN` env var is set in Vercel production (not just preview); (3) test `curl -s https://www.hyo.world/api/health | jq .` and compare to handler code. Day 99 chronic sentinel P0 may be a real production bug, not sandbox environmental as previously classified.
+
 ## P1 — NEXT SESSION
 
 - [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Hyo creates Stripe account + product ($19/mo, 14-day trial) + keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel.
@@ -586,3 +588,9 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gifted-wonderful-gates/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1bb68c20:escalated]
 
 - [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-20.md [sentinel:aurora-ran-today:dae67aaf] _(filed 2026-04-20)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/youthful-compassionate-keller/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:27d2b779] _(filed 2026-04-20)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/youthful-compassionate-keller/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:27d2b779:escalated]
+
+- [ ] **[K]** [sentinel] 27 P0 tasks (overload threshold 5) [sentinel:task-queue-size:344e5802] _(filed 2026-04-20)_
