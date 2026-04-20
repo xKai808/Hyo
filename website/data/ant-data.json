@@ -1,10 +1,10 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-20T00:45:04.486776-06:00",
+  "updatedAt": "2026-04-20T05:30:12.143881-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-20T00:45:04.486781-06:00",
+    "lastUpdated": "2026-04-20T05:30:12.143884-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -15,26 +15,26 @@
       "currency": "USD"
     },
     "openai": {
-      "total": 0.9741,
+      "total": 1.0598,
       "currency": "USD"
     },
-    "total": 1.214,
-    "today": 0
+    "total": 1.2997,
+    "today": 0.0857
   },
   "burn": {
-    "daily": 0.4047,
+    "daily": 0.3249,
     "dailyBudget": 50,
-    "pctOfBudget": 0.8,
+    "pctOfBudget": 0.6,
     "trend": "stable",
     "alertThreshold": 1.0
   },
   "byProcess": [
     {
       "process": "aether",
-      "runs": 23,
-      "totalCost": 1.213785,
-      "avgPerRun": 0.052773,
-      "lastRun": "2026-04-19T03:21:04-0600"
+      "runs": 25,
+      "totalCost": 1.299475,
+      "avgPerRun": 0.051979,
+      "lastRun": "2026-04-20T03:21:10-0600"
     },
     {
       "process": "podcast-tts",
@@ -71,15 +71,15 @@
       },
       {
         "name": "OpenAI API",
-        "actual": 0.9741,
+        "actual": 1.0598,
         "category": "API"
       }
     ],
     "infrastructure": [],
     "other": [],
     "total_fixed": 220.0,
-    "total_api": 1.214,
-    "total": 221.214
+    "total_api": 1.2997,
+    "total": 221.2997
   },
   "credits": {
     "anthropic": {
@@ -88,7 +88,7 @@
       "used": 9.21,
       "used_mtd": 0.2399,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (screen-scraped, scraped 26h ago)",
+      "source": "console.anthropic.com (screen-scraped, scraped 30h ago)",
       "scraped_at": "2026-04-18T23:13:41.287965-06:00",
       "note": "Real account balance from Anthropic console."
     },
@@ -96,9 +96,9 @@
       "remaining": 18.64,
       "total": 20.0,
       "used": 1.36,
-      "used_mtd": 0.9741,
+      "used_mtd": 1.0598,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (screen-scraped, scraped 26h ago)",
+      "source": "platform.openai.com (screen-scraped, scraped 30h ago)",
       "scraped_at": "2026-04-18T23:13:41.287965-06:00",
       "note": "Real account balance from OpenAI platform."
     }
@@ -106,8 +106,8 @@
   "models": [
     {
       "name": "gpt-4o",
-      "calls": 19,
-      "cost": 0.9739
+      "calls": 21,
+      "cost": 1.0596
     },
     {
       "name": "claude-sonnet-4-6",
@@ -123,7 +123,7 @@
   "agents": [
     {
       "name": "aether",
-      "cost": 1.2138
+      "cost": 1.2995
     },
     {
       "name": "sam/podcast",
@@ -212,8 +212,8 @@
     {
       "date": "2026-04-20",
       "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
+      "openai": 0.0857,
+      "total": 0.0857
     }
   ]
 }
