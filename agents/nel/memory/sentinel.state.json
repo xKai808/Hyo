@@ -2,33 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-19T18:10:51Z",
-  "totalRuns": 99,
+  "lastRunAt": "2026-04-20T02:10:55Z",
+  "totalRuns": 102,
   "runHistory": [
-    {
-      "ts": "2026-04-18T10:05:52Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 1
-    },
-    {
-      "ts": "2026-04-18T10:09:55Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 1,
-      "recurringIssues": 2,
-      "resolved": 1
-    },
-    {
-      "ts": "2026-04-18T10:09:58Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
     {
       "ts": "2026-04-18T10:10:05Z",
       "passed": 6,
@@ -244,6 +220,30 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-19T22:10:36Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 0,
+      "recurringIssues": 4,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-04-19T22:10:54Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 0,
+      "recurringIssues": 4,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-20T02:10:55Z",
+      "passed": 5,
+      "failed": 4,
+      "newIssues": 0,
+      "recurringIssues": 4,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -254,48 +254,8 @@
       "firstSeen": "2026-04-11T10:04:55Z",
       "lastSeen": "2026-04-19T18:10:51Z",
       "daysFailing": 96,
-      "status": "open",
-      "resolvedAt": "2026-04-19T14:10:48Z"
-    },
-    "aurora-ran-today:0c142622": {
-      "severity": "P0",
-      "check_id": "aurora-ran-today",
-      "detail": "missing or empty /sessions/clever-beautiful-cray/mnt/Hyo/newsletters/2026-04-12.md",
-      "firstSeen": "2026-04-12T07:13:47Z",
-      "lastSeen": "2026-04-12T07:13:50Z",
-      "daysFailing": 2,
       "status": "resolved",
-      "resolvedAt": "2026-04-12T22:10:34Z"
-    },
-    "scheduled-tasks-fired:07c43f6a": {
-      "severity": "P1",
-      "check_id": "scheduled-tasks-fired",
-      "detail": "no aurora logs in /sessions/clever-beautiful-cray/mnt/Hyo/kai/logs",
-      "firstSeen": "2026-04-12T07:13:47Z",
-      "lastSeen": "2026-04-12T07:13:50Z",
-      "daysFailing": 2,
-      "status": "resolved",
-      "resolvedAt": "2026-04-12T22:10:34Z"
-    },
-    "aurora-ran-today:feb31bdf": {
-      "severity": "P0",
-      "check_id": "aurora-ran-today",
-      "detail": "missing or empty /sessions/vigilant-nifty-darwin/mnt/Hyo/newsletters/2026-04-12.md",
-      "firstSeen": "2026-04-12T22:10:34Z",
-      "lastSeen": "2026-04-12T22:10:46Z",
-      "daysFailing": 2,
-      "status": "resolved",
-      "resolvedAt": "2026-04-13T02:09:34Z"
-    },
-    "scheduled-tasks-fired:3d76170a": {
-      "severity": "P1",
-      "check_id": "scheduled-tasks-fired",
-      "detail": "no aurora logs in /sessions/vigilant-nifty-darwin/mnt/Hyo/agents/nel/logs",
-      "firstSeen": "2026-04-12T22:10:34Z",
-      "lastSeen": "2026-04-12T22:10:46Z",
-      "daysFailing": 2,
-      "status": "resolved",
-      "resolvedAt": "2026-04-13T02:09:34Z"
+      "resolvedAt": "2026-04-19T22:10:36Z"
     },
     "aurora-ran-today:e98fd1df": {
       "severity": "P0",
@@ -752,9 +712,9 @@
       "check_id": "founder-token-integrity",
       "detail": "founder.token mode is 0600, want 6xx",
       "firstSeen": "2026-04-18T06:14:01Z",
-      "lastSeen": "2026-04-19T14:10:52Z",
-      "daysFailing": 3,
-      "status": "resolved",
+      "lastSeen": "2026-04-20T02:10:55Z",
+      "daysFailing": 6,
+      "status": "open",
       "resolvedAt": "2026-04-19T18:10:32Z"
     },
     "scheduled-tasks-fired:a2875b77": {
@@ -762,9 +722,9 @@
       "check_id": "scheduled-tasks-fired",
       "detail": "no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-18T06:14:01Z",
-      "lastSeen": "2026-04-19T14:10:52Z",
-      "daysFailing": 3,
-      "status": "resolved",
+      "lastSeen": "2026-04-20T02:10:55Z",
+      "daysFailing": 6,
+      "status": "open",
       "resolvedAt": "2026-04-19T18:10:32Z"
     },
     "secrets-dir-permissions:6717d4df": {
@@ -772,9 +732,9 @@
       "check_id": "secrets-dir-permissions",
       "detail": "0755 (want 700) \u2014 run: chmod 700 /Users/kai/Documents/Projects/Hyo/.secrets",
       "firstSeen": "2026-04-18T06:14:01Z",
-      "lastSeen": "2026-04-19T14:10:52Z",
-      "daysFailing": 3,
-      "status": "resolved",
+      "lastSeen": "2026-04-20T02:10:55Z",
+      "daysFailing": 6,
+      "status": "open",
       "resolvedAt": "2026-04-19T18:10:32Z"
     },
     "task-queue-size:385b8938": {
@@ -842,8 +802,8 @@
       "check_id": "task-queue-size",
       "detail": "26 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-18T18:10:13Z",
-      "lastSeen": "2026-04-19T18:10:51Z",
-      "daysFailing": 24,
+      "lastSeen": "2026-04-20T02:10:55Z",
+      "daysFailing": 27,
       "status": "open"
     },
     "scheduled-tasks-fired:4ceeed88": {
@@ -913,7 +873,8 @@
       "firstSeen": "2026-04-19T18:10:32Z",
       "lastSeen": "2026-04-19T18:10:51Z",
       "daysFailing": 4,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-19T22:10:36Z"
     }
   },
   "falsePositives": [],

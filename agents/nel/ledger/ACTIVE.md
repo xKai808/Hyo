@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-19T20:38:08Z
+Last updated: 2026-04-20T02:38:30Z
 
 ## In Progress
 
 - **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-19T20:38:08Z
+  - Delegated: 2026-04-20T02:38:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
