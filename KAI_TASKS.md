@@ -584,3 +584,5 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/gifted-wonderful-gates/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1bb68c20] _(filed 2026-04-19)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gifted-wonderful-gates/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1bb68c20:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-20.md [sentinel:aurora-ran-today:dae67aaf] _(filed 2026-04-20)_

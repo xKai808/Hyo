@@ -1,16 +1,16 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-04-19T20:35:18-0600
+**Last updated:** 2026-04-20T02:36:09-0600
 
 ## System Health
-- Status: ISSUES (4 P0/P1)
-- Warnings: 7
-- Actions taken: Dispatched auto-remediation for 4 P0/P1 issues
+- Status: ISSUES (6 P0/P1)
+- Warnings: 9
+- Actions taken: Dispatched auto-remediation for 6 P0/P1 issues
 
 ## Agent ACTIVE.md Status
 - aether: updated 0h ago
 - ant: NO ACTIVE.md
-- dex: updated 20h ago
-- hyo: updated 9h ago
+- dex: updated 2h ago
+- hyo: updated 15h ago
 - kai: NO ACTIVE.md
 - manifests: NO ACTIVE.md
 - nel: updated 0h ago
@@ -18,4 +18,5 @@
 - sam: updated 0h ago
 
 ## Top Issues
+- [P1] flags: 2 unaddressed P0/P1 flags in last 2h
 - [P0] morning-report: Morning report JSON exists but hq.html has NO rendering code

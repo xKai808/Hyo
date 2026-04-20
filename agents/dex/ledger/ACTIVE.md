@@ -1,11 +1,11 @@
 # Dex Active Tasks
 
-Last updated: 2026-04-19T06:12:10Z
+Last updated: 2026-04-20T06:14:22Z
 
 ## In Progress
 
-- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 209 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
-  - Delegated: 2026-04-19T06:12:01Z
+- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 215 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
+  - Delegated: 2026-04-20T06:14:13Z
   - Status: DELEGATED
 
 - **dex-002** [P1] [AUTO-REMEDIATE] Phase 1 JSONL corruption unresolved since 2026-04-14 (flag-dex-001): 2 JSONL files have corrupt entries. 4+ days stale as P2 — upgrading to P1. Need root-cause trace of which writer is producing malformed records and a schema-validation gate at append time. (flagged by dex, cascade flag-dex-002)

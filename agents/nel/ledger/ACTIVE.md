@@ -1,16 +1,16 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-20T02:38:30Z
+Last updated: 2026-04-20T08:38:50Z
 
 ## In Progress
 
 - **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-20T02:38:30Z
+  - Delegated: 2026-04-20T08:38:50Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit 2026-04-18: 33 stale queued flags >48h across all 5 agents (nel:24, sam:4, ra:3, aether:1, dex:1); aether dashboard-sync drift recurring (flag-aether-001 unresolved since 04-14, new WARN tonight at 01:56); dex Phase 1 JSONL corruption unresolved since 04-14; 6 stale failed queue jobs (oldest 04-12); 8 [K]/[AUTOMATE] items idle >5 days (website sync permanent fix, post-deploy API test, kai-hydrate cmd, context-save task, no-newsletter sentinel, watch-deploy launchd, UTC timestamp check)
-  - Delegated: 2026-04-18T08:07:14Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2.
+  - Delegated: 2026-04-20T08:08:46Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

@@ -1,21 +1,21 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-20T02:38:30Z
+Last updated: 2026-04-20T08:38:50Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-20T02:38:30Z
+  - Delegated: 2026-04-20T08:38:50Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-004): Daily audit 2026-04-18: 33 stale queued flags >48h across all 5 agents (nel:24, sam:4, ra:3, aether:1, dex:1); aether dashboard-sync drift recurring (flag-aether-001 unresolved since 04-14, new WARN tonight at 01:56); dex Phase 1 JSONL corruption unresolved since 04-14; 6 stale failed queue jobs (oldest 04-12); 8 [K]/[AUTOMATE] items idle >5 days (website sync permanent fix, post-deploy API test, kai-hydrate cmd, context-save task, no-newsletter sentinel, watch-deploy launchd, UTC timestamp check)
-  - Delegated: 2026-04-18T08:07:14Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-005): Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2.
+  - Delegated: 2026-04-20T08:08:46Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-003** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-18: 33 stale queued flags >48h across all 5 agents (nel:24, sam:4, ra:3, aether:1, dex:1); aether dashboard-sync drift recurring (flag-aether-001 unresolved since 04-14, new WARN tonight at 01:56); dex Phase 1 JSONL corruption unresolved since 04-14; 6 stale failed queue jobs (oldest 04-12); 8 [K]/[AUTOMATE] items idle >5 days (website sync permanent fix, post-deploy API test, kai-hydrate cmd, context-save task, no-newsletter sentinel, watch-deploy launchd, UTC timestamp check) (flagged by kai, cascade flag-kai-004)
-  - Delegated: 2026-04-18T08:07:14Z
+- **sam-003** [P1] [AUTO-REMEDIATE] Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2. (flagged by kai, cascade flag-kai-005)
+  - Delegated: 2026-04-20T08:08:46Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 
@@ -30,12 +30,12 @@ Last updated: 2026-04-20T02:38:30Z
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
 - **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-20T02:38:30Z
+  - Delegated: 2026-04-20T08:38:50Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit 2026-04-18: 33 stale queued flags >48h across all 5 agents (nel:24, sam:4, ra:3, aether:1, dex:1); aether dashboard-sync drift recurring (flag-aether-001 unresolved since 04-14, new WARN tonight at 01:56); dex Phase 1 JSONL corruption unresolved since 04-14; 6 stale failed queue jobs (oldest 04-12); 8 [K]/[AUTOMATE] items idle >5 days (website sync permanent fix, post-deploy API test, kai-hydrate cmd, context-save task, no-newsletter sentinel, watch-deploy launchd, UTC timestamp check)
-  - Delegated: 2026-04-18T08:07:14Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2.
+  - Delegated: 2026-04-20T08:08:46Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -59,7 +59,7 @@ Last updated: 2026-04-20T02:38:30Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-20T02:35:17Z
+  - Delegated: 2026-04-20T08:36:08Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -108,16 +108,16 @@ Last updated: 2026-04-20T02:38:30Z
   - Delegated: 2026-04-13T03:33:17Z
   - Status: DELEGATED
 
-- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 209 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
-  - Delegated: 2026-04-19T06:12:01Z
+- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 215 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
+  - Delegated: 2026-04-20T06:14:13Z
   - Status: DELEGATED
 
-- **kai-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by kai)
-  - Delegated: 2026-04-19T22:34:49Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 215 recurrent patterns detected — check safeguard status (flagged by kai)
+  - Delegated: 2026-04-20T08:06:04Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-20T02:35:17Z
+  - Delegated: 2026-04-20T08:36:08Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-002)
@@ -159,6 +159,9 @@ Last updated: 2026-04-20T02:38:30Z
 
 - **flag-dex-002** [P2] Phase 1 JSONL corruption unresolved since 2026-04-14 (flag-dex-001): 2 JSONL files have corrupt entries. 4+ days stale as P2 — upgrading to P1. Need root-cause trace of which writer is producing malformed records and a schema-validation gate at append time.
   - Created: 2026-04-18T08:07:23Z
+
+- **flag-kai-005** [P2] Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2.
+  - Created: 2026-04-20T08:08:46Z
 
 ## Recently Completed
 
