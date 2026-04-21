@@ -1,5 +1,5 @@
 {
-  "ts": "2026-04-21T14:25:10Z",
+  "ts": "2026-04-21T14:40:12Z",
   "status": "ISSUES",
   "issues": 4,
   "warnings": 5,
@@ -53,33 +53,33 @@
   "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776780826-507",
+      "id": "cmd-1776782380-1696",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git status -s website/data/hq-state.json agents/s",
+      "command": "HYO_ROOT=~/Documents/Projects/Hyo bash ~/Documents/Projects/Hyo/bin/agent-resear",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776780818-480",
+      "id": "cmd-1776782323-1461",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git status -s | grep -E '(hq-state|nel|cipher|sen",
+      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit --no-verify -m 'dex W3/k",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776780808-454",
+      "id": "cmd-1776782272-1399",
       "status": "ok",
-      "command": "cp ~/Documents/Projects/Hyo/website/data/hq-state.json ~/Documents/Projects/Hyo/",
+      "command": "HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/agents/dex/de",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776780793-428",
+      "id": "cmd-1776782179-1292",
       "status": "ok",
-      "command": "ls -la ~/Documents/Projects/Hyo/website 2>&1 | head -2 && echo --- && diff ~/Doc",
+      "command": "diff ~/Documents/Projects/Hyo/website/data/feed.json ~/Documents/Projects/Hyo/ag",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776780782-401",
+      "id": "cmd-1776782171-1266",
       "status": "ok",
-      "command": "python3 ~/Documents/Projects/Hyo/kai/queue/_tmp_hq_update.py && rm ~/Documents/P",
+      "command": "ls -la ~/Documents/Projects/Hyo/website 2>/dev/null | head -3",
       "exit_code": 0
     }
   ],

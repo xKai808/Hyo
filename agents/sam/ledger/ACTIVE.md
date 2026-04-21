@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-21T14:25:10Z
+Last updated: 2026-04-21T14:40:51Z
 
 ## In Progress
 
-- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-21T14:25:10Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
+  - Delegated: 2026-04-21T14:40:51Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
