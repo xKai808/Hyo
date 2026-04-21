@@ -1044,8 +1044,8 @@ with open(path, 'w') as f: json.dump(d, f, indent=2)
 print(f'Closed {path}')
 " ;;
   agent-goals|goals)  HYO_ROOT="$ROOT" bash "$ROOT/bin/agent-goals-sync.sh" "$@" ;;
-  desktop)            ssh -p 22246 -L 5900:localhost:5900 kai@bore.pub -fN 2>/dev/null; sleep 1; open vnc://localhost ;;
-  ssh-mini)           ssh -p 22246 kai@bore.pub ;;
+  desktop)            ssh -p 31781 -L 5900:localhost:5900 kai@bore.pub -fN 2>/dev/null; sleep 1; open vnc://localhost ;;
+  ssh-mini)           ssh -p 31781 kai@bore.pub ;;
   nel-qa)             bash "$ROOT/agents/nel/nel-qa-cycle.sh" "$@" ;;
   link-check|lc)      bash "$ROOT/agents/nel/link-check.sh" "$@" ;;
   sync-research)      bash "$ROOT/kai/queue/sync-research.sh" ;;
