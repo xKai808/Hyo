@@ -317,6 +317,60 @@ bash bin/agent-execute-improvement.sh dex I2  # runs root cause clustering impro
 
 ---
 
+## Agent Improvements Shipped (2026-04-21, Session 22)
+
+Session 22 completed the full pending improvement backlog. All agents now have real shipped code, not just research.
+
+**Aether W2 — Analysis Quality Gate (commit 92aa0fc)**
+- File: `agents/aether/analysis-quality-gate.sh` (NEW, 12 QC checks)
+- Blocks HQ publish if GPT cross-check (QC05), recommendation (QC09), date markers fail
+- Wired into aether.sh publish block before every HQ push
+- Metric: 0% automated quality checking → 12-point gate on every publish
+
+**Dex W1 — JSONL Auto-Repair (commit 92aa0fc)**
+- File: `agents/dex/dex-repair.py` (NEW, scans 8 JSONL files)
+- Removes duplicates, injects missing ts/status/severity/category fields
+- Safety gate: skips files with >20% corruption (P0 flag)
+- Wired into consolidate.sh Phase 0a (runs before sentinel reads ledgers)
+- Metric: JSONL corruption detected but never fixed → auto-repaired nightly
+
+**Nel W2 — Dependency CVE Audit (commit 1761f52)**
+- File: `agents/nel/dep-audit.sh` (NEW, 4-check audit)
+- npm audit + pip-audit + staleness check + Node LTS version check
+- Wired into cipher.sh as Layer 5
+- P1 ticket auto-opens if critical/high CVEs found
+- Current state: clean (stripe up to date, Node v25.9 ≥ LTS)
+
+**Sam W2 — Vercel KV Persistence (commit b293b9d)**
+- File: `agents/sam/website/api/hq.js` (MODIFIED — KV layer added)
+- initKV() + hydrateFromKV() on cold start, syncToKV() fire-and-forget on every write
+- Graceful in-memory fallback when KV not provisioned
+- kv_connected + persistence fields in /api/health response
+- Setup: `agents/sam/website/docs/VERCEL_KV_SETUP.md` (3-step guide)
+- To activate: provision Vercel KV → link project → redeploy
+
+**Aether W3 — Cross-Session Strategy Aggregator (commit 049488e)**
+- File: `agents/aether/aggregate-weekly.py` (NEW, reads all Analysis_*.txt)
+- Extracts per-strategy edge, per-window P&L trend, concentration risk, health flags
+- First run (12 sessions, Apr 8-17): net +.07, 50% WR, PAQ_EARLY_AGG declining, 92.8% concentration
+- Wired into aether.sh Step 12b (runs after publish, before memory update)
+- Output: `agents/aether/ledger/weekly-aggregator.json` + `agents/aether/research/STRATEGY_HEALTH.md`
+
+**Dex W2 — Pattern Cluster Analysis (commit 22c3c7d)**
+- File: `agents/dex/dex-cluster.py` (NEW, Jaccard clustering)
+- 255 entries → 117 clusters (54.1% noise reduction), largest cluster: 31 entries same root cause
+- Ra identified as top issue agent by volume
+- Temporal pattern detection (2 recurring patterns found)
+- Wired into consolidate.sh Phase 0b (after repair, before sentinel)
+- Output: `agents/dex/ledger/cluster-report.json` + `agents/dex/research/CLUSTER_REPORT.md`
+
+**Next targets by agent:**
+- Nel W3: fix research source failures (5/6 external feeds timeout from sandbox)
+- Ra Phase 2: SMTP bounce parsing + bounce handler (target 2026-04-28)
+- Sam W3: Lighthouse CI + bundle size monitoring
+- Aether W1: phantom position reconciliation vs Kalshi API
+- Dex W3: cross-agent constitution drift detection
+
 ## Agent I1 Improvements Shipped (2026-04-21, Session 21)
 
 These are the first real shipped improvements from the self-improvement protocols. Read before working on any agent to avoid re-implementing or regressing.
