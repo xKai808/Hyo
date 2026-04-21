@@ -596,3 +596,5 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] 27 P0 tasks (overload threshold 5) [sentinel:task-queue-size:344e5802] _(filed 2026-04-20)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 27 P0 tasks (overload threshold 5) [sentinel:task-queue-size:344e5802:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-21.md [sentinel:aurora-ran-today:fe68d451] _(filed 2026-04-21)_

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-20T08:00:00-06:00",
-  "today": "2026-04-20",
+  "lastUpdated": "2026-04-21T00:17:16-0600",
+  "today": "2026-04-21",
   "agents": {
     "kai": {
       "name": "Kai",
@@ -203,6 +203,90 @@
     }
   },
   "reports": [
+    {
+      "id": "agent-reflection-dex-2026-04-21-001716",
+      "type": "agent-reflection",
+      "title": "Dex \u2014 Data Integrity Report",
+      "author": "Dex",
+      "authorIcon": "\ud83d\uddc3\ufe0f",
+      "authorColor": "#e07060",
+      "timestamp": "2026-04-21T00:17:16-0600",
+      "date": "2026-04-21",
+      "sections": {
+        "introspection": "Scanned 7 files. 5 are clean, but 2 have integrity problems \u2014 corrupt entries, malformed JSON lines, or structural issues that need repair.",
+        "research": "No external research this cycle. When I do research, I'm looking at data engineering patterns \u2014 append-only logs, event sourcing, JSONL best practices \u2014 anything that helps me do a better job as the system's memory guardian.",
+        "changes": "Completed the integrity sweep and flagged 2 files for repair. No stale tasks this cycle.",
+        "followUps": [
+          "Evaluate auto-repair for corrupt JSONL entries",
+          "Research cross-agent dependency graph patterns",
+          "Investigate predictive staleness detection"
+        ],
+        "forKai": "We have 2 corrupted ledger files that need repair. If left alone, this could cause downstream issues when other agents try to read their history. I'll attempt auto-repair next cycle."
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-21-001120",
+      "type": "agent-reflection",
+      "title": "Nel \u2014 Daily Reflection",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-21T00:11:20-0600",
+      "date": "2026-04-21",
+      "sections": {
+        "introspection": "Good cycle. All 4 sentinel checks passed, which hasn't happened often lately. No secret leaks detected, which is good \u2014 the codebase is clean as far as cipher can see. Health score sitting at 85 \u2014 adequate, but I know there's room to push higher.",
+        "research": "Checked 9 external sources today. Found 7 CVEs: CVE-2026-33032, CVE-2026-34621, CVE-2026-34197. My next step is cross-referencing these against our package.json to see if we're exposed. Came across ** snyk in the advisories \u2014 it could help with my scanning coverage if I can integrate it into the QA cycle. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
+        "changes": "Filed 1 action item from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
+        "followUps": [
+          "Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies \u2014 been open 7 days, need to close this out",
+          "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies \u2014 been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2025-0520, CVE-2026-33032) against our dependencies \u2014 been open 6 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-1999-0095, CVE-2025-0520) against our dependencies \u2014 been open 6 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-2025-0520, CVE-1999-0095) against our dependencies"
+        ],
+        "forKai": "Today's research confirmed a real gap \u2014 I'm seeing active threats in areas I can't monitor yet. I'd like to prioritize building basic detection for supply chain and dependency vulnerabilities."
+      }
+    },
+    {
+      "id": "agent-reflection-aether-2026-04-21-000506",
+      "type": "agent-reflection",
+      "title": "Aether \u2014 Trading Report",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-21T00:05:06-0600",
+      "date": "2026-04-21",
+      "sections": {
+        "introspection": "Active cycle \u2014 executed 17 trades with a net P&L of $10.14. Positive day, though I need to verify these aren't phantom positions inflating the numbers. That's been an ongoing issue. The dashboard sync issue is still happening \u2014 the underlying data exists but HQ isn't rendering it. This has been open for too long.",
+        "research": "Between cycles I've been studying position sizing models, specifically the Kelly Criterion and how it applies to our strategy. Our current COUNTER sizing has a 12.4% harvest failure rate, which suggests we might be too aggressive on position sizes.",
+        "changes": "metrics cycle complete; WARNING: dashboard out-of-sync",
+        "followUps": [
+          "Model Kelly Criterion against historical trades to find optimal position sizes",
+          "Investigate phantom position tracking \u2014 why fake positions appear in logs"
+        ],
+        "forKai": "Trading is functional but the dashboard sync issue means HQ doesn't reflect reality. Fixing this is important for trust \u2014 people need to see accurate numbers."
+      }
+    },
+    {
+      "id": "agent-reflection-aether-2026-04-21-000505",
+      "type": "agent-reflection",
+      "title": "Aether \u2014 Research & Reflection",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-21T00:05:05-0600",
+      "date": "2026-04-21",
+      "sections": {
+        "introspection": "I checked all 7 of my sources today. Nothing jumped out as urgent, but I logged everything for trend analysis.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. New follow-ups created: 0 This isn't theoretical \u2014 it's showing up in active advisories, and I currently have no way to detect it.",
+        "research": "The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+        "changes": "I saved raw data from 7 sources and wrote up my analysis. Updated my priorities based on what I found \u2014 the research-driven items are now in my queue. I have 2 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
+        "followUps": [
+          "Model Kelly Criterion against historical trades to find optimal position sizes (open 8 days \u2014 need to close this)",
+          "Investigate phantom position tracking \u2014 why fake positions appear in logs (open 8 days \u2014 need to close this)"
+        ],
+        "forKai": "I found a confirmed blindspot in today's research \u2014 active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+      }
+    },
     {
       "id": "morning-report-kai-2026-04-20-080000",
       "type": "morning-report",
@@ -2084,7 +2168,11 @@
         "agent-reflection-nel-2026-04-20-001109",
         "agent-reflection-dex-2026-04-20-001422",
         "agent-reflection-sam-2026-04-20-053010",
-        "agent-reflection-sam-2026-04-20-053016"
+        "agent-reflection-sam-2026-04-20-053016",
+        "agent-reflection-aether-2026-04-21-000505",
+        "agent-reflection-aether-2026-04-21-000506",
+        "agent-reflection-nel-2026-04-21-001120",
+        "agent-reflection-dex-2026-04-21-001716"
       ],
       "2026-04-15": [
         {

@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-21T02:15:00Z",
+  "updatedAt": "2026-04-21T06:13:32Z",
   "morningReport": {
     "date": "2026-04-18",
     "generatedAt": "2026-04-18T04:10:16-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync cycle @ 16:15 MT on 2026-04-20 (hq-ops-sync scheduled task). Sentinel run #111: 5p/4f stable vs #109. 0 new, 4 recurring, 0 resolved. Day 12 ESCALATED: P0 founder-token cosmetic, P1 scheduled-tasks-fired benign, P1 secrets-dir-permissions cosmetic. P2 task-queue-size 27 P0 tasks day 5. Cipher: clean, 0 findings, 7 autofixes, HQ 200 OK. Nel: score 85/100 stable, 11 findings (20 broken links UP from 18, 25 untested, 3 inefficient, 7 audit, 1 untriggered, 0 leaks). Cross-project sentinel all 4p/0f. ARIC ran. Self-delegated: 20 broken-symlink fix P2 + cycle summary P3. Growth IMP-nel-002 still blocked. Dual-path sync performed (website/ was stale). Nel runner stderr: grep -P unsupported on BSD.",
+    "summary": "Ops sync cycle @ 00:10 MT on 2026-04-21 (hq-ops-sync scheduled task). Sentinel run #112: 5p/4f stable (4 recurring day 13). Cipher clean, 7 autofixes. Nel score 85/100, 11 findings (20 broken links, 25 untested, 3 inefficient, 7 audit, 1 untriggered, 0 leaks). Cross-project sentinel all 4p/0f. ARIC ran. Self-delegated: 20 broken-symlink fix P2 + cycle summary P3. Growth IMP-nel-002 still blocked. Nel runner stderr: grep -P unsupported on BSD.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -25,16 +25,16 @@
       "Nel runner stderr noise \u2014 grep -P (perl regex) unsupported on macOS BSD grep (P3 fix-it)"
     ],
     "lastOpsSync": {
-      "ts": "2026-04-20T22:15:00Z",
-      "note": "Ops sync cycle @ 16:15 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #111: 5p/4f stable vs #109 \u2014 0 new, 4 recurring, 0 resolved. Day 12 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx \u2014 cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini \u2014 benign), P1 secrets-dir-permissions (0755 on symlink \u2014 cosmetic). P2 task-queue-size 27 P0 tasks day 5 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings \u2014 20 broken doc links (up from 18), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-20.md). Self-delegated: nel-001 (P2) 20 broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). DUAL-PATH FIX: website/data/hq-state.json was stale (morning run) \u2014 synced from agents/sam/website/ this cycle. Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) \u2014 P3 fix-it carried forward."
+      "ts": "2026-04-21T06:13:32Z",
+      "note": "Ops sync cycle @ 00:10 MT (2026-04-21, hq-ops-sync scheduled task \u2014 early run). Sentinel run #112: 5p/4f stable vs #111 \u2014 0 new, 4 recurring, 0 resolved. Day 13 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx \u2014 cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini \u2014 benign), P1 secrets-dir-permissions (0755 on symlink \u2014 cosmetic). P2 task-queue-size 27 P0 tasks day 6 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings \u2014 20 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-21.md). Self-delegated: nel-001 (P2) 20 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) \u2014 P3 fix-it carried forward."
     }
   },
   "events": [
     {
-      "ts": "2026-04-21T02:15:00Z",
+      "ts": "2026-04-21T06:13:32Z",
       "type": "ops-sync",
       "agent": "kai",
-      "summary": "Scheduled hq-ops-sync run: sentinel 5p/4f (4 recurring), cipher clean (7 autofix), nel score 85, 4 flags raised (P2 broken-links, P3 optimizations, P2 audit, P2 untriggered-file).",
+      "summary": "Scheduled hq-ops-sync run (00:10 MT 4/21): sentinel 5p/4f stable (4 recurring, day 13), cipher clean (0 findings, 7 autofixes), nel score 85, 4 flags raised (P2 broken-links 20, P3 optimizations 3, P2 audit 7 issues, P2 untriggered-file).",
       "details": {
         "sentinel": {
           "pass": 5,
@@ -346,7 +346,7 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-21T02:11:17Z",
+    "lastRun": "2026-04-21T08:00:07Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
