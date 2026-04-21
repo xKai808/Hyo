@@ -1,11 +1,11 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-21T14:41:13Z
+Last updated: 2026-04-21T16:28:15Z
 
 ## In Progress
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-21T14:41:12Z
+  - Delegated: 2026-04-21T16:25:28Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -59,7 +59,7 @@ Last updated: 2026-04-21T14:41:13Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-21T14:41:12Z
+  - Delegated: 2026-04-21T16:25:28Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -113,11 +113,11 @@ Last updated: 2026-04-21T14:41:13Z
   - Status: DELEGATED
 
 - **kai-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by kai)
-  - Delegated: 2026-04-21T14:41:13Z
+  - Delegated: 2026-04-21T16:25:29Z
   - Status: DELEGATED
 
-- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-21T14:41:12Z
+- **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
+  - Delegated: 2026-04-21T16:25:28Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-002)

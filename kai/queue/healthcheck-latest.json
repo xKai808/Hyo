@@ -1,8 +1,8 @@
 {
-  "ts": "2026-04-21T14:41:12Z",
+  "ts": "2026-04-21T16:25:28Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 5,
+  "issues": 4,
+  "warnings": 1,
   "findings": [
     {
       "severity": "P1",
@@ -10,34 +10,9 @@
       "detail": "4 unaddressed P0/P1 flags in last 2h"
     },
     {
-      "severity": "P2",
-      "area": "queue-worker",
-      "detail": "Worker last active 493550h ago \u2014 may be dead"
-    },
-    {
       "severity": "P3",
       "area": "agent-output",
       "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P0",
-      "area": "morning-report",
-      "detail": "Morning report JSON exists but hq.html has NO rendering code"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file hq-state.json has no reference in hq.html"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file morning-report.json has no reference in hq.html"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file remote-access.json has no reference in hq.html"
     },
     {
       "severity": "P1",
@@ -52,39 +27,39 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
+      "detail": "aether stuck in dead-loop (bottleneck_stuck): dashboard out-of-sync \u2014 data exists but HQ doesn't render "
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "event-sam-flag-nel-001",
+      "id": "cmd-1776788114-937",
       "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh",
+      "command": "cd ~/Documents/Projects/Hyo && rm -f .git/index.lock .git/HEAD.lock && git add K",
       "exit_code": 0
     },
     {
-      "id": "event-nel-flag-nel-001",
+      "id": "cmd-1776788104-910",
       "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776782427-1728",
+      "id": "cmd-1776788097-874",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add bin/agent-growth.sh agents/dex/GROWTH.md ",
+      "command": "rm -f ~/Documents/Projects/Hyo/.git/index.lock ~/Documents/Projects/Hyo/.git/HEA",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776782380-1696",
+      "id": "cmd-1776788032-772",
       "status": "ok",
-      "command": "HYO_ROOT=~/Documents/Projects/Hyo bash ~/Documents/Projects/Hyo/bin/agent-resear",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776782323-1461",
+      "id": "cmd-1776788002-677",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit --no-verify -m 'dex W3/k",
+      "command": "rm -f ~/Documents/Projects/Hyo/.git/index.lock",
       "exit_code": 0
     }
   ],
