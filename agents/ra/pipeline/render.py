@@ -30,6 +30,22 @@ Usage:
     python3 render.py                          # today
     python3 render.py --date 2026-04-09        # specific day
     python3 render.py --in some.md --out some.html
+    python3 render.py --no-track               # disable engagement tracking
+
+ENGAGEMENT TRACKING (Ra I1 Phase 1 — shipped 2026-04-21):
+    --newsletter-id NID  Override the newsletter ID used in tracking URLs
+                         (default: derived from date, e.g. "newsletter-2026-04-21")
+    --no-track           Disable tracking pixel + link wrapping (e.g. local preview)
+
+    When tracking is ON (default):
+    - A 1x1 transparent tracking pixel is injected before </body>
+      that fires when the email client renders the HTML.
+    - External links in the body are rewritten to route through
+      https://hyo.world/api/v1/track/click, which logs the click
+      and 302-redirects to the original URL.
+    - Open and click events are logged by the Vercel API to
+      agents/ra/ledger/engagement.jsonl (via hq-push or direct write).
+    Gate: if --no-track is set, output is identical to pre-I1 behaviour.
 """
 
 from __future__ import annotations
@@ -37,12 +53,16 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import html as _html
+import json
 import os
 import re
 import sys
+import urllib.parse
 from pathlib import Path
 
 DEFAULT_NEWSLETTERS_DIR = Path.home() / "Documents" / "Projects" / "Hyo" / "newsletters"
+TRACKING_BASE = "https://hyo.world/api/v1/track"
+ENGAGEMENT_LEDGER = Path.home() / "Documents" / "Projects" / "Hyo" / "agents" / "ra" / "ledger" / "engagement.jsonl"
 
 
 # ---------------------------------------------------------------------------
@@ -75,8 +95,75 @@ _ITALIC_RE = re.compile(r"(?<![\*\w])\*([^*\n]+)\*(?!\*)")
 _LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 
 
-def render_inline(text: str) -> str:
-    """Escape + apply inline markdown -> HTML. Order matters."""
+# ---------------------------------------------------------------------------
+# engagement tracking helpers (Ra I1 Phase 1)
+# ---------------------------------------------------------------------------
+
+# Module-level tracking context — set once in main(), used throughout render
+_tracking_enabled: bool = True
+_newsletter_id: str = ""
+
+
+def _make_tracking_url(original_url: str, link_index: int) -> str:
+    """Wrap a URL in the hyo.world tracking redirect.
+
+    Format: /api/v1/track/click?nid=newsletter-2026-04-21&li=0&url=<encoded>
+    The Vercel endpoint logs the event and 302-redirects to original_url.
+    li (link_index) lets us correlate which link drove engagement.
+    """
+    encoded = urllib.parse.quote(original_url, safe="")
+    return f"{TRACKING_BASE}/click?nid={_newsletter_id}&li={link_index}&url={encoded}"
+
+
+def _make_pixel_html(newsletter_id: str) -> str:
+    """Return a 1×1 tracking pixel <img> tag.
+
+    Fires when the email client loads the HTML (open event).
+    The Vercel /api/v1/track/open endpoint logs the event to engagement.jsonl.
+    Pixel is hidden via inline style; alt="" for accessibility/spam-filter safety.
+    """
+    pixel_url = f"{TRACKING_BASE}/open?nid={newsletter_id}"
+    return (
+        f'  <!-- Ra engagement tracking pixel — do not remove -->\n'
+        f'  <img src="{pixel_url}" width="1" height="1" '
+        f'alt="" style="display:none;border:0;outline:none;text-decoration:none;'
+        f'-ms-interpolation-mode:bicubic;" />'
+    )
+
+
+def _log_send_event(newsletter_id: str, link_count: int) -> None:
+    """Write a 'sent' event to engagement.jsonl so Ra knows a render occurred.
+
+    This is the server-side record (not tracking-pixel-dependent). It captures:
+    - When the newsletter was rendered with tracking enabled
+    - How many links were wrapped (proxy for content richness)
+    The pixel/click API will add 'opened'/'clicked' events later.
+    """
+    ledger = Path(os.environ.get("HYO_ROOT", str(Path.home() / "Documents" / "Projects" / "Hyo"))) / \
+             "agents" / "ra" / "ledger" / "engagement.jsonl"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    event = {
+        "event": "rendered",
+        "nid": newsletter_id,
+        "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "link_count": link_count,
+        "tracking_enabled": True,
+    }
+    try:
+        with open(ledger, "a") as f:
+            f.write(json.dumps(event) + "\n")
+    except OSError as e:
+        print(f"[warn] engagement ledger write failed: {e}", file=sys.stderr)
+
+
+def render_inline(text: str, _link_counter: list[int] | None = None) -> str:
+    """Escape + apply inline markdown -> HTML. Order matters.
+
+    _link_counter is a 1-element list used as a mutable int for counting
+    links processed within a single newsletter render. When tracking is
+    enabled, each external link is wrapped with a click-tracking URL.
+    Pass None (or omit) to disable link counting (e.g., in unit tests).
+    """
     # protect inline code first so its contents aren't touched
     code_slots: list[str] = []
 
@@ -94,6 +181,12 @@ def render_inline(text: str) -> str:
         label, url = m.group(1), m.group(2)
         # url was escaped by _html.escape — undo for the href only
         href = url.replace("&amp;", "&")
+        # Tracking: wrap external links when enabled
+        if _tracking_enabled and _link_counter is not None and href.startswith("http"):
+            idx = _link_counter[0]
+            _link_counter[0] += 1
+            tracked_href = _make_tracking_url(href, idx)
+            return f'<a href="{_html.escape(tracked_href, quote=True)}">{label}</a>'
         return f'<a href="{_html.escape(href, quote=True)}">{label}</a>'
 
     text = _LINK_RE.sub(_link_sub, text)
@@ -140,7 +233,12 @@ def strip_preamble_code_blocks(md: str) -> str:
     return cleaned_preamble + content
 
 
-def md_to_html_body(md: str) -> str:
+def md_to_html_body(md: str, link_counter: list[int] | None = None) -> str:
+    """Convert newsletter markdown to HTML body.
+
+    link_counter: mutable [int] shared with render_inline for counting
+    tracked links. Pass None to disable tracking in the body.
+    """
     md = strip_preamble_code_blocks(md)
     lines = md.splitlines()
     i = 0
@@ -162,7 +260,7 @@ def md_to_html_body(md: str) -> str:
         if paragraph_buf:
             text = " ".join(paragraph_buf).strip()
             if text:
-                out.append(f"<p>{render_inline(text)}</p>")
+                out.append(f"<p>{render_inline(text, _link_counter=link_counter)}</p>")
             paragraph_buf = []
 
     def end_block():
@@ -209,7 +307,8 @@ def md_to_html_body(md: str) -> str:
         if m:
             end_block()
             level = len(m.group(1))
-            text = render_inline(m.group(2).strip())
+            # Headers: pass link_counter so tracked links in headings are counted
+            text = render_inline(m.group(2).strip(), _link_counter=link_counter)
             out.append(f"<h{level}>{text}</h{level}>")
             i += 1
             continue
@@ -222,7 +321,7 @@ def md_to_html_body(md: str) -> str:
                 close_list(list_kind)
                 out.append("<ul>")
                 list_kind = "ul"
-            out.append(f"<li>{render_inline(m.group(1).strip())}</li>")
+            out.append(f"<li>{render_inline(m.group(1).strip(), _link_counter=link_counter)}</li>")
             i += 1
             continue
 
@@ -234,7 +333,7 @@ def md_to_html_body(md: str) -> str:
                 close_list(list_kind)
                 out.append("<ol>")
                 list_kind = "ol"
-            out.append(f"<li>{render_inline(m.group(2).strip())}</li>")
+            out.append(f"<li>{render_inline(m.group(2).strip(), _link_counter=link_counter)}</li>")
             i += 1
             continue
 
@@ -246,7 +345,7 @@ def md_to_html_body(md: str) -> str:
                 close_list(list_kind)
                 out.append("<blockquote>")
                 list_kind = "bq"
-            out.append(f"<p>{render_inline(m.group(1).strip())}</p>")
+            out.append(f"<p>{render_inline(m.group(1).strip(), _link_counter=link_counter)}</p>")
             i += 1
             continue
 
@@ -362,20 +461,34 @@ TEMPLATE = """<!DOCTYPE html>
     <span class="brand">hyo.world</span>
   </footer>
 </main>
+{tracking_pixel}
 </body>
 </html>
 """
 
 
 def render_markdown_file(md_text: str) -> tuple[str, dict]:
+    global _newsletter_id
     meta, body_md = split_frontmatter(md_text)
     title = meta.get("title") or f"Hyo Daily — {meta.get('date', dt.date.today().isoformat())}"
     date = meta.get("date", dt.date.today().isoformat())
-    body_html = md_to_html_body(body_md)
+
+    # Build body with link tracking counter
+    link_counter = [0] if _tracking_enabled else None
+    body_html = md_to_html_body(body_md, link_counter=link_counter)
+
+    # Tracking pixel (injected before </body> — fires on open)
+    pixel_html = _make_pixel_html(_newsletter_id) if _tracking_enabled and _newsletter_id else ""
+
+    # Log the render event to engagement ledger
+    if _tracking_enabled and _newsletter_id:
+        _log_send_event(_newsletter_id, link_counter[0] if link_counter else 0)
+
     full = TEMPLATE.format(
         title=_html.escape(title),
         date=_html.escape(date),
         body=body_html,
+        tracking_pixel=pixel_html,
     )
     return full, meta
 
@@ -385,10 +498,21 @@ def render_markdown_file(md_text: str) -> tuple[str, dict]:
 # ---------------------------------------------------------------------------
 
 def main() -> int:
+    global _tracking_enabled, _newsletter_id
+
     ap = argparse.ArgumentParser(description="Render Hyo newsletter markdown -> HTML")
     ap.add_argument("--date", help="YYYY-MM-DD (default: today)")
     ap.add_argument("--in", dest="in_path", help="Markdown input path override")
     ap.add_argument("--out", dest="out_path", help="HTML output path override")
+    # Ra I1 Phase 1: engagement tracking flags
+    ap.add_argument(
+        "--no-track", dest="no_track", action="store_true",
+        help="Disable tracking pixel and link wrapping (use for local preview)"
+    )
+    ap.add_argument(
+        "--newsletter-id", dest="newsletter_id",
+        help="Override newsletter ID for tracking (default: newsletter-YYYY-MM-DD)"
+    )
     args = ap.parse_args()
 
     date_str = args.date or dt.date.today().isoformat()
@@ -397,6 +521,15 @@ def main() -> int:
 
     md_path = Path(args.in_path) if args.in_path else out_dir / f"{date_str}.md"
     html_path = Path(args.out_path) if args.out_path else out_dir / f"{date_str}.html"
+
+    # Configure tracking module state
+    _tracking_enabled = not args.no_track
+    _newsletter_id = args.newsletter_id or f"newsletter-{date_str}"
+
+    if _tracking_enabled:
+        print(f"[info] tracking enabled: nid={_newsletter_id}", file=sys.stderr)
+    else:
+        print("[info] tracking disabled (--no-track)", file=sys.stderr)
 
     if not md_path.exists():
         print(f"[error] markdown not found: {md_path}", file=sys.stderr)
@@ -409,6 +542,9 @@ def main() -> int:
     html_path.write_text(html_text)
 
     print(f"[ok] rendered → {html_path}")
+    if _tracking_enabled:
+        link_n = html_text.count(TRACKING_BASE + "/click")
+        print(f"[info] tracking: {link_n} links wrapped, pixel injected", file=sys.stderr)
     if meta:
         print(f"[info] frontmatter: {meta}", file=sys.stderr)
     return 0
