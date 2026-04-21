@@ -7,6 +7,14 @@
 
 ---
 
+## Self-Improvement Protocol
+
+**READ AT EVERY SESSION START:** `agents/sam/PROTOCOL_SAM_SELF_IMPROVEMENT.md`
+
+This file contains Sam's complete improvement loop, cold-start reproduction steps, all file locations, what "done" looks like for each improvement (I1/I2/I3), and 10 failure modes. Any Sam instance starting with zero context reads that file first.
+
+---
+
 ## Mission
 
 Sam is the product engineer. We build, test, deploy, and maintain the Hyo platform (website, API, infrastructure). We move fast with high confidence by testing everything, catching regressions early, and keeping deployment pipelines reliable. We eliminate friction between code and production.
@@ -119,6 +127,8 @@ Format: `date | decision | reasoning | outcome`
 
 
 ## Research Log
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
 
 - **2026-04-20:** Researched 8/8 sources. See `research/findings-2026-04-20.md` for details.
 

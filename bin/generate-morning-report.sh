@@ -402,6 +402,75 @@ for agent_name in agents_list:
     if actually_shipped and aric and aric.get("improvement_built", {}).get("commit"):
         wins.append(f"{agent_name}: {novel_work}")
 
+    # ── New v6 fields: 5 mandatory questions per PROTOCOL_MORNING_REPORT.md ──
+    # Q1: What shipped since the last report?
+    shipped_since_last = "Nothing shipped."
+    if aric and aric.get("improvement_built", {}).get("status") == "shipped":
+        imp = aric["improvement_built"]
+        commit = imp.get("commit", "")
+        desc = imp.get("description", "improvement")
+        shipped_since_last = f"Shipped: {desc}" + (f" (commit {commit})" if commit else " (unverified — no commit hash)")
+    elif growth:
+        shipped_imps = [i for i in growth.get("improvements", []) if i.get("status") in ("shipped", "Phase 1 shipped")]
+        if shipped_imps:
+            shipped_since_last = f"Previously shipped: {shipped_imps[0].get('title', 'improvement')} — but no current cycle shipment."
+
+    # Q2: What is the single highest-priority unresolved issue?
+    highest_priority_issue = "No data — ARIC Phase 1 not completed."
+    if aric and aric.get("weakness_worked"):
+        highest_priority_issue = aric["weakness_worked"]
+    elif growth:
+        weaknesses = growth.get("weaknesses", [])
+        if weaknesses:
+            highest_priority_issue = weaknesses[0].get("title", "Unknown weakness")
+
+    # Q3: What is the next concrete action?
+    next_action = "Run ARIC Phase 5 to define next step."
+    if aric and aric.get("improvement_built"):
+        imp = aric["improvement_built"]
+        imp_status = imp.get("status", "unknown")
+        if imp_status == "shipped":
+            next_action = aric.get("next_target", "Measure metric movement from shipped improvement.")
+        elif imp_status == "researched":
+            next_action = f"Execute improvement: bash bin/agent-execute-improvement.sh {agent_name} I1"
+        elif imp_status == "in_progress":
+            next_action = f"Complete and commit: {imp.get('description', 'improvement in progress')}"
+        else:
+            next_action = f"Build: {imp.get('description', 'improvement defined but not started')}"
+
+    # Q4: Action type classification
+    action_type = "research"  # default
+    if next_action.startswith("Execute improvement") or next_action.startswith("bash bin/agent-execute"):
+        action_type = "build"
+    elif next_action.startswith("Shipped") or "deploy" in next_action.lower():
+        action_type = "deployment"
+    elif next_action.startswith("Measure") or "metric" in next_action.lower():
+        action_type = "instrumentation"
+    elif next_action.startswith("Build") or next_action.startswith("Create") or "implement" in next_action.lower():
+        action_type = "build"
+    elif next_action.startswith("Complete") or "commit" in next_action.lower():
+        action_type = "build"
+    elif not aric:
+        action_type = "research"
+
+    # Q5: Priority evidence
+    priority_evidence = "No ARIC data — evidence not available."
+    if aric:
+        research = aric.get("research_conducted", [])
+        if research:
+            priority_evidence = "; ".join([f"{r.get('source','?')}: {r.get('finding','?')[:60]}" for r in research[:2]])
+        elif aric.get("weakness_worked"):
+            priority_evidence = f"Weakness identified from Phase 1 observe: {aric['weakness_worked'][:100]}"
+
+    # Improvement detail (all 3 improvements status)
+    improvement_status_detail = "No GROWTH.md data."
+    if growth:
+        imps = growth.get("improvements", [])
+        details = []
+        for imp in imps:
+            details.append(f"{imp.get('id','?')}: {imp.get('title','?')[:40]} ({imp.get('status','?')})")
+        improvement_status_detail = " | ".join(details) if details else "No improvements defined."
+
     # Compile agent report
     agent_reports[agent_name] = {
         "novel_work": novel_work,
@@ -411,13 +480,21 @@ for agent_name in agents_list:
         "research_count": weakness_research.get("count", 0),
         "improvement_status": improvement_status,
         "improvement_description": aric.get("improvement_built", {}).get("description") if aric else "N/A",
+        "improvement_commit": (aric.get("improvement_built", {}).get("commit") if aric else None),
         "metric_before": metric_move.get("before") if metric_move else "N/A",
         "metric_after": metric_move.get("after") if metric_move else "N/A",
         "metric_moved": bool(metric_move),
         "external_opportunity_type": external.get("type") if external else "none",
         "external_opportunity_desc": external.get("description") if external else "none",
         "has_aric_data": aric is not None,
-        "aric_cycle_date": aric.get("cycle_date", "unknown") if aric else None
+        "aric_cycle_date": aric.get("cycle_date", "unknown") if aric else None,
+        # ── v6 new fields (PROTOCOL_MORNING_REPORT.md Part 2) ──
+        "shipped_since_last": shipped_since_last,
+        "highest_priority_issue": highest_priority_issue,
+        "next_action": next_action,
+        "action_type": action_type,
+        "priority_evidence": priority_evidence,
+        "improvement_status_detail": improvement_status_detail,
     }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -469,14 +546,47 @@ if not exec_layer["alive"]:
         f"{exec_layer['detail']}"
     )
 
+# ── v6: Count agents by action state ──
+agents_shipped_count = sum(1 for a in agents_list
+    if agent_reports[a].get("improvement_status") == "shipped")
+agents_building_count = sum(1 for a in agents_list
+    if agent_reports[a].get("action_type") in ("build", "deployment")
+    and agent_reports[a].get("improvement_status") != "shipped")
+agents_researching_count = sum(1 for a in agents_list
+    if agent_reports[a].get("action_type") == "research"
+    and agent_reports[a].get("improvement_status") not in ("shipped",))
+agents_stalled_count = sum(1 for a in agents_list
+    if agent_reports[a].get("improvement_status") in ("no active work", "stalled", "unknown")
+    and agent_reports[a].get("has_aric_data") == False)
+
+# ── Research theater detection (PROTOCOL_MORNING_REPORT.md FM3) ──
+research_theater_warning = None
+all_researching = all(
+    agent_reports[a].get("action_type") == "research" for a in agents_list
+)
+if all_researching:
+    research_theater_warning = (
+        "RESEARCH THEATER DETECTED: All agents in research phase with no agent in build/deploy. "
+        "ARIC execution engine (bin/agent-execute-improvement.sh) may not be firing. "
+        "Research without execution is not improvement."
+    )
+
+# ── Critical blocked agents ──
+critical_blocked = []
+for a in agents_list:
+    if agent_reports[a].get("improvement_status") in ("no active work", "stalled"):
+        issue = agent_reports[a].get("highest_priority_issue", "unknown issue")
+        critical_blocked.append(f"{a}: {issue[:80]}")
+
 report = {
     "generated": now_mt,
     "date": today,
-    "version": "v5-honest-execution-first",
+    "version": "v6-action-engine",
     "executive_summary": {
         "system_online": exec_layer["alive"],
         "execution_layer": exec_layer,
         "simulation_warning": simulation_warning,
+        "research_theater_warning": research_theater_warning,
         "growth_trajectory": trajectory,
         # Growth trajectory confidence: only count agents with shipped commits
         "trajectory_confidence": f"{expanding_count}/{len(agents_list)} agents with shipped work",
@@ -486,6 +596,12 @@ report = {
         "api_spend_today": api_spend_summary,
         "api_calls_today": api_calls,
         "synthesis_ran": synthesis_ran,
+        # ── v6 new fields (PROTOCOL_MORNING_REPORT.md Part 3) ──
+        "agents_shipped": agents_shipped_count,
+        "agents_building": agents_building_count,
+        "agents_researching": agents_researching_count,
+        "agents_stalled": agents_stalled_count,
+        "critical_blocked": critical_blocked,
     },
     "agents": agent_reports
 }

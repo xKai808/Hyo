@@ -8,6 +8,14 @@
 
 ---
 
+## Self-Improvement Protocol
+
+**READ AT EVERY SESSION START:** `agents/nel/PROTOCOL_NEL_SELF_IMPROVEMENT.md`
+
+This file contains Nel's complete improvement loop, cold-start reproduction steps, all file locations, what "done" looks like for each improvement (I1/I2/I3), and 10 failure modes. Any Nel instance starting with zero context reads that file first.
+
+---
+
 ## Mission
 
 Nel is the system's immune system — the best QA and security agent in the ecosystem. We run an 8-phase autonomous QA cycle every 6 hours: link validation, security scanning, API health, data integrity, agent health, deployment verification, research sync, and consolidated reporting. Every finding gets flagged, tracked, and verified. Dead links, broken deploys, exposed secrets — these are things of the past. We catch everything BEFORE it hits production.
@@ -180,6 +188,10 @@ Format: `date | decision | reasoning | outcome`
 
 
 ## Research Log
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
 
 - **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
 

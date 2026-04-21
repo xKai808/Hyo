@@ -214,11 +214,16 @@ read the relevant PROTOCOL before touching any agent's code, data, or runner.
 
 ### Protocol registry
 
-| Agent   | Protocol file                                  | Current version | When to read |
-|---------|------------------------------------------------|-----------------|--------------|
-| Aether  | `agents/aether/PROTOCOL_DAILY_ANALYSIS.md`     | v2.5            | Before any analysis, HQ publish, or runner change |
-| Ant     | `agents/ant/PROTOCOL_ANT.md`                   | v1.3            | Before any credit data, ant-update.sh, or hq.html Ant tab work |
-| Podcast | `agents/ra/PROTOCOL_PODCAST.md`                | v1.2            | Before any podcast.py, Vale voice, or script format work |
+| Agent   | Protocol file                                           | Current version | When to read |
+|---------|---------------------------------------------------------|-----------------|--------------|
+| Aether  | `agents/aether/PROTOCOL_DAILY_ANALYSIS.md`              | v2.5            | Before any analysis, HQ publish, or runner change |
+| Ant     | `agents/ant/PROTOCOL_ANT.md`                            | v1.3            | Before any credit data, ant-update.sh, or hq.html Ant tab work |
+| Podcast | `agents/ra/PROTOCOL_PODCAST.md`                         | v1.2            | Before any podcast.py, Vale voice, or script format work |
+| Nel     | `agents/nel/PROTOCOL_NEL_SELF_IMPROVEMENT.md`           | v1.0            | Before any Nel improvement work (adaptive sentinel, dep audit, cache) |
+| Ra      | `agents/ra/PROTOCOL_RA_SELF_IMPROVEMENT.md`             | v1.0            | Before any Ra improvement work (source health, feedback loop, diversity) |
+| Sam     | `agents/sam/PROTOCOL_SAM_SELF_IMPROVEMENT.md`           | v1.0            | Before any Sam improvement work (perf baseline, Vercel KV, error handling) |
+| Dex     | `agents/dex/PROTOCOL_DEX_SELF_IMPROVEMENT.md`           | v1.0            | Before any Dex improvement work (clustering, drift detection) |
+| Kai     | `kai/protocols/PROTOCOL_MORNING_REPORT.md`              | v1.0            | Before any morning report work — schema, rendering, failure modes |
 
 Kai's rule: **before working on an agent, read its PROTOCOL file first.**
 The protocol tells you: file locations, dual-path rules, field names, failure modes, upgrade steps.
@@ -248,6 +253,67 @@ After upgrading: update this table's "Current version" column and commit.
 - **Quality gate:** `python3 bin/ant-gate.py` — hard-block, 5 gates, exit 1 on fail, Telegram alert auto-sent. ant-update.sh calls this; no commit on failure.
 - **Open tickets:** ANT-GAP-001 (Admin API key), ANT-GAP-002 (monthly close job), ANT-GAP-003 (RESOLVED via ant-gate.py Telegram), ANT-GAP-004 (weekly P&L rollover), ANT-GAP-005 (scraped-credits staleness in report-check)
 - **17 failure modes documented** in Part 13 — check before any Ant work
+
+---
+
+## MORNING REPORT FORMAT SPECIFICATION (v6 — 2026-04-21)
+
+**Protocol:** `kai/protocols/PROTOCOL_MORNING_REPORT.md` — read before any morning report work.
+**Generator:** `bin/generate-morning-report.sh` (v6-action-engine)
+**Output:** `agents/sam/website/data/morning-report.json` (canonical) + `website/data/morning-report.json` (mirror)
+
+### Required JSON fields per agent (enforced as of v6)
+- `shipped_since_last` — what shipped since last report with proof (commit hash)
+- `highest_priority_issue` — the ONE most important unresolved issue
+- `next_action` — one concrete next step executable in 6 hours
+- `action_type` — enum: `research | instrumentation | build | deployment`
+- `priority_evidence` — data citation from ARIC Phase 1 justifying priority
+- `improvement_status_detail` — all 3 improvements (I1/I2/I3) with current status
+- `improvement_commit` — git commit hash if shipped (null if not)
+
+### Required executive summary fields (new in v6)
+- `agents_shipped` — count of agents with shipped improvements today
+- `agents_building` — count of agents with action_type=build/deployment
+- `agents_researching` — count of agents in research phase
+- `agents_stalled` — count of agents with no active work
+- `critical_blocked` — list of agents blocked with specific reason
+- `research_theater_warning` — populated if ALL agents are in research phase
+
+### CRITICAL: action_type interpretation
+- `research` + no commit for 3+ consecutive reports = RESEARCH THEATER (flag it)
+- `build` or `deployment` = healthy progress
+- Goal: every agent has action_type != research at least once per week
+
+---
+
+## SELF-IMPROVEMENT EXECUTION ENGINE (2026-04-21)
+
+**Location:** `bin/agent-execute-improvement.sh`
+**Purpose:** Turns "researched" improvements into actual code changes via Claude API call
+
+**Usage:**
+```bash
+bash bin/agent-execute-improvement.sh nel I2  # runs dependency audit improvement
+bash bin/agent-execute-improvement.sh ra I1   # runs source health improvement
+bash bin/agent-execute-improvement.sh sam I1  # runs performance baseline improvement
+bash bin/agent-execute-improvement.sh dex I2  # runs root cause clustering improvement
+```
+
+**Gates (all must pass):**
+1. `aric-latest.json` exists with improvement thesis
+2. `files_to_change` field is non-empty in improvement_built
+3. Anthropic API key at `agents/nel/security/anthropic.key` is valid
+4. Claude generates non-empty implementation (>50 chars)
+5. Written file is non-empty
+6. `verify.sh` passes (if it exists for that agent)
+7. `git commit` succeeds
+8. `git push origin main` succeeds
+
+**Failure behavior:** Restores backup, logs execution_error to aric-latest.json, does NOT mark as shipped.
+
+**What agent-growth.sh does vs this script:**
+- `agent-growth.sh`: Phases 1-4 (observe, orient, research, decide) — bash only, no LLM
+- `agent-execute-improvement.sh`: Phase 6 (ACT) — calls Claude API, writes code, commits
 
 ---
 
