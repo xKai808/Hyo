@@ -52,6 +52,13 @@
 - [x] **SENT-001 SHIPPED:** Sentinel two-fer bug fix — killed 2 chronic false positives that had been re-flagging for 15 days each. (1) `stat_mode` BSD branch returned `0600` from `%Mp%Lp` but regex `^6[0-9][0-9]$` only matched 3 digits → false P0 on founder.token (actual mode 600 ✓). (2) `.secrets` dir-permissions check stat'd the symlink (0755) instead of target `agents/nel/security/` (700 ✓). Added `_bsd_norm_mode` helper + `stat_mode_L` (follow-symlink) in agents/nel/sentinel.sh. Re-ran to verify — run #115: 7p/2f (was 5p/4f), both chronic recurrings resolved. Logged to `agents/nel/evolution.jsonl`. **Lesson:** 15-day chronic false positives mask real P0s — future sentinel failures should be root-caused within 3 days, not normalized.
 - [x] **SENT-002 NOTED (not shipped):** P1 `scheduled-tasks-fired` check is now the only remaining P1 — looks for `aurora-*.log` in `agents/nel/logs/`, but no aurora logs exist (day 16 chronic). Either Aurora was renamed/consolidated (manifest still in agents/manifests/aurora.hyo.json but no recent runner output) or the check needs a different proxy. Deferred to next interactive — needs decision on whether to revive Aurora or retire the check.
 
+## ✅ SHIPPED — Session 27 cont. (2026-04-21)
+
+- [x] **24h ticket enforcement — SHIPPED:** bin/ticket-sla-enforcer.sh autonomous daemon. Scans every 30 min via launchd (com.hyo.ticket-sla-enforcer.plist). P0:30m/P1:1h/P2:4h/P3:24h SLA gates. Auto-escalates → nudges owning agent → P0 breaches page Hyo inbox → zombies (>90 days) auto-archive. Commits ledger after enforcement.
+- [x] **Agent ticket hooks — SHIPPED:** bin/ticket-agent-hooks.sh sourced in all 4 runners (nel/ra/sam/aether). ticket_cycle_start() marks all owned OPEN/ACTIVE tickets as active at cycle start → prevents false escalation. ticket_cycle_complete() marks RESOLVED with evidence. ticket_create_if_missing() prevents daily dedup explosion.
+- [x] **Duplicate ticket gate — SHIPPED:** ticket.sh cmd_create now checks if same ID already in ledger before appending. nel's daily TASK-YYYYMMDD-nel-001 storm eliminated.
+- [x] **HQ archive + theater gate — SHIPPED:** publish-to-feed.sh now: (1) blocks research-drop without URL citations (theater gate → auto P1 ticket), (2) archives every publish to agents/[agent]/archive/YYYY/MM/. Immutable HQ publish history from now on.
+
 ## ✅ SHIPPED — Session 27 (2026-04-21)
 
 - [x] **Aurora subscriber persistence SHIPPED:** aurora-checkout.js + aurora-webhook.js updated to write subscriber JSON files to GitHub via Contents API. Eliminates missing sync-aurora-subscribers.sh. Every signup persists immediately. Queued commit aurora-persist-01.

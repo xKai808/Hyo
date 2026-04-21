@@ -77,6 +77,14 @@ cmd_create() {
 
   local id
   id=$(generate_id "$agent")
+
+  # ─── DUPLICATE GATE: reject if this ID already exists ───
+  if [[ -s "$TICKET_LEDGER" ]] && grep -q "\"id\":\"$id\"" "$TICKET_LEDGER" 2>/dev/null; then
+    log_warn "Ticket $id already exists — skipping create (duplicate gate)"
+    echo "$id"
+    return 0
+  fi
+
   local status="OPEN"
   [[ -n "$blocked_by" ]] && status="BLOCKED"
 

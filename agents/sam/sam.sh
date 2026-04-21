@@ -53,6 +53,13 @@ if [[ -f "$GROWTH_SH" ]]; then
   run_growth_phase "sam" || true
 fi
 
+# ---- Ticket lifecycle hooks -------------------------------------------------
+TICKET_HOOKS="$ROOT/bin/ticket-agent-hooks.sh"
+if [[ -f "$TICKET_HOOKS" ]]; then
+  source "$TICKET_HOOKS"
+  ticket_cycle_start "sam" || true
+fi
+
 # ---- logging ----------------------------------------------------------------
 log_activity() {
   local cmd="$1" status="$2" details="${3:-}"

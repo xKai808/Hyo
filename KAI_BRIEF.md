@@ -2,7 +2,25 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-21 (Session 27 — Aurora billing persistence + Day 7 retention email)
+**Updated:** 2026-04-21 (Session 27 cont. — 24h ticket enforcement + HQ archive gate + agent lifecycle hooks)
+
+## Shipped today (2026-04-21 — Session 27 cont.)
+
+**24h ticket enforcement system — BUILT + QUEUED:**
+- `bin/ticket-sla-enforcer.sh` — autonomous enforcement daemon. Runs every 30 min. For every OPEN/ACTIVE ticket: checks age vs SLA (P0:30m/P1:1h/P2:4h/P3:24h) → auto-escalates priority → dispatches nudge to agent's ACTIVE.md → P0 breaches → Hyo inbox → commits. Zombie detection >90 days → auto-archive.
+- `kai/queue/com.hyo.ticket-sla-enforcer.plist` — launchd with StartInterval=1800. Queued to Mini for install.
+- `bin/ticket-agent-hooks.sh` — shared library sourced in all 4 agent runners. Functions: `ticket_cycle_start` (stamps ACTIVE on all owned tickets, prevents false escalation), `ticket_cycle_complete` (marks RESOLVED with evidence), `ticket_open_for_agent`, `ticket_create_if_missing` (dedup-safe).
+- `bin/ticket.sh` — DUPLICATE GATE added to `cmd_create`: if same ID already in ledger → skip. Eliminates TASK-YYYYMMDD-nel-001 daily explosion.
+- All 4 runners patched: nel.sh, ra.sh, sam.sh, aether.sh now source ticket-agent-hooks.sh and call `ticket_cycle_start` at cycle start.
+
+**HQ publication enforcement — WIRED:**
+- `bin/publish-to-feed.sh` — two new gates added:
+  1. THEATER GATE: `research-drop` blocked if no URL citations in finding/sources → auto-creates P1 ticket
+  2. ARCHIVE STEP: every publish saves to `agents/[agent]/archive/YYYY/MM/[agent]-[type]-DATE.json`
+
+**Hyo decision:** Hold on RESEND_API_KEY and Stripe webhook until self-improving system is solid. Correct call — the enforcement infrastructure needed to exist first.
+
+---
 
 ## Shipped today (2026-04-21 — Session 27)
 

@@ -60,6 +60,14 @@ if [[ -f "$GROWTH_SH" ]]; then
   source "$GROWTH_SH"
   run_growth_phase "ra" || true
 fi
+
+# ---- Ticket lifecycle hooks -------------------------------------------------
+TICKET_HOOKS="$ROOT/bin/ticket-agent-hooks.sh"
+if [[ -f "$TICKET_HOOKS" ]]; then
+  source "$TICKET_HOOKS"
+  ticket_cycle_start "ra" || true
+fi
+
 ok()   { printf '%s✓%s %s\n' "$GRN" "$RST" "$*"; }
 warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
 err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }

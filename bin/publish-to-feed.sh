@@ -37,6 +37,31 @@ if [[ ! -f "$SECTIONS_FILE" ]]; then
   exit 1
 fi
 
+# ─── THEATER DETECTION GATE ──────────────────────────────────────────────────
+# Research-drop publishes must include sources. Blocks theater ("did research"
+# without citations). Gate 3 from PROTOCOL_HQ_PUBLISH.md.
+if [[ "$TYPE" == "research-drop" ]]; then
+  SOURCES_CHECK=$(python3 -c "
+import json, sys
+with open('$SECTIONS_FILE') as f:
+    s = json.load(f)
+finding = str(s.get('finding',''))
+sources = str(s.get('sources',''))
+# Theater = no URL-like string in finding or sources
+import re
+has_source = bool(re.search(r'https?://', finding + sources))
+print('ok' if has_source else 'blocked')
+")
+  if [[ "$SOURCES_CHECK" == "blocked" ]]; then
+    echo "ERROR: THEATER GATE BLOCKED — research-drop has no sources (no URLs in finding/sources). Add citations before publishing." >&2
+    HYO_ROOT="$ROOT" bash "$ROOT/bin/ticket.sh" create \
+      --agent "kai" \
+      --title "Theater gate: research-drop missing sources ($TITLE)" \
+      --priority "P1" 2>/dev/null || true
+    exit 1
+  fi
+fi
+
 # Agent metadata lookup (bash 3.x compatible — no associative arrays)
 AUTHOR_LC=$(echo "$AUTHOR" | tr '[:upper:]' '[:lower:]')
 
@@ -171,5 +196,46 @@ PYEOF
 if [[ -f "$FEED" && -f "$FEED_GIT" && "$FEED" != "$FEED_GIT" ]]; then
   cp "$FEED" "$FEED_GIT"
 fi
+
+# ─── ARCHIVE STEP (PROTOCOL_HQ_PUBLISH.md Section 7) ─────────────────────────
+# Every publish saves to agents/[agent]/archive/YYYY/MM/[agent]-[type]-DATE.json
+# This creates an immutable, browsable record of everything ever published.
+AUTHOR_LC_ARCHIVE=$(echo "$AUTHOR" | tr '[:upper:]' '[:lower:]')
+YEAR=$(TZ="America/Denver" date +%Y)
+MONTH=$(TZ="America/Denver" date +%m)
+ARCHIVE_DIR="$ROOT/agents/$AUTHOR_LC_ARCHIVE/archive/$YEAR/$MONTH"
+mkdir -p "$ARCHIVE_DIR"
+ARCHIVE_FILE="$ARCHIVE_DIR/${AUTHOR_LC_ARCHIVE}-${TYPE}-${TODAY}.json"
+
+python3 - "$SECTIONS_FILE" "$ARCHIVE_FILE" "$REPORT_ID" "$TYPE" "$AUTHOR" "$NOW_MT" "$TITLE" << 'ARCHEOF'
+import json, sys
+sections_file, archive_file, report_id, rtype, author, ts, title = sys.argv[1:8]
+with open(sections_file) as f:
+    sections = json.load(f)
+archive_entry = {
+    "id": report_id,
+    "type": rtype,
+    "title": title,
+    "author": author,
+    "published_at": ts,
+    "sections": sections
+}
+# Append mode: keep all daily versions if run multiple times
+existing = []
+try:
+    with open(archive_file) as f:
+        existing = json.load(f)
+        if not isinstance(existing, list):
+            existing = [existing]
+except:
+    pass
+# Dedup by id
+ids = {e.get("id") for e in existing}
+if report_id not in ids:
+    existing.append(archive_entry)
+with open(archive_file, "w") as f:
+    json.dump(existing, f, indent=2)
+print(f"Archived to {archive_file}")
+ARCHEOF
 
 echo "Feed entry published: $REPORT_ID"
