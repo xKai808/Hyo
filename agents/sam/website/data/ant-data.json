@@ -1,10 +1,10 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-20T05:30:12.143881-06:00",
+  "updatedAt": "2026-04-21T00:45:05.596414-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-20T05:30:12.143884-06:00",
+    "lastUpdated": "2026-04-21T00:45:05.596418-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -19,7 +19,7 @@
       "currency": "USD"
     },
     "total": 1.2997,
-    "today": 0.0857
+    "today": 0
   },
   "burn": {
     "daily": 0.3249,
@@ -45,8 +45,18 @@
     }
   ],
   "income": {
-    "total_monthly": 0.0,
-    "streams": []
+    "total_monthly": 12.67,
+    "streams": [
+      {
+        "name": "AetherBot Trading",
+        "source": "aether-metrics.json",
+        "weekly_pnl": 12.67,
+        "pnl_pct": 11.0,
+        "balance": 127.86,
+        "week_start": "2026-04-20",
+        "note": "Current week P&L from autonomous trading"
+      }
+    ]
   },
   "expenses": {
     "subscriptions": [
@@ -83,24 +93,24 @@
   },
   "credits": {
     "anthropic": {
-      "remaining": 30.79,
-      "total": 40.0,
-      "used": 9.21,
+      "monthly_budget": 10.0,
       "used_mtd": 0.2399,
-      "expires": "2027-04-09",
-      "source": "console.anthropic.com (screen-scraped, scraped 30h ago)",
-      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
-      "note": "Real account balance from Anthropic console."
+      "remaining": 9.7601,
+      "total": 10.0,
+      "used": 0.2399,
+      "source": "api-usage.jsonl MTD (budget-based fallback)",
+      "note": "No recent scrape. Run 'kai ant-scrape' to get real balance. Fallback for 2026-04.",
+      "expires": null
     },
     "openai": {
-      "remaining": 18.64,
-      "total": 20.0,
-      "used": 1.36,
+      "monthly_budget": 10.0,
       "used_mtd": 1.0598,
-      "expires": "2027-04-30",
-      "source": "platform.openai.com (screen-scraped, scraped 30h ago)",
-      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
-      "note": "Real account balance from OpenAI platform."
+      "remaining": 8.9402,
+      "total": 10.0,
+      "used": 1.0598,
+      "source": "api-usage.jsonl MTD (budget-based fallback)",
+      "note": "No recent scrape. Run 'kai ant-scrape' from Cowork.",
+      "expires": null
     }
   },
   "models": [
@@ -131,12 +141,6 @@
     }
   ],
   "history": [
-    {
-      "date": "2026-04-07",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
     {
       "date": "2026-04-08",
       "anthropic": 0.0,
@@ -214,6 +218,12 @@
       "anthropic": 0.0,
       "openai": 0.0857,
       "total": 0.0857
+    },
+    {
+      "date": "2026-04-21",
+      "anthropic": 0.0,
+      "openai": 0.0,
+      "total": 0.0
     }
   ]
 }

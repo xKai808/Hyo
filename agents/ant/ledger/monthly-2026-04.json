@@ -1,13 +1,23 @@
 {
   "month": "2026-04",
-  "generated_at": "2026-04-20T05:30:12.144592-06:00",
+  "generated_at": "2026-04-21T00:45:05.597385-06:00",
   "status": "open",
   "income": {
-    "trading_pnl_wtd": 0.0,
-    "trading_balance": 115.19,
+    "trading_pnl_wtd": 12.67,
+    "trading_balance": 127.86,
     "week_start": "2026-04-20",
-    "streams": [],
-    "total_income_mtd": 0.0
+    "streams": [
+      {
+        "name": "AetherBot Trading",
+        "source": "aether-metrics.json",
+        "weekly_pnl": 12.67,
+        "pnl_pct": 11.0,
+        "balance": 127.86,
+        "week_start": "2026-04-20",
+        "note": "Current week P&L from autonomous trading"
+      }
+    ],
+    "total_income_mtd": 12.67
   },
   "expenses": {
     "subscriptions": [
@@ -30,27 +40,27 @@
     "total_api_mtd": 1.2997,
     "total_expenses": 221.2997
   },
-  "net_position": -221.2997,
+  "net_position": -208.6297,
   "api_credits": {
     "anthropic": {
-      "remaining": 30.79,
-      "total": 40.0,
-      "used": 9.21,
+      "monthly_budget": 10.0,
       "used_mtd": 0.2399,
-      "expires": "2027-04-09",
-      "source": "console.anthropic.com (screen-scraped, scraped 30h ago)",
-      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
-      "note": "Real account balance from Anthropic console."
+      "remaining": 9.7601,
+      "total": 10.0,
+      "used": 0.2399,
+      "source": "api-usage.jsonl MTD (budget-based fallback)",
+      "note": "No recent scrape. Run 'kai ant-scrape' to get real balance. Fallback for 2026-04.",
+      "expires": null
     },
     "openai": {
-      "remaining": 18.64,
-      "total": 20.0,
-      "used": 1.36,
+      "monthly_budget": 10.0,
       "used_mtd": 1.0598,
-      "expires": "2027-04-30",
-      "source": "platform.openai.com (screen-scraped, scraped 30h ago)",
-      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
-      "note": "Real account balance from OpenAI platform."
+      "remaining": 8.9402,
+      "total": 10.0,
+      "used": 1.0598,
+      "source": "api-usage.jsonl MTD (budget-based fallback)",
+      "note": "No recent scrape. Run 'kai ant-scrape' from Cowork.",
+      "expires": null
     }
   },
   "notes": []
