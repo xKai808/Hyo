@@ -1,10 +1,10 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-21T00:45:05.596414-06:00",
+  "updatedAt": "2026-04-21T05:30:15.264060-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-21T00:45:05.596418-06:00",
+    "lastUpdated": "2026-04-21T05:30:15.264062-06:00",
     "staleAfterHours": 24,
     "note": "If updatedAt is >24h ago, Ant data is stale \u2014 check ant-update.sh cron"
   },
@@ -15,14 +15,14 @@
       "currency": "USD"
     },
     "openai": {
-      "total": 1.0598,
+      "total": 1.2408,
       "currency": "USD"
     },
-    "total": 1.2997,
-    "today": 0
+    "total": 1.4806,
+    "today": 0.181
   },
   "burn": {
-    "daily": 0.3249,
+    "daily": 0.2961,
     "dailyBudget": 50,
     "pctOfBudget": 0.6,
     "trend": "stable",
@@ -31,10 +31,10 @@
   "byProcess": [
     {
       "process": "aether",
-      "runs": 25,
-      "totalCost": 1.299475,
-      "avgPerRun": 0.051979,
-      "lastRun": "2026-04-20T03:21:10-0600"
+      "runs": 28,
+      "totalCost": 1.480428,
+      "avgPerRun": 0.052872,
+      "lastRun": "2026-04-21T02:52:36-0600"
     },
     {
       "process": "podcast-tts",
@@ -45,14 +45,14 @@
     }
   ],
   "income": {
-    "total_monthly": 12.67,
+    "total_monthly": 3.59,
     "streams": [
       {
         "name": "AetherBot Trading",
         "source": "aether-metrics.json",
-        "weekly_pnl": 12.67,
-        "pnl_pct": 11.0,
-        "balance": 127.86,
+        "weekly_pnl": 3.59,
+        "pnl_pct": 3.12,
+        "balance": 118.78,
         "week_start": "2026-04-20",
         "note": "Current week P&L from autonomous trading"
       }
@@ -81,33 +81,33 @@
       },
       {
         "name": "OpenAI API",
-        "actual": 1.0598,
+        "actual": 1.2408,
         "category": "API"
       }
     ],
     "infrastructure": [],
     "other": [],
     "total_fixed": 220.0,
-    "total_api": 1.2997,
-    "total": 221.2997
+    "total_api": 1.4806,
+    "total": 221.4806
   },
   "credits": {
     "anthropic": {
-      "monthly_budget": 10.0,
+      "monthly_budget": 40.0,
       "used_mtd": 0.2399,
-      "remaining": 9.7601,
-      "total": 10.0,
+      "remaining": 39.7601,
+      "total": 40.0,
       "used": 0.2399,
       "source": "api-usage.jsonl MTD (budget-based fallback)",
       "note": "No recent scrape. Run 'kai ant-scrape' to get real balance. Fallback for 2026-04.",
       "expires": null
     },
     "openai": {
-      "monthly_budget": 10.0,
-      "used_mtd": 1.0598,
-      "remaining": 8.9402,
-      "total": 10.0,
-      "used": 1.0598,
+      "monthly_budget": 20.0,
+      "used_mtd": 1.2408,
+      "remaining": 18.7592,
+      "total": 20.0,
+      "used": 1.2408,
       "source": "api-usage.jsonl MTD (budget-based fallback)",
       "note": "No recent scrape. Run 'kai ant-scrape' from Cowork.",
       "expires": null
@@ -116,8 +116,8 @@
   "models": [
     {
       "name": "gpt-4o",
-      "calls": 21,
-      "cost": 1.0596
+      "calls": 24,
+      "cost": 1.2406
     },
     {
       "name": "claude-sonnet-4-6",
@@ -133,7 +133,7 @@
   "agents": [
     {
       "name": "aether",
-      "cost": 1.2995
+      "cost": 1.4804
     },
     {
       "name": "sam/podcast",
@@ -222,8 +222,8 @@
     {
       "date": "2026-04-21",
       "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
+      "openai": 0.181,
+      "total": 0.181
     }
   ]
 }
