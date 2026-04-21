@@ -1,11 +1,21 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-21T02:40:02Z
+Last updated: 2026-04-21T08:12:00Z
+
+## Audit log — 2026-04-21
+
+- **Daily bottleneck audit ran this session** (sandbox gracious-sweet-archimedes, 02:10 MT).
+  - Auto-report: `kai/ledger/daily-audit-2026-04-21.md` — 0 issues, 0 warnings.
+  - Supplement: `kai/ledger/daily-audit-2026-04-21-supplement.md` — 12-section deeper review.
+  - **Shipped:** `kai/queue/daily-audit.sh` patched for (a) macOS bash 3.2 compat (no `declare -A`), (b) `.md` OR `.log` runner-output extensions, (c) `[AUTOMATE]` counter only counts open `[ ]` items. Three-day carry-forward cleared. Verified with re-run.
+  - **flag-kai-005 RESOLVED** (root bug shipped).
+  - **Filed flag-kai-001** (P1) for chronic flag-aether-001/002 + flag-dex-001/002 (3–7 days past SLA). Cascade dispatched.
+  - **Next-session actions logged:** aether publish→verify→reconcile loop, aether Q4 divergence auto-flag, dex append-time schema gate, no-newsletter-by-06:00 sentinel, Nel UTC-Z audit, delegation-theater sweep.
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): Aether metrics JSON exists but hq.html has NO rendering code
-  - Delegated: 2026-04-21T02:40:02Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-21T08:11:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -29,8 +39,8 @@ Last updated: 2026-04-21T02:40:02Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-21T02:40:02Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-21T08:11:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -59,7 +69,7 @@ Last updated: 2026-04-21T02:40:02Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-21T02:38:34Z
+  - Delegated: 2026-04-21T08:11:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -108,16 +118,16 @@ Last updated: 2026-04-21T02:40:02Z
   - Delegated: 2026-04-13T03:33:17Z
   - Status: DELEGATED
 
-- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 215 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
-  - Delegated: 2026-04-20T06:14:13Z
+- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 225 recurrent patterns detected — check safeguard status (flagged by dex, cascade flag-dex-001)
+  - Delegated: 2026-04-21T06:17:08Z
   - Status: DELEGATED
 
-- **kai-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by kai)
-  - Delegated: 2026-04-20T22:38:05Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-21: flag-aether-001/002 and flag-dex-001/002 past SLA by 3-7 days; root fixes logged as next-session actions 1 and 3 in daily-audit-2026-04-21-supplement.md (flagged by kai)
+  - Delegated: 2026-04-21T08:11:33Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-21T02:38:34Z
+  - Delegated: 2026-04-21T08:11:32Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-002)
@@ -162,6 +172,7 @@ Last updated: 2026-04-21T02:40:02Z
 
 - **flag-kai-005** [P2] Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2.
   - Created: 2026-04-20T08:08:46Z
+  - **Resolved: 2026-04-21T08:12Z** — all three bugs (incl. bash 3.2 `declare -A` crash surfaced today) patched in kai/queue/daily-audit.sh and verified via re-run; see daily-audit-2026-04-21-supplement.md §1.
 
 ## Recently Completed
 

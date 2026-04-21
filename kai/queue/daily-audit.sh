@@ -39,7 +39,12 @@ add_gap() {
 }
 
 # ── Agent Health Status ──
-declare -A AGENT_STATUS
+# bash 3.2 on macOS doesn't support `declare -A`; use per-agent plain vars + a getter.
+AGENT_STATUS_nel="UNKNOWN"
+AGENT_STATUS_sam="UNKNOWN"
+AGENT_STATUS_ra="UNKNOWN"
+AGENT_STATUS_aether="UNKNOWN"
+AGENT_STATUS_dex="UNKNOWN"
 
 for agent in "${AGENTS[@]}"; do
   status="OK"
@@ -75,10 +80,13 @@ for agent in "${AGENTS[@]}"; do
     fi
   fi
 
-  # Check today's runner output
-  runner_log="$ROOT/agents/$agent/logs/${agent}-${DATE}.md"
-  alt_log="$ROOT/agents/nel/logs/${agent}-${DATE}.md"
-  if [[ ! -f "$runner_log" ]] && [[ ! -f "$alt_log" ]]; then
+  # Check today's runner output — accept .md OR .log (aether writes .log)
+  runner_log_md="$ROOT/agents/$agent/logs/${agent}-${DATE}.md"
+  runner_log_log="$ROOT/agents/$agent/logs/${agent}-${DATE}.log"
+  alt_log_md="$ROOT/agents/nel/logs/${agent}-${DATE}.md"
+  alt_log_log="$ROOT/agents/nel/logs/${agent}-${DATE}.log"
+  if [[ ! -f "$runner_log_md" ]] && [[ ! -f "$runner_log_log" ]] && \
+     [[ ! -f "$alt_log_md" ]] && [[ ! -f "$alt_log_log" ]]; then
     # Only flag for agents that should run daily
     case "$agent" in
       nel|dex|aether)
@@ -117,7 +125,7 @@ for agent in "${AGENTS[@]}"; do
     esac
   fi
 
-  AGENT_STATUS[$agent]="$status"
+  eval "AGENT_STATUS_${agent}=\"\$status\""
 done
 
 # ── Queue Health ──
@@ -154,10 +162,10 @@ fi
 TASKS_FILE="$ROOT/KAI_TASKS.md"
 AUTOMATE_STALE=0
 if [[ -f "$TASKS_FILE" ]]; then
-  # Count [AUTOMATE] items (these should be prioritized)
-  AUTOMATE_STALE=$(grep -c '\[AUTOMATE\]' "$TASKS_FILE" 2>/dev/null || echo 0)
+  # Count OPEN [AUTOMATE] items only — checkbox `[ ]` before, not `[x]`.
+  AUTOMATE_STALE=$(grep -cE '^[[:space:]]*[-*][[:space:]]+\[ \][^\n]*\[AUTOMATE\]' "$TASKS_FILE" 2>/dev/null || echo 0)
   if [[ $AUTOMATE_STALE -gt 5 ]]; then
-    add_gap "KAI_TASKS has $AUTOMATE_STALE [AUTOMATE] items — review for quick wins"
+    add_gap "KAI_TASKS has $AUTOMATE_STALE open [AUTOMATE] items — review for quick wins"
   fi
 fi
 
@@ -264,11 +272,11 @@ cat > "$AUDIT_FILE" <<EOF
 
 | Agent  | Status |
 |--------|--------|
-| nel    | ${AGENT_STATUS[nel]:-UNKNOWN} |
-| sam    | ${AGENT_STATUS[sam]:-UNKNOWN} |
-| ra     | ${AGENT_STATUS[ra]:-UNKNOWN} |
-| aether | ${AGENT_STATUS[aether]:-UNKNOWN} |
-| dex    | ${AGENT_STATUS[dex]:-UNKNOWN} |
+| nel    | ${AGENT_STATUS_nel:-UNKNOWN} |
+| sam    | ${AGENT_STATUS_sam:-UNKNOWN} |
+| ra     | ${AGENT_STATUS_ra:-UNKNOWN} |
+| aether | ${AGENT_STATUS_aether:-UNKNOWN} |
+| dex    | ${AGENT_STATUS_dex:-UNKNOWN} |
 
 ## Queue
 
