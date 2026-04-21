@@ -243,6 +243,13 @@ def main() -> int:
         elif status == "empty":
             print(f"  - {rel} — empty file")
             total_skipped += 1
+        elif status == "ok":
+            errs = report.get("parse_errors", 0)
+            if errs:
+                print(f"  ~ {rel} — {report['lines_read']} lines, {errs} parse error(s) below 20% threshold (data recovered)")
+            else:
+                print(f"  ✓ {rel} — clean ({report['lines_read']} lines)")
+            total_clean += 1
         else:
             print(f"  ? {rel} — {status}: {report.get('errors', [])}")
 

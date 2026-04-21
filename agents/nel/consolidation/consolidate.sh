@@ -424,6 +424,17 @@ if [[ "${1:-}" == "--project" && -n "${2:-}" ]]; then
   TARGET="$2"
 fi
 
+# ── Phase 0: Dex JSONL auto-repair (before sentinel reads ledgers) ──
+DEX_REPAIR="$ROOT/agents/dex/dex-repair.py"
+if [[ -f "$DEX_REPAIR" ]]; then
+  log "Phase 0: Running Dex JSONL auto-repair..."
+  REPAIR_OUT=$(HYO_ROOT="$ROOT" python3 "$DEX_REPAIR" 2>&1 || true)
+  log "Dex repair: $(echo "$REPAIR_OUT" | tail -2 | tr '
+' ' ')"
+else
+  log "Phase 0: dex-repair.py not found — skipping JSONL repair"
+fi
+
 if [[ "$TARGET" == "all" ]]; then
   for proj in hyo aurora-ra aether kai-ceo nel sam; do
     run_project "$proj"
