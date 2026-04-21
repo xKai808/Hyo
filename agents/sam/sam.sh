@@ -740,6 +740,13 @@ PYEOF
   fi
 
   if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
+    # PROTOCOL_AGENT_REPORT.md v1.0: augment with BLUF + 5-question block + improvement status
+    BLUF_AUGMENTER="$ROOT/bin/agent-bluf-augment.py"
+    if [[ -f "$BLUF_AUGMENTER" ]]; then
+      HYO_ROOT="$ROOT" python3 "$BLUF_AUGMENTER" "sam" "$REFLECTION_SECTIONS" 2>/dev/null \
+        && ok "Sam reflection: BLUF + 5Q augmented" \
+        || warn "BLUF augmentation failed — publishing without BLUF"
+    fi
     bash "$PUBLISH_SCRIPT" "agent-reflection" "sam" "Sam — Engineering Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
     ok "Self-authored report published to HQ feed"
 

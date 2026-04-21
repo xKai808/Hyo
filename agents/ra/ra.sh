@@ -668,6 +668,14 @@ PYEOF
 
 RA_REPORT_PUBLISH_MARKER="/tmp/ra-report-published-$(TZ=America/Denver date +%Y%m%d)"
 if [[ -f "$RA_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
+  # PROTOCOL_AGENT_REPORT.md v1.0: augment with BLUF + 5-question block + improvement status
+  BLUF_AUGMENTER="$ROOT/bin/agent-bluf-augment.py"
+  if [[ -f "$BLUF_AUGMENTER" ]]; then
+    HYO_ROOT="$ROOT" python3 "$BLUF_AUGMENTER" "ra" "$RA_REFLECTION" 2>/dev/null \
+      && say "Ra reflection: BLUF + 5Q augmented" \
+      || say "BLUF augmentation failed — publishing without BLUF"
+  fi
+
   if [[ -f "$RA_REPORT_PUBLISH_MARKER" ]]; then
     say "Self-authored report: skipping HQ publish (already published today)"
   else

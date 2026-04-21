@@ -869,6 +869,14 @@ if [[ "$REFLECT_HOUR" =~ ^0[0-2]$ ]]; then NIGHTLY_WINDOW=1; fi
 FORCE_REFLECT="${NEL_FORCE_REFLECT:-0}"
 
 if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
+  # PROTOCOL_AGENT_REPORT.md v1.0: augment sections with BLUF + 5-question block + improvement status
+  BLUF_AUGMENTER="$ROOT/bin/agent-bluf-augment.py"
+  if [[ -f "$BLUF_AUGMENTER" ]]; then
+    HYO_ROOT="$ROOT" python3 "$BLUF_AUGMENTER" "nel" "$REFLECTION_SECTIONS" 2>/dev/null \
+      && log_info "Nel reflection: BLUF + 5Q + improvement_status prepended" \
+      || log_warn "BLUF augmentation failed — publishing without BLUF"
+  fi
+
   if [[ -f "$NEL_REPORT_PUBLISH_MARKER" ]]; then
     log_info "Reflection: skipping HQ publish (already published today)"
   elif [[ "$NIGHTLY_WINDOW" -eq 0 && "$FORCE_REFLECT" != "1" ]]; then
