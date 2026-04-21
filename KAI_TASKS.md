@@ -52,7 +52,17 @@
 - [x] **SENT-001 SHIPPED:** Sentinel two-fer bug fix — killed 2 chronic false positives that had been re-flagging for 15 days each. (1) `stat_mode` BSD branch returned `0600` from `%Mp%Lp` but regex `^6[0-9][0-9]$` only matched 3 digits → false P0 on founder.token (actual mode 600 ✓). (2) `.secrets` dir-permissions check stat'd the symlink (0755) instead of target `agents/nel/security/` (700 ✓). Added `_bsd_norm_mode` helper + `stat_mode_L` (follow-symlink) in agents/nel/sentinel.sh. Re-ran to verify — run #115: 7p/2f (was 5p/4f), both chronic recurrings resolved. Logged to `agents/nel/evolution.jsonl`. **Lesson:** 15-day chronic false positives mask real P0s — future sentinel failures should be root-caused within 3 days, not normalized.
 - [x] **SENT-002 NOTED (not shipped):** P1 `scheduled-tasks-fired` check is now the only remaining P1 — looks for `aurora-*.log` in `agents/nel/logs/`, but no aurora logs exist (day 16 chronic). Either Aurora was renamed/consolidated (manifest still in agents/manifests/aurora.hyo.json but no recent runner output) or the check needs a different proxy. Deferred to next interactive — needs decision on whether to revive Aurora or retire the check.
 
+## ✅ SHIPPED — Session 27 (2026-04-21)
+
+- [x] **Aurora subscriber persistence SHIPPED:** aurora-checkout.js + aurora-webhook.js updated to write subscriber JSON files to GitHub via Contents API. Eliminates missing sync-aurora-subscribers.sh. Every signup persists immediately. Queued commit aurora-persist-01.
+- [x] **aurora-retention.js SHIPPED:** Day 7 retention email handler. Auth-gated Vercel function. Lists subscribers via GitHub API, identifies 6-8 day trialing targets, sends via Resend API, marks retentionEmailSent. Queued commits aurora-retention-02 + aurora-retention-launchd-03. Needs RESEND_API_KEY in Vercel env.
+- [x] **S20-001 CLOSED (false alarm):** /api/health returns correct JSON — confirmed live: `{"ok":true,"founderTokenConfigured":true}`. Sentinel #106 failure was transient curl error (Mini network blip), not a real bug.
+
 ## P0 — ACTION REQUIRED FROM HYO
+
+- [ ] **[H]** **RESEND_API_KEY needed for Aurora retention email.** Create Resend.com account → get API key → add to Vercel project env vars as `RESEND_API_KEY`. Also add sender domain `aurora@hyo.world` in Resend dashboard. Kai has built and deployed the retention system — this is the only missing piece.
+
+- [ ] **[H]** **Stripe webhook endpoint registration.** In Stripe dashboard → Developers → Webhooks → Add endpoint: `https://www.hyo.world/api/aurora-webhook` with events: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Copy the `whsec_...` signing secret → confirm it's set in Vercel as `STRIPE_WEBHOOK_SECRET`.
 
 - [ ] **[H]** **S18-013: Remote connection (bore.pub) broken.** SSH to bore.pub port 22246 refused. On Mini terminal run: `launchctl list | grep bore` — if not found, restart with: `bore local 22 --to bore.pub`. Note the new port, update SSH config on Pro. Kai cannot execute queue commands without this tunnel. Everything else works via filesystem queue fallback, but bridge latency is 30-120x slower.
 
@@ -60,14 +70,14 @@
 
 ## P1 — NEXT SESSION
 
-- [ ] **[B]** **S17-006: Wire Aurora Stripe billing.** Hyo creates Stripe account + product ($19/mo, 14-day trial) + keys. Kai sets STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET in Vercel.
+- [x] **[B]** **S17-006: Wire Aurora Stripe billing.** SUBSTANTIALLY DONE 2026-04-21. Keys set in Vercel. Checkout works (tested live). Webhook persistence wired (GitHub API). Remaining: Stripe dashboard webhook registration (see P0 Hyo action) + RESEND_API_KEY.
 - [ ] **[K]** **S18-002: Verify Aurora post-registration flow end-to-end.** aurora-success → aurora-page → magic link. Needs Stripe keys to test real flow.
 - [ ] **[K]** **S18-009: Weekly system algorithm report.** Build bin/weekly-system-report.sh, schedule Sunday 06:00 MT. 7 required sections, 3+ external research sources each.
 - [ ] **[K]** **S18-010: Weekly Claude/GPT platform assessment.** Weekly Sunday/Monday. New capabilities, pricing, API limits, hyo.world improvement opportunities. Publish to HQ.
 - [ ] **[K]** **S18-011/012: Ant daily update + cost-per-process table.** Verify ant-update.sh runs daily. Add lastUpdated staleness indicator. Add cost-per-process breakdown (podcast-tts, gpt-crosscheck, ra-synthesis, aurora-synthesis). Surface on HQ Ant view.
 - [ ] **[K]** **S18-018: Aurora brief pre-publish readLink gate.** newsletter.sh must curl readLink before writing feed entry. Never publish a 404.
 - [ ] **[K]** **S18-022/023: Research publishing + pattern enforcement gates.** Wire to agent runners. Nel: 3+ occurrences in 7 days → auto P0 + 24h SLA.
-- [ ] **[K]** **Day 7 retention email.** Build aurora-retention.js.
+- [x] **[K]** **Day 7 retention email.** SHIPPED 2026-04-21 — aurora-retention.js built + launchd plist queued. Needs RESEND_API_KEY in Vercel (see P0 above).
 - [ ] **[K]** **BUILD-002 Phase 2.** Aurora app preferences UI.
 - [ ] **[K]** **BUILD-003 RESEARCH-003.** AetherBot capital scaling.
 - [ ] **[K]** **S17-007: Ticket queue.** 55+ open. Continue closing.

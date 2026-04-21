@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.hyo.aurora-retention</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>source /Users/kai/.zshrc 2>/dev/null; TOKEN=$(cat /Users/kai/Documents/Projects/Hyo/.secrets/founder.token 2>/dev/null || echo ''); curl -sf -X POST https://www.hyo.world/api/aurora-retention -H 'Content-Type: application/json' -d "{\"auth\":\"$TOKEN\"}" >> /Users/kai/Documents/Projects/Hyo/kai/ledger/aurora-retention.log 2>&amp;1</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key><integer>9</integer>
+    <key>Minute</key><integer>0</integer>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/Users/kai/Documents/Projects/Hyo/kai/ledger/aurora-retention.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/kai/Documents/Projects/Hyo/kai/ledger/aurora-retention.log</string>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key><string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+  </dict>
+</dict>
+</plist>
