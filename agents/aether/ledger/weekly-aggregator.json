@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-04-21T14:11:26.882311+00:00",
+  "date_range": {
+    "start": "2026-04-08",
+    "end": "2026-04-17",
+    "sessions_analyzed": 12
+  },
+  "summary": {
+    "total_net_pnl": 10.07,
+    "positive_days": 3,
+    "negative_days": 3,
+    "win_rate_pct": 50.0,
+    "total_profit": 15.91
+  },
+  "daily_pnl": [
+    {
+      "date": "2026-04-08",
+      "pnl": -10.2
+    },
+    {
+      "date": "2026-04-09",
+      "pnl": 4.23
+    },
+    {
+      "date": "2026-04-13",
+      "pnl": -3.81
+    },
+    {
+      "date": "2026-04-14",
+      "pnl": 19.36
+    },
+    {
+      "date": "2026-04-15",
+      "pnl": -0.37
+    },
+    {
+      "date": "2026-04-17",
+      "pnl": 0.86
+    }
+  ],
+  "strategy_health": {
+    "PAQ_EARLY_AGG": {
+      "total_pnl": 8.91,
+      "trades": 10,
+      "edge_per_trade": 0.891,
+      "sessions": 6,
+      "trend": "declining",
+      "best_window": "NY_PRIME",
+      "worst_window": "OVERNIGHT2"
+    },
+    "PAQ_STRUCT_GATE": {
+      "total_pnl": 3.57,
+      "trades": 1,
+      "edge_per_trade": 3.57,
+      "sessions": 1,
+      "trend": "stable",
+      "best_window": "NY_PRIME",
+      "worst_window": "NY_PRIME"
+    },
+    "WES_EARLY": {
+      "total_pnl": 2.28,
+      "trades": 1,
+      "edge_per_trade": 2.28,
+      "sessions": 1,
+      "trend": "stable",
+      "best_window": "EVENING",
+      "worst_window": "EVENING"
+    },
+    "bps_late": {
+      "total_pnl": 1.15,
+      "trades": 2,
+      "edge_per_trade": 0.575,
+      "sessions": 2,
+      "trend": "stable",
+      "best_window": "EVENING",
+      "worst_window": "NY_PRIME"
+    },
+    "bps_premium": {
+      "total_pnl": -1.57,
+      "trades": 14,
+      "edge_per_trade": -0.112,
+      "sessions": 6,
+      "trend": "improving",
+      "best_window": "EVENING",
+      "worst_window": "NY_PRIME"
+    }
+  },
+  "window_performance": {
+    "OVERNIGHT": {
+      "total_pnl": -0.46,
+      "avg_pnl": -0.46,
+      "sessions": 1,
+      "positive_sessions": 0,
+      "negative_sessions": 1,
+      "win_rate": 0.0,
+      "ev_label": "-EV"
+    },
+    "EU_MORNING": {
+      "total_pnl": 3.61,
+      "avg_pnl": 3.61,
+      "sessions": 1,
+      "positive_sessions": 1,
+      "negative_sessions": 0,
+      "win_rate": 100.0,
+      "ev_label": "+EV"
+    },
+    "ASIA_OPEN": {
+      "total_pnl": 0.0,
+      "avg_pnl": 0.0,
+      "sessions": 1,
+      "positive_sessions": 0,
+      "negative_sessions": 0,
+      "win_rate": 0.0,
+      "ev_label": "-EV"
+    },
+    "NY_PRIME": {
+      "total_pnl": 6.55,
+      "avg_pnl": 2.18,
+      "sessions": 3,
+      "positive_sessions": 3,
+      "negative_sessions": 0,
+      "win_rate": 100.0,
+      "ev_label": "+EV"
+    },
+    "EVENING": {
+      "total_pnl": 14.2,
+      "avg_pnl": 4.73,
+      "sessions": 3,
+      "positive_sessions": 3,
+      "negative_sessions": 0,
+      "win_rate": 100.0,
+      "ev_label": "+EV"
+    },
+    "OVERNIGHT2": {
+      "total_pnl": -0.16,
+      "avg_pnl": -0.16,
+      "sessions": 1,
+      "positive_sessions": 0,
+      "negative_sessions": 1,
+      "win_rate": 0.0,
+      "ev_label": "-EV"
+    }
+  },
+  "concentration_risk": {
+    "top_1": {
+      "strategy": "PAQ_EARLY_AGG",
+      "pnl": 8.91,
+      "cumulative_pct": 56.0
+    },
+    "top_2": {
+      "strategy": "PAQ_STRUCT_GATE",
+      "pnl": 3.57,
+      "cumulative_pct": 78.4
+    },
+    "top_3": {
+      "strategy": "WES_EARLY",
+      "pnl": 2.28,
+      "cumulative_pct": 92.8
+    },
+    "top_4": {
+      "strategy": "bps_late",
+      "pnl": 1.15,
+      "cumulative_pct": 100.0
+    }
+  },
+  "health_flags": [
+    "DECLINING: PAQ_EARLY_AGG \u2014 trend declining across sessions",
+    "CONCENTRATION: top 3 strategies = 92.8% of profit"
+  ]
+}

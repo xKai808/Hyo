@@ -1332,6 +1332,15 @@ PYEOF
     fi
   fi
 
+  # ─── STEP 12b: WEEKLY AGGREGATOR (Aether W3 — cross-session strategy health) ──
+  AGGREGATOR="$ROOT/agents/aether/aggregate-weekly.py"
+  if [[ -f "$AGGREGATOR" ]]; then
+    log "Running weekly strategy aggregator (W3)..."
+    AGG_OUT=$(HYO_ROOT="$ROOT" python3 "$AGGREGATOR" --days 7 2>&1 || true)
+    AGG_FLAGS=$(echo "$AGG_OUT" | grep -c "⚠" || echo 0)
+    log "Aggregator complete: ${AGG_FLAGS} health flags — see agents/aether/research/STRATEGY_HEALTH.md"
+  fi
+
   # ─── STEP 13: MEMORY UPDATE (constitutional — AGENT_ALGORITHMS.md) ────────
   local aether_active="$ROOT/agents/aether/ledger/ACTIVE.md"
   mkdir -p "$(dirname "$aether_active")"

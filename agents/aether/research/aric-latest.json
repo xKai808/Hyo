@@ -2,7 +2,7 @@
   "agent": "aether",
   "cycle_date": "2026-04-16",
   "aric_phase": "W1 Research Cycle",
-  "weakness_worked": "W2: No Automated Analysis Quality Gate \u2014 analysis quality depends entirely on analyst, no automated gate between complete and published",
+  "weakness_worked": "W3",
   "research_conducted": [
     {
       "source": "Aether GROWTH.md (internal)",
@@ -69,15 +69,17 @@
   "session_date": "2026-04-16",
   "conducted_by": "Aether ARIC research cycle",
   "improvement_built": {
-    "description": "Analysis Quality Gate (W2) \u2014 12-check automated gate before HQ publish",
+    "description": "aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags",
     "files_changed": [
-      "agents/aether/analysis-quality-gate.sh",
+      "agents/aether/aggregate-weekly.py",
       "agents/aether/aether.sh"
     ],
-    "commit": "92aa0fc",
+    "commit": null,
     "status": "shipped",
     "shipped_date": "2026-04-21",
-    "verification": "analysis-quality-gate.sh checks QC01-QC12: file exists, >500B, window section, P&L numbers, GPT cross-check, strategy classification, risk section, no draft markers, recommendation, balance, date match, modified today. Wired into aether.sh publish gate \u2014 if gate fails, HQ publish is blocked with log message."
+    "metric_before": "Cross-session intelligence: 0% automated \u2014 strategy evaluation required reading 41 files manually",
+    "metric_after": "Cross-session intelligence: automated \u2014 PAQ_EARLY_AGG declining detected, 92.8% concentration flagged from 12 sessions",
+    "next_target": "W1: phantom position reconciliation against Kalshi API"
   },
   "metric_before": "Analysis quality: 0% automated checking \u2014 sub-par analyses publish silently",
   "metric_after": "Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks.",
