@@ -2,7 +2,52 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-21 (Session 26 — ARIC execution engine wired + PROTOCOL_AGENT_REPORT.md + healthcheck fixes)
+**Updated:** 2026-04-21 (Session 27 — Aurora billing persistence + Day 7 retention email)
+
+## Shipped today (2026-04-21 — Session 27)
+
+Commit: e7137d0 — 8 files changed, 1142 insertions. Pushed and live on Vercel.
+
+**Aurora subscriber persistence — COMPLETE (no more lost signups):**
+- `aurora-checkout.js` rewrote to write `pending_billing` subscriber JSON to GitHub Contents API immediately after Stripe session creation. Non-blocking — checkout response not gated on GitHub write. Falls back gracefully if `GITHUB_TOKEN` missing.
+- `aurora-webhook.js` rewrote to read + update subscriber JSON on every lifecycle event:
+  - `checkout.session.completed` → status `trialing`, adds `stripeCustomerId`, `stripeSubscriptionId`, `trialStarted`. Creates fallback record if checkout write failed.
+  - `customer.subscription.updated` → mirrors Stripe status field (trialing/active/past_due/canceled)
+  - `customer.subscription.deleted` → status `canceled`
+  - `invoice.payment_failed` → status `payment_failed`, logs attempt count
+- Eliminates missing `bin/sync-aurora-subscribers.sh` dependency entirely.
+- Subscriber records live at: `agents/sam/website/data/aurora-subscribers/{id}.json`
+
+**Aurora Day 7 retention email — BUILT + DEPLOYED:**
+- `api/aurora-retention.js` — auth-gated `POST /api/aurora-retention` Vercel function:
+  - Lists all subscriber JSONs via GitHub Contents API
+  - Identifies trialing subscribers 6–8 days past `trialStarted` who haven't received retention email
+  - Sends personalized HTML+text email via Resend API (topic-aware subject + body)
+  - Marks `retentionEmailSent: true` + `retentionEmailSentAt` back to GitHub
+  - `dry_run: true` mode for safe testing
+  - Graceful degradation: if `RESEND_API_KEY` missing, logs error but doesn't crash
+- `com.hyo.aurora-retention.plist` — launchd job installed on Mini, fires daily 09:00 MT
+- **NEEDS: `RESEND_API_KEY` added to Vercel env vars** (Resend.com → create account → API key → add `aurora@hyo.world` sending domain)
+
+**S20-001 CLOSED (false alarm):**
+- `/api/health` is working correctly: `{"ok":true,"founderTokenConfigured":true}` confirmed live.
+- Sentinel #106 failure was transient `curl -sf` failure (Mini network blip) → `|| echo '{}'` fallback.
+
+**Queue format bug fixed:**
+- Previous sessions used `"command"` key; I accidentally used `"cmd"` in first 4 jobs → all went to `failed/`.
+- Correct format: `{"id":"...", "ts":"...", "command":"..."}` — no `"priority"` field.
+- Lesson logged: always copy from a completed job as format reference.
+
+**Hyo action items remaining (Aurora billing loop):**
+1. Add `RESEND_API_KEY` to Vercel env vars (Resend.com account needed)
+2. Register Stripe webhook in Stripe dashboard: URL = `https://www.hyo.world/api/aurora-webhook`, events = `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Copy `whsec_...` → confirm as `STRIPE_WEBHOOK_SECRET` in Vercel.
+
+**Previously confirmed working (from this session):**
+- Stripe checkout: `POST /api/aurora-checkout` → returns `{ok:true, url: "https://checkout.stripe.com/..."}` ✅
+- Aurora page auth: `aurora-page?id=X&token=Y` → "Invalid or expired link" for bad token ✅
+- Webhook signature check: `POST /api/aurora-webhook` without valid sig → `{"error":"Webhook signature invalid."}` 400 ✅
+- `AURORA_TOKEN_SALT` + `GITHUB_TOKEN` already added to Vercel ✅
+- `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` already in Vercel ✅
 
 ## Shipped today (2026-04-21 — Session 26, Part 2)
 
