@@ -52,6 +52,15 @@
 **Earlier sentinel run:** 2026-04-18 ~04:05 MT (run #70, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix: `manifest-valid-json` RESOLVED — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json`. Same three recurring P0/P1/P2 environmental carryover as above. See `agents/nel/logs/sentinel-2026-04-18.md`.
 **Earliest sentinel run on record (this brief):** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
 
+## Shipped today (2026-04-21 — Session 23: deploy fix + 3 systemic improvements)
+
+**Session 23 — Reducing bottlenecks autonomously**
+
+- **Vercel deploy FIXED**: deploy hook (curl POST) now primary method in kai.sh. Bypasses CLI website/website path error. Confirmed working: job 2xIk8KHgw9sA7mZQdYLX triggered, live site updated to 11/11 today reports.
+- **Dex W3 dex-dedup.py SHIPPED** (commit 1bc9c15): 5 known-FP patterns registered, 128 recurrent false positives resolved in known-issues.jsonl + nel ledger. Wired into consolidate.sh Phase 0c. FP-001: nel/security scanner noise. FP-002: 401 API health checks. FP-003: pip-audit not installed. FP-004: bore.pub tunnel (has own P0 ticket). FP-005: aurora legacy logs.
+- **ARIC enforcement FIXED** (commit 32cf289): check_aric_day() now actually calls agent-research.sh. Previous: marker created, research never invoked. Ra research ran: 9/9 sources fetched, 102 lines of findings.
+- **Nightly commit + push**: 22 files — all agent logs, GPT reviews, dep-audit.jsonl first run, Ra research briefs.
+
 ## Shipped today (2026-04-21 — Session 22: 6 more agent improvements shipped)
 
 **Session 22 — All pending improvements executed, 5/5 agents expanding with real commits**

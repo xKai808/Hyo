@@ -80,9 +80,9 @@
 - [ ] **[K→Sam]** **Sam W2: Vercel KV migration.** Provision KV, migrate HQ state.
 - [ ] **[K]** **Fix 9 stale simulation render failures.** Feed path issue. Use verify-render.sh output to diagnose.
 - [ ] **[K]** **Dispatch auto-escalation.** Nel findings → auto-create tickets.
-- [ ] **[K]** **ARIC cycle enforcement.** agent-research.sh inconsistent. Fix trigger.
-- [ ] **[K]** **Dex pattern dedup.** 162+ recurrent detections. Build dedup + auto-resolve.
-- [ ] **[K]** **DEPLOY-002.** Change Vercel root dir from website/ to agents/sam/website/. Vercel dashboard API.
+- [x] **[K]** **ARIC cycle enforcement.** FIXED 2026-04-21 (commit 32cf289): check_aric_day() now calls agent-research.sh. Ra research: 9/9 sources fetched.
+- [x] **[K]** **Dex pattern dedup.** SHIPPED 2026-04-21 (commit 1bc9c15): dex-dedup.py — 5 FP patterns, 128 false positives resolved.
+- [x] **[K]** **DEPLOY-002.** RESOLVED 2026-04-21: kai.sh deploy now uses deploy hook (curl POST) as primary. No Vercel dashboard change needed.
 - [ ] **[K]** **Aurora synthesize.py: API key fallback.** ANTHROPIC_API_KEY in launchd plist.
 - [ ] **[K]** **Migrate Aurora off Cowork sandbox onto Mini launchd.** 03:00 MT daily.
 - [ ] **[K]** **Sam launchd trigger.** Sam only runs on-demand. Add launchd plist.

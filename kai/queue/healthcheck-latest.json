@@ -1,9 +1,14 @@
 {
-  "ts": "2026-04-21T14:40:12Z",
+  "ts": "2026-04-21T14:41:12Z",
   "status": "ISSUES",
-  "issues": 4,
+  "issues": 5,
   "warnings": 5,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "4 unaddressed P0/P1 flags in last 2h"
+    },
     {
       "severity": "P2",
       "area": "queue-worker",
@@ -50,8 +55,26 @@
       "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
   "recent_queue_results": [
+    {
+      "id": "event-sam-flag-nel-001",
+      "status": "ok",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/sam/sam.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "event-nel-flag-nel-001",
+      "status": "ok",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776782427-1728",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add bin/agent-growth.sh agents/dex/GROWTH.md ",
+      "exit_code": 0
+    },
     {
       "id": "cmd-1776782380-1696",
       "status": "ok",
@@ -62,24 +85,6 @@
       "id": "cmd-1776782323-1461",
       "status": "ok",
       "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit --no-verify -m 'dex W3/k",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776782272-1399",
-      "status": "ok",
-      "command": "HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/agents/dex/de",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776782179-1292",
-      "status": "ok",
-      "command": "diff ~/Documents/Projects/Hyo/website/data/feed.json ~/Documents/Projects/Hyo/ag",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776782171-1266",
-      "status": "ok",
-      "command": "ls -la ~/Documents/Projects/Hyo/website 2>/dev/null | head -3",
       "exit_code": 0
     }
   ],
