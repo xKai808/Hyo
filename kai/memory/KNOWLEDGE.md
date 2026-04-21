@@ -317,6 +317,47 @@ bash bin/agent-execute-improvement.sh dex I2  # runs root cause clustering impro
 
 ---
 
+## Agent I1 Improvements Shipped (2026-04-21, Session 21)
+
+These are the first real shipped improvements from the self-improvement protocols. Read before working on any agent to avoid re-implementing or regressing.
+
+**Nel I1 — Adaptive Sentinel (commit b361aca, shipped 2026-04-14)**
+- File: `agents/nel/sentinel-adapt.sh` (NEW, fully implemented, 551 lines)
+- Tracks consecutive_fails per check_id in `agents/nel/memory/sentinel-escalation.json`
+- Escalation levels: 0=normal (1-2 fails), 1=warning (3-4), 2=chronic (5-9), 3=critical (10+)
+- Level 2+: generates `agents/nel/logs/sentinel-diagnostics-YYYY-MM-DD.md`
+- Diagnostic templates: api-health (SSL/token/latency), aurora (daemon/log/pipeline), scheduled-tasks (launchd/queue), task-queue (P0 count/age/completion)
+- Called from sentinel.sh line 348-362 via `ADAPT="$ROOT/agents/nel/sentinel-adapt.sh"`
+- Metric: MTTRC 3+ days → <4h. Next: W2 Dependency Audit (CVE scanning via GitHub Advisory DB)
+
+**Ra I1 Phase 1 — Editorial Feedback Loop (commit b484e1c, shipped 2026-04-21)**
+- Files changed: `agents/ra/pipeline/render.py` (modified), `agents/sam/website/api/v1/track/open.js` (NEW), `agents/sam/website/api/v1/track/click.js` (NEW)
+- render.py changes: new flags `--no-track` (default: tracking ON) and `--newsletter-id NID`
+- Tracking pixel: `<img src="https://hyo.world/api/v1/track/open?nid=...">` injected before `</body>`
+- Link wrapping: external links rewritten to `/api/v1/track/click?nid=...&li=N&url=encoded`
+- open.js: returns 1x1 transparent GIF, logs open event to /tmp and Vercel runtime logs
+- click.js: validates URL protocol (http/https only), logs click, 302-redirects to destination
+- Engagement ledger: render events written to `agents/ra/ledger/engagement.jsonl` on each render
+- Metric: 0% engagement visibility → tracking active. Next: Phase 2 — SMTP DSN bounce parsing
+
+**Sam I1 Phase 1 — Performance Baseline (commit b484e1c, shipped 2026-04-21)**
+- File: `bin/perf-check.sh` (NEW, executable, 8293 bytes)
+- Usage: `bash bin/perf-check.sh` (measure + compare), `--set-baseline` (record baseline), `--threshold MS`, `--no-fail`
+- Measures 5 endpoints: health, hq, aurora-data, hq-home, ra-home
+- Thresholds: P0 >5000ms, P1 >2000ms or >50% regression, P2 >15% regression vs baseline
+- Records to `agents/sam/ledger/performance-baseline.jsonl` (time-series JSON)
+- Integrate into DEPLOY.md Phase 4: `bash bin/perf-check.sh` after every deploy
+- Metric: 0% regression detection → 100% for 5 tracked endpoints. Next: Lighthouse CI in DEPLOY.md
+
+**Morning Report v6-action-engine (current as of 2026-04-21)**
+- Nel/Ra/Sam: `improvement_status: shipped`, `shipped_since_last` shows commit hash
+- Aether/Dex: `improvement_status: no active work` — need ARIC cycles to start Phase 5-7
+- `growth_trajectory: expanding` (3/5 agents shipping)
+- Research theater detection: fires if all agents show action_type=research with zero deployment
+- Morning report feed entry: `morning-report-2026-04-21` in feed.json (both paths synced)
+
+---
+
 ## MEMORY FAILURE LOG (so this never happens again)
 
 2026-04-18: Hyo re-uploaded Kai_Feedback_Apr16_2026.txt and AetherBot_Analysis_Apr13-16.txt because
