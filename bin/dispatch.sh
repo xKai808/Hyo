@@ -381,6 +381,59 @@ cmd_flag() {
   local agent="$1"; shift
   local severity="$1"; shift  # P0, P1, P2, P3
   local title="$*"
+
+  # ── DEDUP GATE: skip if same flag was already dispatched within 24h ────────
+  # Prevents cascade explosion: Dex's 225-pattern flag was creating 4 queue jobs
+  # per cycle (nel audit, sam coverage, event-driven runs, healthcheck) every run.
+  local ki_file="$ROOT/kai/ledger/known-issues.jsonl"
+  local title_prefix="${title:0:60}"  # match on first 60 chars to catch count-variants
+  if [[ -f "$ki_file" ]]; then
+    local already_flagged
+    already_flagged=$(python3 -c "
+import json, sys, time
+from datetime import datetime, timezone, timedelta
+
+ki_file = sys.argv[1]
+title_prefix = sys.argv[2]
+cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
+
+try:
+    with open(ki_file) as f:
+        for line in f:
+            line = line.strip()
+            if not line: continue
+            try:
+                e = json.loads(line)
+                desc = e.get('description', e.get('title', ''))
+                status = e.get('status', 'active')
+                ts_str = e.get('ts', '')
+                if status in ('resolved', 'resolved_fp', 'fixed', 'mitigated', 'autofixed'):
+                    continue
+                if title_prefix in desc or desc[:60] == title_prefix:
+                    if ts_str:
+                        try:
+                            ts = datetime.fromisoformat(ts_str.replace('Z','+00:00'))
+                            if ts.tzinfo is None:
+                                ts = ts.replace(tzinfo=timezone.utc)
+                            if ts > cutoff:
+                                print('yes')
+                                sys.exit(0)
+                        except:
+                            pass
+            except:
+                pass
+except:
+    pass
+print('no')
+" "$ki_file" "$title_prefix" 2>/dev/null || echo "no")
+    if [[ "$already_flagged" == "yes" ]]; then
+      # Already flagged within 24h — update timestamp but skip cascade
+      echo "Flag DEDUP: '$title_prefix' already flagged within 24h — skipping cascade (rate-limited)" >&2
+      return 0
+    fi
+  fi
+  # ── END DEDUP GATE ──────────────────────────────────────────────────────────
+
   local fid; fid=$(next_flag_id "$agent")
 
   local json; json=$(python3 -c "
@@ -525,15 +578,48 @@ print(json.dumps({
   cmd_delegate sam P1 "SAFEGUARD: Add test coverage for issue ($issue_id): $description" 2>&1 | sed 's/^/    /'
 
   # Kai: log to memory so this pattern is known next simulation
-  local mem_entry; mem_entry=$(python3 -c "
+  # DEDUP: only append if this exact description isn't already active in the ledger
+  local ki_file="$ROOT/kai/ledger/known-issues.jsonl"
+  local desc_prefix="${description:0:60}"
+  local already_in_ledger
+  already_in_ledger=$(python3 -c "
+import json, sys
+ki_file = sys.argv[1]
+prefix = sys.argv[2]
+try:
+    with open(ki_file) as f:
+        for line in f:
+            line = line.strip()
+            if not line: continue
+            try:
+                e = json.loads(line)
+                desc = e.get('description', e.get('title', ''))
+                status = e.get('status', 'active')
+                if status in ('resolved', 'resolved_fp', 'fixed', 'mitigated', 'autofixed'):
+                    continue
+                if prefix in desc or desc[:60] == prefix:
+                    print('yes')
+                    sys.exit(0)
+            except:
+                pass
+except:
+    pass
+print('no')
+" "$ki_file" "$desc_prefix" 2>/dev/null || echo "no")
+
+  if [[ "$already_in_ledger" != "yes" ]]; then
+    local mem_entry; mem_entry=$(python3 -c "
 import json, sys
 print(json.dumps({
   'ts': sys.argv[1], 'type': 'issue_pattern', 'source': sys.argv[2],
   'description': sys.argv[3], 'status': 'active',
   'prevention': 'Nel audit + Sam test coverage deployed'
 }))" "$NOW" "$issue_id" "$description")
-  echo "$mem_entry" >> "$ROOT/kai/ledger/known-issues.jsonl"
-  echo "    → Memory: pattern logged to known-issues.jsonl"
+    echo "$mem_entry" >> "$ki_file"
+    echo "    → Memory: NEW pattern logged to known-issues.jsonl"
+  else
+    echo "    → Memory: pattern already in known-issues.jsonl — skipping duplicate"
+  fi
 }
 
 # ── Closed-Loop Health Check ──

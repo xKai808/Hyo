@@ -2,7 +2,34 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-21 (Session 27 cont. — 24h ticket enforcement + HQ archive gate + agent lifecycle hooks)
+**Updated:** 2026-04-21 (Session 27 cont. 3 — Q3 false-positive eliminator + cascade dedup + Ant depletion forecast + protocol staleness enforcer)
+
+## Shipped today (2026-04-21 — Session 27 cont. 3)
+
+**Hyo Q3: Stale error loop — ROOT CAUSE FOUND + FIXED:**
+- `nel-qa-cycle.sh` was checking for `abStrategiesTable|loadAetherMetrics` (old function names). hq.html uses `renderAetherDashboard`. → 27x P0 false positive every cycle. Fixed grep pattern.
+- `/api/hq?action=data` returns 401 by design (auth-gated). Was being logged as failure. → 32x false positive. Fixed: accept 401 as healthy for auth-gated endpoints.
+- `/api/usage` → 404 because endpoint doesn't exist. Removed from monitored list. → 14x false positive.
+- 42 total false-positive known-issues entries resolved.
+- `dispatch.sh` — 24h dedup gate added to `cmd_flag` + `cmd_safeguard`. Every flag was creating 4 queue jobs (nel audit, sam coverage, event-driven runs, healthcheck). Now rate-limited to once per 24h per pattern.
+- `dex.sh` — Phase 4 pattern count dedup: only flags when count increases ≥5 (was firing every cycle).
+- `dex-activity-2026-04-20.jsonl` — JSONL corruption repaired (split lines merged).
+
+**Hyo Q2: Ant API credits — CONTINUOUS TRACKING:**
+- `bin/ant-update.sh` refactored: formula changed from `monthly_budget - MTD` → `scraped_remaining - spend_since_scrape_date`
+- Added: `depletion_date`, `days_until_depleted`, `burn_per_day`, `confidence`
+- Current: Anthropic $30.79 @ $0.148/day → ~Nov 2026. OpenAI $18.64 @ $0.063/day → ~Jan 2027.
+
+**Hyo Q5: Protocol staleness enforcer:**
+- `bin/protocol-staleness-check.sh` — scans all protocol files, opens P0/P1/P2 tickets by age (30/60/90d), stamps missing headers. Runs daily 09:00 MT via kai-autonomous.sh.
+
+**Hyo Q6: Aether HQ verified:**
+- aether-metrics.json: updated 12:14 MT today, dataGateStatus=PASS, 7 strategies, WinRate 73.5%
+- renderAetherDashboard exists and is fully wired. False-positive cleared.
+
+**Commit queued:** s27-commit-push-v2 (nel-qa-cycle.sh, dispatch.sh, dex.sh, ant-update.sh, protocol-staleness-check.sh, known-issues.jsonl, dex JSONL repair)
+
+---
 
 ## Shipped today (2026-04-21 — Session 27 cont.)
 

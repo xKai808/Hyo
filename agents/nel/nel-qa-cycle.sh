@@ -213,7 +213,12 @@ echo "## Phase 3: API Health" >> "$REPORT"
 echo "" >> "$REPORT"
 
 P3_FAILS=0
-API_ENDPOINTS=("/api/health" "/api/usage" "/api/hq?action=data")
+# /api/usage does not exist (no such endpoint) — removed from check
+# /api/hq?action=data returns 401 by design when no session token — auth-gated is expected, not a failure
+# Only check unauthenticated public endpoints
+API_ENDPOINTS=("/api/health")
+# Auth-gated endpoints: accept 401 as healthy
+API_ENDPOINTS_AUTHED=("/api/hq?action=data")
 
 for ep in "${API_ENDPOINTS[@]}"; do
   STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "https://www.hyo.world${ep}" 2>/dev/null || echo "000")
@@ -223,6 +228,18 @@ for ep in "${API_ENDPOINTS[@]}"; do
     echo "- \`$ep\` → $STATUS ✗" >> "$REPORT"
     P3_FAILS=$((P3_FAILS + 1))
     add_finding "P1" "api" "$ep returned HTTP $STATUS"
+  fi
+done
+
+# Auth-gated endpoints: 200 or 401 both = healthy (endpoint exists, auth required)
+for ep in "${API_ENDPOINTS_AUTHED[@]}"; do
+  STATUS=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "https://www.hyo.world${ep}" 2>/dev/null || echo "000")
+  if [[ "$STATUS" == "200" || "$STATUS" == "401" ]]; then
+    echo "- \`$ep\` → $STATUS ✓ (auth-gated)" >> "$REPORT"
+  else
+    echo "- \`$ep\` → $STATUS ✗" >> "$REPORT"
+    P3_FAILS=$((P3_FAILS + 1))
+    add_finding "P1" "api" "$ep returned unexpected HTTP $STATUS (expected 200 or 401)"
   fi
 done
 
@@ -517,7 +534,7 @@ print(len(strategies))
 
   # Verify hq.html has Aether rendering that handles current structure
   if [[ -f "$HQ_HTML" ]]; then
-    if ! grep -q "abStrategiesTable\|loadAetherMetrics" "$HQ_HTML" 2>/dev/null; then
+    if ! grep -q "renderAetherDashboard\|renderAetherAnalysis\|aether-metrics.json" "$HQ_HTML" 2>/dev/null; then
       add_finding "P0" "render" "Aether metrics JSON exists but hq.html has NO rendering code"
       P75_ISSUES=$((P75_ISSUES + 1))
     fi

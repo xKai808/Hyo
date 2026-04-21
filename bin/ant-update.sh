@@ -70,7 +70,9 @@ this_month_prefix = today.strftime("%Y-%m")
 
 # ── Load scraped credit data (real values from billing consoles) ───────────────
 # scraped-credits.json is written by: kai ant-scrape (browser automation via Cowork)
-# If exists and <48h old → real values. Otherwise → budget-based fallback.
+# Strategy: use scraped data as the BASE even if stale — then subtract spend SINCE
+# the scrape date to get a continuously-updated estimate. Never reset monthly.
+# Only fall back to budget-based if no scrape file exists at all.
 _scraped = None
 _scraped_age_h = None
 try:
@@ -78,8 +80,10 @@ try:
         _scraped = json.load(_f)
     _st = datetime.fromisoformat(_scraped["scraped_at"])
     _scraped_age_h = (datetime.now(timezone.utc) - _st.astimezone(timezone.utc)).total_seconds() / 3600
-    if _scraped_age_h > 48:
-        print(f"[ant-update] scraped-credits.json is {_scraped_age_h:.0f}h old — run 'kai ant-scrape' to refresh", file=sys.stderr)
+    if _scraped_age_h > 96:
+        print(f"[ant-update] WARNING: scraped-credits.json is {_scraped_age_h:.0f}h old. Run 'kai ant-scrape' for accuracy.", file=sys.stderr)
+    else:
+        print(f"[ant-update] scraped-credits.json age: {_scraped_age_h:.1f}h", file=sys.stderr)
 except Exception:
     _scraped = None
 
@@ -126,58 +130,120 @@ for r in records:
 mtd_anthropic = by_month_provider[this_month_prefix].get("anthropic", 0.0)
 mtd_openai    = by_month_provider[this_month_prefix].get("openai", 0.0)
 
-# ── Credits: real (scraped) → budget-based fallback ──────────────────────────
-if _scraped and _scraped_age_h is not None and _scraped_age_h <= 48:
+# ── Credits: continuous estimate — never wipe, never reset monthly ────────────
+# Formula: remaining = scraped_remaining - spend_since_scrape_date
+# This gives a CONTINUOUSLY UPDATED estimate regardless of month boundaries.
+# Burn rate: 7-day rolling average for depletion forecast.
+
+def compute_spend_since(records, scrape_date_str, provider_filter):
+    """Sum spend from api-usage.jsonl entries after scrape_date."""
+    total = 0.0
+    for r in records:
+        d = r.get("date", r.get("ts", ""))[:10]
+        if d < scrape_date_str: continue
+        p = r.get("provider", "openai" if "gpt" in r.get("model", "") else "anthropic")
+        if p == provider_filter:
+            total += float(r.get("cost_usd", r.get("estimated_cost_usd", 0.0)))
+    return total
+
+def depletion_forecast(remaining, daily_burn, provider_label):
+    """Returns (depletion_date_iso, days_left, confidence) or None if burn=0."""
+    if daily_burn <= 0 or remaining is None:
+        return None, None, "no_burn_data"
+    days_left = remaining / daily_burn
+    dep_date = (date.today() + timedelta(days=days_left)).isoformat()
+    confidence = "high" if daily_burn > 0.01 else "low"
+    return dep_date, round(days_left), confidence
+
+# Burn rate by provider (last 7 days)
+recent_7d = [(today - timedelta(days=i)).isoformat() for i in range(7)]
+burn_anthropic = sum(by_date_provider[d].get("anthropic", 0.0) for d in recent_7d) / 7
+burn_openai    = sum(by_date_provider[d].get("openai",    0.0) for d in recent_7d) / 7
+
+if _scraped:
     _ant = _scraped.get("anthropic", {})
     _oai = _scraped.get("openai", {})
-    _age_label = f"scraped {_scraped_age_h:.0f}h ago"
+    _scrape_date = _scraped.get("scraped_at", "")[:10]
+    _age_label = f"scraped {_scraped_age_h:.0f}h ago" if _scraped_age_h else "scraped"
+    _confidence = "high" if _scraped_age_h and _scraped_age_h <= 48 else "estimated"
+
+    # Continuous remaining: scraped balance minus spend since scrape
+    spend_since_ant = compute_spend_since(records, _scrape_date, "anthropic")
+    spend_since_oai = compute_spend_since(records, _scrape_date, "openai")
+    remaining_ant = max(round((_ant.get("remaining") or 0) - spend_since_ant, 4), 0)
+    remaining_oai = max(round((_oai.get("remaining") or 0) - spend_since_oai, 4), 0)
+
+    dep_date_ant, days_ant, conf_ant = depletion_forecast(remaining_ant, burn_anthropic, "anthropic")
+    dep_date_oai, days_oai, conf_oai = depletion_forecast(remaining_oai, burn_openai, "openai")
+
     credits_data = {
         "anthropic": {
-            "remaining":  _ant.get("remaining"),
-            "total":      _ant.get("total"),
-            "used":       _ant.get("used"),
-            "used_mtd":   round(mtd_anthropic, 4),
-            "expires":    _ant.get("expires"),
-            "source":     f"console.anthropic.com (screen-scraped, {_age_label})",
-            "scraped_at": _scraped.get("scraped_at"),
-            "note":       "Real account balance from Anthropic console."
+            "remaining":            remaining_ant,
+            "total":                _ant.get("total"),
+            "used_since_scrape":    round(spend_since_ant, 4),
+            "used_all_time":        round(total_anthropic, 4),
+            "used_mtd":             round(mtd_anthropic, 4),
+            "burn_per_day":         round(burn_anthropic, 4),
+            "depletion_date":       dep_date_ant,
+            "days_until_depleted":  days_ant,
+            "expires":              _ant.get("expires"),
+            "source":               f"console.anthropic.com ({_age_label}, adjusted by api-usage.jsonl)",
+            "scraped_at":           _scraped.get("scraped_at"),
+            "confidence":           _confidence,
+            "note":                 f"Remaining = scraped balance minus api-usage.jsonl spend since {_scrape_date}. Run 'kai ant-scrape' to reset baseline.",
         },
         "openai": {
-            "remaining":  _oai.get("remaining"),
-            "total":      _oai.get("total"),
-            "used":       _oai.get("used"),
-            "used_mtd":   round(mtd_openai, 4),
-            "expires":    _oai.get("expires"),
-            "source":     f"platform.openai.com (screen-scraped, {_age_label})",
-            "scraped_at": _scraped.get("scraped_at"),
-            "note":       "Real account balance from OpenAI platform."
+            "remaining":            remaining_oai,
+            "total":                _oai.get("total"),
+            "used_since_scrape":    round(spend_since_oai, 4),
+            "used_all_time":        round(total_openai, 4),
+            "used_mtd":             round(mtd_openai, 4),
+            "burn_per_day":         round(burn_openai, 4),
+            "depletion_date":       dep_date_oai,
+            "days_until_depleted":  days_oai,
+            "expires":              _oai.get("expires"),
+            "source":               f"platform.openai.com ({_age_label}, adjusted by api-usage.jsonl)",
+            "scraped_at":           _scraped.get("scraped_at"),
+            "confidence":           _confidence,
+            "note":                 f"Remaining = scraped balance minus api-usage.jsonl spend since {_scrape_date}.",
         }
     }
-    print(f"[ant-update] Real scraped credits ({_age_label}): Anthropic ${_ant.get('remaining'):.2f}/{_ant.get('total'):.2f} | OpenAI ${_oai.get('remaining'):.2f}/{_oai.get('total'):.2f}", file=sys.stderr)
+    print(f"[ant-update] Credits ({_confidence}): Anthropic ${remaining_ant:.2f} remaining (depletion: {dep_date_ant}, {days_ant}d) | OpenAI ${remaining_oai:.2f} remaining (depletion: {dep_date_oai}, {days_oai}d)", file=sys.stderr)
 else:
+    # True fallback: no scrape file at all — budget-based only
+    dep_date_ant, days_ant, _ = depletion_forecast(MONTHLY_BUDGET_ANTHROPIC - mtd_anthropic, burn_anthropic, "anthropic")
+    dep_date_oai, days_oai, _ = depletion_forecast(MONTHLY_BUDGET_OPENAI - mtd_openai, burn_openai, "openai")
     credits_data = {
         "anthropic": {
-            "monthly_budget": MONTHLY_BUDGET_ANTHROPIC,
-            "used_mtd":       round(mtd_anthropic, 4),
-            "remaining":      round(max(MONTHLY_BUDGET_ANTHROPIC - mtd_anthropic, 0), 4),
-            "total":          MONTHLY_BUDGET_ANTHROPIC,
-            "used":           round(mtd_anthropic, 4),
-            "source":         "api-usage.jsonl MTD (budget-based fallback)",
-            "note":           f"No recent scrape. Run 'kai ant-scrape' to get real balance. Fallback for {this_month_prefix}.",
-            "expires":        None
+            "monthly_budget":       MONTHLY_BUDGET_ANTHROPIC,
+            "used_mtd":             round(mtd_anthropic, 4),
+            "used_all_time":        round(total_anthropic, 4),
+            "remaining":            round(max(MONTHLY_BUDGET_ANTHROPIC - mtd_anthropic, 0), 4),
+            "total":                MONTHLY_BUDGET_ANTHROPIC,
+            "burn_per_day":         round(burn_anthropic, 4),
+            "depletion_date":       dep_date_ant,
+            "days_until_depleted":  days_ant,
+            "source":               "api-usage.jsonl (budget-based — no scrape file)",
+            "confidence":           "low",
+            "note":                 f"No scraped-credits.json found. Run 'kai ant-scrape' from Cowork to get real balance.",
+            "expires":              None
         },
         "openai": {
-            "monthly_budget": MONTHLY_BUDGET_OPENAI,
-            "used_mtd":       round(mtd_openai, 4),
-            "remaining":      round(max(MONTHLY_BUDGET_OPENAI - mtd_openai, 0), 4),
-            "total":          MONTHLY_BUDGET_OPENAI,
-            "used":           round(mtd_openai, 4),
-            "source":         "api-usage.jsonl MTD (budget-based fallback)",
-            "note":           "No recent scrape. Run 'kai ant-scrape' from Cowork.",
-            "expires":        None
+            "monthly_budget":       MONTHLY_BUDGET_OPENAI,
+            "used_mtd":             round(mtd_openai, 4),
+            "used_all_time":        round(total_openai, 4),
+            "remaining":            round(max(MONTHLY_BUDGET_OPENAI - mtd_openai, 0), 4),
+            "total":                MONTHLY_BUDGET_OPENAI,
+            "burn_per_day":         round(burn_openai, 4),
+            "depletion_date":       dep_date_oai,
+            "days_until_depleted":  days_oai,
+            "source":               "api-usage.jsonl (budget-based — no scrape file)",
+            "confidence":           "low",
+            "note":                 "Run 'kai ant-scrape' from Cowork for real balance.",
+            "expires":              None
         }
     }
-    print("[ant-update] WARNING: No fresh scraped-credits — using budget-based fallback. Run 'kai ant-scrape'.", file=sys.stderr)
+    print("[ant-update] WARNING: No scraped-credits.json — using budget-based fallback.", file=sys.stderr)
 
 # ── 14-day daily history (per provider) ──────────────────────────────────────
 # This powers the "Daily Credit Usage" stacked bar chart on HQ Ant tab.
@@ -267,9 +333,19 @@ data = {
     "updatedAt":  datetime.now(tz_mt).isoformat(),
     "dataSource": "api-usage.jsonl + aether-metrics.json",
     "staleness": {
-        "lastUpdated":     datetime.now(tz_mt).isoformat(),
-        "staleAfterHours": 24,
-        "note":            "If updatedAt is >24h ago, Ant data is stale — check ant-update.sh cron"
+        "lastUpdated":        datetime.now(tz_mt).isoformat(),
+        "staleAfterHours":    24,
+        "creditScrapedAt":    _scraped.get("scraped_at") if _scraped else None,
+        "creditScrapeAgeH":   round(_scraped_age_h, 1) if _scraped_age_h else None,
+        "creditScrapeStale":  (_scraped_age_h or 999) > 96,
+        "note":               "ant-data.json updates nightly 23:45 MT. Credits use scraped baseline + continuous api-usage.jsonl adjustment. Run 'kai ant-scrape' weekly or when credits change."
+    },
+    "credit_refresh_guide": {
+        "how_to_refresh": "kai ant-scrape (browser automation via Cowork session)",
+        "recommended_frequency": "weekly or after any credit purchase",
+        "last_scraped": _scraped.get("scraped_at") if _scraped else "never",
+        "scrape_age_hours": round(_scraped_age_h, 1) if _scraped_age_h else None,
+        "action_needed": (_scraped_age_h or 999) > 96
     },
     "alerts": alerts,
     "costs": {

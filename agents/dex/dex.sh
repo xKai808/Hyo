@@ -651,7 +651,22 @@ fi
 
 if [[ $PATTERNS_FOUND -gt 0 ]]; then
   log_activity "PHASE_4_PATTERNS" "found" "$PATTERNS_FOUND recurrent patterns detected"
-  dispatch_flag "P1" "Dex Phase 4: $PATTERNS_FOUND recurrent patterns detected — check safeguard status"
+  # DEDUP: only flag once per day when count increases by ≥5 (not every single cycle)
+  # The dispatch dedup gate also blocks same-title re-flags within 24h
+  PREV_PATTERN_COUNT=$(python3 -c "
+import json
+try:
+    with open('$ROOT/kai/ledger/dex-pattern-state.json') as f:
+        d = json.load(f)
+        print(d.get('last_count', 0))
+except: print(0)
+" 2>/dev/null || echo 0)
+  if [[ $PATTERNS_FOUND -gt $((PREV_PATTERN_COUNT + 4)) ]]; then
+    dispatch_flag "P1" "Dex Phase 4: $PATTERNS_FOUND recurrent patterns detected — increased from $PREV_PATTERN_COUNT, root-cause fix needed"
+    python3 -c "import json; open('$ROOT/kai/ledger/dex-pattern-state.json','w').write(json.dumps({'last_count':$PATTERNS_FOUND,'ts':'$NOW_ISO'}))" 2>/dev/null || true
+  else
+    log_info "Phase 4: $PATTERNS_FOUND patterns detected (no significant change from $PREV_PATTERN_COUNT — suppressing duplicate flag)"
+  fi
 else
   log_activity "PHASE_4_PATTERNS" "passed" "No recurrent patterns detected"
   log_pass "Phase 4 complete: No recurrent patterns detected"
