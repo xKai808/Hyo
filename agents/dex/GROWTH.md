@@ -208,11 +208,19 @@ Build a new checker (Phase 6: Constitution Drift Detection) that runs daily:
 
 ## Goals (self-set)
 
-1. **By 2026-04-21:** Implement Auto-Repair Phase and Corruption Remediation. Every nightly, corrupt JSONL entries are fixed or quarantined. Phase 1 status goes from FAILED to HEALTHY.
+<!-- STANDARDIZED TABLE — required by PROTOCOL_GOAL_STALENESS.md and goal-staleness-check.py -->
 
-2. **By 2026-04-28:** Root Cause Clustering Phase 4 complete. Instead of "120 patterns detected," Dex reports: "120 patterns in 5 root causes. Largest: Ra pipeline (42 issues, 35%). Actionable path: fix gather.py schema."
+| Goal | Timeframe | Target Date | Status | Last Progress |
+|------|-----------|-------------|--------|---------------|
+| Auto-repair complete — every nightly run fixes corrupt JSONL entries; Phase 1 status HEALTHY | short | 2026-05-01 | active | 2026-04-21 |
+| Root cause clustering — report 5 root causes with actionable paths, not just raw pattern count | medium | 2026-05-12 | active | 2026-04-21 |
+| Constitution drift detector — daily audit of all agent PLAYBOOKs and evolution.jsonl health | medium | 2026-05-19 | active | 2026-04-21 |
 
-3. **By 2026-05-05:** Constitution Drift Detector Phase 6 operational. Daily audit verifies all agents' PLAYBOOKs are current, ACTIVE.md is fresh, runners implement required phases, and evolution.jsonl shows growth (no dead-loops).
+**Goal 1 detail:** Auto-Repair Phase and Corruption Remediation. Every nightly, corrupt JSONL entries are fixed or quarantined. Phase 1 status goes from FAILED to HEALTHY.
+
+**Goal 2 detail:** Root Cause Clustering Phase 4 complete. Reports "5 root causes" not "120 patterns." Largest cluster actionable via Kai guidance.
+
+**Goal 3 detail:** Constitution Drift Detector Phase 6 operational. Daily audit verifies all agent PLAYBOOKs are current, ACTIVE.md is fresh, runners implement required phases.
 
 ## Growth Log
 

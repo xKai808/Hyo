@@ -1,6 +1,6 @@
 # PROTOCOL_MORNING_REPORT.md — Morning Report Protocol
 #
-# VERSION: v1.0
+# VERSION: v1.1
 # Author: Kai | Date: 2026-04-21 | Authority: Constitutional — mandatory
 # Trigger: com.hyo.morning-report launchd plist at 05:00 MT daily
 #
@@ -26,6 +26,92 @@
 # The goal: every agent in EXECUTION on at least one improvement per week.
 #
 # ============================================================================
+
+---
+
+## PART 0 — HYO_FEEDBACK META-ALGORITHM (v1.1 — CONSTITUTIONAL)
+
+**This gate runs whenever Hyo provides feedback on any product or output.**
+
+Hyo's feedback (2026-04-21): "This [the report] still reads 'stiff'. Ensure the protocol is updated to reflect these changes so it is consistently correct. This should not have to be mentioned moving forward — perhaps in the form of an algorithm? If Hyo suggests changes to a certain product, see if the protocol needs to be changed."
+
+```
+HYO_FEEDBACK_GATE — runs after any Hyo feedback on any product:
+
+GATE 1: Did Hyo suggest a change to a product or output?
+  → YES → continue to GATE 2
+  → NO  → this gate doesn't apply
+
+GATE 2: Is there a protocol governing the product Hyo mentioned?
+  → YES → update the protocol IN THE SAME SESSION before declaring work done
+  → NO  → create the protocol or add the standard to the nearest governing protocol
+
+GATE 3: Does the protocol update include an explicit standard or gate for the issue raised?
+  → YES → done — the fix will now propagate automatically on every future run
+  → NO  → the update is insufficient; a principle without a gate gets skipped
+
+RULE: Hyo should never have to mention the same issue twice.
+The first feedback is information. The protocol update is the permanent fix.
+```
+
+**Scope:** This gate applies to ALL agents, ALL products. It is documented here because the morning report was the first product where Hyo raised it — but it lives in AGENT_ALGORITHMS.md and applies system-wide.
+
+---
+
+## PART 0b — WRITING STANDARD: HOW THE MORNING REPORT READS (v1.1)
+
+**Hyo's feedback (2026-04-21):** "The report needs work as it still reads 'stiff'... needs to be readable for a human that is not an expert in that field."
+
+The morning report is read by Hyo — a CEO, not an engineer. It must be written as a human brief, not a technical log.
+
+### The standard: BLUF + inverted pyramid
+
+**BLUF** (Bottom Line Up Front): Lead with what matters. Bury the technical details.
+
+```
+WRONG (technical log style):
+  "Nel executed 3 security scans via cipher.sh. PASS: 2. FAIL: 1.
+   The failure was in supply chain audit Phase 7. No CVEs detected.
+   Improvement ticket IMP-nel-002 remains open."
+
+RIGHT (human brief style):
+  "Nel's most urgent gap: she can't detect vulnerabilities at runtime,
+   only at audit time. That blind spot is what she's building toward closing.
+   One scan failed yesterday — a supply chain check — but no active threats.
+   She's not in firefighting mode. She's building."
+```
+
+### Rules for every agent section
+
+1. **Lead with what changed** — not what ran. What's different from yesterday?
+2. **Explain the "so what"** — don't just state findings. What does it mean for Hyo?
+3. **Name the real issue** — not "tracking weakness W2" but what W2 actually is in plain English
+4. **Progress in human terms** — not "improvement_status: in_progress" but "she built X, which means Y is no longer a problem"
+5. **Max 2 technical terms per agent section** — anything requiring domain knowledge must be explained in the same sentence
+
+### Tone: like a smart colleague briefing a CEO
+
+NOT: "Ra executed Phase 3 of the ARIC cycle and gathered 47 sources across 6 entity categories."
+YES: "Ra sourced 47 pieces of research overnight. The most relevant: [specific finding]. Here's why it matters for the newsletter."
+
+NOT: "Aether P&L: +$0.12. Sessions: 3. Win rate: 67%."
+YES: "Aether had a quiet day — three small positions, all profitable. The more interesting thing: she passed on two setups that most algorithms would have taken. That discipline is what the win rate actually measures."
+
+### Executive summary standard
+
+The executive summary is the first thing Hyo reads. It must answer in plain language:
+- Is the system healthy right now? (one sentence)
+- What's the single biggest thing to know? (one sentence)
+- What should Hyo be aware of, if anything? (one sentence, or "Nothing urgent")
+
+```
+WRONG: "System online: true. Growth trajectory: expanding. Agents shipped: 2/5."
+
+RIGHT: "System is healthy and getting better — two agents shipped real improvements
+        overnight, not just research. The thing to watch: Ra's source coverage
+        dropped for the third day in a row, which will start showing up in newsletter
+        quality by end of week if not addressed."
+```
 
 ---
 
@@ -426,3 +512,4 @@ The morning report is DONE when:
 | Version | Date       | Change |
 |---------|------------|--------|
 | v1.0    | 2026-04-21 | Initial protocol. Adds 5 mandatory questions, new JSON fields, action_type classification, executive summary agent counts, 10 failure modes, HQ color table, cold start reproduction. Incorporates GPT critique verbatim. |
+| v1.1    | 2026-04-21 | HYO_FEEDBACK_GATE (Part 0): constitutional meta-algorithm — Hyo feedback → protocol update in same session, every time. WRITING STANDARD (Part 0b): BLUF + inverted pyramid, plain English, human CEO audience. "NOT this / THIS" examples for every agent section and executive summary. Max 2 technical terms per section rule. |

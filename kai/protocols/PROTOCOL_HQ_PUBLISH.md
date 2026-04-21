@@ -1,8 +1,13 @@
 # PROTOCOL_HQ_PUBLISH.md
-# Version: 1.0
+# Version: 1.1
 # Author: Kai
 # Date: 2026-04-21
 # Status: AUTHORITATIVE — every HQ publish must pass these gates
+#
+# v1.1 (2026-04-21): Added SECTION 7 — ARCHIVE REQUIREMENT. Every HQ publish must
+# also save a copy to archive/YYYY/MM/[type]/ with date-labeled filename. Hyo directive:
+# "This applies to anything published on HQ. We need to save copies into well-organized
+# folders and well-labeled files."
 
 ---
 
@@ -276,3 +281,101 @@ bash "$ROOT/bin/kai.sh" deploy  # triggers deploy hook
 - Kai owns this protocol
 - When a new report type is added, update Section 3 immediately
 - When schema changes, update Section 3 and publish-to-feed.sh validation in same commit
+
+---
+
+## SECTION 7: ARCHIVE REQUIREMENT (v1.1 — Hyo directive 2026-04-21)
+
+**Every item published to HQ must also be saved to a permanent archive folder.**
+
+Hyo's directive: "This applies to anything published on HQ. We need to save copies into well-organized folders and well-labeled files."
+
+### Archive folder structure
+
+```
+agents/
+└── [agent]/
+    └── archive/
+        └── YYYY/
+            └── MM/
+                └── [agent]-[type]-YYYY-MM-DD.[ext]
+```
+
+Examples:
+```
+agents/nel/archive/2026/04/nel-report-2026-04-21.json
+agents/ra/archive/2026/04/ra-daily-2026-04-21.md
+agents/ra/archive/2026/04/newsletter-2026-04-21.md
+agents/ra/podcasts/2026/podcast-2026-04-21.mp3       ← podcast has its own archive folder
+agents/ra/podcasts/2026/script-2026-04-21.txt
+kai/archive/2026/04/morning-report-2026-04-21.json
+kai/archive/2026/04/ceo-report-2026-04-21.md
+agents/aether/archive/2026/04/aether-analysis-2026-04-21.json
+agents/sam/archive/2026/04/sam-report-2026-04-21.json
+```
+
+### File naming convention
+
+Format: `[agent]-[type]-YYYY-MM-DD.[ext]`
+
+| Report type | Agent | Filename pattern | Extension |
+|---|---|---|---|
+| morning-report | kai | morning-report-YYYY-MM-DD.json | .json |
+| ceo-report | kai | ceo-report-YYYY-MM-DD.md | .md |
+| nel-report | nel | nel-report-YYYY-MM-DD.json | .json |
+| sam-report | sam | sam-report-YYYY-MM-DD.json | .json |
+| ra-report | ra | ra-daily-YYYY-MM-DD.md | .md |
+| newsletter | ra | newsletter-YYYY-MM-DD.md | .md |
+| podcast | ra | podcast-YYYY-MM-DD.mp3 (in podcasts/) | .mp3 |
+| aether-analysis | aether | aether-analysis-YYYY-MM-DD.json | .json |
+| aether-daily | aether | aether-daily-YYYY-MM-DD.md | .md |
+| agent-reflection | [agent] | [agent]-reflection-YYYY-MM-DD.json | .json |
+
+### Archive gate (runs as part of the post-publish step)
+
+```
+ARCHIVE GATE — added to publish-to-feed.sh or each agent runner:
+
+GATE A1: After successful publish to feed.json, was an archive copy written?
+  → Location: agents/[agent]/archive/YYYY/MM/[filename]
+  → YES → continue
+  → NO  → write archive copy now; do NOT mark publish as complete without it
+
+GATE A2: Does the archive filename include the date?
+  → YES: [agent]-[type]-YYYY-MM-DD.[ext] → OK
+  → NO  → rename before saving
+
+GATE A3: Was the archive directory created (mkdir -p) if it doesn't exist?
+  → YES → OK
+  → NO  → create it; never fail silently
+```
+
+### Implementation in each agent runner
+
+Each runner's publish phase must include an archive step:
+
+```bash
+# Archive after successful publish (add to each agent runner)
+YEAR=$(date +%Y)
+MONTH=$(date +%m)
+DATE=$(date +%Y-%m-%d)
+ARCHIVE_DIR="$ROOT/agents/$AGENT/archive/$YEAR/$MONTH"
+mkdir -p "$ARCHIVE_DIR"
+
+# Copy the output to archive with date-labeled filename
+cp "$REPORT_FILE" "$ARCHIVE_DIR/${AGENT}-${REPORT_TYPE}-${DATE}.${EXT}"
+echo "[archive] Saved: $ARCHIVE_DIR/${AGENT}-${REPORT_TYPE}-${DATE}.${EXT}"
+```
+
+### What the archive is NOT
+
+- The archive is NOT the live feed (that's `website/data/feed.json`)
+- The archive is NOT the working output dir (that's `agents/[agent]/logs/` or `output/`)
+- The archive does NOT replace the dual-path publish — both still required
+- Archive write failure does NOT block the publish — log WARN and continue
+
+### Archive is permanent — do not auto-delete
+
+Archive files are never auto-deleted. They are the complete historical record of everything published to HQ.
+Manual archival review happens during PROTOCOL_SYSTEM_MAINTENANCE.md redundancy audits.
+The only deletion of archive files requires explicit Hyo approval.

@@ -190,11 +190,19 @@ Addresses W3
 
 ## Goals (self-set)
 
-1. **By 2026-04-21:** Implement Performance Baseline + Regression Detection. Deploy post-deploy Lighthouse checks. Catch first regression automatically.
+<!-- STANDARDIZED TABLE — required by PROTOCOL_GOAL_STALENESS.md and goal-staleness-check.py -->
 
-2. **By 2026-04-28:** Persistent Storage Migration complete. Vercel KV wired for HQ state, founder tokens, subscriber records. Verify data persists across cold starts.
+| Goal | Timeframe | Target Date | Status | Last Progress |
+|------|-----------|-------------|--------|---------------|
+| Implement performance baseline + regression detection — post-deploy Lighthouse checks wired | short | 2026-05-01 | active | 2026-04-21 |
+| Persistent storage migration — Vercel KV for HQ state, founder tokens, subscriber records | medium | 2026-05-12 | active | 2026-04-21 |
+| Structured error logging + monitoring endpoint — all endpoints have try/catch + error dashboard | medium | 2026-05-19 | active | 2026-04-21 |
 
-3. **By 2026-05-05:** Structured Error Logging + Monitoring Endpoint live. All API endpoints have try/catch + structured logs. Error dashboard on HQ shows real-time error rate and recent failures.
+**Goal 1 detail:** Performance Baseline + Regression Detection. Deploy post-deploy Lighthouse checks. Catch first regression automatically.
+
+**Goal 2 detail:** Persistent Storage Migration complete. Vercel KV wired for HQ state, founder tokens, subscriber records. Verify data persists across cold starts.
+
+**Goal 3 detail:** Structured Error Logging + Monitoring Endpoint live. All API endpoints have try/catch + structured logs. Error dashboard on HQ shows real-time error rate and recent failures.
 
 ## Growth Log
 

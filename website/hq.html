@@ -1660,57 +1660,82 @@ function renderMorningReport(s) {
 
 function renderNewsletter(s, report) {
   let html = '';
-  const summary = s.summary || s.headline || report.title || '';
-  const topics = s.topics || [];
+  const summary  = s.summary || s.headline || report.title || '';
+  const stories  = s.stories || [];   // structured story array (v2 format)
+  const topics   = s.topics || [];
   const readLink = s.readLink || report.readLink || '';
 
-  // Render summary: split pipe-separated items into clean bullets,
-  // or show as a plain paragraph if no pipes present
+  // ── BLUF summary at top — always shown first ──────────────────────────────
   if (summary) {
+    html += `<p style="color:var(--text-primary);font-size:0.97em;font-weight:500;margin:0 0 14px;line-height:1.5;">${summary}</p>`;
+  }
+
+  // ── Structured stories (v2 feed format — sections.stories array) ──────────
+  if (stories.length > 0) {
+    html += `<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:14px;">`;
+    stories.forEach((story, i) => {
+      const title = story.title || '';
+      const take  = story.take  || '';
+      const watch = story.watch || '';
+      const cat   = story.category || '';
+      const catColors = {
+        tech: '#4a9eff', ai: '#9b59b6', macro: '#e67e22',
+        crypto: '#f39c12', politics: '#e74c3c', science: '#2ecc71',
+      };
+      const catColor = catColors[cat] || 'var(--text-muted)';
+      html += `<div style="background:var(--bg-secondary);border-radius:8px;padding:12px 14px;border-left:3px solid ${catColor};">`;
+      if (title) {
+        html += `<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px;">`;
+        html += `<span style="font-size:0.78em;color:${catColor};font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">${cat || 'story'}</span>`;
+        html += `<strong style="color:var(--text-primary);font-size:0.95em;">${title}</strong>`;
+        html += `</div>`;
+      }
+      if (take) {
+        html += `<p style="color:var(--text-secondary);font-size:0.88em;margin:0 0 6px;line-height:1.55;">${take}</p>`;
+      }
+      if (watch) {
+        html += `<p style="color:var(--text-muted);font-size:0.82em;margin:0;font-style:italic;">Watch: ${watch}</p>`;
+      }
+      html += `</div>`;
+    });
+    html += `</div>`;
+  } else if (!stories.length) {
+    // Legacy fallback: pipe-separated summary → bullet list
     const items = summary.split('|').map(t => t.trim()).filter(Boolean);
     if (items.length > 1) {
       const bullets = items.map(item => {
-        // Bold the label before the first colon if present (e.g. "AI Advancements: ...")
         const colonIdx = item.indexOf(':');
         if (colonIdx > 0 && colonIdx < 40) {
           const label = item.slice(0, colonIdx).trim();
-          const rest = item.slice(colonIdx + 1).trim();
-          return `<li><strong style="color:var(--text-primary)">${label}</strong> — ${rest}</li>`;
+          const rest  = item.slice(colonIdx + 1).trim();
+          return `<li style="margin-bottom:6px;"><strong style="color:var(--text-primary)">${label}</strong> — ${rest}</li>`;
         }
-        return `<li>${item}</li>`;
+        return `<li style="margin-bottom:6px;">${item}</li>`;
       }).join('');
-      html += sec('Today', `<ul style="list-style:none;padding:0;margin:0">${bullets}</ul>`);
-    } else {
-      html += sec('Today', `<p>${summary}</p>`);
+      html += sec('Stories', `<ul style="list-style:none;padding:0;margin:0">${bullets}</ul>`);
     }
   }
 
+  // ── Topic chips ───────────────────────────────────────────────────────────
   if (topics.length) {
-    html += `<div class="newsletter-topics" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 8px;">`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 10px;">`;
     topics.forEach(t => {
-      html += `<span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:3px 10px;border-radius:12px;font-size:0.8em;">${t}</span>`;
+      html += `<span style="background:var(--bg-tertiary);color:var(--text-secondary);padding:3px 10px;border-radius:12px;font-size:0.78em;">${t}</span>`;
     });
     html += `</div>`;
   }
 
-  // Full content inline — no click-to-expand gate (Hyo directive)
-  if (s.story) {
-    html += sec('The Story', `<p>${s.story}</p>`);
-  }
-  if (s.alsoMoving) {
-    html += sec('Also Moving', `<p>${s.alsoMoving}</p>`);
-  }
-  if (s.lab) {
-    html += sec('The Lab', `<p>${s.lab}</p>`);
-  }
-  if (s.reflection) {
-    html += sec('Worth Sitting With', `<p style="font-style:italic;color:var(--text-secondary);">${s.reflection}</p>`);
-  }
+  // ── Legacy section fields (kept for backward compat) ─────────────────────
+  if (s.story)      html += sec('The Story', `<p>${s.story}</p>`);
+  if (s.alsoMoving) html += sec('Also Moving', `<p>${s.alsoMoving}</p>`);
+  if (s.lab)        html += sec('The Lab', `<p>${s.lab}</p>`);
+  if (s.reflection) html += sec('Worth Sitting With', `<p style="font-style:italic;color:var(--text-secondary);">${s.reflection}</p>`);
 
+  // ── Read full newsletter link ─────────────────────────────────────────────
   if (readLink) {
-    html += `<div style="padding:12px 0 4px;">
+    html += `<div style="padding:10px 0 4px;">
       <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-weight:500;text-decoration:none;font-size:0.85em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-        View full brief <span style="font-size:1.1em;">→</span>
+        Read full brief <span style="font-size:1.1em;">→</span>
       </a>
     </div>`;
   }

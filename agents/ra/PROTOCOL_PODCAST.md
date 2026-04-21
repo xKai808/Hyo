@@ -1,7 +1,7 @@
 # PROTOCOL_PODCAST.md
 # Vale — Daily Morning Brief Protocol
 #
-# VERSION: 1.2
+# VERSION: 1.3
 # Author: Kai | Created: 2026-04-19
 # Canonical location: agents/ra/PROTOCOL_PODCAST.md
 #
@@ -22,6 +22,13 @@
 #                      file paths, and verification checklist for any agent with
 #                      wiped memory; Ra authorship section (Part 12) — feed entry
 #                      must show author="Ra", authorColor="#b49af0"
+#   v1.3 (2026-04-21): TTS CHUNKING FIX (POD-F-015) — OpenAI gpt-4o-mini-tts silently
+#                      truncates input beyond ~4096 chars. Scripts are ~10k chars.
+#                      Fix: chunk_script_for_tts() splits at sentence boundaries into
+#                      ≤3800-char pieces; each chunk TTS-processed; MP3s binary-concatenated.
+#                      ARCHIVE: every podcast saved to agents/ra/podcasts/YYYY/ (MP3 + script).
+#                      TONE STANDARD: added "NOT THIS" examples for grade-school reading style.
+#                      WRITING GATE: script must pass 3-sentence depth test before TTS.
 
 ---
 
@@ -285,6 +292,117 @@ print('Feed OK' if f'podcast-${DATE}' in ids else 'FAIL: missing from feed')
 
 ---
 
+## PART 5b — TTS CHUNKING (POD-F-015 FIX — mandatory since v1.3)
+
+**Root cause:** OpenAI `gpt-4o-mini-tts` silently truncates input beyond ~4096 characters.
+A 1,400-word expanded script is approximately 9,000–10,000 characters.
+**Symptom:** Podcast stops playing after ~60 seconds. Script was complete; TTS only processed the first ~600 words.
+**This was observed 3 consecutive recordings before being diagnosed and fixed.**
+
+### The fix (in `bin/podcast.py` since v1.3)
+
+```python
+TTS_CHUNK_MAX_CHARS = 3800  # Safely under the 4096 char API limit
+
+def chunk_script_for_tts(script, max_chars=3800):
+    """Split at sentence boundaries. Binary-concatenate resulting MP3s."""
+```
+
+The `call_openai_tts()` function now:
+1. Calls `chunk_script_for_tts(script)` — splits at `. `, `? `, `! `, `— ` boundaries
+2. Calls OpenAI TTS **once per chunk** (each chunk ≤ 3800 chars)
+3. Saves each chunk to `<output_path>.chunk{N}.mp3` (temp files)
+4. Binary-concatenates all chunks → final MP3 (MP3 is frame-based; concatenation is valid)
+5. Deletes temp chunk files
+
+**Gate (POD-F-015):** Before every TTS call — is the script > 3800 chars?
+→ YES → chunking is mandatory. `chunk_script_for_tts()` handles this automatically.
+→ NO → single call, no change.
+
+**Verify chunking ran:**
+```bash
+# After a run, check the log for "Script chunked:"
+grep "Script chunked" agents/sam/logs/podcast.log | tail -3
+# Expected: "Script chunked: 9847 chars → 3 TTS chunks (avg 3282 chars each)"
+```
+
+---
+
+## PART 5c — ARCHIVE (mandatory since v1.3)
+
+**Every podcast — regardless of outcome — is archived in `agents/ra/podcasts/`.**
+This is separate from the dual-path HQ publish paths.
+
+### Archive structure
+
+```
+agents/ra/podcasts/
+└── YYYY/
+    ├── podcast-YYYY-MM-DD.mp3    ← copy of the MP3 after successful TTS
+    └── script-YYYY-MM-DD.txt     ← copy of the expanded script
+```
+
+**Why:** HQ feed.json only keeps recent entries. The archive is the permanent record.
+Hyo can review any prior morning brief — both the audio and the written script.
+
+**Archive happens automatically** in `podcast.py` after dual-path sync succeeds.
+No manual step required. If archive fails (disk issue), it logs a WARN — it does NOT
+block the publish, since the HQ paths are the live consumer.
+
+**Verify archive is growing:**
+```bash
+ls -lh agents/ra/podcasts/$(date +%Y)/
+# Expected: podcast-YYYY-MM-DD.mp3 and script-YYYY-MM-DD.txt for each day
+```
+
+---
+
+## PART 5d — TONE STANDARD: WHAT VALE IS NOT (v1.3)
+
+Hyo's feedback (2026-04-21): "The podcast sounds too much like a book being read to a grade school student."
+
+Vale speaks to an intelligent adult who wants substance, not a reading of notes. The expansion prompt and script review must enforce this.
+
+### NOT THIS (grade-school reading style)
+
+```
+WRONG: "Today, Nel did three security scans. She found two issues. The issues were resolved.
+        This is important because security keeps the system safe."
+
+WRONG: "Aether made some trades today. The trades were good. Aether is doing well.
+        We should watch what happens next."
+
+WRONG: "Good morning! Today is Tuesday. Let me tell you about what happened.
+        First, let's talk about Nel. Nel is the security agent..."
+```
+
+### THIS (Vale's actual voice)
+
+```
+RIGHT: "Nel is chasing something specific this week — a class of dependency vulnerability
+       she can detect at audit time but not at runtime. That gap is real. She's building
+       toward closing it. That's the difference between a scanner and a sentinel."
+
+RIGHT: "The market gave Aether a muddy read yesterday — mixed signals, no clean entry.
+       She held. That's the discipline. Most algorithms would have made something up.
+       She waited for clarity that never came, and that was the correct call."
+```
+
+### The 3-sentence depth test (run before TTS)
+
+After GPT expansion, read any three consecutive sentences from the agent sections.
+If all three could appear in a children's science textbook, the expansion failed.
+Re-run with a stronger directive or manually rewrite before sending to TTS.
+
+Specifically — if the script contains ANY of these patterns, it needs rewriting:
+- Three sentences in a row averaging under 10 words each (too choppy/simple)
+- Subject-verb-object with no subordinate clauses in 5+ consecutive sentences
+- "This is important because..." (explains rather than implies)
+- "Let's talk about..." (narration of narration — Vale is already talking)
+- Starting more than 2 consecutive sentences with the same subject noun
+
+---
+
 ## PART 6 — SCHEDULE
 
 | Job                          | Time (MT) | Plist                                    |
@@ -326,6 +444,7 @@ to the output before committing. Voice changes require Hyo approval.
 | 1.0     | 2026-04-19 | Initial protocol. GPT expansion upgraded gpt-4o-mini → gpt-4o. Voice spec locked. |
 | 1.1     | 2026-04-19 | Bankless/informative-first editorial model. Hard gate in podcast.py (exit 1). Deterministic script path (agents/ra/output/script-DATE.txt). Aether always included (zero-skip removed). Telegram alerts wired (gate fail, TTS fail, dual-path, push fail). [pause] markers removed from spec. Minimum content threshold. |
 | 1.2     | 2026-04-19 | Cold-start reproduction section (Part 11) — full 6-step guide for any agent with wiped memory. Ra authorship section (Part 12) — podcast must appear under Ra (author="Ra", authorColor="#b49af0"), canonical agent color table. |
+| 1.3     | 2026-04-21 | TTS chunking fix (POD-F-015): chunk_script_for_tts() splits scripts at sentence boundaries into ≤3800-char pieces; binary MP3 concatenation. Archive: agents/ra/podcasts/YYYY/ for every podcast. Tone standard (Part 5d): "NOT THIS" examples, 3-sentence depth test. New failure modes POD-F-015/016/017. |
 
 ---
 
@@ -347,6 +466,9 @@ to the output before committing. Voice changes require Hyo approval.
 | POD-F-012 | 0 data sources available at 06:05 MT                | Hard block: Telegram alert sent, exit 1. Check if Ra and morning report runs completed. |
 | POD-F-013 | Podcast sounds like entertainment instead of information | Is GPT_EXPAND_PROMPT using the Bankless/informative-first model? Read Part 3. |
 | POD-F-014 | Aether section missing from podcast                 | The zero-P&L skip has been removed (v1.1). Always includes Aether. If missing, check build_podcast_script(). |
+| POD-F-015 | Podcast stops at ~60 seconds — TTS input truncated  | Was script >3800 chars? chunking is mandatory. Check log for "Script chunked:" — if absent, chunking didn't run. |
+| POD-F-016 | Podcast sounds like grade-school reading — too simple | Run 3-sentence depth test (Part 5d). GPT expansion may have used wrong prompt or gpt-4o-mini. Check GPT_EXPAND_MODEL = "gpt-4o". |
+| POD-F-017 | No archive copy saved after podcast runs            | Check agents/ra/podcasts/YYYY/ exists. Archive happens post-sync — if TTS or sync failed, archive won't run. |
 
 ---
 

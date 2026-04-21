@@ -18,6 +18,41 @@ Every agent also has a PLAYBOOK.md they OWN and can self-modify. The constitutio
 
 ---
 
+## HYO_FEEDBACK_GATE (2026-04-21 — Constitutional)
+
+**This gate fires whenever Hyo provides feedback on any product, output, or behavior.**
+It is not optional. It is not a suggestion. It runs before closing any task where Hyo spoke.
+
+```
+HYO_FEEDBACK_GATE:
+
+GATE 1: Did Hyo give feedback or suggest a change to any product or output this session?
+  → YES → continue
+  → NO  → gate not triggered
+
+GATE 2: Is there a protocol governing the product/behavior Hyo mentioned?
+  → YES → GATE 3
+  → NO  → create the protocol section or standard now, before session ends
+
+GATE 3: Does the update add a specific gate or standard that prevents the issue recurring?
+  → YES → done (the protocol now enforces what Hyo said, automatically, every run)
+  → NO  → insufficient — a note without a gate gets ignored on next run; add the gate
+
+GATE 4: Is the protocol update committed to the repo?
+  → YES → done
+  → NO  → commit before ending session
+
+RULE: Hyo should never repeat the same feedback twice.
+The first mention is information. The protocol update is the permanent fix.
+If Hyo mentions it a second time, that is a protocol failure — Kai's failure, not Hyo's.
+```
+
+**Scope:** All agents. All products. Every piece of Hyo feedback triggers this gate.
+**When to run:** Immediately after understanding Hyo's feedback — before any implementation.
+**Evidence of completion:** The protocol governing the product has a new section, gate, or standard, and that change is committed.
+
+---
+
 ## ALGORITHM-FIRST ARCHITECTURE (2026-04-21 — Constitutional Addition)
 
 **Rules enforce what already exists. Rules alone are not enough.**

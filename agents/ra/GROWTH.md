@@ -194,11 +194,21 @@ Addresses W3
 
 ## Goals (self-set)
 
-1. **By 2026-04-21:** Implement Source Health Monitoring Phase 0. Validate all 15 sources before each gather. Disable any source that scores <20 for 3 consecutive days. Publish health status to HQ.
+<!-- STANDARDIZED TABLE — required by PROTOCOL_GOAL_STALENESS.md and goal-staleness-check.py -->
+<!-- Format: short=overdue if >3d, medium=stale if no progress >14d, long=stale if no progress >30d -->
 
-2. **By 2026-04-28:** Complete Quality Scoring Phase 4.5 and publish first quality scorecard with HQ. Hyo can see diversity, freshness, length, and uniqueness metrics for each newsletter.
+| Goal | Timeframe | Target Date | Status | Last Progress |
+|------|-----------|-------------|--------|---------------|
+| Ship source health monitoring — validate all 15 sources before each gather, disable failing sources | short | 2026-05-01 | active | 2026-04-21 |
+| Complete quality scorecard — diversity, freshness, length, uniqueness metrics visible on HQ | medium | 2026-05-12 | active | 2026-04-21 |
+| Integrate 5 new sources for gap topics (culture, sports, arts) — 2+ sources per topic all 30 | long | 2026-06-01 | active | 2026-04-21 |
 
-3. **By 2026-05-12:** Research and integrate 5 new sources for gap topics (culture, sports, arts). Run coverage matrix validation. Achieve 2+ sources per topic across all 30 topics.
+<!-- Free-text goal notes (for context — authoritative tracking is the table above) -->
+**Goal 1 detail:** Source Health Monitoring Phase 0. Validate all 15 sources before each gather. Disable any source that scores <20 for 3 consecutive days. Publish health status to HQ.
+
+**Goal 2 detail:** Quality Scoring Phase 4.5 and first quality scorecard on HQ. Hyo can see diversity, freshness, length, and uniqueness metrics for each newsletter.
+
+**Goal 3 detail:** Research and integrate 5 new sources for gap topics (culture, sports, arts). Run coverage matrix validation. Achieve 2+ sources per topic across all 30 topics.
 
 ## Growth Log
 

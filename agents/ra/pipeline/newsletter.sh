@@ -147,18 +147,52 @@ import json, re, sys, os, subprocess
 md_path, date, feed_git, feed_live = sys.argv[1:5]
 with open(md_path) as f:
     text = f.read()
-entities = re.findall(r'name:\s+"([^"]+)"', text)
-takes    = re.findall(r'take:\s+"([^"]+)"', text)
-summary  = " | ".join(f"{e}: {t}" for e, t in zip(entities[:3], takes[:3])) or "Today's tech and market intelligence."
-topics   = list(dict.fromkeys(re.findall(r'name:\s+"([^"]+)"', text)))[:6]
+
+# Parse structured entity data from YAML frontmatter
+# Each entity has: name, take, hinge, confidence, category
+entities_raw = re.findall(r'name:\s+"([^"]+)"', text)
+takes_raw    = re.findall(r'take:\s+"([^"]+)"', text)
+hinges_raw   = re.findall(r'hinge:\s+"([^"]+)"', text)
+cats_raw     = re.findall(r'category:\s+(\S+)', text)
+confs_raw    = re.findall(r'confidence:\s+(\S+)', text)
+
+# Build structured story objects for top 5 entities
+stories = []
+for i, name in enumerate(entities_raw[:5]):
+    stories.append({
+        "title": name,
+        "take":  takes_raw[i] if i < len(takes_raw) else "",
+        "watch": hinges_raw[i] if i < len(hinges_raw) else "",
+        "category": cats_raw[i] if i < len(cats_raw) else "",
+    })
+
+# BLUF summary: count + top story lead
+story_count = len(entities_raw)
+top_story = entities_raw[0] if entities_raw else "today's briefing"
+bluf = f"{story_count} stories this morning, led by {top_story}." if stories else "Today's tech and market intelligence."
+
+topics = list(dict.fromkeys(entities_raw))[:6]
+
 now = subprocess.check_output(["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],text=True).strip()
+
 # readLink uses /daily/newsletter-DATE — bare YYYY-MM-DD causes Vercel 404 (SE-019)
-entry = {"id": f"newsletter-ra-{date}", "type": "newsletter",
-         "title": f"Aurora Daily Brief — {date}", "author": "Ra",
-         "authorIcon": "📰", "authorColor": "#b49af0",
-         "timestamp": now, "date": date,
-         "sections": {"summary": summary[:500], "topics": topics,
-                      "readLink": f"/daily/newsletter-{date}"}}
+entry = {
+    "id": f"newsletter-ra-{date}",
+    "type": "newsletter",
+    "title": f"Aurora Daily Brief — {date}",
+    "author": "Ra",
+    "authorIcon": "📰",
+    "authorColor": "#b49af0",
+    "timestamp": now,
+    "date": date,
+    "sections": {
+        "summary": bluf,          # BLUF sentence — shown at top of expanded card
+        "stories": stories,       # Structured story list for HQ card rendering
+        "topics": topics,         # Topic chips (entity names)
+        "readLink": f"/daily/newsletter-{date}"  # Full newsletter HTML
+    }
+}
+
 for path in [feed_git, feed_live]:
     if not os.path.exists(path):
         continue
@@ -170,7 +204,7 @@ for path in [feed_git, feed_live]:
     d["lastUpdated"] = now
     with open(path, "w") as f:
         json.dump(d, f, ensure_ascii=False, indent=2)
-print(f"[feed] published {entry['id']}")
+print(f"[feed] published {entry['id']} ({story_count} stories)")
 PYPUB
   [[ $? -ne 0 ]] && echo "[$STAMP] WARNING: feed publish failed" >&2
 

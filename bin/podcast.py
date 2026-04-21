@@ -542,11 +542,60 @@ def _log_api_cost(script: str, size_kb: int):
         log(f"WARN: Could not log cost: {e}")
 
 
+TTS_CHUNK_MAX_CHARS = 3800  # OpenAI TTS input limit is ~4096 chars; stay safely under
+
+
+def chunk_script_for_tts(script: str, max_chars: int = TTS_CHUNK_MAX_CHARS) -> list[str]:
+    """
+    Split a podcast script into TTS-safe chunks at sentence boundaries.
+
+    WHY THIS EXISTS:
+    OpenAI's gpt-4o-mini-tts silently truncates input beyond ~4096 characters.
+    A 1,400-word script is ~9,000 characters — the TTS stops at ~60 seconds
+    because only the first chunk (~600 words) is processed.
+
+    FIX: Split at sentence boundaries ('. ', '? ', '! ', '— ') so each chunk
+    is ≤ max_chars. MP3 chunks are binary-concatenated afterward.
+
+    POD-F-015 gate: "Was the script chunked before TTS? YES for scripts >3800 chars."
+    """
+    if len(script) <= max_chars:
+        return [script]
+
+    # Split on sentence-ending boundaries, preserving the delimiter
+    sentence_endings = re.compile(r'(?<=[.!?—])\s+')
+    sentences = sentence_endings.split(script)
+
+    chunks = []
+    current_chunk = ""
+
+    for sentence in sentences:
+        # If adding this sentence would exceed limit, flush current chunk
+        candidate = (current_chunk + " " + sentence).strip() if current_chunk else sentence
+        if len(candidate) > max_chars and current_chunk:
+            chunks.append(current_chunk.strip())
+            current_chunk = sentence
+        else:
+            current_chunk = candidate
+
+    if current_chunk.strip():
+        chunks.append(current_chunk.strip())
+
+    log(f"Script chunked: {len(script)} chars → {len(chunks)} TTS chunks "
+        f"(avg {len(script)//max(len(chunks),1)} chars each)")
+    return chunks
+
+
 def call_openai_tts(script: str, output_path: str, voice: str = TTS_VOICE, dry_run: bool = False) -> bool:
-    """Call OpenAI TTS API and save MP3."""
+    """
+    Call OpenAI TTS API and save MP3.
+
+    CHUNKING: Scripts longer than TTS_CHUNK_MAX_CHARS are split into multiple
+    TTS calls and the resulting MP3 chunks are binary-concatenated. This is the
+    fix for the >60-second truncation bug (POD-F-015).
+    """
     if dry_run:
         log(f"[DRY RUN] Would call TTS for {len(script)} chars → {output_path}")
-        # Write a placeholder file so the pipeline can continue
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "wb") as f:
             f.write(b"ID3")  # Minimal placeholder
@@ -561,25 +610,64 @@ def call_openai_tts(script: str, output_path: str, voice: str = TTS_VOICE, dry_r
         import openai
         client = openai.OpenAI(api_key=api_key)
 
-        log(f"Calling OpenAI TTS: model={TTS_MODEL}, voice={voice}, chars={len(script)}")
+        chunks = chunk_script_for_tts(script)
+        log(f"Calling OpenAI TTS: model={TTS_MODEL}, voice={voice}, "
+            f"total_chars={len(script)}, chunks={len(chunks)}")
 
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
-        # Build TTS kwargs — gpt-4o-mini-tts supports 'instructions' for voice steering
-        tts_kwargs = {
-            "model": TTS_MODEL,
-            "voice": voice,
-            "input": script,
-            "response_format": "mp3",
-        }
-        if TTS_MODEL == "gpt-4o-mini-tts":
-            tts_kwargs["instructions"] = VALE_INSTRUCTIONS
+        if len(chunks) == 1:
+            # Single chunk — direct write, no temp files needed
+            tts_kwargs = {
+                "model": TTS_MODEL,
+                "voice": voice,
+                "input": chunks[0],
+                "response_format": "mp3",
+            }
+            if TTS_MODEL == "gpt-4o-mini-tts":
+                tts_kwargs["instructions"] = VALE_INSTRUCTIONS
 
-        with client.audio.speech.with_streaming_response.create(**tts_kwargs) as response:
-            response.stream_to_file(output_path)
+            with client.audio.speech.with_streaming_response.create(**tts_kwargs) as response:
+                response.stream_to_file(output_path)
+        else:
+            # Multi-chunk: write each to temp, then concatenate
+            chunk_paths = []
+            for i, chunk in enumerate(chunks):
+                tmp_path = output_path + f".chunk{i}.mp3"
+                tts_kwargs = {
+                    "model": TTS_MODEL,
+                    "voice": voice,
+                    "input": chunk,
+                    "response_format": "mp3",
+                }
+                if TTS_MODEL == "gpt-4o-mini-tts":
+                    tts_kwargs["instructions"] = VALE_INSTRUCTIONS
+
+                log(f"TTS chunk {i+1}/{len(chunks)}: {len(chunk)} chars → {tmp_path}")
+                with client.audio.speech.with_streaming_response.create(**tts_kwargs) as response:
+                    response.stream_to_file(tmp_path)
+
+                chunk_size = os.path.getsize(tmp_path)
+                log(f"Chunk {i+1} complete: {chunk_size // 1024}KB")
+                chunk_paths.append(tmp_path)
+
+            # Concatenate all MP3 chunks into final output
+            # MP3 is frame-based: binary concatenation produces a valid playable file
+            log(f"Concatenating {len(chunk_paths)} MP3 chunks → {output_path}")
+            with open(output_path, "wb") as out:
+                for cp in chunk_paths:
+                    with open(cp, "rb") as f:
+                        out.write(f.read())
+
+            # Clean up temp chunks
+            for cp in chunk_paths:
+                try:
+                    os.remove(cp)
+                except Exception:
+                    pass
 
         size_kb = os.path.getsize(output_path) // 1024
-        log(f"TTS complete: {output_path} ({size_kb}KB)")
+        log(f"TTS complete: {output_path} ({size_kb}KB, {len(chunks)} chunk(s))")
 
         # Log API cost to api-usage.jsonl (Ant tracks this)
         _log_api_cost(script, size_kb)
@@ -876,6 +964,28 @@ def main():
             msg = f"DUAL-PATH FAIL {date_str}: mirror MP3 missing after sync"
             log(f"WARN: {msg}")
             send_telegram_alert(msg)
+
+    # ── Archive podcast to agents/ra/podcasts/ (Hyo directive 2026-04-21) ────────
+    # Every podcast is permanently archived with date-labeled filename.
+    # Folder: agents/ra/podcasts/YYYY/podcast-YYYY-MM-DD.mp3
+    # Script: agents/ra/podcasts/YYYY/script-YYYY-MM-DD.txt
+    if not args.dry_run and os.path.exists(mp3_primary):
+        year = date_str[:4]
+        archive_dir = Path(HYO_ROOT) / f"agents/ra/podcasts/{year}"
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        archive_mp3 = archive_dir / f"podcast-{date_str}.mp3"
+        archive_script = archive_dir / f"script-{date_str}.txt"
+        try:
+            shutil.copy2(mp3_primary, archive_mp3)
+            log(f"Archived MP3: {archive_mp3}")
+        except Exception as e:
+            log(f"WARN: Archive MP3 failed: {e}")
+        if os.path.exists(script_path):
+            try:
+                shutil.copy2(script_path, archive_script)
+                log(f"Archived script: {archive_script}")
+            except Exception as e:
+                log(f"WARN: Archive script failed: {e}")
 
     # Update feed.json
     feed_ok = update_feed(date_str, f"~{est_minutes} min")

@@ -191,11 +191,19 @@ Nel research phase builds a local cache:
 
 ## Goals (self-set)
 
-1. **By 2026-04-21:** Implement Adaptive Sentinel escalation (threshold 3 failures) so repeated issues auto-generate investigation reports instead of being flagged redundantly.
+<!-- STANDARDIZED TABLE — required by PROTOCOL_GOAL_STALENESS.md and goal-staleness-check.py -->
 
-2. **By 2026-04-28:** Build and test Dependency Audit Pipeline against real package.json + requirements.txt. Have first vulnerability report shipped to HQ showing all packages and their CVE status.
+| Goal | Timeframe | Target Date | Status | Last Progress |
+|------|-----------|-------------|--------|---------------|
+| Adaptive sentinel escalation — 3-failure threshold triggers investigation report, not repeat flag | short | 2026-05-01 | active | 2026-04-21 |
+| Dependency audit pipeline — first vulnerability report shipped showing all packages + CVE status | medium | 2026-05-12 | active | 2026-04-21 |
+| Local intelligence cache — research source failures in sandbox don't leave Nel blind | medium | 2026-05-19 | active | 2026-04-21 |
 
-3. **By 2026-05-05:** Complete Local Intelligence Cache so research sources that fail in sandbox don't leave Nel blind. Cache visible in reports with freshness metadata.
+**Goal 1 detail:** Adaptive Sentinel escalation (threshold 3 failures) so repeated issues auto-generate investigation reports instead of being flagged redundantly.
+
+**Goal 2 detail:** Build and test Dependency Audit Pipeline against real package.json + requirements.txt. First vulnerability report shipped to HQ showing all packages and their CVE status.
+
+**Goal 3 detail:** Complete Local Intelligence Cache so research sources that fail in sandbox don't leave Nel blind. Cache visible in reports with freshness metadata.
 
 ## Growth Log
 
