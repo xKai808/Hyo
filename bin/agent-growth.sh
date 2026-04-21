@@ -33,9 +33,28 @@ check_aric_day() {
 
   # ARIC runs daily for every agent. No exceptions. No day-of-week gating.
   local marker="$aric_marker_dir/aric-trigger-$aric_date"
-  if [[ ! -f "$marker" ]]; then
-    growth_log "$agent" "ARIC trigger: daily full research cycle (Phases 1-7)"
-    touch "$marker"
+  local findings="$aric_marker_dir/findings-$aric_date.md"
+
+  # Gate: has research already run today? (marker + findings file both must exist)
+  if [[ -f "$marker" && -f "$findings" ]]; then
+    growth_log "$agent" "ARIC: research already complete for $aric_date — skipping"
+    return 0
+  fi
+
+  growth_log "$agent" "ARIC trigger: daily full research cycle (Phases 1-7)"
+  touch "$marker"
+
+  # Actually invoke agent-research.sh — this is the fix for the ARIC enforcement gap
+  local research_script="$HYO_ROOT/bin/agent-research.sh"
+  if [[ -x "$research_script" ]]; then
+    growth_log "$agent" "ARIC: invoking agent-research.sh for $agent"
+    if HYO_ROOT="$HYO_ROOT" bash "$research_script" "$agent" 2>&1 | tail -3; then
+      growth_log "$agent" "ARIC: research cycle complete"
+    else
+      growth_log "$agent" "ARIC: research cycle encountered errors — check research/raw/"
+    fi
+  else
+    growth_log "$agent" "ARIC: agent-research.sh not found/executable — skipping"
   fi
 }
 
