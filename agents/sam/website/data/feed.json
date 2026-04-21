@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-21T07:48:20-06:00",
+  "lastUpdated": "2026-04-21T08:00:01-06:00",
   "today": "2026-04-21",
   "agents": {
     "kai": {
@@ -204,31 +204,32 @@
   },
   "reports": [
     {
-      "id": "morning-report-kai-2026-04-21-074820",
+      "id": "morning-report-kai-2026-04-21-080001",
       "type": "morning-report",
       "title": "Morning Report \u2014 2026-04-21",
       "author": "Kai",
       "authorIcon": "\ud83d\udc54",
       "authorColor": "#d4a853",
-      "timestamp": "2026-04-21T07:48:20-06:00",
+      "timestamp": "2026-04-21T08:00:01-06:00",
       "date": "2026-04-21",
       "sections": {
-        "summary": "System: online. Growth: expanding (3/5 agents with shipped work with actual shipped work). API spend: $0.18 (3 calls) \u2014 openai=$0.18.",
+        "summary": "System: online. Growth: expanding (5/5 agents with shipped work with actual shipped work). API spend: $0.18 (3 calls) \u2014 openai=$0.18.",
         "wentWell": [
           "Nel: Adaptive Sentinel (I1) \u2014 sentinel-adapt.sh with 4-level escalation",
           "Ra: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
-          "Sam: Performance Baseline (I1) \u2014 perf-check.sh curl-based API response time measurement with regression detection"
+          "Sam: Performance Baseline (I1) \u2014 perf-check.sh curl-based API response time measurement with regression detection",
+          "Aether: Analysis Quality Gate (W2) \u2014 12-check automated gate before HQ publish",
+          "Dex: JSONL Auto-Repair (W1) \u2014 dex-repair.py scans 8 JSONL ledgers, removes dupes, injects missing fields"
         ],
         "needsAttention": [
-          "Aether: ARIC fetched 5 sources but no improvement built \u2014 research is theater until Phase 6 executes",
-          "Dex: ARIC fetched 3 sources but no improvement built \u2014 research is theater until Phase 6 executes"
+          "No critical issues"
         ],
         "agentHighlights": {
           "nel": "Shipped: Adaptive Sentinel (I1) \u2014 sentinel-adapt.sh with 4-level escalation.",
           "ra": "Shipped: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API.",
           "sam": "Shipped: Performance Baseline (I1) \u2014 perf-check.sh curl-based API response time measurement with regression detection.",
-          "aether": "Identified weakness: W1: Phantom Position Tracking Unsolved \u2014 Aether reports P&L on positions Kalshi never filled. Fetched 5 sources. Key finding: Phantom position issue documented with evidence: Aether claims $103.67 (session 2026-04-14 ending balance) but Kalshi confirmed $105.80 (different snapshot time), raw logs show $107.36 (final state). Up to $25.96/day discrepancy between claimed and real P&L. Root cause: Aether's metrics phase reads from AetherBot's own position logs, NOT from Kalshi portfolio endpoint. When bot and Kalshi diverge (missed fills, cancellations, partial fills), Aether doesn't detect the delta.; Line 89: 'Tuesday April 14 ending balance disputed: Kai reported $103.67 (snapshot ~19:57 MT), GPT found $105.80 (snapshot ~20:58 MT), raw log shows $107.36 (final at 21:29 MT). All three are intermediate snapshots at different times.' This demonstrates snapshot timing issues, but also reveals that the 'real' balance is in the raw log at final settlement. Problem: no automated tool reconciles intermediate snapshots against final Kalshi state.",
-          "dex": "Identified weakness: W1: Detection Without Remediation \u2014 Dex finds issues but only flags them, never fixes them. Fetched 3 sources. Key finding: jscodeshift (9983 stars, MIT) is a codemod toolkit for deterministic code transformations. Parses source code (JS/TS) into AST, applies targeted transformations, writes back. Used by Facebook/Meta for large-scale code migrations. Key insight: can be adapted for data repair \u2014 parse JSONL/JSON files into AST, apply repair transformations (fix missing fields, remove duplicates, correct timestamps), write back. Pattern: detection (parse) \u2192 transformation (repair) \u2192 verification (validate output).; Prettier (51797 stars, MIT) is opinionated code formatter that auto-fixes formatting issues. Core strategy: parse \u2192 normalize \u2192 output. Dex can adopt same pattern for data: detect corruption type (via regex or schema validation) \u2192 normalize (apply repair rules) \u2192 write (atomic file operations). Prettier's safety: generates identical AST on read/write (idempotency proven). Dex repair engine can guarantee idempotency too: parse \u2192 repair \u2192 validate parse succeeds \u2192 write."
+          "aether": "Shipped: Analysis Quality Gate (W2) \u2014 12-check automated gate before HQ publish.",
+          "dex": "Shipped: JSONL Auto-Repair (W1) \u2014 dex-repair.py scans 8 JSONL ledgers, removes dupes, injects missing fields."
         }
       }
     },

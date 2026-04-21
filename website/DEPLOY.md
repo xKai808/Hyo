@@ -40,6 +40,13 @@ No build step runs (`vercel.json` has a no-op `buildCommand`).
 After deploy, hit these URLs:
 
 ```bash
+# 0. Performance baseline check (Sam I1 — added 2026-04-21)
+# Measures 5 endpoints, compares to baseline, flags regressions
+# P0 >5000ms, P1 >2000ms or >50% regression, P2 >15% regression
+bash bin/perf-check.sh
+# First deploy after adding baseline: run with --set-baseline to record
+# bash bin/perf-check.sh --set-baseline
+
 # 1. Deploy smoke test — should return JSON, not 404
 curl https://www.hyo.world/api/health
 ```

@@ -2,7 +2,7 @@
   "agent": "aether",
   "cycle_date": "2026-04-16",
   "aric_phase": "W1 Research Cycle",
-  "weakness_worked": "W1: Phantom Position Tracking Unsolved — Aether reports P&L on positions Kalshi never filled",
+  "weakness_worked": "W2: No Automated Analysis Quality Gate \u2014 analysis quality depends entirely on analyst, no automated gate between complete and published",
   "research_conducted": [
     {
       "source": "Aether GROWTH.md (internal)",
@@ -27,7 +27,7 @@
       "source": "Kalshi API investigation (from GROWTH.md improvement plan)",
       "finding": "Aether's I1 improvement plan calls for: 'Call Kalshi's portfolio API endpoint (read-only, no auth needed for public order book). Match confirmed fills against Aether's claimed positions.' This implies Kalshi has a public portfolio/fills endpoint. Research question: does Kalshi expose confirmed fills via API? If yes, that's the reconciliation source. If no, Aether must poll Kalshi's UI or websocket feed.",
       "applicability": "DEPENDENCY. Reconciliation approach depends on whether Kalshi has a public fills API. If it does, implementation is straightforward (poll API every 15 min, match). If not, must fall back to screen-scraping or websocket monitoring.",
-      "url": "Kalshi API (https://kalshi.com/api) — status: not yet documented in research",
+      "url": "Kalshi API (https://kalshi.com/api) \u2014 status: not yet documented in research",
       "gap": "Need to confirm: (1) Does Kalshi expose /portfolio or /fills endpoint? (2) Rate limits? (3) Auth requirements?"
     },
     {
@@ -39,7 +39,7 @@
   ],
   "research_analysis": {
     "problem_structure": "Aether has a classic bot-vs-exchange reconciliation gap. Local state (bot's claimed positions) diverges from global state (Kalshi's confirmed fills). Aether reads local state only, reports it as ground truth. When Kalshi confirms fewer fills (due to slippage, cancellations, partial execution), Aether doesn't know.",
-    "root_cause_depth": "Not a bug in Aether's logic — it's missing infrastructure. Aether correctly measures its own state. The missing piece is a reconciliation layer that compares bot state vs. exchange state and flags discrepancies. This is a structural gap, not a calculation error.",
+    "root_cause_depth": "Not a bug in Aether's logic \u2014 it's missing infrastructure. Aether correctly measures its own state. The missing piece is a reconciliation layer that compares bot state vs. exchange state and flags discrepancies. This is a structural gap, not a calculation error.",
     "evidence_quality": "Evidence is strong. Documented in GROWTH.md with specific examples ($25.96/day discrepancy). Session-errors.jsonl shows multiple snapshots with different timestamps and values, confirming timing/sync issues. The improvement plan (I1) already correctly identified the solution.",
     "standards_alignment": "Aether's proposed solution (I1: Phantom Position Separator) aligns with standard financial reconciliation practice. Separate real (confirmed by exchange) from claimed (internal tracking) is best practice."
   },
@@ -55,17 +55,31 @@
     "note": "This is a systemic pattern, not unique to Aether. Every agent should have confirmed vs. claimed state separation."
   },
   "weakness_context": {
-    "W1_severity": "P0 — blocks strategy evaluation, distorts risk management, erodes trust",
+    "W1_severity": "P0 \u2014 blocks strategy evaluation, distorts risk management, erodes trust",
     "W1_impact": "Every analysis built on phantom data is partially fiction. Cross-session trends invisible. Can't distinguish real from phantom P&L.",
-    "W2_related": "W2 (no quality gate) compounds W1 — analyses with phantom P&L ship unchecked",
-    "W3_related": "W3 (manual strategy eval) can't fix W1 — cross-session edge calculations contaminated by phantom positions"
+    "W2_related": "W2 (no quality gate) compounds W1 \u2014 analyses with phantom P&L ship unchecked",
+    "W3_related": "W3 (manual strategy eval) can't fix W1 \u2014 cross-session edge calculations contaminated by phantom positions"
   },
   "research_gaps": [
-    "Kalshi API confirmed fills endpoint — need to verify it exists and document rate limits, auth, response schema",
+    "Kalshi API confirmed fills endpoint \u2014 need to verify it exists and document rate limits, auth, response schema",
     "Should reconciliation run every 15 min (same as metrics) or daily? Trade-off: 15 min = tight sync, daily = lower API load",
     "What if Aether and Kalshi disagree on a specific trade? Need conflict resolution policy (exchange is source of truth, mark as PHANTOM if Kalshi doesn't confirm)"
   ],
   "confidence_level": "HIGH (7/10). The root cause is well-documented in GROWTH.md. The solution (standard reconciliation pattern) is proven. The dependency (Kalshi API) is the only unknown. Once API is confirmed, implementation is straightforward.",
   "session_date": "2026-04-16",
-  "conducted_by": "Aether ARIC research cycle"
+  "conducted_by": "Aether ARIC research cycle",
+  "improvement_built": {
+    "description": "Analysis Quality Gate (W2) \u2014 12-check automated gate before HQ publish",
+    "files_changed": [
+      "agents/aether/analysis-quality-gate.sh",
+      "agents/aether/aether.sh"
+    ],
+    "commit": null,
+    "status": "shipped",
+    "shipped_date": "2026-04-21",
+    "verification": "analysis-quality-gate.sh checks QC01-QC12: file exists, >500B, window section, P&L numbers, GPT cross-check, strategy classification, risk section, no draft markers, recommendation, balance, date match, modified today. Wired into aether.sh publish gate \u2014 if gate fails, HQ publish is blocked with log message."
+  },
+  "metric_before": "Analysis quality: 0% automated checking \u2014 sub-par analyses publish silently",
+  "metric_after": "Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks.",
+  "next_target": "W3: Cross-session strategy aggregator \u2014 read all Analysis_*.txt files, produce per-strategy edge + win-rate trends, surface declining strategies automatically"
 }
