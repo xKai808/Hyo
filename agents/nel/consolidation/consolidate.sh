@@ -424,15 +424,21 @@ if [[ "${1:-}" == "--project" && -n "${2:-}" ]]; then
   TARGET="$2"
 fi
 
-# ── Phase 0: Dex JSONL auto-repair (before sentinel reads ledgers) ──
+# ── Phase 0: Dex JSONL auto-repair + pattern clustering ──────────────────────
 DEX_REPAIR="$ROOT/agents/dex/dex-repair.py"
 if [[ -f "$DEX_REPAIR" ]]; then
-  log "Phase 0: Running Dex JSONL auto-repair..."
+  log "Phase 0a: Running Dex JSONL auto-repair..."
   REPAIR_OUT=$(HYO_ROOT="$ROOT" python3 "$DEX_REPAIR" 2>&1 || true)
   log "Dex repair: $(echo "$REPAIR_OUT" | tail -2 | tr '
 ' ' ')"
-else
-  log "Phase 0: dex-repair.py not found — skipping JSONL repair"
+fi
+
+DEX_CLUSTER="$ROOT/agents/dex/dex-cluster.py"
+if [[ -f "$DEX_CLUSTER" ]]; then
+  log "Phase 0b: Running Dex pattern cluster analysis..."
+  CLUSTER_OUT=$(HYO_ROOT="$ROOT" python3 "$DEX_CLUSTER" 2>&1 || true)
+  log "Dex cluster: $(echo "$CLUSTER_OUT" | tail -3 | tr '
+' ' ')"
 fi
 
 if [[ "$TARGET" == "all" ]]; then
