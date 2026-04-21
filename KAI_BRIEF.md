@@ -2,7 +2,36 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-21 (Session 25 — Hyo's 7 product-quality directives addressed)
+**Updated:** 2026-04-21 (Session 26 — healthcheck chronic fixes + morning report humanized + maintenance-audit.py)
+
+## Shipped today (2026-04-21 — Session 26)
+
+All committed and pushed to origin/main:
+
+1. **healthcheck.sh: 3 chronic false-positive patches** (20+ cycles eliminated):
+   - P0 false positive: grep pattern was `loadMorningReport|mrSummary` but hq.html uses `renderMorningReport` — fixed
+   - Worker age math: macOS date parsing failed → fallback to epoch 0 → bogus "493541h ago". Now uses full ISO timestamp + python3 (SE-healthcheck-001)
+   - Render-binding P2: `hq-state.json`, `remote-access.json`, `morning-report.json` added to `RENDER_BINDING_SKIP` whitelist (legitimate non-filename references)
+
+2. **generate-morning-report.sh humanized** (per PROTOCOL_MORNING_REPORT.md v1.1 Part 0b):
+   - `build_agent_narrative()` rewritten: was mechanical log-style, now human brief ("smart colleague briefing a CEO")
+   - Executive summary stdout: 3 human BLUF sentences (health / biggest thing / what to watch) instead of field=value
+   - Feed entry `summary_text`: same 3-sentence pattern for HQ card
+   - `highlights[name]`: "so what" not "what ran"
+
+3. **bin/maintenance-audit.py BUILT** (per PROTOCOL_SYSTEM_MAINTENANCE.md Section 4):
+   - Phase 1 `--check-dead-scripts`: finds .sh/.py not in TRIGGER_MATRIX.md, >14d old, zero grep refs
+   - Phase 2 `--check-stale-protocols`: finds protocols with dead path refs; smart about .json→.jsonl mismatches, date-pattern examples
+   - Phase 3 `--check-duplicates`: sha256-identical files, excludes intentional dual-path pairs
+   - Flags only — never deletes. Logs to `kai/ledger/maintenance-log.jsonl`
+   - Tested: stale-protocols phase finds 1 real flag (dex/known-fps.json dead ref), 0 false positives
+
+4. **com.hyo.system-maintenance launchd plist** installed on Mini (01:30 MT daily):
+   - Runs `maintenance-audit.py --all` nightly after consolidate.sh (01:00)
+   - Log output: `kai/ledger/maintenance-audit.log`
+   - Confirmed loaded: `launchctl list | grep system-maintenance` exit 0
+
+Commits: ff48cac (healthcheck + morning report) → 48842f3 (maintenance-audit.py) → ongoing (plist)
 
 ## Shipped today (2026-04-21 — Session 25)
 
