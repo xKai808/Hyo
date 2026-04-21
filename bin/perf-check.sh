@@ -199,12 +199,9 @@ compute_p50() {
 }
 
 for r in "${RESULTS[@]}"; do
-  local label
   label=$(echo "$r" | python3 -c "import sys,json; d=json.loads(sys.stdin.read()); print(d.get('endpoint', 'unknown'))" 2>/dev/null)
-  local time_ms
   time_ms=$(echo "$r" | python3 -c "import sys,json; d=json.loads(sys.stdin.read()); print(d.get('time_ms', -1))" 2>/dev/null)
 
-  local entry
   entry=$(python3 -c "
 import json, sys
 r = json.loads(sys.argv[1])
