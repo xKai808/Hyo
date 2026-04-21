@@ -1,112 +1,109 @@
 # Aether Growth Plan
 
-**Domain:** Trading intelligence, strategy evaluation, risk management, bot performance optimization
-**Last updated:** 2026-04-14
-**Assessment cycle:** 15-min metrics extraction + daily 12-step analysis + weekly GPT dual-phase review
+**Domain:** External market intelligence — macro economics, geopolitical risk, Kalshi platform conditions, BTC/crypto market structure
+**Last updated:** 2026-04-21
+**Assessment cycle:** Daily external intelligence research → analysis output → external_factors section in aether-analysis
 **Status:** Active
 
-## System Weaknesses (in my domain)
+**SCOPE NOTE (per PROTOCOL_AETHER_ISOLATION.md, 2026-04-21):**
+Aether's GROWTH.md is for EXTERNAL intelligence weaknesses ONLY. Internal AetherBot issues
+(phantom positions, analysis quality, strategy aggregation) are tracked in PLAYBOOK.md "Open Issues"
+section and resolved through Aether's own daily analysis cycle. Kai and other agents do NOT
+touch AetherBot code — only Aether's own analysis cycle implements those fixes.
 
-### W1: Phantom Position Tracking Unsolved — Aether Reports P&L on Positions Kalshi Never Filled
+## System Weaknesses (in Aether's external intelligence domain)
 
-**Severity:** P0
-
-**Evidence:**
-- KAI_BRIEF.md line 15 (Aether migration notes): "Real trading data (542 tickers, 92.4% resolution rate, $90.25 current balance) live on HQ."
-- But Aether's analysis files show discrepancies: Aether counts trades from its own API (aether.sh metrics extraction phase) which returns the count of positions it tracked. Kalshi's actual account may have fewer filled positions due to slippage, cancellations, or partial fills.
-- Session-errors.jsonl line 89: "Tuesday April 14 ending balance disputed: Kai reported $103.67 (snapshot ~19:57 MT), GPT found $105.80 (snapshot ~20:58 MT), raw log shows $107.36 (final at 21:29 MT). All three are intermediate snapshots at different times."
-- Root issue: **reconciliation gap between Aether's position tracking and actual Kalshi account state.** Aether can have up to $25.96/day discrepancy between phantom (claimed) and real (confirmed by exchange) P&L.
-- No automated reconciliation. Aether's analysis files contain two numbers: one reported by Aether, one confirmed by Kalshi. The delta between them is never calculated, never highlighted, never reconciled.
-
-**Root cause:**
-Aether's metrics phase (15-min cycle) reads from AetherBot's own logs/API, not from Kalshi's portfolio endpoint. The bot tracks its own position state in memory. If the bot and Kalshi diverge (missed fills, cancellations), Aether doesn't know. Analysis files compare Aether's internal state (phantom) vs. Kalshi's actual state (real) but don't separate them in reporting.
-
-**Impact:**
-- Every analysis built on phantom data is partially fiction. Strategy edge calculations based on fake P&L. Win rate based on trades the bot thought it made, not trades Kalshi confirmed.
-- Hyo sees two numbers and doesn't know which is real. Trust erodes.
-- Risk management blind: if phantom P&L is inflated, actual leverage is worse than reported.
-- Cross-session trend analysis (which strategies are +EV?) contaminated by phantom position carry-over.
-
-### W2: No Automated Analysis Quality Gate — Daily Analysis Quality Depends Entirely on Analyst
+### W1: Macro Data Coverage Inadequate — No Real-Time Fed/CPI Signal Monitoring
 
 **Severity:** P1
 
 **Evidence:**
-- Aether's daily analysis (12-step algorithm in ANALYSIS_ALGORITHM.md) goes through GPT dual-phase review (Phase 1: independent analysis of raw logs, Phase 2: comparative review of Kai's analysis).
-- **No automated check on whether the analysis ITSELF is good.** Does it cover all session windows? Does it classify every loss? Does it follow the anti-patchwork doctrine?
-- Session-errors.jsonl line 87: "Kai skipped GPT cross-check when rewriting analysis files. Reformatted executive summary without re-sending to GPT-4o for verification. Treated existing GPT reviews as sufficient when the analysis content had changed."
-- Aether's ANALYSIS_BRIEFING.txt (660+ lines) has 5 different goal formats, 3 recommendation styles, 2 classification schemes. Consistency depends on who writes it (only Kai can write it now).
-- No scorecard, no pass/fail gate, no trigger to catch sub-par analysis before it ships.
+- Aether's daily analyses reference "macro conditions" but source from general market news rather than structured macro data feeds (Fed funds futures, CPI release schedule, PCE data).
+- AetherBot's operating conditions are materially affected by macro regime changes (risk-on vs. risk-off), but Aether has no systematic way to detect when the macro regime shifts.
+- No Fed calendar integration: FOMC meetings, rate decisions, and dot plot releases all cause BTC volatility spikes. Aether currently discovers these reactively (after they affect trades), not proactively.
+- DXY (dollar index) correlation with BTC is a known signal but Aether doesn't track it in its daily analysis; only mentions BTC/USD directly.
 
 **Root cause:**
-Analysis pipeline assumed the analyst is always correct and GPT is a rubber-stamp checker. When Kai rewrites summaries or classifications, GPT review doesn't re-run (assumed prior review covers the change). No quality gate between "analysis complete" and "analysis published."
+External intelligence was added to Aether's scope implicitly, not with a structured research framework. Aether's analysis protocol covers trading decisions but doesn't have a dedicated macro data gathering phase. Research is opportunistic rather than systematic.
 
 **Impact:**
-- Hyo receives analyses that might have incomplete trade classifications, missing session windows, or anti-patchwork violations without knowing.
-- Can't distinguish "this analysis has a problem" from "this analysis is good."
-- Process is bottlenecked on Kai (the analyst). If Kai is tired or in a hurry, quality drops silently.
+- AetherBot may be trading into a macro headwind Aether didn't flag.
+- No early warning when Fed pivot signals or inflation data is imminent.
+- Hyo doesn't have macro context paired with AetherBot performance data to see if external conditions explain why trading is up or down.
 
-### W3: Strategy Evaluation Is Manual — No Automated Cross-Session Aggregation or Edge Analysis
+### W2: No On-Chain Signal Integration — AetherBot Operating Blind to BTC Structural Shifts
 
 **Severity:** P1
 
 **Evidence:**
-- Aether has 41 analysis files (April 7-14 from migration), each with 3 sections (trade log, strategic assessment, P&L breakdown).
-- **Cross-session intelligence requires manual work.** Questions like "Which strategies have positive edge per contract risked?" "Which windows are -EV?" "Is any family in systematic decline?" require reading all 41 files, aggregating manually, spotting patterns.
-- Session-errors.jsonl line 89 shows balance discrepancies day-by-day (phantom vs. real). Aether has no aggregator to answer: "Are phantom positions accumulating? Is the divergence growing?"
-- Aether's PRIORITIES.md lists "phantom positions" and "harvest 12.4% failure" but doesn't quantify cross-session trends. Is phantom position issue getting worse? Better? Stable?
-- No automated tool reads all 41 Analysis_*.txt files to produce: per-strategy edge, per-window P&L trend, strategy family health report, concentration risk.
+- On-chain data (exchange inflows/outflows, miner behavior, HODLer cohort moves, funding rates) is a leading indicator for BTC price direction that Aether does not currently monitor.
+- Aether's external_factors section in daily analyses mentions "market structure" but uses price action only (BTC/USD level, daily range) — not on-chain signals that precede price moves.
+- Known signal gap: when whales move BTC to exchanges (high exchange inflow) it historically precedes sell pressure. Aether never flags this.
+- Funding rates on perpetual markets signal crowded positioning. Aether doesn't track these despite them being available via free APIs (Coinglass, Glassnode free tier).
 
 **Root cause:**
-Aether's daily analysis is designed to answer "what happened today?" not "what patterns emerged across 30 days?" Cross-session aggregation was deferred ("we can do it later") and never built. Analysis files exist in a flat list; no aggregation layer connects them.
+Aether's research scope was defined around price-level observation rather than structural market intelligence. On-chain data was considered "advanced" and deferred. No data pipeline for on-chain feeds exists.
 
 **Impact:**
-- Strategy evolution invisible. Hyo can't tell if a strategy that was +EV weeks ago is still +EV or if it's degrading slowly.
-- Concentration risk unchecked. If top 3 trades generated 80% of profit, that's a red flag Aether doesn't surface.
-- Can't answer board-level questions ("Is trading improving month-over-month?" "What's the biggest risk?") without manual analysis.
+- Aether can't warn Hyo when BTC is in a structurally vulnerable position (high exchange inflows + elevated funding = risk-off signal).
+- External intelligence layer is reactive rather than predictive; doesn't surface leading indicators.
+- AetherBot may increase position size during periods Aether should be recommending REDUCE_EXPOSURE.
+
+### W3: Kalshi Platform Monitoring Not Systematic — Fee/Rule Changes Discovered Reactively
+
+**Severity:** P2
+
+**Evidence:**
+- Kalshi has changed fee structures, settlement rules, and available markets multiple times. Aether has no systematic check for these changes; discovers them when they affect trade outcomes.
+- Kalshi's API stability is not monitored: if the Kalshi API is slow or intermittent, AetherBot's fills may be unreliable, but Aether's external_factors section doesn't include an API health signal.
+- No monitoring for new BTC prediction market categories Kalshi adds (these could be trading opportunities Aether should flag to Hyo).
+- Regulatory developments affecting prediction markets (CFTC oversight, new rulings on Kalshi's structure) are not systematically tracked.
+
+**Root cause:**
+Kalshi monitoring was assumed to happen organically (via trade results). No dedicated Kalshi platform intelligence phase exists in Aether's research cycle. Research has covered macro and BTC but not the exchange layer specifically.
+
+**Impact:**
+- AetherBot could be trading under outdated fee assumptions if Kalshi changed fees without Aether noticing.
+- New market opportunities on Kalshi go undetected.
+- Regulatory risk to Kalshi itself (which would require AetherBot to pause or exit) is not surfaced proactively.
 
 ## Improvement Plan
 
-### I1: Phantom Position Separator — Automated Reconciliation Against Kalshi, Produce Dual P&L (Real vs. Claimed)
+### I1: Macro Data Pipeline — Structured Fed/CPI/DXY Signal Monitoring
 
 Addresses W1
 
 **Approach:**
-Build automated reconciliation step in aether.sh metrics phase:
-1. **Extract Kalshi real positions:** Call Kalshi's portfolio API endpoint (read-only, no auth needed for public order book). Match confirmed fills against Aether's claimed positions.
-2. **Tag each trade:** For every trade in Aether's log, mark as CONFIRMED (Kalshi API confirms) or PHANTOM (Aether claimed but Kalshi didn't fill).
-3. **Produce dual P&L:** Two columns in aether-metrics.json: realBalance (from CONFIRMED trades only), claimedBalance (from all trades including PHANTOM).
-4. **Reconciliation report:** Write `agents/aether/ledger/reconciliation.jsonl`: { date, phantom_count, confirmed_count, balance_delta_usd, phantom_pct_of_total }
-5. **Update analysis files:** Every daily analysis must show both P&L numbers and explain the delta.
-6. **Publish reconciliation status to HQ:** Show "Real P&L: $107.36, Phantom P&L: $103.67, Divergence: $3.69 (3.4%)"
+Build a daily macro intelligence phase in Aether's research cycle:
+1. **Fed calendar integration:** Pull FOMC meeting dates, rate decision dates from public Fed calendar. Flag upcoming events in external_factors section with "FOMC in N days — elevated volatility risk."
+2. **CPI/PCE release monitoring:** Automate detection of upcoming inflation data releases. Flag: "CPI release on [date] — historically +/- 3% BTC move."
+3. **DXY correlation tracker:** Pull DXY daily close from free API (Yahoo Finance, Alpha Vantage free tier). Include in external_factors: "DXY [up/down/flat] — BTC [historically correlates inversely]."
+4. **Macro regime signal:** Classify current macro environment (risk-on/risk-off/neutral) based on DXY trend + rate expectations. Include in daily analysis.
 
 **Research needed:**
-- What's the Kalshi API endpoint for confirmed fills? (rate limits, auth requirements?)
-- Should we auto-reconcile every 15 min or daily?
-- What if Aether and Kalshi disagree on a trade — who's source of truth?
+- What free APIs provide Fed calendar data?
+- What are the reliable CPI release date sources?
+- What DXY threshold constitutes a "material move" for BTC correlation purposes?
 
-**Research status:** not started
+**Research status:** initial scoping
 
-**Research findings:** (none yet)
+**Research findings:** (to be populated by Aether's ARIC research phase)
 
 **Implementation:**
-1. Create `agents/aether/reconcile.sh` — pulls Kalshi portfolio data, matches against Aether's position log
-2. For each position, determine: is it in Kalshi's confirmed fills? (CONFIRMED) or not? (PHANTOM)
-3. Calculate realBalance (sum of CONFIRMED trades), claimedBalance (sum of all trades), delta
-4. Write to `agents/aether/ledger/reconciliation.jsonl` and `agents/aether/metrics/reconciliation.json`
-5. Integrate reconcile.sh into aether.sh metrics phase (after position extraction, before JSON publish)
-6. Update aether-metrics.json schema: add realBalance, claimedBalance, reconciliation.divergence_pct
-7. Test: manually verify 5 trades against Kalshi API, confirm CONFIRMED/PHANTOM tags are correct
+1. Create macro data research phase in Aether's daily ARIC cycle
+2. Source: Fed website (free), BLS.gov for CPI schedule (free), Yahoo Finance API for DXY
+3. Write findings to agents/aether/research/macro-YYYY-MM-DD.md
+4. Integrate into external_factors.macro section of daily analysis output
+5. Add FOMC/CPI countdown to Kalshi posture recommendation section
 
 **Success metric:**
-- Every daily metrics snapshot shows both real and phantom P&L
-- Reconciliation report visible on HQ: "Real balance $107.36, reconciliation gap 3.4%"
-- Analysis files can now cite real P&L separately from claimed P&L
-- Hyo knows exactly how much of Aether's reported P&L is phantom vs. real
+- Every daily analysis includes structured macro context (DXY trend, upcoming events within 7d)
+- FOMC/CPI within 3 days → automatically surfaced as external risk with posture implication
+- Hyo can see: "Macro regime: risk-off (DXY +0.4%). FOMC in 2 days. Elevated volatility expected."
 
 **Status:** planned
 
-**Ticket:** IMP-aether-001
+**Ticket:** IMP-aether-001-ext
 
 ### I2: Analysis Quality Scorecard — Auto-Score Completeness, Classification Accuracy, Anti-Patchwork Compliance
 
@@ -660,6 +657,10 @@ Build a weekly aggregation script that runs after each day's analysis is publish
 | 2026-04-20 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-20 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-20 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |

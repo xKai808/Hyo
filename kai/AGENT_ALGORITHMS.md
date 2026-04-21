@@ -18,9 +18,48 @@ Every agent also has a PLAYBOOK.md they OWN and can self-modify. The constitutio
 
 ---
 
-## Ticket System & Workflow Systems (v1.0 — 2026-04-14)
+## ALGORITHM-FIRST ARCHITECTURE (2026-04-21 — Constitutional Addition)
+
+**Rules enforce what already exists. Rules alone are not enough.**
+Every rule in this constitution must be preceded by a yes/no question gate that enforces it.
+A rule says "don't do X." A gate asks "Did I do X?" and blocks until answered.
+Rules get skipped. Gates don't.
+
+**When reading this document**: look for `GATE N:` and `Q:` patterns — these are the enforcing questions. If a rule exists without a preceding gate question, it's incomplete. File a proposal to add the gate.
+
+### Protocol Library (2026-04-21 — ALL agents must know these)
+
+These protocols are mandatory reference material. Reading "PLAYBOOK only" is not sufficient. Every agent must know which protocols govern their actions.
+
+| Protocol | Scope | Trigger | Mandatory For |
+|---|---|---|---|
+| `kai/protocols/EXECUTION_GATE.md` | Pre/post action gates | Before every action | All agents + Kai |
+| `kai/protocols/VERIFICATION_PROTOCOL.md` | Post-action verification | After every action | All agents + Kai |
+| `kai/protocols/RESOLUTION_ALGORITHM.md` | Issue resolution | On every error/issue | All agents + Kai |
+| `kai/protocols/AGENT_RESEARCH_CYCLE.md` | ARIC daily cycle | Daily (all runners) | All agents |
+| `kai/protocols/REASONING_FRAMEWORK.md` | Question framework | Monthly review | All agents + Kai |
+| `kai/protocols/PROTOCOL_TICKET_LIFECYCLE.md` | Ticket opening→resolution→close | On every discrepancy | All agents + Kai |
+| `kai/protocols/PROTOCOL_HQ_PUBLISH.md` | HQ publication standards | Before every HQ publish | All agents + Kai |
+| `kai/protocols/PROTOCOL_AETHER_ISOLATION.md` | Aether code/scope boundaries | Any Aether-touching task | Kai + all agents |
+| `kai/protocols/PROTOCOL_GOAL_STALENESS.md` | Stale goal detection + push | Daily (Kai) | Kai |
+| `kai/protocols/PROTOCOL_PROTOCOL_REVIEW.md` | Daily protocol hole-finding | Daily (Kai session start) | Kai |
+| `kai/protocols/PROTOCOL_PREFLIGHT.md` | Pre-existing file familiarity | Before any create/modify/decide | All agents + Kai |
+| `kai/protocols/TRIGGER_MATRIX.md` | Every artifact's trigger | Weekly audit (Kai) | Kai |
+
+**PREFLIGHT GATE (mandatory — runs before any protocol or file change):**
+> "Have I read the relevant existing files before making any decision?"
+> → NO → STOP. Read first. PROTOCOL_PREFLIGHT.md is the implementation.
+
+**NO-PATCH GATE (mandatory — runs before any fix):**
+> "Am I fixing the root cause or adding a patch/workaround?"
+> → PATCH → STOP. Find the root cause. Document if temporarily unavoidable.
+
+---
+
+## Ticket System & Workflow Systems (v1.0 — 2026-04-14, updated 2026-04-21)
 
 **Full reference:** `kai/WORKFLOW_SYSTEMS.md`
+**Lifecycle protocol:** `kai/protocols/PROTOCOL_TICKET_LIFECYCLE.md` (v1.0 — 42-source research, constitutional)
 **CLI:** `kai ticket <command>` or `bash bin/ticket.sh <command>`
 **Ledger:** `kai/tickets/tickets.jsonl` (single source of truth for all task state)
 
@@ -69,27 +108,46 @@ Dex (Data)          → System 1 (Loop) + System 5 (Memory)
 
 ### Ticket Lifecycle
 
+**Full specification:** `kai/protocols/PROTOCOL_TICKET_LIFECYCLE.md` (read this for complete gates)
+
 ```
 OPEN      → Created. Work not started or in progress.
 ACTIVE    → Agent is currently working on this.
-BLOCKED   → Cannot proceed. Auto-escalates to Kai after SLA.
-IN_REVIEW → Completed. Waiting for gate agent verification.
-CLOSED    → All gates passed. Evidence filed. No open issues.
+BLOCKED   → Cannot proceed. Dependency on external resource or decision.
+RESOLVED  → Agent completed work; awaiting system verification (4h window).
+CLOSED    → All gates passed. Prevention gate placed. Evidence filed.
 ARCHIVED  → Closed and older than 30 days.
 ```
+
+**RESOLVED ≠ CLOSED.** These are distinct states. Agents RESOLVE. The system CLOSES after 4h with no regression. A ticket jumping from ACTIVE to CLOSED without RESOLVED state is a violation.
+
+**5-CYCLE ESCALATION RULE (constitutional — no exceptions):**
+- Each agent gets a maximum of 5 cycles to resolve a ticket
+- cycle_count field in ticket tracks this; increments at each attempt
+- Cycle 3: agent must change approach (different hypothesis, different method)
+- Cycle 5: MANDATORY escalation to Kai — agent cannot attempt a 6th cycle
+- Kai gets 3 cycles; if unresolved after 3 → escalate to Hyo as CEO decision
+- This prevents dead-loops from consuming indefinite agent cycles
+
+**PREVENTION GATE (before CLOSED — non-negotiable):**
+A ticket cannot close without a documented prevention. The prevention MUST be:
+- A yes/no question added to an existing algorithm (not a standalone rule)
+- Placed where it will be ASKED, not just documented
+- Verified to actually catch the original error (simulate the failure scenario)
 
 **A ticket remains OPEN if:**
 - Any open-ended question is unanswered
 - Any simulation gate has not passed
 - Any agent has issued a FAIL verdict
 - Verification script (`agents/<name>/verify.sh`) has not passed
-- Operator approval required and not yet given
+- Prevention gate has not been placed and verified
 
 **SLA Escalation (auto-enforced by healthcheck):**
 - P1: 1 hour → auto-escalate to P0
 - P2: 4 hours → auto-escalate to P1
 - P3: 24 hours → auto-escalate to P2
 - BLOCKED tickets older than their SLA are promoted and flagged to Kai
+- Zombie tickets (open > 90 days) → P1 flag; immediate investigation required
 
 ### The Universal Question Set (ask for ANY task, ANY system)
 
@@ -990,11 +1048,17 @@ This gate is as mandatory as the Automation Gate. Together they ensure:
 
 ## Daily Bottleneck Audit (Kai — runs daily, minimum)
 
+**Protocol references (run these as part of the audit):**
+- `kai/protocols/PROTOCOL_PROTOCOL_REVIEW.md` — daily protocol hole-finding (7 gates)
+- `kai/protocols/PROTOCOL_GOAL_STALENESS.md` — stale goal detection per agent
+- `kai/protocols/TRIGGER_MATRIX.md` — weekly audit of all artifact triggers
+
 ```
 PURPOSE:
   Kai reviews every agent's operational health daily. This is NOT the 2-hour
   health check (which catches P0/P1 flags). This is a deeper audit that
   catches systemic bottlenecks, stale automation, and missed optimizations.
+  It also includes protocol review (hole-finding) and goal staleness detection.
 
 TRIGGER:
   - Daily, during first session of the day (or at 22:00 MT if no session)
@@ -1031,11 +1095,37 @@ AUDIT STEPS (Kai executes, not delegated):
      → If any P0/P1 found: dispatch immediately
      → If bottlenecks found: create [AUTOMATE] tasks
 
-OUTPUT: kai/ledger/daily-audit-YYYY-MM-DD.md
+  5. Run PROTOCOL_PROTOCOL_REVIEW.md Daily Audit Gate (7 gates):
+     → All protocols reviewed in last 7 days?
+     → Each protocol has algorithm-first sections (trigger/execute/verify)?
+     → Each agent has GROWTH.md with 3 active weaknesses and goals?
+     → All new scripts listed in TRIGGER_MATRIX.md?
+     → All PLAYBOOK protocol references point to existing files?
+     → Proposals in kai/proposals/ older than 48h without review?
+     → Dex ran constitution drift check today?
+     → For each YES anomaly → open task ticket immediately
+
+  6. Run PROTOCOL_GOAL_STALENESS.md Goal Staleness Gate (per agent):
+     → bin/goal-staleness-check.py (PROPOSED — manual until created)
+     → Check each agent's GROWTH.md goals section
+     → Short goal overdue >3d = P1; Medium >14d = P2; Long >30d = P2
+     → Dead-loop (same evolution entry 3+ consecutive cycles) = P1
+     → Any stale goal → run Kai Guidance Protocol (questions, not answers)
+
+  7. Produce daily audit summary:
+     → Write to kai/ledger/daily-audit-YYYY-MM-DD.md
+     → Write to kai/ledger/protocol-review-log.jsonl (protocol review entry)
+     → If any P0/P1 found: dispatch immediately
+     → If bottlenecks found: create [AUTOMATE] tasks
+     → If protocol holes found: open task tickets to fix
+
+OUTPUT: kai/ledger/daily-audit-YYYY-MM-DD.md + kai/ledger/protocol-review-log.jsonl
 FORMAT:
   # Daily Bottleneck Audit — YYYY-MM-DD
   ## Agent Health: [nel:OK|WARN|FAIL] [sam:OK|WARN|FAIL] [ra:OK|WARN|FAIL] [aether:OK|WARN|FAIL] [dex:OK|WARN|FAIL]
   ## Queue: X pending, Y failed, Z completed
+  ## Protocol Review: X holes found, X tickets opened
+  ## Goal Staleness: X stale goals (list agents)
   ## Bottlenecks Found: (list or "none")
   ## Actions Taken: (list of dispatches/tasks created)
   ## Automation Gaps: (list or "none")
