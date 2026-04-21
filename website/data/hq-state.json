@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-20T22:15:00Z",
+  "updatedAt": "2026-04-21T02:15:00Z",
   "morningReport": {
     "date": "2026-04-18",
     "generatedAt": "2026-04-18T04:10:16-0600",
@@ -30,6 +30,30 @@
     }
   },
   "events": [
+    {
+      "ts": "2026-04-21T02:15:00Z",
+      "type": "ops-sync",
+      "agent": "kai",
+      "summary": "Scheduled hq-ops-sync run: sentinel 5p/4f (4 recurring), cipher clean (7 autofix), nel score 85, 4 flags raised (P2 broken-links, P3 optimizations, P2 audit, P2 untriggered-file).",
+      "details": {
+        "sentinel": {
+          "pass": 5,
+          "fail": 4,
+          "totalRuns": 112
+        },
+        "cipher": {
+          "leaks": 0,
+          "autofixes": 7
+        },
+        "nel": {
+          "score": 85,
+          "flags": 4,
+          "brokenLinks": 20,
+          "untested": 25,
+          "inefficient": 3
+        }
+      }
+    },
     {
       "ts": "2026-04-20T22:15:00Z",
       "agent": "kai",
@@ -283,21 +307,17 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRun": "2026-04-20T10:11:00Z",
+    "lastRun": "2026-04-21T02:11:00Z",
     "passed": 5,
     "failed": 4,
-    "totalRuns": 107,
+    "totalRuns": 112,
     "findings": [
-      "P2: task-queue-size \u2014 27 P0 tasks vs threshold 5 (NEW this run; +1 vs run #103)",
-      "P0: founder-token-integrity \u2014 founder.token mode 0600 vs expected 6xx (day 8 ESCALATED, cosmetic sandbox check bug \u2014 regex mismatch)",
-      "P1: scheduled-tasks-fired \u2014 no aurora logs in Cowork sandbox (day 8 ESCALATED; aurora runs on Mini, benign)",
-      "P1: secrets-dir-permissions \u2014 0755 on symlink; target at 700 (day 8 ESCALATED, cosmetic)"
+      "P0: founder-token-integrity \u2014 founder.token mode 0600 vs expected 6xx (day 13 ESCALATED, cosmetic check-bug)",
+      "P1: scheduled-tasks-fired \u2014 no aurora logs in sandbox path (day 13 ESCALATED, sandbox cosmetic; aurora runs on Mini)",
+      "P1: secrets-dir-permissions \u2014 0755 on symlink; target at 700 (day 13 ESCALATED, cosmetic)",
+      "P2: task-queue-size \u2014 27 P0 tasks vs threshold 5 (day 6 ESCALATED)"
     ],
-    "resolvedThisRun": [
-      "api-health-green:82547bfc",
-      "task-queue-size:40b61f0b (variant \u2014 replaced by new 27-task instance)",
-      "scheduled-tasks-fired:27d2b779 (variant)"
-    ],
+    "resolvedThisRun": [],
     "escalations": [
       "P0 \u2014 founder-token-integrity failing 8 runs in a row",
       "P1 \u2014 scheduled-tasks-fired failing 8 runs in a row",
@@ -306,14 +326,14 @@
     "summary": "Run #107: 5p/4f. 1 new (P2 task-queue-size 27 P0 tasks). 3 recurring escalated day 8 (founder-token cosmetic, scheduled-tasks-fired benign sandbox, secrets-dir-permissions cosmetic). 3 resolved."
   },
   "cipher": {
-    "lastRun": "2026-04-20T10:11:00Z",
+    "lastRun": "2026-04-21T02:11:10Z",
     "secretsDir": "0755",
     "founderToken": "0600",
     "leaks": 0,
     "autofixes": 7,
     "notes": "0 findings; 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600). HQ push 200 OK.",
     "latestDoc": null,
-    "totalRuns": 258,
+    "totalRuns": 259,
     "summary": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied, exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
   },
   "sim": {
@@ -326,7 +346,7 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-20T22:15:16Z",
+    "lastRun": "2026-04-21T02:11:17Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,

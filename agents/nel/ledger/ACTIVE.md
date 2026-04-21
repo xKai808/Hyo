@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-20T22:15:29Z
+Last updated: 2026-04-21T02:40:02Z
 
 ## In Progress
 
-- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-20T22:07:59Z
+- **nel-001** [P0] [AUTO-REMEDIATE] Aether metrics JSON exists but hq.html has NO rendering code (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-04-21T02:40:02Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
