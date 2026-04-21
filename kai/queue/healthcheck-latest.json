@@ -1,28 +1,18 @@
 {
-  "ts": "2026-04-21T08:39:23Z",
+  "ts": "2026-04-21T14:25:10Z",
   "status": "ISSUES",
-  "issues": 6,
-  "warnings": 6,
+  "issues": 4,
+  "warnings": 5,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "2 unaddressed P0/P1 flags in last 2h"
-    },
     {
       "severity": "P2",
       "area": "queue-worker",
-      "detail": "Worker last active 493544h ago \u2014 may be dead"
+      "detail": "Worker last active 493550h ago \u2014 may be dead"
     },
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "sam has no output today"
     },
     {
       "severity": "P0",
@@ -47,11 +37,6 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
       "detail": "sam stuck in dead-loop (assessment_stuck): routine engineering check"
     },
     {
@@ -62,39 +47,39 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (bottleneck_stuck): dashboard out-of-sync \u2014 data exists but HQ doesn't render "
+      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776759166-668",
+      "id": "cmd-1776780826-507",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git push origin main 2>&1 | tail -10 && echo '---",
+      "command": "cd ~/Documents/Projects/Hyo && git status -s website/data/hq-state.json agents/s",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776759160-643",
+      "id": "cmd-1776780818-480",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git diff --stat kai/queue/daily-audit.sh && echo ",
+      "command": "cd ~/Documents/Projects/Hyo && git status -s | grep -E '(hq-state|nel|cipher|sen",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776759147-616",
+      "id": "cmd-1776780808-454",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git status --short kai/queue/daily-audit.sh kai/l",
+      "command": "cp ~/Documents/Projects/Hyo/website/data/hq-state.json ~/Documents/Projects/Hyo/",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776759138-590",
+      "id": "cmd-1776780793-428",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git status --short && echo '---LOG---' && git log",
+      "command": "ls -la ~/Documents/Projects/Hyo/website 2>&1 | head -2 && echo --- && diff ~/Doc",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-kai-001",
+      "id": "cmd-1776780782-401",
       "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
+      "command": "python3 ~/Documents/Projects/Hyo/kai/queue/_tmp_hq_update.py && rm ~/Documents/P",
       "exit_code": 0
     }
   ],
