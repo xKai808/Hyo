@@ -617,53 +617,103 @@ print(f"✓ JSON report written: {json_output_path}")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def build_agent_narrative(name, report):
-    """Build a 3-5 sentence narrative for one agent, growth-focused."""
+    """Build a 2-4 sentence human-readable narrative for one agent.
+    Tone: smart colleague briefing a CEO. BLUF first. No jargon without explanation.
+    Per PROTOCOL_MORNING_REPORT.md v1.1 Part 0b.
+    """
+    agent_labels = {
+        "nel": "Nel (security & QA)",
+        "ra": "Ra (newsletter)",
+        "sam": "Sam (engineering)",
+        "aether": "Aether (trading bot)",
+        "dex": "Dex (pattern detection)"
+    }
+    label = agent_labels.get(name, name.capitalize())
+
+    imp_status = report.get("improvement_status", "unknown")
+    weakness = report.get("weakness_identified", "")
+    novel = report.get("novel_work", "")
+    metric_before = report.get("metric_before", "")
+    metric_after = report.get("metric_after", "")
+    findings = report.get("research_findings", "")
+    has_aric = report.get("has_aric_data", False)
+    imp_desc = report.get("improvement_description", "")
+    commit = report.get("improvement_commit", "")
+
     parts = []
 
-    # Novel work
-    novel = report["novel_work"]
-    if "no" not in novel.lower() and "unknown" not in novel.lower():
-        parts.append(f"**{name.upper()}** is {novel}.")
+    if imp_status == "shipped" and imp_desc:
+        # Something real shipped — lead with that
+        if commit:
+            parts.append(f"{label} shipped a real improvement overnight: {imp_desc}.")
+        else:
+            parts.append(f"{label} completed work on: {imp_desc}.")
+        if metric_before and metric_after and metric_before != "N/A":
+            parts.append(f"Before: {metric_before}. After: {metric_after} — a measurable change.")
+        elif findings and findings not in ("none", "N/A", "(no ARIC data yet)", "(research not completed)"):
+            parts.append(f"What drove it: {findings[:120]}.")
+    elif has_aric and weakness and weakness not in ("Unknown", "?"):
+        # Research happened but nothing built yet — honest about that
+        parts.append(f"{label} is working on a structural weakness: {weakness}.")
+        if findings and findings not in ("none", "N/A", "(no ARIC data yet)", "(research not completed)"):
+            parts.append(f"What the research surfaced: {findings[:120]}.")
+        parts.append("No code has changed yet — the research is done, execution is next.")
+    elif novel and "no novel" not in novel.lower() and "unknown" not in novel.lower():
+        # Some active work, even without ARIC
+        parts.append(f"{label} is actively working on: {novel}.")
+        if weakness and weakness not in ("Unknown", "?"):
+            parts.append(f"The core issue being addressed: {weakness}.")
     else:
-        parts.append(f"**{name.upper()}** has no active novel work — {novel}.")
-        return " ".join(parts)
-
-    # Weakness + research
-    weakness = report["weakness_identified"]
-    sources = report["research_conducted"]
-    findings = report["research_findings"]
-    if sources != "none" and sources != "(no ARIC data yet)":
-        parts.append(f"Identified weakness: {weakness}. Researched: {sources}. Finding: {findings}.")
-    elif weakness != "?":
-        parts.append(f"Weakness identified: {weakness}. Research in progress.")
-
-    # Metric movement
-    if report["metric_moved"]:
-        parts.append(f"Metric moved: {report['metric_before']} → {report['metric_after']}.")
-
-    # External expansion
-    if report["external_opportunity_type"] != "none":
-        parts.append(f"Pursuing {report['external_opportunity_type']} expansion: {report['external_opportunity_desc']}.")
-
-    # ARIC status
-    if not report["has_aric_data"]:
-        parts.append("⚠️ No ARIC Phase 7 data — cycle may not have run.")
+        # Nothing notable — say so plainly
+        parts.append(f"{label} has no active improvement work this cycle.")
+        if weakness and weakness not in ("Unknown", "?"):
+            parts.append(f"Known weakness not yet worked: {weakness}.")
+        if not has_aric:
+            parts.append("Research cycle did not complete — no data to work from.")
 
     return " ".join(parts)
 
 # Build narrative per agent
+# Per PROTOCOL_MORNING_REPORT.md v1.1 Part 0b: BLUF + inverted pyramid, human tone
 print("\n" + "="*80)
 print("MORNING REPORT — " + today)
 print("="*80 + "\n")
 
-print(f"Growth trajectory: {trajectory} ({expanding_count}/{len(agents_list)} expanding)")
-print(f"Biggest risk: {biggest_risk}")
-print(f"Biggest win: {biggest_win}")
-print(f"API spend today: {api_spend_summary}")
-if hyo_attention:
-    print(f"⚠️ NEEDS ATTENTION: {hyo_attention}")
+# Executive summary: 3 human sentences
+# Q1: System healthy?
+if not exec_layer["alive"]:
+    health_sentence = f"The execution layer is down — queue worker has been stalled for {exec_layer['stall_hours']}h, which means no delegated commands have run."
+elif hyo_attention:
+    health_sentence = f"Something needs your attention this morning: {hyo_attention}"
+else:
+    health_sentence = "System is healthy — the queue is active and all agents ran overnight."
+
+# Q2: Biggest thing to know
+if wins:
+    big_thing = f"Biggest win: {wins[0]}."
+elif agents_shipped_count > 0:
+    big_thing = f"{agents_shipped_count} agent(s) shipped improvements overnight."
+elif agents_building_count > 0:
+    big_thing = f"{agents_building_count} agent(s) are actively building; nothing has shipped to production yet."
+else:
+    big_thing = f"No improvements shipped overnight — all agents are in research or stalled. That's not progress yet."
+
+# Q3: Watch for
+if risks:
+    watch_sentence = f"Watch: {risks[0]}."
+elif simulation_warning:
+    watch_sentence = "Watch: API synthesis didn't run, so agent 'research' is raw source snippets, not analyzed findings."
+else:
+    watch_sentence = "Nothing urgent to flag."
+
+print(health_sentence)
+print(big_thing)
+print(watch_sentence)
+if hyo_attention and not exec_layer["alive"]:
+    print(f"\n⚠️  {hyo_attention}")
 print()
 
+# Agent sections
 for agent_name in agents_list:
     narrative = build_agent_narrative(agent_name, agent_reports[agent_name])
     print(narrative)
@@ -740,18 +790,27 @@ for name, data in agents.items():
     if isinstance(has_aric, str):
         has_aric = has_aric.lower() == "true"
 
-    # Highlight what actually happened
-    # NOTE: no char limits — full text is displayed in HQ, truncation causes cut-off
+    # Highlight what actually happened — human-readable, CEO-audience
+    # Per PROTOCOL_MORNING_REPORT.md v1.1 Part 0b: lead with "so what", not "what ran"
     if imp_status == "shipped" and data.get("improvement_description"):
-        parts.append(f"Shipped: {data['improvement_description']}.")
+        imp_d = data["improvement_description"]
+        commit = data.get("improvement_commit", "")
+        parts.append(f"Shipped a real improvement: {imp_d}." + (f" Commit: {commit}." if commit else ""))
+        if data.get("metric_after") and data.get("metric_before") and data.get("metric_before") != "N/A":
+            parts.append(f"Before: {data['metric_before']} → after: {data['metric_after']}.")
     elif rc > 0 and has_aric:
-        parts.append(f"Identified weakness: {w}." if w and w != "?" else "Weakness unclear.")
-        parts.append(f"Fetched {rc} sources.")
+        if w and w != "?":
+            parts.append(f"Working on: {w}.")
         if rf and rf not in ("none", "N/A", "(no ARIC data yet)", "(research not completed)"):
-            parts.append(f"Key finding: {rf}")
+            parts.append(f"What the research found: {rf[:150]}.")
+        parts.append("Research is done — no code changed yet.")
+    elif nw and "no novel" not in nw.lower() and "unknown" not in nw.lower():
+        parts.append(f"Active work: {nw}.")
     else:
-        parts.append(nw if nw and "no novel" not in nw.lower() else "No cycle data — ARIC may not have run.")
-    highlights[name] = " ".join(parts) if parts else "No active work this cycle."
+        parts.append("No active improvement work this cycle.")
+        if not has_aric:
+            parts.append("Research cycle didn't complete.")
+    highlights[name] = " ".join(parts) if parts else "No data."
 
     # went_well: ONLY if something shipped with a commit hash
     if imp_status == "shipped" and data.get("improvement_description"):
@@ -772,16 +831,40 @@ if not went_well:
 if not needs_attention:
     needs_attention = ["No critical issues"]
 
-# Summary text: honest, execution-first
-system_status = "offline" if exec_layer_status and not exec_layer_status.get("alive", True) else "online"
-summary_text = (
-    f"System: {system_status}. "
-    f"Growth: {exec_summary.get('growth_trajectory', '?')} "
-    f"({exec_summary.get('trajectory_confidence', '?')} with actual shipped work). "
-    f"API spend: {exec_summary.get('api_spend_today', '?')}."
-)
+# Summary text: 3 human sentences per PROTOCOL_MORNING_REPORT.md v1.1 Part 0b
+# Q1: System healthy? Q2: Biggest thing to know? Q3: What to watch?
+system_alive = exec_layer_status.get("alive", True) if exec_layer_status else True
+hyo_attn = exec_summary.get("hyo_attention")
+
+if not system_alive:
+    stall_h = exec_layer_status.get("stall_hours", "?") if exec_layer_status else "?"
+    q1 = f"The execution layer is down — the queue has been stalled for {stall_h}h, so no delegated commands ran overnight."
+elif hyo_attn:
+    q1 = f"Something needs your attention: {hyo_attn}"
+else:
+    q1 = "System is healthy — the queue is active and all agents ran overnight."
+
+agents_shipped = exec_summary.get("agents_shipped", 0)
+agents_building = exec_summary.get("agents_building", 0)
+biggest_win = exec_summary.get("biggest_win", "")
+if agents_shipped and agents_shipped > 0:
+    q2 = f"{agents_shipped} agent(s) shipped real improvements." + (f" Biggest win: {biggest_win}." if biggest_win and "no" not in biggest_win.lower() else "")
+elif agents_building and agents_building > 0:
+    q2 = f"{agents_building} agent(s) are actively building — nothing shipped to production yet."
+else:
+    q2 = "No improvements shipped overnight — agents are in research or haven't started building."
+
+biggest_risk = exec_summary.get("biggest_risk", "")
 if simulation_warning:
-    summary_text += " ⚠️ Synthesis phase did not run."
+    q3 = "Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings."
+elif biggest_risk and "no blocker" not in biggest_risk.lower():
+    q3 = f"Watch: {biggest_risk}."
+else:
+    q3 = "Nothing urgent to flag."
+
+summary_text = f"{q1} {q2} {q3}"
+if simulation_warning:
+    summary_text += " ⚠️ Synthesis did not run."
 
 now_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 entry = {

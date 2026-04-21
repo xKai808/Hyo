@@ -72,9 +72,27 @@ fi
 WORKER_LOG="$QUEUE/worker.log"
 if [[ -f "$WORKER_LOG" ]]; then
   LAST_LINE=$(tail -1 "$WORKER_LOG" 2>/dev/null)
-  LAST_TS=$(echo "$LAST_LINE" | grep -oE '\[20[0-9]{2}-[0-9]{2}-[0-9]{2}' | tr -d '[' | head -1)
+  # Extract full ISO timestamp (e.g. 2026-04-21T10:02:24Z) — date-only extraction caused
+  # macOS date parse failure → fallback to epoch 0 → bogus "493541h ago" (SE-healthcheck-001)
+  LAST_TS=$(echo "$LAST_LINE" | grep -oE '20[0-9]{2}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z' | head -1)
+  if [[ -z "$LAST_TS" ]]; then
+    # Fallback: date-only from [YYYY-MM-DD format
+    LAST_TS=$(echo "$LAST_LINE" | grep -oE '20[0-9]{2}-[0-9]{2}-[0-9]{2}' | head -1)
+  fi
   if [[ -n "$LAST_TS" ]]; then
-    LAST_EPOCH=$(date -d "$LAST_TS" +%s 2>/dev/null || date -f "%Y-%m-%d" "$LAST_TS" +%s 2>/dev/null || echo 0)
+    # Use python3 for portable epoch parsing (avoids macOS date -d / date -f bugs)
+    LAST_EPOCH=$(python3 -c "
+import datetime, sys
+ts = '$LAST_TS'
+try:
+    if 'T' in ts:
+        d = datetime.datetime.strptime(ts, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
+    else:
+        d = datetime.datetime.strptime(ts, '%Y-%m-%d').replace(tzinfo=datetime.timezone.utc)
+    print(int(d.timestamp()))
+except Exception as e:
+    print(0)
+" 2>/dev/null || echo 0)
     NOW_EPOCH=$(date +%s)
     AGE_HOURS=$(( (NOW_EPOCH - LAST_EPOCH) / 3600 ))
     if [[ $AGE_HOURS -gt 4 ]]; then
@@ -125,7 +143,8 @@ if [[ -f "$MR_JSON" ]]; then
     MR_STALE=true
   fi
   # Verify rendering code exists in hq.html
-  if [[ -f "$HQ_HTML" ]] && ! grep -q "loadMorningReport\|mrSummary" "$HQ_HTML" 2>/dev/null; then
+  # Check for renderMorningReport (the actual function) or the type string used in the type-switch
+  if [[ -f "$HQ_HTML" ]] && ! grep -qE "renderMorningReport|'morning-report'" "$HQ_HTML" 2>/dev/null; then
     add_finding "P0" "morning-report" "Morning report JSON exists but hq.html has NO rendering code"
   fi
 else
@@ -159,10 +178,20 @@ print(cw.get('currentBalance', 0))
 fi
 
 # 5c: Data-to-HTML binding — every JSON must have a render reference
+# SKIP LIST: files legitimately not referenced by filename in hq.html:
+#   - hq-state.json: server-side state, fetched via /api/hq endpoint not direct filename
+#   - remote-access.json: used by remote-monitor, not rendered in hq.html
+#   - morning-report.json: rendered via type-switch ('morning-report'), not by filename ref
+# (SE-healthcheck-001: these caused chronic false P0/P2 for 20+ cycles)
+RENDER_BINDING_SKIP="^(hq-state|remote-access|morning-report)\.json$"
 if [[ -f "$HQ_HTML" ]]; then
   for jf in "$ROOT"/website/data/*.json; do
     [[ ! -f "$jf" ]] && continue
     jname=$(basename "$jf")
+    # Skip files that use alternative reference mechanisms
+    if echo "$jname" | grep -qE "$RENDER_BINDING_SKIP" 2>/dev/null; then
+      continue
+    fi
     if ! grep -q "$jname" "$HQ_HTML" 2>/dev/null; then
       add_finding "P2" "render-binding" "Data file $jname has no reference in hq.html"
     fi
