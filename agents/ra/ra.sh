@@ -68,6 +68,12 @@ if [[ -f "$TICKET_HOOKS" ]]; then
   ticket_cycle_start "ra" || true
 fi
 
+# ---- Self-improvement cycle (weakness → research → implement → compound) -----
+SELF_IMPROVE_SH="$ROOT/bin/agent-self-improve.sh"
+if [[ -f "$SELF_IMPROVE_SH" ]]; then
+  HYO_ROOT="$ROOT" bash "$SELF_IMPROVE_SH" "ra" >> "$ROOT/kai/ledger/self-improve.log" 2>&1 || true
+fi
+
 ok()   { printf '%s✓%s %s\n' "$GRN" "$RST" "$*"; }
 warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
 err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }

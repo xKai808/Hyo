@@ -50,6 +50,12 @@ if [[ -f "$TICKET_HOOKS" ]]; then
   ticket_cycle_start "aether" || true
 fi
 
+# ─── Self-improvement cycle (weakness → research → implement → compound) ───────
+SELF_IMPROVE_SH="$ROOT/bin/agent-self-improve.sh"
+if [[ -f "$SELF_IMPROVE_SH" ]]; then
+  HYO_ROOT="$ROOT" bash "$SELF_IMPROVE_SH" "aether" >> "$ROOT/kai/ledger/self-improve.log" 2>&1 || true
+fi
+
 # ─── Monday Reset ─────────────────────────────────────────────────────────────
 check_monday_reset() {
   local dow

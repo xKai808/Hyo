@@ -59,6 +59,12 @@ if [[ -f "$TICKET_HOOKS" ]]; then
   ticket_cycle_start "nel" || true
 fi
 
+# ---- Self-improvement cycle (weakness → research → implement → compound) -----
+SELF_IMPROVE_SH="$ROOT/bin/agent-self-improve.sh"
+if [[ -f "$SELF_IMPROVE_SH" ]]; then
+  HYO_ROOT="$ROOT" bash "$SELF_IMPROVE_SH" "nel" >> "$ROOT/kai/ledger/self-improve.log" 2>&1 || true
+fi
+
 # ---- Claude Code delegate (source once, use throughout cycle) ---------------
 DELEGATE_SH="$ROOT/bin/claude-code-delegate.sh"
 [[ -f "$DELEGATE_SH" ]] && source "$DELEGATE_SH" || true

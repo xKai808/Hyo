@@ -60,6 +60,12 @@ if [[ -f "$TICKET_HOOKS" ]]; then
   ticket_cycle_start "sam" || true
 fi
 
+# ---- Self-improvement cycle (weakness → research → implement → compound) -----
+SELF_IMPROVE_SH="$ROOT/bin/agent-self-improve.sh"
+if [[ -f "$SELF_IMPROVE_SH" ]]; then
+  HYO_ROOT="$ROOT" bash "$SELF_IMPROVE_SH" "sam" >> "$ROOT/kai/ledger/self-improve.log" 2>&1 || true
+fi
+
 # ---- logging ----------------------------------------------------------------
 log_activity() {
   local cmd="$1" status="$2" details="${3:-}"

@@ -399,6 +399,11 @@ check_and_dispatch 7 15 "completeness-check" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/report-completeness-check.sh >> $HYO_ROOT/kai/ledger/completeness.log 2>&1" \
   "completeness_check_run"
 
+# Self-improvement cycle for all agents (08:00) — compounding flywheel
+check_and_dispatch 8 0 "agent-self-improve-all" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
+  "self_improve_run"
+
 # Queue hygiene (09:30)
 check_and_dispatch 9 30 "queue-hygiene" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/queue-hygiene.sh >> $HYO_ROOT/kai/ledger/queue-hygiene.log 2>&1" \
