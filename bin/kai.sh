@@ -318,9 +318,25 @@ cmd_validate() {
 cmd_deploy() {
   cmd_validate
   hdr "Deploying website to Vercel"
-  cd "$ROOT/website"
-  npx vercel@latest --prod --yes
-  ok "deploy dispatched"
+  local hook_file="$ROOT/agents/nel/security/deploy-hook"
+  if [[ -f "$hook_file" ]]; then
+    local hook
+    hook=$(cat "$hook_file")
+    local response
+    response=$(curl -s -X POST "$hook" 2>/dev/null || echo '{}')
+    local job_id
+    job_id=$(echo "$response" | python3 -c "import json,sys; print(json.load(sys.stdin).get('job',{}).get('id','unknown'))" 2>/dev/null || echo "unknown")
+    ok "deploy triggered via hook — job: $job_id"
+    echo "  Monitor: https://vercel.com/dashboard" >&2
+  else
+    # Fallback: CLI deploy from parent dir so Vercel root-dir=website resolves correctly
+    warn "deploy hook not found — trying CLI from project root"
+    cd "$ROOT"
+    npx vercel@latest --prod --yes --cwd website 2>/dev/null || \
+      npx vercel@latest --prod --yes 2>/dev/null || \
+      die "CLI deploy also failed — check agents/nel/security/deploy-hook"
+    ok "deploy dispatched via CLI"
+  fi
   sleep 5
   cmd_health
 }

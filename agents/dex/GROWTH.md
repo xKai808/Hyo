@@ -202,7 +202,7 @@ Build a new checker (Phase 6: Constitution Drift Detection) that runs daily:
 - Evolution.jsonl shows growth (new entries regularly, no repetition)
 - If constitution changes, drift detector flags any agent not updated within 24h
 
-**Status:** planned
+**Status:** W3 Phase 1 shipped — false-positive dedup (2026-04-21). Constitution drift detector is Phase 2 (target 2026-05-05).
 
 **Ticket:** IMP-dex-003
 
@@ -220,7 +220,9 @@ Build a new checker (Phase 6: Constitution Drift Detection) that runs daily:
 |------|-------------|----------------------|
 | 2026-04-14 | Initial assessment created. Identified 3 weaknesses: detection without fix, pattern counting not analysis, no drift detection. | Baseline established. Real evidence from known-issues.jsonl (120 patterns detected, 2+ JSONL corrupt entries), KAI_BRIEF (P0 gitignore gap repeated 2+ days), session-errors.jsonl (governance drift pattern). |
 | 2026-04-14 | I1 Phase 1 shipped: Auto-Repair engine (repair.sh) integrated into Phase 1.5 of dex.sh. | Script created, tested, and wired. Handles 5 corruption types (trailing comma, missing braces, truncated lines, duplicates, empty lines). Test run on 7-line JSONL with 2 corrupt entries: repaired 2, deduped 1, removed 1 empty line. Result: 4 clean entries. Safety verified: atomic operations, temp cleanup on failure. |
-| 2026-04-21 | (Planned) Nightly run validates I1 deployment. | Nightly run: 7 corrupt entries fixed (missing ts field, 3 deduped, 2 malformed JSON repaired), 2 unparseable entries quarantined. Phase 1 status: HEALTHY (was FAILED). |
+| 2026-04-21 | W1→dex-repair.py shipped: JSONL auto-repair scans 8 ledger files, removes dupes, injects missing fields. Display bug fixed (ok status handler). Wired into consolidate.sh Phase 0a. | dex-repair.py commit 43b15f2 — clean output on all 8 files. |
+| 2026-04-21 | W2→dex-cluster.py shipped: Jaccard token clustering (UnionFind), temporal pattern detection. 255 entries → 117 clusters (54.1% noise reduction). Wired into consolidate.sh Phase 0b. | dex-cluster.py commit 22c3c7d. |
+| 2026-04-21 | W3 Phase 1→dex-dedup.py shipped: 5 known false-positive patterns registered. 128 recurrent false positives resolved in known-issues.jsonl + nel ledger. Wired into consolidate.sh Phase 0c. | dex-dedup.py created 2026-04-21. |
 | 2026-04-28 | (Planned) Root Cause Clustering Phase 4 live. | Pattern report shows: "5 clusters detected. Ra pipeline (42 issues, 35%, increasing trend), Stale Sentinel (31 issues, 26%, stable), Aether sync (18 issues, 15%, decreasing). Root causes: (1) gather schema mismatch, (2) sentinel baseline unchanged, (3) aether metrics lag." |
 | 2026-05-05 | (Planned) Constitution Drift Detector Phase 6 operational. | Daily drift audit: All 5 agents on AGENT_ALGORITHMS v3.1. Sam's runner missing Phase 5 flagged P1 (PLAYBOOK will be updated). All ACTIVE.md <24h old. Evolution shows growth across all agents (no dead-loops). Constitution consistency: HEALTHY. |
 | 2026-04-15 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |

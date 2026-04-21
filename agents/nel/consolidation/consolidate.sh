@@ -441,6 +441,13 @@ if [[ -f "$DEX_CLUSTER" ]]; then
 ' ' ')"
 fi
 
+DEX_DEDUP="$ROOT/agents/dex/dex-dedup.py"
+if [[ -f "$DEX_DEDUP" ]]; then
+  log "Phase 0c: Running Dex false-positive dedup..."
+  DEDUP_OUT=$(HYO_ROOT="$ROOT" python3 "$DEX_DEDUP" 2>&1 || true)
+  log "Dex dedup: $(echo "$DEDUP_OUT" | grep 'Summary:' | head -1)"
+fi
+
 if [[ "$TARGET" == "all" ]]; then
   for proj in hyo aurora-ra aether kai-ceo nel sam; do
     run_project "$proj"
