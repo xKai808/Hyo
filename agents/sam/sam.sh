@@ -361,12 +361,26 @@ cmd_fix() {
   say ""
   say "Issue: $issue"
   say ""
-  say "Next step: Run on the Mini to implement the fix:"
-  say ""
-  say "  ${BOLD}claude -p \"Issue: $issue. Read the code, create a plan, implement the fix, test it, and report status.\"${RST}"
-  say ""
 
   log_activity "fix" "initiated" "Issue: $issue"
+
+  # Source Claude Code delegate and run autonomously
+  local delegate="$ROOT/bin/claude-code-delegate.sh"
+  if [[ -f "$delegate" ]]; then
+    source "$delegate"
+    say "Delegating to Claude Code..."
+    claude_delegate \
+      --agent "sam" \
+      --task "$issue" \
+      --priority "P1" && \
+      say "✓ Claude Code completed the fix" || \
+      say "✗ Claude Code could not complete fix — ticket opened for review"
+  else
+    say "WARN: claude-code-delegate.sh not found"
+    say "Manual fallback: claude -p \"$issue\""
+  fi
+
+  log_activity "fix" "completed" "Issue: $issue"
 }
 
 # ---- review -----------------------------------------------------------------
@@ -465,6 +479,70 @@ EOF
 # ---- evolve: Sam self-evolution logging ----------------------------------------
 cmd_evolve() {
   hdr "Sam: Self-evolution logging"
+
+  # ── PHASE 0: Claude Code ticket resolution ────────────────────────────────
+  # Sam picks up open coding tickets and delegates them to Claude Code.
+  # This is the core of autonomous coding — no Cowork session required.
+  local DELEGATE_SH="$ROOT/bin/claude-code-delegate.sh"
+  if [[ -f "$DELEGATE_SH" ]]; then
+    source "$DELEGATE_SH"
+
+    local claude_bin
+    if claude_bin=$(_find_claude_bin 2>/dev/null); then
+      say "Phase 0: Claude Code ticket resolution (binary: $claude_bin)"
+
+      # Find open P1/P2 tickets owned by sam with type=bug or type=improvement
+      local ticket_ledger="$ROOT/kai/tickets/tickets.jsonl"
+      if [[ -f "$ticket_ledger" ]]; then
+        local coding_tickets
+        coding_tickets=$(python3 -c "
+import json, sys
+with open('$ticket_ledger') as f:
+    tickets = [json.loads(l) for l in f if l.strip()]
+# Filter: open sam tickets that are coding-resolvable
+eligible = [
+    t for t in tickets
+    if t.get('owner','').lower() in ('sam','k','kai')
+    and t.get('status','').upper() in ('OPEN','ACTIVE')
+    and t.get('priority','') in ('P1','P2')
+    and t.get('type','') in ('bug','improvement','code-fix','')
+    and 'BLOCKED' not in t.get('title','').upper()
+    and 'STRIPE' not in t.get('title','').upper()
+    and 'API KEY' not in t.get('title','').upper()
+    and 'CREDENTIALS' not in t.get('title','').upper()
+][:3]  # Max 3 per cycle to avoid runaway
+for t in eligible:
+    print(json.dumps({'id': t['id'], 'title': t['title'], 'priority': t['priority']}))
+" 2>/dev/null || echo "")
+
+        if [[ -n "$coding_tickets" ]]; then
+          local ticket_count
+          ticket_count=$(echo "$coding_tickets" | wc -l | tr -d ' ')
+          say "  Found $ticket_count eligible coding tickets for Claude Code"
+
+          while IFS= read -r ticket_json; do
+            [[ -z "$ticket_json" ]] && continue
+            local tid tprio ttitle
+            tid=$(echo "$ticket_json" | python3 -c "import json,sys; print(json.load(sys.stdin)['id'])" 2>/dev/null)
+            tprio=$(echo "$ticket_json" | python3 -c "import json,sys; print(json.load(sys.stdin)['priority'])" 2>/dev/null)
+            ttitle=$(echo "$ticket_json" | python3 -c "import json,sys; print(json.load(sys.stdin)['title'])" 2>/dev/null)
+
+            say "  Delegating [$tprio] $tid: $ttitle"
+            claude_delegate \
+              --agent "sam" \
+              --task "$ttitle" \
+              --ticket "$tid" \
+              --priority "$tprio" \
+              --timeout 300 || true
+          done <<< "$coding_tickets"
+        else
+          say "  No eligible coding tickets for Claude Code this cycle"
+        fi
+      fi
+    else
+      say "Phase 0: Claude binary not found — skipping ticket resolution"
+    fi
+  fi
 
   # Self-review reasoning gates
   local AGENT_GATES="$ROOT/kai/protocols/agent-gates.sh"

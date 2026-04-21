@@ -59,6 +59,10 @@ if [[ -f "$TICKET_HOOKS" ]]; then
   ticket_cycle_start "nel" || true
 fi
 
+# ---- Claude Code delegate (source once, use throughout cycle) ---------------
+DELEGATE_SH="$ROOT/bin/claude-code-delegate.sh"
+[[ -f "$DELEGATE_SH" ]] && source "$DELEGATE_SH" || true
+
 # ---- Report Header ----------------------------------------------------------
 cat > "$REPORT" <<EOF
 # Nel System Report
