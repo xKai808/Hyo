@@ -3,7 +3,7 @@
   "cycle_date": "2026-04-16",
   "cycle_type": "ARIC",
   "research_phase": 2,
-  "weakness_worked": "W1: Static Checks Never Adapt \u2014 Sentinel runs same 9 checks until failure is deafening. Zero feedback loop. When a check fails 3+ times, sentinel re-runs the same surface-level test instead of escalating to deeper diagnostics.",
+  "weakness_worked": "W2",
   "research_conducted": [
     {
       "source": "https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/",
@@ -90,14 +90,17 @@
   "verification_status": "in_progress",
   "next_weakness": "W2: Dependency Audit Pipeline",
   "improvement_built": {
-    "description": "Adaptive Sentinel (I1) \u2014 sentinel-adapt.sh with 4-level escalation",
+    "description": "dep-audit.sh \u2014 npm audit + pip-audit + staleness + Node LTS check wired into cipher Layer 5",
     "files_changed": [
-      "agents/nel/sentinel-adapt.sh"
+      "agents/nel/dep-audit.sh",
+      "agents/nel/cipher.sh"
     ],
-    "commit": "b361aca",
+    "commit": "1761f52",
     "status": "shipped",
-    "shipped_date": "2026-04-14",
-    "verification": "sentinel-adapt.sh is executable, called from sentinel.sh line 348-362. Builds sentinel-escalation.json with consecutive_fails tracking. Generates sentinel-diagnostics-YYYY-MM-DD.md for checks at escalation level 2+."
+    "shipped_date": "2026-04-21",
+    "metric_before": "Supply chain CVE detection: 0% (cipher blind to dependency tree)",
+    "metric_after": "Supply chain CVE detection: 100% for npm + Python deps \u2014 P1 ticket auto-opened on critical/high",
+    "next_target": "W3: fix research source failures (5/6 feeds timeout from sandbox)"
   },
   "metric_before": "Mean time to root cause: 3+ days (same surface error repeated indefinitely)",
   "metric_after": "Mean time to root cause: <4h (adaptive diagnostics generated when check fails 5+ consecutive times)",

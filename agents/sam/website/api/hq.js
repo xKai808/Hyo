@@ -1,49 +1,107 @@
 // /api/hq — unified HQ endpoint (auth + push + data in ONE lambda)
-// This ensures push and data share the same globalThis memory.
+// Sam W2: Vercel KV persistence layer added 2026-04-21
+//   - globalThis used as fast in-memory cache (same as before)
+//   - On cold start: hydrates from KV if KV_REST_API_URL is configured
+//   - On every write: fire-and-forget KV sync (best-effort, never blocks response)
+//   - Fallback: if KV not configured or unavailable, behaves exactly as before
+//
+// To activate persistence: provision Vercel KV in dashboard, then add env vars:
+//   KV_REST_API_URL   — from Vercel KV dashboard "REST API" tab
+//   KV_REST_API_TOKEN — from same tab (read-write token)
+//   See: agents/sam/website/docs/VERCEL_KV_SETUP.md
 //
 // Routes (via ?action= query param):
 //   POST ?action=auth    { password }           → { ok, token }
 //   POST ?action=push    { agent, event, data } → { ok } (founder-token gated)
 //   GET  ?action=data                           → { ok, ...store } (session-token gated)
-//   GET  (no action)                            → { ok, service: "hq" }
+//   GET  (no action)                            → { ok, service: "hq", kv_connected }
 
 import { createHash, createHmac, timingSafeEqual } from 'crypto';
 
-// ─── In-memory store (shared across requests in the same lambda) ───
-if (!globalThis.__hq) {
-  globalThis.__hq = {
+// ─── KV persistence layer (activates when KV_REST_API_URL is set) ─────────────
+let kv = null;
+let kvConnected = false;
+const KV_KEY = 'hq:store';
+
+async function initKV() {
+  if (!process.env.KV_REST_API_URL) return; // KV not provisioned — silent no-op
+  try {
+    const mod = await import('@vercel/kv');
+    kv = mod.kv;
+    kvConnected = true;
+    console.log('[hq] Vercel KV connected — state persists across cold starts');
+  } catch (e) {
+    console.warn('[hq] @vercel/kv not installed or import failed:', e.message);
+    console.warn('[hq] Falling back to in-memory store. Run: npm install @vercel/kv in website/');
+  }
+}
+
+function makeEmptyStore() {
+  return {
     events: [],
     ra: {}, aurora: {}, sentinel: {}, cipher: {},
     sim: {}, consolidation: {}, aether: {}, health: {},
     credits: {},
-    hyoMessages: [],  // Hyo → Kai inbox (persists during lambda warm period)
+    hyoMessages: [],
   };
+}
+
+// Hydrate globalThis from KV on cold start
+async function hydrateFromKV() {
+  if (!kv || globalThis.__hq) return; // Already warm or KV unavailable
+  try {
+    const persisted = await kv.get(KV_KEY);
+    globalThis.__hq = persisted || makeEmptyStore();
+    console.log('[hq] State hydrated from KV (' +
+      (globalThis.__hq.events?.length || 0) + ' events loaded)');
+  } catch (e) {
+    console.warn('[hq] KV hydration failed:', e.message, '— using empty store');
+    globalThis.__hq = makeEmptyStore();
+  }
+}
+
+// Fire-and-forget KV write — never blocks the response
+function syncToKV() {
+  if (!kv) return;
+  kv.set(KV_KEY, globalThis.__hq).catch(e =>
+    console.warn('[hq] KV write failed (non-fatal):', e.message)
+  );
+}
+
+// Initialize KV and hydrate — runs once per cold start (top-level await)
+await initKV();
+await hydrateFromKV();
+
+// ─── In-memory store (shared across requests in the same lambda) ───────────────
+if (!globalThis.__hq) {
+  globalThis.__hq = makeEmptyStore();
 }
 // Ensure hyoMessages exists on older warm lambdas
 if (!globalThis.__hq.hyoMessages) globalThis.__hq.hyoMessages = [];
+
 function getStore() { return globalThis.__hq; }
 function pushEvent(agent, msg) {
   const store = getStore();
   store.events.unshift({ ts: new Date().toISOString(), agent, msg });
   if (store.events.length > 100) store.events.length = 100;
+  syncToKV();
 }
 function updateSection(section, data) {
   const store = getStore();
   if (store[section] !== undefined) {
     Object.assign(store[section], data);
   }
+  syncToKV();
 }
 
-// ─── Auth helpers ───
+// ─── Auth helpers ──────────────────────────────────────────────────────────────
 const HQ_PASS_HASH = '0ff6c5c11e95ef67d8ee819553c366dcfa1895cd29592cbd9e4d97b074f0a333';
 const SECRET = process.env.HYO_FOUNDER_TOKEN;
 if (!SECRET) {
-  // Fail loud at startup — a missing env var must never silently downgrade security
   console.error('[hq] FATAL: HYO_FOUNDER_TOKEN env var not set — endpoint refusing all requests');
 }
 
-// ─── Rate limiting (in-memory, per-lambda — Vercel serverless) ───
-// Limits auth attempts to 10/min per IP to prevent brute-force attacks
+// ─── Rate limiting (in-memory, per-lambda) ────────────────────────────────────
 if (!globalThis.__hqRateLimit) globalThis.__hqRateLimit = new Map();
 function checkRateLimit(ip, max = 10, windowMs = 60000) {
   const now = Date.now();
@@ -52,7 +110,6 @@ function checkRateLimit(ip, max = 10, windowMs = 60000) {
   if (now > entry.reset) { entry.count = 0; entry.reset = now + windowMs; }
   entry.count++;
   globalThis.__hqRateLimit.set(key, entry);
-  // Prune old entries occasionally
   if (globalThis.__hqRateLimit.size > 500) {
     for (const [k, v] of globalThis.__hqRateLimit) {
       if (now > v.reset) globalThis.__hqRateLimit.delete(k);
@@ -82,9 +139,8 @@ function verifyToken(token) {
   } catch { return false; }
 }
 
-// ─── Handler ───
+// ─── Handler ───────────────────────────────────────────────────────────────────
 export default function handler(req, res) {
-  // Refuse all requests if secret is not configured
   if (!SECRET) {
     return res.status(503).json({ ok: false, error: 'service misconfigured' });
   }
@@ -96,7 +152,6 @@ export default function handler(req, res) {
     const { password } = req.body || {};
     if (!password) return res.status(400).json({ ok: false, error: 'missing password' });
 
-    // Rate limit auth attempts by IP
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
     if (!checkRateLimit(ip, 10, 60000)) {
       return res.status(429).json({ ok: false, error: 'too many requests' });
@@ -167,11 +222,9 @@ export default function handler(req, res) {
       status: 'unread',
     };
     store.hyoMessages.unshift(entry);
-    // Keep last 200 messages
     if (store.hyoMessages.length > 200) store.hyoMessages.length = 200;
-
-    // Also push to events feed so it appears in store.events
     pushEvent('hyo', `[Hyo→Kai] ${message.trim().slice(0, 80)}`);
+    syncToKV();
 
     return res.status(200).json({ ok: true, ts: entry.ts });
   }
@@ -188,7 +241,13 @@ export default function handler(req, res) {
 
   // ── fallback ──
   if (req.method === 'GET' && !action) {
-    return res.status(200).json({ ok: true, service: 'hq', ts: new Date().toISOString() });
+    return res.status(200).json({
+      ok: true,
+      service: 'hq',
+      ts: new Date().toISOString(),
+      kv_connected: kvConnected,
+      persistence: kvConnected ? 'vercel-kv' : 'in-memory-only',
+    });
   }
 
   return res.status(400).json({ ok: false, error: 'unknown action' });

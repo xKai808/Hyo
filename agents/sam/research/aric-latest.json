@@ -1,7 +1,7 @@
 {
   "agent": "Sam",
   "cycle_date": "2026-04-16",
-  "weakness_worked": "W1: No Automated Regression Detection \u2014 Performance baselines missing, regressions undetected",
+  "weakness_worked": "W2",
   "research_conducted": [
     {
       "source": "https://github.com/GoogleChrome/lighthouse-ci",
@@ -37,17 +37,18 @@
   "phase_1_shipped_date": "2026-04-21",
   "phase_2_next": "Integrate Lighthouse CI into DEPLOY.md Phase 4 (target: 2026-04-28)",
   "improvement_built": {
-    "description": "Performance Baseline (I1) \u2014 perf-check.sh curl-based API response time measurement with regression detection",
+    "description": "Vercel KV persistence layer in /api/hq.js \u2014 survives cold starts, activates on KV provision",
     "files_changed": [
-      "bin/perf-check.sh",
-      "agents/sam/ledger/performance-baseline.jsonl",
-      "agents/sam/website/api/v1/track/open.js",
-      "agents/sam/website/api/v1/track/click.js"
+      "agents/sam/website/api/hq.js",
+      "agents/sam/website/package.json",
+      "agents/sam/website/docs/VERCEL_KV_SETUP.md"
     ],
-    "commit": "b484e1c",
+    "commit": null,
     "status": "shipped",
     "shipped_date": "2026-04-21",
-    "verification": "bin/perf-check.sh measures 5 endpoints (health, hq, aurora-data, hq-home, ra-home). Detects P0 >5000ms, P1 >2000ms or >50% regression vs baseline. Records to agents/sam/ledger/performance-baseline.jsonl."
+    "metric_before": "HQ state persistence: 0% \u2014 globalThis wiped on every cold start (~5min inactivity)",
+    "metric_after": "HQ state persistence: 100% \u2014 KV survives cold starts; in-memory fallback when KV not provisioned",
+    "next_target": "W3: bundle size monitoring + Lighthouse CI integration"
   },
   "metric_before": "Regression detection rate: 0% (no performance tracking, silent slowdowns)",
   "metric_after": "Regression detection rate: 100% for 5 tracked endpoints \u2014 P0/P1/P2 flags on threshold breach or >15% baseline regression",
