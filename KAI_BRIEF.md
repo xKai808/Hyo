@@ -52,6 +52,24 @@
 **Earlier sentinel run:** 2026-04-18 ~04:05 MT (run #70, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix: `manifest-valid-json` RESOLVED — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json`. Same three recurring P0/P1/P2 environmental carryover as above. See `agents/nel/logs/sentinel-2026-04-18.md`.
 **Earliest sentinel run on record (this brief):** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
 
+## Shipped today (2026-04-21 — Session 24: algorithm-first architecture + 6 new protocols)
+
+**Session 24 — Hyo's system directives fully implemented**
+
+- **6 new protocols SHIPPED** (commit 09bd336): all algorithm-first design (gate before rule):
+  - PROTOCOL_TICKET_LIFECYCLE.md: 42-source research; 5-cycle escalation to Kai; RESOLVED/CLOSED distinction; prevention gate mandatory before close; 8-gate closure algorithm
+  - PROTOCOL_PREFLIGHT.md: HARD RULE as protocol; session start mandatory reads; NO-PATCH gate defined with full patch taxonomy
+  - PROTOCOL_HQ_PUBLISH.md: theater detection; schema validation by report type; publish-to-feed.sh required path; post-publish verification gate
+  - PROTOCOL_AETHER_ISOLATION.md: 4-gate isolation; Aether-exclusive file list; external-only weakness scope; per-agent CAN/CANNOT table
+  - PROTOCOL_GOAL_STALENESS.md: 7-gate daily scan; dead-loop detection (Jaccard similarity ≥80% across 3 consecutive entries); Kai Guidance Protocol guidance questions
+  - PROTOCOL_PROTOCOL_REVIEW.md: 7-gate daily audit; hole-finding scan (6 hole types); agent expert development check; protocol update algorithm
+- **TRIGGER_MATRIX.md CREATED**: full artifact inventory (10 sections, 60+ artifacts); trigger/execute/verify per artifact; Sessions 22-23 verification checklist
+- **AGENT_ALGORITHMS.md UPDATED**: Algorithm-First Architecture section added; Protocol Library table (12 protocols); Ticket Lifecycle updated with 5-cycle escalation + RESOLVED/CLOSED distinction + prevention gate; Daily Bottleneck Audit now includes protocol review + goal staleness steps
+- **bin/goal-staleness-check.py SHIPPED**: daily scanner at 06:00 MT; parses GROWTH.md standard table; checks evolution.jsonl; Jaccard dead-loop detection; P1/P2 flags; JSON output for morning report integration. TEST RESULT: correctly identifies all 4 agents lack standardized goal table format (P2 flags)
+- **agents/dex/ledger/known-errors.jsonl CREATED** (KEDB): initialized with 5 known errors (KE-001: Vercel deploy path, KE-002: git-lock, KE-003: ARIC enforcement gap, KE-004: false-positive accumulation, KE-005: dual-path sync) — each with workaround, permanent fix, gate question, prevention status
+- **kai/ledger/protocol-review-log.jsonl CREATED**: 7 entries for all protocols reviewed in session 24; holes_found + tickets_opened documented
+- **Aether GROWTH.md CORRECTED**: W1/W2/W3 redirected from internal AetherBot code issues → external intelligence domains: W1=macro data coverage (Fed/CPI/DXY), W2=on-chain signals (exchange inflows, funding rates), W3=Kalshi platform monitoring. Internal issues remain in PLAYBOOK.md "open issues" section (owned by Aether's own analysis cycle per PROTOCOL_AETHER_ISOLATION.md)
+
 ## Shipped today (2026-04-21 — Session 23: deploy fix + 3 systemic improvements)
 
 **Session 23 — Reducing bottlenecks autonomously**
