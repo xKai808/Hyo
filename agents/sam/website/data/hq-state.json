@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-21T06:13:32Z",
+  "updatedAt": "2026-04-21T10:11:30Z",
   "morningReport": {
     "date": "2026-04-18",
     "generatedAt": "2026-04-18T04:10:16-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync cycle @ 00:10 MT on 2026-04-21 (hq-ops-sync scheduled task). Sentinel run #112: 5p/4f stable (4 recurring day 13). Cipher clean, 7 autofixes. Nel score 85/100, 11 findings (20 broken links, 25 untested, 3 inefficient, 7 audit, 1 untriggered, 0 leaks). Cross-project sentinel all 4p/0f. ARIC ran. Self-delegated: 20 broken-symlink fix P2 + cycle summary P3. Growth IMP-nel-002 still blocked. Nel runner stderr: grep -P unsupported on BSD.",
+    "summary": "Ops sync cycle @ 04:11 MT (2026-04-21, hq-ops-sync scheduled task). Sentinel run #116: 7p/2f — IMPROVED from prior 5p/4f (2 recurring resolved). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings — 20 broken doc links, 25 untested scripts, 3 inefficient patterns, 7 audit issues, 1 untriggered file, 0 leaks. Cross-project sentinel: hyo=2p/2f, aurora-ra=4p/0f, aether=1p/1f, kai-ceo=4p/0f. ARIC research cycle ran. Self-delegated: nel-001 (P2) 20 broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Stderr: nel runner grep -P unsupported on BSD (P3 fix-it carried).",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,22 +14,81 @@
       "dex": "active"
     },
     "topIssues": [
-      "Task queue P0 saturation \u2014 27 P0 tasks vs threshold 5 (day 5 counter)",
+      "Sentinel run #116 IMPROVED — 7p/2f (resolved 2 recurring from #115)",
+      "Task queue P0 saturation — 27 P0 tasks vs threshold 5 (day 5 counter)",
       "Founder-token integrity P0 day 12 ESCALATED (cosmetic: mode 0600 valid but regex expects 6xx)",
-      "Scheduled-tasks-fired P1 day 12 ESCALATED (benign \u2014 aurora runs on Mini, not sandbox)",
-      "Secrets-dir-permissions P1 day 12 ESCALATED (cosmetic \u2014 0755 on symlink; target is 700)",
+      "Scheduled-tasks-fired P1 day 12 ESCALATED (benign — aurora runs on Mini, not sandbox)",
+      "Secrets-dir-permissions P1 day 12 ESCALATED (cosmetic — 0755 on symlink; target is 700)",
       "Nel: 20 broken doc links (up from 18), 25 untested scripts, 3 inefficient patterns, 5 sensitive files outside .secrets/",
       "20 broken symlinks identified in audit (nel self-delegated P2 fix)",
-      "Growth phase blocked \u2014 IMP-nel-002 CVE scanner needs package.json at project root",
-      "Dual-path drift \u2014 website/data/hq-state.json was stale 4h until manual sync this cycle",
-      "Nel runner stderr noise \u2014 grep -P (perl regex) unsupported on macOS BSD grep (P3 fix-it)"
+      "Growth phase blocked — IMP-nel-002 CVE scanner needs package.json at project root",
+      "Dual-path drift — website/data/hq-state.json was stale 4h until manual sync this cycle",
+      "Nel runner stderr noise — grep -P (perl regex) unsupported on macOS BSD grep (P3 fix-it)"
     ],
     "lastOpsSync": {
-      "ts": "2026-04-21T06:13:32Z",
-      "note": "Ops sync cycle @ 00:10 MT (2026-04-21, hq-ops-sync scheduled task \u2014 early run). Sentinel run #112: 5p/4f stable vs #111 \u2014 0 new, 4 recurring, 0 resolved. Day 13 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx \u2014 cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini \u2014 benign), P1 secrets-dir-permissions (0755 on symlink \u2014 cosmetic). P2 task-queue-size 27 P0 tasks day 6 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings \u2014 20 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-21.md). Self-delegated: nel-001 (P2) 20 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) \u2014 P3 fix-it carried forward."
+      "ts": "2026-04-21T10:11:30Z",
+      "note": "Ops sync cycle @ 04:11 MT (2026-04-21, hq-ops-sync scheduled task). Sentinel run #116: 7p/2f — IMPROVED from prior 5p/4f (2 recurring resolved). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings — 20 broken doc links, 25 untested scripts, 3 inefficient patterns, 7 audit issues, 1 untriggered file, 0 leaks. Cross-project sentinel: hyo=2p/2f, aurora-ra=4p/0f, aether=1p/1f, kai-ceo=4p/0f. ARIC research cycle ran. Self-delegated: nel-001 (P2) 20 broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Stderr: nel runner grep -P unsupported on BSD (P3 fix-it carried)."
     }
   },
   "events": [
+    {
+      "ts": "2026-04-21T10:11:30Z",
+      "agent": "nel",
+      "msg": "Health sweep — score 85/100 stable. 11 findings: 20 broken doc links, 25 untested scripts, 3 inefficient patterns, 7 audit issues, 1 untriggered file, 0 leaks. Self-delegated: 20 broken-symlink fix P2.",
+      "doc": "/viewer?agent=nel&file=2026-04-21"
+    },
+    {
+      "ts": "2026-04-21T10:11:30Z",
+      "agent": "cipher",
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied. HQ push 200 OK.",
+      "doc": "/viewer?agent=cipher&file=2026-04-21"
+    },
+    {
+      "ts": "2026-04-21T10:11:30Z",
+      "agent": "sentinel",
+      "msg": "QA sweep run #116 — 7 passed, 2 failed (IMPROVED vs #115 5p/4f; 2 resolved, 0 new). Recurring P2s only.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-21"
+    },
+    {
+      "ts": "2026-04-21T10:11:30Z",
+      "type": "ops-sync",
+      "agent": "kai",
+      "summary": "Ops sync cycle @ 04:11 MT (2026-04-21, hq-ops-sync scheduled task). Sentinel run #116: 7p/2f — IMPROVED from prior 5p/4f (2 recurring resolved). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings — 20 broken doc links, 25 untested scripts, 3 inefficient patterns, 7 audit issues, 1 untriggered file, 0 leaks. Cross-project sentinel: hyo=2p/2f, aurora-ra=4p/0f, aether=1p/1f, kai-ceo=4p/0f. ARIC research cycle ran. Self-delegated: nel-001 (P2) 20 broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Stderr: nel runner grep -P unsupported on BSD (P3 fix-it carried).",
+      "details": {
+        "sentinel": {
+          "pass": 7,
+          "fail": 2,
+          "resolved": 2,
+          "newIssues": 0,
+          "totalRuns": 116
+        },
+        "cipher": {
+          "leaks": 0,
+          "findings": 0,
+          "autofixes": 7
+        },
+        "nel": {
+          "score": 85,
+          "flags": 4,
+          "brokenLinks": 20,
+          "untested": 25,
+          "inefficient": 3,
+          "auditIssues": 7
+        }
+      }
+    },
+    {
+      "ts": "2026-04-21T08:00:05Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation — sam",
+      "doc": "/viewer?agent=consolidation&file=2026-04-21"
+    },
+    {
+      "ts": "2026-04-21T08:00:05Z",
+      "agent": "simulation",
+      "msg": "24h action plan — 2026-04-21",
+      "doc": "/viewer?agent=simulation&file=2026-04-21"
+    },
     {
       "ts": "2026-04-21T06:13:32Z",
       "type": "ops-sync",
@@ -57,67 +116,67 @@
     {
       "ts": "2026-04-20T22:15:00Z",
       "agent": "kai",
-      "msg": "Ops sync cycle @ 16:15 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #111: 5p/4f stable vs #109 \u2014 0 new, 4 recurring, 0 resolved. Day 12 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx \u2014 cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini \u2014 benign), P1 secrets-dir-permissions (0755 on symlink \u2014 cosmetic). P2 task-queue-size 27 P0 tasks day 5 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings \u2014 20 broken doc links (up from 18), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-20.md). Self-delegated: nel-001 (P2) 20 broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). DUAL-PATH FIX: website/data/hq-state.json was stale (morning run) \u2014 synced from agents/sam/website/ this cycle. Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) \u2014 P3 fix-it carried forward."
+      "msg": "Ops sync cycle @ 16:15 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #111: 5p/4f stable vs #109 — 0 new, 4 recurring, 0 resolved. Day 12 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx — cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini — benign), P1 secrets-dir-permissions (0755 on symlink — cosmetic). P2 task-queue-size 27 P0 tasks day 5 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings — 20 broken doc links (up from 18), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed — 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-20.md). Self-delegated: nel-001 (P2) 20 broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). DUAL-PATH FIX: website/data/hq-state.json was stale (morning run) — synced from agents/sam/website/ this cycle. Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) — P3 fix-it carried forward."
     },
     {
       "ts": "2026-04-20T22:15:00Z",
       "agent": "sentinel",
-      "msg": "QA sweep run #111 \u2014 5 passed, 4 failed (stable vs #109). 0 new, 4 recurring, 0 resolved. Day 12 ESCALATED: P0 founder-token-integrity (mode 0600 vs regex 6xx), P1 scheduled-tasks-fired (no aurora logs in sandbox), P1 secrets-dir-permissions (0755 on symlink, target 700). P2 task-queue-size 27 P0 tasks day 5.",
+      "msg": "QA sweep run #111 — 5 passed, 4 failed (stable vs #109). 0 new, 4 recurring, 0 resolved. Day 12 ESCALATED: P0 founder-token-integrity (mode 0600 vs regex 6xx), P1 scheduled-tasks-fired (no aurora logs in sandbox), P1 secrets-dir-permissions (0755 on symlink, target 700). P2 task-queue-size 27 P0 tasks day 5.",
       "doc": "/viewer?agent=sentinel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T22:15:00Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
     },
     {
       "ts": "2026-04-20T22:15:00Z",
       "agent": "nel",
-      "msg": "Health sweep \u2014 score 85/100 stable. 11 findings: 20 broken doc links (up from 18), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo 4p/0f, aurora-ra 4p/0f, aether 4p/0f, kai-ceo 4p/0f \u2014 all passing. ARIC ran research cycle (PLAYBOOK entry + brief). Self-delegated: nel-001 (P2) 20 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
+      "msg": "Health sweep — score 85/100 stable. 11 findings: 20 broken doc links (up from 18), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed — 5 sensitive files outside .secrets/: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo 4p/0f, aurora-ra 4p/0f, aether 4p/0f, kai-ceo 4p/0f — all passing. ARIC ran research cycle (PLAYBOOK entry + brief). Self-delegated: nel-001 (P2) 20 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
       "doc": "/viewer?agent=nel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T18:11:00Z",
       "agent": "kai",
-      "msg": "Ops sync cycle @ 12:11 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #109: 5p/4f stable vs #108 \u2014 0 new, 4 recurring, 0 resolved. Day 10 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx \u2014 cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini \u2014 benign), P1 secrets-dir-permissions (0755 on symlink \u2014 cosmetic). P2 task-queue-size 27 P0 tasks day 3 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings \u2014 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-20.md). Self-delegated: nel-001 (P2) broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Known-benign carryovers unchanged. Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) \u2014 log as P3 fix-it for nel."
+      "msg": "Ops sync cycle @ 12:11 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #109: 5p/4f stable vs #108 — 0 new, 4 recurring, 0 resolved. Day 10 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx — cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini — benign), P1 secrets-dir-permissions (0755 on symlink — cosmetic). P2 task-queue-size 27 P0 tasks day 3 (counter persists). Cipher: clean, 0 findings, 7 permission autofixes, HQ push 200 OK. Nel: score 85/100 stable, 11 findings — 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo/aurora-ra/aether/kai-ceo all 4p/0f. ARIC research cycle ran (PLAYBOOK entry + brief published to ra/research/briefs/nel-2026-04-20.md). Self-delegated: nel-001 (P2) broken-symlink fix + nel-001 (P3) cycle summary. Growth IMP-20260414-nel-002 CVE scanner still blocked (no package.json at root). Known-benign carryovers unchanged. Stderr noise: nel runner uses grep -P (BSD grep on macOS rejects) — log as P3 fix-it for nel."
     },
     {
       "ts": "2026-04-20T18:11:00Z",
       "agent": "sentinel",
-      "msg": "QA sweep run #109 \u2014 5 passed, 4 failed (stable vs #108). 0 new, 4 recurring, 0 resolved. Day 10 ESCALATED: P0 founder-token-integrity (mode 0600 vs regex 6xx), P1 scheduled-tasks-fired (no aurora logs in sandbox), P1 secrets-dir-permissions (0755 on symlink, target 700). P2 task-queue-size 27 P0 tasks day 3.",
+      "msg": "QA sweep run #109 — 5 passed, 4 failed (stable vs #108). 0 new, 4 recurring, 0 resolved. Day 10 ESCALATED: P0 founder-token-integrity (mode 0600 vs regex 6xx), P1 scheduled-tasks-fired (no aurora logs in sandbox), P1 secrets-dir-permissions (0755 on symlink, target 700). P2 task-queue-size 27 P0 tasks day 3.",
       "doc": "/viewer?agent=sentinel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T18:11:00Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
     },
     {
       "ts": "2026-04-20T18:11:00Z",
       "agent": "nel",
-      "msg": "Health sweep \u2014 score 85/100 stable. 11 findings: 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo 4p/0f, aurora-ra 4p/0f, aether 4p/0f, kai-ceo 4p/0f \u2014 all passing. ARIC ran research cycle (PLAYBOOK entry + brief). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
+      "msg": "Health sweep — score 85/100 stable. 11 findings: 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed — 5 sensitive files outside .secrets/: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo 4p/0f, aurora-ra 4p/0f, aether 4p/0f, kai-ceo 4p/0f — all passing. ARIC ran research cycle (PLAYBOOK entry + brief). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
       "doc": "/viewer?agent=nel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T14:12:00Z",
       "agent": "kai",
-      "msg": "Ops sync cycle @ 08:11 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #108: 5p/4f (stable vs #107). 0 new, 4 recurring, 0 resolved. Recurring day 9 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx \u2014 cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini \u2014 benign), P1 secrets-dir-permissions (0755 on symlink \u2014 cosmetic). P2 task-queue-size 27 P0 tasks day 2 (counter reset \u2014 still 27, same as #107). Cipher: clean, 0 findings, 7 permission autofixes applied, HQ push 200 OK. Nel: score 85/100 stable, 11 findings \u2014 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: 4p/0f (hyo, aurora-ra, aether, kai-ceo all passing). ARIC research ran metrics-only (reflection already published today; introspection\u2192ticket skipped). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked \u2014 no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini; founder-token mode check cosmetic; .secrets symlink permissions cosmetic."
+      "msg": "Ops sync cycle @ 08:11 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #108: 5p/4f (stable vs #107). 0 new, 4 recurring, 0 resolved. Recurring day 9 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx — cosmetic), P1 scheduled-tasks-fired (aurora runs on Mini — benign), P1 secrets-dir-permissions (0755 on symlink — cosmetic). P2 task-queue-size 27 P0 tasks day 2 (counter reset — still 27, same as #107). Cipher: clean, 0 findings, 7 permission autofixes applied, HQ push 200 OK. Nel: score 85/100 stable, 11 findings — 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed — 5 sensitive files outside .secrets/), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: 4p/0f (hyo, aurora-ra, aether, kai-ceo all passing). ARIC research ran metrics-only (reflection already published today; introspection→ticket skipped). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked — no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini; founder-token mode check cosmetic; .secrets symlink permissions cosmetic."
     },
     {
       "ts": "2026-04-20T14:12:00Z",
       "agent": "sentinel",
-      "msg": "QA sweep run #108 \u2014 5 passed, 4 failed (stable vs #107). 0 new, 4 recurring, 0 resolved. Recurring day 9 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx), P1 scheduled-tasks-fired (no aurora logs in sandbox), P1 secrets-dir-permissions (0755 want 700). P2 task-queue-size 27 P0 tasks day 2.",
+      "msg": "QA sweep run #108 — 5 passed, 4 failed (stable vs #107). 0 new, 4 recurring, 0 resolved. Recurring day 9 ESCALATED: P0 founder-token-integrity (mode 0600 vs 6xx), P1 scheduled-tasks-fired (no aurora logs in sandbox), P1 secrets-dir-permissions (0755 want 700). P2 task-queue-size 27 P0 tasks day 2.",
       "doc": "/viewer?agent=sentinel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T14:12:00Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
     },
     {
       "ts": "2026-04-20T14:12:00Z",
       "agent": "nel",
-      "msg": "Health sweep \u2014 score 85/100 stable vs #107. 11 findings: 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo 4p/0f, aurora-ra 4p/0f, aether 4p/0f, kai-ceo 4p/0f \u2014 all passing. ARIC metrics-only (reflection + introspection\u2192ticket already published today). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
+      "msg": "Health sweep — score 85/100 stable vs #107. 11 findings: 18 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (5/7 checks passed — 5 sensitive files outside .secrets/: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 1 untriggered file (self-review), 0 verified leaks. Cross-project sentinel: hyo 4p/0f, aurora-ra 4p/0f, aether 4p/0f, kai-ceo 4p/0f — all passing. ARIC metrics-only (reflection + introspection→ticket already published today). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
       "doc": "/viewer?agent=nel&file=2026-04-20"
     },
     {
@@ -128,171 +187,171 @@
     {
       "ts": "2026-04-20T10:11:00Z",
       "agent": "sentinel",
-      "msg": "QA sweep run #107 \u2014 5 passed, 4 failed (improvement from 4p/5f at #103). 1 new: P2 task-queue-size (27 P0 tasks, +1). Recurring day 8 ESCALATED: P0 founder-token-integrity, P1 scheduled-tasks-fired, P1 secrets-dir-permissions. 3 resolved this run (api-health-green, task-queue-size variant, scheduled-tasks-fired variant).",
+      "msg": "QA sweep run #107 — 5 passed, 4 failed (improvement from 4p/5f at #103). 1 new: P2 task-queue-size (27 P0 tasks, +1). Recurring day 8 ESCALATED: P0 founder-token-integrity, P1 scheduled-tasks-fired, P1 secrets-dir-permissions. 3 resolved this run (api-health-green, task-queue-size variant, scheduled-tasks-fired variant).",
       "doc": "/viewer?agent=sentinel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T10:11:00Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
     },
     {
       "ts": "2026-04-20T10:11:00Z",
       "agent": "nel",
-      "msg": "Health sweep \u2014 score 85/100 (stable vs #103). 11 findings: 18 broken doc links, 25 untested scripts, 3 inefficient patterns, 7 audit issues (5/7 checks passed \u2014 5 sensitive files outside .secrets/ flagged: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. ARIC metrics-only (reflection already published today). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
+      "msg": "Health sweep — score 85/100 (stable vs #103). 11 findings: 18 broken doc links, 25 untested scripts, 3 inefficient patterns, 7 audit issues (5/7 checks passed — 5 sensitive files outside .secrets/ flagged: website/.env.local, agents/sam/website/.env.local, newsletter/.env.example, 2x claude_api_tokens csv), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. ARIC metrics-only (reflection already published today). Self-delegated: nel-001 (P2) 18 broken-symlink fix, nel-001 (P3) cycle summary. Growth IMP-nel-002 still blocked (no package.json at root).",
       "doc": "/viewer?agent=nel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T08:00:04Z",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
+      "msg": "Nightly consolidation — sam",
       "doc": "/viewer?agent=consolidation&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T08:00:04Z",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-20",
+      "msg": "24h action plan — 2026-04-20",
       "doc": "/viewer?agent=simulation&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T06:12:50Z",
       "agent": "kai",
-      "msg": "Ops sync cycle @ 00:12 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #103: 4 pass / 5 fail (regression from 5/4 at #102 \u2014 new P0 aurora-ran-today day 1 because newsletter for 2026-04-20 not yet generated; newsletter pipeline fires at 03:00 MT, this sync ran at 00:10 MT). Recurring: P0 founder-token-integrity day 7 ESCALATED (mode 0600 vs 6xx \u2014 cosmetic sandbox check bug), P1 scheduled-tasks-fired day 7 ESCALATED (no aurora logs in sandbox \u2014 aurora runs on Mini), P1 secrets-dir-permissions day 7 ESCALATED (0755 on symlink; target at 700 \u2014 cosmetic), P2 task-queue-size day 28 ESCALATED (26 P0 tasks vs threshold 5). 1 new, 4 recurring, 0 resolved. Cipher: clean, 0 findings, 7 autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target 700). HQ push 200 OK. Nel: score 85/100 (stable vs #102). 11 findings \u2014 18 broken doc links (+2 vs prior 16), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (unchanged), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. ARIC research cycle ran (Phases 1-7), reflection published to HQ feed. Improvement ticket TASK-20260420-nel-001 (P2, W3) created from introspection. Self-delegated: nel-001 (P2) broken-symlink fix, nel-001 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked \u2014 no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini; founder-token mode check cosmetic."
+      "msg": "Ops sync cycle @ 00:12 MT (2026-04-20, hq-ops-sync scheduled task). Sentinel run #103: 4 pass / 5 fail (regression from 5/4 at #102 — new P0 aurora-ran-today day 1 because newsletter for 2026-04-20 not yet generated; newsletter pipeline fires at 03:00 MT, this sync ran at 00:10 MT). Recurring: P0 founder-token-integrity day 7 ESCALATED (mode 0600 vs 6xx — cosmetic sandbox check bug), P1 scheduled-tasks-fired day 7 ESCALATED (no aurora logs in sandbox — aurora runs on Mini), P1 secrets-dir-permissions day 7 ESCALATED (0755 on symlink; target at 700 — cosmetic), P2 task-queue-size day 28 ESCALATED (26 P0 tasks vs threshold 5). 1 new, 4 recurring, 0 resolved. Cipher: clean, 0 findings, 7 autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target 700). HQ push 200 OK. Nel: score 85/100 (stable vs #102). 11 findings — 18 broken doc links (+2 vs prior 16), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (unchanged), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. ARIC research cycle ran (Phases 1-7), reflection published to HQ feed. Improvement ticket TASK-20260420-nel-001 (P2, W3) created from introspection. Self-delegated: nel-001 (P2) broken-symlink fix, nel-001 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked — no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini; founder-token mode check cosmetic."
     },
     {
       "ts": "2026-04-20T06:12:50Z",
       "agent": "sentinel",
-      "msg": "QA sweep run #103 \u2014 4 passed, 5 failed (regression from 5/4). 1 new: P0 aurora-ran-today (newsletter 2026-04-20.md missing \u2014 pipeline fires at 03:00 MT, sync ran at 00:10 MT). Recurring: P0 founder-token-integrity (day 7 ESCALATED), P1 scheduled-tasks-fired (day 7 ESCALATED), P1 secrets-dir-permissions (day 7 ESCALATED), P2 task-queue-size (26 P0 tasks, day 28 ESCALATED). 1 new, 4 recurring, 0 resolved.",
+      "msg": "QA sweep run #103 — 4 passed, 5 failed (regression from 5/4). 1 new: P0 aurora-ran-today (newsletter 2026-04-20.md missing — pipeline fires at 03:00 MT, sync ran at 00:10 MT). Recurring: P0 founder-token-integrity (day 7 ESCALATED), P1 scheduled-tasks-fired (day 7 ESCALATED), P1 secrets-dir-permissions (day 7 ESCALATED), P2 task-queue-size (26 P0 tasks, day 28 ESCALATED). 1 new, 4 recurring, 0 resolved.",
       "doc": "/viewer?agent=sentinel&file=2026-04-20"
     },
     {
       "ts": "2026-04-20T06:12:50Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
     },
     {
       "ts": "2026-04-20T06:12:50Z",
       "agent": "nel",
-      "msg": "Health sweep \u2014 score 85/100 (stable vs #102). 11 findings: 18 broken doc links (+2 vs prior), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (unchanged), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. ARIC Phases 1-7 complete; reflection + research brief published to HQ feed. Improvement ticket TASK-20260420-nel-001 (P2, W3) emitted from introspection. Self-delegated: nel-001 (broken-symlink fix P2) + nel-001 (cycle summary P3). Growth IMP-nel-002 still blocked (no package.json at root).",
+      "msg": "Health sweep — score 85/100 (stable vs #102). 11 findings: 18 broken doc links (+2 vs prior), 25 untested scripts (unchanged), 3 inefficient patterns (unchanged), 7 audit issues (unchanged), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. ARIC Phases 1-7 complete; reflection + research brief published to HQ feed. Improvement ticket TASK-20260420-nel-001 (P2, W3) emitted from introspection. Self-delegated: nel-001 (broken-symlink fix P2) + nel-001 (cycle summary P3). Growth IMP-nel-002 still blocked (no package.json at root).",
       "doc": "/viewer?agent=nel&file=2026-04-20"
     },
     {
       "ts": "2026-04-19T22:11:18Z",
       "agent": "kai",
-      "msg": "Ops sync cycle @ 16:11 MT (2026-04-19, hq-ops-sync scheduled task). Sentinel run #101: 5 pass / 4 fail (regression from 6/3 at #99). Recurring: P0 founder-token-integrity day 5 (ESCALATED, mode 0600 vs expected 6xx \u2014 cosmetic sandbox check bug), P1 scheduled-tasks-fired day 5 (ESCALATED, no aurora logs in sandbox \u2014 aurora runs on Mini), P1 secrets-dir-permissions day 5 (ESCALATED, 0755 on symlink; target at 700 \u2014 cosmetic), P2 task-queue-size day 26 (ESCALATED, 26 P0 tasks vs threshold 5). 0 new, 4 recurring, 0 resolved. Cipher: clean, 0 findings, 7 autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target 700). HQ push 200 OK. Nel: score 85/100 (recovery from 65 at prior sync). 11 findings \u2014 16 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns, 7 audit issues (+2 vs prior sync from 5), 1 untriggered file (self-review), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. Self-delegated: nel-001 (P2) broken-symlink fix, nel-001 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked \u2014 no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini; founder-token mode check cosmetic."
+      "msg": "Ops sync cycle @ 16:11 MT (2026-04-19, hq-ops-sync scheduled task). Sentinel run #101: 5 pass / 4 fail (regression from 6/3 at #99). Recurring: P0 founder-token-integrity day 5 (ESCALATED, mode 0600 vs expected 6xx — cosmetic sandbox check bug), P1 scheduled-tasks-fired day 5 (ESCALATED, no aurora logs in sandbox — aurora runs on Mini), P1 secrets-dir-permissions day 5 (ESCALATED, 0755 on symlink; target at 700 — cosmetic), P2 task-queue-size day 26 (ESCALATED, 26 P0 tasks vs threshold 5). 0 new, 4 recurring, 0 resolved. Cipher: clean, 0 findings, 7 autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target 700). HQ push 200 OK. Nel: score 85/100 (recovery from 65 at prior sync). 11 findings — 16 broken doc links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns, 7 audit issues (+2 vs prior sync from 5), 1 untriggered file (self-review), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. Self-delegated: nel-001 (P2) broken-symlink fix, nel-001 (P3) cycle summary. Growth phase: IMP-20260414-nel-002 CVE scanner still blocked — no package.json at project root. Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini; founder-token mode check cosmetic."
     },
     {
       "ts": "2026-04-19T22:11:18Z",
       "agent": "sentinel",
-      "msg": "QA sweep run #101 \u2014 5 passed, 4 failed. Recurring: P0 founder-token-integrity (day 5 ESCALATED), P1 scheduled-tasks-fired (day 5 ESCALATED), P1 secrets-dir-permissions (day 5 ESCALATED), P2 task-queue-size (26 P0 tasks, day 26 ESCALATED). 0 new, 4 recurring, 0 resolved.",
+      "msg": "QA sweep run #101 — 5 passed, 4 failed. Recurring: P0 founder-token-integrity (day 5 ESCALATED), P1 scheduled-tasks-fired (day 5 ESCALATED), P1 secrets-dir-permissions (day 5 ESCALATED), P2 task-queue-size (26 P0 tasks, day 26 ESCALATED). 0 new, 4 recurring, 0 resolved.",
       "doc": "/viewer?agent=sentinel&file=2026-04-19"
     },
     {
       "ts": "2026-04-19T22:11:18Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+      "msg": "Security scan — clean, 0 findings, 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600), exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
     },
     {
       "ts": "2026-04-19T22:11:18Z",
       "agent": "nel",
-      "msg": "Health sweep \u2014 score 85/100 (recovery from 65 at prior sync). 11 findings: 16 broken links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns, 7 audit issues (+2 vs prior sync), 1 untriggered file (self-review), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. Self-delegated nel-001 (broken-symlink fix P2) + nel-001 (cycle summary P3). Growth IMP-nel-002 still blocked (no package.json at root).",
+      "msg": "Health sweep — score 85/100 (recovery from 65 at prior sync). 11 findings: 16 broken links (unchanged), 25 untested scripts (unchanged), 3 inefficient patterns, 7 audit issues (+2 vs prior sync), 1 untriggered file (self-review), 0 verified leaks. Sentinel across projects: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. Self-delegated nel-001 (broken-symlink fix P2) + nel-001 (cycle summary P3). Growth IMP-nel-002 still blocked (no package.json at root).",
       "doc": "/viewer?agent=nel&file=2026-04-19"
     },
     {
       "ts": "2026-04-19T08:00:05Z",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
+      "msg": "Nightly consolidation — sam",
       "doc": "/viewer?agent=consolidation&file=2026-04-19"
     },
     {
       "ts": "2026-04-19T08:00:05Z",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-19",
+      "msg": "24h action plan — 2026-04-19",
       "doc": "/viewer?agent=simulation&file=2026-04-19"
     },
     {
       "ts": "2026-04-18T20:11:00-0600",
       "agent": "sentinel",
-      "msg": "QA sweep run #85 \u2014 6 passed, 3 failed. Recurring: P0 api-health-green (day 84), P1 scheduled-tasks-fired (day 3), P2 task-queue-size (26 P0 tasks, day 10). 0 new issues, 3 recurring, 0 resolved.",
+      "msg": "QA sweep run #85 — 6 passed, 3 failed. Recurring: P0 api-health-green (day 84), P1 scheduled-tasks-fired (day 3), P2 task-queue-size (26 P0 tasks, day 10). 0 new issues, 3 recurring, 0 resolved.",
       "doc": "/viewer?agent=sentinel&file=2026-04-18"
     },
     {
       "ts": "2026-04-18T14:11:19Z",
       "agent": "kai",
-      "msg": "Ops sync cycle @ 08:11 MT (2026-04-18) \u2014 sentinel #75 (6p/3f, P0 api-health-green day 74, P1 scheduled-tasks-fired day 2, P2 task-queue-size day 16). Cipher clean (0 findings, 0 autofixes). Nel score 65; 16 broken links, 5 audit issues, 0 leaks; 4 P2 flags (nel-007/008/010/011) + 1 P3 (nel-009); self-delegated nel-004 (broken-link fix) + nel-005 (cycle summary). Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini."
+      "msg": "Ops sync cycle @ 08:11 MT (2026-04-18) — sentinel #75 (6p/3f, P0 api-health-green day 74, P1 scheduled-tasks-fired day 2, P2 task-queue-size day 16). Cipher clean (0 findings, 0 autofixes). Nel score 65; 16 broken links, 5 audit issues, 0 leaks; 4 P2 flags (nel-007/008/010/011) + 1 P3 (nel-009); self-delegated nel-004 (broken-link fix) + nel-005 (cycle summary). Known-benign carryovers: Mini API unreachable from Cowork sandbox; aurora runs on Mini."
     },
     {
       "ts": "2026-04-18T14:11:19Z",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean. 0 findings, 0 autofixes. Founder token 600 OK, secretsDir 755 (cosmetic \u2014 symlink target at 700). HQ push succeeded."
+      "msg": "Security scan — clean. 0 findings, 0 autofixes. Founder token 600 OK, secretsDir 755 (cosmetic — symlink target at 700). HQ push succeeded."
     },
     {
       "ts": "2026-04-18T14:11:19Z",
       "agent": "nel",
-      "msg": "System sweep \u2014 score 65/100 (below 70 target). 2 project test failures (hyo 2p/2f, aether 1p/1f). 16 broken links, 23 untested scripts, 3 inefficient patterns, 5 audit issues, 1 untriggered file, 0 verified leaks. Flags emitted: nel-007 (P2 sentinel failures), nel-008 (P2 broken links), nel-009 (P3 code optimization), nel-010 (P2 audit issues), nel-011 (P2 untriggered file). Self-delegated: nel-004 (P2) broken-link fix, nel-005 (P3) cycle summary. Growth phase: IMP-nel-002 CVE scanner still blocked \u2014 no package.json at root.",
+      "msg": "System sweep — score 65/100 (below 70 target). 2 project test failures (hyo 2p/2f, aether 1p/1f). 16 broken links, 23 untested scripts, 3 inefficient patterns, 5 audit issues, 1 untriggered file, 0 verified leaks. Flags emitted: nel-007 (P2 sentinel failures), nel-008 (P2 broken links), nel-009 (P3 code optimization), nel-010 (P2 audit issues), nel-011 (P2 untriggered file). Self-delegated: nel-004 (P2) broken-link fix, nel-005 (P3) cycle summary. Growth phase: IMP-nel-002 CVE scanner still blocked — no package.json at root.",
       "doc": "/viewer?agent=nel&file=2026-04-18"
     },
     {
       "ts": "2026-04-17T20:10:12-0600",
       "agent": "nel",
-      "msg": "System sweep run #2026-04-17 \u2014 score 65, 16 broken links, 3 audit issues, 0 verified leaks. Growth phase: IMP-nel-002 (CVE scanner \u2014 no package.json at root). Sentinel 2 pass/2 fail across projects. Self-delegated broken link fix. TASK-20260417-nel-001 (P2) filed. Feed entry: agent-reflection-nel-2026-04-17-201026.",
+      "msg": "System sweep run #2026-04-17 — score 65, 16 broken links, 3 audit issues, 0 verified leaks. Growth phase: IMP-nel-002 (CVE scanner — no package.json at root). Sentinel 2 pass/2 fail across projects. Self-delegated broken link fix. TASK-20260417-nel-001 (P2) filed. Feed entry: agent-reflection-nel-2026-04-17-201026.",
       "doc": "/viewer?agent=nel&file=2026-04-17"
     },
     {
       "ts": "2026-04-17T20:10:12-0600",
       "agent": "sentinel",
-      "msg": "QA sweep run #64 \u2014 6 passed, 3 failed. P0 api-health-green down day 64 (ESCALATED), P1 scheduled-tasks-fired day 6, P2 task-queue-size day 6 (25 P0 tasks vs threshold 5).",
+      "msg": "QA sweep run #64 — 6 passed, 3 failed. P0 api-health-green down day 64 (ESCALATED), P1 scheduled-tasks-fired day 6, P2 task-queue-size day 6 (25 P0 tasks vs threshold 5).",
       "doc": "/viewer?agent=sentinel&file=2026-04-17"
     },
     {
       "ts": "2026-04-17T20:10:12-0600",
       "agent": "cipher",
-      "msg": "Security scan \u2014 clean. 0 findings, 0 autofixes. secretsDir 755 (cosmetic \u2014 symlink target 700), founder token 600 OK."
+      "msg": "Security scan — clean. 0 findings, 0 autofixes. secretsDir 755 (cosmetic — symlink target 700), founder token 600 OK."
     },
     {
       "ts": "2026-04-16T00:12:30-0600",
       "agent": "nel",
-      "msg": "System sweep run #2026-04-16 \u2014 score 65, 16 broken links, 5 audit issues, 0 verified leaks. Growth phase: IMP-nel-002 (CVE scanner). Self-delegated nel-002 broken link fix. TASK-20260416-nel-001 filed.",
+      "msg": "System sweep run #2026-04-16 — score 65, 16 broken links, 5 audit issues, 0 verified leaks. Growth phase: IMP-nel-002 (CVE scanner). Self-delegated nel-002 broken link fix. TASK-20260416-nel-001 filed.",
       "doc": "/viewer?agent=nel&file=2026-04-16"
     },
     {
       "ts": "2026-04-16T00:12:30-0600",
       "agent": "sentinel",
-      "msg": "QA sweep run #55 \u2014 6 passed, 3 failed. API health down day 55 (ESCALATED), scheduled-tasks-fired day 2, task-queue-size day 36.",
+      "msg": "QA sweep run #55 — 6 passed, 3 failed. API health down day 55 (ESCALATED), scheduled-tasks-fired day 2, task-queue-size day 36.",
       "doc": "/viewer?agent=sentinel&file=2026-04-15"
     },
     {
       "ts": "2026-04-16T00:12:30-0600",
       "agent": "cipher",
-      "msg": "Security scan run #187 \u2014 2 recurring findings (gitleaks/trufflehog not installed), 0 verified leaks. secretsDir 755 on symlink (cosmetic \u2014 target at 700), founder token 600 OK."
+      "msg": "Security scan run #187 — 2 recurring findings (gitleaks/trufflehog not installed), 0 verified leaks. secretsDir 755 on symlink (cosmetic — target at 700), founder token 600 OK."
     },
     {
       "ts": "2026-04-15T20:10:50-0600",
       "agent": "nel",
-      "msg": "System sweep \u2014 score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
+      "msg": "System sweep — score 65, 15 broken links, 5 audit issues, 0 verified leaks. Growth phase: CVE scanner (IMP-nel-002). Self-delegated broken link fix. Health below target.",
       "doc": "/viewer?agent=nel&file=2026-04-15"
     },
     {
       "ts": "2026-04-15T20:10:50-0600",
       "agent": "sentinel",
-      "msg": "QA sweep run #53 \u2014 6 passed, 3 failed. API health down day 53 (ESCALATED), scheduled-tasks-fired day 2, task overload day 34.",
+      "msg": "QA sweep run #53 — 6 passed, 3 failed. API health down day 53 (ESCALATED), scheduled-tasks-fired day 2, task overload day 34.",
       "doc": "/viewer?agent=sentinel&file=2026-04-15"
     },
     {
       "ts": "2026-04-15T20:10:50-0600",
       "agent": "cipher",
-      "msg": "Security scan \u2014 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
+      "msg": "Security scan — 2 findings (secrets dir 755), 0 verified leaks, founder token 600 OK"
     },
     {
       "ts": "2026-04-15T08:00:05Z",
       "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
+      "msg": "Nightly consolidation — sam",
       "doc": "/viewer?agent=consolidation&file=2026-04-15"
     },
     {
       "ts": "2026-04-15T08:00:05Z",
       "agent": "simulation",
-      "msg": "24h action plan \u2014 2026-04-15",
+      "msg": "24h action plan — 2026-04-15",
       "doc": "/viewer?agent=simulation&file=2026-04-15"
     }
   ],
@@ -308,22 +367,27 @@
   },
   "sentinel": {
     "lastRun": "2026-04-21T02:11:00Z",
-    "passed": 5,
-    "failed": 4,
-    "totalRuns": 112,
+    "passed": 7,
+    "failed": 2,
+    "totalRuns": 116,
     "findings": [
-      "P0: founder-token-integrity \u2014 founder.token mode 0600 vs expected 6xx (day 13 ESCALATED, cosmetic check-bug)",
-      "P1: scheduled-tasks-fired \u2014 no aurora logs in sandbox path (day 13 ESCALATED, sandbox cosmetic; aurora runs on Mini)",
-      "P1: secrets-dir-permissions \u2014 0755 on symlink; target at 700 (day 13 ESCALATED, cosmetic)",
-      "P2: task-queue-size \u2014 27 P0 tasks vs threshold 5 (day 6 ESCALATED)"
+      "P0: founder-token-integrity — founder.token mode 0600 vs expected 6xx (day 13 ESCALATED, cosmetic check-bug)",
+      "P1: scheduled-tasks-fired — no aurora logs in sandbox path (day 13 ESCALATED, sandbox cosmetic; aurora runs on Mini)",
+      "P1: secrets-dir-permissions — 0755 on symlink; target at 700 (day 13 ESCALATED, cosmetic)",
+      "P2: task-queue-size — 27 P0 tasks vs threshold 5 (day 6 ESCALATED)"
     ],
     "resolvedThisRun": [],
     "escalations": [
-      "P0 \u2014 founder-token-integrity failing 8 runs in a row",
-      "P1 \u2014 scheduled-tasks-fired failing 8 runs in a row",
-      "P1 \u2014 secrets-dir-permissions failing 8 runs in a row"
+      "P0 — founder-token-integrity failing 8 runs in a row",
+      "P1 — scheduled-tasks-fired failing 8 runs in a row",
+      "P1 — secrets-dir-permissions failing 8 runs in a row"
     ],
-    "summary": "Run #107: 5p/4f. 1 new (P2 task-queue-size 27 P0 tasks). 3 recurring escalated day 8 (founder-token cosmetic, scheduled-tasks-fired benign sandbox, secrets-dir-permissions cosmetic). 3 resolved."
+    "summary": "Run #107: 5p/4f. 1 new (P2 task-queue-size 27 P0 tasks). 3 recurring escalated day 8 (founder-token cosmetic, scheduled-tasks-fired benign sandbox, secrets-dir-permissions cosmetic). 3 resolved.",
+    "lastRunAt": "2026-04-21T10:11:30Z",
+    "newIssues": 0,
+    "recurringIssues": 2,
+    "resolved": 2,
+    "status": "improved"
   },
   "cipher": {
     "lastRun": "2026-04-21T02:11:10Z",
@@ -331,10 +395,13 @@
     "founderToken": "0600",
     "leaks": 0,
     "autofixes": 7,
-    "notes": "0 findings; 7 permission autofixes applied (.secrets/ 0755\u2192700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600\u2192600). HQ push 200 OK.",
+    "notes": "0 findings; 7 permission autofixes applied (.secrets/ 0755→700; aethel-bot.key, anthropic.key, deploy-hook, env, founder.token, openai.key 0600→600). HQ push 200 OK.",
     "latestDoc": null,
     "totalRuns": 259,
-    "summary": "Security scan \u2014 clean, 0 findings, 7 permission autofixes applied, exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK."
+    "summary": "Security scan — clean, 0 findings, 7 permission autofixes applied, exit 0. Founder token 600 OK, .secrets 755 (symlink cosmetic, target at 700). HQ push 200 OK.",
+    "lastRunAt": "2026-04-21T10:11:30Z",
+    "findings": 0,
+    "status": "clean"
   },
   "sim": {
     "lastRun": "2026-04-10T16:14:00-06:00",
@@ -346,7 +413,7 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-21T08:00:07Z",
+    "lastRun": "2026-04-21T10:11:11Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
@@ -359,6 +426,14 @@
     },
     "cipher": {
       "leaks": 0
-    }
+    },
+    "lastRunAt": "2026-04-21T10:11:30Z",
+    "score": 85,
+    "flags": 4,
+    "findings": 11,
+    "auditIssues": 7,
+    "untriggered": 1,
+    "leaks": 0,
+    "status": "acceptable"
   }
 }
