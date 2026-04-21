@@ -22,12 +22,19 @@ mkdir -p "$LOGS" "$MEMORY"
 
 # ---- portable stat wrapper (macOS BSD vs Linux GNU) ------------------------
 # Probe once: GNU stat supports -c, BSD stat supports -f. stderr only.
+# stat_mode/stat_mode_L normalize to 3-digit perms (e.g. "600", "755").
+# BSD %Mp%Lp emits 4 digits (leading 0 for non-setuid files) — strip the
+# leading 0 so downstream regex (^6[0-9][0-9]$) matches on both platforms.
+# _L variants follow symlinks (use for dirs like .secrets that are symlinked).
 if stat -c %a / >/dev/null 2>&1; then
-  stat_mode() { stat -c %a "$1" 2>/dev/null; }
-  stat_mtime() { stat -c %Y "$1" 2>/dev/null; }
+  stat_mode()   { stat -c %a "$1" 2>/dev/null; }
+  stat_mode_L() { stat -L -c %a "$1" 2>/dev/null; }
+  stat_mtime()  { stat -c %Y "$1" 2>/dev/null; }
 else
-  stat_mode() { stat -f %Mp%Lp "$1" 2>/dev/null; }
-  stat_mtime() { stat -f %m "$1" 2>/dev/null; }
+  _bsd_norm_mode() { local m="$1"; [[ ${#m} -eq 4 && "${m:0:1}" == "0" ]] && m="${m:1}"; echo "$m"; }
+  stat_mode()   { _bsd_norm_mode "$(stat -f %Mp%Lp "$1" 2>/dev/null)"; }
+  stat_mode_L() { _bsd_norm_mode "$(stat -L -f %Mp%Lp "$1" 2>/dev/null)"; }
+  stat_mtime()  { stat -f %m "$1" 2>/dev/null; }
 fi
 
 # ---- state bootstrap --------------------------------------------------------
@@ -119,8 +126,9 @@ else
 fi
 
 # P1 secrets-dir-permissions
+# .secrets is a symlink to agents/nel/security/ — use stat_mode_L to follow it.
 if [[ -d "$ROOT/.secrets" ]]; then
-  SMODE=$(stat_mode "$ROOT/.secrets")
+  SMODE=$(stat_mode_L "$ROOT/.secrets")
   if [[ "$SMODE" =~ ^7[0-9][0-9]$ ]]; then
     pass "P1 secrets-dir-permissions"
   else

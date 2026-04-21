@@ -47,6 +47,11 @@
 - [x] **Podcast research** published to HQ (docs/research/podcast-format-2026-04-18.md).
 - [x] **verify-live.sh BUILT + WIRED:** 11-check live verification script. Mandatory after every push. Wired into EXECUTION_GATE.md completion gate. 11/11 PASS confirmed.
 
+## ✅ SHIPPED — Scheduled sentinel run (2026-04-21 ~04:06 MT, intelligent-compassionate-allen sandbox)
+
+- [x] **SENT-001 SHIPPED:** Sentinel two-fer bug fix — killed 2 chronic false positives that had been re-flagging for 15 days each. (1) `stat_mode` BSD branch returned `0600` from `%Mp%Lp` but regex `^6[0-9][0-9]$` only matched 3 digits → false P0 on founder.token (actual mode 600 ✓). (2) `.secrets` dir-permissions check stat'd the symlink (0755) instead of target `agents/nel/security/` (700 ✓). Added `_bsd_norm_mode` helper + `stat_mode_L` (follow-symlink) in agents/nel/sentinel.sh. Re-ran to verify — run #115: 7p/2f (was 5p/4f), both chronic recurrings resolved. Logged to `agents/nel/evolution.jsonl`. **Lesson:** 15-day chronic false positives mask real P0s — future sentinel failures should be root-caused within 3 days, not normalized.
+- [x] **SENT-002 NOTED (not shipped):** P1 `scheduled-tasks-fired` check is now the only remaining P1 — looks for `aurora-*.log` in `agents/nel/logs/`, but no aurora logs exist (day 16 chronic). Either Aurora was renamed/consolidated (manifest still in agents/manifests/aurora.hyo.json but no recent runner output) or the check needs a different proxy. Deferred to next interactive — needs decision on whether to revive Aurora or retire the check.
+
 ## P0 — ACTION REQUIRED FROM HYO
 
 - [ ] **[H]** **S18-013: Remote connection (bore.pub) broken.** SSH to bore.pub port 22246 refused. On Mini terminal run: `launchctl list | grep bore` — if not found, restart with: `bore local 22 --to bore.pub`. Note the new port, update SSH config on Pro. Kai cannot execute queue commands without this tunnel. Everything else works via filesystem queue fallback, but bridge latency is 30-120x slower.
