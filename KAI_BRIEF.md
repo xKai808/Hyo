@@ -2,9 +2,43 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-21 (Session 26 — healthcheck chronic fixes + morning report humanized + maintenance-audit.py)
+**Updated:** 2026-04-21 (Session 26 — ARIC execution engine wired + PROTOCOL_AGENT_REPORT.md + healthcheck fixes)
 
-## Shipped today (2026-04-21 — Session 26)
+## Shipped today (2026-04-21 — Session 26, Part 2)
+
+All committed and queued for push to origin/main:
+
+5. **ARIC execution engine wired into agent-growth.sh** (root cause of 27/30 tickets stuck OPEN):
+   - `get_files_to_change(agent, weakness)`: maps each agent/weakness to a specific file to create
+   - `get_improvement_thesis(agent, weakness)`: full implementation spec per weakness → fed to Claude API
+   - `write_aric_for_ticket()`: builds `aric-latest.json` with `status: researched` before calling engine
+   - `execute_next_improvement()`: writes aric → calls `agent-execute-improvement.sh` → updates ticket OPEN→SHIPPED
+   - `update_ticket_status()`: atomically rewrites tickets.jsonl with new status
+   - Aether: explicitly excluded (market analysis only — no AetherBot code changes)
+   - IMP-* tickets only (TASK-* excluded from execution engine)
+   - Cycle date staleness check prevents re-executing already-shipped tickets
+   - Commit: 7ae346b
+
+6. **PROTOCOL_AGENT_REPORT.md v1.0 CREATED** (`kai/protocols/`):
+   - 5-question mandatory block (what shipped / open issue / next action / action type / evidence)
+   - Tone-per-domain: CISO (Nel), editor (Ra), engineer (Sam), data analyst (Dex), PM (Aether)
+   - Anti-pattern rejection criteria table (8 patterns = immediate regeneration)
+   - Research standards: ≥3 named sources per finding, no gestalt
+   - Dex compliance enforcement: daily scan → P2 tickets for violations
+
+7. **bin/agent-bluf-augment.py CREATED** — pre-publish sections augmenter:
+   - Reads `aric-latest.json` per agent → derives improvement_status string
+   - Builds 3-sentence BLUF from existing reflection sections
+   - Builds 5-question block from sections + aric data
+   - Writes augmented sections back in-place before `publish-to-feed.sh`
+
+8. **nel.sh / ra.sh / sam.sh patched**: each calls `agent-bluf-augment.py` before publish
+   - 3-line insertion per runner — no existing logic changed, just prepend step
+   - Queued commit: f4a8d86d
+
+---
+
+## Shipped today (2026-04-21 — Session 26, Part 1)
 
 All committed and pushed to origin/main:
 
