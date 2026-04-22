@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-22T14:12:41Z",
+  "updatedAt": "2026-04-22T18:12:00Z",
   "morningReport": {
-    "date": "2026-04-18",
-    "generatedAt": "2026-04-18T04:10:16-0600",
+    "date": "2026-04-22",
+    "generatedAt": "2026-04-22T12:12:00-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync 08:10 MT on 2026-04-22 (3rd cycle of day). Sentinel #130 7p/2f (2 recurring, 2 resolved \u2014 first meaningful clear-out of stale checks). Cipher clean, 7 autofixes. Nel score 65\u219285 (+20). 13 findings in self-review. 3 flags: P2 broken-links 20, P3 optimizations 8, P2 audit 7. Self-delegated P2 broken-symlink fix + P3 cycle summary.",
+    "summary": "Ops sync 12:10 MT on 2026-04-22 (4th cycle of day). Sentinel #131 7p/2f stable vs #130 \u2014 0 new, 2 recurring (P1 scheduled-tasks-fired day 22, P2 task-queue-size 29 P0 day 14), 0 resolved. Cipher clean, 0 findings, 7 permission autofixes, HQ push 200. Nel score 85 stable, 4p/0f cross-project sentinel, 13 self-review findings. 3 flags: P2 broken-links 20 (flat), P3 code-optimizations 8 (flat), P2 audit 7 (flat). Self-delegated P2 broken-symlink fix + P3 cycle summary.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,23 +14,50 @@
       "dex": "active"
     },
     "topIssues": [
-      "Nel score STABLE at 65/100 (below 70 target) \u2014 P2 TASK open; regression 85\u219265 is stale signal (score unchanged this cycle)",
-      "Sentinel #129 6p/3f \u2014 P0 api-health-green day 109 (sandbox cannot reach hyo.world; structural check needs environment-awareness)",
-      "api-health-green FAILING 109 DAYS \u2014 longest-standing failure; auto-filed as recurring only",
-      "Untested scripts held at 32 (no new regression this cycle but +2 delta from earlier today unresolved)",
-      "Broken documentation links held at 20 (flag-nel-003 P2 filed)",
-      "Task queue P0 saturation continues \u2014 29 P0 tasks vs threshold 5 (day 12)",
-      "scheduled-tasks-fired NEW this run \u2014 aurora logs absent from sandbox /agents/nel/logs (benign, sandbox-specific)",
-      "Cipher: clean, 0 findings, 0 autofixes \u2014 perms stable (founder.token 600, secrets 755)",
+      "Nel score 85/100 STABLE this cycle (above 70 target) \u2014 recovery holding from earlier 65\u219285 bump",
+      "Sentinel #131 7p/2f stable vs #130 \u2014 0 new, 2 recurring, 0 resolved this cycle (prior cycle cleared 2)",
+      "P2 task-queue-size ESCALATED day 14 \u2014 29 P0 tasks vs threshold 5 (counter persists)",
+      "P1 scheduled-tasks-fired ESCALATED day 22 \u2014 aurora logs absent from sandbox /agents/nel/logs (benign, sandbox-specific)",
+      "Untested scripts held at 32 (no delta)",
+      "Broken documentation links held at 20 (flag-nel P2 re-filed)",
+      "Code-optimization opportunities held at 8 (flag-nel P3 re-filed)",
+      "Audit issues held at 7 (flag-nel P2 re-filed)",
+      "Cipher: clean, 0 findings, 7 autofixes, leaks 0 \u2014 perms stable (founder.token 600, secrets 700)",
       "ARIC research cycle already ran for 2026-04-22 \u2014 skipped (growth phase idle, no open IMP tickets)",
-      "BLUF augmentation failed on /tmp write (sandbox perms) \u2014 non-blocking; reflection published without BLUF"
+      "Stderr: nel runner grep -P unsupported on BSD \u2014 P3 fix-it carried forward"
     ],
     "lastOpsSync": {
-      "ts": "2026-04-22T14:12:41Z",
-      "note": "Ops sync cycle @ 08:10 MT (2026-04-22, hq-ops-sync scheduled task, 3rd of day). Sentinel run #130: 7p/2f \u2014 0 new, 2 recurring, 2 resolved. Cipher clean: 0 findings, 7 permission autofixes, 0 leaks, HQ push 200. Nel score 65\u219285 (+20). Self-review: 13 findings. Flags: P2 broken-links (20 unchanged), P3 optimizations (8), P2 audit (7 issues). Self-delegated P2 20-broken-symlink fix + P3 cycle summary. Growth IMP-nel idle (no open IMP tickets). Stderr noise: nel runner grep -P unsupported on BSD (carried forward P3)."
+      "ts": "2026-04-22T18:12:00Z",
+      "note": "Ops sync cycle @ 12:10 MT (2026-04-22, hq-ops-sync scheduled task, 4th of day). Sentinel run #131: 7p/2f \u2014 0 new, 2 recurring, 0 resolved. Remaining recurring: P1 scheduled-tasks-fired day 22 (sandbox-benign, aurora runs on Mini), P2 task-queue-size day 14 (29 P0 tasks). Cipher clean: 0 findings, 7 permission autofixes, 0 leaks, HQ push 200. Nel score 85 stable, 4p/0f cross-project, 13 self-review findings. Flags: P2 broken-links 20 (flat), P3 code-optimizations 8 (flat), P2 audit 7 (flat). Self-delegated P2 20-broken-symlink fix + P3 cycle summary. Growth IMP-nel idle (no open IMP tickets). Stderr noise: nel runner grep -P unsupported on BSD (carried forward P3)."
     }
   },
   "events": [
+    {
+      "ts": "2026-04-22T18:12:00Z",
+      "agent": "kai",
+      "msg": "Ops sync cycle @ 12:10 MT (2026-04-22, hq-ops-sync 4th of day). Sentinel #131: 7p/2f stable vs #130 \u2014 0 new, 2 recurring, 0 resolved. Remaining recurring: P1 scheduled-tasks-fired day 22 (sandbox-benign \u2014 aurora runs on Mini), P2 task-queue-size 29 P0 tasks day 14. Cipher clean (0 findings, 7 permission autofixes, HQ push 200 OK). Nel: score 85 STABLE, 4p/0f cross-project sentinel, 1 finding in block + 13 in self-review. Flags raised: P2 broken-links 20 (flat), P3 code-optimizations 8 (flat), P2 audit 7 issues (flat). Self-delegated: nel-001 P2 (20 broken symlinks fix), nel-001 P3 (cycle summary). ARIC cycle already ran today \u2014 skipped. Dual-path hq-state.json sync enforced. Stderr: nel runner grep -P unsupported on BSD (P3 fix-it carried).",
+      "severity": "warning"
+    },
+    {
+      "ts": "2026-04-22T18:12:00Z",
+      "agent": "sentinel",
+      "msg": "QA sweep run #131 \u2014 7 passed, 2 failed (stable vs #130 7p/2f). 0 new, 2 recurring, 0 resolved. Recurring: P1 scheduled-tasks-fired day 22 ESCALATED (no aurora logs in sandbox /agents/nel/logs \u2014 structural, aurora runs on Mini), P2 task-queue-size 29 P0 tasks day 14 ESCALATED.",
+      "doc": "/viewer?agent=sentinel&file=2026-04-22",
+      "severity": "warning"
+    },
+    {
+      "ts": "2026-04-22T18:12:00Z",
+      "agent": "cipher",
+      "msg": "Security scan \u2014 clean. 0 findings, 7 permission autofixes applied (.secrets/ + key files restored to 700/600), 0 leaks, exit 0. Founder token mode 600 OK, .secrets dir 755 on symlink (target 700). HQ push 200 OK.",
+      "severity": "info"
+    },
+    {
+      "ts": "2026-04-22T18:12:00Z",
+      "agent": "nel",
+      "msg": "Health sweep \u2014 score 85/100 STABLE. Cross-project sentinel 4p/0f (hyo, aurora-ra, aether, kai-ceo all passing). Findings: 20 broken doc links (flat), 32 untested scripts (flat), 8 inefficient patterns (flat), 7 audit issues (flat), 0 verified leaks. Self-review: 13 findings. Flags: P2 broken-links, P3 code-optimizations, P2 audit. Self-delegated: nel-001 (P2) 20 broken-symlink fix, nel-001 (P3) cycle summary. ARIC already ran today \u2014 growth phase idle (no open IMP tickets). Report published to agents/sam/website/docs/nel/report-2026-04-22.md.",
+      "doc": "/viewer?agent=nel&file=2026-04-22",
+      "severity": "warning"
+    },
     {
       "ts": "2026-04-22T14:12:41Z",
       "agent": "kai",
@@ -450,17 +477,17 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRunId": 130,
-    "lastRunAt": "2026-04-22T14:12:41Z",
+    "lastRunId": 131,
+    "lastRunAt": "2026-04-22T18:12:00Z",
     "passed": 7,
     "failed": 2,
     "new": 0,
     "recurring": 2,
-    "resolved": 2,
+    "resolved": 0,
     "regression": false
   },
   "cipher": {
-    "lastRunAt": "2026-04-22T14:12:41Z",
+    "lastRunAt": "2026-04-22T18:12:00Z",
     "findings": 0,
     "autofixes": 7,
     "leaks": 0,
@@ -477,13 +504,15 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-22T14:42:17Z",
+    "lastRun": "2026-04-22T18:10:26Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 20,
     "untested": 32,
     "inefficient": 8,
+    "auditIssues": 7,
+    "selfReviewFindings": 13,
     "sentinel": {
       "pass": 4,
       "fail": 0
