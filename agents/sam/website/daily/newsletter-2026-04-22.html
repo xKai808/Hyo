@@ -88,30 +88,72 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>AI Scientists Under Scrutiny for Lack of Scientific Reasoning</h2>
-<p>Good morning. Today, we're diving into the intriguing world of AI scientists and their reasoning capabilities, or lack thereof. We'll also touch on the Federal Reserve's ongoing influence on market dynamics and the recent surge in cryptocurrency prices. Let's explore these stories and see what they mean for the broader landscape.</p>
-<h2>The Story · AI Scientists Under Scrutiny</h2>
-<p>AI scientists, or large language model (LLM)-based systems, are increasingly being deployed to conduct scientific research autonomously. However, a recent study has raised concerns about whether these systems adhere to the epistemic norms that make scientific inquiry self-correcting. The study evaluated LLM-based scientific agents across eight domains, involving over 25,000 agent runs, and found that these systems often produce results without reasoning scientifically.</p>
-<p>The core issue lies in the fact that while these AI systems can generate outputs, they may not follow the rigorous reasoning processes that are fundamental to scientific inquiry. This raises questions about the reliability and validity of the results produced by AI scientists, especially in fields where precise reasoning and adherence to scientific norms are crucial.</p>
-<p>The implications of this are significant. As AI continues to play a larger role in scientific research, ensuring that these systems align with the epistemic norms of scientific inquiry becomes increasingly important. Without this alignment, there's a risk that AI-generated research could lead to flawed conclusions or misinformed decisions.</p>
-<p>Looking ahead, further studies are needed to explore the reasoning capabilities of AI systems and how they can be better aligned with scientific norms. This isn't just about improving AI technology; it's about ensuring that AI can be a reliable partner in advancing scientific knowledge.</p>
-<h2>Also Moving · Market Dynamics and Cryptocurrency Surge</h2>
-<p>While AI scientists are under scrutiny, the Federal Reserve remains a focal point in the macroeconomic landscape. The Fed's stance on interest rates continues to be a key area of focus for markets, especially amid ongoing economic uncertainties. Although there's no new data today, market participants are eagerly anticipating the upcoming FOMC meeting and other economic indicators that could influence the Fed's decisions.</p>
-<p>In the world of cryptocurrencies, Bitcoin has seen a significant price increase, rising by 4.37% to $78,630. This surge reflects broader market optimism and highlights the continued interest in digital assets. As always, the cryptocurrency market remains highly volatile, and future price movements will likely be influenced by regulatory developments and technological advancements.</p>
-<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
-<h2>The Lab · What AI Can Newly Do This Week</h2>
-<p>Today, we're spotlighting a fascinating development in AI: the AI Scientists-v2. This agent evaluates AI systems' adherence to scientific reasoning norms, ensuring that they align with the epistemic standards necessary for self-correcting scientific inquiry. This tool is particularly useful when evaluating AI systems' reasoning capabilities and alignment, providing a framework for improving AI's role in scientific research. For more details, check out the paper <a href="https://hyo.world/api/v1/track/click?nid=newsletter-2026-04-22&amp;li=0&amp;url=https%3A%2F%2Farxiv.org%2Fabs%2F2604.18805">here</a>.</p>
-<p>Filed for future reference: <code>kai/research/2026-04-22-ai-scientists.md</code></p>
-<h2>Worth Sitting With</h2>
-<p>As AI systems become more integrated into scientific research, we must ask ourselves: How do we ensure that these systems adhere to the same rigorous standards as human scientists? What mechanisms can we put in place to verify the validity of AI-generated research? These questions are not just technical challenges; they touch on the very nature of scientific inquiry and the role of AI in shaping our understanding of the world.</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped the latest AI reasoning capabilities report.</li>
-<li>In-flight: Analysis of cryptocurrency market trends.</li>
-<li>Need your input on the upcoming AI conference agenda. Yes/No?</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: firefox-tor
+    name: Firefox-Tor Privacy Vulnerability
+    aliases: [Firefox, Tor, privacy vulnerability]
+    category: tech
+    take: &quot;A stable identifier in Firefox links private Tor identities, raising privacy concerns.&quot;
+    data: &quot;IndexedDB vulnerability in Firefox allows tracking across Tor sessions.&quot;
+    hinge: &quot;Mozilla&#x27;s response and patch release timeline.&quot;
+    confidence: high
+  - slug: ai-scientific-reasoning
+    name: AI Scientific Reasoning
+    aliases: [AI scientists, LLM-based systems]
+    category: ai
+    take: &quot;AI systems produce results without adhering to scientific reasoning norms.&quot;
+    data: &quot;Evaluation of LLM-based scientific agents across eight domains.&quot;
+    hinge: &quot;Development of frameworks ensuring epistemic norms in AI reasoning.&quot;
+    confidence: medium
+topics:
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;Privacy vulnerabilities in tech products can have widespread implications.&quot;
+    take: &quot;The Firefox-Tor vulnerability highlights ongoing privacy challenges in tech.&quot;
+  - slug: ai-reasoning
+    name: &quot;AI &amp; Reasoning&quot;
+    signal: &quot;AI systems need frameworks to ensure adherence to scientific reasoning norms.&quot;
+    take: &quot;AI&#x27;s role in scientific research requires scrutiny to maintain epistemic integrity.&quot;
+lab_items:
+  - slug: ai-scientific-reasoning
+    name: &quot;AI Scientific Reasoning&quot;
+    what: &quot;Evaluation of AI systems&#x27; adherence to scientific reasoning norms.&quot;
+    why: &quot;Ensures AI systems contribute to scientific inquiry without epistemic failures.&quot;
+    when: &quot;Deploying AI for autonomous scientific research.&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
+---
+# Ra — 2026-04-22
+## Firefox-Tor Privacy Vulnerability Raises Concerns
+
+Good morning. Today, we&#x27;re diving into a significant privacy vulnerability in Firefox that affects Tor users, and exploring how AI systems are handling scientific reasoning. Let&#x27;s get started.
+
+## The Story · Firefox-Tor Privacy Vulnerability
+A recent discovery has unveiled a privacy vulnerability in Firefox that links private Tor identities through a stable identifier. This issue arises from an IndexedDB vulnerability, which allows tracking across Tor sessions. The implications are significant, as Tor is widely used for anonymous browsing, and this vulnerability undermines its core purpose. The tech community is abuzz with discussions on how such vulnerabilities can compromise user privacy and the steps needed to address them.
+
+Mozilla, the organization behind Firefox, is expected to respond swiftly to this issue. The timeline for a patch release will be crucial in restoring user trust and ensuring that privacy remains a top priority. This incident serves as a stark reminder of the ongoing challenges in maintaining privacy in the digital age. As we await Mozilla&#x27;s response, the broader conversation about privacy in tech continues to evolve.
+
+## Also Moving · AI&#x27;s Scientific Reasoning Under Scrutiny
+In the realm of AI, a new study has highlighted a critical gap in how AI systems handle scientific reasoning. Large language model (LLM)-based systems are increasingly deployed for autonomous scientific research, yet their adherence to scientific reasoning norms is under question. The study evaluated AI agents across eight domains, revealing that while these systems can produce results, they often do so without the rigorous reasoning expected in scientific inquiry.
+
+This raises concerns about the reliability and integrity of AI-driven research. As AI continues to play a larger role in scientific exploration, developing frameworks to ensure adherence to epistemic norms becomes essential. The challenge lies in balancing AI&#x27;s capabilities with the need for robust scientific reasoning, ensuring that AI contributes positively to the scientific community.
+
+## The Lab · What AI can newly do this week
+AI&#x27;s role in scientific reasoning is under the spotlight this week. The recent study on AI scientific reasoning (filed under `kai/research/2026-04-22-ai-scientific-reasoning.md`) highlights the need for frameworks that ensure AI systems adhere to epistemic norms. This is crucial when deploying AI for autonomous scientific research, as it ensures that AI systems contribute to scientific inquiry without epistemic failures. As AI continues to evolve, maintaining the integrity of scientific reasoning will be paramount.
+
+## Worth Sitting With
+The discovery of a privacy vulnerability in Firefox that affects Tor users raises an important question: How do we balance the rapid pace of technological advancement with the need to protect user privacy? As tech companies race to innovate, ensuring that privacy remains a core consideration is crucial. This incident serves as a reminder that privacy vulnerabilities can have far-reaching implications, and addressing them requires a concerted effort from the tech community. How can we ensure that privacy is prioritized in the development of new technologies?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped a deep dive on AI&#x27;s role in scientific reasoning.
+- In-flight: Analysis of privacy vulnerabilities in tech products.
+- Need your thoughts on prioritizing privacy in upcoming projects.
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
