@@ -804,7 +804,23 @@ Full details: `kai/queue/healthcheck-latest.json`. **Most important single item:
 
 ---
 
-## Current state (as of 2026-04-22T02:04Z / 20:04 MT — automated 2h healthcheck)
+## Current state (as of 2026-04-22T20:03Z / 14:03 MT — automated 2h healthcheck)
+
+**Healthcheck findings (auto-probe):**
+- **P1 — Aether dead-loop now at cycle 4+ WITHOUT escalation.** Guidance dispatched again at 19:59:01Z (4 min before this check). Aether continues cycling "dashboard: out-of-sync" — same bottleneck flagged in 20:04Z (yesterday session-cont.), 18:03Z, and 16:04Z healthchecks. Per KAI GUIDANCE PROTOCOL: after 3 same-question cycles, stop asking and ship the fix. **Action for next interactive session:** delegate to Sam to repair the local-data → API publish path for aether-analysis. This is now the 4th consecutive healthcheck repeating this recommendation.
+- **P1 — Aether flag-spam is masking signal.** 260 P2 FLAGs + 261 REPORTs from aether in 2h (~1 emission every 14s combined). No dedup window. Same anti-pattern we diagnosed for the broken-link cascade yesterday: cascading "responsive" dispatches without a heal. Fix: add flag dedup on aether, or promote to a single P1 ticket + suppress repeats until resolved.
+- **P3 — Nel:** 8 code optimization opportunities flagged at 18:10Z — informational, rolling improvement.
+- **P3 (watch) — Silent agents:** sam/ra/dex produced 0 REPORTs in 2h. ACTIVE.md mtimes are <1h so they're executing, but prior-check dead-loops mean silence is ambiguous. Not escalating; watch next cycle.
+- **Queue healthy:** 0 pending, 0 running, worker idle. Last 3 completed exit_code=0 (cipher log tail, cipher runner, misc HYO_ROOT command).
+- **Today's logs present** for nel(23), sam(1), ra(3), aether(2), dex(3). Sam still single-log — consistent dead-loop signature persists.
+
+**Most important single item:** Aether bottleneck escalation has been recommended for 4 consecutive healthchecks now. Sam delegation to repair the aether local-data → API publish path is overdue. Guidance protocol is being ignored — stop cycling questions to aether and ship the fix.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## Current state (as of 2026-04-22T02:04Z / 20:04 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — 4 dead-loop guidance dispatches just sent (01:56Z, 8min ago)** to nel/sam/ra/aether — no agent responses yet. **Aether's dispatch repeats the SAME bottleneck question (dashboard out-of-sync) for the 3rd cycle in a row.** Per KAI GUIDANCE PROTOCOL, after 3 same-question cycles, escalate from question to direct fix. **Action for next interactive session:** delegate to Sam to repair the local-data → API publish path for aether-analysis. Stop asking aether the same question.
@@ -820,7 +836,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-22T00:03Z / 18:03 MT — automated 2h healthcheck) [SUPERSEDED]
+## Current state (as of 2026-04-22T00:03Z / 18:03 MT — automated 2h healthcheck) [SUPERSEDED — see 20:03Z above]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — Broken-links auto-remediation cascade NOT closing.** 20 `[AUTO-REMEDIATE] 1 broken links detected (flagged by kai)` delegations in the last 4 hours (every ~15 min, 20:41Z → 22:26Z → still firing). Every cycle self-dispatches a new P1 ticket; no resolution logged. The remediator runs but doesn't fix. **Stop cascading and fix root cause:** (a) identify WHICH link is broken (check `kai/ledger/log.jsonl` nel ledger or site-scan output), (b) fix that specific link, (c) patch the remediator to either actually heal the link or open ONE ticket + suppress duplicates until resolved. Re-firing the same P1 every 15 min is theater.
