@@ -112,6 +112,7 @@ REQUIRED_KEYS = {
     "agent-reflection":  {"introspection"},
     "newsletter":        set(),  # flexible
     "research-drop":     {"topic", "finding"},
+    "self-improve-report": {"weakness", "outcome"},   # from agent-self-improve.sh
 }
 RECOMMENDED_KEYS = {
     "morning-report":    {"summary", "wentWell", "needsAttention", "agentHighlights"},

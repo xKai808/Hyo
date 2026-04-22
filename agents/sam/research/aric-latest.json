@@ -1,56 +1,17 @@
 {
-  "agent": "Sam",
-  "cycle_date": "2026-04-16",
-  "weakness_worked": "W2",
-  "research_conducted": [
-    {
-      "source": "https://github.com/GoogleChrome/lighthouse-ci",
-      "finding": "Lighthouse CI (Apache 2.0, 6927 stars) automates running Lighthouse for every commit, views changes, and prevents regressions. Integrates with GitHub CI/CD. Supports baseline comparison, threshold enforcement, and PR comments with performance deltas. Real-world: detects LCP, CLS, FCP regressions automatically on every merge. Strategy: runs in CI pre-deploy, flags regressions as failed checks."
-    },
-    {
-      "source": "https://github.com/GoogleChrome/web-vitals",
-      "finding": "Web Vitals (8471 stars) provides essential metrics for healthy sites: LCP (Largest Contentful Paint), FID (First Input Delay), CLS (Cumulative Layout Shift). Library for instrumenting real user metrics. Can be embedded in API responses to measure actual performance in production. Recommendation: use alongside Lighthouse CI for baseline (synthetic) + real-user (RUM) metrics."
-    },
-    {
-      "source": "https://github.com/sitespeedio/sitespeed.io",
-      "finding": "sitespeed.io (4974 stars, open-source) is comprehensive web performance analysis tool. Tests using real browsers, measures core web vitals, bundle size, and API response times. Supports continuous monitoring with historical trending. Can be run post-deploy to measure baseline and compare to previous versions. Advantage: no external service needed, runs locally or in CI."
-    }
-  ],
-  "improvement_thesis": "If we integrate Lighthouse CI (post-deploy baseline measurement) + Web Vitals (production RUM tracking) + response time instrumentation via curl/k6 (API baseline), then Sam's regression detection will improve from 0% to 100% because: (1) Lighthouse CI detects page performance regressions (LCP, CLS, SEO) on every deploy, (2) Web Vitals captures real user experience degradation, (3) API response time tracking catches backend slowdowns before users notice. Evidence: Lighthouse CI is battle-tested (6927 GH stars), Web Vitals powers Google's CrUX data, sitespeed.io supports continuous monitoring.",
-  "target_condition": "Regression detection rate: 100%. Every deploy is measured against baseline. Performance regressions >15% flag P1 automatically. API response times tracked <500ms p95. Lighthouse score tracked; LCP <2.5s; CLS <0.1; bundle size <500KB.",
-  "actual_condition": "Regression detection rate: 0%. No performance tracking. Smoke tests verify 'page loads' not 'page loads fast.' No API response time monitoring. No bundle size tracking. Silent failures: users notice slowdowns before Sam does.",
-  "next_step": "Run bin/perf-check.sh --set-baseline after next deploy to record initial baseline. Then integrate into DEPLOY.md Phase 4 smoke tests.",
-  "verification": "Deploy a known regression (add 2s delay to API endpoint), run full deploy pipeline, verify: (1) Lighthouse CI detects LCP regression, (2) /api/hq reports increased response time, (3) P1 flag raised automatically, (4) Deploy halts or flags failure. Success = regression caught before reaching production.",
-  "external_opportunity": {
-    "type": "horizontal",
-    "description": "Extend performance monitoring beyond web frontend to all Hyo systems: measure AI model inference latency (for aether), newsletter generation time (for ra), data consolidation duration (for dex). Build unified performance dashboard showing: page performance, API latency, agent execution time, queue processing latency. This positions Hyo as performance-aware infrastructure.",
-    "status": "researched"
-  },
-  "implementation_status": "phase_1_shipped",
-  "phase_1_description": "curl-based API performance baseline measurement. Checks 5 endpoints (health, hq, aurora-data, hq-home, ra-home). Records p50 response times to agents/sam/ledger/performance-baseline.jsonl. Detects P0 (>5000ms), P1 (>2000ms or >50% regression), P2 (>15% regression vs baseline). Also enabled Ra tracking endpoints (api/v1/track/).",
-  "phase_1_artifacts": [
-    "bin/perf-check.sh (NEW: performance baseline measurement, 5 endpoints)",
-    "agents/sam/ledger/ (NEW: ledger directory for Sam metrics)",
-    "agents/sam/website/api/v1/track/open.js (NEW: Ra open-event tracking)",
-    "agents/sam/website/api/v1/track/click.js (NEW: Ra click-event tracking)"
-  ],
-  "phase_1_shipped_date": "2026-04-21",
-  "phase_2_next": "Integrate Lighthouse CI into DEPLOY.md Phase 4 (target: 2026-04-28)",
+  "cycle_date": "2026-04-21",
+  "agent": "sam",
   "improvement_built": {
-    "description": "Vercel KV persistence layer in /api/hq.js \u2014 survives cold starts, activates on KV provision",
-    "files_changed": [
-      "agents/sam/website/api/hq.js",
-      "agents/sam/website/package.json",
-      "agents/sam/website/docs/VERCEL_KV_SETUP.md"
+    "ticket_id": "IMP-20260414-sam-001",
+    "description": "Build performance baseline + regression detection",
+    "weakness": "W1",
+    "thesis": "Build performance-check.sh: after every deploy, curl each HQ API endpoint 3 times, record min/mean/max response time in ms. Compare against 7-day baseline from agents/sam/ledger/performance-baseline.jsonl. If any endpoint regresses >20%, write P2 alert to kai/ledger/known-issues.jsonl. Use curl -w '%{time_total}' -o /dev/null -s.",
+    "research_summary": "Performance baseline exists with 5 entries \u2014 regression detection script needed",
+    "files_to_change": [
+      "agents/sam/performance-check.sh"
     ],
-    "commit": "b293b9d",
-    "status": "shipped",
-    "shipped_date": "2026-04-21",
-    "metric_before": "HQ state persistence: 0% \u2014 globalThis wiped on every cold start (~5min inactivity)",
-    "metric_after": "HQ state persistence: 100% \u2014 KV survives cold starts; in-memory fallback when KV not provisioned",
-    "next_target": "W3: bundle size monitoring + Lighthouse CI integration"
-  },
-  "metric_before": "Regression detection rate: 0% (no performance tracking, silent slowdowns)",
-  "metric_after": "Regression detection rate: 100% for 5 tracked endpoints \u2014 P0/P1/P2 flags on threshold breach or >15% baseline regression",
-  "next_target": "Phase 2: Integrate perf-check.sh into DEPLOY.md Phase 4 post-deploy smoke tests. Run --set-baseline after next deploy to record initial baseline."
+    "status": "researched",
+    "success_metric": "New file exists, is executable or importable, produces structured JSONL output",
+    "execution_error": "Claude API call failed at 2026-04-21T23:30:00-0600"
+  }
 }

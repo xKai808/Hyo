@@ -1,0 +1,77 @@
+{
+  "session_id": "27c9",
+  "ended_at": "2026-04-21T21:45:00-06:00",
+  "written_by": "kai-session-close (manual)",
+  "top_priority": "Diagnose Ra runner exit-2 (TASK-20260421-ra-P0-runner-exit2) — 8+ days silent failure",
+  "shipped_this_session": [
+    "Kai 5-dimensional OMP (DQI/OSS/KRI/AAS/BIS) + research from 36 sources — bin/omp-measure.sh",
+    "Kai SICQ 5-check exec compliance (HC/RDC/QGC/DMW/ERR) — bin/flywheel-doctor.sh",
+    "PROTOCOL_KAI_METRICS.md created (~350 lines, full spec with research citations)",
+    "Schedule resequenced: flywheel 04:30, doctor 05:30, OMP 06:00, snapshot 06:15, report 07:00",
+    "SYSTEM_SCHEDULE.md created — master timing doc all agents read during hydration",
+    "AGENT_ALGORITHMS.md: QUALITY METRIC SYSTEM section — algorithms survive memory wipe",
+    "7 tickets opened for 8-day-silent simulation failures (1 P0, 4 P1, 2 P2)",
+    "SESSION_CONTINUITY_PROTOCOL.md created — the protocol that makes this file exist",
+    "bin/session-close.sh created — mandatory end-of-session checklist script",
+    "bin/session-prep.sh created — nightly 06:45 MT memory integrity verifier"
+  ],
+  "open_p0s": [
+    "TASK-20260421-ra-P0-runner-exit2: Ra runner exit-2 since Apr 13 (8 consecutive nights)",
+    "S20-001: /api/health returns empty JSON in production (Day 99 chronic sentinel P0)"
+  ],
+  "open_p1s": [
+    "TASK-20260421-sim-P1-morning-report-render: 3 morning-report render variants",
+    "TASK-20260421-sim-P1-hq-state-unbound: hq-state.json unbound in simulation",
+    "TASK-20260421-sim-P1-remote-access-unbound: remote-access.json unbound",
+    "TASK-20260421-infra-P1-active-md-missing: ACTIVE.md missing for ALL agents (Phase 1 health check blind)"
+  ],
+  "hyo_actions_pending": [
+    "RESEND_API_KEY in Vercel — Aurora retention emails blocked without it",
+    "Stripe webhook registration: https://www.hyo.world/api/aurora-webhook in Stripe dashboard",
+    "bore.pub tunnel restart on Mini — `bore local 22 --to bore.pub` (queue 30-120x slower without)"
+  ],
+  "commits_queued": [
+    "s27c8-kai-metrics-commit.json — omp-measure.sh, flywheel-doctor.sh, PROTOCOL_KAI_METRICS.md, GROWTH.md, KNOWLEDGE.md",
+    "s27c9-schedule-algorithms-commit.json — kai-autonomous.sh, SYSTEM_SCHEDULE.md, AGENT_ALGORITHMS.md",
+    "s27c9-tickets-commit.json — tickets.jsonl",
+    "s27c9-brief-commit.json — KAI_BRIEF.md, KAI_TASKS.md",
+    "session-close-FINAL-commit.json — session-close.sh, session-prep.sh, SESSION_CONTINUITY_PROTOCOL.md, session-handoff.json"
+  ],
+  "commits_to_verify": [
+    "Run: cd ~/Documents/Projects/Hyo && git log --oneline -10",
+    "Expect: all 5 s27c8/s27c9/session-close commits on main before starting new work"
+  ],
+  "memory_freshness": {
+    "kai_brief_updated": "2026-04-21T21:22:00-06:00",
+    "kai_tasks_updated": "2026-04-21T21:25:00-06:00",
+    "daily_note_written": "2026-04-21T21:22:00-06:00",
+    "knowledge_md_updated": "2026-04-21",
+    "tacit_md_last_updated": "2026-04-18",
+    "session_handoff_written": "2026-04-21T21:45:00-06:00"
+  },
+  "system_tonight": {
+    "22:00": "Nel runner (healthy)",
+    "22:30": "Sam runner (healthy)",
+    "22:45": "Aether daily (healthy)",
+    "23:00": "Aether full analysis — Monday-Friday (tonight = Tuesday, runs)",
+    "23:30": "Kai CEO report (healthy)",
+    "03:00": "Ra runner — EXPECT EXIT-2 (9th consecutive failure — P0 open)",
+    "04:30": "Flywheel self-improve (new time — was 08:00)",
+    "05:30": "Flywheel doctor morning (new — provides fresh SICQ)",
+    "06:00": "OMP measurement (new time — was 06:45)",
+    "06:15": "Memory snapshot (new)",
+    "06:45": "Session prep check (new — verifies session-handoff.json, KAI_BRIEF, daily note)",
+    "07:00": "Morning report (now has all fresh data)"
+  },
+  "next_session_steps": [
+    "1. Read this file (session-handoff.json) — you are reading it now, good",
+    "2. Run full hydration: KAI_BRIEF → hyo-inbox → dispatch → KNOWLEDGE.md → TACIT.md → memory recall",
+    "3. Run hydration self-test (5 gates in SESSION_CONTINUITY_PROTOCOL.md Part 2)",
+    "4. Run: dispatch health && dispatch status",
+    "5. Verify commits landed: git log --oneline -10",
+    "6. If commits landed: proceed to Ra runner diagnosis (agents/ra/ra.sh + agents/ra/logs/)",
+    "7. If commits NOT landed: investigate queue worker status first"
+  ],
+  "protocol_reference": "kai/protocols/SESSION_CONTINUITY_PROTOCOL.md",
+  "notes": "Session 27 was a major success. Kai built 5D metrics, fixed schedule timing bugs, opened 7 long-silent tickets, and created this continuity system. Hyo signed off happy. Do not waste that momentum — verify commits, fix Ra, done."
+}

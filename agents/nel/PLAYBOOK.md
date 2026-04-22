@@ -189,6 +189,24 @@ Format: `date | decision | reasoning | outcome`
 
 ## Research Log
 
+- **2026-04-22:** Researched 7/8 sources. See `research/findings-2026-04-22.md` for details.
+
+- **2026-04-22:** Researched 1/8 sources. See `research/findings-2026-04-22.md` for details.
+
+- **2026-04-22:** Researched 1/8 sources. See `research/findings-2026-04-22.md` for details.
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
+
+- **2026-04-21:** Researched 1/8 sources. See `research/findings-2026-04-21.md` for details.
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
+
+- **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
+
 - **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
 
 - **2026-04-21:** Researched 8/8 sources. See `research/findings-2026-04-21.md` for details.
@@ -336,3 +354,5 @@ Format: `date | decision | reasoning | outcome`
 - **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.
 
 - **2026-04-13:** Researched 0/6 sources. See `research/findings-2026-04-13.md` for details.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

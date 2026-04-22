@@ -276,3 +276,5 @@ DISCREPANCY DISCOVERED:
 - Count: how many discrepancies did Hyo report this week?
 - Count: how many had a ticket already open when Hyo reported it?
 - Gap = Kai's ticket discipline score. Target: 0 gap.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

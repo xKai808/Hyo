@@ -244,3 +244,5 @@ Issue detected
      ▼
  STEP 9: CLOSE (confirm, commit, push)
 ```
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

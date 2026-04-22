@@ -75,3 +75,5 @@
 | Date | Weakness | Action | Result |
 |------|---------|--------|--------|
 | 2026-04-18 | All three | Documented weaknesses, created IMP tickets | Baseline established |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

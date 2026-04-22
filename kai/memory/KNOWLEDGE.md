@@ -317,7 +317,12 @@ bash bin/agent-execute-improvement.sh dex I2  # runs root cause clustering impro
 
 ---
 
-## Agent Improvements Shipped (2026-04-21, Session 22)
+## Agent Improvements
+
+### [2026-04-22] nel fixed W1: Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening
+**What worked:** Fixed via Claude Code delegate — see agents/nel/research/improvements/W1-2026-04-22.md
+**Files changed:** see evolution.jsonl
+**Applicable to:** any agent with similar weakness Shipped (2026-04-21, Session 22)
 
 Session 22 completed the full pending improvement backlog. All agents now have real shipped code, not just research.
 
@@ -409,6 +414,83 @@ These are the first real shipped improvements from the self-improvement protocol
 - `growth_trajectory: expanding` (3/5 agents shipping)
 - Research theater detection: fires if all agents show action_type=research with zero deployment
 - Morning report feed entry: `morning-report-2026-04-21` in feed.json (both paths synced)
+
+---
+
+## SELF-IMPROVEMENT FLYWHEEL — ARCHITECTURE AND CRITICAL PATTERNS (2026-04-21, Session 27)
+
+**Core files:**
+- `bin/agent-self-improve.sh` — 3-stage state machine (research → implement → verify) per agent
+- `bin/flywheel-doctor.sh` — self-healing script, 9 checks, automated recovery, runs 09:00 + 14:00 MT
+- `agents/<name>/self-improve-state.json` — per-agent state: current_weakness, stage, cycles, failure_count
+- `agents/<name>/GROWTH.md` — weakness/expansion registry (W1/W2/W3, E1/E2/E3 format)
+- `kai/ledger/self-improve.log` — flywheel execution log
+- `kai/ledger/sicq-latest.json` — SICQ quality scores per agent (0-100, written by flywheel-doctor)
+- `kai/ledger/flywheel-doctor-latest.json` — last doctor run results
+- `kai/protocols/FLYWHEEL_RECOVERY.md` — complete issue→recovery map (10 issue types)
+- `kai/protocols/SELF_IMPROVE_AUDIT.md` — fault analysis: failure modes, echo chamber risks, SICQ framework
+
+**P0 BUG — Theater verification (SE-S27-001, fixed 2026-04-21):**
+`verify_improvement()` originally used system-wide git log to check "did anything commit?" — meaning ANY commit anywhere in the project caused ANY agent's weakness to verify as RESOLVED. A Nel commit would resolve a Sam weakness. Fix: `verify_improvement()` now reads `FILES_TO_CHANGE` from the research file and uses `-nt state_file` (file newer than state machine start) for specific-file checks. Falls back to deep checks only when no research file exists.
+
+**P1 BUG — Silent state advance on empty research (SE-S27-002, fixed 2026-04-21):**
+When Claude Code returned empty output (timeout, binary failure), the research phase had no gate — state machine advanced to `implement` on nothing. Fix: explicit file existence check after research phase. If `agents/<name>/research/improvements/<WID>-DATE.md` does not exist, state stays at `research`, failure_count increments, P1 ticket opens.
+
+**P1 BUG — Confidence gate inversion (SE-S27-003, fixed 2026-04-21):**
+Old code: `[[ "$confidence" == "LOW" ]]` — only blocked explicit LOW string. Empty string, "UNKNOWN", or any typo proceeded to implementation. Fix: whitelist pattern `[[ "$confidence" != "HIGH" && "$confidence" != "MEDIUM" ]]` — only proceeds with explicit HIGH or MEDIUM.
+
+**P1 BUG — Shell injection in persist_knowledge / report_to_kai (SE-S27-004, fixed 2026-04-21):**
+`python3 -c "... $bash_var ..."` pattern caused silent JSON corruption when weakness titles contained `"`, `$`, or newlines. Fix: env-var + quoted heredoc pattern — variables passed via `SI_VAR=value python3 << 'HEREDOC'` — bash variables never interpolated inside the Python.
+
+**Hyo-feedback-to-GROWTH.md injection pipeline (NEW 2026-04-21):**
+`kai inject-feedback <agent> "<summary>" [P0|P1|P2]` — when Hyo corrects Kai during a session, this command immediately writes the feedback as a new W-item to `agents/<agent>/GROWTH.md`, creates a ticket, and logs to `session-errors.jsonl`. Closes the loop that was broken: Hyo feedback → session-errors.jsonl → nowhere. Now: Hyo feedback → GROWTH.md → flywheel picks it up next cycle.
+
+**SICQ (Self-Improve Cycle Quality Score):**
+0-100 per agent, computed by flywheel-doctor. 5 components, 20 points each:
+- Research file written for today
+- Research has FIX_APPROACH + FILES_TO_CHANGE + CONFIDENCE: HIGH or MEDIUM
+- Implementation attempted (cycles > 0)
+- Specific FILES_TO_CHANGE were modified (not just any commit)
+- KNOWLEDGE.md has entry for this weakness
+Score ≥ 60 = ✓ healthy | 40-59 = ⚠ degraded | < 40 = ✗ critical (P1 ticket auto-opens)
+
+**Flywheel Recovery hierarchy (FLYWHEEL_RECOVERY.md):**
+1. Automated fix (doctor repairs without human input)
+2. State reset (return to W1/research safe known-good)
+3. P1 ticket + Kai signal (Kai addresses next session)
+4. Hyo inbox entry (ONLY when Kai cannot resolve autonomously)
+Hyo escalation triggers: multiple P0 in same run | SICQ avg < 40 for 3 days | log >96h stale
+
+**Kai's own GROWTH.md (agents/kai/GROWTH.md — created 2026-04-21):**
+W1: Session Continuity Drift (P0) | W2: Decision Quality Not Measured (P1)
+W3: Cross-Agent Coordination Latency (P1) | W4: Memory Consolidation Coverage Gaps (P1)
+E1: Agentic Code Review Pipeline | E2: Hyo Portfolio Management | E3: Autonomous Architecture Proposals
+Kai is now a participant in the flywheel, not just the synthesizer.
+
+**OMP + Kai-specific metrics framework (Task #64-69 — BUILT 2026-04-21, Session 27 cont. 7-8):**
+Two-layer quality system: SICQ (process compliance) + OMP (outcome quality).
+OMP has umbrella metrics (OCR, RR, RDI, CE, MCS — all agents) + one agent-specific metric per agent.
+Kai's OMP was redesigned (2026-04-21) from a single CCS metric to a 5-dimensional profile:
+- DQI (Decision Quality Index): CEO role. Formula: (documented_decisions/total) × (1-reversal_rate). Source: kai/ledger/decision-log.jsonl. Target: ≥0.80.
+- OSS (Orchestration Sync Score): Orchestrator role. Dispatch ACK rate × (1 - delegation-back rate). Fallback: ACTIVE.md freshness. Target: ≥0.85.
+- KRI (Knowledge Retention Index): Memory keeper role. 1 - (repeated_error_categories / total_categories). Source: session-errors.jsonl. Target: ≥0.90.
+- AAS (Autonomous Action Score): Self-improver role. (E_items/total_items × 0.60) + (cycle_ratio × 0.40). Source: GROWTH.md + self-improve-state.json. Target: ≥0.75.
+- BIS (Business Impact Score): Business operator role. on-time delivery × HQ publish rate. Source: morning-report.json + feed.json. Target: ≥0.85.
+Composite = 0.25×DQI + 0.20×OSS + 0.25×KRI + 0.15×AAS + 0.15×BIS. Threshold healthy: ≥0.75. Critical: <0.55.
+Kai SICQ replaces generic flywheel SICQ with 5 executive protocol compliance checks:
+HC (hydration: KAI_BRIEF within 24h), RDC (research ≥6 external URLs), QGC (no queue violations in 7d),
+DMW (KNOWLEDGE.md within 7d + KAI_TASKS within 24h), ERR (no same-category error 3+ times in 14d).
+Full spec: kai/protocols/PROTOCOL_KAI_METRICS.md. Research: 36 sources across CEO, orchestration, KM, agentic AI, business ops.
+Morning report shows Kai OMP as 5-dimensional breakdown (not composite-only). Output: agents/kai/ledger/omp-latest.json (kai_profile field).
+W1→KRI+HC, W2→DQI+RDC, W3→OSS+BIS, W4→KRI+DMW. All weaknesses linked to metrics in agents/kai/GROWTH.md.
+
+**Cross-agent adversarial review (Task #63 — BUILT 2026-04-21):**
+`bin/cross-agent-review.sh` — Saturday 06:45 MT via kai-autonomous.sh. Primary antidote to echo chamber dynamics.
+Pairs: nel reviews sam | sam reviews nel | ra reviews aether | dex reviews all agents.
+Claude Code is asked to produce an adversarial (not diplomatic) review across 6 sections:
+diagnosis quality, research quality, implementation critique, echo chamber risk, critical gaps (P0/P1/P2), verdict (STRONG/ADEQUATE/WEAK/THEATER).
+P0/P1 gaps auto-ticketed against the target agent. Non-STRONG verdicts published to HQ Research tab.
+Run ad-hoc: `kai cross-agent-review nel sam` (nel reviews sam only) or `kai cross-agent-review` (all pairs).
 
 ---
 

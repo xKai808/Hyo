@@ -133,6 +133,10 @@ Format: `date | decision | reasoning | outcome`
 
 ## Research Log
 
+- **2026-04-22:** Researched 7/7 sources. See `research/findings-2026-04-22.md` for details.
+
+- **2026-04-22:** Researched 7/7 sources. See `research/findings-2026-04-22.md` for details.
+
 - **2026-04-21:** Researched 7/7 sources. See `research/findings-2026-04-21.md` for details.
 
 - **2026-04-20:** Researched 7/7 sources. See `research/findings-2026-04-20.md` for details.
@@ -168,3 +172,5 @@ Format: `date | decision | reasoning | outcome`
 - **2026-04-14:** Researched 6/6 sources. See `research/findings-2026-04-14.md` for details.
 
 - **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

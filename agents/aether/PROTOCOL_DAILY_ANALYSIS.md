@@ -1380,3 +1380,5 @@ After any update:
 *v2.5 adds bin/analysis-gate.py as a hard block between analysis and publish.*
 *Meta-change: protocol now enforces requirements mechanically, not just documents them.*
 *Fallback if unavailable: use Analysis_2026-04-17.txt as the practical format reference.*
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

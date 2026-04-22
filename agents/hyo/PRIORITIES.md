@@ -35,3 +35,5 @@ Each cycle, hyo investigates one external design/UX question:
 - LAB-001: Aurora landing page positioning update ("built for you, not by you" angle)
 - DEPLOY-002: Change Vercel root dir from `website/` to `agents/sam/website/` (unblocks symlink)
 - Podcast player accessibility: add `aria-label` to audio element
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

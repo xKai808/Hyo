@@ -1,7 +1,11 @@
-# nel Self-Review — 2026-04-21T08:41
+# nel Self-Review — 2026-04-21T23:00
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-21-nel-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **nel-agent-reflection-2026-04-21.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **nel-self-improve-report-2026-04-21.json**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
@@ -45,6 +49,7 @@ Questions for nel to answer:
 - ✗ **dex/repair.sh** does not source agent-gates.sh
 - ✗ **hyo/hyo.sh** does not source agent-gates.sh
 - ✗ **nel/dep-audit.sh** does not source agent-gates.sh
+- ✗ **nel/dependency-audit.sh** does not source agent-gates.sh
 - ✗ **nel/sentinel-adapt.sh** does not source agent-gates.sh
 - ✗ **nel/verify.sh** does not source agent-gates.sh
 - ✗ **ra/verify.sh** does not source agent-gates.sh
@@ -58,6 +63,6 @@ Questions for nel to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 13
-- Gate results: trigger=18/19, visibility=checked, resolutions=7, adoption=-4/5
+- Findings: 16
+- Gate results: trigger=15/18, visibility=checked, resolutions=7, adoption=-5/5
 

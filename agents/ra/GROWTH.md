@@ -219,3 +219,6 @@ Addresses W3
 | 2026-04-21 | (Planned) Source health checks run during gather phase. First disabled sources identified and skipped. | Real data: which sources consistently fail, when, what errors. Health status visible in ra.sh output. Newsletter coverage may drop if sources stay disabled >7 cycles. |
 | 2026-04-28 | (Planned) Quality Scoring Phase 4.5 complete. First scorecard published. | Newsletter for 2026-04-28 shows: diversity 18/30 topics (60%), freshness 92%, length 1150 words (compliant), uniqueness 11/15 sources. Overall score: 75/100. |
 | 2026-05-12 | (Planned) Gap coverage research + first wave of new sources. | 3 new sources integrated: ArtsAxis (culture), ESPN RSS (sports), Wellness API (lifestyle). Coverage matrix shows 22/30 topics now have 2+sources (up from 9/30). Next newsletter will test diversification. |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+| 2026-04-22 | IMP-20260414-ra-002 (W2): Content quality scoring not yet implemented — quality-score.py will add 4-axis | Automated assessment → execution |

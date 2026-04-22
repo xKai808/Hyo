@@ -1,22 +1,18 @@
 {
-  "generated_at": "2026-04-21T16:28:15.239148+00:00",
+  "generated_at": "2026-04-22T08:27:09.600217+00:00",
   "date_range": {
-    "start": "2026-04-14",
+    "start": "2026-04-15",
     "end": "2026-04-17",
     "sessions_analyzed": 8
   },
   "summary": {
-    "total_net_pnl": 19.85,
-    "positive_days": 2,
+    "total_net_pnl": 0.49,
+    "positive_days": 1,
     "negative_days": 1,
-    "win_rate_pct": 66.7,
-    "total_profit": 10.49
+    "win_rate_pct": 50.0,
+    "total_profit": 0
   },
   "daily_pnl": [
-    {
-      "date": "2026-04-14",
-      "pnl": 19.36
-    },
     {
       "date": "2026-04-15",
       "pnl": -0.37
@@ -26,54 +22,8 @@
       "pnl": 0.86
     }
   ],
-  "strategy_health": {
-    "bps_premium": {
-      "total_pnl": 4.96,
-      "trades": 6,
-      "edge_per_trade": 0.827,
-      "sessions": 3,
-      "trend": "stable",
-      "best_window": "NY_PRIME",
-      "worst_window": "OVERNIGHT"
-    },
-    "PAQ_EARLY_AGG": {
-      "total_pnl": 2.59,
-      "trades": 4,
-      "edge_per_trade": 0.647,
-      "sessions": 3,
-      "trend": "stable",
-      "best_window": "OVERNIGHT",
-      "worst_window": "NY_PRIME"
-    },
-    "WES_EARLY": {
-      "total_pnl": 2.28,
-      "trades": 1,
-      "edge_per_trade": 2.28,
-      "sessions": 1,
-      "trend": "stable",
-      "best_window": "EVENING",
-      "worst_window": "EVENING"
-    },
-    "bps_late": {
-      "total_pnl": 0.66,
-      "trades": 1,
-      "edge_per_trade": 0.66,
-      "sessions": 1,
-      "trend": "stable",
-      "best_window": "EVENING",
-      "worst_window": "EVENING"
-    }
-  },
+  "strategy_health": {},
   "window_performance": {
-    "OVERNIGHT": {
-      "total_pnl": -0.46,
-      "avg_pnl": -0.46,
-      "sessions": 1,
-      "positive_sessions": 0,
-      "negative_sessions": 1,
-      "win_rate": 0.0,
-      "ev_label": "-EV"
-    },
     "EU_MORNING": {
       "total_pnl": 3.61,
       "avg_pnl": 3.61,
@@ -93,47 +43,24 @@
       "ev_label": "-EV"
     },
     "NY_PRIME": {
-      "total_pnl": 5.86,
-      "avg_pnl": 2.93,
-      "sessions": 2,
-      "positive_sessions": 2,
+      "total_pnl": 0.65,
+      "avg_pnl": 0.65,
+      "sessions": 1,
+      "positive_sessions": 1,
       "negative_sessions": 0,
       "win_rate": 100.0,
       "ev_label": "+EV"
     },
     "EVENING": {
-      "total_pnl": 10.88,
-      "avg_pnl": 5.44,
-      "sessions": 2,
-      "positive_sessions": 2,
+      "total_pnl": 5.14,
+      "avg_pnl": 5.14,
+      "sessions": 1,
+      "positive_sessions": 1,
       "negative_sessions": 0,
       "win_rate": 100.0,
       "ev_label": "+EV"
     }
   },
-  "concentration_risk": {
-    "top_1": {
-      "strategy": "bps_premium",
-      "pnl": 4.96,
-      "cumulative_pct": 47.3
-    },
-    "top_2": {
-      "strategy": "PAQ_EARLY_AGG",
-      "pnl": 2.59,
-      "cumulative_pct": 72.0
-    },
-    "top_3": {
-      "strategy": "WES_EARLY",
-      "pnl": 2.28,
-      "cumulative_pct": 93.7
-    },
-    "top_4": {
-      "strategy": "bps_late",
-      "pnl": 0.66,
-      "cumulative_pct": 100.0
-    }
-  },
-  "health_flags": [
-    "CONCENTRATION: top 3 strategies = 93.7% of profit"
-  ]
+  "concentration_risk": {},
+  "health_flags": []
 }

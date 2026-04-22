@@ -256,3 +256,5 @@ This framework evolves the same way everything else does: through use.
 Every resolution, every self-evolution cycle, every review generates insights about what questions were missing. Agents propose additions. Kai reviews.
 
 The measure of success is not "did the agent follow the checklist." It's "did the agent ask a question I didn't think of, and was it the right question?"
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

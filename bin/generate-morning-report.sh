@@ -351,15 +351,40 @@ def load_resolved_issues(root):
         pass
     return resolved
 
+# ─── Self-improvement report reader ─────────────────────────────────────────
+def read_self_improve(agent_name):
+    """Read agents/<name>/research/self-improve-latest.json if it exists."""
+    path = os.path.join(root, "agents", agent_name, "research", "self-improve-latest.json")
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path) as f:
+            data = json.load(f)
+        # Only return if it's from today or yesterday (not stale)
+        report_date = data.get("report_date", "")
+        from datetime import datetime, timedelta
+        yesterday = (datetime.strptime(today, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
+        if report_date not in (today, yesterday):
+            return None
+        return data
+    except:
+        return None
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # GATHER DATA PER AGENT
 # ═══════════════════════════════════════════════════════════════════════════════
 
-agents_list = ["nel", "ra", "sam", "aether", "dex"]
+agents_list = ["nel", "ra", "sam", "aether", "dex", "kai"]
 agent_reports = {}
 growth_trajectories = []
 risks = []
 wins = []
+
+self_improve_reports = {}  # agent_name → self-improve-latest.json data
+
+for agent_name in agents_list:
+    si = read_self_improve(agent_name)
+    self_improve_reports[agent_name] = si
 
 for agent_name in agents_list:
     aric = read_aric_phase7(agent_name)
@@ -471,6 +496,22 @@ for agent_name in agents_list:
             details.append(f"{imp.get('id','?')}: {imp.get('title','?')[:40]} ({imp.get('status','?')})")
         improvement_status_detail = " | ".join(details) if details else "No improvements defined."
 
+    # ── Self-improvement data ──
+    si = self_improve_reports.get(agent_name)
+    si_summary = None
+    if si:
+        si_summary = {
+            "weakness_id": si.get("weakness_id", "?"),
+            "weakness_title": si.get("weakness_title", "unknown"),
+            "stage_completed": si.get("cycle_stage_completed", "unknown"),
+            "outcome": si.get("outcome", ""),
+            "fix_approach": si.get("fix_approach", ""),
+            "confidence": si.get("confidence", ""),
+            "improvements_resolved": si.get("improvements_resolved", []),
+            "total_cycles": si.get("total_cycles", 0),
+            "report_date": si.get("report_date", ""),
+        }
+
     # Compile agent report
     agent_reports[agent_name] = {
         "novel_work": novel_work,
@@ -495,6 +536,8 @@ for agent_name in agents_list:
         "action_type": action_type,
         "priority_evidence": priority_evidence,
         "improvement_status_detail": improvement_status_detail,
+        # ── self-improve cycle report (from agent-self-improve.sh) ──
+        "self_improve": si_summary,
     }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -578,10 +621,42 @@ for a in agents_list:
         issue = agent_reports[a].get("highest_priority_issue", "unknown issue")
         critical_blocked.append(f"{a}: {issue[:80]}")
 
+# ── Self-improvement flywheel summary (across all agents) ──
+si_resolved_today = []
+si_in_progress = []
+si_no_data = []
+for a in agents_list:
+    si = self_improve_reports.get(a)
+    if not si:
+        si_no_data.append(a)
+        continue
+    resolved = si.get("improvements_resolved", [])
+    if resolved:
+        si_resolved_today.append(f"{a}: resolved {', '.join(resolved)}")
+    stage = si.get("cycle_stage_completed", "")
+    wid = si.get("weakness_id", "?")
+    wtitle = si.get("weakness_title", "")
+    outcome = si.get("outcome", "")
+    si_in_progress.append(f"{a}: {wid} — {wtitle} ({stage}) → {outcome[:80]}")
+
 report = {
     "generated": now_mt,
     "date": today,
     "version": "v6-action-engine",
+    "self_improvement_flywheel": {
+        "resolved_today": si_resolved_today,
+        "in_progress": si_in_progress,
+        "no_report": si_no_data,
+        "agents_with_data": len(agents_list) - len(si_no_data),
+        "total_agents": len(agents_list),
+        # SICQ scores from flywheel-doctor (computed at 09:00 MT, available by morning report)
+        "sicq_scores": (lambda p: json.load(open(p)).get("scores", {})
+                        if os.path.exists(p) else {})(
+            os.path.join(root, "kai/ledger/sicq-latest.json")),
+        "doctor_issues": (lambda p: json.load(open(p)).get("issues_found", [])
+                          if os.path.exists(p) else [])(
+            os.path.join(root, "kai/ledger/flywheel-doctor-latest.json")),
+    },
     "executive_summary": {
         "system_online": exec_layer["alive"],
         "execution_layer": exec_layer,
@@ -626,7 +701,8 @@ def build_agent_narrative(name, report):
         "ra": "Ra (newsletter)",
         "sam": "Sam (engineering)",
         "aether": "Aether (trading bot)",
-        "dex": "Dex (pattern detection)"
+        "dex": "Dex (pattern detection)",
+        "kai": "Kai (CEO orchestrator)"
     }
     label = agent_labels.get(name, name.capitalize())
 
@@ -719,6 +795,173 @@ for agent_name in agents_list:
     print(narrative)
     print()
 
+# ── Self-Improvement Flywheel Section ──────────────────────────────────────────
+print("─"*80)
+print("🔧 SELF-IMPROVEMENT CYCLE (reported by each agent to Kai)")
+print("─"*80)
+print()
+
+si_section_lines = []
+for agent_name in agents_list:
+    si = self_improve_reports.get(agent_name)
+    agent_labels = {
+        "nel": "Nel", "ra": "Ra", "sam": "Sam",
+        "aether": "Aether", "dex": "Dex", "kai": "Kai (orchestrator)"
+    }
+    label = agent_labels.get(agent_name, agent_name.capitalize())
+
+    if not si:
+        si_section_lines.append(f"{label}: No self-improvement report yet — cycle has not run today.")
+        continue
+
+    wid = si.get("weakness_id", "?")
+    wtitle = si.get("weakness_title", "") or "unknown weakness"
+    stage = si.get("cycle_stage_completed", "?")
+    outcome = si.get("outcome", "")
+    fix = si.get("fix_approach", "")
+    conf = si.get("confidence", "")
+    resolved = si.get("improvements_resolved", [])
+    cycles = si.get("total_cycles", 0)
+
+    if resolved:
+        line = f"{label}: ✓ Resolved {', '.join(resolved)} — {wtitle}. Cycle {cycles} complete."
+    else:
+        stage_label = {"research": "Researched", "implement": "Implementing", "verify": "Verifying"}.get(stage, stage.capitalize())
+        conf_str = f" (confidence: {conf})" if conf else ""
+        line = f"{label}: {stage_label} {wid} — {wtitle}{conf_str}."
+        if fix:
+            line += f" Approach: {fix[:100]}."
+
+    si_section_lines.append(line)
+
+for line in si_section_lines:
+    print(line)
+
+# SICQ quality scores (process compliance — from flywheel-doctor-latest.json)
+import json as _json_sicq, os as _os_sicq
+_sicq_path = os.path.join(root, "kai/ledger/sicq-latest.json")
+if _os_sicq.path.exists(_sicq_path):
+    try:
+        _sicq = _json_sicq.load(open(_sicq_path))
+        _scores = _sicq.get("scores", {})
+        _score_date = _sicq.get("date", "")
+        if _scores:
+            print()
+            print(f"📊 SICQ Process Compliance ({_score_date}):")
+            for _a, _s in sorted(_scores.items()):
+                _flag = "✓" if _s >= 60 else ("⚠" if _s >= 40 else "✗")
+                print(f"  {_flag} {_a.capitalize()}: {_s}/100")
+            _avg = sum(_scores.values()) // len(_scores) if _scores else 0
+            print(f"  System average: {_avg}/100 {'(healthy)' if _avg >= 60 else '(needs attention)'}")
+    except:
+        pass
+
+# OMP outcome quality scores (from omp-summary.json — runs at 06:45 MT)
+_omp_path = os.path.join(root, "kai/ledger/omp-summary.json")
+if os.path.exists(_omp_path):
+    try:
+        _omp = json.load(open(_omp_path))
+        _omp_agents = _omp.get("agents", {})
+        _omp_date = _omp.get("date", "")
+        if _omp_agents:
+            print()
+            print(f"🎯 OMP Outcome Quality ({_omp_date}):")
+            _metric_labels = {
+                "nel": "APS", "sam": "DSS", "ra": "EQS",
+                "aether": "ASR", "dex": "PAR", "kai": "KAI_COMPOSITE"
+            }
+            _thresholds = {
+                "APS": 0.80, "DSS": 0.90, "EQS": 0.50,
+                "ASR": 0.65, "PAR": 0.35, "KAI_COMPOSITE": 0.75
+            }
+            # Kai-specific dimension thresholds
+            _kai_dim_thresholds = {"DQI": 0.80, "OSS": 0.85, "KRI": 0.90, "AAS": 0.75, "BIS": 0.85}
+            _kai_dim_labels = {
+                "DQI": "CEO decisions",
+                "OSS": "orchestration sync",
+                "KRI": "knowledge retention",
+                "AAS": "autonomous action",
+                "BIS": "business impact"
+            }
+            for _a in sorted(_omp_agents.keys()):
+                _ad = _omp_agents[_a]
+                _mn = _ad.get("specific_metric", "?")
+                _ms = _ad.get("specific_score")
+                _thr = _thresholds.get(_mn, 0.50)
+                # Kai: show 5-dimensional breakdown instead of single metric
+                if _a == "kai" and _ad.get("kai_profile"):
+                    _kp = _ad["kai_profile"]
+                    print(f"  Kai OMP (5-dimensional):")
+                    for _dim in ["DQI", "OSS", "KRI", "AAS", "BIS"]:
+                        _dv = _kp.get(_dim)
+                        _dt = _kai_dim_thresholds.get(_dim, 0.75)
+                        _dl = _kai_dim_labels.get(_dim, _dim)
+                        if _dv is not None:
+                            _df = "✓" if _dv >= _dt else ("⚠" if _dv >= _dt * 0.80 else "✗")
+                            print(f"    {_df} {_dim} ({_dl}): {_dv:.3f}")
+                        else:
+                            print(f"    — {_dim} ({_dl}): no data")
+                    if _ms is not None:
+                        _cf = "✓" if _ms >= _thr else ("⚠" if _ms >= _thr * 0.80 else "✗")
+                        print(f"    → Composite: {_ms:.3f} {_cf}")
+                    continue
+                if _ms is not None:
+                    _flag = "✓" if _ms >= _thr else ("⚠" if _ms >= _thr * 0.80 else "✗")
+                    _pct = int(_ms * 100)
+                    print(f"  {_flag} {_a.capitalize()} {_mn}: {_pct}% (target: {int(_thr*100)}%)")
+                else:
+                    print(f"  — {_a.capitalize()} {_mn}: no data yet")
+            # RDI (research depth) — show aggregate
+            _rdi_vals = [v.get("RDI") for v in _omp_agents.values() if v.get("RDI") is not None]
+            if _rdi_vals:
+                _avg_rdi = sum(_rdi_vals) / len(_rdi_vals)
+                _rdi_flag = "✓" if _avg_rdi >= 0.70 else ("⚠" if _avg_rdi >= 0.40 else "✗")
+                print(f"  {_rdi_flag} Research Depth (RDI avg): {int(_avg_rdi*100)}% (target: 70%)")
+    except Exception as _e:
+        pass
+
+# Kai synthesis of all agent self-improve reports
+# Exclude Kai from "agent" count for synthesis phrasing (Kai is the synthesizer, not a reportee)
+non_kai_agents = [a for a in agents_list if a != "kai"]
+reported_count = sum(1 for a in non_kai_agents if self_improve_reports.get(a) is not None)
+
+# Kai's own research highlight (separate from orchestrator synthesis)
+kai_si = self_improve_reports.get("kai")
+if kai_si:
+    print()
+    kai_wid = kai_si.get("weakness_id", "?")
+    kai_wtitle = kai_si.get("weakness_title", "") or "system weakness"
+    kai_stage = kai_si.get("cycle_stage_completed", "research")
+    kai_fix = kai_si.get("fix_approach", "")
+    kai_conf = kai_si.get("confidence", "")
+    kai_resolved = kai_si.get("improvements_resolved", [])
+    kai_cycles = kai_si.get("total_cycles", 0)
+    if kai_resolved:
+        print(f"Kai Research: ✓ Resolved orchestrator weakness {', '.join(kai_resolved)} — {kai_wtitle}. "
+              f"Research + implementation complete after {kai_cycles} cycles. "
+              f"System architecture improved. See agents/kai/research/ for full findings.")
+    else:
+        stage_label = {"research": "Researched", "implement": "Implementing fix for", "verify": "Verifying"}.get(kai_stage, kai_stage.capitalize())
+        conf_str = f" (confidence: {kai_conf})" if kai_conf else ""
+        print(f"Kai Research: {stage_label} {kai_wid} — {kai_wtitle}{conf_str}.")
+        if kai_fix:
+            print(f"  Fix approach: {kai_fix[:150]}.")
+        print(f"  Published research drop to HQ — see Research tab for full findings.")
+
+if reported_count == 0:
+    print()
+    print("Kai synthesis: No agent has reported yet — self-improvement cycle has not run today (expected 08:00 MT).")
+elif len(si_resolved_today) > 0:
+    print()
+    print(f"Kai synthesis: {len(si_resolved_today)} improvement(s) resolved today via the compounding flywheel. "
+          f"Knowledge persisted to KNOWLEDGE.md and memory engine.")
+else:
+    print()
+    print(f"Kai synthesis: {reported_count}/{len(non_kai_agents)} agents reported. "
+          f"All cycles in progress — no weaknesses fully resolved yet today. "
+          f"Expected completions: next overnight cycle.")
+
+print()
 print("="*80)
 
 PYEOF
@@ -866,6 +1109,25 @@ summary_text = f"{q1} {q2} {q3}"
 if simulation_warning:
     summary_text += " ⚠️ Synthesis did not run."
 
+# ── Self-improvement flywheel section for feed entry ──
+si_flywheel = mr.get("self_improvement_flywheel", {})
+si_resolved = si_flywheel.get("resolved_today", [])
+si_in_prog = si_flywheel.get("in_progress", [])
+si_no_rpt = si_flywheel.get("no_report", [])
+si_count = si_flywheel.get("agents_with_data", 0)
+total_agents = si_flywheel.get("total_agents", 5)
+
+if si_resolved:
+    flywheel_summary = f"{len(si_resolved)} weakness(es) resolved today: " + "; ".join(si_resolved)
+elif si_count > 0:
+    flywheel_summary = f"{si_count}/{total_agents} agents reported — cycles in progress, resolving overnight."
+else:
+    flywheel_summary = "No agent self-improvement reports yet — cycle expected at 08:00 MT."
+
+flywheel_detail = si_in_prog if si_in_prog else ["No in-progress reports."]
+if si_no_rpt:
+    flywheel_detail.append(f"No report from: {', '.join(si_no_rpt)}")
+
 now_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
 entry = {
     "id": f"morning-report-kai-{today}-{datetime.now().strftime('%H%M%S')}",
@@ -880,7 +1142,12 @@ entry = {
         "summary": summary_text,
         "wentWell": went_well,
         "needsAttention": needs_attention,
-        "agentHighlights": highlights
+        "agentHighlights": highlights,
+        "selfImprovementFlywheel": {
+            "summary": flywheel_summary,
+            "detail": flywheel_detail,
+            "resolved_today": si_resolved,
+        }
     }
 }
 

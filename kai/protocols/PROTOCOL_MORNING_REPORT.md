@@ -513,3 +513,5 @@ The morning report is DONE when:
 |---------|------------|--------|
 | v1.0    | 2026-04-21 | Initial protocol. Adds 5 mandatory questions, new JSON fields, action_type classification, executive summary agent counts, 10 failure modes, HQ color table, cold start reproduction. Incorporates GPT critique verbatim. |
 | v1.1    | 2026-04-21 | HYO_FEEDBACK_GATE (Part 0): constitutional meta-algorithm — Hyo feedback → protocol update in same session, every time. WRITING STANDARD (Part 0b): BLUF + inverted pyramid, plain English, human CEO audience. "NOT this / THIS" examples for every agent section and executive summary. Max 2 technical terms per section rule. |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

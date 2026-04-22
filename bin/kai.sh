@@ -473,21 +473,68 @@ cmd_tasks() {
 
 cmd_context() {
   hdr "Hydration block (paste as first message to any new Kai session)"
+  local handoff="$ROOT/kai/ledger/session-handoff.json"
+  if [[ -f "$handoff" ]]; then
+    echo ""
+    echo "★ READ THIS FIRST — session-handoff.json:"
+    python3 -c "
+import json
+d = json.load(open('$handoff'))
+print(f\"  Session: {d.get('session_id','?')} | Ended: {d.get('ended_at','?')}\")
+print(f\"  Top priority: {d.get('top_priority','?')}\")
+p0s = d.get('open_p0s', [])
+if p0s:
+  print(f\"  Open P0s ({len(p0s)}): {p0s[0][:80]}\")
+hyo = d.get('hyo_actions_pending', [])
+if hyo:
+  print(f\"  Hyo pending: {len(hyo)} action(s)\")
+notes = d.get('next_session_steps', [])
+if notes:
+  print(f\"  Next steps: {len(notes)} defined in session-handoff.json\")
+" 2>/dev/null || true
+    echo ""
+  fi
   cat <<EOF
+Read these files in order before responding to anything:
 
-Read these files first, in order, before responding to anything:
+0. $ROOT/kai/ledger/session-handoff.json   ← machine-readable handoff (TOP PRIORITY)
+1. $BRIEF                                   ← session-continuity memory
+2. $ROOT/kai/ledger/hyo-inbox.jsonl         ← Hyo direct messages (urgent)
+3. $ROOT/kai/dispatch/                      ← today + yesterday dispatch transcripts
+4. $ROOT/kai/memory/KNOWLEDGE.md            ← permanent knowledge layer
+5. $ROOT/kai/memory/TACIT.md               ← Hyo preferences + hard rules
+6. $TASKS                                   ← priority queue (★ NEXT SESSION block)
+7. $ROOT/kai/ledger/session-errors.jsonl    ← Kai's mistake ledger
+8. $ROOT/kai/protocols/EXECUTION_GATE.md    ← pre-action gate
+9. $ROOT/kai/ledger/simulation-outcomes.jsonl ← last nightly sim
 
-1. $BRIEF
-2. $TASKS
-3. $ROOT/NFT/HyoRegistry_Notes.md
-4. $ROOT/NFT/agents/ (list; read the ones relevant to the current task)
-5. Most recent log in $LOGS
+You are Kai, orchestrator of hyo.world. Hyo is the CEO and decision authority.
+See kai/protocols/SESSION_CONTINUITY_PROTOCOL.md for the full start-of-session protocol.
+Use kai.sh (aliased 'kai') for all routine operations — never copy-paste curl commands.
 
-You are Kai, CEO of hyo.world. Hyo is the operator. The registry is deployed at https://www.hyo.world with serverless functions in website/api/. The founder bypass token lives in .secrets/founder.token. Use kai.sh (aliased as 'kai') for any routine operation — do not copy-paste curl commands.
-
-After reading, give me a 3-line status: (1) what shipped since last session, (2) what's in the task queue, (3) what you recommend doing next.
+After hydration, give me a 4-line status:
+1. What shipped last session
+2. Top priority this session
+3. Recommendation for next 15 minutes
+4. Queue active: yes/no
 
 EOF
+}
+
+cmd_session_close() {
+  if [[ -x "$ROOT/bin/session-close.sh" ]]; then
+    HYO_ROOT="$ROOT" bash "$ROOT/bin/session-close.sh" "$@"
+  else
+    die "session-close.sh not found at $ROOT/bin/session-close.sh"
+  fi
+}
+
+cmd_session_prep() {
+  if [[ -x "$ROOT/bin/session-prep.sh" ]]; then
+    HYO_ROOT="$ROOT" bash "$ROOT/bin/session-prep.sh" "$@"
+  else
+    die "session-prep.sh not found at $ROOT/bin/session-prep.sh"
+  fi
 }
 
 cmd_save() {
@@ -1019,6 +1066,8 @@ case "$sub" in
     ;;
   env)                cmd_env "$@" ;;
   consolidate)        bash "$ROOT/agents/nel/consolidation/consolidate.sh" "$@" ;;
+  session-close|sc)   cmd_session_close "$@" ;;
+  session-prep|sp)    cmd_session_prep "$@" ;;
   dispatch|d)         bash "$ROOT/bin/dispatch.sh" "$@" ;;
   simulate|sim)       bash "$ROOT/bin/dispatch.sh" simulate ;;
   dhealth)            bash "$ROOT/bin/dispatch.sh" health ;;
@@ -1053,5 +1102,75 @@ print(f'Closed {path}')
   podcast)            HYO_ROOT="$ROOT" python3 "$ROOT/bin/podcast.py" "$@" ;;
   podcast-dry)        HYO_ROOT="$ROOT" python3 "$ROOT/bin/podcast.py" --dry-run "$@" ;;
   podcast-script)     HYO_ROOT="$ROOT" python3 "$ROOT/bin/podcast.py" --script-only "$@" ;;
+
+  # inject-feedback: wire Hyo feedback directly into an agent's GROWTH.md
+  # Usage: kai inject-feedback <agent> "<feedback summary>" [P0|P1|P2]
+  # This is the most important signal in the system — Hyo's corrections feed directly
+  # into the improvement cycle rather than stopping at session-errors.jsonl
+  inject-feedback|feedback)
+    FEEDBACK_AGENT="${2:-}"
+    FEEDBACK_TEXT="${3:-}"
+    FEEDBACK_PRIORITY="${4:-P1}"
+    TODAY_F=$(TZ=America/Denver date +%Y-%m-%d)
+    NOW_F=$(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
+    if [[ -z "$FEEDBACK_AGENT" || -z "$FEEDBACK_TEXT" ]]; then
+      err "Usage: kai inject-feedback <agent> \"<feedback>\" [P0|P1|P2]"
+      exit 1
+    fi
+    GROWTH_FILE="$ROOT/agents/$FEEDBACK_AGENT/GROWTH.md"
+    if [[ ! -f "$GROWTH_FILE" ]]; then
+      err "GROWTH.md not found for $FEEDBACK_AGENT at $GROWTH_FILE"
+      exit 1
+    fi
+    # Find next available W-ID
+    NEXT_ID=$(python3 -c "
+import re
+content = open('$GROWTH_FILE').read()
+ids = re.findall(r'^### W(\d+):', content, re.MULTILINE)
+nums = [int(x) for x in ids] if ids else [0]
+print('W' + str(max(nums) + 1))
+" 2>/dev/null || echo "W99")
+    # Append new weakness from Hyo feedback
+    cat >> "$GROWTH_FILE" << GROWTH_ENTRY
+
+### $NEXT_ID: Hyo Feedback — $FEEDBACK_TEXT
+**Severity:** $FEEDBACK_PRIORITY
+**Status:** active — injected from Hyo feedback $TODAY_F
+
+**Evidence:**
+Hyo directly flagged this issue in a session on $TODAY_F.
+
+**Root cause:**
+Under investigation — needs research phase to identify root cause.
+
+**Fix approach:**
+Research phase will determine specific fix approach.
+GROWTH_ENTRY
+    echo "✓ Injected as $NEXT_ID into $FEEDBACK_AGENT/GROWTH.md"
+    # Also create a P1 ticket
+    HYO_ROOT="$ROOT" bash "$ROOT/bin/ticket.sh" create \
+      --agent "$FEEDBACK_AGENT" \
+      --title "Hyo feedback → $NEXT_ID: $FEEDBACK_TEXT" \
+      --priority "$FEEDBACK_PRIORITY" \
+      --type "improvement" \
+      --created-by "kai-inject-feedback" 2>/dev/null && echo "✓ Ticket opened"
+    # Log to session-errors.jsonl too
+    python3 -c "
+import json
+from datetime import datetime
+entry = {'ts': '$NOW_F', 'category': 'hyo-feedback', 'agent': '$FEEDBACK_AGENT',
+         'description': '$FEEDBACK_TEXT', 'growth_id': '$NEXT_ID',
+         'prevention': 'Injected into GROWTH.md for self-improve flywheel'}
+with open('$ROOT/kai/ledger/session-errors.jsonl', 'a') as f:
+    f.write(json.dumps(entry) + '\n')
+" 2>/dev/null || true
+    echo "✓ Logged to session-errors.jsonl"
+    ;;
+
+  flywheel-doctor|doctor)    HYO_ROOT="$ROOT" bash "$ROOT/bin/flywheel-doctor.sh" "$@" ;;
+  self-improve|improve)      HYO_ROOT="$ROOT" bash "$ROOT/bin/agent-self-improve.sh" "$@" ;;
+  cross-agent-review|review) HYO_ROOT="$ROOT" bash "$ROOT/bin/cross-agent-review.sh" "$@" ;;
+  omp|omp-measure)           HYO_ROOT="$ROOT" bash "$ROOT/bin/omp-measure.sh" "$@" ;;
+
   *)                  err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac

@@ -65,3 +65,5 @@ Questions Nel must answer each night:
 - [ ] No orphaned temp files in agents/nel/
 - [ ] Report published to website/docs/nel/ for HQ visibility
 - [ ] Ledger entries all have corresponding ACTIVE.md view
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

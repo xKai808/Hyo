@@ -52,6 +52,21 @@
 - [x] **SENT-001 SHIPPED:** Sentinel two-fer bug fix — killed 2 chronic false positives that had been re-flagging for 15 days each. (1) `stat_mode` BSD branch returned `0600` from `%Mp%Lp` but regex `^6[0-9][0-9]$` only matched 3 digits → false P0 on founder.token (actual mode 600 ✓). (2) `.secrets` dir-permissions check stat'd the symlink (0755) instead of target `agents/nel/security/` (700 ✓). Added `_bsd_norm_mode` helper + `stat_mode_L` (follow-symlink) in agents/nel/sentinel.sh. Re-ran to verify — run #115: 7p/2f (was 5p/4f), both chronic recurrings resolved. Logged to `agents/nel/evolution.jsonl`. **Lesson:** 15-day chronic false positives mask real P0s — future sentinel failures should be root-caused within 3 days, not normalized.
 - [x] **SENT-002 NOTED (not shipped):** P1 `scheduled-tasks-fired` check is now the only remaining P1 — looks for `aurora-*.log` in `agents/nel/logs/`, but no aurora logs exist (day 16 chronic). Either Aurora was renamed/consolidated (manifest still in agents/manifests/aurora.hyo.json but no recent runner output) or the check needs a different proxy. Deferred to next interactive — needs decision on whether to revive Aurora or retire the check.
 
+## ✅ SHIPPED — Session 27 cont. 4-7 (2026-04-21) — Flywheel complete
+
+- [x] **Compounding self-improvement flywheel — LIVE (cont. 4):** bin/agent-self-improve.sh (950+ lines). 3-stage state machine (research→implement→verify) per agent. Runs 08:00 MT + after every runner cycle. All 4 runners (nel/ra/sam/aether) wired. Closed-loop: weakness → research → implement → verify → KNOWLEDGE.md → next weakness.
+- [x] **Kai added to flywheel as participant (cont. 5-6):** agents/kai/GROWTH.md (W1-W4 weaknesses, E1-E3 expansions). agents/kai/self-improve-state.json initialized. Kai research-drop published to HQ. Kai included in morning report flywheel section.
+- [x] **P0/P1 bug fixes — ALL FIXED (cont. 7):**
+  - SE-S27-001: verify_improvement() theater bug → specific FILES_TO_CHANGE path check
+  - SE-S27-002: empty-research gate → state cannot advance on empty Claude Code output  
+  - SE-S27-003: confidence gate whitelist → only HIGH/MEDIUM proceed (was LOW blacklist)
+  - SE-S27-004: shell injection in persist_knowledge/report_to_kai → env-var heredoc
+- [x] **bin/flywheel-doctor.sh BUILT (cont. 7):** 9 automated recovery checks. SICQ 0-100/agent. Runs 09:00+14:00 MT via kai-autonomous.sh. Self-heals without Hyo. Hyo inbox only for unresolvable escalations.
+- [x] **FLYWHEEL_RECOVERY.md WRITTEN (cont. 7):** Complete issue→recovery map for 10 issue types. Recovery hierarchy: automated fix → state reset → P1 ticket → Hyo inbox.
+- [x] **bin/cross-agent-review.sh BUILT (cont. 7) — Task #63 DONE:** Weekly adversarial peer review. Nel↔Sam, Ra→Aether, Dex→all. 6-section Claude review. Verdicts: STRONG/ADEQUATE/WEAK/THEATER. P0/P1 gaps auto-ticketed. Non-STRONG → published HQ Research. Saturday 06:45 MT in kai-autonomous.sh. `kai cross-agent-review` subcommand.
+- [x] **kai inject-feedback subcommand (cont. 7):** Wires Hyo session corrections → GROWTH.md immediately. Closes the broken loop.
+- [x] **KNOWLEDGE.md updated (cont. 7):** All 4 bug patterns, SICQ framework, flywheel architecture, cross-agent review architecture — permanent memory layer.
+
 ## ✅ SHIPPED — Session 27 cont. (2026-04-21)
 
 - [x] **24h ticket enforcement — SHIPPED:** bin/ticket-sla-enforcer.sh autonomous daemon. Scans every 30 min via launchd (com.hyo.ticket-sla-enforcer.plist). P0:30m/P1:1h/P2:4h/P3:24h SLA gates. Auto-escalates → nudges owning agent → P0 breaches page Hyo inbox → zombies (>90 days) auto-archive. Commits ledger after enforcement.
@@ -64,6 +79,33 @@
 - [x] **Aurora subscriber persistence SHIPPED:** aurora-checkout.js + aurora-webhook.js updated to write subscriber JSON files to GitHub via Contents API. Eliminates missing sync-aurora-subscribers.sh. Every signup persists immediately. Queued commit aurora-persist-01.
 - [x] **aurora-retention.js SHIPPED:** Day 7 retention email handler. Auth-gated Vercel function. Lists subscribers via GitHub API, identifies 6-8 day trialing targets, sends via Resend API, marks retentionEmailSent. Queued commits aurora-retention-02 + aurora-retention-launchd-03. Needs RESEND_API_KEY in Vercel env.
 - [x] **S20-001 CLOSED (false alarm):** /api/health returns correct JSON — confirmed live: `{"ok":true,"founderTokenConfigured":true}`. Sentinel #106 failure was transient curl error (Mini network blip), not a real bug.
+
+## ★ NEXT SESSION PRIORITY QUEUE (for fresh Kai — read this first)
+
+> Session 27 ended 2026-04-21 ~21:30 MT. Hyo is done for the night.
+> Do NOT ask Hyo anything. Work autonomously from this list.
+
+**STEP 1 — Verify overnight commits landed (queue worker processes these):**
+Check git log to confirm s27c8 + s27c9 commits are on main.
+Files to verify: `bin/omp-measure.sh`, `bin/flywheel-doctor.sh`, `kai/protocols/PROTOCOL_KAI_METRICS.md`, `kai/protocols/SYSTEM_SCHEDULE.md`, `bin/kai-autonomous.sh`, `kai/AGENT_ALGORITHMS.md`, `kai/tickets/tickets.jsonl`.
+
+**STEP 2 — P0: Diagnose Ra runner exit-2 (TICKET: TASK-20260421-ra-P0-runner-exit2)**
+Ra has been failing nightly since Apr 13 — 8+ days. Newsletter pipeline dark.
+- Read `agents/ra/ra.sh` fully
+- Check `agents/ra/logs/` for most recent log with error output
+- Find exact line/command causing exit code 2 (API failure? missing file? bad path?)
+- Fix, test, verify next nightly run succeeds
+- This is the #1 autonomous task for next session
+
+**STEP 3 — P1: Add ACTIVE.md writes to all agent runners (TICKET: TASK-20260421-infra-P1-active-md-missing)**
+3-line write at end of nel.sh, ra.sh, sam.sh, aether.sh. Without this, Phase 1 health check is blind.
+Format: `echo "{\"last_run\":\"$(TZ=America/Denver date -Iseconds)\",\"status\":\"ok\"}" > $HYO_ROOT/agents/<name>/ledger/ACTIVE.md`
+
+**STEP 4 — P1: Wire decision-log.jsonl into session flow**
+DQI metric in fallback mode. Add a function to log Kai decisions to `kai/ledger/decision-log.jsonl`.
+Format: `{"timestamp":"...","decision":"...","rationale":"...","type":"orchestration|research|deploy","reversed":false}`
+
+---
 
 ## P0 — ACTION REQUIRED FROM HYO
 
@@ -620,3 +662,19 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 27 P0 tasks (overload threshold 5) [sentinel:task-queue-size:344e5802:escalated]
 
 - [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-21.md [sentinel:aurora-ran-today:fe68d451] _(filed 2026-04-21)_
+
+- [ ] **[K]** [sentinel] 29 P0 tasks (overload threshold 5) [sentinel:task-queue-size:d1171b82] _(filed 2026-04-21)_
+
+- [ ] **[K]** [sentinel] bin/kai.sh missing or not executable [sentinel:kai-dispatcher-present:d08345bd] _(filed 2026-04-21)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/sleepy-exciting-knuth/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0fea41a5] _(filed 2026-04-21)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/sleepy-exciting-knuth/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0fea41a5:escalated]
+- [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 29 P0 tasks (overload threshold 5) [sentinel:task-queue-size:d1171b82:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/relaxed-gallant-dirac/mnt/Hyo/newsletters/2026-04-22.md [sentinel:aurora-ran-today:d2ffaef6] _(filed 2026-04-22)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/relaxed-gallant-dirac/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4dd22172] _(filed 2026-04-22)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/relaxed-gallant-dirac/mnt/Hyo/newsletters/2026-04-22.md [sentinel:aurora-ran-today:d2ffaef6:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/relaxed-gallant-dirac/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4dd22172:escalated]

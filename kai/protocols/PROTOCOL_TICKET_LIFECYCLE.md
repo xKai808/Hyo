@@ -517,3 +517,5 @@ This protocol connects to and does NOT replace:
 
 42 sources consulted. Full bibliography: kai/research/briefs/2026-04-21.md
 Key frameworks applied: ITIL Problem Management, Google SRE Postmortem Culture, PagerDuty Escalation Policies, KCS Methodology, ITSM Known Error Database, 5 Whys Root Cause Analysis, Atlassian Definition of Done, AI Multi-Agent Orchestration patterns (QAT, Akira AI, MindStudio).
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

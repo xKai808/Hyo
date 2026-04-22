@@ -132,3 +132,5 @@ This protocol is wired into:
 4. **Post-action** — every action gets a verification step; no "fire and forget"
 
 The test: if Hyo asks "did you verify?" the answer must always be YES with proof.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

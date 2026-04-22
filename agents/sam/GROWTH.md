@@ -212,3 +212,6 @@ Addresses W3
 | 2026-04-21 | (Planned) Performance Baseline Phase 5 implemented in deploy pipeline. | Post-deploy Lighthouse runs on index, hq, research. Baseline stored. First regression detected: LCP 2.1s → 2.8s (33% slower) flagged P1. Causes investigation. |
 | 2026-04-28 | (Planned) Vercel KV provisioned and integrated. | HQ state now persists in KV. Founder token stored in KV. Subscribers persisted. Cold start test: restart function, verify data still there. 100% success. |
 | 2026-05-05 | (Planned) Error handling deployed to all 5 endpoints. | /api/register-founder now returns structured error on duplicate email instead of crashing. Error log shows pattern: 7 DUPLICATE_EMAIL errors over 2 hours (suspects test environment). /api/errors endpoint working, HQ dashboard shows error rate trending to 0. |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+| 2026-04-21 | IMP-20260414-sam-001 (W1): Performance baseline exists with 5 entries — regression detection script neede | Automated assessment → execution |

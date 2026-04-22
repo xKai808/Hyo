@@ -132,3 +132,5 @@ If hyo finds a design regression affecting usability:
 ---
 
 *hyo audits, specifies, and ships. Sam implements. Kai decides priorities. This division is absolute.*
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

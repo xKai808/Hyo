@@ -267,3 +267,5 @@ find agents/ bin/ \( -name "*.py" -o -name "*.sh" \) | while read f; do
   grep -q "$(basename $f)" kai/protocols/TRIGGER_MATRIX.md || echo "UNLISTED: $f"
 done
 ```
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

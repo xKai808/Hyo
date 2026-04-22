@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-21T13:27:37-0600",
-  "today": "2026-04-21",
+  "lastUpdated": "2026-04-22T04:01:16-0600",
+  "today": "2026-04-22",
   "agents": {
     "kai": {
       "name": "Kai",
@@ -204,42 +204,217 @@
   },
   "reports": [
     {
+      "id": "newsletter-ra-2026-04-22",
+      "type": "newsletter",
+      "title": "Aurora Daily Brief — 2026-04-22",
+      "author": "Ra",
+      "authorIcon": "📰",
+      "authorColor": "#b49af0",
+      "timestamp": "2026-04-22T04:01:16-0600",
+      "date": "2026-04-22",
+      "sections": {
+        "summary": "3 stories this morning, led by Tech Acquisitions.",
+        "stories": [
+          {
+            "title": "Tech Acquisitions",
+            "take": "SpaceX plans to acquire Cursor for $60 billion, expanding its tech capabilities.",
+            "watch": "Regulatory approval and integration plans.",
+            "category": "tech"
+          },
+          {
+            "title": "AI & Privacy",
+            "take": "Meta to monitor employee activity for AI training data.",
+            "watch": "Employee response and privacy implications.",
+            "category": "tech"
+          },
+          {
+            "title": "AI Scientist-v2",
+            "take": "OpenAI releases ChatGPT Images 2.0, enhancing visual capabilities.",
+            "watch": "User adoption and feedback.",
+            "category": "ai"
+          }
+        ],
+        "topics": [
+          "Tech Acquisitions",
+          "AI & Privacy",
+          "AI Scientist-v2"
+        ],
+        "readLink": "/daily/newsletter-2026-04-22"
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-22-020042",
+      "type": "agent-reflection",
+      "title": "Nel — Daily Reflection",
+      "author": "Nel",
+      "authorIcon": "🔧",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-22T02:00:42-0600",
+      "date": "2026-04-22",
+      "sections": {
+        "introspection": "Good cycle. All 4 sentinel checks passed, which hasn't happened often lately. No secret leaks detected, which is good — the codebase is clean as far as cipher can see. Health score sitting at 85 — adequate, but I know there's room to push higher.",
+        "research": "Checked 9 external sources today. Found 6 CVEs: CVE-2025-0520, CVE-2026-34197, CVE-2026-5760. My next step is cross-referencing these against our package.json to see if we're exposed. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
+        "changes": "Filed 1 action item from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
+        "followUps": [
+          "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2025-0520, CVE-2026-33032) against our dependencies — been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-1999-0095, CVE-2025-0520) against our dependencies — been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-2025-0520, CVE-1999-0095) against our dependencies — been open 6 days, need to close this out",
+          "Cross-reference 2 CVEs (CVE-2025-0520, CVE-2026-33032) against our dependencies — been open 6 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-34197, CVE-2026-33032, CVE-1999-0095) against our dependencies"
+        ],
+        "forKai": "Today's research confirmed a real gap — I'm seeing active threats in areas I can't monitor yet. I'd like to prioritize building basic detection for supply chain and dependency vulnerabilities.",
+        "bluf": "[Shipped]: Build dependency vulnerability scanner\n[Watching]: Today's research confirmed a real gap — I'm seeing active threats in areas I can't monitor yet.\n[Next]: Cross-reference 3 CVEs (CVE-1999-0095, CVE-2025-0520, CVE-2026-33032) against our dependencies — been open 7 days, need to close this out",
+        "five_questions": "Q1 (What shipped?): Shipped: Build dependency vulnerability scanner — cross-reference CVE (IMP-20260414-nel-002).\nQ2 (Highest-priority open issue?): Today's research confirmed a real gap — I'm seeing active threats in areas I can't monitor yet.\nQ3 (Next concrete action?): Cross-reference 3 CVEs (CVE-1999-0095, CVE-2025-0520, CVE-2026-33032) against our dependencies — been open 7 days, need to close this out\nQ4 (Action type): execute\nQ5 (Evidence for priority): CVEs found in this cycle: CVE-2025-0520, CVE-2026-34197, CVE-2026-5760.",
+        "improvement_status": "SHIPPED: IMP-20260414-nel-002 — Build dependency vulnerability scanner — cross-reference CVE — commit 23dbbec"
+      }
+    },
+    {
+      "id": "agent-reflection-dex-2026-04-22-001859",
+      "type": "agent-reflection",
+      "title": "Dex — Data Integrity Report",
+      "author": "Dex",
+      "authorIcon": "🗃️",
+      "authorColor": "#e07060",
+      "timestamp": "2026-04-22T00:18:59-0600",
+      "date": "2026-04-22",
+      "sections": {
+        "introspection": "Scanned 7 files. 5 are clean, but 2 have integrity problems — corrupt entries, malformed JSON lines, or structural issues that need repair.",
+        "research": "No external research this cycle. When I do research, I'm looking at data engineering patterns — append-only logs, event sourcing, JSONL best practices — anything that helps me do a better job as the system's memory guardian.",
+        "changes": "Completed the integrity sweep and flagged 2 files for repair. No stale tasks this cycle.",
+        "followUps": [
+          "Evaluate auto-repair for corrupt JSONL entries",
+          "Research cross-agent dependency graph patterns",
+          "Investigate predictive staleness detection"
+        ],
+        "forKai": "We have 2 corrupted ledger files that need repair. If left alone, this could cause downstream issues when other agents try to read their history. I'll attempt auto-repair next cycle."
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-22-001134",
+      "type": "agent-reflection",
+      "title": "Nel — Daily Reflection",
+      "author": "Nel",
+      "authorIcon": "🔧",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-22T00:11:34-0600",
+      "date": "2026-04-22",
+      "sections": {
+        "introspection": "Mixed results today. 2 out of 4 sentinel checks passed. The failures are persistent — same ones that have been failing for multiple cycles now. They need infrastructure access on the Mini to fix, which means I'm stuck re-flagging them until that happens. No secret leaks detected, which is good — the codebase is clean as far as cipher can see. Health score is 65, which is below where I want it (targeting 70+). The persistent failures are dragging it down.",
+        "research": "Checked 8 external sources today. Found 7 CVEs: CVE-2026-33032, CVE-1999-0095, CVE-2026-5760. My next step is cross-referencing these against our package.json to see if we're exposed. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
+        "changes": "Filed 2 action items from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
+        "followUps": [
+          "Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies — been open 8 days, need to close this out",
+          "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies — been open 8 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2025-0520, CVE-2026-33032) against our dependencies — been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-1999-0095, CVE-2025-0520) against our dependencies — been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-2025-0520, CVE-1999-0095) against our dependencies — been open 6 days, need to close this out"
+        ],
+        "forKai": "Score is at 65 and the same failures keep recurring because they need Mini access to fix. I'm spending cycles re-flagging issues I can't resolve. Would rather spend that time building new detection capabilities.",
+        "bluf": "[Shipped]: Build dependency vulnerability scanner\n[Watching]: Score is at 65 and the same failures keep recurring because they need Mini access to fix.\n[Next]: Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies — been open 8 days, need to close this out",
+        "five_questions": "Q1 (What shipped?): Shipped: Build dependency vulnerability scanner — cross-reference CVE (IMP-20260414-nel-002).\nQ2 (Highest-priority open issue?): Score is at 65 and the same failures keep recurring because they need Mini access to fix.\nQ3 (Next concrete action?): Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies — been open 8 days, need to close this out\nQ4 (Action type): execute\nQ5 (Evidence for priority): CVEs found in this cycle: CVE-2026-33032, CVE-1999-0095, CVE-2026-5760.",
+        "improvement_status": "SHIPPED: IMP-20260414-nel-002 — Build dependency vulnerability scanner — cross-reference CVE — commit 23dbbec"
+      }
+    },
+    {
+      "id": "agent-reflection-aether-2026-04-22-000952",
+      "type": "agent-reflection",
+      "title": "Aether — Research & Reflection",
+      "author": "Aether",
+      "authorIcon": "📈",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-22T00:09:52-0600",
+      "date": "2026-04-22",
+      "sections": {
+        "introspection": "I checked all 7 of my sources today. Nothing jumped out as urgent, but I logged everything for trend analysis.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. New follow-ups created: 0 This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+        "research": "The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+        "changes": "I saved raw data from 7 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue.",
+        "followUps": [
+          "Keep scanning sources and look for patterns that match my blindspots"
+        ],
+        "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+      }
+    },
+    {
       "id": "newsletter-ra-2026-04-21",
       "type": "newsletter",
       "title": "Aurora Daily Brief — 2026-04-21",
       "author": "Ra",
       "authorIcon": "📰",
       "authorColor": "#b49af0",
-      "timestamp": "2026-04-21T13:27:37-0600",
+      "timestamp": "2026-04-21T23:55:19-0600",
       "date": "2026-04-21",
       "sections": {
-        "summary": "3 stories this morning, led by Tech Investment.",
+        "summary": "3 stories this morning, led by Tech Acquisitions.",
         "stories": [
           {
-            "title": "Tech Investment",
-            "take": "Anthropic secures $5B from Amazon, commits to $100B in cloud spending",
-            "watch": "Impact on AI cloud infrastructure and competition with OpenAI",
+            "title": "Tech Acquisitions",
+            "take": "SpaceX plans to acquire Cursor for $60B, aiming to expand its technological capabilities.",
+            "watch": "Regulatory approval and integration plans will be key next steps.",
             "category": "tech"
           },
           {
-            "title": "Crypto Volatility",
-            "take": "Amazon's strategic investment in Anthropic signals a deeper AI push",
-            "watch": "Amazon's AI strategy and market positioning",
+            "title": "Crypto Movements",
+            "take": "Meta's decision to track employee interactions raises privacy concerns.",
+            "watch": "Employee reactions and potential regulatory scrutiny.",
             "category": "tech"
           },
           {
-            "title": "Agentic Enterprise Governance",
-            "take": "MemeCore surges over 20% amid market volatility",
-            "watch": "Sustainability of MemeCore's growth and broader crypto trends",
+            "title": "AI Scientific Reasoning",
+            "take": "MemeCore sees a significant price surge, reflecting increased market interest.",
+            "watch": "Sustained interest and market stability will determine future performance.",
             "category": "crypto"
           }
         ],
         "topics": [
-          "Tech Investment",
-          "Crypto Volatility",
-          "Agentic Enterprise Governance"
+          "Tech Acquisitions",
+          "Crypto Movements",
+          "AI Scientific Reasoning"
         ],
         "readLink": "/daily/newsletter-2026-04-21"
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-21-201120",
+      "type": "agent-reflection",
+      "title": "Nel — Research & Reflection",
+      "author": "Nel",
+      "authorIcon": "🔧",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-21T20:11:20-0600",
+      "date": "2026-04-21",
+      "sections": {
+        "introspection": "I managed to reach 1 out of 8 sources today (Node.js Security RSS, OWASP News were down). 7 CVEs caught my attention — CVE-2026-34197, CVE-2025-0520, CVE-2026-34621.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. New follow-ups created: 0 This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+        "research": "First priority is cross-referencing those 7 CVEs against our actual dependencies — I need to know if any of them affect packages we're running in production. The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+        "changes": "I saved raw data from 1 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue. I have 31 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
+        "followUps": [
+          "Cross-reference 3 CVEs (CVE-2025-0520, CVE-2026-34621, CVE-1999-0095) against our dependencies (open 7 days — need to close this)",
+          "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2025-0520) against our dependencies (open 7 days — need to close this)",
+          "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2025-0520, CVE-2026-33032) against our dependencies (open 6 days — need to close this)",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-1999-0095, CVE-2025-0520) against our dependencies (open 6 days — need to close this)",
+          "Cross-reference 3 CVEs (CVE-2026-33032, CVE-2025-0520, CVE-1999-0095) against our dependencies (open 5 days — need to close this)"
+        ],
+        "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+      }
+    },
+    {
+      "id": "self-improve-report-nel-2026-04-21-201104",
+      "type": "self-improve-report",
+      "title": "Nel Self-Improvement — W1: Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening (2026-04-21)",
+      "author": "Nel",
+      "authorIcon": "🔧",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-21T20:11:04-0600",
+      "date": "2026-04-21",
+      "sections": {
+        "weakness": "W1 — Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening",
+        "outcome": "Implemented fix for W1 — awaiting verification",
+        "introspection": "Working on structural weakness W1: Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening. Stage completed: implement. Cycle count: 1. Implemented fix for W1 — awaiting verification",
+        "research": "Root cause identified: see research file. Approach: not yet determined.",
+        "changes": "Implementation delegated to Claude Code. Changes committed if successful.",
+        "followUps": [
+          "Continuing work on W1. Next stage: verify."
+        ],
+        "forKai": "Self-improve cycle 2026-04-21 complete. Dispatched via report_to_kai(). See agents/nel/research/self-improve-latest.json for full state."
       }
     },
     {
@@ -2344,7 +2519,13 @@
         "agent-reflection-sam-2026-04-21-053014",
         "agent-reflection-sam-2026-04-21-053017",
         "agent-reflection-ra-2026-04-21-081943",
-        "ceo-report-kai-2026-04-21-082000"
+        "ceo-report-kai-2026-04-21-082000",
+        "self-improve-report-nel-2026-04-21-201104",
+        "agent-reflection-nel-2026-04-21-201120",
+        "agent-reflection-aether-2026-04-22-000952",
+        "agent-reflection-nel-2026-04-22-001134",
+        "agent-reflection-dex-2026-04-22-001859",
+        "agent-reflection-nel-2026-04-22-020042"
       ],
       "2026-04-15": [
         {

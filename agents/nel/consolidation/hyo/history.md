@@ -141,3 +141,13 @@ findings:
 **Cipher:** leaks=0 in website/ | leaks=0 in NFT/
 **HQ state:**    29095 bytes
 **Docs deployed:** 8 agent dirs
+
+## 2026-04-22 — nightly consolidation
+
+**Sentinel:** passed=2 failed=2
+findings:
+- FAIL: .secrets dir mode=0700 (want 700)
+- FAIL: founder.token mode=0600 (want 600)
+**Cipher:** leaks=0 in website/ | leaks=0 in NFT/
+**HQ state:**    43627 bytes
+**Docs deployed:** 9 agent dirs

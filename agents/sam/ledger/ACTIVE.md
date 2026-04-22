@@ -1,21 +1,21 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-21T16:25:28Z
+Last updated: 2026-04-22T08:41:56Z
 
 ## In Progress
 
-- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-21T16:25:28Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
+  - Delegated: 2026-04-22T08:41:56Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-005): Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2.
-  - Delegated: 2026-04-20T08:08:46Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit (2026-04-22): kai/queue/daily-audit.sh defaults HYO_ROOT to $HOME/Documents/Projects/Hyo — when run by scheduled task without HYO_ROOT set it resolves to /sessions/clever-nice-cerf/Documents/Projects/Hyo (dead path), reports all 5 agents FAIL, and writes the report to an unreachable location. The scheduled-task runner at kai/queue/com.hyo.daily-audit.plist (or equivalent) must export HYO_ROOT=/Users/kai/Documents/Projects/Hyo before invoking, OR the script should fall back to its own location via dirname. Self-sabotaging audit — fix before next 22:00 MT run.
+  - Delegated: 2026-04-22T08:08:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-003** [P1] [AUTO-REMEDIATE] Daily audit: kai/queue/daily-audit.sh false-WARN (log vs md extension) and AUTOMATE counter (open vs total) — both bugs carry-forward 2 days, unpatched since 04-19 supplement. See kai/ledger/daily-audit-2026-04-20-supplement.md actions 1-2. (flagged by kai, cascade flag-kai-005)
-  - Delegated: 2026-04-20T08:08:46Z
+- **sam-003** [P1] [AUTO-REMEDIATE] Daily audit (2026-04-22): kai/queue/daily-audit.sh defaults HYO_ROOT to $HOME/Documents/Projects/Hyo — when run by scheduled task without HYO_ROOT set it resolves to /sessions/clever-nice-cerf/Documents/Projects/Hyo (dead path), reports all 5 agents FAIL, and writes the report to an unreachable location. The scheduled-task runner at kai/queue/com.hyo.daily-audit.plist (or equivalent) must export HYO_ROOT=/Users/kai/Documents/Projects/Hyo before invoking, OR the script should fall back to its own location via dirname. Self-sabotaging audit — fix before next 22:00 MT run. (flagged by kai, cascade flag-kai-002)
+  - Delegated: 2026-04-22T08:08:07Z
   - Method: python3 JSON schema check on all 6 manifests: required fields = name, version, description, capabilities
   - Status: DELEGATED — All 6 manifests were missing description field. Added descriptions to aurora, cipher, nel, ra, sam, sentinel. Re-validation: 6/6 PASS on required fields (name, version, description, capabilities). sam.sh test suite: 13 pass, 3 fail (API egress — sandbox-expected).
 

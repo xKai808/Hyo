@@ -235,3 +235,5 @@ Always read from disk — never from memory of a previous session.
 - Kai owns updates to this protocol
 - All agents are required to follow it
 - Violations are logged to kai/ledger/session-errors.jsonl immediately
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

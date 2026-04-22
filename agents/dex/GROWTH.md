@@ -248,3 +248,7 @@ Build a new checker (Phase 6: Constitution Drift Detection) that runs daily:
 | 2026-04-20 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
 | 2026-04-21 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
 | 2026-04-21 | IMP-20260414-dex-002 (W2): Root cause clusters from known-issues.jsonl: | Automated assessment |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+| 2026-04-22 | IMP-20260414-dex-002 (W2): Root cause clusters (188 total issues): | Automated assessment → execution |
+| 2026-04-22 | IMP-20260414-dex-002 (W2): Root cause clusters (189 total issues): | Automated assessment → execution |

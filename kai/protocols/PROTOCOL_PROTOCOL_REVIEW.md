@@ -256,3 +256,5 @@ GATE 5: Has the updated protocol been verified to work?
 - Full protocol inventory review (all protocols, not just flagged ones)
 - Protocol version bump if content changed this week
 - Propagation check: did any constitution change propagate to all PLAYBOOKs?
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

@@ -64,3 +64,5 @@ Questions Sam must answer each night:
 - [ ] Build artifacts cleaned (no node_modules in repo)
 - [ ] Log files rotated and under size limit
 - [ ] Ledger entries current with ACTIVE.md view
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

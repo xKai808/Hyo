@@ -180,3 +180,5 @@ A report that hits any of the following must be regenerated before publish:
 - If `cycle_date` > 2 days old → "Nel ARIC stale — last cycle [date]"
 
 **Kai weekly review** reads all 5 agent reports and gives written feedback per agent. Feedback is saved to `kai/memory/feedback/` and referenced in the following week's Kai daily report.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

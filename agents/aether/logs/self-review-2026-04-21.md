@@ -1,4 +1,4 @@
-# aether Self-Review — 2026-04-21T10:28
+# aether Self-Review — 2026-04-21T23:54
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-21-aether-results.json**: WHAT triggers this? Found 0 callers.
@@ -42,6 +42,7 @@ Questions for aether to answer:
 - ✗ **dex/repair.sh** does not source agent-gates.sh
 - ✗ **hyo/hyo.sh** does not source agent-gates.sh
 - ✗ **nel/dep-audit.sh** does not source agent-gates.sh
+- ✗ **nel/dependency-audit.sh** does not source agent-gates.sh
 - ✗ **nel/sentinel-adapt.sh** does not source agent-gates.sh
 - ✗ **nel/verify.sh** does not source agent-gates.sh
 - ✗ **ra/verify.sh** does not source agent-gates.sh
@@ -55,6 +56,6 @@ Questions for aether to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 13
-- Gate results: trigger=16/17, visibility=checked, resolutions=6, adoption=-4/5
+- Findings: 14
+- Gate results: trigger=11/12, visibility=checked, resolutions=6, adoption=-5/5
 

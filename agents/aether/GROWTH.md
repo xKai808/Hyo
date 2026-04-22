@@ -700,3 +700,11 @@ Build a weekly aggregation script that runs after each day's analysis is publish
 | 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
 | 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment → execution |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment → execution |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment → execution |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment → execution |
+| 2026-04-21 | IMP-20260414-aether-001 (W1): Total phantom warnings (last 3 days): 0 | Automated assessment → execution |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

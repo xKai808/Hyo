@@ -130,3 +130,5 @@
 **Escalation path:** dispatch flag → Kai review → dispatch safeguard (if needed)  
 **Schedule:** Daily 03:00 MT (after nightly consolidation)  
 **Manual invocation:** `kai dex [validate|stale|compact|patterns|report]`
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

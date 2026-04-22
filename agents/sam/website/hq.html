@@ -1315,7 +1315,7 @@ function renderAgentView(container, agentId) {
 // ═══ RESEARCH VIEW (keeps sidebar) ═══
 function renderResearch(container) {
   // Pull ALL agent reports for Research tab
-  const researchTypes = new Set(['agent-reflection', 'research-drop', 'agent-daily', 'agent-weekly']);
+  const researchTypes = new Set(['agent-reflection', 'research-drop', 'agent-daily', 'agent-weekly', 'self-improve-report']);
   const allReports = (FEED_DATA.reports || [])
     .filter(r => researchTypes.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1338,7 +1338,7 @@ function renderResearch(container) {
   for (const r of allReports) {
     const time = formatTime(r.timestamp);
     const s = r.sections || {};
-    const typeLabel = r.type === 'research-drop' ? 'Research' : 'Reflection';
+    const typeLabel = r.type === 'research-drop' ? 'Research' : r.type === 'self-improve-report' ? '🔧 Self-Improve' : 'Reflection';
     const borderColor = r.authorColor || 'var(--accent)';
     let body = '';
     if (r.type === 'research-drop') {
@@ -1391,7 +1391,7 @@ function renderResearch(container) {
           arcHtml += `<div style="margin-left:14px;margin-bottom:10px">
             <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">${month} (${entries.length})</div>`;
           for (const r of entries) {
-            const rtype = r.type === 'agent-weekly' ? '📊 Weekly' : r.type === 'agent-daily' ? '📋 Daily' : r.type === 'agent-reflection' ? '🔍 Reflection' : '📄';
+            const rtype = r.type === 'agent-weekly' ? '📊 Weekly' : r.type === 'agent-daily' ? '📋 Daily' : r.type === 'agent-reflection' ? '🔍 Reflection' : r.type === 'self-improve-report' ? '🔧 Self-Improve' : '📄';
             arcHtml += `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--border-color);font-size:11px">
               <span style="color:var(--text-muted);font-family:var(--font-mono);min-width:72px">${r.date || ''}</span>
               <span style="color:var(--text-muted);min-width:72px">${rtype}</span>
@@ -1592,7 +1592,7 @@ function renderReport(report) {
     body = renderMorningReport(s);
   } else if (report.type === 'ceo-report') {
     body = renderCeoReport(s);
-  } else if (report.type === 'agent-reflection') {
+  } else if (report.type === 'agent-reflection' || report.type === 'self-improve-report') {
     body = renderAgentReflection(s);
   } else if (report.type === 'newsletter') {
     body = renderNewsletter(s, report);
@@ -2026,6 +2026,7 @@ function getTypeLabel(type) {
     'aether-analysis': 'Trading Analysis',
     'podcast': '🎙️ Podcast',
     'agent-goals': 'Goals & Progress',
+    'self-improve-report': '🔧 Self-Improvement',
   };
   return map[type] || type;
 }

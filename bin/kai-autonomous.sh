@@ -389,37 +389,110 @@ check_and_dispatch() {
   fi
 }
 
-# Morning report (07:00)
+# ════════════════════════════════════════════════════════════════════════════
+# DEPENDENCY-ORDERED SCHEDULE (see kai/protocols/SYSTEM_SCHEDULE.md)
+#
+# Sequence rationale:
+#   Agents report (22-23h) → Consolidation (01-01:15h) → Ra newsletter (03h)
+#   → Flywheel/growth cycle (04:30h) → Doctor+SICQ morning (05:30h)
+#   → OMP+memory snapshot (06h) → Morning report (07h, has ALL fresh data)
+#   → Completeness check (07:15h) → Midday maintenance (09-15h)
+#
+# DEPENDENCY CHAIN (critical path for morning report):
+#   Nel/Sam/Aether runners (22:00-22:45) MUST precede morning report
+#   Ra newsletter (03:00) MUST precede morning report
+#   Flywheel/self-improve (04:30) MUST precede morning doctor+SICQ (05:30)
+#   Flywheel doctor/SICQ (05:30) MUST precede OMP (06:00)
+#   OMP (06:00) MUST precede morning report (07:00)
+#   Morning report (07:00) MUST precede completeness check (07:15)
+# ════════════════════════════════════════════════════════════════════════════
+
+# Self-improvement cycle for all agents (04:30) — runs BEFORE morning report
+# Moved from 08:00: flywheel results (aric-latest.json) must exist before morning report
+# runs at 07:00. Previously the morning report always showed yesterday's flywheel output.
+check_and_dispatch 4 30 "agent-self-improve-all" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
+  "self_improve_run"
+
+# Flywheel doctor + SICQ — morning run (05:30)
+# Moved from 09:00: SICQ must be fresh BEFORE morning report at 07:00.
+# Was previously written at 09:00 (after report) — morning report always showed yesterday's SICQ.
+# Runs after flywheel (04:30) so it can validate the cycle that just completed.
+check_and_dispatch 5 30 "flywheel-doctor-morning" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
+  "flywheel_doctor_morning_run"
+
+# OMP measurement (06:00) — outcome quality, after SICQ is fresh
+# Moved from 06:45: gives more buffer before morning report + allows Saturday
+# cross-agent review to stay at 06:45 without conflict.
+# Publishes omp-daily to HQ feed. Injects GROWTH evidence if Kai metric drops.
+check_and_dispatch 6 0 "omp-measure" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/omp-measure.sh >> $HYO_ROOT/kai/ledger/omp-measure.log 2>&1" \
+  "omp_measure_run"
+
+# Memory snapshot (06:15) — push today's SICQ + OMP to SQLite memory engine
+# Ensures intra-day recall queries see today's scores (not just after 01:00 consolidation).
+check_and_dispatch 6 15 "memory-snapshot" \
+  "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/kai/memory/agent_memory/memory_engine.py observe 'Daily metric snapshot: SICQ+OMP computed' --type metric_snapshot >> $HYO_ROOT/kai/ledger/memory-snapshot.log 2>&1 || true" \
+  "memory_snapshot_run"
+
+# Saturday only: weekly report (06:00) + cross-agent adversarial review (06:45)
+# Weekly report at 06:00 — before OMP at 06:00 (both run, different state_keys)
+# Cross-agent review at 06:45 — after OMP, before morning report
+if [[ $DOW -eq 6 ]]; then
+  check_and_dispatch 6 0 "weekly-report" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/weekly-report.sh >> $HYO_ROOT/kai/ledger/weekly-report.log 2>&1" \
+    "weekly_report_run"
+
+  # Cross-agent adversarial peer review (Saturday 06:45)
+  # Nel reviews Sam, Sam reviews Nel, Ra reviews Aether, Dex reviews all
+  # Primary antidote to echo chamber dynamics in the self-improvement flywheel
+  check_and_dispatch 6 45 "cross-agent-review" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/cross-agent-review.sh >> $HYO_ROOT/kai/ledger/cross-agent-review.log 2>&1" \
+    "cross_agent_review_run"
+fi
+
+# Morning report (07:00) — now has ALL fresh data:
+#   ✓ Agent dailies (Nel/Sam/Aether ran at 22:00-22:45)
+#   ✓ Ra newsletter (ran at 03:00)
+#   ✓ Flywheel results (ran at 04:30)
+#   ✓ SICQ fresh (doctor ran at 05:30)
+#   ✓ OMP fresh (ran at 06:00)
 check_and_dispatch 7 0 "morning-report" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/generate-morning-report.sh >> $HYO_ROOT/kai/ledger/morning-report.log 2>&1" \
   "morning_report_run"
 
-# Completeness check (07:15)
+# Completeness check (07:15) — verifies all required HQ entries exist; auto-remediates gaps
 check_and_dispatch 7 15 "completeness-check" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/report-completeness-check.sh >> $HYO_ROOT/kai/ledger/completeness.log 2>&1" \
   "completeness_check_run"
 
-# Self-improvement cycle for all agents (08:00) — compounding flywheel
-check_and_dispatch 8 0 "agent-self-improve-all" \
-  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
-  "self_improve_run"
+# Session prep check (06:45) — verifies last session was properly closed, memory is fresh,
+# and the next Kai session has everything it needs. Writes failures to hyo-inbox.jsonl.
+# Runs EVERY day. On Saturday this runs alongside cross-agent-review (different state_key).
+check_and_dispatch 6 45 "session-prep" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/session-prep.sh >> $HYO_ROOT/kai/ledger/session-prep.log 2>&1" \
+  "session_prep_run"
 
-# Queue hygiene (09:30)
-check_and_dispatch 9 30 "queue-hygiene" \
+# Queue hygiene (09:00)
+check_and_dispatch 9 0 "queue-hygiene" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/queue-hygiene.sh >> $HYO_ROOT/kai/ledger/queue-hygiene.log 2>&1" \
   "queue_hygiene_run"
+
+# Flywheel doctor midday check (09:30) — catch daytime drift, write SICQ update
+check_and_dispatch 9 30 "flywheel-doctor-midday" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
+  "flywheel_doctor_midday_run"
 
 # Root-cause enforcer (15:00)
 check_and_dispatch 15 0 "root-cause-enforcer" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/root-cause-enforcer.sh >> $HYO_ROOT/kai/ledger/root-cause-enforcer.log 2>&1" \
   "root_cause_run"
 
-# Weekly report (Saturday 06:00)
-if [[ $DOW -eq 6 ]]; then
-  check_and_dispatch 6 0 "weekly-report" \
-    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/weekly-report.sh >> $HYO_ROOT/kai/ledger/weekly-report.log 2>&1" \
-    "weekly_report_run"
-fi
+# Flywheel doctor evening check (17:00) — third check for P0 issues before agents run at 22:00
+check_and_dispatch 17 0 "flywheel-doctor-evening" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
+  "flywheel_doctor_evening_run"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 7: HEALTH SCORE + REPORTING

@@ -252,3 +252,5 @@ the task involves Aether.
 - Kai updates this protocol when Hyo changes Aether's scope
 - Aether cannot unilaterally expand its own scope
 - Any scope change requires Hyo approval
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

@@ -216,3 +216,5 @@ If 0/4: agent must document WHY in evolution.jsonl before publishing.
 8. Never publishes a research-drop without URL citations
 9. Never lets morning report be missing after 09:00 MT (auto-regenerates)
 10. Never treats local commit as "done" — push must follow immediately
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

@@ -13,6 +13,7 @@ Continuation sessions (context compaction, "continue from where you left off") a
 
 Read these files in order. Do not skip. Do not skim.
 
+0. `kai/ledger/session-handoff.json` — **READ THIS FIRST, BEFORE ANYTHING ELSE.** Machine-readable handoff written at the end of every session by `bin/session-close.sh`. Contains: top priority for this session, what shipped last session, open P0s, Hyo-pending actions, which commits are still queued vs landed. If this file is missing or older than 48h, that itself is a signal — note it and proceed with extra caution. This file was created 2026-04-21 as part of SESSION_CONTINUITY_PROTOCOL.md.
 1. `KAI_BRIEF.md` — persistent memory, current state, known blockers
 1.5. `kai/ledger/hyo-inbox.jsonl` — **Hyo's direct messages to Kai** (READ FIRST after brief — may contain urgent instructions). If unread messages exist, surface them immediately in the 4-line status. Mark as read by updating status in the file after reading.
 1.6. `kai/dispatch/` — **Dispatch conversation transcripts.** A scheduled task syncs full Dispatch ↔ Hyo chat transcripts here daily at 16:00 MT. Check for today's file (`dispatch-YYYY-MM-DD.md`) and yesterday's. These are COMPLETE transcripts of what Hyo discussed with Dispatch (the remote/mobile Claude interface). Treat as direct context from Hyo — decisions made, fixes shipped, and instructions given via Dispatch are authoritative. If a dispatch transcript references work you should know about (commits, edits, task changes), verify the current state of those files. Dispatch and Kai are separate sessions — this sync is how you stay in the loop.
@@ -236,8 +237,11 @@ Hyo/
 
 ## End-of-session checklist
 
+**MANDATORY FIRST STEP: Run `kai session-close` (or `bin/session-close.sh`).** This script writes `kai/ledger/session-handoff.json`, verifies memory freshness, auto-appends the daily note, and queues any uncommitted files. It will not exit until all checks pass. If Hyo ends the session abruptly before this runs, run it at the very START of the next session before doing anything else. Full protocol: `kai/protocols/SESSION_CONTINUITY_PROTOCOL.md`.
+
 Before ending any significant work session, run this in order:
 
+0. **`kai session-close`** — writes session-handoff.json + verifies all memory layers (MANDATORY)
 1. Update `KAI_BRIEF.md` "Current state" and "Shipped today" sections
 2. Move completed items in `KAI_TASKS.md` to the "Done" section with date
 3. Add any new tasks that emerged during the session
@@ -251,3 +255,5 @@ Before ending any significant work session, run this in order:
 5. `kai scan secrets` — catch any accidental leaks
 6. `kai verify` — confirm the live API still works
 7. Commit everything if git is configured (`git add -A && git commit -m "..."`)
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

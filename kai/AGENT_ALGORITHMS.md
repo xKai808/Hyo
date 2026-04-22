@@ -72,6 +72,8 @@ These protocols are mandatory reference material. Reading "PLAYBOOK only" is not
 | `kai/protocols/VERIFICATION_PROTOCOL.md` | Post-action verification | After every action | All agents + Kai |
 | `kai/protocols/RESOLUTION_ALGORITHM.md` | Issue resolution | On every error/issue | All agents + Kai |
 | `kai/protocols/AGENT_RESEARCH_CYCLE.md` | ARIC daily cycle | Daily (all runners) | All agents |
+| `bin/agent-self-improve.sh` | Autonomous self-improvement flywheel | Every runner cycle + 08:00 MT daily | All agents |
+| `bin/claude-code-delegate.sh` | Delegate coding tasks to Claude Code | Called by agent-self-improve.sh + Sam cmd_fix/cmd_evolve | All agents |
 | `kai/protocols/REASONING_FRAMEWORK.md` | Question framework | Monthly review | All agents + Kai |
 | `kai/protocols/PROTOCOL_TICKET_LIFECYCLE.md` | Ticket opening→resolution→close | On every discrepancy | All agents + Kai |
 | `kai/protocols/PROTOCOL_HQ_PUBLISH.md` | HQ publication standards | Before every HQ publish | All agents + Kai |
@@ -741,6 +743,57 @@ observe again — did it work? Pick the next thing.
 **RESEARCH ACCESS (agent tooling for ARIC Phase 4):**
 Available: WebSearch, gh CLI (GitHub), Exa MCP
 To install on Mini: GitHub MCP (P0), Reddit MCP (P1), YouTube MCP (P1), X/Twitter MCP (P2)
+
+---
+
+## Autonomous Self-Improvement Cycle (ALL AGENTS — CONSTITUTIONAL)
+
+**The compounding flywheel. This is the structural difference between agents that detect the same problem forever and agents that fix their own problems and get better.**
+
+Every agent runs `bin/agent-self-improve.sh <agent>` at the START of every runner cycle AND via `kai-autonomous.sh` at 08:00 MT daily.
+
+```
+THE FLYWHEEL (per agent, every cycle):
+
+  Weakness (GROWTH.md W1/W2/W3...)
+      ↓
+  Research: Claude Code reads evidence, proposes specific fix
+      - Output: agents/<name>/research/improvements/<WID>-DATE.md
+      - Fields: ROOT_CAUSE, FIX_APPROACH, FILES_TO_CHANGE, IMPLEMENTATION, CONFIDENCE
+  ↓ (only HIGH/MEDIUM confidence)
+  Implement: claude-code-delegate.sh invokes Claude Code autonomously
+      - Claude Code reads files, implements fix, verifies, reports RESULT/CHANGED/SUMMARY
+  ↓ (on success)
+  Verify: agent-specific QA (nel-qa-cycle, verify-render, git diff)
+  ↓ (on pass)
+  Persist: KNOWLEDGE.md "Agent Improvements" + memory engine + evolution.jsonl
+  ↓
+  Identify next weakness: Claude Code reads agent logs + tickets → appends to GROWTH.md
+  ↓
+  State advances: agents/<name>/self-improve-state.json → next weakness → research
+
+[CYCLE REPEATS — compounds every day across all agents]
+```
+
+**State machine per agent:**
+- `research` → research the current weakness
+- `implement` → delegate fix to Claude Code
+- `verify` → run QA, persist knowledge, find next weakness
+- Failure at any stage → resets to `research` (safe: never forward-skips verification)
+
+**File locations:**
+- Script: `bin/agent-self-improve.sh`
+- State: `agents/<name>/self-improve-state.json`
+- Research output: `agents/<name>/research/improvements/<WID>-<DATE>.md`
+- Log: `kai/ledger/self-improve.log`
+
+**Constitutional rules:**
+1. Every agent MUST have a `GROWTH.md` with at least 3 active weaknesses. No GROWTH.md = no improvement cycle.
+2. Resolved weaknesses are immediately replaced — Claude Code identifies the next one from real log data.
+3. Knowledge compounds to KNOWLEDGE.md and the SQLite memory engine — never lost between sessions.
+4. Improvements that fail verification reset to research — no partial fixes shipped.
+5. Claude Code must be installed (`claude` binary) for the implement stage. Research and verify still run without it.
+6. Every resolved weakness creates an `improvement` ticket and an entry in `evolution.jsonl`.
 
 ---
 
@@ -2120,3 +2173,49 @@ RULE: "The code is correct" is never a valid response to a visual bug report.
 ❌ "The data file exists" — exists ≠ correct structure ≠ correct values
 ❌ Moving to next task before visual confirmation on the current feature
 ```
+
+---
+
+## QUALITY METRIC SYSTEM (know this exists — these algorithms run daily)
+
+**SICQ (Self-Improve Cycle Quality Score)**
+Process compliance measurement. 5 binary checks × 20 pts = 100 max.
+Checks: research file written, structured fields present, cycles advanced, files changed, KNOWLEDGE updated.
+For Kai: custom 5-check executive compliance (HC, RDC, QGC, DMW, ERR).
+Computed by: `bin/flywheel-doctor.sh` at 05:30, 09:30, 17:00 MT daily.
+Output: `kai/ledger/sicq-latest.json`. Threshold: ≥60 warn, ≥80 healthy.
+Protocol: `kai/protocols/PROTOCOL_KAI_METRICS.md`.
+
+**OMP (Outcome Metric Profile)**
+Outcome quality measurement. Two layers: umbrella metrics (all agents) + agent-specific metric.
+Umbrella: OCR (completion rate), RR (regression rate), RDI (research depth ≥6 external URLs), CE (cycle efficiency), MCS (calibration).
+Agent-specific: Nel=APS, Sam=DSS, Ra=EQS, Aether=ASR, Dex=PAR.
+Kai: 5-dimensional — DQI (CEO), OSS (orchestrator), KRI (memory), AAS (self-improver), BIS (business).
+Computed by: `bin/omp-measure.sh` at 06:00 MT daily.
+Output: `agents/<name>/ledger/omp-latest.json`, `kai/ledger/omp-summary.json`.
+Publishes: `omp-daily` feed entry to HQ every day.
+Protocol: `kai/protocols/PROTOCOL_OMP.md` (all agents), `kai/protocols/PROTOCOL_KAI_METRICS.md` (Kai).
+
+**Metric linkage to GROWTH.md**
+Every weakness in every GROWTH.md must have a `**Linked Metrics:**` field.
+When an OMP metric drops below threshold: evidence is auto-injected into the linked weakness.
+When SICQ drops: doctor opens P1 ticket + writes to GROWTH.md evidence block.
+This is what closes the loop: metric drops → weakness gets evidence → flywheel prioritizes it → metric recovers.
+
+**ARIC (Agent Research and Improvement Cycle)**
+7-phase research cycle. Runs inside the flywheel at 04:30 MT daily.
+Phase 1: collect data. Phase 2: identify weaknesses. Phase 3: diagnose. Phase 4: research (≥6 external sources required for RDI ≥0.70).
+Phase 5: design fix. Phase 6: implement. Phase 7: output aric-latest.json for morning report.
+Protocol: `kai/protocols/AGENT_RESEARCH_CYCLE.md`.
+
+**System schedule**
+The full dependency-ordered schedule lives at `kai/protocols/SYSTEM_SCHEDULE.md`.
+Every agent must know this file exists. The critical path: agent runners (22:00-22:45) → consolidation (01:00) → Ra (03:00) → flywheel (04:30) → doctor/SICQ (05:30) → OMP (06:00) → morning report (07:00).
+Violations of this order produce stale data in the morning report.
+
+**Agent creation**
+Protocol: `docs/AGENT_CREATION_PROTOCOL.md` (v3.0). Battle-tested on 8 agents.
+Required files every agent must have: PLAYBOOK.md, GROWTH.md, evolution.jsonl, self-improve-state.json, ACTIVE.md (freshness marker), runner with ARIC integration, launchd plist.
+ACTIVE.md MUST be updated at the end of every agent runner cycle — it is the freshness marker kai-autonomous.sh uses to detect stale agents. Missing ACTIVE.md = always stale in Phase 1 checks.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

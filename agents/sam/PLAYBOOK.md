@@ -139,3 +139,5 @@ Format: `date | decision | reasoning | outcome`
 - **2026-04-18:** Researched 8/8 sources. See `research/findings-2026-04-18.md` for details.
 
 - **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

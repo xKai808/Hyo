@@ -1,45 +1,17 @@
 {
-  "agent": "Dex",
-  "cycle_date": "2026-04-16",
-  "weakness_worked": "W2",
-  "research_conducted": [
-    {
-      "source": "https://github.com/facebook/jscodeshift",
-      "finding": "jscodeshift (9983 stars, MIT) is a codemod toolkit for deterministic code transformations. Parses source code (JS/TS) into AST, applies targeted transformations, writes back. Used by Facebook/Meta for large-scale code migrations. Key insight: can be adapted for data repair \u2014 parse JSONL/JSON files into AST, apply repair transformations (fix missing fields, remove duplicates, correct timestamps), write back. Pattern: detection (parse) \u2192 transformation (repair) \u2192 verification (validate output)."
-    },
-    {
-      "source": "https://github.com/prettier/prettier",
-      "finding": "Prettier (51797 stars, MIT) is opinionated code formatter that auto-fixes formatting issues. Core strategy: parse \u2192 normalize \u2192 output. Dex can adopt same pattern for data: detect corruption type (via regex or schema validation) \u2192 normalize (apply repair rules) \u2192 write (atomic file operations). Prettier's safety: generates identical AST on read/write (idempotency proven). Dex repair engine can guarantee idempotency too: parse \u2192 repair \u2192 validate parse succeeds \u2192 write."
-    },
-    {
-      "source": "https://github.com/eslint/eslint",
-      "finding": "ESLint (27190 stars, MIT) is linter that finds AND fixes problems (--fix flag). Architecture: parse source \u2192 run rules \u2192 (1) report issues, (2) auto-fix safe problems, (3) bail on unsafe ones. Key: ESLint has 'fixable' rules (safe to auto-fix) vs. non-fixable (require human review). Dex should adopt same: categorize corruption as 'auto-fixable' (missing field \u2192 infer default) vs. 'requires review' (unparseable JSON \u2192 quarantine). Deterministic fixes auto-apply; risky ones flag human."
-    }
-  ],
-  "improvement_thesis": "If we build a deterministic repair engine (inspired by ESLint's --fix + jscodeshift + Prettier's AST approach) that categorizes corruption as 'auto-fixable' (missing fields, duplicates, malformed JSON) vs. 'requires review' (unparseable, data loss risk), then Dex's remediation rate will improve from 0% to 80% because: (1) 80% of JSONL corruption is predictable (trailing commas, missing required fields, duplicates), (2) These have deterministic fixes (add default value, dedupe, remove). (3) ESLint + Prettier prove this at scale (millions of files auto-fixed daily). Evidence: repair.sh already implemented (Phase 1.5) with 5 fixable patterns; test run fixed 7 of 9 corrupt entries (78% success).",
-  "target_condition": "Auto-repair success rate: 80%+. Every nightly, JSONL corruption is: (1) detected, (2) classified (fixable vs. requires-review), (3) fixed in-place (fixable) or quarantined (requires-review). Phase 1 FAILED \u2192 HEALTHY. Zero repeat corruption.",
-  "actual_condition": "Auto-repair success rate: 0%. Corruption detected but never fixed. Same issues repeat nightly (known-issues.jsonl shows '2 corrupt entries' on 2026-04-13 and 2026-04-14, never goes to 0). Hyo manually fixes or ignores.",
-  "next_step": "Phase 1 (complete): repair.sh deployed, handles 5 fixable patterns. Phase 2 (this week): expand repair categories to 8+ patterns (empty fields, schema drift, timestamp format variations). Add quarantine strategy: unparseable entries \u2192 `.corrupt/` dir with timestamp. Phase 3 (next week): integrate repair metrics into Dex Phase 1 report: 'Fixed 12 entries, quarantined 2, verified.' Test: corrupt 10 entries across 3 files (types: trailing comma, missing field, duplicate line), run repair, verify 8+ fixed, <2 quarantined.",
-  "verification": "Deploy repair engine. Create test JSONL with 20 intentionally corrupted entries (5 types: trailing comma, missing field, duplicate, empty line, wrong bracket). Run repair. Measure: (1) How many are fixed? (target: 16+), (2) How many are quarantined? (target: <4), (3) Do repaired entries parse correctly? (100% success), (4) Are originals preserved in backup? (100% safety). Success = all 16+ fixed entries parse + validate against schema.",
-  "external_opportunity": {
-    "type": "horizontal",
-    "description": "Extend auto-repair beyond JSONL to all Hyo data formats: fix YAML syntax errors (config files), repair Markdown formatting (README/PLAYBOOK.md), auto-correct schema drift in API responses (add missing required fields with sensible defaults). Build 'data health dashboard' showing: JSONL integrity %, schema compliance %, auto-repair success rate per agent. Position Dex as self-healing infrastructure that gets cleaner over time, not dirtier.",
-    "status": "researched"
-  },
+  "cycle_date": "2026-04-22",
+  "agent": "dex",
   "improvement_built": {
-    "description": "dex-cluster.py \u2014 Jaccard token clustering: 255 entries \u2192 117 clusters (54.1% noise reduction), temporal pattern detection, agent breakdown",
-    "files_changed": [
-      "agents/dex/dex-cluster.py",
-      "agents/nel/consolidation/consolidate.sh"
+    "ticket_id": "IMP-20260414-dex-002",
+    "description": "Build root cause clustering \u2014 group 120 issues into actionable categories",
+    "weakness": "W2",
+    "thesis": "Build root-cause-cluster.py: read kai/ledger/known-issues.jsonl and kai/ledger/session-errors.jsonl. Group by (source_agent, category, description_prefix). For each cluster >2 entries, compute: first_seen, last_seen, occurrence_count, unique_sessions. Rank by occurrence_count. Output top 15 clusters to agents/dex/ledger/root-cause-clusters.jsonl with cluster_id, title, count, recommended_systemic_fix.",
+    "research_summary": "Root cause clusters (189 total issues):\n  flag-nel-001/issue_pattern: 107\n  flag-dex-001/issue_pattern: 31\n  session-8-audit/session_pattern: 7\n  unknown/uncategorized: 7\n  flag-nel-003/issue_pattern: 5\n  hyo-feedback-0412/recurrence_pattern: 4\n  flag-nel-009/issue_pattern: 3\n  flag-kai-001/issue_pattern: 2",
+    "files_to_change": [
+      "agents/dex/root-cause-cluster.py"
     ],
-    "commit": "22c3c7d",
-    "status": "shipped",
-    "shipped_date": "2026-04-21",
-    "metric_before": "Pattern intelligence: 120 issues counted, 0% clustered \u2014 pure noise",
-    "metric_after": "Pattern intelligence: 255 entries \u2192 117 clusters (54.1% dedup), Ra identified as top agent, 31-entry root cause cluster found",
-    "next_target": "W3: cross-agent consistency enforcement (constitution drift detection)"
-  },
-  "metric_before": "JSONL corruption: detected but never fixed \u2014 same corrupt entries persist across days",
-  "metric_after": "JSONL corruption: auto-repaired each nightly cycle. 0 duplicates, 0 missing required fields in scanned ledgers.",
-  "next_target": "W2: Pattern clustering \u2014 group 120+ known-issues.jsonl entries by root cause (not just count), surface top 3 root causes per agent, detect temporal correlation (does issue X always precede issue Y?)"
+    "status": "researched",
+    "success_metric": "New file exists, is executable or importable, produces structured JSONL output",
+    "execution_error": "Claude API call failed at 2026-04-22T00:18:50-0600"
+  }
 }

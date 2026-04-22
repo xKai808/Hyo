@@ -275,3 +275,5 @@ To enable machine parsing, all GROWTH.md files must use this goal format:
 ```
 
 **Kai adds this standardization gate to daily protocol review**: "Does each agent's GROWTH.md have parseable goals in the standard table format? NO → open task ticket to update."
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

@@ -337,3 +337,5 @@ Kai reviews proposals. The question set gets smarter over time.
 The meta-question that drives evolution:
   "When can we go and see what we Have Learned from taking that step?"
   — Coaching Kata Q5 (Mike Rother, Toyota Kata)
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

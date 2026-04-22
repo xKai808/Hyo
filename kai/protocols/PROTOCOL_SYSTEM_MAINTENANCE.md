@@ -242,3 +242,5 @@ No matter what the situation is, Kai NEVER:
 | Version | Date       | Change |
 |---------|------------|--------|
 | v1.0    | 2026-04-21 | Initial protocol. Hyo directive: read everything first, no purging, nightly cadence. 6-gate pre-maintenance algorithm. 4-phase nightly audit. Maintenance log schema. Forbidden actions list. |
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

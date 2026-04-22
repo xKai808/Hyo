@@ -379,3 +379,5 @@ echo "[archive] Saved: $ARCHIVE_DIR/${AGENT}-${REPORT_TYPE}-${DATE}.${EXT}"
 Archive files are never auto-deleted. They are the complete historical record of everything published to HQ.
 Manual archival review happens during PROTOCOL_SYSTEM_MAINTENANCE.md redundancy audits.
 The only deletion of archive files requires explicit Hyo approval.
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

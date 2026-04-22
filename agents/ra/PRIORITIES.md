@@ -69,3 +69,5 @@ Questions Ra must answer each night:
 - [ ] Subscriber data backed up (when KV migration complete)
 - [ ] Report published to website/docs/ra/ for HQ visibility
 - [ ] Ledger entries current with ACTIVE.md view
+
+<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->

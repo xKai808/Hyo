@@ -63,7 +63,9 @@ fi
 # ---- Self-improvement cycle (weakness → research → implement → compound) -----
 SELF_IMPROVE_SH="$ROOT/bin/agent-self-improve.sh"
 if [[ -f "$SELF_IMPROVE_SH" ]]; then
-  HYO_ROOT="$ROOT" bash "$SELF_IMPROVE_SH" "sam" >> "$ROOT/kai/ledger/self-improve.log" 2>&1 || true
+  # fault-fix: async so Claude Code's 600s timeout doesn't block the main runner
+  ( HYO_ROOT="$ROOT" bash "$SELF_IMPROVE_SH" "sam" >> "$ROOT/kai/ledger/self-improve.log" 2>&1 ) &
+  disown $! 2>/dev/null || true
 fi
 
 # ---- logging ----------------------------------------------------------------
