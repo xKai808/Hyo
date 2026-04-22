@@ -94,43 +94,39 @@ kind: ra-daily
 edition: v2
 voice: kai.hyo
 entities:
-  - slug: fed
-    name: Federal Reserve
-    aliases: [Fed, FOMC, Powell, central bank]
-    category: macro
-    take: &quot;Fed&#x27;s latest meeting suggests a cautious approach to future rate hikes.&quot;
-    data: &quot;Effective FFR remains at 3.64%; dot plot unchanged with one cut expected in 2026.&quot;
-    hinge: &quot;Next CPI release and upcoming FOMC meeting.&quot;
-    confidence: medium
   - slug: bitcoin
     name: Bitcoin
-    aliases: [BTC, bitcoin, crypto]
+    aliases: [BTC, crypto]
     category: crypto
-    take: &quot;Bitcoin sees a significant price surge, reflecting increased investor confidence.&quot;
-    data: &quot;Bitcoin price up 4.56% to $78,963.&quot;
-    hinge: &quot;Market response to macroeconomic indicators and regulatory developments.&quot;
-    confidence: medium-high
+    take: &quot;Bitcoin surges nearly 5% as crypto market rallies.&quot;
+    data: &quot;Bitcoin price at $79,121, market cap $1.58 trillion.&quot;
+    hinge: &quot;Potential regulatory updates in the US.&quot;
+    confidence: medium
+  - slug: ethereum
+    name: Ethereum
+    aliases: [ETH, crypto]
+    category: crypto
+    take: &quot;Ethereum follows Bitcoin&#x27;s lead with a 4.38% increase.&quot;
+    data: &quot;Ethereum price at $2,403.45, market cap $290 billion.&quot;
+    hinge: &quot;Upcoming Ethereum network upgrade.&quot;
+    confidence: medium
   - slug: github
     name: GitHub
-    aliases: [GitHub CLI, GitHub telemetry]
+    aliases: [GitHub CLI, telemetry]
     category: tech
-    take: &quot;GitHub&#x27;s new telemetry feature raises privacy concerns among developers.&quot;
-    data: &quot;GitHub CLI now collects pseudoanonymous telemetry data.&quot;
-    hinge: &quot;Community feedback and potential policy changes.&quot;
+    take: &quot;GitHub CLI introduces pseudoanonymous telemetry, sparking privacy debates.&quot;
+    data: &quot;GitHub CLI now collects usage data to improve services.&quot;
+    hinge: &quot;Community feedback and potential policy adjustments.&quot;
     confidence: medium
 topics:
-  - slug: macro-rates
-    name: &quot;Macro &amp; Rates&quot;
-    signal: &quot;Fed&#x27;s cautious stance on rate hikes.&quot;
-    take: &quot;Market remains uncertain about future rate adjustments.&quot;
-  - slug: crypto-flow
-    name: &quot;Crypto Flow&quot;
-    signal: &quot;Bitcoin&#x27;s price surge indicates bullish sentiment.&quot;
-    take: &quot;Investors are optimistic despite regulatory uncertainties.&quot;
+  - slug: crypto-rally
+    name: &quot;Crypto Rally&quot;
+    signal: &quot;Bitcoin and Ethereum lead a market-wide surge.&quot;
+    take: &quot;Crypto markets are experiencing a significant rally, driven by major coins like Bitcoin and Ethereum.&quot;
   - slug: tech-privacy
     name: &quot;Tech &amp; Privacy&quot;
-    signal: &quot;GitHub&#x27;s telemetry sparks debate on data privacy.&quot;
-    take: &quot;Developers are wary of increased data collection.&quot;
+    signal: &quot;GitHub&#x27;s telemetry update raises privacy concerns.&quot;
+    take: &quot;The introduction of telemetry in GitHub CLI has sparked discussions about user privacy and data collection.&quot;
 lab_items:
   - slug: ai-scientist-v2
     name: &quot;AI Scientist-v2&quot;
@@ -139,44 +135,37 @@ lab_items:
     when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
     paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
 ---
-
 # Ra — 2026-04-22
-## Bitcoin&#x27;s Surge and GitHub&#x27;s Privacy Concerns
+## Crypto Rally: Bitcoin and Ethereum Lead the Charge
 
-Good morning! Today we&#x27;re diving into Bitcoin&#x27;s recent price surge and what it signals about investor sentiment. We&#x27;ll also explore the privacy concerns stirred by GitHub&#x27;s new telemetry feature. In The Lab, we&#x27;ll look at a novel AI tool that could change how we approach complex problem-solving. Let&#x27;s get started.
+Good morning! Today, we&#x27;re diving into a notable surge in the crypto market, with Bitcoin and Ethereum leading the way. We&#x27;ll also touch on a new privacy debate sparked by GitHub&#x27;s latest update. Let&#x27;s get started.
 
-## The Story · Bitcoin&#x27;s Bullish Bounce
+## The Story · Crypto Rally: Bitcoin and Ethereum Lead the Charge
 
-Bitcoin has seen a notable price increase, jumping 4.56% to $78,963. This surge reflects a broader trend of optimism in the crypto market, despite ongoing regulatory challenges. Investors seem to be regaining confidence, possibly driven by recent macroeconomic indicators that suggest stability in interest rates and inflation.
+Bitcoin and Ethereum are making headlines with significant price increases, leading a broader rally in the cryptocurrency market. Bitcoin has surged nearly 5%, reaching a price of $79,121 and a market cap of $1.58 trillion. Ethereum isn&#x27;t far behind, climbing 4.38% to $2,403.45, with a market cap of $290 billion. This rally is part of a larger trend, with other major cryptocurrencies like Zcash and Solana also seeing gains.
 
-The Federal Reserve&#x27;s recent meeting indicated a cautious approach to future rate hikes, maintaining the effective federal funds rate at 3.64%. This decision may have contributed to the positive sentiment in the crypto market, as investors anticipate a stable economic environment conducive to riskier assets like Bitcoin.
+What&#x27;s driving this surge? Analysts point to a combination of factors, including increased institutional interest, positive sentiment around upcoming technological upgrades, and a general market rebound after a period of stagnation. Bitcoin&#x27;s resilience continues to attract investors, while Ethereum&#x27;s upcoming network upgrade is generating excitement about its future capabilities.
 
-However, the crypto market remains sensitive to regulatory developments. Any significant policy changes could quickly alter the current bullish sentiment. For now, Bitcoin&#x27;s rise is a signal of renewed investor confidence, but it&#x27;s essential to keep an eye on macroeconomic indicators and regulatory news that could impact this trend.
+However, it&#x27;s important to remain cautious. The crypto market is notoriously volatile, and regulatory developments, particularly in the US, could impact these gains. Investors should keep an eye on potential regulatory updates that might influence market dynamics.
 
 *This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
 
-## Also Moving · GitHub&#x27;s Telemetry Sparks Debate
+## Also Moving · Tech &amp; Privacy Concerns
 
-GitHub&#x27;s introduction of pseudoanonymous telemetry in its CLI has sparked a heated debate among developers. The feature, aimed at improving user experience by collecting usage data, has raised privacy concerns. Developers are wary of the potential for increased data collection and the implications for user privacy.
-
-The community&#x27;s response will be crucial in shaping GitHub&#x27;s future policies. If the backlash grows, GitHub may need to reconsider its approach to telemetry and data privacy. This situation highlights the ongoing tension between technological advancement and privacy concerns, a theme that continues to resonate in the tech industry.
+GitHub has introduced pseudoanonymous telemetry in its CLI, sparking a debate about user privacy. The update aims to collect usage data to improve services, but it has raised concerns among users about data collection practices. As GitHub navigates this feedback, the tech community is watching closely to see how privacy policies might evolve in response to user concerns.
 
 ## The Lab · What AI can newly do this week
 
-This week, we&#x27;re looking at a new AI tool called AI Scientist-v2. This agent is designed to search over research moves rather than individual tokens, making it particularly useful for process-heavy problems where the right loop is more critical than the right answer. This capability is especially relevant in areas like debugging, workflow optimization, pricing, go-to-market strategies, and system integration.
-
-AI Scientist-v2 could significantly enhance our ability to tackle complex challenges by focusing on the process rather than just the outcome. It&#x27;s a tool worth filing for future reference, especially for projects that require intricate problem-solving approaches.
-
-Filed under: `kai/research/2026-04-22-ai-scientist-v2.md`
+This week, we&#x27;re spotlighting AI Scientist-v2, an agent designed to search over research moves rather than individual tokens. This capability is particularly useful in scenarios where the process is more critical than the immediate answer, such as debugging, workflow optimization, and system integration. By focusing on the broader research process, AI Scientist-v2 can enhance reasoning in complex, process-heavy problems. Filed under `kai/research/2026-04-22-ai-scientist-v2.md`.
 
 ## Worth Sitting With
 
-As we navigate the intersection of technology and privacy, it&#x27;s worth considering how much data we&#x27;re willing to share for the sake of convenience and innovation. GitHub&#x27;s telemetry feature is just one example of the broader trend toward data-driven decision-making. But where do we draw the line between useful data collection and invasive surveillance? How can we ensure that technological advancements don&#x27;t come at the cost of our privacy? These are questions worth pondering as we move forward in an increasingly connected world.
+As we observe the ongoing developments in both cryptocurrency and tech privacy, it&#x27;s worth considering the balance between innovation and regulation. How do we ensure that technological advancements benefit society while protecting individual rights? This question isn&#x27;t just about crypto or GitHub—it&#x27;s a broader challenge for the digital age. What are your thoughts on finding this balance?
 
 ## Kai&#x27;s Desk · P.S.
-- Shipped the latest update on AI Scientist-v2 research.
-- Preparing a deep dive into macroeconomic trends for next week.
-- Need your thoughts on the GitHub telemetry feature — is it a concern for our projects?
+- Shipped the latest analysis on AI Scientist-v2.
+- Preparing a deep dive into the crypto market trends.
+- Need your input on the next focus area for our AI research library.
 
 — Kai</code></pre>
   </article>
