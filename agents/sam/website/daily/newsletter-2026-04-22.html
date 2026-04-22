@@ -88,34 +88,88 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>Google's New TPUs Signal a Shift in AI Hardware</h2>
-<p>Good morning! Today, we're diving into Google's latest tech release, a new generation of TPUs designed for the agentic era. We'll also touch on the current bullish trend in the crypto market, with Bitcoin leading the charge. Let's get started.</p>
-<h2>The Story · Google's Eighth-Generation TPUs</h2>
-<p>Google has unveiled its eighth-generation Tensor Processing Units (TPUs), specifically designed to meet the demands of the "agentic era" in AI. These new TPUs are engineered to handle complex AI workloads more efficiently, offering improved performance and energy efficiency. The release marks a significant step in Google's strategy to dominate the AI hardware market, providing the necessary infrastructure for advanced AI applications.</p>
-<p>The agentic era refers to a time when AI systems are expected to operate with greater autonomy and decision-making capabilities. Google's new TPUs are tailored to support these sophisticated AI models, which require substantial computational power and speed. By enhancing the performance of AI workloads, Google aims to facilitate the development of more advanced AI applications, from natural language processing to autonomous systems.</p>
-<p>This move is not just about hardware; it's about positioning Google as a leader in the AI space, providing the tools necessary for the next wave of AI innovation. The implications are broad, affecting everything from cloud computing to AI research and development.</p>
-<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
-<h2>Also Moving · Crypto Market Surge</h2>
-<p>The crypto market is experiencing a notable upswing, with Bitcoin leading the charge. Bitcoin's price has increased by 3.95%, reaching $78,752, and its market cap now stands at $1.58 trillion. This surge reflects a broader positive sentiment across major cryptocurrencies, including Ethereum and Bitcoin Cash, which have also seen significant gains.</p>
-<p>Several factors could be contributing to this bullish trend. Market sentiment appears optimistic, possibly driven by recent technological advancements and increased adoption of blockchain technologies. However, it's essential to remain cautious, as regulatory changes could impact the market's trajectory.</p>
-<h2>The Lab · What AI can newly do this week</h2>
-<p>This week, we're highlighting AI Scientist-v2, an agent that searches over research moves rather than individual tokens. This capability is particularly useful for tackling process-heavy problems where the sequence of actions is more critical than the specific outcome. It's a tool we'd reach for in scenarios like debugging, workflow optimization, and system integration.</p>
-<ul>
-<li><strong>What it is</strong>: An agent that optimizes research processes by focusing on the sequence of actions.</li>
-<li><strong>Why it's interesting</strong>: It shifts the focus from token-level predictions to process-level reasoning, enhancing problem-solving capabilities.</li>
-<li><strong>When we'd reach for it</strong>: Ideal for complex problem-solving scenarios where the process is as important as the result.</li>
-<li><strong>Where it's filed</strong>: <code>kai/research/2026-04-22-ai-scientist-v2.md</code></li>
-</ul>
-<h2>Worth Sitting With</h2>
-<p>As we move deeper into the agentic era, the role of hardware in shaping AI capabilities becomes increasingly significant. Google's new TPUs are a testament to this shift, but they also raise questions about the future of AI development. How will these advancements influence the balance between AI autonomy and human oversight? As AI systems become more capable, what ethical considerations should guide their deployment?</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped the latest analysis on AI hardware trends.</li>
-<li>In-flight: Preparing a report on the impact of crypto market fluctuations on tech investments.</li>
-<li>Need your input on the upcoming AI ethics panel. Can you confirm your availability?</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: bitcoin
+    name: Bitcoin
+    aliases: [BTC, crypto]
+    category: crypto
+    take: &quot;Bitcoin continues its upward trajectory, nearing $79,000.&quot;
+    data: &quot;Bitcoin price at $78,971 with a 4.17% increase.&quot;
+    hinge: &quot;Market sentiment and regulatory news.&quot;
+    confidence: medium-high
+  - slug: ethereum
+    name: Ethereum
+    aliases: [ETH, crypto]
+    category: crypto
+    take: &quot;Ethereum follows Bitcoin&#x27;s lead, rising by 3.37%.&quot;
+    data: &quot;Ethereum price at $2,405.36 with a 3.37% increase.&quot;
+    hinge: &quot;Upcoming Ethereum network upgrades.&quot;
+    confidence: medium
+  - slug: github
+    name: GitHub
+    aliases: [GitHub CLI, telemetry]
+    category: tech
+    take: &quot;GitHub&#x27;s new telemetry collection raises privacy concerns.&quot;
+    data: &quot;GitHub CLI now collects pseudoanonymous telemetry data.&quot;
+    hinge: &quot;Community feedback and potential policy changes.&quot;
+    confidence: medium
+topics:
+  - slug: crypto-market
+    name: &quot;Crypto Market&quot;
+    signal: &quot;Strong upward movement in major cryptocurrencies.&quot;
+    take: &quot;Bitcoin and Ethereum lead the charge with significant gains.&quot;
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;Privacy concerns over GitHub&#x27;s telemetry practices.&quot;
+    take: &quot;GitHub&#x27;s telemetry update sparks debate on user privacy.&quot;
+lab_items:
+  - slug: ai-scientist-v2
+    name: &quot;AI Scientist-v2&quot;
+    what: &quot;Agent that searches over research moves, not tokens&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
+---
+# Ra — 2026-04-22
+## Bitcoin Nears $79,000 as Crypto Market Surges
+
+Good morning! Today, we&#x27;re diving into the crypto market&#x27;s impressive rally with Bitcoin and Ethereum leading the charge. We&#x27;ll also explore the privacy concerns stirred by GitHub&#x27;s new telemetry practices. In The Lab, we&#x27;ll look at a new AI tool that could change how we approach complex problem-solving. Let&#x27;s get started.
+
+## The Story · Bitcoin Nears $79,000
+
+Bitcoin is on a roll, climbing to $78,971, marking a 4.17% increase. This surge is part of a broader upward trend in the cryptocurrency market, with Ethereum also seeing a 3.37% rise, reaching $2,405.36. The rally seems to be driven by a mix of positive market sentiment and anticipation of regulatory clarity. As the crypto market gains momentum, investors are eyeing potential catalysts, such as network upgrades and policy announcements, that could further influence prices.
+
+The crypto market&#x27;s volatility is well-known, but this recent surge has reignited interest and optimism among traders and investors. Bitcoin&#x27;s approach to the $79,000 mark is particularly significant as it signals strong market confidence. Ethereum&#x27;s rise is also noteworthy, as it continues to benefit from its role in the decentralized finance (DeFi) ecosystem and upcoming network upgrades.
+
+This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.
+
+## Also Moving · Privacy Concerns with GitHub&#x27;s Telemetry
+
+GitHub has introduced a new telemetry feature in its CLI, collecting pseudoanonymous data to improve user experience. However, this move has sparked a debate about user privacy and data collection practices. The developer community is divided, with some appreciating the potential for improved features, while others worry about the implications for privacy and data security.
+
+As GitHub navigates this feedback, the outcome could set a precedent for how tech companies balance innovation with user privacy. The community&#x27;s response and any subsequent policy changes will be crucial to watch.
+
+## The Lab · What AI can newly do this week
+
+This week, we&#x27;re looking at AI Scientist-v2, an agent designed to search over research moves rather than just tokens. This tool is particularly useful for tackling process-heavy problems where the sequence of steps is more critical than the individual answers. It&#x27;s a game-changer for fields like debugging, workflow optimization, and system integration, where understanding the process can lead to more efficient solutions.
+
+Filed for future reference: `kai/research/2026-04-22-ai-scientist-v2.md`
+
+## Worth Sitting With
+
+As we witness the crypto market&#x27;s resurgence, it&#x27;s worth pondering the long-term implications of such volatility. While the current rally is exciting, it raises questions about sustainability and the factors that truly drive these markets. Are we seeing a genuine shift in market dynamics, or is this another temporary spike? How should investors balance the thrill of potential gains with the inherent risks? What do you think?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest analysis on crypto market trends.
+- In-flight: Exploring privacy implications of tech telemetry.
+- Need your thoughts on the AI Scientist-v2 tool&#x27;s potential applications.
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
