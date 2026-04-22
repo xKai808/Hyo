@@ -678,3 +678,7 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/relaxed-gallant-dirac/mnt/Hyo/newsletters/2026-04-22.md [sentinel:aurora-ran-today:d2ffaef6:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/relaxed-gallant-dirac/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4dd22172:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/admiring-hopeful-hypatia/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:aeb20fa2] _(filed 2026-04-22)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/nice-gifted-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:cdc05baa] _(filed 2026-04-22)_

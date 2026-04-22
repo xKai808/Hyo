@@ -38,6 +38,28 @@ Commits queued: `s27c9-schedule-algorithms-commit.json` + `s27c9-tickets-commit.
 - **Ra runner exit-2** — 8 days silent failure, TASK-20260421-ra-P0-runner-exit2 (ACTIVE)
 - **ACTIVE.md missing** — all 5 agents, Phase 1 freshness checks broken (P1 TASK-20260421-infra-P1-active-md-missing)
 
+### Sentinel run — 2026-04-22 (sentinel-hyo-daily scheduled task, ~04:05Z)
+- **Run #128** — 6 passed, 3 failed, 0 new, 3 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-04-22.md`.
+- **P0 `api-health-green` — day 108 escalated** — `curl https://www.hyo.world/api/health` returns HTTP 000 from sandbox. Environmental (sandbox network policy blocks outbound to hyo.world); no new ticket since recurring — but 108 consecutive failures means this check is structurally wrong for sandbox-bound scheduled runs. **ACTION: make the check environment-aware** (skip + note when `HEALTH_CHECK_URL` is unreachable, or run only on Mini). Current behavior files an escalation every day that nobody can act on.
+- **P1 `scheduled-tasks-fired`** — no aurora-*.log in `agents/nel/logs/` (day 2). Sandbox logs directory is a fresh mount; aurora hasn't run here. Same environmental caveat as above.
+- **P2 `task-queue-size` — day 11 escalated** — 29 P0 tasks vs threshold 5. Real signal: KAI_TASKS P0 section is bloated. Already tracked — not duplicating.
+- **No new findings filed to KAI_TASKS** (all recurring, already present). Sentinel auto-pushed to HQ via `kai push sentinel` if dispatcher reachable.
+
+### From 2026-04-22T12:05Z scheduled health check (5th consecutive — dead-loops persisting)
+- **Same 4 P1 dead-loops** (sam / ra / aether / dex) — UNCHANGED across 5 consecutive healthchecks now (~02:41Z, ~07:57Z, ~09:57Z, ~11:58Z, 12:05Z). The previous healthcheck "dispatched auto-remediation" — it did not work. **Pattern is conclusive: guidance-only remediation does not resolve dead-loops.** Next interactive session must issue concrete fix-the-thing directives, not another open-ended question.
+- **flag-aether-001 spammed 4 P2 FLAGs in 12 seconds** (12:00:17Z, :19Z, :27Z, :29Z) — dashboard data mismatch (local ts 2026-04-22T06:00 vs API ts 2026-04-21T11:13). The aether dashboard is publishing stale data; remediator keeps re-flagging without fixing. Direct fix needed.
+- **Improvement noted:** orphaned `running/recheck-flag-nel-001.json` from 02:41Z is finally CLEARED. Queue infrastructure remains healthy (pending=0, running=0).
+- **No new P0/P1 FLAGs in last 2h** — log noise is all P2 from aether dead-loop. Real signal is the persistent P1 backlog, not new emergencies.
+- **Sam still producing minimal output** — sam-2026-04-22.md is 276 bytes (token output, not real work). Confirms previous session's note that sam runner is barely executing.
+
+### From 2026-04-22 scheduled health check (~10:00Z, 4th consecutive — dead-loop confirmed)
+- **flag-kai-002 unresolved** — daily-audit.sh self-sabotaging (defaults HYO_ROOT to dead `/sessions/clever-nice-cerf/...`). Logged 2x at 08:08Z, no resolution. Will misfire again at 22:00 MT tonight unless plist exports HYO_ROOT or script falls back to dirname. **ACTION: fix before 22:00 MT.**
+- **flag-nel-001 dead-loop confirmed** — broken-link flag fired 22 times today (02:41Z → 08:42Z). Auto-remediator is a no-op. Same pattern as dex/sam/ra/aether dead-loops. Escalate to concrete fix-the-link directive next session — stop re-issuing remediation flags that no one acts on.
+- **Dead-loops UNCHANGED across 4 healthchecks** — sam-001 / ra-001 / aether-001 / dex-001. Guidance-only remediation has now failed for >8h. Hard escalation required: concrete directive + ownership assignment, not another open-ended question.
+- **Sam runner still silent today** — 0 logs dated 2026-04-22. Carry-over from 09:57Z brief. Check `launchctl list | grep com.hyo.sam` next session.
+- **Scheduled-task path drift** — this healthcheck task was written for `/sessions/sharp-gracious-franklin/...` (no longer exists). Update task definition to use a stable HYO_ROOT or session-agnostic path.
+- **Queue itself is healthy** — pending=0, running=0, ACTIVE.md files all <2h fresh. The bottleneck is *acting on* flags, not the queue infrastructure.
+
 ### From 2026-04-22T09:57 health check (P1 — persistence escalation)
 - **Orphaned queue/running STILL stuck** — `kai/queue/running/recheck-flag-nel-001.json` now ~7h+ old (since 02:41Z). THIRD consecutive healthcheck flagging without remediation. Janitor still not implemented. Move to `failed/` manually next session.
 - **Dead-loops UNCHANGED** — sam-001 / ra-001 / aether-001 / dex-001 all re-delegated with [GUIDANCE] at 07:57Z; still no REPORT back. Pattern from 06:03 brief confirmed: guidance-only remediation is not working. ESCALATE to concrete directive next session — do not re-issue open-ended questions again.

@@ -1,11 +1,12 @@
 # Ra Research Archive — Index
 
-*Auto-generated 2026-04-22T05:55:19Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
+*Auto-generated 2026-04-22T13:55:42Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
 
-## Briefs (6)
+## Briefs (7)
 
 | Name | Agent | Date |
 | --- | --- | --- |
+| [Ra brief · 2026-04-22](briefs/2026-04-22.md) | Ra | 2026-04-22 |
 | [Ra brief · 2026-04-21](briefs/2026-04-21.md) | Ra | 2026-04-21 |
 | [Ra brief · 2026-04-20](briefs/2026-04-20.md) | Ra | 2026-04-20 |
 | [Ra brief · 2026-04-19](briefs/2026-04-19.md) | Ra | 2026-04-19 |

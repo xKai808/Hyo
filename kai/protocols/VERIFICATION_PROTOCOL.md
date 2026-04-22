@@ -111,6 +111,9 @@ Before every action, scan for these known failure modes:
 | Shell syntax assumed | Test in target shell, use shellcheck | SE-010-001, SE-010-003 |
 | API format assumed | Check docs or test payload first | SE-010-002 |
 | Committed not pushed | `kai exec git push` immediately after every commit | SE-010-015 |
+| Dual-path git add | When staging feed.json or any dual-path file, `git diff --cached --name-only` must show BOTH website/ and agents/sam/website/ paths before commit | SE-028-001 |
+| Push ≠ live | After git push, wait 30s, fetch live URL, confirm today's entry exists in response — do not trust exit code 0 alone | SE-028-003 |
+| Wrong diff baseline | `git diff FILE1 FILE2` compares files to each other, NOT to HEAD. Always use `git diff --quiet HEAD -- FILE` to detect uncommitted changes | SE-028-002 |
 
 ---
 

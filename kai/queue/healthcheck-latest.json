@@ -1,23 +1,13 @@
 {
-  "ts": "2026-04-22T08:27:33Z",
+  "ts": "2026-04-22T14:28:19Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 2,
+  "issues": 4,
+  "warnings": 1,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "2 unaddressed P0/P1 flags in last 2h"
-    },
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "sam has no output today"
     },
     {
       "severity": "P1",
@@ -32,7 +22,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (bottleneck_stuck): dashboard out-of-sync \u2014 data exists but HQ doesn't render "
+      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
     },
     {
       "severity": "P1",
@@ -40,36 +30,36 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "2bdc235b-0a56-4225-9ca3-fe4ea186fc75",
+      "id": "d95a1d37-7c89-4d34-8c3b-96bc02a85bee",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "b838ad30-3678-4cc9-9d5a-71a3f38af291",
+      "id": "cmd-1776867286-822",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "cd ~/Documents/Projects/Hyo && git log --oneline -3 && echo '---' && python3 -c ",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-kai-002",
+      "id": "cmd-1776867272-795",
       "status": "ok",
-      "command": "bash /sessions/clever-nice-cerf/mnt/Hyo/kai/queue/healthcheck.sh",
+      "command": "cd ~/Documents/Projects/Hyo && git commit -m 'ops-sync 2026-04-22 08:10 MT: sent",
       "exit_code": 0
     },
     {
-      "id": "event-sam-flag-kai-002",
+      "id": "cmd-1776867257-769",
       "status": "ok",
-      "command": "bash /sessions/clever-nice-cerf/mnt/Hyo/agents/sam/sam.sh",
+      "command": "cd ~/Documents/Projects/Hyo && cp website/data/feed.json agents/sam/website/data",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776844966-181",
+      "id": "cmd-1776867244-743",
       "status": "ok",
-      "command": "tail -40 ~/Documents/Projects/Hyo/agents/nel/logs/cipher-2026-04-22T02.log",
+      "command": "cd ~/Documents/Projects/Hyo && ls -la website agents/sam/website && echo '---' &",
       "exit_code": 0
     }
   ],

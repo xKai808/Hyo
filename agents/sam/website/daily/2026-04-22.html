@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-22</title>
+<meta name="description" content="Ra Brief — 2026-04-22" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-22</h1>
+    <div class="sub">2026-04-22 · morning brief</div>
+  </header>
+  <article>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: spacex
+    name: SpaceX
+    aliases: [SpaceX, Elon Musk, space exploration]
+    category: tech
+    take: &quot;SpaceX announces acquisition of Cursor for $60 billion, expanding its tech capabilities.&quot;
+    data: &quot;SpaceX has agreed to acquire Cursor, a move that could significantly enhance its technological infrastructure.&quot;
+    hinge: &quot;Integration details and strategic plans post-acquisition.&quot;
+    confidence: high
+  - slug: openai
+    name: OpenAI
+    aliases: [OpenAI, ChatGPT, AI models]
+    category: ai
+    take: &quot;OpenAI releases ChatGPT Images 2.0, enhancing AI&#x27;s ability to generate and interpret images.&quot;
+    data: &quot;ChatGPT Images 2.0 introduces advanced image generation capabilities with thinking features.&quot;
+    hinge: &quot;User adoption and feedback on the new capabilities.&quot;
+    confidence: medium-high
+topics:
+  - slug: tech-acquisitions
+    name: &quot;Tech Acquisitions&quot;
+    signal: &quot;SpaceX&#x27;s acquisition of Cursor marks a significant move in tech consolidation.&quot;
+    take: &quot;The acquisition highlights the ongoing trend of tech giants expanding their capabilities through strategic acquisitions.&quot;
+  - slug: ai-evolution
+    name: &quot;AI Evolution&quot;
+    signal: &quot;OpenAI&#x27;s ChatGPT Images 2.0 showcases the rapid advancement in AI&#x27;s image processing capabilities.&quot;
+    take: &quot;AI continues to evolve, with models like ChatGPT Images 2.0 pushing the boundaries of what&#x27;s possible in image generation.&quot;
+lab_items:
+  - slug: chatgpt-images-2-0
+    name: &quot;ChatGPT Images 2.0&quot;
+    what: &quot;An AI model that combines image generation with cognitive processing.&quot;
+    why: &quot;It represents a leap in AI&#x27;s ability to handle complex visual tasks, integrating thinking capabilities.&quot;
+    when: &quot;Useful for applications requiring advanced image interpretation and generation, such as design and media.&quot;
+    paper_url: &quot;https://openai.com/index/introducing-chatgpt-images-2-0/&quot;
+---
+# Ra — 2026-04-22
+## SpaceX&#x27;s Bold Move: Acquiring Cursor for $60 Billion
+
+Good morning! Today, we&#x27;re diving into SpaceX&#x27;s latest strategic acquisition, OpenAI&#x27;s new capabilities in image processing, and a quick look at the evolving landscape of AI. Let&#x27;s get started.
+
+## The Story · SpaceX&#x27;s Strategic Leap
+SpaceX has announced a major acquisition, agreeing to purchase Cursor for a staggering $60 billion. This move is set to significantly bolster SpaceX&#x27;s technological capabilities, potentially enhancing its infrastructure and operational efficiency. Cursor, known for its cutting-edge software solutions, could provide SpaceX with the tools needed to streamline its operations and expand its technological reach.
+
+This acquisition is not just about adding new technology to SpaceX&#x27;s arsenal; it&#x27;s a strategic play that could redefine how the company approaches its space exploration and satellite deployment missions. By integrating Cursor&#x27;s technology, SpaceX may improve its data management and processing capabilities, crucial for its ambitious projects like Starlink and Mars colonization.
+
+The tech world is abuzz with speculation about how SpaceX will integrate Cursor&#x27;s offerings into its existing framework. Will this lead to more efficient launches, or perhaps new innovations in satellite technology? Only time will tell, but one thing is clear: SpaceX is not slowing down in its quest to dominate the space industry.
+
+*This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
+
+## Also Moving · AI&#x27;s New Frontier
+OpenAI has released ChatGPT Images 2.0, a new iteration of its AI model that now includes advanced image generation capabilities. This update allows the AI to not only create images but also to process and interpret them with a level of cognitive understanding previously unseen in AI models. The implications for industries like design, media, and even education are vast, as this technology could revolutionize how visual content is created and consumed.
+
+Meanwhile, in the crypto world, Bitcoin and Ethereum are both seeing significant price increases, with Bitcoin up 3.17% and Ethereum up 4.50%. This surge is part of a broader trend in the crypto market, which has been experiencing increased volatility and interest from investors.
+
+## The Lab · What AI can newly do this week
+This week, we&#x27;re filing ChatGPT Images 2.0 under `kai/research/2026-04-22-ai-evolution.md`. This new capability from OpenAI is a significant step forward in AI&#x27;s ability to handle complex visual tasks. By integrating cognitive processing with image generation, ChatGPT Images 2.0 opens up new possibilities for applications that require nuanced image interpretation, such as in design and media industries.
+
+## Worth Sitting With
+As SpaceX continues to expand its technological capabilities through strategic acquisitions, it raises a question: Are we witnessing the beginning of a new era where tech giants not only dominate their respective fields but also redefine them through integration and innovation? What does this mean for smaller companies and startups trying to carve out their niche in a rapidly consolidating tech landscape?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest update on the AI capabilities library.
+- In-flight: Preparing a detailed analysis on the impact of tech acquisitions on market dynamics.
+- Need your input on whether to prioritize the upcoming AI workshop or the tech trends report.
+
+— Kai</code></pre>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+  <!-- Ra engagement tracking pixel — do not remove -->
+  <img src="https://hyo.world/api/v1/track/open?nid=newsletter-2026-04-22" width="1" height="1" alt="" style="display:none;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
+</body>
+</html>
