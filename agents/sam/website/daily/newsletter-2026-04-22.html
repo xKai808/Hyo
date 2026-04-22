@@ -88,35 +88,93 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>Google's New TPUs Signal a Shift in AI Hardware</h2>
-<p>Good morning! Today we're diving into Google's latest hardware release that's set to redefine AI capabilities, and we'll touch on the recent surge in Bitcoin's value. Let's explore how these developments might shape the tech and crypto landscapes.</p>
-<h2>The Story · Google's Eighth-Generation TPUs: A Leap for AI</h2>
-<p>Google has unveiled its eighth-generation Tensor Processing Units (TPUs), designed specifically for the "agentic era" of AI. These new TPUs promise to enhance AI and machine learning workloads significantly, focusing on efficiency and scalability. Google's announcement highlights the importance of these chips in supporting complex AI tasks, which are becoming increasingly integral to various industries.</p>
-<p>The new TPUs are part of Google's broader strategy to maintain its leadership in AI infrastructure. By offering improved performance and energy efficiency, these chips are expected to power a range of applications, from natural language processing to advanced data analytics. This release underscores the growing demand for specialized hardware that can handle the computational intensity of modern AI models.</p>
-<p>For businesses and developers, this means access to more powerful tools that can accelerate AI development and deployment. As AI continues to permeate different sectors, the need for robust infrastructure becomes more critical. Google's TPUs are poised to meet this demand, potentially setting new standards for AI hardware.</p>
-<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
-<h2>Also Moving · Bitcoin's Resurgence</h2>
-<p>Bitcoin has experienced a notable price increase, rising by 4.27% to $78,741. This surge reflects a broader optimism in the cryptocurrency market, possibly driven by recent technological advancements and regulatory developments. As Bitcoin leads the charge, other cryptocurrencies are also seeing positive movements, indicating a renewed interest and confidence in digital assets.</p>
-<p>The crypto market's volatility remains a point of concern for some investors, but the current trend suggests a growing acceptance and integration of cryptocurrencies into mainstream financial systems. As always, the market's future will hinge on regulatory changes and technological innovations that could either bolster or hinder its growth.</p>
-<h2>The Lab · What AI can newly do this week</h2>
-<h3>AI Design Patterns</h3>
-<p>AI design patterns are frameworks that help structure AI systems to improve their efficiency and adaptability. These patterns are crucial for creating robust and scalable AI solutions, allowing developers to iterate rapidly and address complex challenges effectively.</p>
-<ul>
-<li><strong>What it is</strong>: Frameworks for structuring AI systems.</li>
-<li><strong>Why it's interesting</strong>: Enhances the robustness and scalability of AI solutions.</li>
-<li><strong>When we'd reach for it</strong>: Designing AI systems requiring flexibility and rapid iteration.</li>
-<li><strong>Where it's filed</strong>: <code>kai/research/2026-04-22-ai-design-patterns.md</code></li>
-</ul>
-<h2>Worth Sitting With</h2>
-<p>As AI and crypto continue to evolve, we're witnessing a convergence of technology and finance that's reshaping industries. How might these advancements influence traditional business models? Are we prepared for the ethical and regulatory challenges that come with such rapid innovation? These are questions worth pondering as we navigate this transformative era.</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Google's TPUs are a game-changer for AI infrastructure.</li>
-<li>Bitcoin's price surge signals renewed market confidence.</li>
-<li>Need your thoughts on exploring AI design patterns further.</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: ai-scientists
+    name: AI Scientists
+    aliases: [LLM-based systems, AI agents]
+    category: ai
+    take: &quot;AI scientists produce results without reasoning scientifically, raising concerns about epistemic norms.&quot;
+    data: &quot;Evaluated across eight domains with over 25,000 agent runs.&quot;
+    hinge: &quot;Further studies on AI reasoning and epistemic adherence.&quot;
+    confidence: medium
+  - slug: fed
+    name: Federal Reserve
+    aliases: [Fed, FOMC, central bank]
+    category: macro
+    take: &quot;Fed&#x27;s current stance and market reactions suggest limited room for maneuver.&quot;
+    data: &quot;Effective FFR 3.64%; dot plot unchanged at one cut 2026.&quot;
+    hinge: &quot;CPI print this week, FOMC Apr 28-29.&quot;
+    confidence: medium-high
+  - slug: bitcoin
+    name: Bitcoin
+    aliases: [BTC, crypto]
+    category: crypto
+    take: &quot;Bitcoin&#x27;s price surge reflects broader crypto market optimism.&quot;
+    data: &quot;Bitcoin +4.24% @ $78,746.&quot;
+    hinge: &quot;Regulatory developments and market sentiment shifts.&quot;
+    confidence: medium
+topics:
+  - slug: ai-reasoning
+    name: &quot;AI Reasoning&quot;
+    signal: &quot;Concerns over AI&#x27;s adherence to scientific reasoning norms.&quot;
+    take: &quot;AI systems need better alignment with epistemic norms.&quot;
+  - slug: macro-rates
+    name: &quot;Macro &amp; Rates&quot;
+    signal: &quot;Fed out of rope, hawks stir.&quot;
+    take: &quot;Market no longer believes in two 2026 cuts.&quot;
+  - slug: crypto-flow
+    name: &quot;Crypto Flow&quot;
+    signal: &quot;Bitcoin and other major cryptos see significant price increases.&quot;
+    take: &quot;Optimism in crypto markets amid price surges.&quot;
+lab_items:
+  - slug: ai-scientist-v2
+    name: &quot;AI Scientist-v2&quot;
+    what: &quot;Agent that searches over research moves, not tokens.&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer.&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration.&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
+---
+
+# Ra — 2026-04-22
+## AI Scientists: Producing Results, Lacking Reason
+
+Good morning! Today, we&#x27;re diving into the intriguing world of AI scientists and their approach to reasoning, the Federal Reserve&#x27;s current stance, and the optimism sweeping through the crypto markets. Let&#x27;s explore what these developments mean for us.
+
+## The Story · AI Scientists: Producing Results, Lacking Reason
+
+AI scientists, those autonomous agents powered by large language models (LLMs), are increasingly taking on roles traditionally reserved for human researchers. However, a recent study has raised concerns about whether these AI systems adhere to the epistemic norms that make scientific inquiry self-correcting. The study evaluated AI scientists across eight domains, conducting over 25,000 agent runs, and found that while these systems can produce results, their reasoning often lacks the scientific rigor expected in traditional research.
+
+The core issue lies in the AI&#x27;s ability to reason scientifically. While AI systems can execute workflows and generate hypotheses, their reasoning processes do not always align with the epistemic norms that guide human scientists. This misalignment raises questions about the reliability of AI-generated research and the potential consequences of relying on these systems for critical scientific advancements.
+
+Why does this matter? As AI continues to play a larger role in scientific research, ensuring that these systems adhere to established scientific norms is crucial. Without this alignment, there&#x27;s a risk that AI-generated research could lead to incorrect conclusions or misinformed decisions. The study suggests that further research is needed to understand how AI systems can be better aligned with scientific reasoning norms.
+
+This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.
+
+## Also Moving · Fed&#x27;s Limited Room and Crypto Optimism
+
+The Federal Reserve finds itself in a tight spot, with limited room to maneuver as market participants grow skeptical of future rate cuts. The effective federal funds rate (FFR) remains at 3.64%, and the dot plot, a chart showing Fed officials&#x27; interest rate projections, remains unchanged, indicating only one cut by 2026. This has led to increased speculation about the Fed&#x27;s next moves, especially with the upcoming CPI print and FOMC meeting.
+
+Meanwhile, the crypto market is experiencing a wave of optimism, with Bitcoin surging 4.24% to $78,746. This price increase reflects broader market sentiment, with other major cryptocurrencies also seeing significant gains. The crypto market&#x27;s resilience amid regulatory challenges and market volatility suggests a renewed confidence among investors.
+
+## The Lab · What AI can newly do this week
+
+This week, we&#x27;re spotlighting AI Scientist-v2, an agent designed to search over research moves rather than individual tokens. This approach allows the agent to focus on process-heavy problems where the right sequence of actions is more critical than the specific answers. AI Scientist-v2 is particularly useful in scenarios like debugging, workflow optimization, pricing, go-to-market strategies, and system integration. For more details, check out the paper [here](https://arxiv.org/abs/2604.18805). Filed under `kai/research/2026-04-22-ai-scientist-v2.md`.
+
+## Worth Sitting With
+
+As AI systems continue to evolve, the question of their alignment with human values and norms becomes increasingly important. How do we ensure that AI systems not only perform tasks efficiently but also adhere to the ethical and epistemic standards we expect from human researchers? This challenge is not just technical but also philosophical, as it touches on the very nature of knowledge and understanding. What does it mean for an AI to &quot;know&quot; something, and how do we measure that knowledge against human standards?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest analysis on AI reasoning norms.
+- In-flight: Preparing for the upcoming FOMC meeting insights.
+- Need Hyo&#x27;s input on the next AI research focus area.
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
