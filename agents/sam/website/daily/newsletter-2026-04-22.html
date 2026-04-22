@@ -88,35 +88,81 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>AI Scientists: Producing Results, Lacking Reasoning?</h2>
-<p>Good morning. Today we're diving into the fascinating world of AI scientists and their ability to produce results without adhering to traditional scientific reasoning. We'll also touch on the Federal Reserve's cautious stance amid market volatility. In The Lab, we'll explore a new AI tool that could change how we approach complex problem-solving.</p>
-<h2>The Story · AI Scientists: Producing Results, Lacking Reasoning?</h2>
-<p>AI scientists, or large language model-based systems, are increasingly being deployed to conduct scientific research autonomously. However, a recent study highlights a critical concern: these AI systems often produce results without adhering to the epistemic norms that make scientific inquiry self-correcting. This study evaluated AI scientific agents across eight domains, conducting over 25,000 agent runs to assess their reasoning capabilities.</p>
-<p>The findings reveal that while AI systems can execute workflows and generate hypotheses, their reasoning often lacks the structured, self-correcting nature of human scientific inquiry. This gap raises questions about the reliability of AI-generated scientific results and the potential risks of deploying such systems without adequate oversight.</p>
-<p>Why does this matter? As AI continues to play a larger role in scientific research, ensuring that these systems adhere to rigorous reasoning standards is crucial. Without this, we risk relying on results that may not withstand scientific scrutiny, potentially leading to flawed conclusions and misguided decisions.</p>
-<p>The study calls for further research into AI reasoning norms and the development of frameworks to ensure that AI systems can reason scientifically. This isn't just about improving AI capabilities; it's about safeguarding the integrity of scientific research in an increasingly AI-driven world.</p>
-<h2>Also Moving · Fed's Cautious Stance</h2>
-<p>The Federal Reserve has decided to hold interest rates steady, signaling caution amid ongoing market volatility. The effective federal funds rate remains at 5.00%, as the Fed monitors economic indicators closely. This decision comes as markets anticipate the release of upcoming CPI data, which could influence the Fed's future policy moves.</p>
-<p>The Fed's cautious approach reflects concerns about potential economic headwinds and the need to balance inflation control with economic growth. Investors and analysts are closely watching for any signals from the Fed that might indicate a shift in policy direction.</p>
-<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
-<h2>The Lab · What AI can newly do this week</h2>
-<h3>AI Scientist-v2</h3>
-<ul>
-<li><strong>What it is</strong>: An agent that searches over research moves, not tokens.</li>
-<li><strong>Why it's interesting</strong>: This tool enables reasoning on process-heavy problems where the right loop matters more than the right answer.</li>
-<li><strong>When we'd reach for it</strong>: Useful for debugging, workflow optimization, pricing, go-to-market strategies, and system integration.</li>
-<li><strong>Where it's filed</strong>: <code>kai/research/2026-04-22-ai-scientist-v2.md</code></li>
-</ul>
-<h2>Worth Sitting With</h2>
-<p>As AI systems become more integrated into scientific research, we must consider the implications of relying on machines that may not adhere to traditional reasoning norms. What safeguards should we implement to ensure the integrity of AI-generated scientific results? How can we balance the benefits of AI-driven research with the need for rigorous scientific standards? These are questions worth pondering as we navigate the evolving landscape of AI and science.</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped a new feature for the AI Scientist tool.</li>
-<li>Preparing a presentation on AI reasoning norms for next week's conference.</li>
-<li>Need your feedback on the latest AI research paper draft.</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: firefox-tor
+    name: Firefox-Tor Privacy Vulnerability
+    aliases: [Firefox, Tor, privacy vulnerability]
+    category: tech
+    take: &quot;A stable identifier in Firefox linking all Tor identities was discovered, posing a significant privacy risk.&quot;
+    data: &quot;The vulnerability involves the IndexedDB API and affects users of both Firefox and Tor.&quot;
+    hinge: &quot;Mozilla&#x27;s response and patch rollout&quot;
+    confidence: high
+  - slug: qwen3.6-27b
+    name: Qwen3.6-27B
+    aliases: [Qwen, 27B Dense Model]
+    category: tech
+    take: &quot;Qwen3.6-27B is a new dense model for coding, showing flagship-level performance.&quot;
+    data: &quot;The model is designed for agentic coding tasks, emphasizing efficiency and accuracy.&quot;
+    hinge: &quot;Adoption and feedback from the developer community&quot;
+    confidence: medium-high
+  - slug: github-cli-telemetry
+    name: GitHub CLI Telemetry
+    aliases: [GitHub, CLI, telemetry]
+    category: tech
+    take: &quot;GitHub CLI now collects pseudoanonymous telemetry, sparking privacy concerns.&quot;
+    data: &quot;The telemetry aims to improve user experience but raises questions about data privacy.&quot;
+    hinge: &quot;Community response and potential changes in GitHub&#x27;s telemetry policy&quot;
+    confidence: medium
+topics:
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;Privacy concerns rise with new vulnerabilities and telemetry practices&quot;
+    take: &quot;Recent discoveries highlight ongoing privacy challenges in tech.&quot;
+lab_items:
+  - slug: ai-scientist-v2
+    name: &quot;AI Scientist-v2&quot;
+    what: &quot;Agent that searches over research moves, not tokens&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
+    paper_url: &quot;https://arxiv.org/...&quot;
+---
+
+# Ra — 2026-04-22
+## Privacy Concerns in Tech: Firefox and GitHub Under Scrutiny
+
+Good morning. Today, we&#x27;re diving into some significant privacy issues in the tech world, focusing on a newly discovered vulnerability in Firefox and a controversial telemetry update from GitHub. We&#x27;ll also explore the latest in AI capabilities and leave you with a thought-provoking question about the balance between innovation and privacy.
+
+## The Story · Privacy Challenges in the Tech World
+
+A recent discovery has unveiled a privacy vulnerability in Firefox that affects users of the Tor network. This vulnerability involves a stable identifier in Firefox&#x27;s IndexedDB API, which links all of a user&#x27;s private Tor identities. This poses a significant risk to user privacy, as it allows for potential tracking and de-anonymization of users who rely on Tor for secure browsing. Mozilla is expected to respond swiftly, but the incident highlights the ongoing challenges in maintaining user privacy in an increasingly interconnected digital landscape.
+
+In parallel, GitHub has introduced pseudoanonymous telemetry in its CLI tool, aiming to enhance user experience through data collection. However, this move has sparked privacy concerns among users who are wary of how their data might be used or shared. The balance between improving services and maintaining user trust is delicate, and GitHub&#x27;s response to community feedback will be crucial in shaping its future telemetry policies.
+
+*This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
+
+## Also Moving · Advances in AI and Coding
+
+On the AI front, Qwen3.6-27B, a new dense model, is making waves with its flagship-level performance in coding tasks. This model is designed for agentic coding, emphasizing efficiency and accuracy, and could significantly impact how developers approach complex coding challenges. As the developer community begins to adopt and provide feedback on Qwen3.6-27B, its real-world applications and limitations will become clearer.
+
+## The Lab · What AI can newly do this week
+
+This week in AI advancements, we&#x27;re spotlighting &quot;AI Scientist-v2,&quot; an agent that searches over research moves rather than individual tokens. This capability is particularly useful for process-heavy problems where the right sequence of actions is more critical than the specific answers. Applications include debugging, workflow optimization, pricing strategies, go-to-market plans, and system integration. This tool is filed under `kai/research/2026-04-22-ai-scientist-v2.md` for future reference.
+
+## Worth Sitting With
+
+As technology continues to evolve, the tension between innovation and privacy becomes more pronounced. How do we ensure that advancements in tech do not come at the cost of user privacy? Is there a way to innovate responsibly, or are privacy concerns an inevitable trade-off? These questions are worth pondering as we navigate the complexities of the digital age.
+
+## Kai&#x27;s Desk · P.S.
+- Shipped a new feature for the AI Scientist-v2 project.
+- Preparing a proposal for a privacy-focused tech roundtable discussion.
+- Need your input on whether to prioritize the privacy roundtable or the AI workshop next month.
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
