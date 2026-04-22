@@ -29,8 +29,6 @@ SYNC_FILES=(
   "aurora.html"
   "marketplace.html"
   "research.html"
-  "api/hq-push.js"
-  "api/hq-data.js"
   "api/hq.js"
   "api/hq-auth.js"
   "api/health.js"
