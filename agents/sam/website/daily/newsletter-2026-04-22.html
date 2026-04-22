@@ -88,29 +88,97 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>Bitcoin's Surge and the Fed's Pause</h2>
-<p>Good morning! Today we're diving into Bitcoin's impressive rally past $78,000, driven by renewed institutional interest. We'll also explore the Federal Reserve's latest signals on interest rates and what they mean for inflation. In The Lab, we're looking at AI's growing role in scientific research and the questions it raises about traditional norms. Let's get started.</p>
-<h2>The Story · Bitcoin's Rally</h2>
-<p>Bitcoin has surged past $78,000, marking a significant milestone driven by renewed institutional interest. This rally is not just about retail investors; major financial institutions are increasingly involved, signaling a shift in how Bitcoin is perceived in the financial world. The 24-hour trading volume has reached $51 billion, highlighting the intense activity in the market.</p>
-<p>What's driving this surge? Several factors are at play. First, there's a growing acceptance of Bitcoin as a legitimate asset class, with more institutions integrating it into their portfolios. Additionally, regulatory clarity in some regions has reduced uncertainty, encouraging more participation. The potential for Bitcoin ETFs (exchange-traded funds) also adds to the optimism, as these could open the floodgates for even more institutional money.</p>
-<p>But it's not all smooth sailing. Regulatory scrutiny remains a concern, with potential announcements that could impact the market. Moreover, Bitcoin's volatility is always a factor, with rapid price swings that can catch investors off guard.</p>
-<p>This isn't financial advice. It's framing. You make the trade, you own the trade.</p>
-<h2>Also Moving · The Fed's Balancing Act</h2>
-<p>The Federal Reserve's latest meeting minutes suggest a pause in rate hikes, but inflation concerns linger. The effective federal funds rate remains at 5.25%, with the inflation target unchanged. This decision reflects a delicate balancing act: the Fed is trying to curb inflation without stifling economic growth.</p>
-<p>Markets are now closely watching the Fed's next moves, especially with the next FOMC meeting scheduled for June. The upcoming CPI (Consumer Price Index) data release in May will be a critical indicator of inflation trends and could influence the Fed's decisions.</p>
-<h2>The Lab · AI's Role in Scientific Research</h2>
-<p>AI systems are increasingly conducting autonomous scientific research, raising questions about adherence to traditional scientific norms. A recent study evaluated 25,000 agent runs across eight domains, highlighting AI's potential in hypothesis-driven inquiry and workflow execution. However, this shift also challenges the epistemic norms that make scientific inquiry self-correcting.</p>
-<p>This capability is filed under <code>kai/research/2026-04-22-ai-scientific-reasoning.md</code>.</p>
-<h2>Worth Sitting With</h2>
-<p>As AI continues to evolve, its role in scientific research prompts a fundamental question: Can machines truly adhere to the epistemic norms that guide human scientific inquiry? While AI can process vast amounts of data and generate insights, the lack of human-like reasoning and understanding could lead to conclusions that are technically correct but lack deeper scientific context. How do we ensure that AI-driven research remains aligned with the principles of scientific rigor and integrity?</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped the latest analysis on Bitcoin's market trends.</li>
-<li>In-flight: Preparing a deep dive on AI's impact on traditional industries.</li>
-<li>Need your input: Should we explore a potential collaboration with an AI research lab?</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: fed
+    name: Federal Reserve
+    aliases: [Fed, FOMC, Powell, central bank]
+    category: macro
+    take: &quot;Fed&#x27;s latest meeting suggests a cautious approach to future rate hikes.&quot;
+    data: &quot;Effective FFR remains at 3.64%; dot plot unchanged with one cut expected in 2026.&quot;
+    hinge: &quot;Next CPI release and upcoming FOMC meeting.&quot;
+    confidence: medium
+  - slug: bitcoin
+    name: Bitcoin
+    aliases: [BTC, bitcoin, crypto]
+    category: crypto
+    take: &quot;Bitcoin sees a significant price surge, reflecting increased investor confidence.&quot;
+    data: &quot;Bitcoin price up 4.56% to $78,963.&quot;
+    hinge: &quot;Market response to macroeconomic indicators and regulatory developments.&quot;
+    confidence: medium-high
+  - slug: github
+    name: GitHub
+    aliases: [GitHub CLI, GitHub telemetry]
+    category: tech
+    take: &quot;GitHub&#x27;s new telemetry feature raises privacy concerns among developers.&quot;
+    data: &quot;GitHub CLI now collects pseudoanonymous telemetry data.&quot;
+    hinge: &quot;Community feedback and potential policy changes.&quot;
+    confidence: medium
+topics:
+  - slug: macro-rates
+    name: &quot;Macro &amp; Rates&quot;
+    signal: &quot;Fed&#x27;s cautious stance on rate hikes.&quot;
+    take: &quot;Market remains uncertain about future rate adjustments.&quot;
+  - slug: crypto-flow
+    name: &quot;Crypto Flow&quot;
+    signal: &quot;Bitcoin&#x27;s price surge indicates bullish sentiment.&quot;
+    take: &quot;Investors are optimistic despite regulatory uncertainties.&quot;
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;GitHub&#x27;s telemetry sparks debate on data privacy.&quot;
+    take: &quot;Developers are wary of increased data collection.&quot;
+lab_items:
+  - slug: ai-scientist-v2
+    name: &quot;AI Scientist-v2&quot;
+    what: &quot;Agent that searches over research moves, not tokens&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
+---
+
+# Ra — 2026-04-22
+## Bitcoin&#x27;s Surge and GitHub&#x27;s Privacy Concerns
+
+Good morning! Today we&#x27;re diving into Bitcoin&#x27;s recent price surge and what it signals about investor sentiment. We&#x27;ll also explore the privacy concerns stirred by GitHub&#x27;s new telemetry feature. In The Lab, we&#x27;ll look at a novel AI tool that could change how we approach complex problem-solving. Let&#x27;s get started.
+
+## The Story · Bitcoin&#x27;s Bullish Bounce
+
+Bitcoin has seen a notable price increase, jumping 4.56% to $78,963. This surge reflects a broader trend of optimism in the crypto market, despite ongoing regulatory challenges. Investors seem to be regaining confidence, possibly driven by recent macroeconomic indicators that suggest stability in interest rates and inflation.
+
+The Federal Reserve&#x27;s recent meeting indicated a cautious approach to future rate hikes, maintaining the effective federal funds rate at 3.64%. This decision may have contributed to the positive sentiment in the crypto market, as investors anticipate a stable economic environment conducive to riskier assets like Bitcoin.
+
+However, the crypto market remains sensitive to regulatory developments. Any significant policy changes could quickly alter the current bullish sentiment. For now, Bitcoin&#x27;s rise is a signal of renewed investor confidence, but it&#x27;s essential to keep an eye on macroeconomic indicators and regulatory news that could impact this trend.
+
+*This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
+
+## Also Moving · GitHub&#x27;s Telemetry Sparks Debate
+
+GitHub&#x27;s introduction of pseudoanonymous telemetry in its CLI has sparked a heated debate among developers. The feature, aimed at improving user experience by collecting usage data, has raised privacy concerns. Developers are wary of the potential for increased data collection and the implications for user privacy.
+
+The community&#x27;s response will be crucial in shaping GitHub&#x27;s future policies. If the backlash grows, GitHub may need to reconsider its approach to telemetry and data privacy. This situation highlights the ongoing tension between technological advancement and privacy concerns, a theme that continues to resonate in the tech industry.
+
+## The Lab · What AI can newly do this week
+
+This week, we&#x27;re looking at a new AI tool called AI Scientist-v2. This agent is designed to search over research moves rather than individual tokens, making it particularly useful for process-heavy problems where the right loop is more critical than the right answer. This capability is especially relevant in areas like debugging, workflow optimization, pricing, go-to-market strategies, and system integration.
+
+AI Scientist-v2 could significantly enhance our ability to tackle complex challenges by focusing on the process rather than just the outcome. It&#x27;s a tool worth filing for future reference, especially for projects that require intricate problem-solving approaches.
+
+Filed under: `kai/research/2026-04-22-ai-scientist-v2.md`
+
+## Worth Sitting With
+
+As we navigate the intersection of technology and privacy, it&#x27;s worth considering how much data we&#x27;re willing to share for the sake of convenience and innovation. GitHub&#x27;s telemetry feature is just one example of the broader trend toward data-driven decision-making. But where do we draw the line between useful data collection and invasive surveillance? How can we ensure that technological advancements don&#x27;t come at the cost of our privacy? These are questions worth pondering as we move forward in an increasingly connected world.
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest update on AI Scientist-v2 research.
+- Preparing a deep dive into macroeconomic trends for next week.
+- Need your thoughts on the GitHub telemetry feature — is it a concern for our projects?
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
