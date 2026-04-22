@@ -45,6 +45,25 @@ Commits queued: `s27c9-schedule-algorithms-commit.json` + `s27c9-tickets-commit.
 - **P2 `task-queue-size` — day 11 escalated** — 29 P0 tasks vs threshold 5. Real signal: KAI_TASKS P0 section is bloated. Already tracked — not duplicating.
 - **No new findings filed to KAI_TASKS** (all recurring, already present). Sentinel auto-pushed to HQ via `kai push sentinel` if dispatcher reachable.
 
+### From 2026-04-22T20:05Z scheduled health check (7th consecutive — dead-loop pattern now diagnosed to root cause)
+- **NEW P1 (elevated from P2): aether publish-pipeline broken, not "detection"** — API `/dashboard` stuck at 2026-04-21T11:13:42-06:00 for ~24h. Local data is current. Every aether cycle (~78s) re-emits the mismatch FLAG → **90 duplicate P2 flags in the last 2h** (plus 100s more earlier today). This isn't a dead-loop in aether's logic; aether IS correctly detecting that publish failed. **Fix direction:** (a) find and repair the job that publishes `/dashboard` endpoint — likely a failed Vercel deploy, a stale data-sync cron, or a dual-path mismatch (website/ vs agents/sam/website/); (b) add coalesce rule to FLAG emitter so continuous mismatches produce ONE flag per window, not one per cycle.
+- **Earlier 4 P1 dead-loops (sam/ra/aether/dex, 17:58Z healthcheck)** — no re-flag in the last 2h, but no explicit RESOLVE entry either. Either auto-remediation cleared them or they were superseded by the P2 aether spam. Close the loop: require remediation commands to emit RESOLVE on success so the distinction is unambiguous.
+- **Queue infrastructure healthy** — pending=0, running=0. All 6 ACTIVE.md fresh (<3.5h). Today's logs present for every agent (nel cipher-*, sam self-review, ra newsletter+ra+self-review, aether aether+self-review, dex dex+self-review).
+- **Log hygiene concern** — log.jsonl gained ~90 near-identical P2 entries in 2h from the aether publish loop. Once the publish is fixed, keep the coalesce rule or these P2s will drown any future signal.
+- **Task-definition drift persists** — this scheduled task still points at `/sessions/sharp-gracious-franklin/...`; actual run used `/sessions/loving-intelligent-gates/...`. Still needs a session-agnostic HYO_ROOT.
+
+### From 2026-04-22T16:03Z scheduled health check (6th consecutive — dead-loops STILL persisting, hard escalation overdue)
+- **Same 4 P1 dead-loops UNCHANGED** (sam / ra / aether / dex) — now spanning 6 consecutive healthchecks (~02:41Z → 16:03Z, ~13.5h). Auto-remediation + [GUIDANCE] has conclusively failed. **Next interactive session MUST issue concrete fix-the-thing directives** (not another open-ended question):
+  - sam: assessment="routine engineering check" 3 cycles (2026-04-20 → 2026-04-22) — give sam a real engineering ticket to execute
+  - ra: assessment="health check with 1 warning(s)" 3 cycles — resolve the warning itself, don't re-flag it
+  - aether: bottleneck="dashboard out-of-sync — data exists but HQ doesn't render" 3 cycles on 2026-04-22 — trace and fix the publish step (kai/flag-aether-001 root cause)
+  - dex: pattern-detection counts CLIMBING (225 → 235) — dex is finding more issues, not closing them; needs a fix loop, not a detection loop
+- **flag-nel-001 still unresolved** — 1 broken link flagged @ 14:42:15Z; no resolution entry in log.jsonl. This is the same dead-loop the remediator has been "dispatching" on for 13+ hours. **Fix the link (or allowlist it).**
+- **Queue infrastructure is healthy** — pending=0, running=0, all 6 ACTIVE.md <2h fresh. Not an infra problem. The bottleneck is *acting on* flags.
+- **Light housekeeping:** 1 empty failed queue file (4ae87c70-…json, 0 bytes) — delete next session.
+- **hyo agent** — 0 logs dated 2026-04-22 (P3, unchanged).
+- **Task-definition drift** — this scheduled task still points at `/sessions/sharp-gracious-franklin/...` (dead mount); actual run used `/sessions/laughing-adoring-pasteur/...`. Task file needs a stable/session-agnostic HYO_ROOT.
+
 ### From 2026-04-22T12:05Z scheduled health check (5th consecutive — dead-loops persisting)
 - **Same 4 P1 dead-loops** (sam / ra / aether / dex) — UNCHANGED across 5 consecutive healthchecks now (~02:41Z, ~07:57Z, ~09:57Z, ~11:58Z, 12:05Z). The previous healthcheck "dispatched auto-remediation" — it did not work. **Pattern is conclusive: guidance-only remediation does not resolve dead-loops.** Next interactive session must issue concrete fix-the-thing directives, not another open-ended question.
 - **flag-aether-001 spammed 4 P2 FLAGs in 12 seconds** (12:00:17Z, :19Z, :27Z, :29Z) — dashboard data mismatch (local ts 2026-04-22T06:00 vs API ts 2026-04-21T11:13). The aether dashboard is publishing stale data; remediator keeps re-flagging without fixing. Direct fix needed.
