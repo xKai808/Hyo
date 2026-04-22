@@ -1172,23 +1172,77 @@ cd "$ROOT" || exit 1
 # Prevention: clear stale lock files from crashed processes (TASK-20260417-kai-002)
 rm -f .git/index.lock 2>/dev/null
 
-if git diff --quiet "$JSON_OUTPUT" "$FEED_JSON" 2>/dev/null; then
-  log "No changes to commit"
+# Both feed.json paths — website/ is symlink, agents/sam/website/ is canonical.
+# Git treats them as separate index entries even though they are the same physical file.
+# BOTH must be staged or the dual-path pre-commit gate blocks the commit.
+SAM_FEED_JSON="$ROOT/agents/sam/website/data/feed.json"
+
+# FIX (Bug 2): Previously compared two unrelated files against each other.
+# Correct check: has any of the four output files changed from the last git HEAD commit?
+if git diff --quiet HEAD -- "$JSON_OUTPUT" "$SAM_MIRROR" "$FEED_JSON" "$SAM_FEED_JSON" 2>/dev/null; then
+  log "No changes to commit (all four output files match HEAD)"
 else
-  git add "$JSON_OUTPUT" "$SAM_MIRROR" "$FEED_JSON" 2>/dev/null || true
-  if git commit -m "morning-report: $TODAY (v4 — growth-driven ARIC consumption)"; then
-    if git push origin main; then
-      log "Pushed to origin"
-    else
-      log "ERROR: git push failed — morning report NOT published. Manual push required."
-      # Flag for sentinel
-      local dispatch_bin="$ROOT/bin/dispatch.sh"
-      if [[ -x "$dispatch_bin" ]]; then
-        bash "$dispatch_bin" flag kai P0 "morning report generated but git push failed — report not live" 2>/dev/null || true
-      fi
+  # Stage all four paths (morning-report.json × 2 paths, feed.json × 2 paths)
+  git add "$JSON_OUTPUT" "$SAM_MIRROR" "$FEED_JSON" "$SAM_FEED_JSON" 2>/dev/null || true
+
+  # GATE (Bug 1 prevention): Before committing, verify BOTH feed.json paths are staged.
+  # This is a yes/no gate — not just a log message. Commit is blocked until both are staged.
+  _WEBSITE_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "website/data/feed\.json" || echo 0)
+  _SAM_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "agents/sam/website/data/feed\.json" || echo 0)
+  if [[ "$_WEBSITE_STAGED" -eq 0 ]] || [[ "$_SAM_STAGED" -eq 0 ]]; then
+    # Gate failed — attempt one recovery: force-add the missing path
+    log "DUAL-PATH GATE: feed.json missing from staged files (website=$_WEBSITE_STAGED sam=$_SAM_STAGED). Attempting recovery..."
+    git add "$FEED_JSON" "$SAM_FEED_JSON" 2>/dev/null || true
+    _WEBSITE_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "website/data/feed\.json" || echo 0)
+    _SAM_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "agents/sam/website/data/feed\.json" || echo 0)
+    if [[ "$_WEBSITE_STAGED" -eq 0 ]] || [[ "$_SAM_STAGED" -eq 0 ]]; then
+      log "DUAL-PATH GATE FAILED after recovery attempt. Aborting commit. Opening P0 ticket."
+      bash "$ROOT/bin/ticket.sh" create \
+        --agent kai --title "Morning report dual-path gate failure — feed.json not staged on both paths" \
+        --priority P0 --system system-3 2>/dev/null || true
+      bash "$ROOT/bin/dispatch.sh" flag kai P0 "morning-report dual-path gate failed — report NOT committed" 2>/dev/null || true
+      log "ERROR: morning report NOT published (dual-path gate)."
     fi
-  else
-    log "ERROR: git commit failed — morning report NOT published."
+  fi
+
+  # Gate passed — both paths staged. Proceed to commit.
+  if [[ "$_WEBSITE_STAGED" -gt 0 ]] && [[ "$_SAM_STAGED" -gt 0 ]]; then
+    log "DUAL-PATH GATE: PASSED (website=$_WEBSITE_STAGED sam=$_SAM_STAGED) — committing"
+    if git commit -m "morning-report: $TODAY (v4 — growth-driven ARIC consumption)"; then
+      if git push origin main; then
+        log "Pushed to origin"
+
+        # FIX (Bug 3): Post-push live verification — fetch the actual live feed endpoint
+        # and confirm today's morning-report entry is visible. Not just "push succeeded".
+        log "Verifying live deployment (waiting 30s for Vercel build)..."
+        sleep 30
+        _LIVE_STATUS=$(curl -sf --max-time 15 "https://www.hyo.world/data/feed.json" 2>/dev/null | python3 -c "
+import json, sys
+try:
+  d = json.load(sys.stdin)
+  reports = d.get('reports', [])
+  mr = [r for r in reports if r.get('type') == 'morning-report' and '$TODAY' in str(r.get('date',''))]
+  print('FOUND' if mr else 'MISSING')
+except:
+  print('ERROR')
+" 2>/dev/null || echo "UNREACHABLE")
+        if [[ "$_LIVE_STATUS" == "FOUND" ]]; then
+          log "LIVE VERIFICATION: PASSED — morning report visible at hyo.world/data/feed.json"
+        else
+          log "LIVE VERIFICATION: FAILED (status=$_LIVE_STATUS) — Vercel may not have deployed yet"
+          log "  Live check: https://www.hyo.world/data/feed.json — look for type=morning-report date=$TODAY"
+          bash "$ROOT/bin/ticket.sh" create \
+            --agent kai --title "Morning report pushed but NOT visible on live site ($TODAY) — Vercel deploy issue" \
+            --priority P1 --system system-3 2>/dev/null || true
+          bash "$ROOT/bin/dispatch.sh" flag kai P1 "morning-report pushed to git but not visible live — check Vercel deploy" 2>/dev/null || true
+        fi
+      else
+        log "ERROR: git push failed — morning report NOT published. Manual push required."
+        bash "$ROOT/bin/dispatch.sh" flag kai P0 "morning report generated but git push failed — report not live" 2>/dev/null || true
+      fi
+    else
+      log "ERROR: git commit failed — morning report NOT published."
+    fi
   fi
 fi
 
