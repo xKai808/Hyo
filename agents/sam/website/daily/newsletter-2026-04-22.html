@@ -96,78 +96,81 @@ voice: kai.hyo
 entities:
   - slug: bitcoin
     name: Bitcoin
-    aliases: [BTC, crypto]
+    aliases: [BTC, bitcoin, crypto]
     category: crypto
-    take: &quot;Bitcoin continues its upward trajectory, nearing $79,000.&quot;
-    data: &quot;Bitcoin price at $78,971 with a 4.17% increase.&quot;
-    hinge: &quot;Market sentiment and regulatory news.&quot;
+    take: &quot;Bitcoin surged past $78,000, marking a significant rally in the crypto market.&quot;
+    data: &quot;Bitcoin price at $78,883, up 5.27% in the last 24 hours.&quot;
+    hinge: &quot;Potential regulatory announcements and market sentiment shifts.&quot;
     confidence: medium-high
   - slug: ethereum
     name: Ethereum
-    aliases: [ETH, crypto]
+    aliases: [ETH, ethereum, crypto]
     category: crypto
-    take: &quot;Ethereum follows Bitcoin&#x27;s lead, rising by 3.37%.&quot;
-    data: &quot;Ethereum price at $2,405.36 with a 3.37% increase.&quot;
-    hinge: &quot;Upcoming Ethereum network upgrades.&quot;
+    take: &quot;Ethereum follows Bitcoin&#x27;s lead with a notable price increase.&quot;
+    data: &quot;Ethereum price at $2,397.47, up 4.55% in the last 24 hours.&quot;
+    hinge: &quot;Upcoming Ethereum network upgrades and DeFi trends.&quot;
     confidence: medium
-  - slug: github
-    name: GitHub
-    aliases: [GitHub CLI, telemetry]
-    category: tech
-    take: &quot;GitHub&#x27;s new telemetry collection raises privacy concerns.&quot;
-    data: &quot;GitHub CLI now collects pseudoanonymous telemetry data.&quot;
-    hinge: &quot;Community feedback and potential policy changes.&quot;
+  - slug: ai-scientist
+    name: AI Scientist
+    aliases: [AI, LLM, language models]
+    category: ai
+    take: &quot;AI systems are producing scientific results but lack epistemic reasoning.&quot;
+    data: &quot;Evaluated across eight domains with over 25,000 agent runs.&quot;
+    hinge: &quot;Advancements in AI reasoning and epistemic alignment.&quot;
     confidence: medium
 topics:
-  - slug: crypto-market
-    name: &quot;Crypto Market&quot;
-    signal: &quot;Strong upward movement in major cryptocurrencies.&quot;
-    take: &quot;Bitcoin and Ethereum lead the charge with significant gains.&quot;
-  - slug: tech-privacy
-    name: &quot;Tech &amp; Privacy&quot;
-    signal: &quot;Privacy concerns over GitHub&#x27;s telemetry practices.&quot;
-    take: &quot;GitHub&#x27;s telemetry update sparks debate on user privacy.&quot;
+  - slug: crypto-rally
+    name: &quot;Crypto Rally&quot;
+    signal: &quot;Bitcoin and Ethereum lead a market-wide surge.&quot;
+    take: &quot;The crypto market is experiencing a significant rally, driven by Bitcoin and Ethereum.&quot;
+  - slug: ai-reasoning
+    name: &quot;AI Reasoning&quot;
+    signal: &quot;AI systems show capability but lack scientific reasoning.&quot;
+    take: &quot;AI&#x27;s ability to produce results without reasoning raises questions about its scientific reliability.&quot;
 lab_items:
   - slug: ai-scientist-v2
     name: &quot;AI Scientist-v2&quot;
-    what: &quot;Agent that searches over research moves, not tokens&quot;
-    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
-    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
+    what: &quot;Agent that evaluates AI&#x27;s scientific reasoning across multiple domains.&quot;
+    why: &quot;Highlights the gap in AI&#x27;s epistemic reasoning capabilities.&quot;
+    when: &quot;Useful for assessing AI&#x27;s reliability in scientific research.&quot;
     paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
 ---
 # Ra — 2026-04-22
-## Bitcoin Nears $79,000 as Crypto Market Surges
+## Bitcoin and Ethereum Lead a Crypto Rally
 
-Good morning! Today, we&#x27;re diving into the crypto market&#x27;s impressive rally with Bitcoin and Ethereum leading the charge. We&#x27;ll also explore the privacy concerns stirred by GitHub&#x27;s new telemetry practices. In The Lab, we&#x27;ll look at a new AI tool that could change how we approach complex problem-solving. Let&#x27;s get started.
+Good morning! Today, we&#x27;re diving into the latest surge in the crypto market, where Bitcoin and Ethereum are making significant moves. We&#x27;ll also explore a fascinating development in AI, where systems are producing scientific results but lack the reasoning that makes science self-correcting. Let&#x27;s get started.
 
-## The Story · Bitcoin Nears $79,000
+## The Story · Bitcoin and Ethereum Surge
 
-Bitcoin is on a roll, climbing to $78,971, marking a 4.17% increase. This surge is part of a broader upward trend in the cryptocurrency market, with Ethereum also seeing a 3.37% rise, reaching $2,405.36. The rally seems to be driven by a mix of positive market sentiment and anticipation of regulatory clarity. As the crypto market gains momentum, investors are eyeing potential catalysts, such as network upgrades and policy announcements, that could further influence prices.
+Bitcoin and Ethereum are leading a notable rally in the cryptocurrency market. Bitcoin has surged past $78,000, marking a 5.27% increase in the last 24 hours. Ethereum isn&#x27;t far behind, with a 4.55% rise, bringing its price to $2,397.47. This rally is part of a broader market movement, with several altcoins also experiencing gains.
 
-The crypto market&#x27;s volatility is well-known, but this recent surge has reignited interest and optimism among traders and investors. Bitcoin&#x27;s approach to the $79,000 mark is particularly significant as it signals strong market confidence. Ethereum&#x27;s rise is also noteworthy, as it continues to benefit from its role in the decentralized finance (DeFi) ecosystem and upcoming network upgrades.
+The surge is attributed to a combination of factors, including increased institutional interest, positive market sentiment, and potential regulatory clarity on the horizon. As Bitcoin and Ethereum continue to climb, investors are closely watching for any signs of regulatory announcements or shifts in market sentiment that could influence the trajectory of these digital assets.
 
 This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.
 
-## Also Moving · Privacy Concerns with GitHub&#x27;s Telemetry
+## Also Moving · AI&#x27;s Scientific Reasoning Gap
 
-GitHub has introduced a new telemetry feature in its CLI, collecting pseudoanonymous data to improve user experience. However, this move has sparked a debate about user privacy and data collection practices. The developer community is divided, with some appreciating the potential for improved features, while others worry about the implications for privacy and data security.
+In the world of AI, a recent study has highlighted a critical gap in the reasoning capabilities of large language models (LLMs). While these AI systems are increasingly deployed to conduct scientific research autonomously, their reasoning does not always adhere to the epistemic norms that make scientific inquiry self-correcting. Evaluated across eight domains with over 25,000 agent runs, the study reveals that AI can produce results but often lacks the scientific reasoning necessary for reliability.
 
-As GitHub navigates this feedback, the outcome could set a precedent for how tech companies balance innovation with user privacy. The community&#x27;s response and any subsequent policy changes will be crucial to watch.
+This raises important questions about the role of AI in scientific research and the need for advancements in AI reasoning and epistemic alignment. As AI continues to evolve, addressing these gaps will be crucial for ensuring that AI-driven research is both reliable and scientifically sound.
 
 ## The Lab · What AI can newly do this week
 
-This week, we&#x27;re looking at AI Scientist-v2, an agent designed to search over research moves rather than just tokens. This tool is particularly useful for tackling process-heavy problems where the sequence of steps is more critical than the individual answers. It&#x27;s a game-changer for fields like debugging, workflow optimization, and system integration, where understanding the process can lead to more efficient solutions.
+### AI Scientist-v2
 
-Filed for future reference: `kai/research/2026-04-22-ai-scientist-v2.md`
+- **What it is**: An agent that evaluates AI&#x27;s scientific reasoning across multiple domains.
+- **Why it&#x27;s interesting**: It highlights the gap in AI&#x27;s epistemic reasoning capabilities, which is crucial for scientific reliability.
+- **When we&#x27;d reach for it**: Useful for assessing AI&#x27;s reliability in scientific research, especially in fields where reasoning and self-correction are paramount.
+- **Where it&#x27;s filed**: `kai/research/2026-04-22-ai-scientist-v2.md`
 
 ## Worth Sitting With
 
-As we witness the crypto market&#x27;s resurgence, it&#x27;s worth pondering the long-term implications of such volatility. While the current rally is exciting, it raises questions about sustainability and the factors that truly drive these markets. Are we seeing a genuine shift in market dynamics, or is this another temporary spike? How should investors balance the thrill of potential gains with the inherent risks? What do you think?
+As AI systems become more integrated into scientific research, the question arises: Can we trust AI to adhere to the same rigorous standards as human scientists? While AI can produce results, the lack of epistemic reasoning poses a challenge. How do we ensure that AI-driven research remains reliable and self-correcting? This is a question worth pondering as we continue to push the boundaries of AI capabilities.
 
 ## Kai&#x27;s Desk · P.S.
-- Shipped the latest analysis on crypto market trends.
-- In-flight: Exploring privacy implications of tech telemetry.
-- Need your thoughts on the AI Scientist-v2 tool&#x27;s potential applications.
+- Shipped the latest research on AI reasoning gaps.
+- In-flight: Analysis of the crypto market rally.
+- Need your thoughts on the potential impact of AI in scientific research.
 
 — Kai</code></pre>
   </article>
