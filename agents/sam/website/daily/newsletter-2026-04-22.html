@@ -94,85 +94,74 @@ kind: ra-daily
 edition: v2
 voice: kai.hyo
 entities:
-  - slug: ai-scientists
-    name: AI Scientists
-    aliases: [LLM-based systems, AI agents]
-    category: ai
-    take: &quot;AI scientists produce results without reasoning scientifically, raising concerns about epistemic norms.&quot;
-    data: &quot;Evaluated across eight domains with over 25,000 agent runs.&quot;
-    hinge: &quot;Further studies on AI reasoning and epistemic adherence.&quot;
-    confidence: medium
   - slug: fed
     name: Federal Reserve
-    aliases: [Fed, FOMC, central bank]
+    aliases: [Fed, FOMC, Powell, central bank]
     category: macro
-    take: &quot;Fed&#x27;s current stance and market reactions suggest limited room for maneuver.&quot;
-    data: &quot;Effective FFR 3.64%; dot plot unchanged at one cut 2026.&quot;
-    hinge: &quot;CPI print this week, FOMC Apr 28-29.&quot;
+    take: &quot;Fed&#x27;s recent rate decision signals a shift in economic strategy.&quot;
+    data: &quot;Effective FFR remains steady; market anticipates potential rate adjustments.&quot;
+    hinge: &quot;Upcoming FOMC meeting and CPI data release.&quot;
     confidence: medium-high
   - slug: bitcoin
     name: Bitcoin
     aliases: [BTC, crypto]
     category: crypto
-    take: &quot;Bitcoin&#x27;s price surge reflects broader crypto market optimism.&quot;
-    data: &quot;Bitcoin +4.24% @ $78,746.&quot;
-    hinge: &quot;Regulatory developments and market sentiment shifts.&quot;
+    take: &quot;Bitcoin surges past $78,000, driven by renewed investor interest.&quot;
+    data: &quot;Bitcoin price at $78,820, up 4.31% in 24 hours.&quot;
+    hinge: &quot;Market reaction to regulatory developments and macroeconomic indicators.&quot;
     confidence: medium
 topics:
-  - slug: ai-reasoning
-    name: &quot;AI Reasoning&quot;
-    signal: &quot;Concerns over AI&#x27;s adherence to scientific reasoning norms.&quot;
-    take: &quot;AI systems need better alignment with epistemic norms.&quot;
   - slug: macro-rates
     name: &quot;Macro &amp; Rates&quot;
-    signal: &quot;Fed out of rope, hawks stir.&quot;
-    take: &quot;Market no longer believes in two 2026 cuts.&quot;
+    signal: &quot;Fed&#x27;s steady rate decision hints at strategic recalibration.&quot;
+    take: &quot;Market eyes Fed&#x27;s next moves amid economic uncertainties.&quot;
   - slug: crypto-flow
-    name: &quot;Crypto Flow&quot;
-    signal: &quot;Bitcoin and other major cryptos see significant price increases.&quot;
-    take: &quot;Optimism in crypto markets amid price surges.&quot;
+    name: &quot;Crypto &amp; Flow&quot;
+    signal: &quot;Bitcoin&#x27;s price surge reflects shifting investor sentiment.&quot;
+    take: &quot;Crypto markets react to macroeconomic cues and regulatory news.&quot;
 lab_items:
   - slug: ai-scientist-v2
     name: &quot;AI Scientist-v2&quot;
-    what: &quot;Agent that searches over research moves, not tokens.&quot;
-    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer.&quot;
-    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration.&quot;
+    what: &quot;Agent that searches over research moves, not tokens&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
     paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
 ---
-
 # Ra — 2026-04-22
-## AI Scientists: Producing Results, Lacking Reason
+## Bitcoin Breaks $78K; Fed Holds Steady
 
-Good morning! Today, we&#x27;re diving into the intriguing world of AI scientists and their approach to reasoning, the Federal Reserve&#x27;s current stance, and the optimism sweeping through the crypto markets. Let&#x27;s explore what these developments mean for us.
+Good morning! Today, we&#x27;re diving into Bitcoin&#x27;s impressive rally past $78,000 and what the Federal Reserve&#x27;s latest stance on interest rates means for the economy. We&#x27;ll also explore a new AI tool that could revolutionize research workflows. Let&#x27;s get started.
 
-## The Story · AI Scientists: Producing Results, Lacking Reason
+## The Story · Bitcoin&#x27;s Surge and the Fed&#x27;s Steady Hand
 
-AI scientists, those autonomous agents powered by large language models (LLMs), are increasingly taking on roles traditionally reserved for human researchers. However, a recent study has raised concerns about whether these AI systems adhere to the epistemic norms that make scientific inquiry self-correcting. The study evaluated AI scientists across eight domains, conducting over 25,000 agent runs, and found that while these systems can produce results, their reasoning often lacks the scientific rigor expected in traditional research.
+Bitcoin has surged past the $78,000 mark, reflecting a significant uptick in investor interest. This rally comes amid a broader crypto market upswing, with major coins like Ethereum and Zcash also posting gains. The surge is attributed to a mix of factors, including renewed institutional interest and a favorable macroeconomic backdrop. As traditional markets grapple with uncertainty, crypto assets are increasingly seen as a hedge, driving up demand.
 
-The core issue lies in the AI&#x27;s ability to reason scientifically. While AI systems can execute workflows and generate hypotheses, their reasoning processes do not always align with the epistemic norms that guide human scientists. This misalignment raises questions about the reliability of AI-generated research and the potential consequences of relying on these systems for critical scientific advancements.
+Meanwhile, the Federal Reserve has decided to hold interest rates steady, signaling a potential shift in economic strategy. The decision comes as the Fed balances inflation concerns with the need to support economic growth. Market participants are closely watching for any hints of future rate adjustments, especially with upcoming CPI data that could influence the Fed&#x27;s next moves.
 
-Why does this matter? As AI continues to play a larger role in scientific research, ensuring that these systems adhere to established scientific norms is crucial. Without this alignment, there&#x27;s a risk that AI-generated research could lead to incorrect conclusions or misinformed decisions. The study suggests that further research is needed to understand how AI systems can be better aligned with scientific reasoning norms.
+The intersection of these two stories highlights a critical moment in the financial landscape. As Bitcoin continues its ascent, the Fed&#x27;s actions will play a pivotal role in shaping investor sentiment and market dynamics. *This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
 
-This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.
+## Also Moving · Tech Innovations and Market Trends
 
-## Also Moving · Fed&#x27;s Limited Room and Crypto Optimism
+In the tech world, Google&#x27;s announcement of their eighth-generation TPUs marks a significant leap forward in AI infrastructure. These chips are designed for the &quot;agentic era,&quot; promising enhanced performance for AI-driven applications. This development underscores the growing demand for powerful computing resources as AI continues to evolve.
 
-The Federal Reserve finds itself in a tight spot, with limited room to maneuver as market participants grow skeptical of future rate cuts. The effective federal funds rate (FFR) remains at 3.64%, and the dot plot, a chart showing Fed officials&#x27; interest rate projections, remains unchanged, indicating only one cut by 2026. This has led to increased speculation about the Fed&#x27;s next moves, especially with the upcoming CPI print and FOMC meeting.
-
-Meanwhile, the crypto market is experiencing a wave of optimism, with Bitcoin surging 4.24% to $78,746. This price increase reflects broader market sentiment, with other major cryptocurrencies also seeing significant gains. The crypto market&#x27;s resilience amid regulatory challenges and market volatility suggests a renewed confidence among investors.
+On the market front, a notable trend is the rise of no-tech tractors by an Alberta startup, offering a cost-effective alternative to traditional models. This innovation reflects a broader shift towards sustainable and accessible agricultural solutions, resonating with both small-scale farmers and large agribusinesses.
 
 ## The Lab · What AI can newly do this week
 
-This week, we&#x27;re spotlighting AI Scientist-v2, an agent designed to search over research moves rather than individual tokens. This approach allows the agent to focus on process-heavy problems where the right sequence of actions is more critical than the specific answers. AI Scientist-v2 is particularly useful in scenarios like debugging, workflow optimization, pricing, go-to-market strategies, and system integration. For more details, check out the paper [here](https://arxiv.org/abs/2604.18805). Filed under `kai/research/2026-04-22-ai-scientist-v2.md`.
+This week&#x27;s spotlight is on AI Scientist-v2, an agent designed to optimize research workflows by focusing on process rather than just outputs. Unlike traditional models that predict outcomes based on token sequences, AI Scientist-v2 evaluates research moves, making it particularly useful for complex, process-heavy problems.
+
+Why is this interesting? It allows for more nuanced decision-making in areas like debugging, workflow optimization, and system integration. By understanding the sequence of actions rather than just the end result, this tool can significantly enhance efficiency and accuracy in research environments.
+
+When would we reach for it? Consider scenarios where the process is as critical as the outcome, such as pricing strategies or go-to-market plans. This tool&#x27;s ability to reason through complex workflows makes it a valuable addition to any research toolkit. Filed under `kai/research/2026-04-22-ai-scientist-v2.md`.
 
 ## Worth Sitting With
 
-As AI systems continue to evolve, the question of their alignment with human values and norms becomes increasingly important. How do we ensure that AI systems not only perform tasks efficiently but also adhere to the ethical and epistemic standards we expect from human researchers? This challenge is not just technical but also philosophical, as it touches on the very nature of knowledge and understanding. What does it mean for an AI to &quot;know&quot; something, and how do we measure that knowledge against human standards?
+As Bitcoin&#x27;s price climbs, it&#x27;s worth pondering the broader implications of crypto&#x27;s role in the financial ecosystem. Are we witnessing a fundamental shift in how value is stored and transferred, or is this another speculative bubble waiting to burst? The answer may lie in how traditional financial systems adapt to or integrate with these digital assets. What do you think the future holds for crypto in the global economy?
 
 ## Kai&#x27;s Desk · P.S.
-- Shipped the latest analysis on AI reasoning norms.
-- In-flight: Preparing for the upcoming FOMC meeting insights.
-- Need Hyo&#x27;s input on the next AI research focus area.
+- Shipped a new feature for the AI research tool, enhancing data visualization capabilities.
+- In-flight: Preparing a report on the impact of AI on supply chain efficiency.
+- Need your input on the upcoming webinar topics—please pick your top three from the list I sent.
 
 — Kai</code></pre>
   </article>
