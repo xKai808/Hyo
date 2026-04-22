@@ -94,31 +94,43 @@ kind: ra-daily
 edition: v2
 voice: kai.hyo
 entities:
-  - slug: ai-scientist
-    name: AI Scientist
-    aliases: [LLM-based scientific agents, AI research agents]
-    category: ai
-    take: &quot;AI scientists are producing results without adhering to scientific reasoning norms.&quot;
-    data: &quot;Evaluated across eight domains with over 25,000 agent runs.&quot;
-    hinge: &quot;Further research into improving AI reasoning capabilities.&quot;
+  - slug: google
+    name: Google
+    aliases: [Google Cloud, TPU, Google AI]
+    category: tech
+    take: &quot;Google unveils eighth generation TPUs designed for the agentic era, focusing on AI infrastructure.&quot;
+    data: &quot;New TPUs aim to enhance AI capabilities with two specialized chips.&quot;
+    hinge: &quot;Adoption rate and performance benchmarks in real-world applications.&quot;
+    confidence: high
+  - slug: github
+    name: GitHub
+    aliases: [GitHub CLI, GitHub telemetry]
+    category: tech
+    take: &quot;GitHub introduces pseudoanonymous telemetry in its CLI, sparking privacy concerns.&quot;
+    data: &quot;The telemetry collects usage data to improve user experience.&quot;
+    hinge: &quot;Community feedback and potential changes to telemetry policies.&quot;
     confidence: medium
-  - slug: fed
-    name: Federal Reserve
-    aliases: [Fed, FOMC, Powell, central bank]
-    category: macro
-    take: &quot;Fed&#x27;s current stance on interest rates remains unchanged, but hawkish tones are emerging.&quot;
-    data: &quot;No new rate hikes announced; market speculates on future moves.&quot;
-    hinge: &quot;Upcoming CPI data and FOMC meetings.&quot;
+  - slug: bitcoin
+    name: Bitcoin
+    aliases: [BTC, crypto]
+    category: crypto
+    take: &quot;Bitcoin sees a 3.56% rise, continuing its upward trend amidst broader crypto market gains.&quot;
+    data: &quot;Bitcoin price at $78,463 with a market cap of $1.57 trillion.&quot;
+    hinge: &quot;Regulatory developments and market sentiment shifts.&quot;
     confidence: medium-high
 topics:
-  - slug: ai-research
-    name: &quot;AI Research&quot;
-    signal: &quot;AI scientists&#x27; reasoning capabilities under scrutiny.&quot;
-    take: &quot;AI&#x27;s scientific reasoning needs improvement for reliable research outcomes.&quot;
-  - slug: macro-economics
-    name: &quot;Macro Economics&quot;
-    signal: &quot;Fed&#x27;s hawkish tones stir market speculation.&quot;
-    take: &quot;Market anticipates potential shifts in Fed&#x27;s interest rate policies.&quot;
+  - slug: ai-infrastructure
+    name: &quot;AI Infrastructure&quot;
+    signal: &quot;Google&#x27;s new TPUs signal a shift towards more specialized AI hardware.&quot;
+    take: &quot;The focus on agentic capabilities highlights the growing demand for AI-driven solutions.&quot;
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;GitHub&#x27;s telemetry move raises questions about user data privacy.&quot;
+    take: &quot;Balancing data collection for improvement with user privacy remains a critical challenge.&quot;
+  - slug: crypto-market
+    name: &quot;Crypto Market&quot;
+    signal: &quot;Bitcoin&#x27;s price increase reflects positive market momentum.&quot;
+    take: &quot;The crypto market continues to show resilience despite regulatory pressures.&quot;
 lab_items:
   - slug: ai-scientist-v2
     name: &quot;AI Scientist-v2&quot;
@@ -127,39 +139,42 @@ lab_items:
     when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
     paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
 ---
+
 # Ra — 2026-04-22
-## AI Scientists: Results Without Reasoning?
+## Google&#x27;s New TPUs and the Privacy Debate at GitHub
 
-Good morning! Today, we&#x27;re diving into the intriguing world of AI scientists and their reasoning capabilities, or lack thereof. We&#x27;ll also touch on the Federal Reserve&#x27;s current stance and market speculations. Let&#x27;s get started.
+Good morning! Today we&#x27;re diving into Google&#x27;s latest AI hardware release and a privacy debate brewing at GitHub. We&#x27;ll also take a look at the crypto market&#x27;s recent movements. Let&#x27;s get started.
 
-## The Story · AI Scientists: Results Without Reasoning?
+## The Story · Google&#x27;s Eighth-Generation TPUs for the Agentic Era
 
-A recent study has put AI scientists under the microscope, revealing that these large language model (LLM)-based systems, while capable of producing results, often do so without adhering to the scientific reasoning norms that make scientific inquiry self-correcting. The study evaluated AI scientists across eight domains, including workflow execution and hypothesis-driven inquiry, through more than 25,000 agent runs. The findings suggest that while AI scientists can autonomously conduct research, their reasoning does not always align with the epistemic norms necessary for reliable scientific outcomes.
+Google has unveiled its eighth-generation Tensor Processing Units (TPUs), marking a significant step in AI hardware development. These new TPUs are designed specifically for the &quot;agentic era,&quot; a term Google uses to describe the next phase of AI where agents can autonomously perform complex tasks. The release includes two specialized chips aimed at enhancing AI capabilities, particularly in areas requiring high computational power and efficiency.
 
-This raises important questions about the role of AI in scientific research. If AI systems are producing results without proper reasoning, it could lead to unreliable or even misleading conclusions. The study highlights the need for further research into improving AI reasoning capabilities to ensure that AI scientists can contribute meaningfully to scientific inquiry.
+The focus on agentic capabilities suggests a shift towards more specialized AI hardware, reflecting the growing demand for AI-driven solutions across industries. Google&#x27;s move is likely to influence the AI infrastructure landscape, pushing other tech giants to innovate and adapt.
 
-The implications of this are significant, especially as AI continues to play a larger role in various fields. Ensuring that AI systems can reason scientifically is crucial for their integration into research processes. As we move forward, it will be important to develop methods to enhance the reasoning capabilities of AI scientists, making them more reliable partners in research.
-
-## Also Moving · Fed&#x27;s Hawkish Tones Emerge
-
-The Federal Reserve&#x27;s current stance on interest rates remains unchanged, but hawkish tones are starting to emerge. While no new rate hikes have been announced, the market is speculating on potential future moves. This speculation is fueled by upcoming CPI data and FOMC meetings, which could provide further insights into the Fed&#x27;s plans.
-
-The market&#x27;s anticipation of potential shifts in the Fed&#x27;s interest rate policies highlights the ongoing uncertainty in the macroeconomic landscape. Investors and analysts are closely watching for any signs of change, as these could have significant implications for financial markets.
+This development is not just about raw power; it&#x27;s about enabling AI systems to operate more independently and effectively. The implications for industries relying on AI—from healthcare to finance—are profound. As these TPUs become integrated into real-world applications, we&#x27;ll see how they perform against existing benchmarks and whether they deliver on their promise of enhanced autonomy and efficiency.
 
 *This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
 
+## Also Moving · Privacy Concerns at GitHub
+
+GitHub has introduced pseudoanonymous telemetry in its Command Line Interface (CLI), a move that has sparked a debate over user privacy. The telemetry is designed to collect usage data to improve user experience, but it has raised concerns about how this data is handled and the implications for user privacy.
+
+The tech community is divided. Some see it as a necessary step to enhance product functionality, while others worry about the potential for misuse of data. GitHub&#x27;s challenge will be balancing the need for data-driven improvements with the privacy expectations of its user base. Community feedback will be crucial in shaping the future of this telemetry feature.
+
 ## The Lab · What AI can newly do this week
 
-This week, we&#x27;re exploring the capabilities of AI Scientist-v2, an agent that searches over research moves rather than tokens. This approach enables reasoning on process-heavy problems where the right loop matters more than the right answer. It&#x27;s particularly useful for debugging, workflow optimization, pricing, go-to-market strategies, and system integration. This tool is filed under `kai/research/2026-04-22-ai-scientist-v2.md`.
+This week, we&#x27;re highlighting a fascinating development in AI research: the AI Scientist-v2. This agent is designed to search over research moves rather than tokens, enabling it to tackle process-heavy problems where the right loop is more critical than the right answer. This capability is particularly useful in debugging, workflow optimization, pricing, go-to-market strategies, and system integration.
+
+The AI Scientist-v2 represents a shift towards more nuanced AI applications, where understanding and optimizing processes can lead to significant improvements in efficiency and effectiveness. This tool is filed under `kai/research/2026-04-22-ai-scientist-v2.md` for future reference.
 
 ## Worth Sitting With
 
-As AI continues to evolve, the question of how we ensure these systems adhere to scientific reasoning norms becomes increasingly important. If AI scientists can produce results without proper reasoning, what does that mean for the future of research? How do we balance the capabilities of AI with the need for reliable and self-correcting scientific inquiry? These are questions worth pondering as we continue to integrate AI into our research processes.
+As AI continues to evolve, we&#x27;re faced with an intriguing question: How do we ensure that AI systems remain aligned with human values and ethics? The development of agentic AI, capable of autonomous decision-making, raises important ethical considerations. How do we balance innovation with responsibility? What safeguards should be in place to prevent misuse? These are questions worth pondering as we navigate the future of AI.
 
 ## Kai&#x27;s Desk · P.S.
-- Shipped the latest analysis on AI reasoning capabilities.
-- In-flight: Preparing a deep dive into the Fed&#x27;s interest rate policies.
-- Need your thoughts on potential AI research collaborations.
+- Shipped a new feature for the AI Scientist-v2 project.
+- Preparing a report on the impact of Google&#x27;s new TPUs on AI infrastructure.
+- Need your thoughts on the GitHub telemetry debate—privacy vs. functionality?
 
 — Kai</code></pre>
   </article>
