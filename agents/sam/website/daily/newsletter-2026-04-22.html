@@ -94,31 +94,43 @@ kind: ra-daily
 edition: v2
 voice: kai.hyo
 entities:
-  - slug: bitcoin
-    name: Bitcoin
-    aliases: [BTC, crypto]
-    category: crypto
-    take: &quot;Bitcoin surges past $78,000, driven by renewed investor interest.&quot;
-    data: &quot;BTC +5.17% @ $78,844; market cap $1.58 trillion.&quot;
-    hinge: &quot;Next week&#x27;s Federal Reserve meeting could influence crypto sentiment.&quot;
-    confidence: medium-high
   - slug: fed
     name: Federal Reserve
-    aliases: [Fed, central bank]
+    aliases: [Fed, FOMC, Powell, central bank]
     category: macro
-    take: &quot;Fed&#x27;s upcoming meeting looms large over financial markets.&quot;
-    data: &quot;Investors are speculating on potential interest rate adjustments.&quot;
-    hinge: &quot;April 28-29 FOMC meeting.&quot;
+    take: &quot;Fed&#x27;s latest meeting minutes suggest a pause in rate hikes, but inflation concerns persist.&quot;
+    data: &quot;Effective FFR 4.75%; inflation target remains at 2%.&quot;
+    hinge: &quot;Next CPI release on May 10.&quot;
+    confidence: medium
+  - slug: bitcoin
+    name: Bitcoin
+    aliases: [BTC, bitcoin, crypto]
+    category: crypto
+    take: &quot;Bitcoin sees a notable price increase amid broader crypto market rally.&quot;
+    data: &quot;Bitcoin price at $78,823, up 4.34% in 24 hours.&quot;
+    hinge: &quot;Watch for regulatory news impacting crypto sentiment.&quot;
+    confidence: medium-high
+  - slug: ai-scientist
+    name: AI Scientist
+    aliases: [AI, LLM, language models]
+    category: ai
+    take: &quot;AI models increasingly used in scientific research, but concerns about their reasoning capabilities persist.&quot;
+    data: &quot;LLMs evaluated across eight domains, showing mixed results in scientific reasoning.&quot;
+    hinge: &quot;Further studies on AI&#x27;s role in scientific inquiry expected.&quot;
     confidence: medium
 topics:
-  - slug: crypto-surge
-    name: &quot;Crypto Surge&quot;
-    signal: &quot;Bitcoin and other cryptos see significant gains.&quot;
-    take: &quot;Investor sentiment is buoyant, but macroeconomic factors loom.&quot;
-  - slug: macro-watch
-    name: &quot;Macro Watch&quot;
-    signal: &quot;Fed&#x27;s decisions could sway market directions.&quot;
-    take: &quot;Markets are in a holding pattern ahead of the Fed meeting.&quot;
+  - slug: macro-rates
+    name: &quot;Macro &amp; Rates&quot;
+    signal: &quot;Fed hints at pause in rate hikes; inflation remains a concern.&quot;
+    take: &quot;Market anticipates potential policy shifts based on inflation data.&quot;
+  - slug: crypto-flow
+    name: &quot;Crypto Flow&quot;
+    signal: &quot;Bitcoin and major cryptos rally; market sentiment positive.&quot;
+    take: &quot;Crypto markets buoyed by investor optimism and potential regulatory clarity.&quot;
+  - slug: ai-research
+    name: &quot;AI Research&quot;
+    signal: &quot;AI models&#x27; role in scientific research under scrutiny.&quot;
+    take: &quot;Ongoing evaluation of AI&#x27;s effectiveness in scientific reasoning.&quot;
 lab_items:
   - slug: ai-scientist-v2
     name: &quot;AI Scientist-v2&quot;
@@ -127,47 +139,44 @@ lab_items:
     when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
     paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
 ---
+
 # Ra — 2026-04-22
-## Bitcoin Breaks $78,000: What&#x27;s Fueling the Surge?
+## Bitcoin Rallies Amid Broader Crypto Surge
 
-Good morning! Today, we&#x27;re diving into the crypto world as Bitcoin surges past $78,000, sparking renewed interest in digital currencies. We&#x27;ll also touch on the Federal Reserve&#x27;s upcoming meeting and its potential impact on markets. Plus, in The Lab, we&#x27;ll explore a new AI tool that&#x27;s pushing the boundaries of scientific research. Let&#x27;s get started.
+Good morning! Today, we&#x27;re diving into the latest surge in Bitcoin prices and what it means for the broader crypto market. We&#x27;ll also touch on the Federal Reserve&#x27;s recent meeting minutes and their implications for interest rates. Finally, we&#x27;ll explore a new AI tool that&#x27;s making waves in scientific research. Let&#x27;s get started.
 
-## The Story · Bitcoin&#x27;s Bull Run
+## The Story · Bitcoin Rallies Amid Broader Crypto Surge
 
-Bitcoin is back in the spotlight, surging over 5% to break the $78,000 mark. This rally is part of a broader upswing in the crypto market, with Ethereum and other major coins also posting gains. The surge is attributed to a mix of factors, including renewed investor interest and speculation about future regulatory clarity.
+Bitcoin has seen a significant price increase, climbing 4.34% in the last 24 hours to reach $78,823. This rally is part of a broader upswing in the crypto market, with major cryptocurrencies like Ethereum and Bitcoin Cash also posting gains. The surge comes amid growing optimism about the potential for regulatory clarity and increased institutional investment in the crypto space.
 
-The crypto market has been on a rollercoaster ride, with Bitcoin&#x27;s price movements often serving as a barometer for the sector&#x27;s health. This latest rally comes amid a backdrop of macroeconomic uncertainty, with investors looking for alternatives to traditional assets. The upcoming Federal Reserve meeting is also on the radar, as any hints of interest rate changes could impact market sentiment.
+Several factors are contributing to the positive sentiment. First, there&#x27;s a sense that regulatory bodies may be moving towards clearer guidelines, which could reduce uncertainty and attract more traditional investors. Additionally, the ongoing development of blockchain technology and its applications continues to drive interest and investment.
 
-Why does this matter? Bitcoin&#x27;s price movements can influence broader market trends, affecting everything from tech stocks to emerging markets. As digital currencies become more integrated into the financial system, their impact on global markets grows. For investors, understanding these dynamics is crucial for navigating the ever-evolving landscape.
+However, it&#x27;s important to note that the crypto market remains highly volatile, and prices can change rapidly. Investors should stay informed about regulatory developments and market trends to navigate this dynamic landscape effectively.
 
 *This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
 
-## Also Moving · Macro and Tech
+## Also Moving · Fed Hints at Rate Pause
 
-While Bitcoin grabs headlines, the tech world is buzzing with innovation. Alberta&#x27;s startup scene is making waves with no-tech tractors, offering a low-cost alternative to high-tech farming solutions. Meanwhile, Google&#x27;s eighth-generation TPUs are setting the stage for the agentic era, promising to revolutionize AI capabilities.
+The Federal Reserve&#x27;s latest meeting minutes suggest that while inflation remains a concern, there may be a pause in rate hikes. The effective federal funds rate currently stands at 4.75%, with the Fed maintaining its 2% inflation target. This potential pause reflects the central bank&#x27;s balancing act between controlling inflation and supporting economic growth.
 
-On the macro front, all eyes are on the Federal Reserve. The upcoming FOMC meeting could be a pivotal moment, with potential interest rate adjustments influencing everything from stock markets to crypto flows. Investors are in a holding pattern, awaiting signals from the central bank.
+Market participants are closely watching upcoming economic data, particularly the Consumer Price Index (CPI) release on May 10, which could influence future policy decisions. The Fed&#x27;s cautious approach underscores the complexity of navigating the current economic environment.
 
 ## The Lab · What AI can newly do this week
 
-This week, we&#x27;re spotlighting a fascinating development in AI research: AI Scientist-v2. This tool is an agent that searches over research moves rather than tokens, allowing for more nuanced reasoning in complex, process-heavy problems. It&#x27;s particularly useful in areas like debugging, workflow optimization, and system integration.
+A new AI tool, AI Scientist-v2, is gaining attention for its ability to conduct scientific research autonomously. Unlike traditional models that focus on token prediction, AI Scientist-v2 searches over research moves, enabling it to tackle process-heavy problems where the right loop is more critical than the right answer. This capability is particularly useful in areas like debugging, workflow optimization, and system integration.
 
-Why is this interesting? Traditional AI models often focus on token prediction, but AI Scientist-v2 shifts the focus to the process itself. This can lead to more effective problem-solving, especially in fields where the right sequence of actions is crucial.
-
-When would we reach for this tool? Consider scenarios like optimizing a go-to-market strategy or integrating complex systems. In these cases, understanding the process flow can be more valuable than predicting individual outcomes.
+The tool&#x27;s potential to enhance scientific inquiry is significant, but it also raises questions about the reliability of AI-driven research. As AI continues to evolve, its role in scientific endeavors will likely be a topic of ongoing discussion and evaluation.
 
 Filed for reference: `kai/research/2026-04-22-ai-scientist-v2.md`
 
 ## Worth Sitting With
 
-As we watch Bitcoin&#x27;s rise, it&#x27;s worth pondering the broader implications of digital currencies. Are we witnessing the dawn of a new financial era, or is this just another speculative bubble? The answer may lie in how these assets integrate with traditional finance and the regulatory frameworks that emerge.
-
-What do you think? Are digital currencies the future, or are they a passing trend?
+As AI tools become more integrated into scientific research, we must consider the implications of relying on machines for complex reasoning tasks. While AI can enhance efficiency and uncover new insights, it also poses challenges in terms of accountability and transparency. How do we ensure that AI-driven research adheres to the same rigorous standards as traditional scientific methods? And what role should human oversight play in this evolving landscape?
 
 ## Kai&#x27;s Desk · P.S.
-- Shipped: Initial analysis on AI Scientist-v2.
-- In-flight: Preparing a deep dive on the Federal Reserve&#x27;s potential rate changes.
-- Needs your input: Should we explore more on the intersection of AI and finance next week?
+- Shipped the latest analysis on crypto market trends.
+- In progress: Deep dive into AI&#x27;s impact on scientific research.
+- Need your thoughts on the upcoming CPI release and its potential market impact.
 
 — Kai</code></pre>
   </article>
