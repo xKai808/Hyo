@@ -400,6 +400,21 @@ When ant-update.sh, PROTOCOL_ANT.md, or the HQ render function changes:
 2. **No subscription detection.** Claude Max ($200) and GPT Plus ($20) are hardcoded in
    ant-update.sh. If plans change, update `fixed_subscriptions` in the script manually.
 
+3. **CRITICAL (discovered 2026-04-22): Cowork sessions consume Anthropic API credits.**
+   api-usage.jsonl only tracks automated scripts (Aether, etc.). Cowork interactive sessions
+   draw from the same Anthropic API credit balance but are NOT logged anywhere in the Hyo project.
+   Verified: $21.09 spent since April 8 on Anthropic — only $0.24 from automated scripts,
+   ~$20.85 from Cowork sessions. A long Cowork session costs $5-9 (claude-sonnet-4-6 at
+   $3.00/MTok input, $15.00/MTok output).
+   Fix required: ant-update.sh must fetch the Anthropic usage API or use the billing CSV
+   export to capture Cowork session costs. Until fixed, ant-data.json understates real Anthropic spend.
+   Gate: "Does ant-data.json reflect total Anthropic spend including Cowork?" NO → spend is understated.
+
+   Credit separation:
+   - Claude Max subscription ($200/month flat): covers claude.ai, Cowork, Claude Code CLI (Ra, agents)
+   - Anthropic API credits: covers Cowork sessions AND automated kai_analysis.py calls
+   - OpenAI API credits: Aether only (gpt_factcheck, kai_analysis GPT synthesis) — fully tracked
+
 3. **AetherBot P&L is weekly, not monthly.** The trading P&L resets every Monday. Monthly net
    position therefore understates total trading income in months where multiple weeks were profitable.
    Fix: accumulate weekly P&L snapshots into the monthly ledger when each week closes.

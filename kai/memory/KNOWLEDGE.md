@@ -537,3 +537,17 @@ saved to kai/memory/feedback/, hydration protocol updated to read KNOWLEDGE.md e
 - Morning report health gate now uses `< 60` (below minimum), not `<= 40` (critical only).
 - Agents below 60 show in health sentence as "quality issues" — system not "healthy."
 
+
+**Anthropic API credits — real balance and cost driver (2026-04-22):**
+- Verified balance: $18.91 remaining of $40 total (two $20 grants, April 8, expire April 2027)
+- Spent: $21.09 since April 8 — ~$0.24 from automated Aether scripts, ~$20.85 from Cowork sessions
+- The main cost driver is NOT Aether — it is Cowork interactive sessions (this conversation)
+- Claude Max subscription ($200/month) covers: claude.ai, Claude Code CLI (Ra newsletter, agent improvements)
+- Anthropic API credits cover: Cowork sessions + Aether kai_analysis.py Claude calls
+- A long intensive Cowork session costs ~$5-9 in API credits (claude-sonnet-4-6: $3/MTok in, $15/MTok out)
+- api-usage.jsonl only tracks automated scripts — Cowork costs were invisible until browser scrape
+- OpenAI remaining: ~$17.94 (scraped April 18 $18.64 minus $0.70 Aether spend since)
+- OpenAI is fully tracked — only Aether scripts (gpt_factcheck, kai_analysis) use it
+- Daily automated spend: OpenAI $0.085-$0.20/day (Aether only). Anthropic automated: $0/day (quota until May 1)
+- Quota reset May 1 UTC — after that, kai_analysis.py will resume Claude calls (~$0.12/day)
+- Action needed: build Cowork session cost tracking so ant-data.json captures true total spend
