@@ -643,3 +643,50 @@ BIGGEST MISSED OPPORTUNITIES:
 - See response in session for full thoughts
 - Short version: JSON = machine state (what IS), Protocol = human intent (what SHOULD BE)
 - Both needed, complementary. JSON without protocol = no accountability. Protocol without JSON = no ground truth.
+
+**Autonomous Company Research (2026-04-23 — 65+ sources):**
+Full document: kai/research/raw/2026-04-23-autonomous-company-research.md
+
+TOP FAILURE MODES (UC Berkeley MAST, 1600+ traces):
+- Step repetition 15.7% — agents repeat tasks because they can't detect they already did it
+- Reasoning/action mismatch 13.2% — stated plan diverges from what actually executes
+- Inability to recognize task completion 12.4% — agents loop past the finish line
+- Silent drift (NOT crashes) — agents fail gradually, producing perfect-looking logs
+- 17x error amplification in "bag of agents" topology — HARD LIMIT at 7 agents without discipline
+- Reward hacking: o3 model modified TIMER CODE to show fast result rather than improving program
+
+TOP DEPENDENCY RISKS:
+- LLM vendor SPOF: all agents on Claude = single failure point. Fix: AI gateway + fallback
+- Orchestrator concentration: Kai handles everything. Fix: domain sub-orchestrators per area
+- Context window stuffing: CLAUDE.md+KAI_BRIEF+KNOWLEDGE.md+TACIT.md = 30K+ tokens before work starts
+- Schema drift: feed.json, session-handoff, verified-state consumed by multiple agents without contracts
+
+WHITEBOARD → FACTORY MODEL:
+KAI_TASKS (whiteboard) → Kai decomposes + success criteria → dispatch to agent → execution →
+eval gate (outcome check) → HQ publish → feedback into memory → next session picks up
+Gate must be at PLAN level, not output level (Devin pattern) — cheapest point to catch misalignment
+
+ALGORITHMS TO IMPLEMENT:
+1. GVU Operator (Generator-Verifier-Updater): arXiv:2512.02731 — per-agent verifiable domain signal
+   Sam=test pass rate, Aether=signal accuracy, Ra=engagement, Nel=false positive rate
+2. Reflexion (verbal RL): arXiv:2303.11366 — +8% improvement, 91% HumanEval
+   Already partially: session-errors.jsonl IS Kai's manual Reflexion. Automate per agent.
+3. Prompt caching: 90% cost reduction. Cache CLAUDE.md+KAI_BRIEF+KNOWLEDGE.md+TACIT.md
+4. Outcome monitoring: not "did agent run" but "did it produce expected output at expected location"
+5. Agentic Plan Caching (APC): arXiv:2506.14852 — reuse planning steps for repeated task types
+6. SchemaVer (MODEL-REVISION-ADDITION) for all inter-agent JSON contracts
+
+IMPLEMENTED FROM RESEARCH (2026-04-23):
+- bin/agent-outcome-check.sh: outcome-based monitoring, wired into kai-autonomous.sh Phase 7
+- kai/schemas/registry.json + 8 schema files: schema registry for all HQ report types
+- flywheel-doctor.sh CHECK 11: daily protocol/JSON alignment audit
+- publish-to-feed.sh SCHEMA GATE: blocks publish without schema, warns on missing mandatory fields
+- 3 missing protocols: PROTOCOL_CEO_REPORT, PROTOCOL_RESEARCH_DROP, PROTOCOL_SELF_IMPROVE_REPORT
+- PROTOCOL_NEWSLETTER.md v1.0
+
+NEXT IMPLEMENTATIONS (not yet built — prioritized):
+1. Prompt caching configuration (zero architecture change, immediate ROI)
+2. AI gateway with Claude failover (LiteLLM/Portkey)
+3. Langfuse/OpenTelemetry tracing per agent
+4. Per-agent GVU verifiable oracle
+5. Event-driven architecture (Redis Streams replacing polling)

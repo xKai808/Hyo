@@ -1,4 +1,4 @@
-# aether Self-Review — 2026-04-23T07:28
+# aether Self-Review — 2026-04-23T07:49
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-23-aether-results.json**: WHAT triggers this? Found 0 callers.
@@ -6,6 +6,8 @@
 - ✗ **kai-self-patch.sh**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 - ✗ **improvement-approval.sh**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **agent-outcome-check.sh**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
@@ -60,6 +62,6 @@ Questions for aether to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 16
-- Gate results: trigger=12/15, visibility=checked, resolutions=6, adoption=-5/5
+- Findings: 17
+- Gate results: trigger=12/16, visibility=checked, resolutions=6, adoption=-5/5
 

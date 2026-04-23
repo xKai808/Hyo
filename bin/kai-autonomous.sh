@@ -623,7 +623,20 @@ check_and_dispatch 17 0 "flywheel-doctor-evening" \
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 7: HEALTH SCORE + REPORTING
 # ═══════════════════════════════════════════════════════════════════════════════
-log_section "PHASE 7: HEALTH SCORE"
+log_section "PHASE 7: OUTCOME CHECK + HEALTH SCORE"
+
+# Run outcome-based monitoring (not activity-based)
+# Research: agents silently fail for hours with perfect activity logs (DEV Community)
+# The correct test: did agent produce expected OUTPUT at expected LOCATION
+if [[ -f "$HYO_ROOT/bin/agent-outcome-check.sh" ]]; then
+  OUTCOME_FAILURES=$(HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/agent-outcome-check.sh" 2>>"$LOG" || echo 0)
+  if [[ "$OUTCOME_FAILURES" -gt 0 ]] 2>/dev/null; then
+    log "⚠️ Outcome check: $OUTCOME_FAILURES expected output(s) missing"
+    HEALTH_SCORE=$((HEALTH_SCORE - (OUTCOME_FAILURES * 10)))
+  else
+    log "✓ Outcome check: all expected outputs present"
+  fi
+fi
 
 # Cap at 100
 [[ $HEALTH_SCORE -gt 100 ]] && HEALTH_SCORE=100
