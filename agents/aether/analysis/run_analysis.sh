@@ -105,11 +105,9 @@ if [[ "$LINE_COUNT" -lt 100 ]]; then
     LINE_COUNT="$YESTERDAY_COUNT"
     # Adjust TODAY so analysis is filed under the correct date (the date of the data)
     # Only if today's log is truly a stub (< 10 lines)
-    if [[ "$LINE_COUNT" -gt 100 ]] && python3 -c "
-import sys
-n=$(wc -l < '$(ls -t "$AETHER_LOG_DIR"/AetherBot_*.txt 2>/dev/null | head -1)' 2>/dev/null || echo 0)
-sys.exit(0 if int(n) < 10 else 1)
-" 2>/dev/null; then
+    # Fixed: was broken bash/Python hybrid (line 108 error). Now pure bash.
+    LATEST_LOG_LINES=$(wc -l < "$(ls -t "$AETHER_LOG_DIR"/AetherBot_*.txt 2>/dev/null | head -1)" 2>/dev/null || echo 0)
+    if [[ "$LINE_COUNT" -gt 100 ]] && [[ "$LATEST_LOG_LINES" -lt 10 ]]; then
       log "Re-labeling analysis as $YESTERDAY (today's file had <10 lines — stub)"
       TODAY="$YESTERDAY"
       REPO_ANALYSIS_FILE="$ANALYSIS_DIR/Analysis_${TODAY}.txt"

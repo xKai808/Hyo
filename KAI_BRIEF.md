@@ -843,7 +843,26 @@ Full details: `kai/queue/healthcheck-latest.json`. **Most important single item:
 
 ---
 
-## Current state (as of 2026-04-23T10:03Z / 04:03 MT — automated 2h healthcheck)
+## Current state (as of 2026-04-23T14:04Z / 08:04 MT — automated 2h healthcheck)
+
+**Healthcheck findings (Cowork-scheduled probe, 08:04 MT):**
+- **P1 — dead-loop detector still flagging 5 agents (nel/sam/ra/aether/dex) as "assessment_stuck."** This is the 6th+ consecutive probe with the same cluster. Root cause is not that agents are halted — all 5 produced log output and evolution entries in the last 2h — but that their self-reported assessment text is unchanged ("routine maintenance", "metrics cycle complete"). Auto-remediation dispatch at 14:01:38Z added 5 more DELEGATE entries to an already-uncleared backlog. **Structural fix required:** either tune the dead-loop detector to accept healthy steady-state, or require agents emit a growth/ARIC ticket whenever assessment is unchanged 3+ cycles — whichever lands first closes the loop.
+- **P1 — delegation-closure backlog compounding.** Last 2h: 40 DELEGATE, 237 REPORT, **0 RESOLVE** in `log.jsonl`. Reports are flowing back, but nothing flips to RESOLVE. Same underlying pattern as yesterday's "16 P1 DELEGATED tasks" headline. Need cascade-receipt tracking: a REPORT that cites a task_id should auto-emit RESOLVE when it passes verification.
+- **P2 — 21 failed queue jobs >24h old** still sitting in `kai/queue/failed/`, including 2 zero-byte sentinels (00e62347, 4ae87c70) and `cmd-1776912672-157` (vercel token ops blocked by security check). Archive or triage next session.
+- **P3 — Big commit `f45be04` landed clean at 13:50Z** (51 files, 4.9k+ insertions — autonomous company foundation research + `bin/agent-outcome-check.sh`). GitHub LFS warning: `kai/tickets/tickets.jsonl` is 51.89 MB. Not blocking yet, but roll a ticket archive before the file hits the 100 MB hard limit.
+
+**Queue & agents:**
+- Queue healthy: 0 pending, 0 running. Last 3 completed exit_code=0 (queue-hygiene, the big commit, ra newsletter).
+- All 6 ACTIVE.md files <1h old — no staleness.
+- Today's output: nel=15, sam=1, ra=3, aether=2, dex=3, ant=1, kai=0 (kai logs not runner-driven).
+
+**Most important single item:** The dead-loop detector is crying wolf on a healthy steady-state across 5 agents while the delegation-closure backlog silently grows. Both need the same fix — a RESOLVE pathway — before another cascade fires. Do not dispatch more auto-remediation until the closure loop is wired; each new DELEGATE adds to the backlog without a matching RESOLVE.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## Current state (as of 2026-04-23T10:03Z / 04:03 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (Cowork-scheduled probe):**
 - **P1 — 16 P1 SAFEGUARD/AUTO-REMEDIATE tasks STILL in DELEGATED status.** Daily audit 2026-04-23 logged this at 08:06:50Z (duplicate entry — flagger emitted twice). Indicates agents are receiving cascades but no REPORT/RESOLVE coming back. Same auto-remediation-loop symptom flagged in last 3+ healthchecks. **Action:** next interactive session must grep `log.jsonl` for task IDs in DELEGATED state and force a manual close-out or reissue with tighter SLA.

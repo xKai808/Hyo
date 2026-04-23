@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key><string>com.hyo.aether-analysis-retry</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>
+# Retry aether analysis publish at 06:00 MT if 23:00 run failed.
+# The 23:00 run may fail when AetherBot log is sparse (trading just started).
+# By 06:00, gpt_factcheck.py has created a complete Analysis file overnight.
+# This retry publishes that analysis to feed.json if it wasn't already.
+ROOT=~/Documents/Projects/Hyo
+TODAY=$(TZ=America/Denver date +%Y-%m-%d)
+ANALYSIS="$ROOT/agents/aether/analysis/Analysis_${TODAY}.txt"
+
+# Check if already in feed
+ALREADY_PUBLISHED=$(python3 -c "
+import json
+with open('$ROOT/agents/sam/website/data/feed.json') as f:
+    feed = json.load(f)
+ids = [r.get('id','') for r in feed.get('reports',[])]
+print('yes' if 'aether-analysis-$TODAY' in ids else 'no')
+" 2>/dev/null || echo "no")
+
+if [[ "$ALREADY_PUBLISHED" == "yes" ]]; then
+    echo "[aether-retry] Already published for $TODAY — skipping"
+    exit 0
+fi
+
+if [[ ! -f "$ANALYSIS" ]]; then
+    echo "[aether-retry] No analysis file found for $TODAY — skipping"
+    exit 0
+fi
+
+echo "[aether-retry] Publishing analysis for $TODAY (was not published at 23:00)"
+HYO_ROOT="$ROOT" bash "$ROOT/bin/aether-publish-analysis.sh" "$TODAY" "$ANALYSIS" >> /tmp/hyo-aether-retry.log 2>&1
+echo "[aether-retry] Done"
+        </string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key><integer>6</integer>
+        <key>Minute</key><integer>15</integer>
+    </dict>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key><string>/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+        <key>HYO_ROOT</key><string>/Users/kai/Documents/Projects/Hyo</string>
+    </dict>
+    <key>StandardOutPath</key><string>/tmp/hyo-aether-retry.log</string>
+    <key>StandardErrorPath</key><string>/tmp/hyo-aether-retry.log</string>
+</dict>
+</plist>

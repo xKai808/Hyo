@@ -1,72 +1,75 @@
 {
-  "ts": "2026-04-23T13:46:35Z",
+  "ts": "2026-04-23T14:04:01Z",
   "status": "ISSUES",
   "issues": 5,
-  "warnings": 1,
+  "warnings": 2,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "dead-loop-recurring",
+      "detail": "5 agents (nel/sam/ra/aether/dex) flagged dead-loop on the 14:01Z cycle \u2014 pattern persists across 6+ consecutive probes. Auto-remediation dispatches are not breaking the loop because the 'stuck' state IS the agents' self-reported assessment ('routine maintenance', 'metrics cycle complete'), not actual halt. Structural fix needed: either (a) change dead-loop detector to ignore healthy steady-state, or (b) require agents emit a growth/ARIC ticket when assessment is unchanged 3+ cycles."
+    },
+    {
+      "severity": "P1",
+      "area": "delegation-closure",
+      "detail": "Last 2h: 40 DELEGATE / 237 REPORT / 0 RESOLVE in log.jsonl. Reports flow in but nothing reaches RESOLVE state. Same pattern as prior healthcheck's '16 P1 DELEGATED tasks still open' headline. Requires cascade receipt tracking or explicit RESOLVE action on REPORT match."
+    },
+    {
+      "severity": "P2",
+      "area": "failed-queue-backlog",
+      "detail": "21 failed jobs in kai/queue/failed/ older than 24h, including 2 zero-byte sentinels (00e62347, 4ae87c70) and cmd-1776912672-157 blocked-by-security-check. Archive or triage at next interactive session."
+    },
     {
       "severity": "P3",
       "area": "agent-output",
-      "detail": "hyo has no output today"
+      "detail": "hyo category still shows no output today (expected \u2014 hyo is not a runner-driven agent). Suppressable false positive from prior healthcheck."
     },
     {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "sam stuck in dead-loop (assessment_stuck): routine engineering check"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
+      "severity": "P3",
+      "area": "observation",
+      "detail": "Last big commit (f45be04 at 13:50Z, 51 files, 4.9k+ insertions) landed clean. kai/tickets/tickets.jsonl is now 51.89 MB \u2014 GitHub LFS warning emitted on push. Consider rolling ticket archive before file crosses 100 MB hard limit."
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Logged findings. No new dispatches \u2014 prior 14:01Z healthcheck already dispatched auto-remediation for 5 P1 dead-loops; repeating that in the same window would compound the delegation-closure backlog.",
   "recent_queue_results": [
+    {
+      "id": "25edeac1-e124-4f51-92bf-5bd040e4c859",
+      "status": "ok",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/queue-hygiene.",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776952238-401",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Research + implement: autonomous company",
+      "exit_code": 0
+    },
     {
       "id": "32d07ee6-67c1-437c-9f58-d167a6c47e19",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "0b7cb48b-d992-4e91-bd95-cd684172252b",
-      "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "effcf772-ed62-4470-a6c2-800dbb043933",
-      "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "10ce1080-7755-45af-a059-5cf8c18ca103",
-      "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776950948-390",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Wire JSON/Protocol e",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/agents/ra/pipeline",
       "exit_code": 0
     }
   ],
-  "next_check": "in 2 hours (30min if P0 found)"
+  "queue_state": {
+    "pending": 0,
+    "running": 0,
+    "completed_total": 1711,
+    "failed_total": 23,
+    "stale_failed_gt_24h": 21
+  },
+  "active_md_staleness": {
+    "all_fresh": true,
+    "max_age_hours": 0
+  },
+  "agent_output_today": {
+    "nel": 15,
+    "sam": 1,
+    "ra": 3,
+    "aether": 2,
+    "dex": 3,
+    "ant": 1,
+    "kai": 0
+  },
+  "next_check": "in 2 hours"
 }
