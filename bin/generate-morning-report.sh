@@ -762,8 +762,8 @@ _sicq_critical_agents = []
 try:
     _sq = json.load(open(os.path.join(root, "kai/ledger/sicq-latest.json"))) if os.path.exists(os.path.join(root, "kai/ledger/sicq-latest.json")) else {}
     for _a, _s in _sq.get("scores", {}).items():
-        if _s <= 40:  # SICQ_LOW_THRESHOLD — same as flywheel-doctor.sh
-            _sicq_critical_agents.append(f"{_a.capitalize()}({_s}/100)")
+        if _s < 60:  # Below minimum threshold (60) — not just critical (40)
+            _sicq_critical_agents.append(f"{_a.capitalize()}({_s}/100 — min:60)")
 except Exception:
     pass
 

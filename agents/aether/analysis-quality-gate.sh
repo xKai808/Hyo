@@ -248,7 +248,7 @@ PYEOF
         PASS*) qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "$QC13_RESULT" ;;
         WARN*) qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "rounding gap only — $QC13_RESULT" ;;
         FAIL*) qcheck "QC13" "Trade P&L reconciles with balance delta" "fail" "$QC13_RESULT — sum of trades does not match balance change" ;;
-        SKIP*) qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "no balance table found — check skipped" ;;
+        SKIP*) qcheck "QC13" "Trade P&L reconciles with balance delta" "fail" "insufficient data — balance table or subtotals missing from analysis" ;;
         *)     qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "QC13 parse error — skipped" ;;
     esac
 fi

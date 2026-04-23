@@ -414,17 +414,40 @@ STALE_PYEOF
 STALE_COUNT=$(echo "$STALE_TICKET_COUNT" | head -1)
 if [[ "$STALE_COUNT" -gt 0 ]]; then
     log "⚠️ ACTIVE.md staleness: $STALE_COUNT ticket(s) >72h without resolution"
+    # Load existing open escalation titles to prevent duplicate tickets every cycle
+    EXISTING_ESCALATIONS=$(python3 -c "
+import json
+titles = set()
+try:
+    with open('$HYO_ROOT/kai/tickets/tickets.jsonl') as f:
+        for line in f:
+            t = json.loads(line.strip())
+            if 'escalat' in t.get('title','').lower() and t.get('status','') not in ('CLOSED','RESOLVED','ARCHIVED'):
+                titles.add(t['title'][:60])
+except: pass
+print('\n'.join(titles))
+" 2>/dev/null || true)
+
+    NEW_ESCALATIONS=0
     while IFS= read -r stale_line; do
         [[ "$stale_line" != STALE:* ]] && continue
         IFS=: read -r _ s_agent s_ticket s_age <<< "$stale_line"
+        TITLE="Staleness escalation: $s_ticket open ${s_age} without resolution"
+        # Skip if an escalation for this ticket already exists (dedup gate)
+        if echo "$EXISTING_ESCALATIONS" | grep -qF "Staleness escalation: $s_ticket"; then
+            log "  ↷ $s_agent/$s_ticket — escalation already open, skipping"
+            continue
+        fi
         log "  → $s_agent/$s_ticket (${s_age} old) — opening P1 escalation"
         if [[ -f "$HYO_ROOT/bin/ticket.sh" ]]; then
             HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/ticket.sh" create \
               --agent "$s_agent" \
-              --title "Staleness escalation: $s_ticket open ${s_age} without resolution" \
+              --title "$TITLE" \
               --priority "P1" --type "escalation" --created-by "kai-autonomous" 2>/dev/null || true
+            NEW_ESCALATIONS=$((NEW_ESCALATIONS+1))
         fi
     done <<< "$STALE_TICKET_COUNT"
+    log "  Escalations opened this cycle: $NEW_ESCALATIONS (existing skipped)"
 else
     log "✓ ACTIVE.md staleness: all tickets updated within 72h"
 fi

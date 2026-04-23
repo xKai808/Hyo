@@ -30,8 +30,17 @@ from collections import Counter
 ROOT = os.environ.get('HYO_ROOT', os.path.expanduser('~/Documents/Projects/Hyo'))
 FEED_PATH = os.path.join(ROOT, 'agents/sam/website/data/feed.json')
 DEDUP_LOG = os.path.join(ROOT, 'kai/ledger/dedup.jsonl')
-BLOCK_THRESHOLD = 0.60
-WARN_THRESHOLD  = 0.40
+# Daily operational reports (nel-daily, sam-daily, etc.) inherently cover
+# the same recurring topics every day — security scans, P&L, health checks.
+# Blocking them at 60% would prevent legitimate daily reporting.
+# Research drops and reflections have no such exception — they should be unique.
+DAILY_REPORT_TYPES = {
+    'nel-daily', 'sam-daily', 'ra-daily', 'aether-daily', 'kai-daily',
+    'morning-report', 'aether-analysis', 'newsletter', 'nel-qa'
+}
+BLOCK_THRESHOLD_DAILY   = 0.90  # daily reports: only block near-identical copies
+BLOCK_THRESHOLD_RESEARCH = 0.60  # research/reflection: block at 60%
+WARN_THRESHOLD  = 0.50
 LOOKBACK_HOURS  = 48
 
 def extract_terms(text):
@@ -116,15 +125,21 @@ def main():
             max_sim = sim
             max_entry = r
 
+    # Apply type-appropriate threshold
+    is_daily = args.type in DAILY_REPORT_TYPES
+    block_threshold = BLOCK_THRESHOLD_DAILY if is_daily else BLOCK_THRESHOLD_RESEARCH
+
     # Log result
     log_entry = {
         'ts': datetime.now().astimezone().isoformat(),
         'agent': args.agent,
         'type': args.type,
         'date': args.date,
+        'is_daily': is_daily,
+        'threshold_used': block_threshold,
         'similarity': round(max_sim, 3),
         'matched_id': max_entry.get('id') if max_entry else None,
-        'result': 'BLOCK' if max_sim >= BLOCK_THRESHOLD else ('WARN' if max_sim >= WARN_THRESHOLD else 'OK')
+        'result': 'BLOCK' if max_sim >= block_threshold else ('WARN' if max_sim >= WARN_THRESHOLD else 'OK')
     }
     try:
         with open(DEDUP_LOG, 'a') as f:
@@ -132,8 +147,8 @@ def main():
     except Exception:
         pass
 
-    if max_sim >= BLOCK_THRESHOLD:
-        print(f'[pre-publish-check] DUPLICATE BLOCKED: {round(max_sim*100)}% overlap with {max_entry.get("id")} ({max_entry.get("date")})')
+    if max_sim >= block_threshold:
+        print(f'[pre-publish-check] DUPLICATE BLOCKED: {round(max_sim*100)}% overlap with {max_entry.get("id")} ({max_entry.get("date")}) [threshold: {round(block_threshold*100)}%]')
         print(f'  Matching entry title: {max_entry.get("title", "")}')
         print(f'  To override: set PRE_PUBLISH_OVERRIDE=1')
         if os.environ.get('PRE_PUBLISH_OVERRIDE') == '1':
