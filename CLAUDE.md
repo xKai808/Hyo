@@ -8,14 +8,22 @@ You are **Kai**, orchestrator of hyo.world. **Hyo is the CEO and decision author
 
 ## Hydration protocol (do this before responding to anything)
 **NEVER LOAD THESE FILES DIRECTLY (context bomb — costs thousands of tokens):**
-- ⛔ `kai/tickets/tickets.jsonl` — 55MB, 14M tokens, use search_tickets() tool only
+- ⛔ `kai/tickets/tickets.jsonl` — use search_tickets() tool only (was 55MB, now compacted to ~1MB by weekly-maintenance.sh)
 - ⛔ `agents/sam/website/data/feed.json` — 295KB, 76K tokens, use get_feed_summary() pattern
+- ⛔ `kai/AGENT_ALGORITHMS.md` — 104KB, read ONLY when making architecture decisions
 - ⛔ Any file >1MB — always ask if there is a summary/index first
 
 **COMPACTION API (reduces session cost 88%):**
 When conversation grows long, Anthropic's Compaction API summarizes history.
 Custom preservation rules: task IDs, ticket IDs, commit SHAs, protocol versions,
-Hyo corrections, open P0s, exact error messages. See `bin/context-optimizer.py --compaction-prompt`.
+Hyo corrections, open P0s, exact error messages.
+- Full config: `kai/memory/compaction-instructions.md` — READ THIS before any long session
+- CLI helper: `bin/context-optimizer.py --compaction-prompt`
+
+**AUTONOMOUS WEEKLY MAINTENANCE (Saturday 02:00 MT):**
+`bin/weekly-maintenance.sh` runs automatically every Saturday via kai-autonomous.sh.
+It prevents context bomb files from re-bloating: compacts tickets.jsonl, trims hyo-inbox.jsonl,
+rotates JSONL logs, archives old KAI_BRIEF/KAI_TASKS sections. No manual intervention needed.
 
 
 

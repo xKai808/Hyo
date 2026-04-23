@@ -4,7 +4,7 @@
 # Every new session reads this. It never gets stale-pruned. It grows as Hyo instructs.
 # Add to it immediately whenever Hyo gives significant feedback, decisions, or corrections.
 #
-# Last updated: 2026-04-18
+# Last updated: 2026-04-23
 
 ---
 
@@ -747,4 +747,44 @@ NEXT IMPLEMENTATIONS (not yet built — prioritized):
 - AI gateway failover: LiteLLM as middleware, 30% additional cost reduction from routing
 - Plan caching (APC): reuse planning steps for repeated task types (Aether daily, Ra newsletter)
 - Langfuse tracing: open source, zero cost, traces every tool call for debugging
+
+---
+
+## S30 SESSION DECISIONS (2026-04-23)
+
+**Hyo directives (non-negotiable, stated explicitly):**
+1. Hard API credit cap: <$1.00/day total. Ant owns enforcement. No exceptions.
+2. Aether daily analysis continues. Hyo does weekly manual review (not automated).
+3. Context window saturation is paramount — $7/session → must stay <$0.27/session.
+4. Automation over prompting — Hyo will not prompt for things that can be automated.
+5. Every improvement must be systemic, not patchwork. If a fix requires a rule added to .md, the fix is incomplete.
+6. Cowork sessions are the primary Anthropic API cost (not agent runs). Session hygiene = cost control.
+
+**Architecture changes shipped in S30:**
+- `bin/weekly-maintenance.sh` runs every Saturday 02:00 MT — compacts tickets, trims inbox, rotates logs
+- `kai/memory/compaction-instructions.md` — Anthropic Compaction API preservation config
+- Context: 620K tokens → 89K tokens (86% reduction, $1.86 → $0.27 per session start)
+- tickets.jsonl: 53.8MB → 0.8MB (notes arrays were accumulating 11K cycle timestamps)
+- hyo-inbox.jsonl: 1.7MB → 18KB (6,190 messages, all unread — never trimmed)
+- Vercel deploy throttle: 96/day → ~24/day (55-min minimum between pushes)
+- Podcast rescheduled to 07:30 MT (was 03:00 MT before morning report content existed)
+- Ant DAILY_ALERT_USD: $50 → $1 (three tiers: $0.25 INFO, $0.75 WARN, $1.00 P0)
+- Schema registry: 8 schemas in kai/schemas/, coupled to publish-to-feed.sh gate
+- flywheel-doctor.sh CHECK 11: protocol/JSON alignment audit
+
+**Root cause fixes shipped:**
+- Aurora terminal font: synthesize.py strip_llm_artifacts() removes unclosed code fences at source
+- Morning report SICQ/OMP scores missing: FEED_PYEOF reads score files directly (separate process)
+- run_analysis.sh line 108: fixed bash/Python hybrid with pure bash LATEST_LOG_LINES expansion
+- agent-self-improve.sh: flock (Linux-only) → mkdir-based locking (POSIX portable, macOS)
+- hq.html JS syntax: nested backtick template literals → string concatenation
+- ant-update.sh NameError: moved total_anthropic definition before if _scraped: block
+
+**Still pending (S30 → S31):**
+- Compaction API: needs Anthropic `compact-2026-01-12` beta header in Cowork API calls (infrastructure)
+- Prompt caching on CLAUDE.md + KAI_BRIEF + KNOWLEDGE + TACIT blocks (same)
+- tickets.jsonl → Git LFS (GitHub warning on 53MB, now 0.8MB but LFS still better)
+- Context rotation gate in ticket.sh (prevent notes accumulating again)
+- Anthropic billing API for individual accounts: not available (no admin key option)
+  → Best available: browser scrape + daily diff via ant-fetch-balance.py (one-time Keychain auth needed)
 
