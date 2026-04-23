@@ -127,13 +127,44 @@ except Exception as _pe:
     _PROTOCOL_CONTENT = "(PROTOCOL FILE UNAVAILABLE — kai_analysis.py could not load agents/aether/PROTOCOL_DAILY_ANALYSIS.md)"
     print(f"[protocol] WARNING: Could not load protocol: {_pe!r} — using fallback instructions only")
 
+# ── Load stable context blocks for prompt caching ────────────────────────────
+# These files change rarely (session-to-session) and qualify as stable cache blocks.
+# With cache_control: ephemeral, cost drops from $3.00/MTok to $0.30/MTok (90% reduction).
+# Min cacheable: 1,024 tokens. Each of these files is 2K-20K tokens — all qualify.
+# Source: Anthropic prompt caching docs; ProjectDiscovery 59% savings; Claude Code 92% hit rate.
+def _load_stable_file(path: str, label: str) -> str:
+    try:
+        with open(path, "r") as f:
+            content = f.read()
+        print(f"[cache-block] Loaded {label} ({len(content.split()):,} words)")
+        return content
+    except Exception as e:
+        print(f"[cache-block] WARNING: Could not load {label}: {e!r}")
+        return f"({label} unavailable)"
+
+_KAI_BRIEF_CONTENT = _load_stable_file(
+    os.path.join(HYO_ROOT, "KAI_BRIEF.md"), "KAI_BRIEF")
+_TACIT_CONTENT = _load_stable_file(
+    os.path.join(HYO_ROOT, "kai/memory/TACIT.md"), "TACIT")
+
+# CLAUDE_SYSTEM is the static portion of the system prompt (for cache hit rate).
+# Dynamic values (balance, version) go into a separate non-cached block appended per call.
 CLAUDE_SYSTEM = f"""MANDATORY: You are executing the AetherBot daily analysis pipeline.
 Follow PROTOCOL_DAILY_ANALYSIS.md (loaded below) exactly for all output format, section markers,
 trade ledger structure, GPT critique requirements, and the 25-point completion checklist.
 
 {_PROTOCOL_CONTENT}
 
-=== AUTOMATED PIPELINE DYNAMIC CONTEXT ===
+REMINDER: Output MUST include all three section markers:
+  === CLAUDE PRIMARY ANALYSIS ===
+  === GPT CRITIQUE ===
+  === FINAL SYNTHESIS ===
+The post-publish quality gate (analysis-gate.py) blocks publishing if these are absent.
+"""
+
+# Dynamic context injected per-call (not cached — changes each run)
+def _build_dynamic_context() -> str:
+    return f"""=== AUTOMATED PIPELINE DYNAMIC CONTEXT ===
 Current deployed version: {CURRENT_VERSION}
 Next build: {NEXT_VERSION}
 
@@ -142,12 +173,6 @@ Balance ledger:
 
 Open issues:
 {OPEN_ISSUES}
-
-REMINDER: Output MUST include all three section markers:
-  === CLAUDE PRIMARY ANALYSIS ===
-  === GPT CRITIQUE ===
-  === FINAL SYNTHESIS ===
-The post-publish quality gate (analysis-gate.py) blocks publishing if these are absent.
 """
 
 GPT_SYSTEM = """You are the adversarial analyst for AetherBot — a Kalshi prediction market trading bot \
@@ -301,25 +326,62 @@ def _log_api_usage(provider: str, model: str, in_tok: int, out_tok: int, notes: 
 
 def call_claude(messages: list) -> str:
     def _do():
-        # Prompt caching: tag system prompt as cacheable (10% cost vs 100% on re-read)
-        # Source: Anthropic prompt caching docs | 90% cost reduction research finding
-        # Min cacheable block: 1,024 tokens. CLAUDE_SYSTEM is typically 2K+ tokens → qualifies.
+        # ── PROMPT CACHING: multi-block system with 90% cost reduction ──────
+        # Stable blocks (PROTOCOL + KAI_BRIEF + TACIT) are tagged cache_control: ephemeral.
+        # After first read, these cost $0.30/MTok instead of $3.00/MTok.
+        # Dynamic context (balance, version) is a plain block — changes each run, no cache.
+        # Anthropic charges cache write on first call, cache read (10%) on subsequent calls.
+        # Cache TTL: 5 minutes (ephemeral). Daily analysis runs once → single write, zero reads.
+        # Across multi-turn calls in the same analysis session, subsequent calls hit cache.
+        #
+        # ── COMPACTION API: compact-2026-01-12 beta ──────────────────────────
+        # Reduces conversation history by 88% when context grows long (>80K tokens).
+        # Custom preservation: ticket IDs, commit SHAs, protocol versions, Hyo corrections.
+        # See: kai/memory/compaction-instructions.md for full preservation rules.
+        # Both betas active simultaneously: prompt-caching-2024-07-31 + compact-2026-01-12.
         response = anthropic_client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=4096,
-            system=[{
-                "type": "text",
-                "text": CLAUDE_SYSTEM,
-                "cache_control": {"type": "ephemeral"}
-            }],
+            system=[
+                # Block 1: Protocol + analysis spec (stable — highest cache value)
+                {
+                    "type": "text",
+                    "text": CLAUDE_SYSTEM,
+                    "cache_control": {"type": "ephemeral"}
+                },
+                # Block 2: KAI_BRIEF — session continuity memory (stable across analysis calls)
+                {
+                    "type": "text",
+                    "text": f"=== KAI_BRIEF (session state) ===\n{_KAI_BRIEF_CONTENT[:8000]}",
+                    "cache_control": {"type": "ephemeral"}
+                },
+                # Block 3: TACIT — Hyo preferences and hard rules (stable)
+                {
+                    "type": "text",
+                    "text": f"=== TACIT (Hyo operating rules) ===\n{_TACIT_CONTENT[:4000]}",
+                    "cache_control": {"type": "ephemeral"}
+                },
+                # Block 4: Dynamic context — NOT cached (changes every run)
+                {
+                    "type": "text",
+                    "text": _build_dynamic_context()
+                }
+            ],
             messages=messages,
-            betas=["prompt-caching-2024-07-31"]
+            betas=["prompt-caching-2024-07-31", "compact-2026-01-12"]
         )
         try:
             _u = getattr(response, "usage", None)
             _in = int(getattr(_u, "input_tokens", 0) or 0) if _u else 0
             _out = int(getattr(_u, "output_tokens", 0) or 0) if _u else 0
-            _log_api_usage("anthropic", "claude-sonnet-4-6", _in, _out, "kai_analysis.call_claude")
+            _cache_read = int(getattr(_u, "cache_read_input_tokens", 0) or 0) if _u else 0
+            _cache_write = int(getattr(_u, "cache_creation_input_tokens", 0) or 0) if _u else 0
+            notes = f"cache_read={_cache_read} cache_write={_cache_write}"
+            _log_api_usage("anthropic", "claude-sonnet-4-6", _in, _out, f"kai_analysis.call_claude {notes}")
+            if _cache_read > 0:
+                print(f"[cache] Hit: {_cache_read:,} tokens read from cache (saved ~${_cache_read * 0.0027 / 1000:.4f})")
+            if _cache_write > 0:
+                print(f"[cache] Write: {_cache_write:,} tokens written to cache")
         except Exception:
             pass
         return response.content[0].text
