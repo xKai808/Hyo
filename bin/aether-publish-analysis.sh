@@ -189,6 +189,11 @@ if not balance_in_final:
 else:
     balance = balance_in_final
 
+# Strip [Pipeline note: ...] from balance — these are operational runner notes, not data.
+# Gate question: "Does balance contain [Pipeline note:"? YES → strip it.
+if balance and '[Pipeline note:' in balance:
+    balance = re.sub(r'\[Pipeline note:[^\]]*\]', '', balance, flags=re.DOTALL).strip()
+
 btc     = grab_line([r"\bbtc\b", r"bitcoin"], text)
 
 # Strategy verdict / recommendation (for the Risk section if it's empty)
