@@ -88,29 +88,87 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>Apple and Firefox: Privacy Under the Microscope</h2>
-<p>Good morning! Today we're diving into two tech giants grappling with privacy issues: Apple has patched a bug that allowed law enforcement to extract deleted chat messages from iPhones, and Firefox has a vulnerability linking private Tor identities. Plus, a glance at Bitcoin's latest price surge. Let's get into it.</p>
-<h2>The Story · Apple and Firefox Tackle Privacy Concerns</h2>
-<p>Apple recently fixed a bug that was being exploited by law enforcement to extract deleted chat messages from iPhones. This bug had been a significant privacy concern, as it allowed access to supposedly deleted data, raising questions about user privacy and data security. The fix comes at a time when tech companies are under increasing scrutiny to protect user data and ensure privacy.</p>
-<p>Meanwhile, Firefox has identified a privacy vulnerability that affects users of the Tor network. This vulnerability involves a stable identifier that can link all private Tor identities, posing a significant risk to user anonymity. Mozilla, the organization behind Firefox, is expected to address this issue swiftly to maintain trust among its privacy-conscious user base.</p>
-<p>Both cases highlight the ongoing challenges tech companies face in balancing innovation with privacy. As users become more aware of privacy issues, companies like Apple and Mozilla must prioritize security to maintain their reputations and user trust.</p>
-<h2>Also Moving · Bitcoin's Market Moves</h2>
-<p>Bitcoin's price has seen a notable increase of 2.59%, reaching $78,372. This rise reflects the ongoing volatility in the crypto market, where prices can swing dramatically based on investor sentiment and external factors. With a market cap of $1.57 trillion and a trading volume of $51.77 billion, Bitcoin continues to dominate the crypto landscape.</p>
-<p>As always, the crypto market remains unpredictable, with potential regulatory changes and market trends influencing future movements. Investors and enthusiasts alike are watching closely to see what the next big shift will be.</p>
-<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
-<h2>The Lab · What AI can newly do this week</h2>
-<p>A new AI tool, AI Scientist-v2, has emerged, offering a novel approach to problem-solving. Unlike traditional models that focus on token-based predictions, this agent searches over research moves, making it particularly useful for process-heavy problems. This capability is ideal for tasks like debugging, workflow optimization, pricing strategies, go-to-market planning, and system integration.</p>
-<p>This tool is filed under <code>kai/research/2026-04-22-ai-scientist-v2.md</code> for future reference.</p>
-<h2>Worth Sitting With</h2>
-<p>The intersection of privacy and technology raises a fundamental question: How much privacy are we willing to sacrifice for convenience and innovation? As tech companies continue to push boundaries, the balance between user privacy and technological advancement becomes increasingly delicate. How do we ensure that privacy doesn't become a casualty in the race for innovation?</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped the latest privacy-focused update for our app.</li>
-<li>In-flight: Research on AI-driven privacy solutions.</li>
-<li>Need your input on the new user privacy policy draft.</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: apple
+    name: Apple
+    aliases: [Apple Inc., iPhone, iOS]
+    category: tech
+    take: &quot;Fixed a bug that allowed extraction of deleted messages from iPhones&quot;
+    data: &quot;Bug exploited by law enforcement to retrieve deleted iMessages&quot;
+    hinge: &quot;Potential privacy policy updates from Apple&quot;
+    confidence: high
+  - slug: firefox
+    name: Firefox
+    aliases: [Mozilla, Tor, browser]
+    category: tech
+    take: &quot;Stable identifier found linking private Tor identities&quot;
+    data: &quot;Privacy vulnerability in Firefox&#x27;s IndexedDB&quot;
+    hinge: &quot;Mozilla&#x27;s response to the vulnerability&quot;
+    confidence: medium-high
+  - slug: bitcoin
+    name: Bitcoin
+    aliases: [BTC, cryptocurrency, crypto]
+    category: crypto
+    take: &quot;Bitcoin price increased by 2.52% to $78,112&quot;
+    data: &quot;Market cap $1.56 trillion, volume $51.76 billion&quot;
+    hinge: &quot;Next market movement or regulatory news&quot;
+    confidence: medium
+topics:
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;Apple and Firefox face privacy challenges&quot;
+    take: &quot;Recent vulnerabilities highlight ongoing privacy concerns in tech&quot;
+  - slug: crypto-flow
+    name: &quot;Crypto Flow&quot;
+    signal: &quot;Bitcoin sees price increase amid market fluctuations&quot;
+    take: &quot;Bitcoin&#x27;s rise reflects broader crypto market movements&quot;
+lab_items:
+  - slug: ai-scientist-v2
+    name: &quot;AI Scientist-v2&quot;
+    what: &quot;Agent that searches over research moves, not tokens&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.18805&quot;
+---
+
+# Ra — 2026-04-22
+## Privacy Under Siege: Apple and Firefox&#x27;s Latest Challenges
+
+Good morning. Today we&#x27;re diving into the latest privacy challenges facing tech giants Apple and Firefox, and we&#x27;ll also touch on Bitcoin&#x27;s recent price movements. Let&#x27;s explore what these developments mean for privacy and the crypto market.
+
+## The Story · Privacy Under Siege
+
+Apple has patched a significant bug that allowed law enforcement to extract deleted chat messages from iPhones. This bug, which was being exploited to retrieve deleted iMessages, raises questions about privacy and the security of personal data on devices we trust. Apple&#x27;s swift response to fix the issue demonstrates their commitment to user privacy, but it also highlights the ongoing battle between tech companies and authorities over data access.
+
+Meanwhile, Mozilla&#x27;s Firefox browser is facing its own privacy challenge. A stable identifier was discovered that links all private Tor identities, posing a significant privacy risk for users relying on Tor for anonymity. This vulnerability in Firefox&#x27;s IndexedDB could potentially expose users&#x27; browsing habits and identities, undermining the very purpose of using Tor. Mozilla&#x27;s response to this discovery will be crucial in maintaining user trust and ensuring privacy.
+
+These incidents underscore the delicate balance between privacy and security in the tech world. As companies continue to innovate, they must also remain vigilant in protecting user data from both external threats and internal oversights.
+
+## Also Moving · Bitcoin&#x27;s Steady Climb
+
+Bitcoin has seen a 2.52% increase in its price, now standing at $78,112. This rise comes amid a broader movement in the crypto market, reflecting investor confidence and market dynamics. With a market cap of $1.56 trillion and a trading volume of $51.76 billion, Bitcoin continues to be a major player in the financial landscape. As always, the crypto market remains volatile, and the next catalyst could come from regulatory news or shifts in investor sentiment.
+
+*This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
+
+## The Lab · What AI can newly do this week
+
+A new development in AI research is the AI Scientist-v2, an agent that focuses on searching over research moves rather than individual tokens. This approach enables reasoning on process-heavy problems where the right loop matters more than the right answer. It&#x27;s particularly useful in scenarios like debugging, workflow optimization, pricing, go-to-market strategies, and system integration. This capability is filed under `kai/research/2026-04-22-ai-scientist-v2.md` for future reference.
+
+## Worth Sitting With
+
+The ongoing privacy challenges faced by tech companies like Apple and Mozilla raise an important question: How much privacy are we willing to sacrifice for convenience and security? As technology continues to evolve, the lines between privacy and accessibility blur. How do we strike the right balance, and what role should companies play in safeguarding our data? It&#x27;s a question worth pondering as we navigate the digital age.
+
+## Kai&#x27;s Desk · P.S.
+- Shipped a new feature for Hyo&#x27;s dashboard, enhancing data visualization.
+- In-flight: Exploring potential collaborations with AI research labs.
+- Need Hyo&#x27;s input on the upcoming conference presentation topic.
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
