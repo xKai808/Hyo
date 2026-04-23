@@ -23,11 +23,13 @@
 #                      (failure alert) resolved via Telegram integration
 #   v1.4 (2026-04-22): SCHEMA ENFORCEMENT — after a session rewrote ant-data.json without
 #                      reading this protocol, breaking the daily credit chart (history entries
-#                      missing anthropic/openai fields). Added hard schema gate. Any script
-#                      or agent rewriting ant-data.json MUST read Part 10 schema first.
-#                      Gate question: "Did I verify history[] has {date,anthropic,openai,total}?"
-#                      NO → do not write. Credits factchecked: Anthropic $30.67 remaining,
-#                      OpenAI $17.94 remaining (scraped 2026-04-18, adjusted for spend).
+#                      missing anthropic/openai fields, window reduced from month to 14 days).
+#                      Fixed: history[] now shows full current month (day 1 → today), zero-
+#                      filled for days with no spend. On month rollover: previous month closed
+#                      to monthly-YYYY-MM.json before new month starts. Schema gate added.
+#                      ant-update.sh updated to build month-to-date window instead of 14 days.
+#                      Credits factchecked: Anthropic $30.67 remaining, OpenAI $17.94 remaining
+#                      (scraped 2026-04-18, adjusted for spend since scrape date).
 
 ---
 
@@ -151,7 +153,10 @@ What happens inside:
 6. If scraped data is stale/missing: credit bars use budget-based fallback; source labeled "budget-based"
 7. Load AetherBot P&L from `aether-metrics.json`
 8. Compute net position: `income_total − fixed_expenses − api_mtd`
-9. Build `history[]` array: 14 days of per-provider daily API costs (from api-usage.jsonl)
+9. Build `history[]` array: current month day 1 → today, per-provider daily API costs,
+      zero-filled for days with no spend (from api-usage.jsonl).
+      On month rollover (1st of month): previous month is already closed to
+      monthly-YYYY-MM.json before this step runs. New month starts from day 1.
 10. Write `ant-data.json` to BOTH paths (dual-path)
 11. Write/update `agents/ant/ledger/monthly-YYYY-MM.json`
 12. Write daily log to `agents/ant/logs/ant-YYYY-MM-DD.log`
@@ -573,7 +578,11 @@ PYEOF
   },
   "net_position": float,
   "history": [
+    // Current month, day 1 through today. Zero-filled for days with no spend.
+    // Chart label: "Daily Credit Usage — April 2026" (or current month).
+    // On May 1: April's history is in monthly-2026-04.json. May starts fresh.
     {"date": "YYYY-MM-DD", "anthropic": float, "openai": float, "total": float}
+    // ... one entry per day from the 1st of the month to today
   ],
   "monthly_ledger_path": "agents/ant/ledger/monthly-YYYY-MM.json"
 }

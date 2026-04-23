@@ -245,11 +245,16 @@ else:
     }
     print("[ant-update] WARNING: No scraped-credits.json — using budget-based fallback.", file=sys.stderr)
 
-# ── 14-day daily history (per provider) ──────────────────────────────────────
-# This powers the "Daily Credit Usage" stacked bar chart on HQ Ant tab.
+# ── Current-month daily history (per provider) ────────────────────────────────
+# Powers the "Daily Credit Usage" stacked bar chart on HQ Ant tab.
+# Shows every day from the 1st of the current month through today (zero-fill gaps).
+# On month rollover (day 1): previous month is closed to monthly-YYYY-MM.json
+#   before this runs, so the new month starts clean from day 1.
 # Each entry: { date, anthropic, openai, total }
 history = []
-for i in range(13, -1, -1):
+month_start = today.replace(day=1)
+days_in_month = (today - month_start).days + 1
+for i in range(days_in_month - 1, -1, -1):
     d   = (today - timedelta(days=i)).isoformat()
     ant = by_date_provider[d].get("anthropic", 0.0)
     oai = by_date_provider[d].get("openai", 0.0)
