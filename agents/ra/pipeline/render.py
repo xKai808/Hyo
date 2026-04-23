@@ -228,8 +228,13 @@ def strip_preamble_code_blocks(md: str) -> str:
         return md
     preamble = md[: first_heading.start()]
     content = md[first_heading.start() :]
-    # Remove all fenced code blocks from the preamble
+    # Remove all fenced code blocks from the preamble.
+    # Handle CLOSED blocks (```...```) and UNCLOSED blocks (``` with no closing fence).
+    # Unclosed blocks: synthesize.py may emit ```yaml without a closing ```.
+    # In that case strip from the opening fence to end-of-preamble.
     cleaned_preamble = re.sub(r"```[^\n]*\n[\s\S]*?```\n?", "", preamble)
+    # If an unclosed fence remains, strip from it to the end of preamble
+    cleaned_preamble = re.sub(r"```[^\n]*\n[\s\S]*$", "", cleaned_preamble)
     return cleaned_preamble + content
 
 

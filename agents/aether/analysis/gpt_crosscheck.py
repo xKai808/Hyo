@@ -92,8 +92,11 @@ if raw_log:
     #   MINIMUM_TICKER_CLOSES = 15  (v1 used trade_line_count < 5, too loose)
     #   MINIMUM_TOTAL_LINES = 1000  (runner logs ~500 lines, trading logs thousands)
     # Both conditions must pass. Either failure blocks GPT.
-    MINIMUM_TICKER_CLOSES = 15    # Any real session has many TICKER CLOSE events
-    MINIMUM_TOTAL_LINES   = 1000  # Runner logs ~500 lines; trading logs are thousands
+    MINIMUM_TICKER_CLOSES = 4     # Lowered from 15: light trading days may have few closes.
+                                  # 4 ensures we have at least some real tick events.
+                                  # The goal is separating trading logs (4+) from runner logs (0).
+    MINIMUM_TOTAL_LINES   = 500   # Lowered from 1000: light days have fewer lines.
+                                  # Still well above runner logs (~200 lines).
     RUNNER_KEYWORDS = ["=== Aether metrics run ===", "Domain research:", "Self-review:"]
 
     log_lines     = full_log_text.splitlines()
