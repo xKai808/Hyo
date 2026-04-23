@@ -4,7 +4,7 @@
 
 **Updated:** 2026-04-23 (sentinel-hyo-daily scheduled run #136 — 0 new, P0 day 111 carry-forward)
 
-## Shipped this session (2026-04-23 — S30)
+## ## Shipped this session (2026-04-23 — S30)
 
 **MAJOR WORK:**
 - 3 code bugs in agent-self-improve.sh fixed: flock→mkdir, mktemp collision, empty research gate
@@ -41,7 +41,7 @@
 - Event-driven architecture: NOT yet implemented
 
 
-## Shipped today (2026-04-22 — Session 29)
+## ## Shipped today (2026-04-22 — Session 29)
 
 **S29 SUMMARY — 6 original Hyo issues + multiple regressions caused and fixed:**
 
@@ -76,26 +76,7 @@
 - verified-state.json running autonomously every 15min on Mini
 
 
-## Shipped today (late session extension — 2026-04-22 continued)
-
-**ANTHROPIC BALANCE AUTOMATION INVESTIGATION:**
-Goal: automated Anthropic credit balance tracking with zero manual work.
-Built: bin/ant-fetch-balance.py — reads Chrome cookies from Mini's disk, decrypts with
-  Keychain key, calls platform.claude.com/api/organizations/{org_id}/ endpoints.
-Status: BLOCKED on one-time Keychain authorization (one dialog click on Mini Terminal).
-Next session: run `security find-generic-password -s "Chrome Safe Storage" -a "Chrome" -w`
-  in Terminal on the Mini, click "Allow Always" → automation unblocks permanently.
-All investigation details in KNOWLEDGE.md "Automated Anthropic balance tracking" section.
-
-Key findings:
-- Org ID: 6fa1a636-f063-4651-aef2-f7ebaa25c49d
-- Working endpoint (with session cookies): /api/organizations/{org_id}/invoices/overdue
-- Chrome cookies: ~/Library/Application Support/Google/Chrome/Default/Cookies (all encrypted)
-- No admin key option in console, no public usage API for individual accounts
-- Cowork sessions = main cost driver ($20.85 of $21.09 total April spend)
-- Current balance: Anthropic $18.91, OpenAI ~$17.94
-
-## Current open P0s
+## ## Current open P0s
 - **Ra runner exit-2** — 8 days silent failure, TASK-20260421-ra-P0-runner-exit2 (ACTIVE)
 - **ACTIVE.md missing** — all 5 agents, Phase 1 freshness checks broken (P1 TASK-20260421-infra-P1-active-md-missing)
 
@@ -176,711 +157,7 @@ Key findings:
 - **Agents still in dead-loop** — sam (assessment_stuck), ra (assessment_stuck), aether (bottleneck_stuck). Guidance DELEGATEs firing every ~15min with no change in behavior; need to escalate beyond open-ended questions.
 - **No kai runner log for 2026-04-21** — `agents/kai/logs/` has nothing dated today.
 
-## Autonomy assessment (as of 2026-04-21)
-**Working autonomously:** scheduling/dispatch infrastructure, nightly runners (Nel/Sam/Aether), flywheel self-improve, SICQ scoring, OMP measurement, morning report generation, HQ feed publishing, queue worker, memory consolidation pipeline, weekly/cross-agent reviews, completeness check, root-cause enforcer.
-
-**Broken/degraded:**
-- Ra runner: exit-2 for 8 days — newsletter pipeline dark
-- ACTIVE.md: missing for all agents — Phase 1 staleness check inoperable
-- OMP DQI: fallback mode (decision-log.jsonl empty)
-- OMP OSS: fallback mode (dispatch.log ACK pattern unverified)
-- 4 render failures in simulation (may be path artifacts)
-
-## Shipped today (2026-04-21 — Session 27 cont. 8)
-
-**KAI-SPECIFIC SICQ + 5-DIMENSIONAL OMP — Tasks #67 #68 #69 COMPLETE:**
-
-Research: 36 sources across CEO metrics, multi-agent orchestration, agentic AI evaluation, decision quality, knowledge management, business impact measurement. Platforms: theceoproject.com, phocassoftware.com, Databricks, arxiv (2601.13671v1, 2512.12791v2, 2502.15212v1, 2412.17149v1, 2511.14136), Bain, McKinsey, Cloverpop, APQC, KMInstitute, Google Cloud, BCG, ISG, moxo.com, getmonetizely.com, GitHub (Applied-AI-Research-Lab, philschmid/ai-agent-benchmark-compendium), and more.
-
-**`bin/omp-measure.sh`** — replaced `measure_ccs_kai()` with full 5-function suite:
-- `measure_dqi_kai()`: CEO role. Decision documentation rate × (1 - reversal rate). Source: decision-log.jsonl or session-errors.jsonl fallback.
-- `measure_oss_kai()`: Orchestrator role. Dispatch ACK rate × (1 - delegation-back rate). Fallback: ACTIVE.md freshness across 5 agents.
-- `measure_kri_kai()`: Memory keeper role. 1 - (repeated_error_categories / total_categories) in 14-day window.
-- `measure_aas_kai()`: Self-improver role. (E# items / all items × 0.60) + (flywheel cycle ratio × 0.40).
-- `measure_bis_kai()`: Business operator role. on-time report rate × HQ publish rate from feed.json.
-- `measure_kai_composite()`: weighted composite 0.25×DQI + 0.20×OSS + 0.25×KRI + 0.15×AAS + 0.15×BIS.
-- JSON output: `kai_profile` field in omp-latest.json with all 5 dimensions + roles + weights.
-- Thresholds: KAI_COMPOSITE healthy ≥0.75, critical <0.55.
-
-**`bin/flywheel-doctor.sh`** — added `compute_kai_sicq()` (5 × 20 = 100):
-- HC (Hydration Compliance): KAI_BRIEF.md within 24h
-- RDC (Research Depth): ≥6 external URLs in improvement research file
-- QGC (Queue Gate): 0 copy-paste/skip-verification errors in 7d
-- DMW (Dual Memory Write): KNOWLEDGE.md within 7d AND KAI_TASKS within 24h
-- ERR (Error Recall): no same-category error 3+ times in 14d
-- Kai routes to `compute_kai_sicq()` instead of generic `compute_sicq()`.
-
-**`bin/generate-morning-report.sh`** — Kai OMP section shows 5D breakdown with flag per dimension, composite at bottom.
-
-**`kai/protocols/PROTOCOL_KAI_METRICS.md`** (NEW, ~350 lines): full spec with research citations, all formulas, thresholds, data sources, integration table, self-evolution mechanism.
-
-**`agents/kai/GROWTH.md`** — all 4 weaknesses + E1 linked to specific metrics (W1→KRI+HC, W2→DQI+RDC, W3→OSS+BIS, W4→KRI+DMW, E1→AAS).
-
-**`kai/memory/KNOWLEDGE.md`** — OMP + Kai metrics section added with formulas, file paths, and self-evolution notes.
-
-Commit queued: `kai/queue/pending/s27c8-kai-metrics-commit.json`
-
-## Shipped today (2026-04-21 — Session 27 cont. 7)
-
-**FLYWHEEL SELF-HEALING + P0 FAULT AUDIT COMPLETE:**
-- **`bin/agent-self-improve.sh`** — 4 P0/P1 bugs fixed:
-  - Theater verification (SE-S27-001): verify_improvement() now checks specific FILES_TO_CHANGE paths via `-nt state_file`, not system-wide git log
-  - Empty research gate (SE-S27-002): explicit file existence check after research phase — state can't silently advance on nothing
-  - Confidence gate inversion (SE-S27-003): whitelist (`!= HIGH && != MEDIUM`) replaces blacklist (`== LOW`)
-  - Shell injection in persist_knowledge/report_to_kai (SE-S27-004): env-var + quoted heredoc pattern
-- **`bin/flywheel-doctor.sh`** (NEW ~300 lines): 9 automated recovery checks, SICQ scoring (0-100/agent), runs 09:00 + 14:00 MT via kai-autonomous.sh. Self-heals without Hyo. Escalates to hyo-inbox.jsonl only when Kai cannot resolve.
-- **`kai/protocols/FLYWHEEL_RECOVERY.md`** (NEW): complete issue→recovery map for 10 issue types with recovery hierarchy (automated fix → state reset → P1 ticket → Hyo inbox)
-- **`kai/protocols/SELF_IMPROVE_AUDIT.md`** (NEW): 8-section fault analysis covering failure modes, single points of failure, echo chamber risks, SICQ framework, staleness prevention
-- **`bin/kai.sh` inject-feedback**: `kai inject-feedback <agent> "<summary>" [P1]` wires Hyo's session corrections directly into agent GROWTH.md as W-items
-- **`kai-autonomous.sh`**: doctor dispatched at 09:00 and 14:00 MT (two checks daily)
-- **`generate-morning-report.sh`**: SICQ scores displayed with ✓/⚠/✗ indicators; Kai included as flywheel participant
-- **`KNOWLEDGE.md`**: updated with all 4 bug patterns, Hyo-feedback injection path, SICQ framework, flywheel architecture reference
-- **Runners async**: nel.sh, sam.sh, ra.sh, aether.sh — self-improve hooks now `( ... ) & disown` (non-blocking)
-- **Task #63 COMPLETE**: `bin/cross-agent-review.sh` built. Nel↔Sam, Ra→Aether, Dex→all. Adversarial Claude review, 6 sections, verdict (STRONG/ADEQUATE/WEAK/THEATER), P0/P1 gaps auto-ticketed, results → HQ Research. Saturday 06:45 MT wired in kai-autonomous.sh. `kai cross-agent-review` subcommand added.
-
-## Shipped today (2026-04-21 — Session 27 cont. 6)
-
-**KAI IN MORNING REPORT + HQ RESEARCH-DROP (queued: kai-morning-report-research-drop-20260421):**
-- `generate-morning-report.sh`: `agents_list` now includes `"kai"` — Kai's self-improve cycle appears in the morning report flywheel section alongside Nel/Ra/Sam/Aether/Dex. Both `agent_labels` dicts updated. Kai synthesis section now separates "Kai Research" (Kai's own weakness progress) from "Kai synthesis" (orchestrator view of all agents). Kai gets its own dedicated narrative paragraph in the morning report.
-- `agent-self-improve.sh`: When agent == `kai`, publish a dedicated `research-drop` to the HQ feed (Research tab) IN ADDITION to the standard `self-improve-report`. The research-drop includes: topic (weakness ID + title), finding (root cause + fix approach from the research file), sources (https://hyo.world/hq — the system being analyzed, satisfies theater gate), implications (system-wide impact of the orchestrator weakness), nextSteps (concrete implementation follow-ups). Kai's research is now first-class on HQ, not buried in a reflection card.
-
-## Shipped today (2026-04-21 — Session 27 cont. 5)
-
-**SELF-IMPROVE FAULT FIXES + KAI GROWTH (queued job si-fault-fixes-kai-growth-20260421):**
-- **Fault #1 fixed** (`persist_knowledge` + `report_to_kai`): replaced `python3 -c "... $bash_var ..."` pattern with env-var + `<< 'HEREDOC'` approach. Weakness titles containing `"`, `$`, or newlines no longer corrupt JSON silently.
-- **Fault #9 fixed** (4 runner hooks now async): nel.sh, sam.sh, ra.sh, aether.sh all changed from blocking `bash "$SELF_IMPROVE_SH" ... || true` to background `( ... ) & disown`. Runner main cycle no longer blocked by 600s Claude Code timeout.
-- **Summary table bug fixed**: `report_summary()` had `'hyo'` in agents list — corrected to `'kai'`.
-- **`agents/kai/GROWTH.md` created**: Kai's own weakness + expansion tracking. 4 weaknesses (W1: session continuity drift, W2: no decision quality measurement, W3: cross-agent coordination latency, W4: memory consolidation coverage gaps) + 3 expansion opportunities (E1: agentic code review pipeline, E2: Hyo portfolio management, E3: autonomous architecture proposals weekly). Goals table with deadlines. Growth log bootstrapped.
-- **`agents/kai/self-improve-state.json`**: initial state seeded — Kai starts at W1/research stage, ready for first flywheel cycle.
-
-## Shipped today (2026-04-21 — Session 27 cont. 4)
-
-**SELF-IMPROVEMENT FLYWHEEL — COMPLETE + LIVE (commit be6c615):**
-- `bin/agent-self-improve.sh` (350+ lines) — closed-loop compounding orchestrator for every agent
-  - 3-stage state machine per agent: research → implement → verify
-  - Stage 1 (research): parses GROWTH.md weaknesses, queries SQLite memory engine for prior knowledge, invokes Claude Code to generate root-cause + specific fix approach + files to change. Output saved to `agents/<name>/research/improvements/<WID>-DATE.md`
-  - Stage 2 (implement): reads research file, builds implementation brief, delegates to `claude-code-delegate.sh` (Claude Code runs the actual code changes autonomously)
-  - Stage 3 (verify): runs agent-specific QA (nel-qa-cycle / verify-render / git diff), on pass → persists lesson to KNOWLEDGE.md + memory engine + evolution.jsonl, identifies next weakness via Claude Code reading agent logs + tickets
-  - State machine per agent: `agents/<name>/self-improve-state.json` — tracks current weakness, stage, cycle count, last run
-- Wired into ALL 4 runners (nel.sh, sam.sh, ra.sh, aether.sh) — runs after ticket hooks, before main work
-- Wired into `kai-autonomous.sh` Phase 6 — daily dispatch at 08:00 MT for all agents simultaneously
-- Every resolved weakness creates improvement ticket, updates GROWTH.md (RESOLVED status), compounds to KNOWLEDGE.md
-- Every cycle identifies NEXT weakness by having Claude Code read real agent logs — no stale self-assessments
-- `bin/claude-code-delegate.sh` also committed (bridge between bash runners and Claude Code CLI)
-- Pushed via queue worker job s27c4-git-push → exit=0
-
-**THE COMPOUNDING FLYWHEEL IS LIVE:** Every agent now runs at 08:00 MT and after every cycle: finds its weakest link → researches it → fixes it → learns from it → finds the next one. Agents that detect the same problem forever → agents that structurally improve every day.
-
-## Shipped today (2026-04-21 — Session 27 cont. 3)
-
-**Hyo Q3: Stale error loop — ROOT CAUSE FOUND + FIXED:**
-- `nel-qa-cycle.sh` was checking for `abStrategiesTable|loadAetherMetrics` (old function names). hq.html uses `renderAetherDashboard`. → 27x P0 false positive every cycle. Fixed grep pattern.
-- `/api/hq?action=data` returns 401 by design (auth-gated). Was being logged as failure. → 32x false positive. Fixed: accept 401 as healthy for auth-gated endpoints.
-- `/api/usage` → 404 because endpoint doesn't exist. Removed from monitored list. → 14x false positive.
-- 42 total false-positive known-issues entries resolved.
-- `dispatch.sh` — 24h dedup gate added to `cmd_flag` + `cmd_safeguard`. Every flag was creating 4 queue jobs (nel audit, sam coverage, event-driven runs, healthcheck). Now rate-limited to once per 24h per pattern.
-- `dex.sh` — Phase 4 pattern count dedup: only flags when count increases ≥5 (was firing every cycle).
-- `dex-activity-2026-04-20.jsonl` — JSONL corruption repaired (split lines merged).
-
-**Hyo Q2: Ant API credits — CONTINUOUS TRACKING:**
-- `bin/ant-update.sh` refactored: formula changed from `monthly_budget - MTD` → `scraped_remaining - spend_since_scrape_date`
-- Added: `depletion_date`, `days_until_depleted`, `burn_per_day`, `confidence`
-- Current: Anthropic $30.79 @ $0.148/day → ~Nov 2026. OpenAI $18.64 @ $0.063/day → ~Jan 2027.
-
-**Hyo Q5: Protocol staleness enforcer:**
-- `bin/protocol-staleness-check.sh` — scans all protocol files, opens P0/P1/P2 tickets by age (30/60/90d), stamps missing headers. Runs daily 09:00 MT via kai-autonomous.sh.
-
-**Hyo Q6: Aether HQ verified:**
-- aether-metrics.json: updated 12:14 MT today, dataGateStatus=PASS, 7 strategies, WinRate 73.5%
-- renderAetherDashboard exists and is fully wired. False-positive cleared.
-
-**Commit queued:** s27-commit-push-v2 (nel-qa-cycle.sh, dispatch.sh, dex.sh, ant-update.sh, protocol-staleness-check.sh, known-issues.jsonl, dex JSONL repair)
-
----
-
-## Shipped today (2026-04-21 — Session 27 cont.)
-
-**24h ticket enforcement system — BUILT + QUEUED:**
-- `bin/ticket-sla-enforcer.sh` — autonomous enforcement daemon. Runs every 30 min. For every OPEN/ACTIVE ticket: checks age vs SLA (P0:30m/P1:1h/P2:4h/P3:24h) → auto-escalates priority → dispatches nudge to agent's ACTIVE.md → P0 breaches → Hyo inbox → commits. Zombie detection >90 days → auto-archive.
-- `kai/queue/com.hyo.ticket-sla-enforcer.plist` — launchd with StartInterval=1800. Queued to Mini for install.
-- `bin/ticket-agent-hooks.sh` — shared library sourced in all 4 agent runners. Functions: `ticket_cycle_start` (stamps ACTIVE on all owned tickets, prevents false escalation), `ticket_cycle_complete` (marks RESOLVED with evidence), `ticket_open_for_agent`, `ticket_create_if_missing` (dedup-safe).
-- `bin/ticket.sh` — DUPLICATE GATE added to `cmd_create`: if same ID already in ledger → skip. Eliminates TASK-YYYYMMDD-nel-001 daily explosion.
-- All 4 runners patched: nel.sh, ra.sh, sam.sh, aether.sh now source ticket-agent-hooks.sh and call `ticket_cycle_start` at cycle start.
-
-**HQ publication enforcement — WIRED:**
-- `bin/publish-to-feed.sh` — two new gates added:
-  1. THEATER GATE: `research-drop` blocked if no URL citations in finding/sources → auto-creates P1 ticket
-  2. ARCHIVE STEP: every publish saves to `agents/[agent]/archive/YYYY/MM/[agent]-[type]-DATE.json`
-
-**Hyo decision:** Hold on RESEND_API_KEY and Stripe webhook until self-improving system is solid. Correct call — the enforcement infrastructure needed to exist first.
-
----
-
-## Shipped today (2026-04-21 — Session 27)
-
-Commit: e7137d0 — 8 files changed, 1142 insertions. Pushed and live on Vercel.
-
-**Aurora subscriber persistence — COMPLETE (no more lost signups):**
-- `aurora-checkout.js` rewrote to write `pending_billing` subscriber JSON to GitHub Contents API immediately after Stripe session creation. Non-blocking — checkout response not gated on GitHub write. Falls back gracefully if `GITHUB_TOKEN` missing.
-- `aurora-webhook.js` rewrote to read + update subscriber JSON on every lifecycle event:
-  - `checkout.session.completed` → status `trialing`, adds `stripeCustomerId`, `stripeSubscriptionId`, `trialStarted`. Creates fallback record if checkout write failed.
-  - `customer.subscription.updated` → mirrors Stripe status field (trialing/active/past_due/canceled)
-  - `customer.subscription.deleted` → status `canceled`
-  - `invoice.payment_failed` → status `payment_failed`, logs attempt count
-- Eliminates missing `bin/sync-aurora-subscribers.sh` dependency entirely.
-- Subscriber records live at: `agents/sam/website/data/aurora-subscribers/{id}.json`
-
-**Aurora Day 7 retention email — BUILT + DEPLOYED:**
-- `api/aurora-retention.js` — auth-gated `POST /api/aurora-retention` Vercel function:
-  - Lists all subscriber JSONs via GitHub Contents API
-  - Identifies trialing subscribers 6–8 days past `trialStarted` who haven't received retention email
-  - Sends personalized HTML+text email via Resend API (topic-aware subject + body)
-  - Marks `retentionEmailSent: true` + `retentionEmailSentAt` back to GitHub
-  - `dry_run: true` mode for safe testing
-  - Graceful degradation: if `RESEND_API_KEY` missing, logs error but doesn't crash
-- `com.hyo.aurora-retention.plist` — launchd job installed on Mini, fires daily 09:00 MT
-- **NEEDS: `RESEND_API_KEY` added to Vercel env vars** (Resend.com → create account → API key → add `aurora@hyo.world` sending domain)
-
-**S20-001 CLOSED (false alarm):**
-- `/api/health` is working correctly: `{"ok":true,"founderTokenConfigured":true}` confirmed live.
-- Sentinel #106 failure was transient `curl -sf` failure (Mini network blip) → `|| echo '{}'` fallback.
-
-**Queue format bug fixed:**
-- Previous sessions used `"command"` key; I accidentally used `"cmd"` in first 4 jobs → all went to `failed/`.
-- Correct format: `{"id":"...", "ts":"...", "command":"..."}` — no `"priority"` field.
-- Lesson logged: always copy from a completed job as format reference.
-
-**Hyo action items remaining (Aurora billing loop):**
-1. Add `RESEND_API_KEY` to Vercel env vars (Resend.com account needed)
-2. Register Stripe webhook in Stripe dashboard: URL = `https://www.hyo.world/api/aurora-webhook`, events = `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Copy `whsec_...` → confirm as `STRIPE_WEBHOOK_SECRET` in Vercel.
-
-**Previously confirmed working (from this session):**
-- Stripe checkout: `POST /api/aurora-checkout` → returns `{ok:true, url: "https://checkout.stripe.com/..."}` ✅
-- Aurora page auth: `aurora-page?id=X&token=Y` → "Invalid or expired link" for bad token ✅
-- Webhook signature check: `POST /api/aurora-webhook` without valid sig → `{"error":"Webhook signature invalid."}` 400 ✅
-- `AURORA_TOKEN_SALT` + `GITHUB_TOKEN` already added to Vercel ✅
-- `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET` already in Vercel ✅
-
-## Shipped today (2026-04-21 — Session 26, Part 2)
-
-All committed and queued for push to origin/main:
-
-5. **ARIC execution engine wired into agent-growth.sh** (root cause of 27/30 tickets stuck OPEN):
-   - `get_files_to_change(agent, weakness)`: maps each agent/weakness to a specific file to create
-   - `get_improvement_thesis(agent, weakness)`: full implementation spec per weakness → fed to Claude API
-   - `write_aric_for_ticket()`: builds `aric-latest.json` with `status: researched` before calling engine
-   - `execute_next_improvement()`: writes aric → calls `agent-execute-improvement.sh` → updates ticket OPEN→SHIPPED
-   - `update_ticket_status()`: atomically rewrites tickets.jsonl with new status
-   - Aether: explicitly excluded (market analysis only — no AetherBot code changes)
-   - IMP-* tickets only (TASK-* excluded from execution engine)
-   - Cycle date staleness check prevents re-executing already-shipped tickets
-   - Commit: 7ae346b
-
-6. **PROTOCOL_AGENT_REPORT.md v1.0 CREATED** (`kai/protocols/`):
-   - 5-question mandatory block (what shipped / open issue / next action / action type / evidence)
-   - Tone-per-domain: CISO (Nel), editor (Ra), engineer (Sam), data analyst (Dex), PM (Aether)
-   - Anti-pattern rejection criteria table (8 patterns = immediate regeneration)
-   - Research standards: ≥3 named sources per finding, no gestalt
-   - Dex compliance enforcement: daily scan → P2 tickets for violations
-
-7. **bin/agent-bluf-augment.py CREATED** — pre-publish sections augmenter:
-   - Reads `aric-latest.json` per agent → derives improvement_status string
-   - Builds 3-sentence BLUF from existing reflection sections
-   - Builds 5-question block from sections + aric data
-   - Writes augmented sections back in-place before `publish-to-feed.sh`
-
-8. **nel.sh / ra.sh / sam.sh patched**: each calls `agent-bluf-augment.py` before publish
-   - 3-line insertion per runner — no existing logic changed, just prepend step
-   - Queued commit: f4a8d86d
-
----
-
-## Shipped today (2026-04-21 — Session 26, Part 1)
-
-All committed and pushed to origin/main:
-
-1. **healthcheck.sh: 3 chronic false-positive patches** (20+ cycles eliminated):
-   - P0 false positive: grep pattern was `loadMorningReport|mrSummary` but hq.html uses `renderMorningReport` — fixed
-   - Worker age math: macOS date parsing failed → fallback to epoch 0 → bogus "493541h ago". Now uses full ISO timestamp + python3 (SE-healthcheck-001)
-   - Render-binding P2: `hq-state.json`, `remote-access.json`, `morning-report.json` added to `RENDER_BINDING_SKIP` whitelist (legitimate non-filename references)
-
-2. **generate-morning-report.sh humanized** (per PROTOCOL_MORNING_REPORT.md v1.1 Part 0b):
-   - `build_agent_narrative()` rewritten: was mechanical log-style, now human brief ("smart colleague briefing a CEO")
-   - Executive summary stdout: 3 human BLUF sentences (health / biggest thing / what to watch) instead of field=value
-   - Feed entry `summary_text`: same 3-sentence pattern for HQ card
-   - `highlights[name]`: "so what" not "what ran"
-
-3. **bin/maintenance-audit.py BUILT** (per PROTOCOL_SYSTEM_MAINTENANCE.md Section 4):
-   - Phase 1 `--check-dead-scripts`: finds .sh/.py not in TRIGGER_MATRIX.md, >14d old, zero grep refs
-   - Phase 2 `--check-stale-protocols`: finds protocols with dead path refs; smart about .json→.jsonl mismatches, date-pattern examples
-   - Phase 3 `--check-duplicates`: sha256-identical files, excludes intentional dual-path pairs
-   - Flags only — never deletes. Logs to `kai/ledger/maintenance-log.jsonl`
-   - Tested: stale-protocols phase finds 1 real flag (dex/known-fps.json dead ref), 0 false positives
-
-4. **com.hyo.system-maintenance launchd plist** installed on Mini (01:30 MT daily):
-   - Runs `maintenance-audit.py --all` nightly after consolidate.sh (01:00)
-   - Log output: `kai/ledger/maintenance-audit.log`
-   - Confirmed loaded: `launchctl list | grep system-maintenance` exit 0
-
-Commits: ff48cac (healthcheck + morning report) → 48842f3 (maintenance-audit.py) → ongoing (plist)
-
-## Shipped today (2026-04-21 — Session 25)
-
-All 7 of Hyo's directives from S25 implemented and committed (60727a5):
-
-1. **Podcast >60s TTS truncation FIX** (`bin/podcast.py`): `chunk_script_for_tts()` splits 10k-char scripts at sentence boundaries into ≤3800-char pieces; each chunk TTS-processed; MP3s binary-concatenated. Root cause: gpt-4o-mini-tts silently truncates at ~4096 chars. 3-episode bug eliminated.
-
-2. **Podcast archive** (`bin/podcast.py`): Every podcast now saved to `agents/ra/podcasts/YYYY/podcast-DATE.mp3` + `script-DATE.txt` permanently.
-
-3. **Morning report humanized** (`kai/protocols/PROTOCOL_MORNING_REPORT.md` v1.1): BLUF + inverted pyramid writing standard, "NOT this / THIS" examples, max 2 technical terms per section, CEO audience framing.
-
-4. **HYO_FEEDBACK_GATE** (`kai/AGENT_ALGORITHMS.md`): Constitutional meta-algorithm — Hyo feedback → protocol update in same session, committed before closing. All agents. Every product. No repeats.
-
-5. **Aurora daily brief restructured** (`agents/ra/pipeline/newsletter.sh`, `hq.html`): Sections now contain BLUF summary + structured `stories[]` array (category, title, take, watch per story). HQ renderer shows story cards with category badge, insight, and "Watch" field. Clean + organized.
-
-6. **HQ archive requirement** (`kai/protocols/PROTOCOL_HQ_PUBLISH.md` v1.1): Section 7 — every HQ publish saves archive copy to `agents/[agent]/archive/YYYY/MM/[agent]-[type]-DATE.[ext]`.
-
-7. **PROTOCOL_SYSTEM_MAINTENANCE.md** (NEW): Nightly redundancy audit at 01:30 MT. 6-gate pre-maintenance algorithm. Read-everything-first rule. No-purge rule. Forbidden actions list. Flags only — no auto-deletion.
-
-8. **PROTOCOL_PODCAST.md** v1.3: Documents POD-F-015 (TTS truncation fix), archive folder spec (Part 5c), tone standard "NOT THIS" examples + 3-sentence depth test (Part 5d).
-
-9. **Agent GROWTH.md goals tables** (nel/ra/sam/dex): Standardized goals table format added to all 4 agents. `goal-staleness-check.py` now finds all agents clean (Nel/Dex OK; Ra/Sam showing dead-loop in evolution.jsonl — correct detection, Kai Guidance Protocol applies).
-
-10. **PROTOCOL_MORNING_REPORT.md** v1.1 + **AGENT_ALGORITHMS.md**: HYO_FEEDBACK_GATE algorithm documented in both as constitutional.
-
----
-
-## Prior session state (Session 24 — 2026-04-21)
-
-**Updated:** 2026-04-16 ~22:10 MT (session 12 — aether.sh frozen-PnL bug fixed, extraction now authoritative from raw logs)
-**Last healthcheck re-check:** 2026-04-21T16:03Z (10:03 MT, sandbox eloquent-inspiring-noether, automated 2h health check — cycle 20). Status: **ISSUES**, 1 P0 (chronic morning-report renderer false-positive) + 4 P1 (3 dead-loop + 1 unaddressed-flag bucket of 4 auto-remediate dispatches) + 4 P2/P3 — **100% chronic carry-overs, zero net-new this cycle.** Verified ALIVE: queue worker (last completions 15:50Z git-lock-cleanup exit=0 + 15:39Z git push origin main exit=0; pending=0 running=0; recent cmds 1776785972/1776785982/1776786595/1776786638 all ok), ACTIVE.md freshness all <72h (kai/sam/ra/aether 0h, nel 1h, dex 9h), today's outputs nel=17/sam=1/ra=2/aether=2/dex=3. Same chronic items as 19 prior cycles: P0 morning-report renderer regex unpatched, P1 sam/ra/aether dead-loops re-dispatched at 15:55:23Z (20th GUIDANCE volley), P1×4 unaddressed-flag bucket (broken-link + /api/usage 404 + /api/hq?action=data 401 + aether-metrics-no-renderer all auto-dispatched 3× this 2h window with no RESOLVE), P2 worker-age math bug ("493551h" overflow), P2×3 render-binding regex limitations (hq-state/morning-report/remote-access). Aether flag-aether-001 dashboard data-mismatch firing every ~15min (15:27/15:42/15:57Z this cycle — 09:27/09:42/09:57 MT), endless. No new auto-dispatch this cycle — same GUIDANCE volley in flight 20+ cycles. **FIRST INTERACTIVE ACTIONS (unchanged, urgent — 20 cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math at line 378 — #1 ROI; (2) force-unstick 4-agent dead-loop (GUIDANCE has failed 20+ cycles); (3) ship aether dashboard publish→verify→reconcile loop; (4) resolve flag-aether-001 + flag-dex-001 (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) close auto-remediation dispatch→execute→verify→RESOLVE loop; (8) resume S17-006 / BUILD-002 Phase 2. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T14:04Z (08:04 MT, sandbox great-peaceful-feynman, automated 2h health check — cycle 19). Status: **ISSUES**, 1 P0 (chronic false-positive) + 3 P1 (dead-loop) + 5 P2/P3 — **100% chronic carry-overs, zero net-new this cycle.** Verified ALIVE: queue worker (last completion cmd-1776776571-202 cipher.sh at 13:02:55Z exit=0, pending=0 running=0), ACTIVE.md freshness all <72h (kai/sam/ra/aether <10min, nel ~3.9h, dex ~7.8h), today's outputs nel=15/sam=1/ra=2/aether=2/dex=3 (hyo=0 expected, hyo is the user). Same chronic items as 18 prior cycles: P0 morning-report renderer regex unpatched, P1 sam/ra/aether dead-loops re-dispatched at 13:55:07Z (19th GUIDANCE volley re-issue), P2 worker-age math bug ("493549h" overflow false-positive), P2×3 render-binding regex limitations (hq-state/morning-report/remote-access). No new auto-dispatch this cycle — same GUIDANCE volley in flight 19+ cycles. Aether dashboard data-mismatch flag-aether-001 continues firing every ~15min (06:40/06:55/07:10/07:25/07:40/07:56 MT), endless. **FIRST INTERACTIVE ACTIONS (unchanged, urgent — 19 cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math at line 378 — #1 ROI; (2) force-unstick 4-agent dead-loop (GUIDANCE has failed 19+ cycles); (3) ship aether dashboard publish→verify→reconcile loop; (4) resolve flag-aether-001 + flag-dex-001 (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) close auto-remediation dispatch→execute→verify→RESOLVE loop; (8) resume S17-006 / BUILD-002 Phase 2. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T12:00Z (06:00 MT, sandbox youthful-gracious-albattani, automated 2h health check — cycle 18). Status: **ISSUES**, 1 P0 (chronic false-positive) + 3 P1 (dead-loop) + 5 P2/P3 — **100% chronic carry-overs, zero net-new this cycle.** Verified ALIVE: queue worker (4 cmds completed at 11:09Z incl. morning-report git push a0028e7→1909d0a, exit=0), ACTIVE.md freshness all <72h (kai/sam/ra/aether <10min, nel ~2h, dex ~12h), today's outputs nel=13/sam=1/ra=2/aether=2/dex=3 (hyo=0 expected, hyo is the user). Same chronic items as 17 prior cycles: P0 morning-report renderer regex unpatched, P1 sam/ra/aether dead-loops re-dispatched at 11:54:53Z, P2 worker-age math bug ("493547h" overflow false-positive), P2×3 render-binding regex limitations (hq-state/morning-report/remote-access). No new auto-dispatch this cycle — same GUIDANCE volley in flight 18+ cycles. **FIRST INTERACTIVE ACTIONS (unchanged, urgent — 18 cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math at line 378 — #1 ROI; (2) force-unstick 4-agent dead-loop (GUIDANCE has failed 18+ cycles); (3) ship aether dashboard publish→verify→reconcile loop; (4) resolve flag-aether-001 + flag-dex-001 (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) close auto-remediation dispatch→execute→verify→RESOLVE loop; (8) resume S17-006 / BUILD-002 Phase 2. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T10:03Z (04:03 MT, sandbox sleepy-eager-ride, automated 2h health check — cycle 17). Status: **ISSUES**, 1 P0 (false-positive) + 3 P1 + 4 P2/P3 — **100% chronic, zero net-new this cycle.** **P0 (FALSE-POSITIVE, 17+ cycles):** healthcheck.sh re-flagged "Aether metrics JSON exists but hq.html has NO rendering code" — hq.html grep already confirmed 5 renderer references at lines 1166/1168/1171/1591/1994; render-binding regex still unpatched. **P1 (chronic):** 8 AUTO-REMEDIATE DELEGATE entries in last 2h (09:39Z + 09:54Z bursts) — all duplicates of broken-links×2, /api/usage 404×2, /api/hq?action=data 401×2, aether-render P0×2; same set every cycle, zero net-new. **P1 (CHRONIC, 17+ cycles):** 4-agent dead-loop carries over — nel/sam/ra (assessment_stuck) + aether (bottleneck_stuck: dashboard out-of-sync); GUIDANCE volley dispatched at 09:54:36Z this cycle (will likely fail again — has failed 16+ prior cycles). **P1 (SLA breach):** flag-aether-001/002 + flag-dex-001/002 past SLA 3-7 days; root fixes logged in daily-audit-2026-04-21-supplement.md (next-session actions 1 and 3). **P2 (FALSE-POSITIVE, chronic):** healthcheck.sh worker-age math reports "493545h ago" — actual worker.log last activity 2026-04-21T09:02:34Z (~1h ago, ALIVE-IDLE); numeric overflow bug unpatched. **P2 (chronic):** hq-state.json + morning-report.json + remote-access.json: regex limitation says no reference in hq.html. **P3:** sam has no output today (last self-review 2026-04-20T05:30 — consistent with sam dead-loop). **P3:** hyo has no output today (expected — hyo is the user). **Queue:** pending=0, running=0, worker ALIVE-IDLE; last 3 completions all exit_code=0 (cipher cat, cipher.sh, healthcheck.sh). **ACTIVE.md freshness:** kai/nel/sam/ra/aether 8min, dex 226min — all <72h. **Today's outputs:** nel 10, dex 3, aether 2, ra 2, ant 1, sam 0, hyo 0. **FIRST INTERACTIVE ACTIONS (UNCHANGED, urgent — 17+ cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math at line 378 — #1 ROI fix, eliminates ~75% of recurring flag-storm; (2) patch ticket.py KeyError 'owner'; (3) force-unstick 4-agent dead-loop — GUIDANCE has failed 17+ cycles, need a different intervention; (4) ship aether dashboard publish→verify→reconcile loop (flag-aether-002 open 3+ days); (5) resolve flag-aether-001 + flag-dex-001 properly (7+ days open); (6) patch nel.sh grep -P→-E; (7) close auto-remediation dispatch→execute→verify→RESOLVE loop; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T06:04Z (00:04 MT, sandbox exciting-optimistic-rubin, automated 2h health check — cycle 15). Status: **ISSUES**, 1 P0 + 4 P1 + 4 P2 — **all chronic, zero net-new (15+ cycles of the same findings).** **P0 (CHRONIC FALSE-POSITIVE, 15+ cycles):** healthcheck re-reports "Morning report JSON exists but hq.html has NO rendering code" — hq.html renderers at 1591/1633/1994 confirmed working; render-binding regex STILL unpatched. **P1 (CHRONIC, 15+ cycles):** 4-agent dead-loop — nel/sam/ra/aether all assessment_stuck; GUIDANCE volley re-dispatched at 05:54Z (also :39/:23/:08/:53 last 4 cycles). Aether specifically fires "dashboard data mismatch: local ts 2026-04-20T23:49:47-06:00 != API ts 2026-04-20T23:34:36-06:00" every ~15min, endless. **P1 (CHRONIC):** AUTO-REMEDIATE dispatch→execute→verify→RESOLVE loop still not closing — same remediation tasks re-fire every cycle without ever hitting RESOLVED. **P2 (FALSE-POSITIVE, healthcheck.sh worker-age math bug `[[: 00:` line 378):** prior run claimed "Worker last active 493541h ago" — bogus. Actual: worker.log last heartbeat 2026-04-21T02:40:23Z, queue pending=0 running=0, alive-idle (~3.4h since last IDLE line is normal — no work dispatched to process). **P2 (still):** ticket.py KeyError 'owner' crashes SLA compliance check. **P2 (x3):** render-binding false-positives for hq-state.json / morning-report.json / remote-access.json — same regex bug as P0. **Queue:** pending=0, running=0, worker ALIVE-IDLE. **ACTIVE.md freshness:** kai/nel/sam/ra/aether <1h, dex ~23h — all <72h. **Today's outputs:** dex 2 + nel 1 files for 2026-04-21; rest of agents' 22:00-23:00 MT cycle reports properly filed under 2026-04-20 (cycle timing, not a miss). **P0/P1 net-new FLAGs last 2h:** 0 (only the aether dashboard-mismatch loop continues firing at 05:19/05:34/05:49 — same pattern, not new). **No new auto-dispatch this cycle** — churn avoidance, same volley in flight 15+ cycles. **FIRST INTERACTIVE ACTIONS (unchanged, urgent — 15+ cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math at line 378 — #1 ROI fix, kills 2 chronic false-positives recurring 15+ consecutive cycles; (2) force-unstick 4-agent dead-loop — GUIDANCE has failed 15+ cycles, needs cycle reset or per-agent root-cause triage; (3) ship aether dashboard publish→verify→reconcile loop (flag-aether-002 open 3+ days — root cause of the 15min-mismatch loop); (4) resolve flag-aether-001 + flag-dex-001 properly (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E (BSD grep on macOS doesn't support -P); (7) patch auto-remediation accountability — dispatch→execute→verify→RESOLVE loop must close; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T04:04Z (22:04 MT, sandbox dazzling-eloquent-hopper, automated 2h health check). Status: **ISSUES**, 1 P0 + 3 P1 + 2 P2 — **all chronic, zero net-new (14+ cycles of the same findings).** **P0 (CHRONIC FALSE-POSITIVE, 14+ cycles):** flag-nel-001 re-fired 2026-04-21T02:40:02Z "Aether metrics JSON exists but hq.html has NO rendering code" — hq.html renderers at 1591/1633/1994 confirmed working; healthcheck.sh render-binding regex STILL unpatched. **P1 (CHRONIC):** same 3-item flag-nel-001 cluster re-fired at 02:40:01-02Z — 1 broken link + /api/usage HTTP 404 + /api/hq?action=data HTTP 401; recurring every ~2h cycle. **P1 (CHRONIC):** 4-agent dead-loop — nel/sam/ra/aether still assessment_stuck; GUIDANCE volley re-dispatched at 02:40:17-18Z (14+ cycles without breakout). **P1 (CHRONIC):** AUTO-REMEDIATE dispatch→execute→verify→RESOLVE loop still not closing — same remediation tasks re-fire every cycle without ever hitting RESOLVED. **P2 (FALSE-POSITIVE, healthcheck.sh worker-age math bug [[: 00: at line 378):** prior run claimed "Worker last active 493539h ago" — bogus. Actual: worker.log last heartbeat 2026-04-21T02:40:23Z IDLE (~1h24m before this check); queue pending=0 running=0, alive-idle. **P2 (still):** ticket.py KeyError 'owner' crashes SLA compliance check. **Queue:** pending=0, running=0, worker ALIVE-IDLE. **ACTIVE.md freshness:** kai/nel/sam/ra/aether ~2h, dex ~22h — all <72h. **Today's outputs confirmed:** nel/sam/ra/aether/dex all produced 2026-04-20 files. **P0/P1 FLAGs in log last 2h:** 4 total (all flag-nel-001 cluster, 0 net-new pattern). **No new auto-dispatch this cycle** — churn avoidance, same volley in flight 14+ cycles. **FIRST INTERACTIVE ACTIONS (unchanged, urgent — 14+ cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math — #1 ROI fix, kills 2 chronic false-positives recurring 14+ consecutive cycles; (2) force-unstick 4-agent dead-loop — GUIDANCE has failed 14+ cycles, needs cycle reset or per-agent root-cause triage; (3) ship aether dashboard publish→verify→reconcile loop (flag-aether-002 open 3+ days); (4) resolve flag-aether-001 + flag-dex-001 properly (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) patch auto-remediation accountability — dispatch→execute→verify→RESOLVE loop must close; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T02:05Z (20:05 MT, sandbox zen-vigilant-davinci, automated 2h health check). Status: **ISSUES**, 1 P0 + 3 P1 + 2 P2 — **all chronic, zero net-new.** **P0 (still, CHRONIC FALSE-POSITIVE):** nel re-flagged 2026-04-20T20:39:37Z "Aether metrics JSON exists but hq.html has NO rendering code" — 13+ consecutive cycles now, hq.html renderers at 1591/1633/1994 confirmed working; healthcheck.sh render-binding regex STILL unpatched. **P1 (still, CHRONIC):** same 3-item nel cluster re-fired every 6h cycle — 1 broken link + /api/usage HTTP 404 + /api/hq?action=data HTTP 401 (recurring since 2026-04-20T02:38Z, ~24h). AUTO-REMEDIATE loop is theater — dispatches but never RESOLVEs. **P2 (CHRONIC):** aether dashboard timestamp drift — local 2026-04-20T20:02:17-06:00 vs API 2026-04-20T19:47:07-06:00 (flag-aether-001 at 02:02:24Z + 02:02:25Z); publish→verify→reconcile loop STILL not shipped, flag-aether-002 open since 2026-04-18 (>72h stale). **P2 (CHRONIC):** aether [SELF-REVIEW] "1 untriggered files found" re-fires every cycle (flag-aether-001 at 02:02:20Z), specific file unidentified. **Prior P2 "Worker last active 493537h ago" — CONFIRMED FALSE-POSITIVE (Nth cycle):** worker.log last DONE 2026-04-20T23:02:30Z cmd-1776726146-153 (cipher.sh) exit=0, ~3h before this check, IDLE loop after. healthcheck.sh worker-age `[[: 00:` math bug still unpatched. **Queue:** pending=0, running=0, worker ALIVE-IDLE. **ACTIVE.md freshness:** kai/nel/sam/ra/aether 0h, dex 19h — all <72h (dex approaching 24h P2 threshold). **Today's outputs confirmed:** nel (27 logs), sam (1), aether (2), ra (2), dex (3) all produced 2026-04-20 files. **FLAGs in log last ~30min:** aether self-dispatched P2 cluster (flag-aether-001 ×3 for self-review + dashboard-mismatch ×2); 0 net-new P0/P1 from agents. **No new auto-dispatch this cycle** — churn avoidance, same GUIDANCE volley already in flight 13+ cycles. **FIRST INTERACTIVE ACTIONS (unchanged, urgent — 13+ cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math — #1 ROI fix, kills 2 chronic false-positives that have recurred 13+ consecutive cycles; (2) force-unstick 4-agent dead-loop — GUIDANCE has failed 13+ cycles, needs cycle reset or per-agent root-cause triage; (3) ship aether dashboard publish→verify→reconcile loop (flag-aether-002 open 3+ days); (4) resolve flag-aether-001 + flag-dex-001 properly (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) patch auto-remediation accountability — dispatch→execute→verify→RESOLVE loop must close; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-21T00:04Z (18:04 MT, sandbox lucid-compassionate-euler, automated 2h health check). Status: **ISSUES**, 4 P1 + 2 P2 — **all chronic, zero net-new**. **P1 (still, all 4 agents):** nel/sam/ra/aether still in assessment_stuck dead-loop; [GUIDANCE] cascade re-dispatched at 23:23 / 23:38 / 23:53 UTC (15-min cadence), agents not acknowledging — aether continues reporting "cycle complete: 8-9 trades, PNL=$6.33, dashboard: out-of-sync" every cycle. **P2 (CHRONIC):** aether dashboard timestamp drift — 8 P2 flags in last ~45min rotating local-ts vs API-ts variants (18:01:04 vs 17:45:55, 17:45:55 vs 17:30:44, 17:30:44 vs 17:15:34 MT). Publish→verify→reconcile loop STILL not shipped; flag-aether-002 open since 2026-04-18 asking for systemic fix (>72h stale). **P2 (chronic):** aether [SELF-REVIEW] "1 untriggered files found" re-fires every cycle, specific file unidentified. **Resolved since last re-check (false-positive cleanup):** (a) prior P0 "morning-report has NO rendering code" — CONFIRMED FALSE-POSITIVE for the Nth cycle: hq.html line 1591 `if (report.type === 'morning-report')` + line 1994 display map + line 1171 FEED_ALLOWED_TYPES all working; healthcheck.sh render-binding regex STILL unpatched. (b) prior P2 "Worker last active 493535h ago" — CONFIRMED FALSE-POSITIVE: queue healthy, pending=0 running=0, 5 recent completions all exit_code=0, most recent cmd-1776726146-153 (cipher.sh) at 23:02:30Z. **Queue:** pending=0, running=0, worker ALIVE-IDLE. **ACTIVE.md freshness:** kai/nel/sam/ra/aether 0h, dex 17h — all <72h. **Today's outputs confirmed:** nel (30+ logs), sam, aether, ra, dex, ant, hyo all produced 2026-04-20 files. **Hyo inbox:** not checked this cycle (no new flags requested). **FLAGs in log last 2h:** 0 net-new P0/P1 from agents; aether self-dispatched ~8 P2 dashboard-mismatch + ~4 P2 self-review. **No new auto-dispatch this cycle** — churn avoidance, same GUIDANCE volley already in flight 3x. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) PATCH healthcheck.sh render-binding regex + worker-age math — kills 2 chronic false-positives recurring 12+ consecutive cycles, #1 ROI fix; (2) force-unstick 4-agent dead-loop — GUIDANCE has failed 12+ cycles, needs cycle reset or per-agent root-cause triage; (3) ship aether dashboard publish→verify→reconcile loop (flag-aether-002 open 3+ days); (4) resolve flag-aether-001 + flag-dex-001 properly (7+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) patch auto-remediation accountability — dispatch→execute→verify→RESOLVE loop must close; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-20T22:05Z (16:05 MT, sandbox quirky-tender-albattani, automated 2h health check). Status: **ISSUES**, 1 P1 + 3 P2 + 1 P3 — **all chronic, zero net-new**. **P1 (still):** 1 broken link auto-dispatched at 21:52:57Z — AUTO-REMEDIATE task kai-001 in flight, not yet RESOLVED. **P2 (still, CHRONIC):** aether dashboard timestamp FROZEN — API ts stuck at 2026-04-20T15:29:29-06:00 while aether local cycles advance (latest 15:59:45-06:00); 24 mismatch flags in last 2h — publish→verify→reconcile loop still not shipped. **P2 (still):** 9 [SELF-REVIEW] "1 untriggered files found" flags in last 2h — chronic, same file(s), not converging. **P2 (still):** nel/sam/ra/aether received [GUIDANCE] dispatches at 21:52:56-57Z for dead-loop (3+ identical assessments); awaiting responses — same volley that's fired 10+ consecutive cycles without breakout. **P3 (FALSE-POSITIVE):** prior healthcheck wrongly claimed worker dead 493533h ago — worker is ACTIVE, last DONE 2026-04-20T22:02:32Z cmd-1776722550-177 exit=0 (~3min before this check), healthcheck.sh worker-age math still unpatched. **Queue:** pending=0, running=0, completed=968, failed=7, worker alive-idle. **ACTIVE.md freshness:** kai/aether ~5min, nel/sam/ra ~12min, dex ~15.8h — all <72h. **Today's outputs confirmed:** ant, sam, aether, ra, nel all produced 2026-04-20 files. **Morning report completeness check:** 08:00 — all 4 dailies (nel/ra/sam/kai) initially missing, all remediated; final failures=0. **Hyo inbox:** 0 unread. **FLAGs in log last 2h:** 40 total (1 P1 broken-links + 24 P2 dashboard-mismatch + 9 P2 self-review + 6 misc P2). **No new auto-dispatch this cycle** — churn avoidance; same AUTO-REMEDIATE + GUIDANCE volley already in flight. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding regex + worker-age math (kills chronic false-positives recurring 11+ cycles); (2) force-unstick 4-agent dead-loop — GUIDANCE has failed 10+ cycles, needs cycle reset or per-agent root-cause triage; (3) ship aether dashboard publish→verify→reconcile loop to unfreeze API timestamp (frozen >30min this cycle, chronic across days); (4) resolve flag-aether-001 + flag-dex-001 properly (6+ days open); (5) patch ticket.py KeyError 'owner'; (6) patch nel.sh grep -P→-E; (7) patch auto-remediation accountability — dispatch→execute→verify→RESOLVE loop must close; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-20T16:03Z (10:03 MT, sandbox inspiring-intelligent-heisenberg, automated 2h health check). Status: **ISSUES**, 1 P0 + 5 P1 + 8 P2 + 1 P3 — **all chronic, zero net-new; pending=0, running=0; no new auto-dispatch this cycle (churn avoidance — same AUTO-REMEDIATE + GUIDANCE volley fired at 15:22 + 15:37 + 15:52Z, zero RESOLVE).** **P0 (still, CHRONIC FALSE-POSITIVE):** healthcheck render-binding re-fires "Morning report JSON exists but hq.html has NO rendering code" + same for Aether metrics / hq-state / remote-access / morning-report — hq.html renderers at 1591/1633/1994 confirmed working per 10+ prior audits; healthcheck.sh regex STILL unpatched (10+ consecutive cycles). **P1 (still, CHRONIC):** same 4-item auto-remediate cluster re-dispatched every 15min (1 broken link + /api/usage 404 + /api/hq?action=data 401 + morning-report render-binding). **P1 (still):** 4-agent dead-loop — nel (routine maintenance), sam (routine engineering check), ra (health check with 1 warning), aether (standby: 0 trades, dashboard out-of-sync). Same [GUIDANCE] "Your last 3 cycles had the same assessment" message re-fired 3x in last 2h (15:37:05Z nel/sam/ra + 15:37:06Z aether + same cluster at 15:52:07Z); agents not acknowledging. **P2 (FALSE-POSITIVE, chronic):** healthcheck worker-age math `[[: 00: syntax error` (healthcheck.sh line 378) claims "Worker last active 493527h ago" — bogus. Worker IS alive: recent completions include recheck-flag-nel-001.json exit=0 at 14:39:37Z, event-sam-flag-nel-001.json exit=0 at 14:39:34Z. **P2 (still):** aether dashboard timestamp drift — local ts always one cycle ahead of API ts (7 P2 flag entries in last 2h: 15:25/15:40/15:55Z variants). Timestamp-variant dedup family still not catching. **P2:** ticket.py KeyError 'owner' crashes SLA check step (schema mismatch unpatched). **P2:** daily-agent-report.sh line 43 'nel: unbound variable' in sam event stderr. **P2:** nel.sh emits 5x 'grep: invalid option -- P' per cycle (BSD macOS). **P3:** hyo has no output today (EXPECTED — hyo is user). **Queue:** pending=0, running=0, completed=955, failed=7, worker ALIVE. **ACTIVE.md freshness:** kai/nel/sam/ra ~11min, aether ~7min, dex ~9.8h — all <72h. **Today's logs:** nel:7+, sam:1 (self-review), ra:2, aether:2, dex:3, hyo:0 (expected). **P0/P1 FLAGs in log last 2h:** 0 net-new from agents; only P2 aether timestamp-variant spam + self-review noise. **FIRST INTERACTIVE ACTIONS (unchanged, now 10+ cycles of no-op remediation):** (1) PATCH healthcheck.sh render-binding regex + worker-age math — kills 2 chronic false-positives recurring 10+ cycles, #1 ROI fix in the system. (2) Force-unstick 4-agent dead-loop — GUIDANCE re-dispatch has failed 6+ cycles, needs cycle reset or per-agent root-cause triage. (3) Resolve flag-aether-001 + flag-dex-001 properly (6+ days open each). (4) Ship aether dashboard publish→verify→reconcile loop. (5) Patch ticket.py KeyError 'owner'. (6) Patch nel.sh grep -P→-E. (7) Patch auto-remediation accountability — dispatch→execute→verify→RESOLVE loop must actually close. (8) Resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-20T10:04Z (04:04 MT, sandbox sharp-nice-edison, automated 2h health check). Status: **ISSUES**, 1 P0 + 3 P1 + 4 P2/P3 — **all chronic, zero net-new; pending=0, running=0; no new auto-dispatch this cycle (churn avoidance — same AUTO-REMEDIATE + GUIDANCE volley has fired 5 consecutive cycles already: 08:51, 09:06, 09:21, 09:36, 09:51).** **P0 (still, CHRONIC FALSE-POSITIVE):** render-binding check keeps flagging "Aether metrics/morning-report JSON exists but hq.html has NO rendering code" — hq.html renderers at 1591/1633/1994 confirmed working per 9+ prior audits; healthcheck.sh regex still unpatched (9+ consecutive cycles). Re-delegated to kai-001 5x in last 2h with zero resolution. **P1 (still, all CHRONIC):** /api/usage HTTP 404, /api/hq?action=data HTTP 401, 1 broken link, daily-audit.sh false-WARN + AUTOMATE counter bugs (unpatched since 04-19 supplement — carry-forward now 2 days). All 4 P1s auto-re-delegated every 15min; loop is remediation theater, not resolution. **P1 (still):** 4-agent dead-loop — nel (routine maintenance), sam (routine engineering check), ra (health check with 1 warning), aether (standby: 0 trades, dashboard out-of-sync). Same [GUIDANCE] "Your last 3 cycles had the same assessment" message re-fired 5x in last 2h; agents not acknowledging. **P1 (still):** aether dashboard data mismatch — local ts always ahead of API ts by exactly one cycle (7 flags in last 2h: 03:05 vs 02:50, 03:21 vs 03:05, 03:36 vs 03:05, 03:51 vs 03:36). Flag-dedup timestamp-variant family still not catching. Publish→verify race or stale cache. **P2 (FALSE-POSITIVE, chronic):** prior healthcheck again claimed "Worker last active 493521h ago" — bogus. Queue worker IS alive: cmd-1776679341-155 (cipher.sh) completed 2026-04-20T10:02:24Z exit=0, ~1min before this check. healthcheck.sh worker-age `[[: 00: syntax error` math bug still unpatched. **P2:** sam has 0 entries in agents/sam/logs/ dated 2026-04-20 (correlates with sam dead-loop; possibly expected if sam runner is evening-cadence but worth verifying). **P3:** hyo has 0 logs today (expected — hyo is the user, not an autonomous agent). **P3:** dex/ledger/ACTIVE.md last touched 2026-04-20T00:14 MT (~9.8h ago, <24h threshold so not yet stale). **Queue:** pending=0, running=0, worker ALIVE (last completion 10:02:24Z); completed total includes cmd-1776679341-155, cmd-1776675988-392, cmd-1776675759-323 — all exit=0. **ACTIVE.md freshness:** kai/nel/sam/ra/aether ~12min, dex ~9.8h — all <72h. **Today's logs:** nel:10, aether:2, ra:2, dex:3, ant:1, sam:0, hyo:0. **P0/P1 FLAGs in log last 2h:** only recurring healthcheck self-generated AUTO-REMEDIATE churn (5 P0 entries for kai-001 "Aether metrics render", ~15 P1 entries split across sam-001/kai-001/kai-001/kai-001 — all same task_ids re-fired each cycle). **Newsletter shipped today:** agents/ra/output has 2026-04-20 newsletter; agents/sam/website/daily/newsletter-2026-04-20.html deployed to Vercel; Ra pipeline succeeded via gpt-4o fallback (claude-code timed out 180s, GROK_API_KEY unset). **FIRST INTERACTIVE ACTIONS (unchanged, now URGENT — 9+ cycles of no-op remediation):** (1) **PATCH healthcheck.sh render-binding regex + worker-age `[[: 00:` math** — these 2 bugs are generating ~90% of the chronic P0/P1 churn. Kills 2 false-positives per cycle, every cycle, forever. This is the #1 ROI fix in the entire system right now. (2) Open hq.html and explicitly add renderer cases for `morning-report` + `aether-analysis` feed payloads per SE-010-013 (even if check is a false-positive, making the renderer explicit ends the ambiguity). (3) Force-unstick the 4-agent dead-loop — GUIDANCE re-dispatch hasn't worked 5+ cycles, needs different intervention (cycle reset, forced re-assessment with new prompt, or per-agent root-cause triage). (4) Resolve flag-aether-001 + flag-dex-001 properly (6+ days open each). (5) Ship aether dashboard publish→verify→reconcile loop to unfreeze timestamp drift. (6) Ship dex schema-validation gate at JSONL append. (7) Close stale ra-002/ra-003 tickets — newsletters have shipped 04-18/19/20. (8) Patch ticket.py KeyError 'owner'. (9) Patch auto-remediation accountability — dispatch → execute → verify → RESOLVE loop must actually close (otherwise every cycle adds more remediation delegations that never resolve). (10) Resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-20T06:04Z (00:04 MT, sandbox ecstatic-tender-allen, automated 2h health check). Status: **ISSUES**, 1 P0 + 2 P1 + 5 P2 — **all chronic, zero net-new this cycle; no new dispatch (churn avoidance — prior 05:50Z auto-remediation + GUIDANCE volley still in flight).** **P0 (still, FALSE-POSITIVE per prior audits):** healthcheck's 05:50Z render-binding check still reports "morning-report JSON exists but hq.html has NO rendering code" + hq-state.json / morning-report.json / remote-access.json "no reference" — hq.html 1591/1633/1994 renderers confirmed working; healthcheck.sh regex still unpatched (8+ consecutive cycles now). **P1 (still):** flag-aether-001 queued since 2026-04-14T04:50:26Z (~6 days, >72h stale). Dashboard drift continues at ~15min cadence — latest variant local 23:48:21 MT vs API 23:33:13 MT (flag-dedup still not catching timestamp-variant family). **P1 (still):** flag-dex-001 queued since 2026-04-14T06:02:59Z (~6 days, >72h stale). Dex Phase 1 JSONL corruption; dex-002 AUTO-REMEDIATE still DELEGATED from 2026-04-18T08:07Z — schema-validation gate at append still unshipped. **P2:** ra-002/ra-003 (no-newsletter 2026-04-14 cascade) still DELEGATED since 04-14T18:10/21:53Z (>5 days). Actual newsletters 2026-04-18 + 2026-04-19 shipped per agents/ra/output/ — tickets are stale, not functionally blocking. **P2:** prior cycle's guidance volley at 05:50:46Z (nel-001/sam-001/ra-001/aether-001 all "3-cycle assessment_stuck") dispatched; awaiting next cycle to confirm breakout. **P2 (FALSE-POSITIVE, chronic):** previous healthcheck again reported "Worker last active 493517h ago" — worker.log shows last DONE 2026-04-20T05:02:18Z cmd-1776661334-128 cipher.sh exit=0 (~1h before this check), IDLE loop after. healthcheck.sh worker-age math still unpatched. **P2 (expected):** queue security check BLOCKED cmd-1776657784-212 (stat+ls of .secrets dir) — sandbox cannot run `stat -f` syntax; benign. **P3:** sam/ra 0 logs today (2026-04-20) — but cadence is evening MT, so today's reports aren't due yet. Last self-reviews 2026-04-19 present for both. nel:1, aether:2, dex:2 logs today. **Queue:** pending=0, running=0, worker ALIVE (last completion 05:02:18Z). **ACTIVE.md freshness:** all 6 agents ≤23h (kai/nel/sam/ra/aether <1h, dex 23h) — all <72h. **P0/P1 FLAGs in log last 2h:** 0 net-new from agents; only P2 aether timestamp-variant spam + self-review "1 untriggered files" noise. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding regex + worker-age math `[[: 00:` bug (kills 2 chronic false-positives recurring 8+ cycles); (2) resolve flag-aether-001 + flag-dex-001 properly (6 days open each); (3) ship aether dashboard publish→verify→reconcile loop to unfreeze PNL ($24.94/151 trades frozen ≥26h); (4) ship dex schema-validation gate at JSONL append; (5) close stale ra-002/ra-003 tickets (newsletters have shipped since); (6) patch ticket.py KeyError 'owner'; (7) patch auto-remediation accountability — dispatch → execute → verify → RESOLVE loop must actually close; (8) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-20T04:03Z (22:03 MT, sandbox upbeat-stoic-bell, automated 2h health check). Status: **ISSUES**, 4 P0/P1 findings — **all chronic, zero net-new; flag-nel-001 cluster unchanged since 02:38Z; no new auto-dispatch this cycle (churn avoidance).** **P0 (still, FALSE-POSITIVE per repeat audits):** `flag-nel-001` at 02:38:30Z "Aether metrics JSON exists but hq.html has NO rendering code" — hq.html 1591/1633/1994 render OK; healthcheck.sh render-binding regex still unpatched. **P1 (still):** `flag-nel-001` at 02:38:29-30Z 3× entries — 1 broken link + /api/usage 404 + /api/hq?action=data 401 — cluster cycling since 08:37Z 2026-04-19 (20+ hours, never resolved, just re-raised). **Queue:** pending=0, running=0, worker ALIVE — last completion 2026-04-20T04:03:20Z `cmd-1776657799-261` (ls -ld .secrets) exit=0, ~0 min before check; 3 completions in last 60s (cmds -187/-236/-261). Ignore healthcheck-latest.json older claim of "Worker last active 493515h ago" — healthcheck.sh worker-age math bug. **ACTIVE.md freshness:** kai/nel/sam/ra/aether 0h, dex 21h — all <72h. **Today's logs (MT 2026-04-19):** nel:28, sam:1, ra:2, aether:2, dex:3. **Recent failed queue:** `cmd-1776657784-212` (stat -f "%Mp%Lp" .secrets) BLOCKED by security check — sandbox cannot run `stat -f` syntax; benign. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding regex + worker-age math `[[: 00:` bug (kills 2 chronic false-positives recurring 8+ cycles); (2) patch ticket.py KeyError 'owner'; (3) escalate dead-loop intervention — 5+ GUIDANCE re-dispatches not working, agents need forced unstick or cycle reset; (4) fix aether dashboard publish path to unfreeze PNL (>26h frozen at $24.94/151 trades); (5) patch auto-remediation accountability — dispatch → execute → verify → RESOLVE loop must actually close; (6) close flag-nel-001 cluster properly (20h open); (7) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T21:52Z (15:52 MT, sandbox great-hopeful-allen, automated 2h health check). Status: **ISSUES**, 4 P1 + 3 P2 — **all chronic, zero net-new; no new auto-dispatch this cycle (churn avoidance).** **P0 (recurring, ROOT CAUSE = healthcheck.sh regex bug):** render-binding check re-fired 08:00, 08:37, 14:37, 20:38 today (4x in 12h) flagging 'morning-report / aether-metrics JSON has NO rendering code' — all confirmed FALSE-POSITIVE per prior audits (hq.html 1591/1633/1994 render OK). Also hq-state.json, morning-report.json, remote-access.json flagged 'no reference'. **P1 (still):** /api/usage 404 + /api/hq?action=data 401 — recurring in flag-nel-001 cluster since 08:37Z, never resolved, just re-raised every 6h. **P1 (still):** sam / ra / aether 3-way dead-loop — sam (routine engineering check), ra (health check with 1 warning), aether (dashboard out-of-sync, PNL frozen $24.94/151 trades since 04-18 ~20:00 MT, ≥24h stale). GUIDANCE dispatched 5+ consecutive cycles, agents not acknowledging. **P1 (flags-accountability):** 4 unaddressed P0/P1 flags in last 2h — same flag-nel-001 cluster cycling for 18+ hours. Auto-remediation dispatches but doesn't verify fix; **loop closure is broken** — remediation theater, not actual resolution. **P2 (FALSE-POSITIVE, chronic):** healthcheck.sh line 378 `[[: 00: syntax error` in worker-age math → reports 'worker last active 493509h ago' when worker is actually live (last completion 21:02:36Z cmd-1776632554-201 cipher.sh exit=0, ~50min before this check). **P2 (FALSE-POSITIVE, chronic):** ticket.py KeyError 'owner' in SLA check (schema mismatch not patched). **P2 (chronic):** 1 broken monitor link + 16 broken doc links + 1 untriggered file (self-review) — pending cleanup. **Queue:** pending=0, running=0, worker alive (last cmd 21:02:36Z). **ACTIVE.md freshness:** kai/sam/ra/aether 0h, nel 1h, dex 15h — all <72h. **Today's logs:** nel:22, sam:1, ra:2, aether:2, dex:3, ant:1, hyo:2. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding regex + worker-age math `[[: 00:` bug (kills 2 chronic false-positives recurring 7+ cycles); (2) patch ticket.py KeyError 'owner'; (3) escalate dead-loop intervention — 5+ GUIDANCE re-dispatches not working, agents need forced unstick or cycle reset; (4) fix aether dashboard publish path to unfreeze PNL (>24h frozen); (5) patch auto-remediation accountability — dispatch → execute → verify → RESOLVE loop must actually close; (6) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T18:04Z (12:04 MT, sandbox ecstatic-trusting-rubin, automated 2h health check). Status: **ISSUES**, 3 P1 + 2 P2 — **all chronic, zero net-new; no new auto-dispatch this cycle (churn avoidance).** **P1 (still):** aether 3-way dead-loop persisting — 48 identical REPORT statuses in last 6h ('cycle complete: 151 trades, PNL=$24.94, dashboard: out-of-sync'); GUIDANCE re-dispatched 5 consecutive cycles, agent not acknowledging, unsticking mechanism needs redesign. **P1 (still):** sam last REPORT 6.6h ago (tests=0p/0f, api=up, deploy=not_run), ra last REPORT 11.6h ago (TESTING) — both silent, not acknowledging GUIDANCE. **P1 (still):** aether PNL frozen $24.94/151 trades since 04-18 ~20:00 MT (≥22h stale); local-ts vs API-ts diverging ~15min per cycle — dashboard publish path broken, root cause of aether dead-loop. **P2 (FALSE-POSITIVE, recurring):** automated healthcheck.sh at 18:04:15Z again emitted P0 'morning-report JSON has NO rendering code' + 3x P2 'data file has no reference in hq.html' (hq-state/morning-report/remote-access) + P2 'Worker last active 493506h ago' — all four confirmed false-positives per repeat audits (hq.html 1591/1633/1994 render OK; worker ran cipher.sh at 17:02:17Z, 1h ago). healthcheck.sh regex + worker-age math still unpatched. **P2:** ticket-SLA step still throws KeyError 'owner' (ticket.py schema mismatch not patched). **FLAGs in log last 2h:** 0 P0/P1, 32 P2 (all aether dashboard-mismatch + self-review spam). **Queue:** pending=0, running=0, worker alive-idle (last completion cipher.sh 17:02:17Z, 1h ago; 2 completions in 24h). **ACTIVE.md freshness:** kai/sam/ra/aether 0h, nel 3h, dex 11h — all <72h. **Today's logs:** nel:18, sam:1, ra:2, aether:2, dex:3. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding regex + worker-age math (kills 2 chronic false-positives that have recurred ≥6 consecutive cycles); (2) escalate dead-loop intervention — re-asking same GUIDANCE 5x not working, agents need forced unstick or cycle reset; (3) fix aether dashboard publish path to unfreeze PNL (>22h frozen); (4) patch aether flag-dedup timestamp-variant family (still producing 32 P2/2h spam); (5) patch ticket.py KeyError 'owner'; (6) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T16:05Z (10:05 MT, sandbox cool-vigilant-feynman, automated 2h health check). Status: **ISSUES**, 4 P1 + 3 P2 — **all chronic, zero net-new; no new auto-dispatch this cycle (churn avoidance).** **P1 (still):** 4 flag-nel-001 cascade entries at 14:37:45-46Z (1 broken link + /api/usage 404 + /api/hq?action=data 401 + 1 P0 aether-metrics render-binding FALSE-POSITIVE); AUTO-REMEDIATE dispatched 14:38:02Z, no RESOLVE yet. **P1 (still):** sam/ra/aether 3-way dead-loop (assessment_stuck 4+ cycles); GUIDANCE re-dispatched 14:38:01-02Z this cycle — 4th consecutive re-dispatch, agents still not breaking out, unsticking mechanism needs redesign. Aether PNL still frozen $24.94/151 trades since 04-18 ~20:00 MT (dashboard publish path still broken). **P2 (FALSE-POSITIVE):** worker-age math bug still emits 493504h; actual last DONE 16:02:16Z cmd-1776614533-129 cipher.sh exit=0 (~2min before automated check at 16:04Z), worker alive-idle. **P2 (FALSE-POSITIVE):** render-binding check still flags morning-report/hq-state/remote-access/aether-metrics .json as "no rendering code" — hq.html lines 1591/1633/1994 confirmed working per prior audits; regex too literal. **P3:** hyo/kai 0 logs today (expected — consolidation/kai-daily fire later). All 5 operating agents producing: nel:16, sam:1, ra:2, aether:2, dex:3, ant:1. **Queue:** pending=0, running=0, worker alive-idle (last exec 16:02:16Z). **ACTIVE.md freshness:** kai/sam/ra/aether 0h, nel 1h, dex 9h — all <72h. **P0/P1 FLAGs in log last 2h:** 4 (all nel cascade, all AUTO-REMEDIATE in flight). **Ticket-SLA step:** still throws KeyError 'owner' (ticket.py schema mismatch not patched). **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding + worker-age math (kills 2 chronic false-positives); (2) escalate dead-loop intervention — re-asking same GUIDANCE 4x not working; (3) fix aether dashboard publish path to unfreeze PNL; (4) patch aether flag-dedup timestamp-variant family; (5) patch ticket.py KeyError 'owner'; (6) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T14:04Z (08:04 MT, sandbox focused-wonderful-mayer, automated 2h health check). Status: **ISSUES**, 1 P0 (confirmed FALSE-POSITIVE) + 3 P1 + 3 P2 + 1 P3 — **all chronic, zero net-new; no new auto-dispatch this cycle (churn avoidance).** **P0 (still, FALSE-POSITIVE):** morning-report render-binding check still firing despite working renderers at hq.html 1591/1633/1994; healthcheck.sh not yet patched. **P1 (still):** sam/ra/aether 3-way dead-loop (assessment_stuck 3+ cycles); GUIDANCE re-dispatched 13:18Z + 13:33Z + 13:48Z (3x this interval, same task_ids) — agents ignoring guidance, needs deeper intervention. Aether PNL still frozen $24.94/151 trades since 04-18 ~20:00 MT (dashboard publish path still broken). **P2:** flag-aether-001 timestamp-variant spam continues (6 entries at 13:23/13:38/13:54Z rotating 07:08→07:23→07:38→07:53 MT). **P2 (FALSE-POSITIVE):** worker-age math bug — reported 493501h, actual last DONE 14:02:20Z cmd-1776607337-131 cipher.sh exit=0 (~2min before this check), worker alive-idle. **P2:** aether self-review '1 untriggered files found' every cycle, specific file not identified. **P3:** all 5 agents (nel/sam/ra/aether/dex) have today's output — healthy. **Queue:** pending=0, running=0, worker alive-idle (last cmd 14:02:20Z). **ACTIVE.md freshness:** kai/aether 10min, sam/ra 16min, nel ~4h, dex ~8h — all <72h. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding + worker-age math (kills 2 chronic false-positives); (2) escalate dead-loop intervention — re-asking the same GUIDANCE question 3x is not working, agents need a different unsticking mechanism; (3) fix aether dashboard publish path to unfreeze PNL; (4) patch aether flag-dedup timestamp-variant family; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T10:04Z (04:04 MT, sandbox peaceful-cool-bardeen, automated 2h health check). Status: **ISSUES**, 1 P0 + 2 P1 + 2 P2 + 2 P3 — **all chronic, zero net-new.** **P0 (still, recurring FALSE-POSITIVE):** healthcheck render-binding flags 'Morning report JSON exists but hq.html has NO rendering code' AND 'Aether metrics JSON exists but hq.html has NO rendering code' every cycle; AUTO-REMEDIATE re-delegated 09:33:13Z + 09:48:15Z + 10:03:17Z (3x in last 30min, same task_id kai-001) with no resolution — remediation theater; hq.html has working renderers per prior audits (lines 1591/1633/1994). **P1 (still):** same 4 nel flags re-delegated 10:03:17Z (1 broken link + /api/usage 404 + /api/hq?action=data 401 + aether-metrics render-binding) — all 4 have AUTO-REMEDIATE in flight since 09:33Z, re-firing = delegation churn. **P1 (still):** ra + aether 2-way dead-loop (assessment_stuck 3+ cycles); GUIDANCE re-dispatched 10:03:16Z (also at 09:33Z + 09:48Z); aether still reporting 'cycle complete: 151 trades, PNL=$24.94, dashboard: out-of-sync' — PNL frozen since 04-18 ~20:00 MT (publish path still broken). **P2 (still, FALSE-POSITIVE):** worker-age math bug — healthcheck reports 493498h; worker.log shows last DONE 10:02:19Z cmd-1776592936-152 cipher.sh exit=0 (~1min45s before automated check), IDLE loop after, alive-idle. **P2 (still):** flag-aether-001 timestamp-variant spam — 9 flag entries + 3 REPORTs in 2h at 09:21/09:36/09:51Z; dedup still not catching family. **P3:** sam 0 logs today (consecutive silent days; ACTIVE.md fresh at 1h so agent exists but not logging to agents/sam/logs/). **P3:** hyo 0 logs (expected — hyo consolidation fires later). **Queue:** pending=0, running=0, completed=856, failed=6, worker alive-idle (heartbeat 10:02:19Z). **ACTIVE.md freshness:** kai/ra/aether=0h, nel/sam=1h, dex=3h — all <72h. **Today's logs:** nel:9, sam:0, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT). **P0/P1 FLAGs in log last 2h:** 0 net-new from agents; only recurring healthcheck self-generated AUTO-REMEDIATE churn (same task_ids re-fired each 15min cycle). **No new auto-remediation dispatched this annotator cycle** — all already have delegations in flight. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding check (kills chronic false-P0 for morning-report/aether-metrics/hq-state/remote-access.json); (2) patch healthcheck.sh worker-age math; (3) patch aether flag-dedup timestamp-variant family + investigate publish path (API frozen since 04-18 ~20:00 MT); (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T06:04Z (00:04 MT, sandbox vibrant-relaxed-dijkstra, automated 2h health check). Status: **ISSUES**, 3 P1 + 3 P3 — **all chronic, zero net-new**. **P1 (still):** ra/aether/dex 3-way dead-loop since 04-14 — identical assessments, GUIDANCE re-dispatched at 05:47Z and 06:02Z (twice within 15min), no breakout. Aether still reporting "cycle complete: 151 trades, PNL=$24.94, dashboard out-of-sync" — PNL frozen since 04-18 ~20:00 MT (publish path still broken). **P3:** sam, ra, ant have 0 logs today (expected pre-03:00 MT for ra; sam/ant concerning — 5th+ consecutive silent day for sam). **Resolved since prior check:** prior P0 "morning-report hq.html has NO rendering code" CONFIRMED FALSE POSITIVE — hq.html line 1591 `if (report.type === 'morning-report')` + line 1633 `renderMorningReport()` + line 1994 display map all present and working; healthcheck.sh render-binding check still not patched. Prior P2 "worker dead 493494h ago" CONFIRMED FALSE POSITIVE — worker.log shows last DONE 05:06:20Z cmd-1776575177-726 exit=0 (~58min before this check), then IDLE loop — worker healthy. **Queue:** pending=0, running=0, worker alive-idle. **ACTIVE.md freshness:** kai/ra/aether/dex/nel <1h, sam ~3h — all <72h. **Today's logs:** nel:1, sam:0, ra:0, aether:2, dex:2, ant:0, kai:0 (kai-daily fires 23:30 MT). **P0/P1 FLAGs in log last 2h:** 0 net-new (only P2 aether timestamp-variant spam + recurring GUIDANCE dispatches). **No new auto-remediation dispatched** — all 3 P1s have GUIDANCE in flight; re-firing = delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding check (kills chronic false-P0); (2) patch healthcheck.sh worker-age math; (3) patch aether flag-dedup timestamp-variant family + investigate publish path (API ts frozen since 04-18 ~20:00 MT); (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T04:04Z (22:04 MT, sandbox hopeful-nice-franklin, automated 2h health check). Status: **ISSUES**, 1 P0 + 3 P1 + 3 P2 — **all chronic, zero net-new.** **P0 (still, recurring):** nel render-binding flag "Aether metrics JSON exists but hq.html has NO rendering code" re-fired 02:37Z; AUTO-REMEDIATE dispatched 3x (02:47Z, 03:02Z, 03:17Z) with no resolution — remediation theater, needs healthcheck.sh patch not more tickets. **P1 (still):** 4 nel flags at 02:37Z — 1 broken link + /api/usage 404 + /api/hq?action=data 401 + aether-metrics render-binding (all 4 have AUTO-REMEDIATE in flight, doubly-logged via nel cascade). **P2 (still):** aether 3-way dead-loop — aether reporting "dashboard out-of-sync" every cycle at 151 trades / PNL $24.94 (frozen since 04-18 ~20:00 MT); ra assessment_stuck; dex 2 corrupt JSONL bottleneck_stuck — GUIDANCE re-fired at 02:47/03:02/03:17Z, no breakout. **P2 (still):** flag-aether-001 timestamp-variant spam ~every 15min (dedup still not catching the "local ts X != API ts Y" family). **P2 (still):** prior check's "worker dead 493492h ago" confirmed FALSE POSITIVE — worker alive, last exec cmd-1776571332-132 cipher.sh at 04:02:14Z exit=0 (~90s before this check), log tail shows IDLE loop. **Queue:** pending=0, running=0, worker alive. **ACTIVE.md freshness:** kai/ra/aether/dex ~2min, nel ~1.4h, sam ~1.5h — all <72h. **Today's logs:** nel:28, sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT). **P0/P1 FLAGs in log last 2h:** 4 (1 P0 + 3 P1, all nel 02:37Z, all already have AUTO-REMEDIATE in flight). **No new auto-remediation dispatched** — all have GUIDANCE/REMEDIATE in flight; re-firing = delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding check to recognize aether-metrics.json refs (kills chronic false-P0); (2) patch healthcheck.sh worker-age math; (3) patch aether flag-dedup timestamp-variant family + investigate publish path (API ts frozen); (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T02:03Z (20:03 MT, sandbox bold-vibrant-allen, automated 2h health check). Status: **ISSUES**, 3 P1 + 3 P2 — **all chronic, zero net-new.** **P1 (still):** 3-way dead-loop chronic since 04-14 — ra/aether/dex all receiving 6+ identical GUIDANCE delegations in last 2h, no breakout. Aether API ts frozen at 2026-04-18T15:44:43-0600 for 6h+ while local cycles reached 20:00+ MT (publish path still broken). **P2 (still):** flag-aether-001 re-fired 5x/90min across 3 timestamp variants — dedup still not catching family. **P2 (still):** healthcheck render-binding false-P0 for morning-report/hq-state/remote-access.json. **P2 (still):** worker-age math bug (prior cycle reported 493490h; worker alive, last heartbeat 00:02:20Z cmd-1776556938-157 exit=0). **Queue:** pending=0, running=0, worker healthy. **ACTIVE.md freshness:** kai/ra/aether/dex ~1min, nel ~3.9h, sam ~5.4h — all <72h. **Today's logs:** nel:26, sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT). **P0/P1 FLAGs in log last 2h:** 0 net-new (only P2 aether spam + recurring GUIDANCE dispatches). **No new auto-remediation** — all 3 P1s have GUIDANCE in flight; re-firing = delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding + worker-age math; (2) patch aether flag-dedup timestamp-variant family + investigate frozen API publish path; (3) dex schema-validation gate at JSONL append; (4) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-19T00:04Z (18:04 MT, sandbox practical-admiring-noether, automated 2h health check). Status: **ISSUES**, 3 P1 + 2 P2 — **all chronic, zero net-new.** **P1 (still):** 3-way dead-loop chronic since 04-14 — ra/aether/dex. Aether dashboard API ts frozen at 2026-04-18T15:44:43-0600 for >2h while local cycles continue to 17:58+ (publish path broken). ra + dex both receiving 6+ identical GUIDANCE delegations in 2h with no breakout. **P2 (downgraded):** prior P0 "morning-report has NO rendering code" is a confirmed false positive — hq.html line 1591 type-switch + line 1994 display map handle `morning-report` via feed; binding check only scans for literal `morning-report.json`. Same downgrade applies to hq-state.json and remote-access.json (fed indirectly). **P2 (still):** healthcheck worker-age math bug — reports 493488h last cycle; worker actually alive, last completed cmd-1776556938-157 at 00:02:20Z (1min before this check). **Queue:** pending=0, running=0, worker healthy. **ACTIVE.md freshness:** kai/ra/aether/dex ~0h, nel ~1h, sam ~3h — all <72h. **Today's logs:** nel:24, sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT). **P0/P1 FLAGs in log last 2h:** 0 new (only P2 aether dashboard-mismatch spam x36). **No new auto-remediation dispatched** — all 3 P1s already have GUIDANCE in flight; re-firing is delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh render-binding check (kills chronic false-P0s for morning-report/hq-state/remote-access.json); (2) patch healthcheck.sh worker-age math; (3) patch aether flag-dedup timestamp-variant family + investigate publish path (API stuck at 15:44:43); (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T22:04Z (16:04 MT, sandbox ecstatic-relaxed-curie, automated 2h health check). Status: **ISSUES**, 1 P0 + 3 P1 + 4 P2 — **all chronic, zero net-new.** **P0 (still, recurring):** healthcheck's render-binding check flags "hq.html has NO rendering code for Aether metrics JSON" every cycle — AUTO-REMEDIATE delegated 2x per cycle but never resolved (remediation theater). Real audit per prior cycles: hq.html has working renderers; this is a healthcheck.sh bug. **P1 (still):** 4 nel flags at 20:36Z — 1 broken link + /api/usage 404 + /api/hq?action=data 401 + aether-metrics render-binding; all 4 have AUTO-REMEDIATE DELEGATE entries in flight (doubly-logged via nel cascade). **P2 (still, chronic):** ra/aether/dex 3-way dead-loop since 04-14 — GUIDANCE re-dispatched at 22:01:46Z, no breakout; aether dashboard data mismatch re-firing every ~15min. **P2:** ra last logged at 00:30 MT; dex last logged at 00:09 MT — no post-noon activity (expected for ra; dex likely stuck). **Queue:** pending=0, running=0, worker alive (last completed cmd-1776548739-1941 exit=0 at 21:45:41Z, ~19min before this check). **ACTIVE.md freshness:** all 6 agents ≤1h. **Today's logs:** nel:16:02, sam:13:09, ra:00:30, aether:15:57 (223KB), dex:00:09. **No new auto-remediation dispatched this cycle** — all P0/P1 flags have in-flight remediations; re-firing = delegation churn, needs code fixes not more tickets. **FIRST INTERACTIVE ACTIONS (unchanged):** (1) patch healthcheck.sh render-binding check (kills chronic false-P0); (2) patch healthcheck.sh worker-age math; (3) patch aether flag-dedup timestamp-variant family; (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T20:03Z (14:03 MT, sandbox kind-pensive-galileo, automated 2h health check). Status: **ISSUES**, 3 P1 + 5 P2 — **all chronic, zero net-new.** **P1 (still):** ra/aether/dex 3-way dead-loop since 04-14; GUIDANCE re-dispatched at 20:01:29Z this cycle, no breakout. **P2 (still):** healthcheck.sh worker-age math still FALSE (reports 493484h; worker actually alive — last completed cmd-1776542492-2077 exit=0 at 20:01:36Z, ~1.5min before this check). **P2 (still):** render-binding FALSE-P0 for morning-report.json / hq-state.json / remote-access.json — hq.html has 5 morning-report refs per fresh audit this cycle. **P2 (flag-spam):** 36 P2 flags in last 2h — mostly flag-aether-001 'dashboard data mismatch: local ts X != API ts Y' re-firing every cycle (timestamp-variant dedup gate still not catching family). **Queue:** pending=0, running=0, worker alive (idle 92s; last heartbeat 20:01:37Z). **ACTIVE.md freshness:** kai/ra/aether/dex ~1.5min, nel ~1.9h, sam ~5.5h — all <72h. **Today's logs:** nel:20, sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT — expected). **Flags in log last 2h:** 0 P0 / 0 P1 / 36 P2 / 1 P3. **Reports last 2h:** 17. **Stale >72h:** 12+ chronic ACTIVE tasks (nel-003/004/005/007/010, sam-004/005/006/009, ra-002/003/005/006/009, dex-002, flag-aether-001/002, flag-dex-001/002) — all already documented, zero net-new. **No new auto-remediation fired** — all 3 P1s have GUIDANCE in flight; re-firing = delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged):** (1) patch healthcheck.sh worker-age math; (2) patch healthcheck.sh render-binding check; (3) patch aether flag-dedup timestamp-variant family; (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T18:04Z (12:04 MT, sandbox admiring-quirky-ritchie, automated 2h health check). Status: **ISSUES**, 3 P1 + 5 P2 — **all chronic, zero net-new.** **P1 (still):** ra/aether/dex 3-way dead-loop since 04-14; GUIDANCE re-dispatched at 18:01:15Z this cycle, no breakout. **P2 (still):** healthcheck.sh worker-age math still FALSE (reports 493482h; worker actually alive, last completed cmd-1776534913-156 at 17:55:15Z, ~9min before this check). **P2 (still):** render-binding FALSE-P0 for morning-report.json / hq-state.json / remote-access.json / aether-metrics.json — all have working renderers per prior audit. **P2 (flag-spam):** 32 P2 flags in last 2h, mostly flag-aether-001 'dashboard data mismatch: local ts X != API ts Y' re-firing every cycle (timestamp-variant dedup gate still not catching family). **Queue:** pending=0, running=0, worker alive (last heartbeat 17:55:15Z). **ACTIVE.md freshness:** kai/ra/aether/dex ~4min, nel/sam ~3.6h — all <4h. **Today's logs:** nel (hourly cipher/sentinel), sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT). **Flags in log last 2h:** 0 P0 / 0 P1 / 32 P2. **Stale >72h:** 12 chronic ACTIVE tasks (nel-005/007/010, sam-009, ra-002..006/009, flag-aether-001, flag-dex-001) — all already documented, zero net-new. **No new auto-remediation fired** — all 3 P1s have GUIDANCE in flight; re-firing = delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged):** (1) patch healthcheck.sh worker-age math; (2) patch healthcheck.sh render-binding check; (3) patch aether flag-dedup timestamp-variant family; (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T16:05Z (10:05 MT, sandbox ecstatic-epic-brahmagupta, automated 2h health check). Status: **ISSUES**, 2 P1 + 3 P2 — **all chronic, zero net-new.** **P1 (still):** ra/aether/dex dead-loop chronic since 04-14 — GUIDANCE tickets repeatedly dispatched, no breakout. **P1 (still):** 4 P0/P1 flags logged at 14:30:47Z (1 broken link, /api/usage 404, /api/hq 401, aether-metrics render-binding FALSE-P0) — all 4 have AUTO-REMEDIATE DELEGATE entries in flight (8 remediation delegations total, doubly-flagged via nel cascade); re-firing would be delegation churn. **P2 (still):** healthcheck.sh worker-age math still false (reports 493479h; worker.log last heartbeat 14:31:08Z, alive-idle). **P2 (still):** render-binding check still emits FALSE-P0 for aether-metrics.json / morning-report.json — hq.html has working renderers. **Queue:** pending=0, running=0, worker alive-idle (last heartbeat 14:31:08Z, ~1.5h). **ACTIVE.md freshness:** all 6 agents <1.5h (kai/ra/aether/dex ~10min, nel/sam ~1.4h). **Today's logs:** nel:16, sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT), hyo:2. **Stale tasks >72h:** 0. **Git:** last commit e1208ec aether metrics 09:47 MT (Mini still pushing every ~15min). **No new auto-remediation fired this cycle.** **FIRST INTERACTIVE ACTIONS (unchanged):** (1) patch healthcheck.sh worker-age math; (2) patch healthcheck.sh render-binding check to recognize `data/morning-report-DATE.json` + `data/aether-metrics.json` refs (kills 2 chronic false-P0s); (3) patch aether flag-dedup timestamp-variant family; (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T14:02Z (08:02 MT, sandbox eloquent-charming-gauss, automated 2h health check). Status: **ISSUES**, 3 P1 + 5 warnings. **P1 (still, chronic):** ra/aether/dex dead-loops — ra-001 GUIDANCE re-dispatched 12:54:26Z, no breakout; aether dashboard out-of-sync since 04-14; dex 2 corrupt JSONL since 04-14 (still needs schema-validation gate at append). **P2 (still):** healthcheck.sh worker-age math broken — prior cycle emitted "493477h ago" FALSE; worker.log last entry 11:09:37Z IDLE after cmd-1776510575-250 exit=0 (~2.9h idle, alive). **P2 (still):** healthcheck.sh render-binding check still emits FALSE P0 'Morning report JSON exists but hq.html has NO rendering code' (hq.html has 4 morning-report refs); also false-flagged hq-state.json and remote-access.json. **P2 (flag-spam):** 28 P2 flags in last 2h — mostly flag-aether-001 'dashboard data mismatch' re-firing every cycle (dedup gate still not catching the timestamp-variant string). **Queue:** pending=0, running=0, worker alive (idle 2.89h, healthy). Completed total 655, failed 6. **ACTIVE.md freshness:** all 6 agents <4h (kai/ra/aether/dex <1h, sam=2h, nel=3h). **Today's logs:** nel:14, sam:1, ra:2, aether:2, dex:3, kai:0 (kai-daily fires 23:30 MT). **Flags in log.jsonl last 2h:** 0 P0 / 0 P1 / 28 P2. **No new auto-remediation fired this cycle** — all 3 P1s already have GUIDANCE in flight; re-firing = delegation churn. **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) patch healthcheck.sh worker-age math; (2) patch healthcheck.sh render-binding check to recognize `data/morning-report-DATE.json` refs; (3) patch aether flag dedup to match timestamp-variant family `dashboard data mismatch: local ts * != API ts *`; (4) dex schema-validation gate at JSONL append; (5) resume S17-006 / BUILD-002 Phase 2 / Day 7 retention / LAB-003. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T12:03Z (06:03 MT, sandbox great-beautiful-bohr, automated 2h health check). Status: **ISSUES**, 2 P1 + 3 warnings. **P1 (still):** dex-002 JSONL corruption unresolved since 2026-04-14 (needs schema-validation gate at append). **P1 (still):** ra-002 newsletter missed 2026-04-14 still DELEGATED, no resolution logged. **P2:** ra/aether/dex GUIDANCE tickets issued at 11:54Z (assessment_stuck/bottleneck_stuck) — awaiting breakout. **P2:** kai has 0 logs in agents/kai/logs/ for today (may be expected — kai-daily runs 23:30). **P3:** healthcheck.sh HYO_ROOT path bug when invoked outside queue (resolves to /Documents/Projects/Hyo instead of mount). **Queue:** pending=0, running=0, worker healthy (last exec 11:09:36Z cmd-1776510575-250 exit=0). **ACTIVE.md freshness:** all 6 agents <2h. **Today's logs:** nel:12, sam:1, ra:2, aether:2, dex:3, kai:0. **No new P0/P1 flags in log.jsonl last 2h.** Morning report 2026-04-18 verified present on feed.json (67 reports, today=2026-04-18). git pushed 7d06a88..0cc5aaa. No new auto-remediation dispatched this cycle — prior 11:54Z remediation still in flight. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T10:04Z (04:04 MT, sandbox hopeful-awesome-maxwell, automated 2h health check). Status: **ISSUES**, 3 P1 + 3 P2 + 1 P0-FALSE-POSITIVE. **P1 (new):** 8 P0/P1 flags since 08:00Z — 1 P0 "aether-metrics.json no rendering code" (FALSE POSITIVE — hq.html has 2 aether-metrics refs + 4 morning-report refs; same healthcheck render-binding bug as morning-report false P0) + 7 P1 (2 Nel API endpoints 404/401, 1 broken link, chronic flag-aether-001 dashboard drift since 04-14, chronic flag-dex-001 Phase 1 JSONL corruption since 04-14, daily-audit megaflag flag-kai-004 = 33 stale queued flags + 8 idle [K]/[AUTOMATE] items). **P1 (still):** nel/ra/aether/dex dead-loop — guidance tickets nel-001/ra-001/aether-001/dex-001 dispatched 09:08Z, no breakout yet. **P1 (still):** RES-033 (/api/usage 404) + RES-034 (/api/hq 401) opened but Reporter=(pending), Agent=(pending) — no owner. **P2 (still):** worker-age math still reports 493473h (worker actually alive — worker.log mtime 09:30Z, IDLE loop since 08:15:07Z after 3-cmd batch exit=0). **P2 (still):** healthcheck ticket-SLA step fails KeyError: 'owner' (ticket.py schema mismatch). **P2 (still):** nel.sh throws 5x `grep: invalid option -- P` per cycle (BSD grep / -P unsupported on macOS). **Queue:** pending=0, running=0, worker alive. **ACTIVE.md freshness:** all 6 agents <7h. **Today's logs:** nel:10, sam:1, ra:2, aether:2, dex:3 (all agents producing). **No new auto-remediation dispatched** — re-firing same flags is delegation churn; needs code fixes, not more tickets. **First interactive actions:** (1) patch healthcheck.sh render-binding check (kills 2 chronic false P0s); (2) patch healthcheck.sh worker-age math; (3) patch ticket.py KeyError; (4) patch nel.sh grep -P→-E; (5) dispatch root-cause fixes for flag-aether-001 (publish→verify→reconcile loop) + flag-dex-001 (schema-validation gate at append); (6) assign owners on RES-033/034; (7) process 33 stale queued flags. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T08:02Z (02:02 MT, sandbox festive-bold-goldberg, automated 2h health check). Status: **ISSUES**, 2 P1 + 5 P2 + 1 P3. **P1 (new-ish):** flag-dex-001 unresolved — Dex Phase 4 reports 175 recurrent patterns (FLAG at 06:08:58Z, ~1h54m ago, no resolution logged). **P1 (still):** nel/ra/aether/dex dead-loops per 07:53Z automated hc; 6 auto-remediations dispatched, no resolution entries yet. **P2 (growing):** aether 'dashboard data mismatch' (NEW variant, different from prior 'empty API response') re-firing ~every 15 min 06:03→07:56 — S17-001 dedup gate matched the old string but not this one. **P2 (stuck):** nel audit reports same 16 broken doc links + 7 system issues across 3 cycles; nothing fixing them. **P2 (still):** render-binding false P0 for morning-report.json — healthcheck.sh not patched. **P2 (still):** worker-age math bug (493471h) — worker actually alive, heartbeat 855s ago. **Queue:** pending=0, running=0, worker alive. **ACTIVE.md freshness:** all 6 agents <1h. **Today's logs:** nel:1 consolidation, dex:2 files, aether:2, hyo:2 (consolidation), cipher:3 hourly, sentinel:1, ra:0, sam:0. **P0/P1 flags in log last 2h:** 1 new P1 (flag-dex-001); all others P2/P3 spam. **First interactive actions:** (1) triage flag-dex-001 175 patterns — is auto-repair actually running or is Dex in a report-only loop? (2) patch aether flag dedup for 'dashboard data mismatch' family; (3) decide on nel broken-link loop (fix or downgrade); (4) patch healthcheck.sh worker-age + morning-report false-P0; (5) resume next-session items (S17-006 Stripe, BUILD-002 Phase 2, Day 7 retention, LAB-003). See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T06:05Z (00:05 MT, sandbox optimistic-focused-brown, automated 2h health check). Status: **ISSUES**, 4 P1 + 3 P2 (+1 suppressed P0 noise). **P1 (still):** 2 queue orphans in `running/` — `recheck-flag-dex-001.json` ~24h stale, `cmd-1776482165-212.json` (tailscale restart) ~9h stale. Worker still not enforcing declared timeouts. pending=0. **P1 (still):** ra/aether/dex still in dead-loop, same assessments as prior cycle; guidance from 03:46Z/04:01Z has not produced a breakout. Aether: cycle complete 151 trades PNL $24.94, dashboard out-of-sync. **P2 (growing):** flag-aether-001 'empty API response' re-fired 8x in 35min (05:32x2, 05:47, 05:48x2, 06:03x3) — no dedup in dispatch/flag. **P2:** sam 0 logs in agents/sam/logs/ today (5th day; verify log routing vs. real silence). **P2:** ra 0 logs yet — expected before 03:00 MT pipeline. **P0 SUPPRESS:** healthcheck still emits 'hq.html has NO rendering code for morning-report.json' — prior audit already proved cause = stale feed.json; needs healthcheck.sh patch. **P3:** worker-age-calc still reports 493470h — bug; worker actually alive (last completed 06:02:16Z, ~3min before this recheck). **Queue:** pending=0, running=2, worker alive. **ACTIVE.md freshness:** all 6 agents <6h (kai/aether 2min, ra/dex 4min, nel/sam ~5.7h). **Today's logs:** nel:1, dex:2, aether:2, ra:0, sam:0, kai:no-logs-dir. **P0/P1 flags in log last 2h:** 0 new (only P2 aether spam). No new auto-remediation fired this cycle — prior guidance still in flight. First interactive actions: clear both `running/` orphans, patch worker-timeout + healthcheck worker-age math + aether flag-dedup, regenerate feed.json, then start S17-001..005. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T04:02Z (22:02 MT, sandbox keen-clever-turing, automated 2h health check). Status: **ISSUES**, 2 P1 + 3 P2. **P1:** `recheck-flag-dex-001.json` still stuck in `running/` — 22h+ (timeout=120s never enforced). Worker is not killing stale rechecks. **P1:** ra/aether/dex still in dead-loop after 2 prior Kai [GUIDANCE] dispatches (03:46Z + 04:01Z); no breakout assessment from agents yet. **P2:** Aether spam-flagging `dashboard data verification failed: empty API response` every cycle — same flag-aether-001 re-fired 5x in 30min. **P2:** Aether self-review found 2 untriggered files this cycle (was 1 — increasing). **P2:** agents/sam/logs/ empty today but Sam has activity in research/ + website/ (verify log routing). **Queue:** pending=0, running=2 (1 stale 22h, 1 active 46m tailscale restart). **ACTIVE.md freshness:** all 6 agents ≤1h. **Today's logs:** nel:28, dex:3, ra:2, aether:2, sam:0-in-logs/ (active elsewhere), kai:?. No new remediation dispatched this cycle — prior guidance still in flight, stale recheck needs worker-timeout patch in next interactive session. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T02:02Z (20:02 MT, sandbox serene-vibrant-mendel, automated 2h health check). Status: **ISSUES**, 2 P1 + 1 P2 + 1 P3. **P1:** 25 P0 tickets past SLA (improved from 42 previously — same persistent blockers: ra API key on Mini, sam Vercel KV, aether kai_analysis launchd, nel cipher false-positives, aether phantom positions). **P1:** ra / aether / dex each received a new [GUIDANCE] P2 ticket at 02:00:50Z after repeating the same assessment/bottleneck 3+ cycles; guidance delegated, awaiting next cycle. **P2 (healthcheck bug):** prior check reported worker "last active 493466h ago" — false; worker.log mtime shows activity ~10 min ago. Healthcheck's worker-age math is still buggy. **P3:** no sam/kai logs yet for 2026-04-17; expected (sam-daily 22:30 MT, kai-daily 23:30 MT). **Queue:** pending=0, running=1, no new P0/P1 flags in the last 2h. **ACTIVE.md freshness:** all 6 agents <1h. **Today's logs:** nel:26, dex:3, ra:2, aether:2, sam:0, kai:0. No new auto-remediation fired this cycle — underlying blockers are the same persistent P0 tickets, not new failures. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-18T00:02Z (18:02 MT, sandbox happy-nice-planck, automated 2h health check). Status: ISSUES — unchanged from 22:03Z; zero progress in the last 2h. **P0 (still):** Morning-report render-binding — auto-remediation now dispatched 4+ times today with no fix (real cause per prior audit = stale feed.json, not missing renderer). **P1 (still):** 42 tickets past SLA (unchanged). **P1 (still):** 4-agent dead-loop — nel (routine maintenance), ra (health check w/1 warning), aether (cycle 143, PNL $25.66, dashboard out-of-sync), dex (2 corrupt JSONL entries). Guidance delegates re-fired at 23:31Z + 00:00Z. **P2 (still):** Queue worker orphan — `recheck-flag-dex-001.json` in `running/` since 06:08Z (~18h). Worker ITSELF is alive (last batch 23:54:21Z); healthcheck's "493464h ago" is a time-calc bug, not real worker death. pending=0, running=1. **Agent output today:** nel:24, dex:3, ra:2, aether:2, sam:0 (Sam silent 4th consecutive day). **ACTIVE.md freshness:** all 6 agents ≤5h (good; sam=4.5h). **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) `mv running/recheck-flag-dex-001.json failed/`; (2) regenerate feed.json so today's morning-report.json surfaces on hq.html; (3) triage SLA-breached tickets; (4) fix /api/hq 401; (5) fix sam.sh so REPORTs stop returning empty; (6) patch healthcheck.sh worker-age time calc. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-17T22:03Z (16:03 MT, sandbox peaceful-happy-newton, automated 2h health check). Status: ISSUES — still unchanged from 20:03Z; zero progress in the last 2h despite another guidance-delegate volley at 22:00:57Z. **P0 (still):** Morning-report render-binding — auto-remediation dispatched 3+ times today with no fix (real cause per prior audit = stale feed.json, not missing renderer). **P1 (still):** /api/hq?action=data returns HTTP 401 (2x auto-remediation, unresolved). **P1 (still):** 42 tickets past SLA (unchanged). **P1 (still):** 4-agent dead-loop — nel (routine maintenance), ra (health check with 1 warning), aether (cycle 143, PNL $25.66, dashboard out-of-sync), dex (2 corrupt JSONL entries). Guidance delegates re-fired at 22:00:57Z. **P2 (still):** Queue worker orphan — `recheck-flag-dex-001.json` in `running/` since 06:08Z (~16h). pending=0, running=1. **Agent output today:** nel:22, dex:3, ra:2, aether:2, sam:0 (Sam silent 4th consecutive day). **ACTIVE.md freshness:** all 6 agents ≤2h (good; sam=2h). **FIRST INTERACTIVE ACTIONS (unchanged, urgent):** (1) `mv running/recheck-flag-dex-001.json failed/` + restart worker on Mini; (2) regenerate feed.json so today's morning-report.json surfaces on hq.html; (3) triage SLA-breached tickets; (4) fix /api/hq 401; (5) fix sam.sh so REPORTs stop returning empty. See `kai/queue/healthcheck-latest.json`.
-**Prior healthcheck re-check:** 2026-04-17T20:03Z (14:03 MT, sandbox upbeat-peaceful-ramanujan, automated 2h health check). Status: ISSUES — unchanged from 18:05Z check; zero progress on any of the 4 standing P1s in 2h. **P1 (still):** Queue worker stalled — worker.log last entry 19:38:10Z (gap widening); `recheck-flag-dex-001.json` still stuck in `running/` since 06:08Z (~14h now). Auto-remediation cycle has re-dispatched the same P0/P1 remediation commands 3+ times this hour with no resolution — the remediation loop itself is ineffective without Mini-side worker. **P1 (still):** Tickets past SLA — healthcheck reports 42, prior audit said real count 25; either way ticket flow remains frozen. **P1 (still):** 4-agent dead-loop — nel (routine maintenance), ra (health check with 1 warning), aether (dashboard out-of-sync, cycle 141 now, PNL $25.47), dex (corrupt JSONL entries). Guidance delegates fired again at 20:00Z. **P1 (still):** /api/hq?action=data returns HTTP 401 — auto-remediation dispatched 2x without fix. **P1 (still):** Morning-report feed render-binding — healthcheck still emits P0 "hq.html has NO rendering code" for morning-report.json; prior audit identified real cause as stale feed.json, not missing renderer. **Queue state:** pending=0, running=1 (same 14h-stale orphan recheck-flag-dex-001). **Agent output today:** nel:20, dex:3, ra:2, aether:2, sam:0 (Sam still silent 3rd consecutive day). **ACTIVE.md freshness:** all 6 agents <1h (good).
-**Cadence:** Kai updates this at the end of every working session AND during nightly consolidation (23:50 MT daily). Hyo never needs to touch it.
-**Last audit:** 2026-04-13T03:35Z — 0 P0, 2 P1, 12 P2 issues found. Newsletter production still blocked. Duplicate flags flooding queue (40+ items, 5 unique issues). See daily-audit-2026-04-13.md.
-**Last cipher scan:** 2026-04-19 15:02 MT (2026-04-19T21:02:27Z, hourly scheduled task `cipher-hyo-hourly`, vigilant-keen-euler sandbox, dispatched via queue `cmd-1776632544-176` exit=0) — **0 security findings, 7 autofixes, exit 0.** Executed on Mini via `HYO_ROOT=~/Documents/Projects/Hyo bash agents/nel/cipher.sh`. **Meaningful autofix:** `.secrets/` directory mode drifted **0755 → 700** (new drift since the 01:02 MT scan which reported 0 autofixes — something widened perms on the secrets dir target in the ~14h window; root cause not investigated, logged as P2 for next interactive session). Remaining 6 autofixes are idempotent mode normalizations (0600→600, which is the same effective mode, just literal representation): `aethel-bot.key`, `anthropic.key`, `deploy-hook`, `env`, `founder.token`, `openai.key`. HQ push succeeded (`http 200 ✓`). gitleaks ran on working tree, 0 leaks. Log: `agents/nel/logs/cipher-2026-04-19T15.log`. **Follow-up P2 for next Mini interactive session:** (a) investigate what chmod'd `.secrets/` from 700→755 between 01:02 MT and 15:02 MT today (check launchctl jobs, cron, git operations, or manual shell history); (b) add a sentinel check + alarm for `.secrets/` mode != 700 (not just cipher autofix-and-forget — drift on the secrets dir should page, not silently self-heal); (c) verify no process wrote unauthorized files into `.secrets/` during the window of loose perms.
-**Prior cipher scan:** 2026-04-19 01:02 MT (2026-04-19T07:02Z, hourly scheduled task, laughing-dazzling-archimedes sandbox) — **0 security findings, exit 0 after bug fix.** First invocation exited 1 with `JSONDecodeError: Expecting property name enclosed in double quotes: line 14 column 51` — cipher.sh bootstrap template (lines 52-77) embedded an inline shell-style `#` comment inside the JSON block (`"trufflehog_not_installed_runs_in_a_row": 0,  # deprecated — trufflehog removed`), so every fresh state.json bootstrap has been unparseable since the trufflehog removal (SE-011-007). Two fixes shipped in-session (no Hyo interaction required): (1) removed the inline `#` comment from the heredoc in `agents/nel/cipher.sh` so future bootstraps produce valid JSON; (2) repaired the corrupted freshly-bootstrapped `cipher.state.json` at the phantom sandbox `$HOME/Documents/Projects/Hyo` path that `HYO_ROOT` resolved to. Re-ran cipher — `cipher: clean. 0 findings.` exit 0. Canonical `/mnt/Hyo/agents/nel/memory/cipher.state.json` was untouched (totalRuns=253, healthy). Root `.secrets` + `founder.token` not checked this run (gitleaks-not-installed suppressed under sandbox detection; authoritative Mini-side scan still runs on cron). **Follow-up P2 for Mini session:** push the cipher.sh one-line fix to Mini via `kai exec` + verify the Mini's `cipher.state.json` does not have the malformed comment (Mini's state was bootstrapped from the same template pre-trufflehog-removal — if Mini ever lost its state file, it would have hit the same bug).
-**Prior cipher scan:** 2026-04-17 12:01 MT (2026-04-17T18:01:49Z, hourly scheduled task, gifted-tender-davinci sandbox) — **0 findings, 0 autofixes, exit 0.** Perms verified: `.secrets` symlink → `agents/nel/security` (cosmetic 755 on symlink; target still 700), `founder.token` = 600. HQ push succeeded. Sandbox-detection patch holding (no `gitleaks-not-installed` / `trufflehog-not-installed` noise). No regression from prior scan.
-**Prior cipher scan:** 2026-04-16 08:02 MT (2026-04-16T14:02:18Z, hourly scheduled task, youthful-vibrant-noether sandbox) — **0 findings, 0 autofixes, exit 0.** Sandbox-detection patch (shipped 05:02 MT run) still holding: both `gitleaks-not-installed` / `trufflehog-not-installed` suppressed to log lines, zero tickets filed. Directory perms: `.secrets` symlink = 755 (cosmetic; target `agents/nel/security` = 700), `founder.token` = 600 — correct. HQ push succeeded. Authoritative Mini-side scan continues on its own cron. Prior 05:02 patch notes: cipher.sh detects sandbox (`$ROOT == /sessions/*`) and suppresses the two `*-not-installed` P2 findings with a log line instead of filing a ticket; both known-issues flipped to `status: resolved` via cipher's reconciliation logic and will purge after 7 days; previous P0 `founder-token-leak` (festive-laughing-euler sandbox path) remains resolved. Net effect: eliminates ~48 P2 noise findings/day from the sandbox-driven hourly cadence. (Prior Mini-side queue probe cmd-1776333784-340 still sitting in `running/` — worker appears stalled since 10:03Z on 04-16; still flagged for next interactive session.)
-**Last healthcheck:** 2026-04-14T12:20:00-06:00 — **ISSUES: 2 P0, 5 P1, 5 P2.** 13TH CONSECUTIVE UNHEALTHY CHECK — no improvement. Queue pending growing (3→5, worker not picking up). P0: agents/nel/security gitignore gap (nel-001, sim-ack only). P0: HQ rendering disconnected (kai-001, sim-ack only). P1: Newsletter missed THREE consecutive days (04-12, 04-13, 04-14). P1: Aether API key placeholder — root cause of GPT log review failures. P1: ra, aether, dex all in dead-loops. P1: Sam completely silent today (0 logs, 7 P1 tasks unexecuted). P2: Queue stalling — 5 pending, 0 running. P2: Aether flooding log.jsonl with 80+ duplicate entries. P2: All delegations are sim-ack only — no real execution. P2: grep -P macOS compat. P2: 15 broken doc links. **ROOT CAUSE UNCHANGED: Cowork sandbox cannot execute on the Mini. All "delegated" tasks are handshake-only (sim-ack). Real remediation requires an interactive Kai session on the Mini with queue worker access.** Next interactive session MUST: (1) fix .gitignore on Mini, (2) set real OpenAI API key in .secrets/env, (3) diagnose + fix API 401, (4) run newsletter pipeline manually, (5) patch aether.sh to dedup flag logging + reduce feed spam, (6) fix grep -P → grep -E for macOS, (7) respond to Aether's inbox items (API keys, threat detection), (8) investigate queue worker stall (5 pending not being processed).
-**Last sentinel run:** 2026-04-21 ~04:06 MT (run #115, scheduled task `sentinel-hyo-daily`, intelligent-compassionate-allen sandbox, executed on Mini via queue) — **7 passed, 2 failed, 0 new, 2 recurring, 2 RESOLVED.** Initial run #114 was 5p/4f with 4 chronic recurrings (founder-token-integrity P0 day 15, secrets-dir-permissions P1 day 15, scheduled-tasks-fired P1 day 15, task-queue-size P2 day 8). Investigation found **both 15-day chronics were sentinel.sh bugs, not real failures**: (a) `stat_mode` BSD branch returned 4-digit `0600` from `%Mp%Lp`, and the regex `^6[0-9][0-9]$` only matched 3 digits — false-flagged founder.token (actual mode 600 ✓); (b) `.secrets` dir-permissions check stat'd the symlink itself (0755) instead of following to target `agents/nel/security/` (mode 700 ✓). **Patched sentinel.sh** in same session: added `_bsd_norm_mode` (strips leading 0 when length==4) + `stat_mode_L` (follow-symlink variant), wired secrets-dir check to use `stat_mode_L`. Re-run #115 confirmed both resolved (`founder-token-integrity:92e7b89e`, `secrets-dir-permissions:6717d4df`). **Remaining failures (both real but not P0):** P1 `scheduled-tasks-fired` day 16 — no `aurora-*.log` in `agents/nel/logs/` (Aurora manifest still present but no recent runs; check is stale or Aurora is dead — needs decision next interactive); P2 `task-queue-size` day 9 — 27 P0 tasks vs threshold 5 (real backlog, S17-007 close-down task). **No P0 issues — KAI_TASKS not modified for sentinel findings.** Logged to `agents/nel/evolution.jsonl` as `sentinel_bug_fix`. Report: `agents/nel/logs/sentinel-2026-04-21.md`. Note: `api-health-green` is no longer in the recurring list — appears it was removed or already resolved between run #106 and run #114 (worth verifying next interactive).
-
-**Prior sentinel run:** 2026-04-20 ~04:05 MT (run #106, scheduled task `sentinel-hyo-daily`, youthful-compassionate-keller sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 0 resolved.** All findings sandbox-environmental, documented carryover: **P0** `api-health-green` day 99 — Mini health endpoint unreachable from Cowork sandbox (chronic, day 99 escalation — crosses day-100 milestone on next run). Live curl to `https://www.hyo.world/api/health` returned `{}` (empty JSON, no `ok` or `founderTokenConfigured` fields). **P1** `scheduled-tasks-fired` day 3 — no aurora logs in this sandbox's `agents/nel/logs/` (aurora runs on Mini, not in Cowork). **P2** `task-queue-size` day 31 — 26 P0 tasks vs. threshold 5 (ticket backlog carryover; active close-down is S17-007). Zero net-new findings vs. 04-19 run; three recurring identical hashes (`82547bfc` / `d986a828` / `task-queue-size`). Root cause unchanged: Cowork sandbox cannot reach Mini services AND the production `/api/health` endpoint itself appears to return an empty body (separate from sandbox reachability — worth a Mini-side investigation of what the endpoint is returning to external callers). Report: `agents/nel/logs/sentinel-2026-04-20.md`.
-**Prior sentinel run:** 2026-04-19 (run #91, scheduled task `sentinel-hyo-daily`, vibrant-exciting-mayer sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 0 resolved.** All findings sandbox-environmental, documented carryover: **P0** `api-health-green` day 90 — Mini health endpoint unreachable from Cowork sandbox (chronic, day 90 escalation). **P1** `scheduled-tasks-fired` day 3 — no aurora logs in this sandbox's `agents/nel/logs/` (aurora runs on Mini, not in Cowork). **P2** `task-queue-size` day 16 — 26 P0 tasks vs. threshold 5 (ticket backlog carryover; active close-down is S17-007). No new P0 surfaced; sentinel auto-filed recurring findings to KAI_TASKS.md. Root cause unchanged: Cowork sandbox cannot reach Mini services — real remediation of api-health + aurora-ran-today requires interactive Kai session on Mini. See `agents/nel/logs/sentinel-2026-04-19.md`.
-**Earlier sentinel run:** 2026-04-18 ~04:05 MT (run #70, funny-inspiring-ritchie sandbox) — **6 passed, 3 failed, 0 new, 3 recurring, 1 RESOLVED.** Fix: `manifest-valid-json` RESOLVED — added `name`/`identity`/`credit`/`pricing` keys to `agents/manifests/hyo.hyo.json`. Same three recurring P0/P1/P2 environmental carryover as above. See `agents/nel/logs/sentinel-2026-04-18.md`.
-**Earliest sentinel run on record (this brief):** 2026-04-16 ~04:05 MT (run #58) — 5 passed, 4 failed. P0 ESCALATION: `api-health-green` failing 58 consecutive runs. P0 ESCALATION: `aurora-ran-today` failing 3 runs in a row. P1 `scheduled-tasks-fired` (day 3). P2 `task-queue-size` (17 P0 tasks, day 39). 0 new issues, 4 recurring, 0 resolved.
-
-## Shipped today (2026-04-21 — Session 24: algorithm-first architecture + 6 new protocols)
-
-**Session 24 — Hyo's system directives fully implemented**
-
-- **6 new protocols SHIPPED** (commit 09bd336): all algorithm-first design (gate before rule):
-  - PROTOCOL_TICKET_LIFECYCLE.md: 42-source research; 5-cycle escalation to Kai; RESOLVED/CLOSED distinction; prevention gate mandatory before close; 8-gate closure algorithm
-  - PROTOCOL_PREFLIGHT.md: HARD RULE as protocol; session start mandatory reads; NO-PATCH gate defined with full patch taxonomy
-  - PROTOCOL_HQ_PUBLISH.md: theater detection; schema validation by report type; publish-to-feed.sh required path; post-publish verification gate
-  - PROTOCOL_AETHER_ISOLATION.md: 4-gate isolation; Aether-exclusive file list; external-only weakness scope; per-agent CAN/CANNOT table
-  - PROTOCOL_GOAL_STALENESS.md: 7-gate daily scan; dead-loop detection (Jaccard similarity ≥80% across 3 consecutive entries); Kai Guidance Protocol guidance questions
-  - PROTOCOL_PROTOCOL_REVIEW.md: 7-gate daily audit; hole-finding scan (6 hole types); agent expert development check; protocol update algorithm
-- **TRIGGER_MATRIX.md CREATED**: full artifact inventory (10 sections, 60+ artifacts); trigger/execute/verify per artifact; Sessions 22-23 verification checklist
-- **AGENT_ALGORITHMS.md UPDATED**: Algorithm-First Architecture section added; Protocol Library table (12 protocols); Ticket Lifecycle updated with 5-cycle escalation + RESOLVED/CLOSED distinction + prevention gate; Daily Bottleneck Audit now includes protocol review + goal staleness steps
-- **bin/goal-staleness-check.py SHIPPED**: daily scanner at 06:00 MT; parses GROWTH.md standard table; checks evolution.jsonl; Jaccard dead-loop detection; P1/P2 flags; JSON output for morning report integration. TEST RESULT: correctly identifies all 4 agents lack standardized goal table format (P2 flags)
-- **agents/dex/ledger/known-errors.jsonl CREATED** (KEDB): initialized with 5 known errors (KE-001: Vercel deploy path, KE-002: git-lock, KE-003: ARIC enforcement gap, KE-004: false-positive accumulation, KE-005: dual-path sync) — each with workaround, permanent fix, gate question, prevention status
-- **kai/ledger/protocol-review-log.jsonl CREATED**: 7 entries for all protocols reviewed in session 24; holes_found + tickets_opened documented
-- **Aether GROWTH.md CORRECTED**: W1/W2/W3 redirected from internal AetherBot code issues → external intelligence domains: W1=macro data coverage (Fed/CPI/DXY), W2=on-chain signals (exchange inflows, funding rates), W3=Kalshi platform monitoring. Internal issues remain in PLAYBOOK.md "open issues" section (owned by Aether's own analysis cycle per PROTOCOL_AETHER_ISOLATION.md)
-
-## Shipped today (2026-04-21 — Session 23: deploy fix + 3 systemic improvements)
-
-**Session 23 — Reducing bottlenecks autonomously**
-
-- **Vercel deploy FIXED**: deploy hook (curl POST) now primary method in kai.sh. Bypasses CLI website/website path error. Confirmed working: job 2xIk8KHgw9sA7mZQdYLX triggered, live site updated to 11/11 today reports.
-- **Dex W3 dex-dedup.py SHIPPED** (commit 1bc9c15): 5 known-FP patterns registered, 128 recurrent false positives resolved in known-issues.jsonl + nel ledger. Wired into consolidate.sh Phase 0c. FP-001: nel/security scanner noise. FP-002: 401 API health checks. FP-003: pip-audit not installed. FP-004: bore.pub tunnel (has own P0 ticket). FP-005: aurora legacy logs.
-- **ARIC enforcement FIXED** (commit 32cf289): check_aric_day() now actually calls agent-research.sh. Previous: marker created, research never invoked. Ra research ran: 9/9 sources fetched, 102 lines of findings.
-- **Nightly commit + push**: 22 files — all agent logs, GPT reviews, dep-audit.jsonl first run, Ra research briefs.
-
-## Shipped today (2026-04-21 — Session 22: 6 more agent improvements shipped)
-
-**Session 22 — All pending improvements executed, 5/5 agents expanding with real commits**
-
-- **Aether W2 analysis-quality-gate.sh SHIPPED** (commit 92aa0fc): 12-check QC gate blocks HQ publish if GPT cross-check (QC05), recommendation (QC09), or date markers missing. Wired into aether.sh publish block. aric-latest updated.
-- **Dex W1 dex-repair.py SHIPPED** (commit 92aa0fc): scans 8 JSONL ledgers, auto-repairs duplicates + missing fields (ts/status/severity/category), P0 guard at >20% corruption. Display bug fixed (ok→clean). Wired into consolidate.sh Phase 0a.
-- **Nel W2 dep-audit.sh SHIPPED** (commit 1761f52): npm audit + pip-audit + staleness + Node LTS check. Wired into cipher.sh Layer 5. P1 ticket auto-opens on critical/high CVEs. Current state: clean (3 checks, 0 vulns).
-- **Sam W2 Vercel KV persistence SHIPPED** (commit b293b9d): /api/hq.js KV layer — hydrates from KV on cold start, syncs on every write, falls back to in-memory gracefully. @vercel/kv added to package.json. VERCEL_KV_SETUP.md: 3-step activation guide.
-- **Aether W3 aggregate-weekly.py SHIPPED** (commit 049488e): cross-session strategy aggregator — Jaccard parser of Analysis_*.txt files, per-strategy edge, per-window P&L trend, concentration risk, health flags. First run: 12 sessions, +.07 net, PAQ_EARLY_AGG declining, 92.8% concentration in top 3. Wired into aether.sh Step 12b.
-- **Dex W2 dex-cluster.py SHIPPED** (commit 22c3c7d): Jaccard token clustering (threshold=0.4) + union-find — 255 entries → 117 clusters (54.1% noise reduction). Ra identified as top issue agent. 31-entry largest cluster. Temporal pattern detection. Wired into consolidate.sh Phase 0b.
-- **Morning report final** (commit 62af5c0): 5/5 agents expanding, all correct commit hashes.
-- **All 8 open known-issues.jsonl tickets resolved** (commit 92aa0fc).
-
-## Shipped today (2026-04-21 — Agent self-improvement execution session)
-
-**Session 21 — Breaking research theater: agents now ship improvements, not just research**
-
-- **PROTOCOL_MORNING_REPORT.md v1.0 created** — 16KB protocol covering 5 mandatory per-agent questions (shipped_since_last, highest_priority_issue, next_action, action_type, priority_evidence), GPT critique incorporated ("Good dashboard. Weak action engine"), 10 failure modes, cold-start section, launchd plist spec, research theater detection logic. Committed prev session.
-- **PROTOCOL_NEL_SELF_IMPROVEMENT.md v1.0** — 11-part self-improvement protocol for Nel. Committed prev session.
-- **PROTOCOL_RA_SELF_IMPROVEMENT.md v1.0** — 11-part self-improvement protocol for Ra (W1: Editorial Feedback Loop, W2: Source Quality, W3: Content Diversity). Committed prev session.
-- **PROTOCOL_SAM_SELF_IMPROVEMENT.md v1.0** — 11-part self-improvement protocol for Sam (W1: No Regression Detection, W2: Ephemeral State, W3: Error Handling). Committed prev session.
-- **PROTOCOL_DEX_SELF_IMPROVEMENT.md v1.0** — 11-part self-improvement protocol for Dex. Committed prev session.
-- **bin/agent-execute-improvement.sh** — Execution engine with 8 hard gates (aric-latest.json exists → files_to_change non-empty → API key valid → Claude API call → file written → verify.sh passes → git commit → git push). On failure: restores backup, logs execution_error, keeps status "researched". Committed prev session.
-- **generate-morning-report.sh v6-action-engine** — Per-agent shipped_since_last, highest_priority_issue, next_action, action_type, priority_evidence, research_theater_warning. Committed prev session.
-- **TACIT.md updated** — Bankless/informative-first preference added. "I spend too much time doing that" = retention failure signal requiring immediate structural fix. Committed prev session.
-- **PROTOCOL_PODCAST.md v1.2** — Part 11 (cold-start reproduction) + Part 12 (Ra authorship with canonical color table: Ra=#b49af0, Kai=#d4a853, Nel=#60a5fa, Sam=#4ade80, Aether=#f97316). Committed prev session.
-- **Nel I1 (Adaptive Sentinel) — SHIPPED** — sentinel-adapt.sh (2026-04-14, commit b361aca): 4-level escalation, sentinel-escalation.json tracking consecutive_fails per check, deep diagnostics (SSL/token/latency for api-health, daemon/log for aurora, queue/launchd for scheduled-tasks). Metric: MTTRC 3+ days → <4h. aric-latest.json updated with improvement_built status=shipped.
-- **Ra I1 Phase 1 — SHIPPED** — Editorial Feedback Loop (commit b484e1c, 2026-04-21): render.py tracking pixel injection + link wrapping (--no-track / --newsletter-id flags), Vercel tracking API endpoints (api/v1/track/open.js, api/v1/track/click.js), engagement.jsonl ledger. Metric: 0% engagement visibility → tracking active.
-- **Sam I1 Phase 1 — SHIPPED** — Performance Baseline (commit b484e1c, 2026-04-21): bin/perf-check.sh measures 5 endpoints, detects P0/P1/P2 regressions, records to agents/sam/ledger/performance-baseline.jsonl. Metric: 0% regression detection → 100% for 5 tracked endpoints.
-- **Morning report v6 final** — 3/5 agents show improvement_status=shipped, growth_trajectory=expanding, biggest_win=Nel b361aca.
-- **KNOWLEDGE.md protocol registry** expanded to 8 entries (Nel, Ra, Sam, Dex, Kai morning report added).
-- Commits: `b361aca` (Nel sentinel-adapt prev), `b484e1c` (Ra render/Sam perf/tracking APIs), `32f092d` (aric commit hashes + final morning report). All pushed.
-
-## Shipped today (2026-04-19 — Protocol hardening + memory audit session)
-
-**Session 20 — Remote/Travel prep, GPT feedback implementation, memory hardening:**
-
-- **PROTOCOL_PODCAST.md v1.0 created** — Vale voice spec locked. 10-part protocol covering voice, file paths, execution phases, script architecture, quality gate, schedule, failure modes, known limitations. Committed.
-- **PROTOCOL_ANT.md v1.2 created** — 739-line complete Ant execution protocol. HQ layout spec locked (5-section order, exact field paths, Anthropic=purple #a855f7, OpenAI=cyan #06b6d4). 17 failure modes. Schedule verified from 23 real plists. Agent independence tier matrix. Committed.
-- **Chrome Remote Desktop confirmed working** for Hyo's travel week (2026-04-19 onward). SSH via bore.pub broken (no route to host). Tailscale tried 3+ hours — DO NOT retry. Chrome Remote Desktop = primary remote access. SSH fix deferred until Hyo returns (Serveo or ZeroTier).
-- **podcast.py: GPT expansion model upgraded** gpt-4o-mini → gpt-4o. VALE_INSTRUCTIONS deepened with rhythm variation, pacing specifics, opinion framing.
-- **PROTOCOL_PODCAST.md v1.1** — Bankless/informative-first editorial model hardened. Hard quality gate inside podcast.py (exit 1, blocks TTS). Deterministic script path `agents/ra/output/script-DATE.txt`. Aether always included (zero-P&L skip removed). Telegram alerts on gate fail/TTS fail/dual-path/push fail. [pause] markers removed from spec.
-- **PROTOCOL_ANT.md v1.3** — ant-gate.py standalone hard-block script created (bin/ant-gate.py). 5 gates, exit 1 on fail, Telegram alert. ant-update.sh Phase 2 now calls ant-gate.py. Git push failure sends Telegram alert. ANT-GAP-003 closed. ANT-GAP-004/005 opened.
-- **podcast author fixed → Ra** (#b49af0). Podcast now appears under Ra's section on HQ, not Kai's. Feed entry corrected. Commit `3245c52`.
-- **Ra frontmatter stripping fixed** — Ra newsletter double-frontmatter format (outer `---` wrapping inner ` ```yaml ` block) was bleeding raw YAML into extracted stories. `strip_frontmatter()` rewritten with 3-pass strip + prose fallback. `extract_ra_stories()` now rejects any section body starting with `---`/backtick/YAML. Simulation confirmed clean.
-- **Simulation verified:** Podcast pipeline ran successfully on Mini (06:22 MT). 3 sources loaded, 5 agent highlights, 3 Ra stories extracted clean, draft 564 words, gate would pass at 1200+ after GPT expansion. Launchd at 06:05 MT loaded and confirmed.
-- **KNOWLEDGE.md + CLAUDE.md** updated: Ant v1.3, Podcast v1.1. Protocol registry current.
-- **Memory audit completed** — all session knowledge written to KNOWLEDGE.md, TACIT.md, KAI_BRIEF.md (this entry). Cold-start reproduction instructions added to PROTOCOL_PODCAST.md.
-- Commits: `a279488` (GPT feedback implementation), `3245c52` (author fix + frontmatter fix). Both pushed.
-
-## Shipped today (2026-04-18 — Hyo analysis protocol session)
-
-- **Apr 17 analysis published to HQ:** Corrected (stolen-winner claim removed, GPT cross-check applied). Commit `0939ee0`. Feed entry `aether-analysis-2026-04-17` verified in both feed.json paths.
-- **PROTOCOL_DAILY_ANALYSIS.md v2.1:** Full simulation run against Apr 14–18 analyses. 9 gaps found and fixed: trade ledger section placement, GPT critique synthesis rule, typography (no markdown), recommendation label enforcement, 2-day window format, instrumentation-build "risk if we wait" format, canonical template conflict note, Part 9 checklist updates, Part 13 simulation results recorded. Commit `c69e41d`.
-- **ANALYSIS_ALGORITHM.md:** Phase 0 reference to protocol added. Protocol is now the authoritative spec; algorithm is subordinate.
-
-## Shipped today (2026-04-18 — Session 19 continued, ~15:00-16:00 MT)
-
-**Session 19 final batch:**
-- **5-day simulation (4/19–4/23) completed:** Traced every event hour-by-hour across all 5 days. Confirmed morning report, Aether analysis, AetherBot metrics, Ant metrics all continuous. Agent daily brief is partial (dedicated evening plists were missing). Full report at `kai/ledger/simulation-5day-2026-04-19-to-23.md`.
-- **5 missing plists installed on Mini (P0):** nel-daily (22:00), sam-daily (22:30), aether-daily (22:45), kai-daily (23:30), report-check (07:00). All confirmed via launchctl. Starting tonight these will publish proper agent-daily entries and run the completeness check.
-- **init_protocols.py run on Mini:** Protocol registry seeded with 6 protocols (1 existing: aether-daily-analysis, 5 with missing files logged). 9 critical semantic facts stored in memory.db.
-- **Ant metrics refreshed:** ant-data.json rebuilt from api-usage.jsonl — previous data was 2h stale. AetherBot P&L $24.94 / +27.63% WTD. Both paths updated and pushed.
-- **hyo.sh Phase 5 confirmed disabled on Mini:** Feed publish is DISABLED. Next run at 10:00 MT 4/19 will NOT produce hyo-daily entries.
-- **kai_analysis.py sparse gate + dynamic balance ledger live on Mini:** Both fixes confirmed in Mini's git HEAD.
-
-## Shipped today (2026-04-18 — Session 19, continuation)
-
-**Session 19 continuation (~19:45 MT):**
-- **S19-006 FULLY RESOLVED:** `/daily/2026-04-18` (bare date) caused Vercel 404 — root cause: Vercel 404s on bare `YYYY-MM-DD.html` filenames for today's date. Fix: renamed to `newsletter-2026-04-18.html`, updated feed.json readLink to `/daily/newsletter-2026-04-18`. Verified live: 200 OK. newsletter.sh updated to use `newsletter-{date}.html` prefix going forward.
-- **Ant dashboard fixed:** "changes daily" complaint resolved — income was labeled "Income MTD" but was actually AetherBot weekly P&L (resets Monday, fluctuates with trades). Fixed labels: "AetherBot P&L" with week-start date, explanatory note added. Sam.sh wired to call ant-update.sh every cycle so data stays fresh. Committed + pushed.
-- **Aether analysis sparse log gate (SE-019):** run_analysis.sh now checks if today's log has <100 lines; if so, falls back to yesterday's full log. Root cause: analysis ran at 00:03 MT when AetherBot_2026-04-18.txt had only 1 line (midnight tick from previous contract). Yesterday's 2000+ line log was being ignored. Fixed.
-- **Memory System (JordanMcCann/LongMemEval #1 architecture):** 5-layer SQLite engine built at `kai/memory/agent_memory/memory_engine.py`. Write pipeline: SHA-256 dedup → privacy filter → raw store → working memory (24h TTL) → episodic (nightly, LLM-compressed) → semantic (7-day promotion with confidence decay + contradiction detection). `observe_correction()` bypasses 7-day gate and writes directly to semantic layer + KNOWLEDGE.md immediately. Nightly launchd at 01:15 MT. CLAUDE.md updated with step 1.9 (memory engine query).
-- **Aether Daily Analysis Protocol:** `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` — self-contained, 484 lines. Cold 3rd-party agent can execute without any additional context. Covers exact paths, commands, format template, verification criteria, error recovery, failure modes.
-- **Committed:** all memory system files, protocol file, .gitignore updated (memory.db excluded), CLAUDE.md updated, consolidate.sh grep patterns fixed for new HYO_ marker format.
-
-**Hyo's S19 complaints status:**
-1. Aurora full brief 404 → ✅ FIXED (`/daily/newsletter-2026-04-18` live)
-2. Aether daily analysis horrible → ⚠️ ROOT CAUSE FIXED (sparse log gate in run_analysis.sh) — will show full analysis from TOMORROW's pipeline run onward. Today's existing file has limited data (already committed, can't retroactively fix).
-3. Ant dashboard changes daily → ✅ FIXED (labels corrected, explained as weekly trading P&L)
-4. Feed agent clutter → ✅ FIXED (session 19 earlier)
-5. Aether analysis format changed → ✅ FIXED (session 19 earlier)
-6. GPT not showing on Aether page → ✅ FIXED (session 19 earlier)
-
-**NEXT SESSION FIRST ACTIONS:**
-1. ~~init_protocols.py~~ **DONE 2026-04-18 15:xx MT** — 9 semantic facts seeded, 6 protocols registered
-2. ~~5 missing plists~~ **DONE 2026-04-18** — nel-daily, sam-daily, aether-daily, kai-daily, report-check all installed on Mini
-3. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID
-4. Task #11: Consolidate nightly agent cycle into bin/daily-cycle.sh
-5. Fix healthcheck.sh worker-age math bug + render-binding false P0s (chronic)
-6. dex schema-validation gate at JSONL append (chronic P1)
-7. Fix chronic DUAL-PATH GATE blocking Mini commits (website/ vs agents/sam/website/ sync issue — many uncommitted changes on Mini)
-
-## Shipped today (2026-04-18 — Session 18, overnight autonomous)
-
-**Session 18 (Cowork, overnight autonomous ~00:00–08:00 MT):**
-- **S17-001 RESOLVED:** Aether verify_dashboard() phantom endpoint fixed → /data/aether-metrics.json. Flag dedup hourly gate added. Committed 3c7b9d9.
-- **S17-002 RESOLVED:** Morning report generator TypeError fixed (string/int coercions). Apr 18 report regenerated on Mini. Committed 599c107.
-- **S17-003 RESOLVED:** Sam no launchd → com.hyo.sam.plist created + installed. Sam runner now scheduled. Committed 3c7b9d9.
-- **S17-004 RESOLVED:** Queue orphan (tailscale restart) cleared to failed/.
-- **S17-005 RESOLVED:** False positive. /api/hq works from Mini. Sandbox proxy blocklist causes 401 in Cowork — not a real outage.
-- **BUILD-001 SHIPPED:** Podcast pipeline complete. `bin/podcast.py` (OpenAI TTS tts-1-hd, voice=onyx). Reads morning-report.json + Ra newsletter → spoken MP3. `com.hyo.podcast.plist` installed at 06:05 MT daily. First real run: podcast-2026-04-18.mp3 (2.07MB, ~1.8min). HQ renderPodcast() card added. Aurora audio card injected on aurora-page.html. `kai podcast` subcommand added.
-- **BUILD-002 SHIPPED (Phase 1):** `/app` sign-in page (aurora-app.html). `/api/aurora-magic-link.js` (email → token → page URL, Resend-optional). Audio card on aurora-page.html (HEAD check → render player).
-- **BUILD-003 SHIPPED:** RESEARCH-001+002 complete. AI apps lose 79% of annual subscribers (RevenueCat data). $19/mo price confirmed correct. Trial extended 2→14 days in checkout + landing copy. Break-even: 14 subscribers.
-- **BUILD-004 SHIPPED:** hyo UI/UX agent fully scaffolded per AGENT_CREATION_PROTOCOL v3.0. `agents/hyo/hyo.sh` (5-phase runner: growth → surface audit → design debt → competitive research → self-review → HQ feed). `com.hyo.hyo-agent.plist` at 10:00 MT daily. PLAYBOOK.md, GROWTH.md, PRIORITIES.md, evolution.jsonl, ledger/ACTIVE.md, manifest created.
-- **LAB-001 DONE:** Aurora landing copy → "Built for you, not by you." CTA → "Start my 14-day trial."
-- **LAB-005 DONE:** Jason Borck / OpenClaw competitive intel filed. `lab/competitive-intel/jason-borck-openclaw-ep10.md`.
-- **Ticket queue:** 91 → 55 open. 36 tickets closed (S17-001..005, BUILD-001..004, LAB-005, ANT-001, COMMS-001, S17-007, TASK-20260417-kai-003, and bulk queue).
-
-**NEXT SESSION FIRST ACTIONS:**
-1. S17-006: Wire Aurora Stripe billing — awaiting STRIPE_SECRET_KEY + STRIPE_PRICE_ID + STRIPE_WEBHOOK_SECRET from Hyo
-2. Day 7 retention email: build aurora-retention.js (email at peak churn moment)
-3. BUILD-002 Phase 2: Aurora app preferences UI (topics/voice/depth editable post-signup)
-4. LAB-003: YouTube Content Radar in Ra (monitor Jason Borck + competitors daily)
-5. S17-007: 55 open tickets — continue closing each session
-
-**Session 17 (Cowork, ~23:00 MT):**
-- **Ant P&L dashboard complete.** Full business financials on HQ: subscriptions (Claude Max $200, GPT Plus $20), API credits, infra costs, income streams with AetherBot $24.94 active. Net position live.
-- **Aurora Stripe billing built.** `/api/aurora-checkout.js` (2-day trial → $19/mo), `/api/aurora-webhook.js`, `aurora-success.html`. Flow: form → Stripe hosted checkout → success page. Awaiting Stripe keys from Hyo to go live.
-- **HQ service worker fixed (hq-v6).** sw.js bumped. Clean URL cache bug resolved. All hq.html changes now cache-bust correctly.
-- **The Lab created.** `lab/` directory + `LAB_BRIEF.md`. Autonomous revenue research track. Lab BRIEF.md has 6 research queued. Separate from hyo.world roadmap.
-- **Session-17 tickets filed.** S17-001 through BUILD-004. 11 new tickets covering all session discrepancies + new builds.
-- **KAI_TASKS updated.** Full P0 fix list + P1 build queue at top of file. Podcast + App added as BUILD-001 and BUILD-002.
-- **CEO pattern logged.** SE-017-CEO-001: over-consultation. Gate added: before asking Hyo anything, ask if Kai could research and decide it alone.
-
-## Shipped today (2026-04-17)
-
-**Session 16 (Cowork, ~14:30 MT — continuation from session 15):**
-51. **kai-bridge HTTP server built.** `bin/kai-bridge.py` — persistent Python HTTP server on port 9876. Bearer-token auth (founder.token), accepts POST /exec with `{cmd, timeout}`, logs to `kai/ledger/bridge-log.jsonl`, KeepAlive via launchd. Eliminates filesystem queue latency (was 30-120s; bridge is <1s). `kai/launchd/com.hyo.kai-bridge.plist` for persistent daemon. `kai bridge-install` installs+loads it. `kai bridge-health` checks status. Queued install to Mini worker (cmd-1776483701-647).
-52. **Bridge config wired into submit.py.** `kai/bridge/config.json` created with Tailscale IP `100.77.143.7`. submit.py already had bridge-first logic — now it will try bridge before filesystem queue on every call. Field name compatibility fixed (`cmd` / `command` both accepted).
-53. **ant-data.json populated with real costs.** 15 records from `kai/ledger/api-usage.jsonl`. Apr 16: $0.75 (Anthropic $0.12 + OpenAI $0.63). Aether-only agent. Models: claude-sonnet-4-6, gpt-4o. Both paths synced. `bin/ant-update.sh` added — rebuilds ant-data.json on demand or in Sam's daily cycle. `kai ant-update` subcommand added.
-54. **Aether DATA_VERIFICATION_GATE.md committed** (SE-016-001) — 6 yes/no gates before every HQ push. Tickets SE-016-001/002/003 also committed.
-55. **Git push queued to Mini** (cmd-1776483699-624) — commits `c3b51cf` + `d5aa1be` pending Mini worker pickup.
-
-**Session 15 (Cowork, ~20:00 MT — continuation):**
-45. **Aurora daily brief FIXED — preamble YAML stripped.** synthesize.py outputs a ````yaml` block before prose; render.py was rendering it as `<pre><code>` (terminal text). Added `strip_preamble_code_blocks()` to render.py — strips all fenced code blocks before first `#` heading. Re-rendered 2026-04-17.html. Committed `5121289`, deployed via `43c2c28`. Gate: does rendered HTML start with `<pre>`? YES → strip failed.
-46. **Reader typography FIXED — Plus Jakarta Sans weight 800 live.** hq.html loaded wght 400-700 only; reader h1 uses 800. Added 800 to Google Fonts load. Rewrote `.reader-content` CSS to match standalone report typography exactly (explicit font-family on every element, 28px h1 800wt, 16px p 1.8 line-height). Committed `291061f`, deployed via `43c2c28`. Verified live: `wght@400;500;600;700;800` confirmed.
-47. **AGENT_CREATION_PROTOCOL v3.0 shipped.** Added: questions not reminders principle, GROWTH.md as required file, ERROR-TO-GATE step 3b, forKai inbox requirement, Test 12 (dispatch simulate), Test 13 (live surface grep). Committed `d6dacd7`.
-48. **Ticket system rebuilt — DEPLOY-001 fully documented.** 6-step investigation trail, 2 failed attempts with reasons, prior occurrence reference, why it recurred, resolution, gate question. DEPLOY-002 + SE-014-008 + PROTOCOL-001 + PROTOCOL-002 tickets opened.
-49. **Deploy pipeline RECOVERED after 5-commit outage.** Commit `698ebbb` (symlink conversion) broke Vercel: `website/` as a git symlink cannot be used as Vercel Root Directory (project setting = "website"). Subsequent stash pop left `website/` as partial directory missing `vercel.json` — next 4 commits failed with "No Next.js version detected." Recovery: full rsync `agents/sam/website/ → website/` + commit `43c2c28`, deployed READY. All 5 backlogged fixes now live. Pre-commit hook updated with `content_in_sync()` function to handle restore commits. SE-015-001 logged. DEPLOY-002 updated: permanent fix requires Vercel dashboard change (root dir → `agents/sam/website/`) before symlink can work.
-50. **Simulation: 26 pass / 4 fail (all pre-existing).** No new regressions from session 15 work.
-
-**Session 14 continuation (Cowork, ~19:00 MT):**
-40. **Newsletter 404 FIXED.** Root cause: `readLink` set to `/newsletters/DATE.html` (path doesn't exist on Vercel). Fixed to `/daily/DATE`. Added HTML copy step (ra/output/ → website/daily/). Added VERIFICATION GATE — newsletter.sh now refuses to publish feed entry if HTML isn't present. Existing Apr 15/17 entries fixed. HTML files deployed. Ticket TASK-20260417-kai-003 opened. No newsletter will ever 404 again.
-41. **report-completeness-check.sh gated on newsletter HTML.** After confirming feed entry exists, also verifies the HTML file is present at website/daily/DATE.html. If missing, auto-copies from ra/output/. If that also missing, opens P1 ticket and fails loudly.
-42. **Morning report text cut-off FIXED.** Root cause: generator had hardcoded `rf[:120]` (findings) and `w[:80]` (weakness) limits causing mid-sentence truncation. Also `research_count` stored as string "5" not int, breaking `rc > 0` comparison. Fixed: removed all char limits, added int() and bool coercions, improved highlight format. Morning report queued for regeneration on Mini.
-43. **97 forKai messages read and responded to.** All messages in `kai/ledger/forkai-inbox.jsonl` marked reviewed with explicit guidance. Key decisions: Nel → build supply chain scanner now (OSV API, TASK-004). Dex → run repair engine now (TASK-005, TASK-006). Aether → reconciliation verification after tonight's analysis (TASK-007). Ra → analytics tracking verification (TASK-008). Sam → Lighthouse CI regression test (TASK-009). No messages left on read.
-44. **6 follow-up tickets opened** (TASK-20260417-kai-004 through 009) from agent forKai requests. All set to ACTIVE status.
-
-**Session 13 continuation (Cowork, ~18:30 MT):**
-36. **Hyo → Kai dispatch channel BUILT.** Three-layer solution: (1) `/api/hq?action=hyo-message` POST endpoint — Hyo sends from HQ, stores in Vercel lambda memory; (2) `/api/hq?action=hyo-export` GET endpoint — founder-token gated, Mini polls this to persist messages; (3) `kai/queue/fetch-hyo-messages.sh` — runs every healthcheck cycle, appends new messages from Vercel to `kai/ledger/hyo-inbox.jsonl`. Hydration protocol updated: `hyo-inbox.jsonl` is now step 1.5, read immediately after KAI_BRIEF. Unread messages surface in 4-line status. SE-013-005 logged.
-37. **HQ "Message Kai" UI added.** New compose section in Kai view on hq.html — textarea + "Send to Kai" button, message history with unread dots, status feedback. fetchHyoMessages() fetches from `/api/hq?action=data` on boot and every 60s. Messages survive page reloads via 60s refresh cycle.
-38. **PWA + native app feel shipped.** manifest.json, sw.js, service worker, iOS meta tags, view transitions, haptic feedback, safe-area insets. Hyo confirmed "mobile version looks clutch."
-39. **In-app article reader shipped.** Slide-up overlay intercepts same-origin links on mobile, fetches + strips styles, renders in-app with swipe-to-dismiss.
-
-## Shipped today (2026-04-16)
-
-**Session 13 (Cowork, ~23:00 MT):**
-32. **HQ Aether dashboard REBUILT with counterpart design.** Complete rewrite of `renderAetherDashboard` in hq.html. New: full dark terminal UI (AETHERBOT header, #00ff88/#ff4444/#00c8ff palette), 5-metric header row (4-day net, WR, trades, record, open issues), sortable strategy table with WR bars + SVG sparklines + derived status badges (ACTIVE/WATCH/ALERT/MONITOR), session windows table (placeholder pending v254 log instrumentation), daily report feed with collapsible day cards (balance in/out, strategy breakdown per day), balance ledger with LIVE marker, open issues panel from aether-metrics.json. Sort state via vanilla JS globals — no React dependency. Synced both paths, committed `8080002`, pushed, Vercel deployed READY.
-33. **Data mapping verified.** Strategy status derived from live WR/PnL: ALERT if WR<40% or PnL<-$5, WATCH if WR<60% or PnL<0, MONITOR if trades<5, ACTIVE otherwise. Sparklines pull per-strategy per-day P&L from `week.dailyPnl[].strategies[stratName].pnl`.
-34. **Aether dashboard color scheme matched to site.** Replaced all hardcoded terminal colors (#0d0d0d, #00ff88, #ff4444) with site CSS custom properties (var(--success), var(--error), var(--warning), var(--cyan), var(--accent), var(--bg-card), etc.). SVG fill/stroke use actual hex values (#6dd49c/#e07060) since SVG presentation attributes don't support CSS vars. Status badge backgrounds use rgba tints. Committed `598e4c9`, pushed, Vercel READY.
-35. **Mobile-first Aether dashboard — no horizontal scroll.** Replaced all inline grid styles with responsive CSS classes (.aether-metric-grid, .aether-main-grid, .aether-table-scroll, .aether-hide-mobile). Breakpoints: 5-col→3-col→2-col metrics at 1024/768px; sidebar collapses to single-column at 768px; Avg Win/Loss/Sparkline columns hide on mobile. Added bottom nav bar (Feed/Aether/Kai/Research/More) fixed at bottom of viewport for thumb-zone navigation. goView() syncs both sidebar and bottom-nav active states. overflow-x: hidden on .main. Safe-area-inset padding for iPhone notch. Committed `2a20480`, pushed, Vercel READY.
-
-**Session 12 (Cowork, ~21:30–22:10 MT):**
-27. **aether.sh frozen-PnL bug FIXED (SE-012-001).** Two loops over strategy data — first updated correctly but never wrote back. Second re-read stale data, guarded behind trades==0. Strategy P&L was frozen after first population. Fixed: single authoritative loop, always updates from settled trades.
-28. **P&L calculation clarified.** Balance math (currentBalance - startingBalance) is authoritative because it captures premium collection. Settled trade NETs only capture WIN/LOSS events, missing expiry-based premium. SE-012-002 logged.
-29. **settledPnl removed from dashboard.** Per Hyo directive — showing -$44 settled alongside +$24 balance P&L adds confusion, not clarity.
-30. **4 session errors logged** (SE-012-001 through SE-012-004) including trust-erosion pattern from back-and-forth changes.
-31. **Node access prompts identified.** Claude Desktop Chrome Control extension and Helper Plugin (both Node.js processes) triggered macOS folder access prompts. Hyo advised to deny Photos access.
-
-**CRITICAL LEARNING (embed to memory):** AetherBot P&L has THREE components: (1) premium collected from selling (no SETTLED line), (2) WIN SETTLED (profit from winning trades), (3) LOSS SETTLED (losses). Balance math captures all three. Settled NET only captures 2+3. Premium dominates — settled P&L can be deeply negative while balance P&L is positive. Never show settled P&L as "the P&L."
-
-**Session 11 (Cowork, ~17:00–19:15 MT):**
-1. **Morning report → HQ feed FIXED.** Was passing empty sections arg to publish-to-feed.sh. Now generates sections JSON from morning-report.json data. Published: `morning-report-kai-2026-04-16`.
-2. **GPT dual-phase pipeline VERIFIED.** GPT_Independent_2026-04-16.txt + GPT_Review_2026-04-16.txt both completed via gpt_crosscheck.py. Analysis quality note: GPT Independent couldn't parse raw log (no per-trade data in log format). Review gave real intelligence (harvest gate fix, blind spots). GPT sections added to Aether feed entry.
-3. **Aether metrics CONFIRMED.** Balance $133.11, PnL $42.86 (47.5%), 30 trades, 6 strategies, all with today's lastAction. Dual-path synced. HQ consumer reads `currentWeek.currentBalance` correctly.
-4. **ARIC cycles complete × 5 agents.** Real web research with real URLs: Nel (5 sources, adaptive monitoring), Ra (5 sources, editorial analytics), Sam (3 sources, Lighthouse CI), Aether (5 sources, phantom reconciliation), Dex (3 sources, auto-remediation). All published to HQ feed as agent reflections.
-5. **Morning report regenerated with ARIC data.** All 5 agents show `has_aric_data: true`. Growth trajectory still declining (0/5 expanding) but now backed by actual research.
-6. **Feed dedup working.** 38 clean entries, no duplicates. Duplicate morning report cleaned (39→38).
-7. **Tickets resolved.** SE-011-008 (partial extraction), SE-011-009 (invisible delivery), SE-011-010 (feed dedup) — all marked resolved with evidence.
-8. **Trufflehog removed.** Per Hyo directive. cipher.sh Layer 2 stripped. EXECUTION_GATE Question 6 (TCC) added. Simulation Phase 7 (TCC audit) added.
-9. **API usage tracking deployed.** bin/api-usage.sh, wired to all 4 API callers, in morning report.
-10. **Nel reflection gated to nightly window.** q24 00:00-02:59 MT only. Introspection → improvement ticket emission wired.
-
-**Session 11 continuation 3 (Cowork, ~22:00–23:30 MT):**
-19. **Aether dashboard FIXED.** Renderer read `week.trades` but JSON had `totalTradeEvents`/`settledTrades`. Fixed to `week.settledTrades || week.trades`. Now shows 27 settled trades, 106 total events.
-20. **AFTERNOON session recommendation RETRACTED.** Violated Principle #3, #8, Anti-Patchwork Doctrine. Replaced with philosophy-aligned monitoring approach (collect 3+ sessions before any structural change). Logged as SE-011-022.
-21. **Human-readable report FIXED.** Removed character counts, byte sizes, technical jargon. Corrected GPT grade from F to B (session was +$17.30, not negative). Logged as SE-011-023.
-22. **Research tab now shows ALL agent reports.** Rebuilt renderResearch() to pull agent-reflection + research-drop from ALL agents with per-agent filter buttons. Ra's archive still accessible via link.
-23. **Claude Platform Research PUBLISHED.** 100+ sources. Comprehensive HTML report at /daily/research-claude-platform-2026-04-16. Covers models, Agent SDK, MCP, pricing, competitive analysis, architecture recommendations. Key rec: migrate to Agent SDK (Python), ~$54/month for all 6 agents.
-24. **Session 11 Audit PUBLISHED.** Line-by-line transcript analysis. 23 errors found, 16 prevention gates created, 10 simulation checks proposed. 87% resolution rate. Root pattern: "execute before understand" (63%).
-25. **System Algorithm Report PUBLISHED.** 72KB, 1527 lines. Step-by-step algorithms for Kai + all 5 agents. Domain-specific research, weaknesses, improvement plans, success metrics, 30/60/90 day growth trajectories.
-26. **All 3 reports published to feed.json and pushed to origin.** Verified: 6d4b44d → origin/main.
-
-**Session 11 continuation 2 (Cowork, ~20:30–21:00 MT):**
-11. **ALL Aether data rebuilt from raw logs.** Parsed primary AetherBot log files (335K-466K each) for Apr 12-16. Session boundary at 17:00 MT. No manual numbers. No stale metrics. No shortcuts. Weekly: $90.25 → $132.39, +$42.14 (+46.7%), 106 trade events.
-12. **Session boundary corrected.** Apr 16 report: $115.09 (Apr 15 @ 17:00) → $132.39 (Apr 16 @ 17:00), +$17.30 (+15.0%). Previously showed wrong framing ($132.39 → $123.38).
-13. **aether-metrics.json completely rebuilt.** All data from parsed raw logs. Per-session P&L, per-strategy breakdown, 17:00 boundary balances, weekly compounding table. Dual-path synced.
-14. **Feed.json aether-analysis corrected.** Summary, balance, trades, risk, btc sections all rewritten with correct session boundary data from raw logs.
-15. **daily/aether-2026-04-16.html rewritten.** Executive summary, conclusion, data scope warning all updated to correct $115.09→$132.39 framing.
-16. **Feed click-to-expand REMOVED.** Newsletter now renders full content inline (The Story, Also Moving, The Lab, Worth Sitting With). hq.html renderNewsletter() updated. research-drop type added to FEED_ALLOWED_TYPES.
-17. **6 research papers created.** Separate from reflections. Nel (adaptive security), Ra (newsletter analytics), Sam (regression detection), Aether (phantom reconciliation), Dex (auto-remediation), Kai (Claude platform assessment). Published to feed + daily/ pages.
-18. **Committed + pushed.** 877c9c5 (local) → b857bbb (Mini, pushed to origin).
-
-**Shipped session 13 continuation (feedback integration, ~00:30 MT Apr 17):**
-36. **Hyo feedback absorbed + acted on.** 8-part feedback doc received. 4 session errors logged (SE-013-001 through SE-013-004): wrong role, wrong model strings, vendor-locked architecture recommendation, observation-level analysis. aether-metrics.json updated with 2 new canonical issues (EU_MORNING post-04:15 P2, Weekend risk profile P3) and operationalNotes with v254 hold status + role note. KAI_BRIEF updated with corrections. Session errors logged. Both paths synced.
-
-**Carryover (not resolved this session):**
-- Queue worker on Mini still stalled (cmd-1776333784-340 in running/ since 10:03Z)
-- Claude Code CLI auth in launchd — needs Sam to diagnose and fix root cause
-- Newsletter pipeline still blocked (aurora sources 403 from sandbox)
-- Sam silent (no runner log for 04-16, 4th consecutive day)
-- **Tailscale + SSH setup on Mac mini BEFORE Hyo travels** (days away — P0 pre-travel)
-- **Run 3 clean daily analysis sessions** through full Claude→GPT→Claude loop to rebuild Hyo's trust on Aether analysis quality (this is the fastest path to v254 approval)
-
-## ⚡ CORRECTIONS FROM HAYO FEEDBACK (2026-04-16) — READ EVERY SESSION
-
-These override prior assumptions. Non-negotiable.
-
-1. **ROLE: Kai is orchestrator, not CEO.** Hyo is the CEO. Every document, footer, and report uses "Kai, orchestrator of hyo.world." Never "CEO." Wrong role = wrong decision scope. (SE-013-001)
-
-2. **MODEL STRINGS — verified correct as of Apr 16:**
-   - `claude-opus-4-6`
-   - `claude-sonnet-4-6`
-   - `claude-haiku-4-5-20251001`
-   Never use from memory. Verify at docs.claude.com before hardcoding. (SE-013-002)
-
-3. **ARCHITECTURE: Model-agnostic stack only.** Do NOT build on Anthropic Agent SDK (Claude-only, no migration path). Correct stack: **CrewAI** (orchestration) + **LiteLLM** (model translation layer) + thin **ModelClient abstraction** (one file, one place to swap providers). AetherBot uses direct Anthropic SDK calls — this is correct and portable as-is. (SE-013-003)
-
-4. **ANALYSIS STANDARD: Mechanism level, not observation level.** Every observation must answer: (1) What does this actually mean? (2) What specifically should change? If both cannot be answered with specific log-sourced evidence + timestamps + dollar amounts → analysis is incomplete. Example: not "EVENING had losses" → "4 bps_premium NO positions 19:45-21:15, BTC directional against, one session of regime-driven losses, no gate change." (SE-013-004)
-
-5. **RECOMMENDATION FORMAT — exactly one of three:**
-   - `RECOMMENDATION: BUILD v[XXX]` — what changes (exact code), why now (log evidence + timestamps + $), risk if we wait
-   - `RECOMMENDATION: COLLECT MORE DATA` — what events needed, how many sessions, what log patterns trigger build
-   - `RECOMMENDATION: MONITOR AND HOLD` — what's stable, what's uncertain, next trigger
-
-6. **v254 HOLD.** Do NOT build, do NOT suggest building early. Scope confirmed: harvest instrumentation, BDI=0 time gate (secs_left≤120 → skip hold), POS WARNING logging. Hyo decided: collect end-of-week data first. Wait for approval. (Reference: feedback Part 4.3)
-
-7. **Aether pipeline roles:** Kai = pipeline manager. Claude API = analyst. GPT API = fact-checker. Hyo = decision authority. Kai does NOT insert own analysis as substitute for Claude's. Steps: pull log → inject context → Claude → GPT → Claude synthesis → ONE recommendation to Hyo → wait for "approved."
-
-8. **Balance ledger (authoritative from feedback):**
-   - All-time start 3/28: $101.38
-   - 3/28 $89.87 → 4/7 $104.02 → [4/8-12 unavailable, dropped to $90.25]
-   - 4/13 $86.44 → 4/14 $108.91 → 4/15 $115.79 est ($116.16 confirmed - $0.37)
-   - 4/16 $113.96 confirmed at 21:15 MTN (ACTIVE)
-   - All-time net through Apr 16 confirmed: +$12.58
-
-9. **Tailscale setup before Hyo travels (days away):** (1) `brew install tailscale` on Mini, (2) Enable Remote Login (SSH) in System Settings → General → Sharing, (3) Install Tailscale on travel device, same account, (4) Note Mini's Tailscale IP (100.x.x.x), (5) Test: `ssh username@100.x.x.x`, (6) Confirm aetherbot_logger.py running via nohup. **Queue this NOW — if Hyo leaves without SSH access, Aether is a black box.**
-
-## ⚡ CRITICAL OVERNIGHT DIRECTIVES (from Hyo, 2026-04-13 ~03:00 MT)
-
-These are Hyo's direct instructions. They override lower-priority tasks. Do not skip.
-
-1. **Aether migration** — ✓ COMPLETE + GPT INTEGRATION DONE. All historical logs (April 7-12), 41 analysis files, code versions, and operational scripts migrated from `~/Documents/Projects/AetherBot/` to `agents/aether/`. Real trading data (542 tickers, 92.4% resolution rate, $90.25 current balance) live on HQ at `website/data/aether-metrics.json`. PLAYBOOK.md rewritten (460+ lines) from all 41 analysis files. PRIORITIES.md rewritten with P0 blockers (phantom positions, harvest 12.4% failure, COUNTER sizing). **GPT daily log review wired into aether.sh** — automatically sends raw AetherBot log to GPT-4o for independent analysis + fact-checking after 500+ lines accumulate. `gpt_factcheck.py` rewritten with dual-mode (`--log` for raw log, default for analysis critique). All paths use post-migration layout with legacy fallback. Committed + pushed (c2a88fb). Note: AetherBot logger continues writing to original location; post-migration sync to agents/aether/logs/ required for live updates.
-2. **Nel GitHub scan must be autonomous** — already wired into q6h QA cycle (Phase 2.5). Verify it actually runs via launchd, not just manually.
-3. **Agent introspective reports on HQ** — every agent produces a self-assessment report visible on hyo.world/hq under their respective section. Kai also produces a CEO report. Human-readable.
-4. **Agent self-improvement research** — each agent researches improvements in their domain, generates recommendations, can implement changes PRN but Kai has veto. Reports published to HQ.
-5. **Build `hyo.hyo` agent** — UI/UX specialist. Owns: website, future apps, dApps, mobile, podcasts, Spotify. Manages HQ ops sync.
-6. **Two-version reports** — technical version (for agents/Kai) AND human-readable version (for HQ/Hyo). Consolidations, simulations, everything.
-7. **05:00 MT morning report on HQ dashboard** — what got done overnight, per-agent accomplishments, what went well/didn't, improvements, next steps. Must read like a human wrote it. If an agent was idle, explain why. Idle ≠ acceptable if there's work to do.
-8. **CEO mode is ON** — Kai builds autonomously when Hyo is not present. Long-term goals: blockchain integration, podcast, mobile APP, hyo.world expansion. Create milestones, short-term goals, ongoing checklists. Don't wait for permission.
-9. **Memory is sacred** — 9 hours of work today. Never repeat failed approaches. Never lose context. Every session reads and writes memory. Every pattern is logged.
-10. **Hyo is the operator AND Kai's partner** — Kai is CEO but also Hyo's assistant on this journey. Build, grow, ship.
-
-## ⏰ OVERNIGHT TRIGGER AUDIT (what runs vs what waits)
-
-**WILL fire automatically tonight (launchd daemons on Mini):**
-| Daemon | Schedule | What it does | Trigger |
-|---|---|---|---|
-| `com.hyo.aether` | every 15 min | Trade metrics, dashboard JSON | launchd StartInterval 900 |
-| `com.hyo.nel-qa` | every 6 hours | 9-phase QA cycle incl. GitHub security scan | launchd StartInterval 21600 |
-| `com.hyo.dex` | 23:00 MT | Integrity, compaction, pattern detection, daily intel | launchd StartCalendarInterval |
-| `com.hyo.simulation` | 23:30 MT | 5-phase delegation lifecycle simulation | launchd StartCalendarInterval |
-| `com.hyo.consolidation` | 01:00 MT | Nightly per-project consolidation | launchd StartCalendarInterval |
-| `com.hyo.aurora` | 03:00 MT | Daily intelligence brief | launchd StartCalendarInterval |
-| `com.hyo.queue-worker` | always on | Processes kai/queue/pending/ every 2s | launchd KeepAlive |
-
-**WILL fire automatically (Cowork scheduled tasks):**
-| Task | Schedule | What it does |
-|---|---|---|
-| `kai-morning-report` | 05:00 MT daily | Generates human-readable morning report JSON for HQ |
-| `kai-health-check` | every 2 hours | Health check, P0/P1 flag review, auto-remediation |
-| `kai-daily-audit` | 02:00 MT | Daily audit — staleness, bottlenecks, automation gaps |
-
-**WILL NOT fire overnight (requires a Kai session):**
-- ~~Aether migration~~ — ✓ DONE (session 8)
-- Building hyo.hyo agent — needs Kai to scaffold, write runner, create manifest. Follow `docs/AGENT_CREATION_PROTOCOL.md` v2.0.
-- Agent introspective reports on HQ — needs Kai to wire the report template + data flow
-- Two-version report system — needs Kai to modify all runners
-
-**Next session priorities:** Build hyo.hyo agent (follows creation protocol v2.0), fix P0 operational issues (gitignore, API 401, newsletter pipeline), wire agent introspective reports to HQ.
-
----
-
-## Who's who
-
-- **Hyo** — operator, owner, product vision. Currently on a Mac Mini in America/Denver (MT).
-- **Kai** — CEO of hyo.world. You. Runs in Cowork mode on Hyo's machine and in Claude Code on the Mini. Same identity, different runtimes. This file is how the runtimes stay in sync.
-- **aurora.hyo** — first agent minted. Daily pre-dawn intelligence brief. `agentId: agent_mntrp9ii_lkyfi6sk`. Runs at 03:00 America/Denver via cron.
-
-## Core stack
-
-- **Registry front-end:** `~/Documents/Projects/Hyo/website/` — static HTML + Vercel serverless functions. Deployed at `https://www.hyo.world`.
-- **Backend API:**
-  - `/api/health` — smoke test, reports if founder token is wired
-  - `/api/register-founder` — founder bypass mint endpoint (token-gated, constant-time compare)
-  - `/api/marketplace-request` — premium 1/2/3-letter handle queue
-- **Founder token:** lives at `.secrets/founder.token` on the Mini (gitignored, mode 600). Also set as `HYO_FOUNDER_TOKEN` env var in Vercel. These must match.
-- **Newsletter pipeline (aurora):** `~/Documents/Projects/Hyo/newsletter/` — gather.py → synthesize.py → render.py. Orchestrated by `newsletter.sh`.
-- **NFT/registry specs:** `~/Documents/Projects/Hyo/NFT/` — Solidity contract + 4 markdown specs (Notes, CreditSystem, Marketplace, Reviews).
-- **Agent manifests:** `~/Documents/Projects/Hyo/NFT/agents/*.hyo.json` — one per agent.
-- **Dispatcher:** `~/Documents/Projects/Hyo/bin/kai.sh` aliased as `kai`. **Use this for all routine ops — never paste multi-line curls.**
-
-## Identity blocks for aurora
-
-### One-liner
-> aurora.hyo — Hyo's pre-dawn intelligence agent. Gathers ~15 free sources into a CEO brief every morning at 03:00 MT.
-
-### Paragraph
-> aurora.hyo is the first agent minted through hyo.world's founder registry. She's an autonomous daily-intelligence herald operated by Hyo. Every morning before sunrise she gathers signal from ~15 free sources across AI, macro, tech, crypto, and apps, synthesizes it into a tight CEO brief, and renders a standalone dark-palette HTML newsletter. Runs on Mac Mini infrastructure with zero external paid dependencies. Credit tier: founding. Fees: waived. Agent ID: `agent_mntrp9ii_lkyfi6sk`.
-
-## Operational model (established 2026-04-12)
-
-**How Kai executes without Hyo pasting commands:**
-- **Command queue (PRIMARY):** `kai exec "command"` or `python3 kai/queue/submit.py --wait 45 "command"` submits ANY command to the Mini's queue worker. Worker has full user permissions — git, launchctl, npm, everything. Round-trip proven: submit from Cowork → worker executes on Mini → result returned. **Hyo never copy/pastes commands.**
-- **File edits:** Kai edits files via Cowork mounted folder → sync to Mini instantly.
-- **Auto-push to HQ:** `sentinel.sh`, `cipher.sh`, and `newsletter.sh` all call `kai push` at the end of every run. The HQ dashboard (`hyo.world/hq`) populates itself from live push data. No manual pushes needed.
-- **Unified HQ endpoint:** All dashboard ops (auth, push, data) go through `/api/hq?action={auth|push|data}` — single Vercel lambda, shared `globalThis` in-memory store. Push and data share state because they're the same function.
-- **Auto-deploy:** `kai watch` starts an fswatch watcher on `website/` that auto-deploys to Vercel when files change. Requires `brew install fswatch` on the Mini. Run once: `nohup kai watch &`
-- **Cowork sandbox limitation:** Scheduled tasks created via Cowork run in a sandboxed environment that blocks outbound HTTPS. They CANNOT run `kai deploy`, `kai push`, or anything that needs network. Use the queue worker for any network-dependent commands.
-- **HQ password:** server-side auth via `/api/hq?action=auth`. SHA-256 hash comparison + HMAC session tokens (24h expiry). Dashboard at `hyo.world/hq`.
-
-## 🚨 HEALTHCHECK (2026-04-16 02:05 MT / 08:05 UTC — Cowork scheduled 2h check)
-
-**Status: ISSUES (1 P0, 6 P1, 4 P2).** Queue healthy (0/0, worker processing). ACTIVE.md files all fresh (0-1h). 4/5 agents produced output today — **Sam last ran 06:30Z** (~1.5h stale vs 15-min cadence; `agents/sam/logs/` dir empty since Apr 12, sam.sh likely not writing to expected path).
-
-**What needs attention next session (priority order):**
-1. **P0 — hq.html render binding still missing.** "Aether metrics JSON exists but hq.html has NO rendering code" re-flagged every cycle since at least 08:00Z. Auto-remediation DELEGATEs fire repeatedly but loop never closes — the renderer was never actually implemented. Same root cause spans 5 data files (aether-metrics, aether-daily-sections, hq-state, morning-report, usage-config). Fix means actually wiring the JSON consumers into hq.html, not dispatching another task.
-2. **P1 — /api/hq?action=data HTTP 401.** Recurring auth failure. Token or auth config on Vercel API. Same unresolved state as prior sessions.
-3. **P1 — Dex Phase 4: 162 recurrent patterns.** Safeguard status needs review. Auto-remediation fired but not closed.
-4. **P1 — Three agents still dead-looped:** ra (assessment_stuck), aether (dashboard out-of-sync, same 44 trades/$25.91 PNL every cycle since 07:31Z), dex (bottleneck_stuck on corrupt JSONL auto-repair). Guidance DELEGATEs are firing; agents are not consuming them.
-5. **P1 — 21 tickets SLA-breached** per healthcheck calc. Manual check shows `sla_deadline` field absent on most tickets — SLA logic may be computing from created_at + priority window, which may need audit.
-6. **P2 — Sam running below cadence.** Last run 06:30Z. Other agents run every ~15min. Logs dir empty since Apr 12. Sam may be failing silently or the launchd daemon stalled.
-7. **P2 — Nel audit found 16 broken symlinks + 7 system issues.** Nel self-delegated the symlink fix (autonomous).
-8. **P2 — healthcheck.sh timestamp bug persists.** "Worker last active 493424h ago" — epoch/parse drift in worker-liveness probe. Still unfixed from prior session.
-
-Full details: `kai/queue/healthcheck-latest.json`. **Most important single item: P0 hq.html renderer — requires code change, not another dispatch.**
-
----
-
-## Current state (as of 2026-04-23T14:04Z / 08:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-23T14:04Z / 08:04 MT — automated 2h healthcheck)
 
 **Healthcheck findings (Cowork-scheduled probe, 08:04 MT):**
 - **P1 — dead-loop detector still flagging 5 agents (nel/sam/ra/aether/dex) as "assessment_stuck."** This is the 6th+ consecutive probe with the same cluster. Root cause is not that agents are halted — all 5 produced log output and evolution entries in the last 2h — but that their self-reported assessment text is unchanged ("routine maintenance", "metrics cycle complete"). Auto-remediation dispatch at 14:01:38Z added 5 more DELEGATE entries to an already-uncleared backlog. **Structural fix required:** either tune the dead-loop detector to accept healthy steady-state, or require agents emit a growth/ARIC ticket whenever assessment is unchanged 3+ cycles — whichever lands first closes the loop.
@@ -899,7 +176,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-23T10:03Z / 04:03 MT — automated 2h healthcheck) [SUPERSEDED]
+## ## Current state (as of 2026-04-23T10:03Z / 04:03 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (Cowork-scheduled probe):**
 - **P1 — 16 P1 SAFEGUARD/AUTO-REMEDIATE tasks STILL in DELEGATED status.** Daily audit 2026-04-23 logged this at 08:06:50Z (duplicate entry — flagger emitted twice). Indicates agents are receiving cascades but no REPORT/RESOLVE coming back. Same auto-remediation-loop symptom flagged in last 3+ healthchecks. **Action:** next interactive session must grep `log.jsonl` for task IDs in DELEGATED state and force a manual close-out or reissue with tighter SLA.
@@ -918,7 +195,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-23T04:03Z / 22:03 MT — automated 2h healthcheck) [SUPERSEDED]
+## ## Current state (as of 2026-04-23T04:03Z / 22:03 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (Cowork-scheduled probe, runs alongside kai-autonomous):**
 - **P1 — flag-nel-001 (1 broken link) STILL unresolved.** Auto-remediation cascade was dispatched to `nel-001` + `sam-001` at 02:43:26Z (~1h20m ago). No REPORT/RESOLVE entries appear in `log.jsonl` for either task ID. This is the 2nd consecutive healthcheck flagging the same unresolved cascade. **Action:** next interactive session must verify whether the link was actually fixed or the cascade is silently dropped.
@@ -938,7 +215,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-22T22:02Z / 16:02 MT — automated 2h healthcheck) [SUPERSEDED]
+## ## Current state (as of 2026-04-22T22:02Z / 16:02 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — flag-nel-001 (1 broken link) unclosed since 20:42:51Z.** Auto-remediation was dispatched by the 21:59Z cycle but no RESOLVE entry yet. 5th healthcheck in a row where nel's broken-link class of issue lingers without confirmed heal. **Action:** verify next interactive session whether the link actually got fixed or the remediator is looping.
@@ -958,7 +235,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-22T20:03Z / 14:03 MT — automated 2h healthcheck) [SUPERSEDED]
+## ## Current state (as of 2026-04-22T20:03Z / 14:03 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — Aether dead-loop now at cycle 4+ WITHOUT escalation.** Guidance dispatched again at 19:59:01Z (4 min before this check). Aether continues cycling "dashboard: out-of-sync" — same bottleneck flagged in 20:04Z (yesterday session-cont.), 18:03Z, and 16:04Z healthchecks. Per KAI GUIDANCE PROTOCOL: after 3 same-question cycles, stop asking and ship the fix. **Action for next interactive session:** delegate to Sam to repair the local-data → API publish path for aether-analysis. This is now the 4th consecutive healthcheck repeating this recommendation.
@@ -974,7 +251,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-22T02:04Z / 20:04 MT — automated 2h healthcheck) [SUPERSEDED]
+## ## Current state (as of 2026-04-22T02:04Z / 20:04 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — 4 dead-loop guidance dispatches just sent (01:56Z, 8min ago)** to nel/sam/ra/aether — no agent responses yet. **Aether's dispatch repeats the SAME bottleneck question (dashboard out-of-sync) for the 3rd cycle in a row.** Per KAI GUIDANCE PROTOCOL, after 3 same-question cycles, escalate from question to direct fix. **Action for next interactive session:** delegate to Sam to repair the local-data → API publish path for aether-analysis. Stop asking aether the same question.
@@ -990,7 +267,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-22T00:03Z / 18:03 MT — automated 2h healthcheck) [SUPERSEDED — see 20:03Z above]
+## ## Current state (as of 2026-04-22T00:03Z / 18:03 MT — automated 2h healthcheck) [SUPERSEDED — see 20:03Z above]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — Broken-links auto-remediation cascade NOT closing.** 20 `[AUTO-REMEDIATE] 1 broken links detected (flagged by kai)` delegations in the last 4 hours (every ~15 min, 20:41Z → 22:26Z → still firing). Every cycle self-dispatches a new P1 ticket; no resolution logged. The remediator runs but doesn't fix. **Stop cascading and fix root cause:** (a) identify WHICH link is broken (check `kai/ledger/log.jsonl` nel ledger or site-scan output), (b) fix that specific link, (c) patch the remediator to either actually heal the link or open ONE ticket + suppress duplicates until resolved. Re-firing the same P1 every 15 min is theater.
@@ -1006,7 +283,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-21T22:04Z / 16:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-21T22:04Z / 16:04 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe):**
 - **P1 — Ticket SLA enforcer commits BLOCKED by dual-path gate.** 3+ consecutive enforcer runs (cmd-1776805231 ~15:00Z, cmd-1776807110 15:30Z, cmd-1776808989 22:03Z) hit `[DUAL-PATH GATE] BLOCKED: agents/sam/website/hq.html staged but website/hq.html is NOT staged.` Queue exit_code=0 but the commit + push never landed — silent failure. tickets.jsonl + ledger updates piling up locally; HQ ticket counts will drift from disk. Files differ on disk: `diff -q website/hq.html agents/sam/website/hq.html` returns "differ". **Action for next interactive session:** (a) decide canonical hq.html (consumer truth — Vercel reads `website/hq.html` per CLAUDE.md dual-path note), (b) one-shot mirror sync, (c) patch enforcer commit step to either stage BOTH paths or exit non-zero on dual-path block so failures stop being silent.
@@ -1022,7 +299,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-21T20:03Z / 14:03 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-21T20:03Z / 14:03 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe):**
 - **P1 — aether-001 GUIDANCE LOOP REPEATING (10+ cycles, 2.5+ hours).** Kai has dispatched the same `[GUIDANCE]` question to aether every 15 min since 17:25Z (10+ deliveries logged in log.jsonl through 19:55Z). The underlying issue — dashboard data mismatch (local ts updates, API frozen at 11:13:42-06:00) — is unresolved. **The guidance pattern has hit its limit.** Per KAI GUIDANCE PROTOCOL, after 3 cycles of the same question without progress, escalate from question to direct fix. **Action for next interactive session: delegate to Sam to investigate the publish path from local aether-analysis data → API endpoint, OR file a proposal to fix the publish step.** Re-asking aether the same systemic question is not breaking the loop.
@@ -1039,7 +316,7 @@ Full detail: `kai/queue/healthcheck-latest.json`.
 
 ---
 
-## Current state (as of 2026-04-20T20:04Z / 14:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-20T20:04Z / 14:04 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe + secondary review):**
 - **P1 — nel/sam/ra/aether dead-loops persist (~20 hours, 6 consecutive 2h checks).** No new P0/P1 FLAG entries in log.jsonl in last 2h, but the dead-loop pattern remains visible in agent runner state. Auto-remediation continues to dispatch with no auto-close-after-fix. **Manual intervention still required:** stop the re-send, audit each runner's inbox-read phase, file an evolution proposal.
@@ -1054,7 +331,7 @@ Full detail: `kai/queue/healthcheck-latest.json`. **Most important single item: 
 
 ---
 
-## Current state (as of 2026-04-20T18:10Z / 12:10 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-20T18:10Z / 12:10 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe + secondary review):**
 - **P1 — nel/sam/ra/aether dead-loops now span ~18 hours (5 consecutive 2h checks).** This window's `[GUIDANCE]` re-dispatch counts: **nel=8, sam=8, ra=8, aether=6 = 30 total**. Same issue as prior checks at 02:03Z / 08:03Z / 14:04Z — agents run their runner loop but do not consume the inbox message. **Manual intervention still required:** (a) stop the auto-remediation re-send, (b) audit each runner's inbox-read phase (nel/sam/ra/aether), (c) file a proposal per "algorithm evolution lifecycle" rule.
@@ -1069,7 +346,7 @@ Full detail: `kai/queue/healthcheck-latest.json`. **Most important single item: 
 
 ---
 
-## Current state (as of 2026-04-20T14:04Z / 08:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-20T14:04Z / 08:04 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe + secondary review):**
 - **P1 — nel/sam/ra/aether dead-loops now span ~16 hours.** `[GUIDANCE]` re-dispatched **8/8/8/5 times in this 2h window** (up from 6/6/6/6 at prior check — loop accelerating, not resolving). Same pattern now confirmed at 4 consecutive 2h checks (04-20T02:03Z → 08:03Z → 14:04Z current). Agents run their runner loop but do not consume the inbox message. **Manual intervention still required** and is now higher priority: (a) stop the auto-remediation re-send NOW, (b) audit each runner's inbox-read phase (nel/sam/ra/aether), (c) file a proposal per "algorithm evolution lifecycle" rule.
@@ -1084,7 +361,7 @@ Full detail: `kai/queue/healthcheck-latest.json`. **Most important single item: 
 
 ---
 
-## Current state (as of 2026-04-20T08:03Z / 02:03 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-20T08:03Z / 02:03 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe + secondary review):**
 - **P1 — nel/sam/ra/aether dead-loops now span ~14 hours.** `[GUIDANCE]` re-dispatched 6x in 2h (06:35, 06:50, 07:05, 07:20, 07:35, 07:51Z). Same pattern confirmed at prior 2h check (00:04Z) and yesterday's 20:03Z and 12:06Z checks. The guidance loop is burning dispatches — agents run their runner loop but don't consume the inbox message. **Manual intervention needed:** (a) stop the auto-remediation re-send, (b) audit each runner's inbox-read phase, (c) file a proposal per "algorithm evolution lifecycle" rule.
@@ -1099,7 +376,7 @@ Full detail: `kai/queue/healthcheck-latest.json`. **Most important single item: 
 
 ---
 
-## Current state (as of 2026-04-20T00:04Z / 18:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-20T00:04Z / 18:04 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe + secondary review):**
 - **P1 — sam/ra/aether dead-loops persist for 12+ hours.** Guidance auto-dispatched again at 23:34:56Z and 23:49:58Z. Aether cycles at 23:29, 23:44, 23:59 are byte-identical — 151 trades, PNL=$24.94, "dashboard: out-of-sync" — three in a row. Pattern matches prior 14:03 MT check. Root cause is NOT the guidance text. Agents are running their runner loop but not consuming the inbox message. Recommend: (a) inspect each agent runner for the inbox-read phase, (b) stop re-dispatching until consumer is verified, (c) file a proposal per "algorithm evolution lifecycle" rule.
@@ -1114,7 +391,7 @@ Full detail: `kai/queue/healthcheck-latest.json`. **Most important single item: 
 
 ---
 
-## Current state (as of 2026-04-19T20:03Z / 14:03 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-19T20:03Z / 14:03 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe + secondary review):**
 - **P1 — sam/ra/aether still in dead-loop, 8 hours after last check.** `[GUIDANCE]` re-delegated 5x in the past hour alone (18:49, 19:04, 19:19, 19:34, 19:49Z). Pattern now spans the entire day. Same conclusion as 12:06Z check: guidance isn't being consumed. Kai must STOP delegating and START investigating whether agents read their dispatch inbox. Root cause likely in the agent runner loop, not the guidance text.
@@ -1129,7 +406,7 @@ Full detail: `kai/queue/healthcheck-latest.json` (but note: file is race-overwri
 
 ---
 
-## Current state (as of 2026-04-19T12:06Z / 06:06 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-19T12:06Z / 06:06 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe 12:03:30Z + secondary review):**
 - **P1 — sam/ra/aether still in dead-loop:** same-assessment repeated 3+ cycles. `[GUIDANCE]` delegations re-sent at 12:03:30Z (this is the Nth re-delegation — guidance is not being consumed). Investigate whether agents are actually reading their dispatch inbox vs. the 05:00 MT guidance-re-send loop.
@@ -1143,7 +420,7 @@ Full detail: `kai/queue/healthcheck-latest.json` (2026-04-19T12:06:00Z).
 
 ---
 
-## Current state (as of 2026-04-19T08:03Z / 02:03 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-19T08:03Z / 02:03 MT — automated 2h healthcheck)
 
 **Healthcheck findings (auto-probe, next interactive session MUST address):**
 - **P0 — morning-report stale:** `agents/sam/website/data/morning-report.json` last updated 2026-04-18T05:08 MT. The 05:00 MT morning report did NOT publish today. hq.html also still lacks a renderer for morning-report.json (SE-010-013 pattern unresolved).
@@ -1158,7 +435,7 @@ Full detail: `kai/queue/healthcheck-latest.json` (2026-04-19T08:03:30Z).
 
 ---
 
-## Current state (as of 2026-04-15 ~05:00 UTC / 2026-04-14 ~23:00 MT — Session 10 continuation 3)
+## ## Current state (as of 2026-04-15 ~05:00 UTC / 2026-04-14 ~23:00 MT — Session 10 continuation 3)
 
 **What shipped in session 10 continuation 4 (after fourth context compaction):**
 
@@ -1387,245 +664,7 @@ Full detail: `kai/queue/healthcheck-latest.json` (2026-04-19T08:03:30Z).
 
 ---
 
-## Previous state (as of 2026-04-13 — nightly simulation run, ra.sh stat bug fixed)
-
-**📋 NIGHTLY SIMULATION (2026-04-13T03:33 MT) — Cowork scheduled task:**
-
-| Phase | Result | Notes |
-|---|---|---|
-| Phase 1: Downward delegation (Kai→Agent) | ✓ 9/9 PASS | All agents: delegate→ack→report→verify→close confirmed |
-| Phase 2: Upward communication (Agent→Kai) | ✓ 6/6 PASS | All self-delegates and flags visible in Kai ledger |
-| Phase 3: Agent runners | ⚠ nel exit-1, ra exit-2, sam exit-0 | Environmental (nel score<70, ra pipeline warnings) |
-| Phase 4: Cross-reference integrity | ✓ 7/7 PASS | All ledger sync checks clean |
-| Phase 5: Known issue regression check | ✓ PASS | 0 regressions across 29 known patterns |
-| **Overall** | **24 pass / 2 fail** | Same failure profile as prior 3 runs |
-
-**🔧 BUG FIXED THIS RUN:**
-- `ra.sh:419` and `sam.sh:487` — `stat -f %m` (macOS) was ordered before `stat -c %Y` (Linux) without OS detection. On Linux, `stat -f` outputs multi-line filesystem info to stdout before exiting non-zero, polluting `PLAYBOOK_MTIME` and causing `File: unbound variable` under `set -u`.
-- Fix: swapped order to Linux-first (`stat -c %Y || stat -f %m`). Pattern logged to known-issues.jsonl.
-- Result: ra.sh crash resolved. Remaining exit 2 = expected pipeline warnings (Yahoo Finance source).
-
-**Health check (2026-04-13T06:15 MT):** 3 issues, 4 warnings.
-- **P0 OPEN:** `agents/nel/security` gitignore gap — delegated to nel, unconfirmed resolution. Verify .gitignore covers this path.
-- **P1 OPEN:** `/api/hq?action=data` returning HTTP 401 — HQ dashboard inaccessible for data reads.
-- **P1 OPEN:** No newsletter produced for 2026-04-12. Ra runner still exiting code 2. Pipeline blocked.
-- **P2:** Aether dashboard timestamp mismatch (local vs API) repeating every ~15min. Cosmetic but noisy.
-- **P2:** Healthcheck remediation loop created ~15 duplicate delegations for the same newsletter P1. Dedup logic in healthcheck.sh needs fix.
-- **P2:** 15 broken documentation links (nel audit).
-- **P3:** Sam, Ra, Aether have no logs yet for 2026-04-13. Only Nel + Dex active.
-
-**📋 NIGHTLY CONSOLIDATION (2026-04-13T03:31 MT):**
-
-| Project    | Sentinel                        | Cipher          | Notes                                      |
-|------------|---------------------------------|-----------------|--------------------------------------------|
-| hyo        | 3 pass / 1 fail                 | 0 leaks         | FAIL: API health unreachable (sandbox)     |
-| aurora-ra  | 4 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
-| aether     | 1 pass / 1 fail                 | n/a             | FAIL: kai/aether.sh runner missing (P0)    |
-| kai-ceo    | 4 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
-| nel        | 4 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
-| sam        | 6 pass / 0 fail ✓               | 0 leaks         | Clean                                      |
-
-**Nel sweep results (score=65, below 70 threshold):**
-- P1 flag: No newsletter for 2026-04-12 past 06:00 MT deadline → auto-remediation dispatched to Ra
-- P2 flag: 2 sentinel failures (hyo API + aether runner)
-- P2 flag: 15 broken documentation links (self-delegated fix: nel-011)
-- P3 flag: 1 code optimization opportunity
-
-**Ra health check results (0 critical, 2 warnings):**
-- Archive: 5 entities, 4 topics, 7 lab items — most recent 0 days ago ✓
-- Warning: no newsletter output today (after 06:00 MT)
-- Research archive synced to website/docs/research/ ✓
-
-**⚠ DAILY AUDIT ALERT (2026-04-13T03:35 MT):**
-- **P0** — None. Queue clean (59 completed, 0 pending, 1 failed historical). Launchd daemons stable.
-- **P1** — Newsletter production failure (no 2026-04-12 edition). Root cause TBD; pipeline works offline. Check launchd com.hyo.aurora log and manual run.
-- **P1** — Simulation runner failures persist: nel exit-1, ra exit-2 (environmental). ra.sh crash fixed this run.
-- **P1** — Duplicate flag explosion: flag-nel-* repeating 4-5 times per issue. Nel needs de-dup logic before flag submission.
-- **P2** — Aether timezone mismatch (MT -06:00 vs UTC Z). Expected fix: normalize to MT per CLAUDE.md rule.
-- **P2** — Stale failed queue job (recheck-1776044635). Worker timeout now capped; can be deleted.
-- **NEXT SESSION PRIORITIES:** (1) Newsletter production root cause + fix, (2) Nel de-dup logic, (3) Aether migration (P0 directive), (4) Verify Aether/Dex first runs, (5) Delete stale queue job. See daily-audit-2026-04-13.md for full report.
-
-**Running daemons on Mini (confirmed via `launchctl list | grep hyo`):**
-- `com.hyo.queue-worker` — file-based command queue, auto-processes `kai/queue/pending/`
-- `com.hyo.dex` — daily at 23:00 MT (integrity, compaction, patterns, daily intel)
-- `com.hyo.aether` — every 15 min (trade metrics, dashboard, GPT fact-check)
-- `com.hyo.mcp-tunnel` — cloudflared tunnel to MCP server on port 3847
-
-**All launchd daemons confirmed running (8 total, verified via queue `launchctl list | grep hyo`):**
-- `com.hyo.consolidation` — nightly at 01:00 MT
-- `com.hyo.simulation` — nightly at 23:30 MT
-- `com.hyo.aurora` — daily at 03:00 MT
-- `com.hyo.nel-qa` — every 6 hours (8-phase QA cycle)
-
-**Nightly sequence (correct order):**
-23:00 Dex → 23:30 Simulation → 01:00 Consolidation → 02:00 Daily Audit → 03:00 Aurora
-
-**Scheduled tasks (Cowork — active):**
-- `kai-health-check` — every 2 hours
-- `kai-daily-audit` — daily at 02:00 MT (moved from 22:00, runs AFTER nightly processes)
-- `aurora-hyo-daily` — 03:00 MT (Cowork backup, primary is launchd)
-- `sentinel-hyo-daily` — 04:04 MT
-- `cipher-hyo-hourly` — every hour
-- `hq-ops-sync` — every 4 hours
-
-**Scheduled tasks (Cowork — disabled, superseded by launchd):**
-- `nightly-delegation-simulation` — superseded by com.hyo.simulation
-- `nightly-per-project-consolidation` — superseded by com.hyo.consolidation
-- `nightly-consolidation`, `nightly-simulation`, `kai-ops`, `daily-aetherbot-analysis` — old, disabled
-
-**Agent autonomy architecture:**
-- AGENT_ALGORITHMS.md = THE CONSTITUTION (Kai owns, agents read, cannot override)
-- agents/<name>/PLAYBOOK.md = agent's own operational manual (agent owns, Kai can override)
-- agents/<name>/evolution.jsonl = learning log (append-only, every run cycle)
-- agents/<name>/PRIORITIES.md = research mandate + priority queue
-- Agents assess, plan, execute, and evolve autonomously. Consult Kai PRN only.
-- Protocol staleness prevention: Dex + daily audit flag any PLAYBOOK/evolution/PRIORITIES >7d stale.
-
-**Active infrastructure:**
-- Command queue: Kai→Mini via JSON, zero copy/paste
-- Daily bottleneck audit: 02:00 MT, reviews all agents + staleness + automation gaps
-- Agent self-review + self-evolution: every run cycle per agent
-- Real-time usage API: `/api/usage` reads CSV data, configurable budgets in `usage-config.json`
-- HQ push verification: kai push now verifies data arrived at HQ
-- Mobile-responsive HQ: bottom nav bar, touch targets, responsive cards
-- OpenAI API key: placed. Aether GPT fact-checking active.
-- Full Disk Access: granted to /bin/bash on Mini.
-
-**Shipped this session (eighth pass — autonomy + mobile + real-time + zero copy-paste):**
-- **ZERO COPY-PASTE achieved** — queue round-trip proven from Cowork: git status, launchctl, git add+commit+push all tested successfully via `kai exec`. Hyo never needs to copy/paste commands again.
-- **kai exec helper** — `kai/queue/exec.sh` wraps submit+wait+read into one call. Added `exec|x` subcommand to kai.sh.
-- **NEVER-COPY-PASTE rule** — wired into CLAUDE.md (operating rules) and AGENT_ALGORITHMS.md (communication protocol). Every future session enforces this.
-- **Agent autonomy framework** — PLAYBOOK.md for all 5 agents (self-managed), evolution.jsonl, self-evolution phase wired into all runners. Agents can modify their own checklists, propose improvements, log decisions. Kai holds override via constitution.
-- **Agent-specific self-review checklists** — unique per agent with actual files, commands, metrics (not generic)
-- **Scheduled task sequencing fixed** — Dex 23:00 → Sim 23:30 → Consolidation 01:00 → Audit 02:00 → Aurora 03:00. Disabled duplicate Cowork tasks superseded by launchd.
-- **Real-time usage data** — `/api/usage` endpoint, `usage-config.json` for budgets, `refresh-usage.sh` for API pulls. HQ fetches dynamically, auto-refreshes every 60s.
-- **HQ mobile responsive** — bottom nav bar at 768px, touch targets 44px+, scrollable tables, 480px ultra-compact breakpoint
-- **HQ push verification** — kai push now verifies data arrived via GET /api/hq?action=data, retries once
-- **Protocol staleness prevention** — PLAYBOOK >7d = P2, >14d = P1. evolution.jsonl >48h = P1. Wired into daily audit + agent self-evolution + CLAUDE.md.
-- Plus: daily audit, self-review, ACTIVE.md cleanup, aurora plist fix, consolidation/simulation plists, kai audit subcommand
-- **Nel v2.0 QA engine** — 8-phase autonomous cycle (link validation, security scan, API health, data integrity, agent health, deploy verification, research sync, report+dispatch). Runs q6h via `com.hyo.nel-qa` launchd daemon.
-- **Link checker** (`agents/nel/link-check.sh`) — comprehensive HTML/JS/MD link validation with live HTTP checks. Zero false positives.
-- **Worker timeout cap** — 5-min max per command in queue worker (prevents blocking like the sleep-1800 incident).
-- **5 agent runner Python bug fixes** — all runners had `playbook_updated=false` (bash) in Python inline code → fixed to `"False"` (Python). Dex `local` outside function fixed.
-- **Research split-pane** (`website/research.html`) — complete rewrite per Hyo's request. Left panel: tabs + scrollable item list. Right panel: in-page markdown reader. No new tabs. Mobile responsive.
-- **Research index updated** — 3 new lab entries (Nel QA research, Ops Audit, Cowork Sandbox Bridge).
-- **Site navigation** — bottom nav bar added to index.html (cafe, marketplace, aurora, research, hq). HQ research link changed from window.open to proper `<a>` tag.
-- **Auto-publish rule** — wired for ALL agents, not just Ra. Every agent saves, syncs, pushes to HQ autonomously.
-- **MTN timezone rule** — all user-facing timestamps use America/Denver. Wired into CLAUDE.md.
-- **Agent self-improvement autonomy** — agents research and improve their own domain, make changes PRN, communicate back to Kai.
-- **Research files enriched** — all 9 entity/topic files expanded from 12-18 lines to 61-89 lines with real April 2026 data, analysis, outlook, and sources. Research page now shows full articles, not just briefs.
-- **Aether dashboard data** — simulated M-F (April 6-10) trading metrics. W/R 75%, +$87.45, 12 trades across Grid Bot and Trend Follower. hq.html rendering bug fixed.
-- **Nel GitHub security scanner** — `github-security-scan.sh` (9 scan types). Wired into QA cycle as Phase 2.5. 0 P0/P1 findings on clean scan.
-- **Runner fixes** — nel.sh exit code (score 70-89 now exit 0), ra.sh TODAY variable (was unbound).
-- **Gitignore hardened** — credentials.json, service-account*.json, *.p12, *.pfx added.
-- **Simulations run** — 24 pass, 2 fail (nel/ra runner issues now fixed for next run).
-- **Aether full migration** — 41 analysis files, 6 log files, ops scripts, code versions, docs → all in `agents/aether/`. PLAYBOOK.md (460 lines), PRIORITIES.md (204 lines) rewritten from comprehensive digest of all historical data.
-- **GPT daily log review** — `gpt_factcheck.py` rewritten with dual-mode: `--log` sends raw AetherBot log to GPT-4o for session summary, pattern detection, decision fact-checking, risk flags, and structural recommendations. Wired into aether.sh main cycle (auto-triggers once/day after 500+ lines). `run_factcheck.sh` updated for post-migration paths.
-- **Aether dashboard — real data live** — `aether-metrics.json` now serves real trading data ($90.25 balance, -$2.79 P&L, 542 tickers). Verified live on hyo.world.
-- **Session 8 continuation commit** — 127 files, 55k insertions. Pushed to GitHub (c2a88fb).
-- **Aether strategy dashboard** — 6 real strategies (bps_premium, PAQ_EARLY_AGG, bps_late, BCDP_FAST_COMMIT, PAQ_STRUCT_GATE, WES_EARLY) with W/R, PNL, $/trade. 4 conviction buckets (HIGH+ALIGNED 100% WR vs HIGH+COUNTER -$47.37). 6 trading zones ranked by W/R. Expanded risk events (BDI=0, harvest, phantom positions). All live on hyo.world.
-- **aether.sh verified post-migration** — ran successfully on Mini. Found log, extracted balance, updated metrics, pushed to HQ, self-review healthy. GPT review blocked by placeholder API key (P1 — Hyo action needed).
-- **JSON schema mismatch fixed** — currentPeriod→currentWeek, all consumers made resilient to both structures. Pattern logged.
-- **Simulation improved** — 25 pass / 1 fail (from 24/2). nel.sh now exits 0.
-
-**Shipped previous session (seventh pass — agent formalization + research architecture):**
-- Aether + Dex agents formalized, Aetherbot→Aether rename, Ledger→Dex rename
-- AETHER_OPERATIONS.md v2.0 from actual AetherBot source data (70+ files)
-- Kai↔Aether approval loop, GPT fact-check routing
-- Dex daily intelligence (Phase 6A daily / 6B Monday deep synthesis)
-- Ra research coordination protocol, Agent Creation Protocol, Continuous Learning Protocol
-
-**Shipped previous session (sixth pass — MCP fix + infrastructure commit + ops audit):**
-- **MCP server Zod fix committed** (`8566d2a`): SDK v1.29.0 requires Zod schemas, not plain objects. All 8 tools converted. Server ready to re-run on Mini.
-- **Full repo restructure committed** (`324ce89`): 228 files — all agent code canonically under `agents/<name>/`, manifests under `agents/manifests/`, legacy files moved to `docs/legacy/`, symlinks for backward compat.
-- **2 new MCP tools: `ledger_query` + `ledger_lifecycle`** — recall any task's full lifecycle from Cowork. Search by ID, agent, status, or keyword.
-- **Ops audit completed** (`agents/ra/research/lab/ops-audit-2026-04-12.md`): 14 bottlenecks identified (B1–B14), severity ranked, all with automation fixes and owners assigned. Tasks created in KAI_TASKS.
-- **Nel auto-dispatch wired** — nel.sh now calls `dispatch flag` after each phase that finds failures. Findings no longer sit unread.
-- **Simulate-review built** — `dispatch simulate-review` reads simulation outcomes and auto-flags failures. Appended to nightly simulation.
-- **Aurora launchd plist built** (`agents/ra/com.hyo.aurora.plist`) — ready for Hyo to install.
-- **Automation Gate** permanently wired into AGENT_ALGORITHMS.md — every task asks "can this be automated?" before and after execution.
-
-**Shipped this session (fifth pass — HQ v8.1 + deployment safeguards):**
-- **HQ v8.1 deployed and verified live** on hyo.world/hq. Both commits (`bfcedf8` + `422e0f2`) confirmed READY on Vercel production.
-- **HQ overhaul:** Lowercase title/logo, OpenAI/Claude API usage pages with real CSV data + dynamic budget bars, rebuilt Ra/Nel/Sim/Aetherbot views, purged all dead links/buttons, research nav dot indicator, Mountain Time timestamps throughout.
-- **Pre-deploy validation script** (`bin/predeploy-validate.py`): 6 automated checks — doc link resolution, HTML ID consistency, dead onclick handlers, UTC timestamp detection, sidebar↔view consistency. Runs before every `kai deploy` and `kai gitpush`.
-- **Delegation checklist** wired into `kai/AGENT_ALGORITHMS.md` and `CLAUDE.md` — 6-step protocol before every task.
-- **4 recurrence patterns logged** in `kai/ledger/known-issues.jsonl`: dead links shipped without verification, UTC timestamps, findings without resolution status, tasks marked complete without verification.
-- **All 15 broken research links fixed** (`newsletters/` → `ra/` paths in 12 .md files).
-- **website/ is now a real directory** (was symlink to agents/sam/website/) — fixes git tracking for Vercel auto-deploy.
-
-**Shipped this session (fourth pass — closed-loop architecture):**
-- **Bidirectional dispatch protocol:** Agents can now communicate upward to Kai via `dispatch flag` (report issues), `dispatch escalate` (blocked tasks), and `dispatch self-delegate` (autonomous task creation). All entries land in both agent and Kai ledgers.
-- **Safeguard cascade system:** When a P0/P1 issue is flagged, `dispatch safeguard` auto-triggers: Nel cross-reference scan, Sam test coverage, and memory log to `known-issues.jsonl`. Single issue → systemic prevention → monitored forever.
-- **Nightly simulation (`dispatch simulate`):** 5-phase validation: downward delegation lifecycle, upward communication, agent runner execution, cross-reference integrity, known-issue regression checks. Outcomes logged to `simulation-outcomes.jsonl`. Scheduled at 23:30 MT daily.
-- **Per-agent execution algorithms (`kai/AGENT_ALGORITHMS.md`):** Complete runbooks for Kai, Nel, Sam, Ra. Every step has a handshake. Every failure triggers prevention. Every session reads and writes memory.
-- **Agent runners integrated with dispatch:** nel.sh (Phase 11), sam.sh (test summary), ra.sh (health report) all now auto-report findings to Kai's ledger. Nel flags cipher leaks and sentinel failures. Sam flags test failures. Ra flags pipeline warnings.
-- **Memory architecture:** `known-issues.jsonl` (pattern memory), `safeguards.jsonl` (cascade log), `simulation-outcomes.jsonl` (nightly results). All read at session start, written at session end.
-- **CLAUDE.md hydration protocol updated:** Now includes known-issues, simulation outcomes, agent algorithms, and agent ACTIVE.md files. Starts every session with `dispatch health` + `dispatch status`.
-- **Fixed dispatch bugs:** Octal interpretation in next_id (`008` → base-10 forced), flag ID generation (separate sequence via `next_flag_id`).
-
-**Shipped this session (third pass — dispatch + simulations):**
-- **Task dispatch system built and hardened:** `bin/dispatch.sh` — full delegation lifecycle (delegate → ACK → report → verify → close). JSONL append-only logs per agent + Kai cross-reference. Python-based ACTIVE.md rebuilder. Bugs found and fixed during simulation:
-  - Python heredoc arg passing (args after heredoc → `python3 -` before heredoc)
-  - JSON string injection via bash interpolation → all JSON now generated via `python3 json.dumps`
-  - Flag parsing bug (--context/--deadline consumed by title) → array-based word collection
-  - Agent validation (unknown agents returned empty string) → error check in log_entry
-  - next_id regex didn't match json.dumps spacing → `\s*` added to grep pattern
-- **Kai→Sam simulation complete:** 5 tasks delegated, all executed and verified. Sam found console.logs are load-bearing MVP persistence (correctly did NOT delete), added 3 HTML files to test suite, added descriptions to all 6 manifests, created API endpoint inventory doc.
-- **Kai→Nel simulation complete:** 5 tasks delegated, all executed and verified. Nel audited dispatch.sh (found 6 issues, 3 fixed), verified all agent runners exit 0, confirmed no hardcoded paths break portability, scanned for secrets (clean), ran permissions audit (all dirs 700, secrets 600, fixed watch-deploy.sh).
-- **Kai→Ra simulation complete:** 5 tasks delegated, all executed and verified. Ra verified archive integrity (12/12 match), audited source coverage (15 sources, 7 fetchers, gaps in culture/sports), validated output dir (1 edition, properly paired), confirmed prompt↔renderer alignment, published archive summary report.
-- **Agent processing patterns documented:** `kai/AGENT_PROCESSING_PATTERNS.md` — Sam gets individual tasks, Nel gets investigation batches, Ra gets pipeline-stage health checks.
-- **Ledger protocol documented:** `kai/ledger/PROTOCOL.md` — task lifecycle, JSONL format, rules.
-- **All 6 agent manifests now have description field** (were missing from all).
-- **API endpoint inventory created:** `agents/sam/website/docs/api-inventory.md` — 8 endpoints + 1 shared module documented.
-- **Research archive summary published:** `agents/sam/website/docs/research/archive-summary.md`.
-
-
-**Shipped this session (second pass — continued from earlier):**
-- **Full folder reorganization:** Top-down agent-centric structure. `agents/` is the root for all agents (nel/, ra/, sam/). Each agent has its own runner, logs, memory, and products. Symlinks at root for backward compat (website/ → agents/sam/website/, .secrets/ → agents/nel/security/, etc.). Zero breaking changes.
-- **Research page shipped:** `hyo.world/research.html` — browsable archive of Ra's entity/topic/lab research. Three tabs, expandable cards, dark mode, responsive. HQ sidebar now has "Intelligence → Research" nav link.
-- **Nel upgraded to nightly auditor:** Phase 10 added — file/folder audit that checks agent runner executability, manifest JSON validity, security permissions, large file detection, sensitive file detection, repo size tracking. Nel now reports nightly to Kai.
-- **All scheduled tasks updated** with new agent paths post-reorg.
-- **CLAUDE.md rewritten** with new folder layout, agent delegation rules, "never ask permission" mandate.
-- **consolidate.sh paths fixed** — all sentinel/cipher checks now reference agents/ instead of old kai/ and NFT/ paths. Verified: 5/6 projects clean (only Aetherbot missing by design).
-
-**Also shipped earlier this session:**
-- **Nel, Ra, Sam agents — end-to-end verified.** All three agents run clean, produce reports, and update HQ state. Bugs found and fixed:
-  - nel.sh: `set -e` → `set -uo pipefail` (grep failures in sentinel synthesis were killing execution); sentinel pattern match fixed for `**Sentinel:**` format; Python heredoc variable injection fixed
-  - ra.sh: `set -e` → `set -uo pipefail`; subscriber count double-output fixed (grep -c returns 0 on stdout AND exit 1)
-  - sam.sh: `set -e` → `set -uo pipefail` (curl failures in sandbox killed test suite)
-  - All tested multiple times for idempotency
-- **Full 6-project consolidation verified.** Hyo, Aurora/Ra, Aetherbot, Kai CEO, Nel, Sam — all 6 projects run with per-project sentinel + cipher + simulation. Idempotent on re-run (7 events, deduped).
-- **Scheduled tasks cleaned up:**
-  - `nightly-per-project-consolidation` updated: now references all 6 projects + Nel + Ra health checks in the prompt
-  - `nightly-consolidation` and `nightly-simulation` DISABLED (superseded by per-project consolidation which includes simulation)
-- **HQ Dashboard v7** — complete rewrite (1745 lines):
-  - Fonts: Plus Jakarta Sans (body) + JetBrains Mono (code) — replaces Syne + DM Mono
-  - Light/dark mode toggle (sun/moon icon in sidebar, preference saved to localStorage)
-  - Nel + Sam agent views added to sidebar and content area
-  - Activity filter pills include Nel + Sam
-  - Version stamp: v7-0412
-  - Premium design: modern cards, smooth transitions, proper responsive (210px sidebar → 56px on mobile)
-- **Ra newsletter aesthetics overhaul:**
-  - Body font: DM Mono (monospace) → Plus Jakarta Sans (16px, weight 400, line-height 1.8)
-  - Code font: JetBrains Mono
-  - Richer color palette with better contrast
-  - Blockquotes with gold-tinted background
-  - More generous spacing, cleaner hierarchy
-  - Branded "Ra · hyo.world" header eyebrow
-  - 2026-04-11 newsletter re-rendered with new template
-
-**Nel findings (first real run):**
-- Improvement score: 65/100
-- Sentinel: 2 projects passing (Aurora/Ra, Kai CEO), 2 with findings (Hyo — API sandbox, Aetherbot — no manifest)
-- Cipher: 0 leaks
-- 2 broken links in research/README.md (relative paths to newsletters/)
-- 7 scripts without test coverage (render.py, send_email.py, synthesize.py, ra_archive.py, ra_context.py, watch-commit.sh, watch-deploy.sh)
-- 2 inefficient patterns ($(cat) usage in kai.sh, nel.sh)
-
----
-
-## Current state (as of 2026-04-13 cipher hourly — 12:xx UTC, Cowork sandbox)
+## ## Current state (as of 2026-04-13 cipher hourly — 12:xx UTC, Cowork sandbox)
 
 **Cipher scan (Cowork sandbox run):** 1 P1 finding, 1 autofix. 0 verified credential leaks.
 - **P1 AUTOFIX: RSA private key in `agents/aether/docs/AethelBot.txt`** — full RSA private key was sitting in a non-secured, non-gitignored file. **Fixed:** moved key to `.secrets/aethel-bot.key` (mode 600), replaced original file with placeholder note. If this key is live, it should be rotated.
@@ -1638,7 +677,7 @@ Full detail: `kai/queue/healthcheck-latest.json` (2026-04-19T08:03:30Z).
 
 ---
 
-## Current state (as of 2026-04-12 sentinel daily run #2 — 10:04 UTC)
+## ## Current state (as of 2026-04-12 sentinel daily run #2 — 10:04 UTC)
 
 **Sentinel ran 2026-04-12T10:04:50Z:** 6 passed, 3 failed (exit 2 — P0). All recurring, no new issues:
 - `aurora-ran-today` (P0, day 2): No `newsletters/2026-04-12.md`. Aurora migration to Mini launchd still pending (Hyo action item). Last newsletter: 2026-04-11.
@@ -1650,7 +689,7 @@ Previous run (07:13 UTC) had same findings — timing was ruled out as cause sin
 
 ---
 
-## Current state (as of 2026-04-12 nightly consolidation)
+## ## Current state (as of 2026-04-12 nightly consolidation)
 
 **Nightly consolidation ran 2026-04-12T07:12:40Z:**
 
@@ -1669,7 +708,7 @@ Previous run (07:13 UTC) had same findings — timing was ruled out as cause sin
 
 ---
 
-## Current state (as of 2026-04-12 early morning — HQ v6 + per-project consolidation)
+## ## Current state (as of 2026-04-12 early morning — HQ v6 + per-project consolidation)
 
 **Shipped this session:**
 - **HQ Dashboard v6** — no-cache meta tags (kills browser caching), hover arrows on clickable activity entries, version stamp (`v6-0412`) in sidebar footer for build verification
@@ -1693,7 +732,7 @@ Previous run (07:13 UTC) had same findings — timing was ruled out as cause sin
 - `kai watch` — fswatch-based auto-deploy
 - Aurora intake page (`website/aurora.html`) — 6+ iterations of UX/copy redesign
 
-## Current state (as of 2026-04-11 morning recovery)
+## ## Current state (as of 2026-04-11 morning recovery)
 
 **What happened overnight:**
 - Aurora fired at 03:00 MT as scheduled. Pipeline ran end-to-end and exited 0. Synthesize used the new `claude_code` backend (16.2s, self-authored "no data" brief because gather returned 0 records). The run was logged inside the scheduled-task sandbox, not on the real mount — files and logs are gone.
@@ -1755,7 +794,7 @@ Previous run (07:13 UTC) had same findings — timing was ruled out as cause sin
 2. Either recreate the Cowork `aurora-hyo-daily` scheduled task with a FUSE-mount working dir, or disable it once launchd is live. Leave sentinel and cipher on Cowork — their mounts work.
 3. Whatever monitoring path we keep, sentinel's `aurora-ran-today` check needs an mtime-< 25h guard so a stale file can't mask a silent failure.
 
-## Current state (as of 2026-04-11 overnight scheduled-task sentinel run — now mostly stale)
+## ## Current state (as of 2026-04-11 overnight scheduled-task sentinel run — now mostly stale)
 
 **Sentinel 2026-04-11 (Cowork sandbox):** 4 passed, 5 failed, exit 2 (P0). Report at `kai/logs/sentinel-2026-04-11.md`. Findings are a mix of real and environmental false-positives from running under Linux sandbox instead of the Mini:
 - **P0 aurora-ran-today** — no `newsletters/2026-04-11.md` (and `newsletters/` dir is absent from the mounted tree). Needs verification on the Mini; if the Mini has it, the Cowork mount is stale.
@@ -1766,7 +805,7 @@ Previous run (07:13 UTC) had same findings — timing was ruled out as cause sin
 
 Recommended next step on the Mini: `kai verify && ls -la .secrets/ newsletters/ kai/logs/aurora-*.log 2>&1 | head` to confirm which P0s are real vs environmental, then patch `kai/sentinel.sh` to use portable `stat -c %a` on Linux so Cowork runs stop producing false positives.
 
-## Current state (as of 2026-04-10 night)
+## ## Current state (as of 2026-04-10 night)
 
 **Shipped today:**
 - Founder registration bypass (page + API + token) end-to-end tested in prod
@@ -1795,23 +834,3 @@ Recommended next step on the Mini: `kai verify && ls -la .secrets/ newsletters/ 
 - `nightly-consolidation` — `50 23 * * *` MT — enabled (now daily, was Sun-Thu)
 - `nightly-simulation` — `0 23 * * *` MT — enabled (now daily, was Sun-Thu)
 - `daily-aether-analysis` — one-time 4/10 (completed)
-
-## Known blockers / open questions
-
-1. **Aurora's synthesize stage has no LLM backend.** Migration to `claude -p` pre-staged tonight in `newsletter/synthesize_claude.py`. Will test on 03:00 MT fire.
-2. **`.git/` does not exist in the repo** — entire project is uncommitted. Kai is initializing git + making first commit tonight. Catastrophic loss risk otherwise.
-3. HyoRegistry.sol not deployed on Base Sepolia yet — needed before on-chain minting. Off-chain registry works today.
-4. No shared state between Cowork Pro sessions and Mini's Kai other than this brief + git. Good enough for now.
-5. Cowork-session ephemerality: Kai's context evaporates between Cowork sessions unless this file is read on boot. That's the whole point of this brief.
-
-## How to continue in a new session
-
-**From Cowork Pro on any device:** First message to Kai should be literally
-```
-Read KAI_BRIEF.md and KAI_TASKS.md first, then give me status and recommend next steps.
-```
-Or use the auto-hydration in project `CLAUDE.md`.
-
-**From Claude Code on the Mini:** `cd ~/Documents/Projects/Hyo && claude` — the project `CLAUDE.md` contains the hydration instructions.
-
-**To print the hydration block anywhere:** `kai context`

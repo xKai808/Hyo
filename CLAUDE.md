@@ -69,7 +69,7 @@ See `kai/memory/MEMORY_SYSTEM.md` for full architecture.
 5. `kai/protocols/EXECUTION_GATE.md` — the 5 questions that run BEFORE every action (pre-action gate)
 6. `kai/protocols/VERIFICATION_PROTOCOL.md` — mandatory verification protocol (post-action check)
 7. `kai/ledger/simulation-outcomes.jsonl` — last nightly sim result (check for failures)
-8. `kai/AGENT_ALGORITHMS.md` — execution protocols for all agents (follow these exactly)
+8. `kai/AGENT_ALGORITHMS.md` — execution protocols (READ ONLY when making architecture decisions, NOT every session — 104KB)
 9. Each agent's `agents/<name>/ledger/ACTIVE.md` — open tasks per agent
    **Agent protocol files (read before working on that agent — these are the single source of truth):**
    - Aether: `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` (v2.5) — analysis runner, HQ publish, dual-path
