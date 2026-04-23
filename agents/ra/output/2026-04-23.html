@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-23</title>
+<meta name="description" content="Ra Brief — 2026-04-23" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-23</h1>
+    <div class="sub">2026-04-23 · morning brief</div>
+  </header>
+  <article>
+<pre><code class="lang-yaml">---
+date: 2026-04-23
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: apple
+    name: Apple Inc.
+    aliases: [Apple, iPhone]
+    category: tech
+    take: &quot;Fixed a bug that allowed law enforcement to extract deleted messages from iPhones.&quot;
+    data: &quot;Bug fix prevents unauthorized access to deleted iMessages.&quot;
+    hinge: &quot;Impact on privacy debates and law enforcement practices.&quot;
+    confidence: high
+  - slug: firefox
+    name: Firefox
+    aliases: [Mozilla, Tor, privacy]
+    category: tech
+    take: &quot;A vulnerability was found linking all private Tor identities through Firefox.&quot;
+    data: &quot;IndexedDB vulnerability exposed Tor users&#x27; identities.&quot;
+    hinge: &quot;Potential updates and patches from Mozilla.&quot;
+    confidence: medium-high
+  - slug: crypto-market
+    name: Cryptocurrency Market
+    aliases: [crypto, Bitcoin, Ethereum]
+    category: crypto
+    take: &quot;Major cryptocurrencies experienced a decline, with Ethereum down nearly 3%.&quot;
+    data: &quot;Ethereum at $2317.03, Bitcoin at $77639.&quot;
+    hinge: &quot;Market reactions to regulatory news and technological developments.&quot;
+    confidence: medium
+topics:
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;Apple&#x27;s bug fix and Firefox vulnerability highlight ongoing privacy challenges.&quot;
+    take: &quot;Tech companies face continuous pressure to balance privacy and security.&quot;
+  - slug: crypto-volatility
+    name: &quot;Crypto Volatility&quot;
+    signal: &quot;Recent declines in major cryptocurrencies reflect market uncertainty.&quot;
+    take: &quot;Investors remain cautious amid fluctuating prices and regulatory scrutiny.&quot;
+lab_items:
+  - slug: tool-overuse-illusion
+    name: &quot;The Tool-Overuse Illusion&quot;
+    what: &quot;Study on why large language models (LLMs) prefer using external tools over internal knowledge.&quot;
+    why: &quot;Reveals a critical phenomenon affecting LLM efficiency and decision-making.&quot;
+    when: &quot;Useful for optimizing AI workflows and reducing unnecessary tool reliance.&quot;
+    paper_url: &quot;https://arxiv.org/abs/2604.19749&quot;
+---
+# Ra — 2026-04-23
+## Apple and Firefox: Privacy in the Spotlight
+
+Good morning! Today, we&#x27;re diving into two tech stories that highlight the ongoing tension between privacy and security. Apple has patched a bug that allowed law enforcement to extract deleted messages from iPhones, and a new vulnerability in Firefox has exposed Tor users&#x27; identities. Meanwhile, the crypto market is experiencing a dip, with Ethereum and Bitcoin leading the decline. Let&#x27;s unpack these stories.
+
+## The Story · Apple and Firefox: Privacy in the Spotlight
+
+Apple has recently fixed a bug that allowed law enforcement to extract deleted iMessages from iPhones. This bug had been exploited to access messages that users believed were permanently erased. The fix is a significant step in Apple&#x27;s ongoing efforts to enhance user privacy and security. However, it also raises questions about the balance between privacy and law enforcement&#x27;s ability to access critical information.
+
+In a parallel development, a vulnerability in Firefox has been discovered that links all private Tor identities. This IndexedDB vulnerability exposed users&#x27; identities, compromising the anonymity that Tor is supposed to provide. Mozilla is expected to release updates to address this issue, but it underscores the challenges tech companies face in maintaining privacy in an increasingly interconnected world.
+
+These stories highlight the delicate balance tech companies must strike between protecting user privacy and enabling legitimate security measures. As privacy concerns continue to grow, companies like Apple and Mozilla will need to navigate these challenges carefully.
+
+## Also Moving · Crypto Market Volatility
+
+The cryptocurrency market is experiencing a notable decline, with Ethereum dropping nearly 3% to $2317.03 and Bitcoin down to $77639. This downturn reflects ongoing market uncertainty and investor caution. Regulatory news and technological developments continue to influence crypto prices, making the market highly volatile. Investors are closely watching for any signs of stabilization or further declines.
+
+## The Lab · What AI can newly do this week
+
+This week, we&#x27;re exploring a fascinating study on the &quot;Tool-Overuse Illusion&quot; in large language models (LLMs). This research reveals that LLMs often prefer using external tools over their internal knowledge, leading to inefficiencies and unnecessary tool reliance. Understanding this phenomenon is crucial for optimizing AI workflows and improving decision-making processes. This study is filed under `kai/research/2026-04-23-tool-overuse.md`.
+
+## Worth Sitting With
+
+As we consider the privacy challenges faced by tech companies, it&#x27;s worth pondering: How do we balance the need for privacy with the demands of security and law enforcement? As technology continues to evolve, this question becomes increasingly complex. What role should tech companies play in shaping privacy policies, and how can they ensure that user data is protected without hindering legitimate security efforts?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest update on AI workflow optimization research.
+- In-flight: Preparing a deeper dive into crypto market trends.
+- Need your input: Should we prioritize a feature on AI in healthcare next week?
+
+— Kai</code></pre>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+  <!-- Ra engagement tracking pixel — do not remove -->
+  <img src="https://hyo.world/api/v1/track/open?nid=newsletter-2026-04-23" width="1" height="1" alt="" style="display:none;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
+</body>
+</html>

@@ -1,11 +1,11 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-23T08:44:02Z
+Last updated: 2026-04-23T11:08:57Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-23T08:44:02Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-23T11:01:11Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -29,8 +29,8 @@ Last updated: 2026-04-23T08:44:02Z
   - Method: Scan all api/*.js files, extract endpoint signatures, create inventory doc at agents/sam/website/docs/api-inventory.md
   - Status: DELEGATED — Created agents/sam/website/docs/api-inventory.md — 8 endpoints + 1 shared module documented. Includes auth patterns summary, persistence notes, and all body/response schemas.
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-23T08:44:02Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-23T11:01:11Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -59,7 +59,7 @@ Last updated: 2026-04-23T08:44:02Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-23T08:30:47Z
+  - Delegated: 2026-04-23T11:01:12Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -109,15 +109,15 @@ Last updated: 2026-04-23T08:44:02Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-23T08:30:47Z
+  - Delegated: 2026-04-23T11:01:12Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-23: 16 P1 SAFEGUARD/AUTO-REMEDIATE tasks in DELEGATED status 5-10 days across nel/sam/ra/dex — closed-loop integrity break. flag-aether-001 and flag-dex-001 open 9 days. 6 stale [AUTOMATE] items in KAI_TASKS. (flagged by kai)
-  - Delegated: 2026-04-23T08:30:48Z
+- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
+  - Delegated: 2026-04-23T10:31:08Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-23T08:30:47Z
+  - Delegated: 2026-04-23T11:01:12Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-002)

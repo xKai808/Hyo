@@ -2,7 +2,7 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-22 (Session 29 — HQ fixes, Ant dashboard, verification discipline)
+**Updated:** 2026-04-23 (sentinel-hyo-daily scheduled run #136 — 0 new, P0 day 111 carry-forward)
 
 ## Shipped today (2026-04-22 — Session 29)
 
@@ -61,6 +61,13 @@ Key findings:
 ## Current open P0s
 - **Ra runner exit-2** — 8 days silent failure, TASK-20260421-ra-P0-runner-exit2 (ACTIVE)
 - **ACTIVE.md missing** — all 5 agents, Phase 1 freshness checks broken (P1 TASK-20260421-infra-P1-active-md-missing)
+
+### Sentinel run — 2026-04-23 (sentinel-hyo-daily scheduled task)
+- **Run #136** — 6 passed, 3 failed, **0 new**, 3 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-04-23.md`.
+- **P0 `api-health-green` — day 111 escalated** — `/api/health` still not green from sandbox. Same environmental cause as prior 110 runs (sandbox network policy blocks outbound to hyo.world). Already tracked in KAI_TASKS (`[sentinel:api-health-green:82547bfc:escalated]`) — not duplicating. **Action carried forward from 2026-04-22 still owed:** make the check environment-aware (skip + note when `HEALTH_CHECK_URL` is unreachable, or run only on Mini). 111 consecutive unactionable escalations = the check is the problem.
+- **P1 `scheduled-tasks-fired` — day 2** — no aurora logs in sandbox mount's `agents/nel/logs/`. Environmental, same as yesterday.
+- **P2 `task-queue-size` — day 19 escalated** — 29 P0 tasks vs threshold 5. Real signal; KAI_TASKS P0 section is bloated with stale sandbox-path-scoped sentinel entries from prior Cowork sessions. Candidate for a prune pass next interactive session.
+- **No new findings filed to KAI_TASKS** (all recurring, already tracked).
 
 ### Sentinel run — 2026-04-22 (sentinel-hyo-daily scheduled task, ~04:05Z)
 - **Run #128** — 6 passed, 3 failed, 0 new, 3 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-04-22.md`.
@@ -836,7 +843,26 @@ Full details: `kai/queue/healthcheck-latest.json`. **Most important single item:
 
 ---
 
-## Current state (as of 2026-04-23T04:03Z / 22:03 MT — automated 2h healthcheck)
+## Current state (as of 2026-04-23T10:03Z / 04:03 MT — automated 2h healthcheck)
+
+**Healthcheck findings (Cowork-scheduled probe):**
+- **P1 — 16 P1 SAFEGUARD/AUTO-REMEDIATE tasks STILL in DELEGATED status.** Daily audit 2026-04-23 logged this at 08:06:50Z (duplicate entry — flagger emitted twice). Indicates agents are receiving cascades but no REPORT/RESOLVE coming back. Same auto-remediation-loop symptom flagged in last 3+ healthchecks. **Action:** next interactive session must grep `log.jsonl` for task IDs in DELEGATED state and force a manual close-out or reissue with tighter SLA.
+- **P1 — nel reported 1 broken link at 08:44:02Z** (post daily-audit cascade). Unresolved. This is a continuation of the same broken-link class of issue flagged across the last ~5 healthchecks. **Action:** interactive session verifies the actual URL, either repairs or removes it.
+- **P3 — sam has zero output today (0 files with 2026-04-23).** Every other agent has run: nel(10), ra(2), aether(2), dex(3). Sam's runner may not have fired this cycle. Check `com.hyo.sam-daily.plist` status at next interactive session.
+- **Good news — no dead-loop flags this cycle.** Previous 6 healthchecks were dominated by aether dashboard-sync loop and agent dead-loop cascades. The 10:01Z auto-remediation dispatch cleared them, and the 10:03Z re-probe came back clean on that axis.
+
+**Queue & agents:**
+- Queue healthy: 0 pending, 0 running. Last 3 completed exit_code=0.
+- All 6 ACTIVE.md files <1h old — no staleness.
+- 2 stale failed jobs still in `kai/queue/failed/` (cmd-1776912672-157 age 7.2h, s27c8-kai-metrics-commit age 31.3h). Archive at next session.
+
+**Most important single item:** The 16 P1 DELEGATED tasks from the daily audit are the headline blocker — they indicate agents are receiving cascades but not closing them. The fix is structural (SLA enforcement or cascade receipt tracking), not another dispatch. Wire it before the next cascade fires or the backlog compounds.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## Current state (as of 2026-04-23T04:03Z / 22:03 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (Cowork-scheduled probe, runs alongside kai-autonomous):**
 - **P1 — flag-nel-001 (1 broken link) STILL unresolved.** Auto-remediation cascade was dispatched to `nel-001` + `sam-001` at 02:43:26Z (~1h20m ago). No REPORT/RESOLVE entries appear in `log.jsonl` for either task ID. This is the 2nd consecutive healthcheck flagging the same unresolved cascade. **Action:** next interactive session must verify whether the link was actually fixed or the cascade is silently dropped.
