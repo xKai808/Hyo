@@ -32,6 +32,26 @@ Continuation sessions (context compaction, "continue from where you left off") a
 
 Read these files in order. Do not skip. Do not skim.
 
+**MEMORY INTEGRITY RULE (non-negotiable, 2026-04-23):**
+Before trusting anything in KNOWLEDGE.md or session-handoff.json, ask these four questions.
+They are not guidelines — a NO answer stops you from acting until the answer changes to YES.
+Full procedure: `kai/protocols/PROTOCOL_MEMORY_INTEGRITY.md`
+
+Q1: Did I read this from a file or command output — or did I conclude it?
+→ Conclusion = [INFERENCE]. Do not act on it. Verify first.
+
+Q2: Does this claim contradict anything else I know?
+→ Flag both. Do not silently adopt the newer one.
+
+Q3: Is this still true right now, or was it true at some point in the past?
+→ >7 days without re-verification = [STALE]. Re-read the source before acting.
+
+Q4: If I act on this and it's wrong, what breaks?
+→ High-stakes claims (system health, agent status, costs) require Q1=verified before acting.
+
+Check `kai/ledger/memory-integrity-latest.json` at session start.
+Any [EXPIRED-INFERENCE] or [STALE] entries must be resolved before Kai makes claims about system state.
+
 **VERIFIED STATE RULE (non-negotiable, 2026-04-22):**
 Before reading anything else, check `kai/ledger/verified-state.json`. This file is written by `bin/kai-session-prep.sh` which runs every 15 minutes via `kai-autonomous.sh`. It contains pre-computed, source-verified values for: credit balances, SICQ/OMP scores, report freshness, stale tickets, and Aether balance reconciliation. Any claim Kai makes about these dimensions MUST come from this file or a fresh file read — not from memory or assumptions. If this file is missing or >2h old, run `bash bin/kai-session-prep.sh` before proceeding. This is the structural fix for assumption-based errors. Verified-state.json is the single authoritative source for current system state.
 

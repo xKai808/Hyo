@@ -129,4 +129,12 @@ tokens = total // 4
 print(f"  TOTAL: {total/1024:.1f}KB (~{tokens:,} tokens, ~${tokens/1_000_000*3:.4f}/session)")
 PYEOF
 
+# ── 5. Memory integrity check ─────────────────────────────────────────────────
+# Scans KNOWLEDGE.md and session-handoff for untagged claims, stale facts,
+# and inferences older than 48h. Prevents contaminated memory from recycling.
+# See: kai/protocols/PROTOCOL_MEMORY_INTEGRITY.md
+if [[ -f "$ROOT/bin/memory-integrity-check.sh" ]]; then
+    HYO_ROOT="$ROOT" bash "$ROOT/bin/memory-integrity-check.sh" >> "$LOG" 2>&1
+fi
+
 log "=== Daily maintenance complete ==="
