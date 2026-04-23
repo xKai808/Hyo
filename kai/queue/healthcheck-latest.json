@@ -1,9 +1,19 @@
 {
-  "ts": "2026-04-23T14:31:42Z",
+  "ts": "2026-04-23T14:46:05Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 1,
+  "issues": 6,
+  "warnings": 2,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "1 unaddressed P0/P1 flags in last 2h"
+    },
+    {
+      "severity": "P2",
+      "area": "queue",
+      "detail": "3 commands pending \u2014 worker may be stalled"
+    },
     {
       "severity": "P3",
       "area": "agent-output",
@@ -35,8 +45,20 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues; Kicked queue worker for 3 stalled commands",
   "recent_queue_results": [
+    {
+      "id": "event-nel-flag-nel-001",
+      "status": "ok",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776954749-237",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Fix context window s",
+      "exit_code": 0
+    },
     {
       "id": "831d89a4-639e-4ee7-967d-5f56af692db8",
       "status": "ok",
@@ -53,18 +75,6 @@
       "id": "cmd-1776954445-436",
       "status": "ok",
       "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Build affordable aut",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776954399-335",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && launchctl unload ~/Library/LaunchAgents/com.hyo.a",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776954341-282",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add KAI_BRIEF.md kai/memory/KNOWLEDGE.md && g",
       "exit_code": 0
     }
   ],

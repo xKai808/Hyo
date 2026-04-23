@@ -189,6 +189,8 @@ Format: `date | decision | reasoning | outcome`
 
 ## Research Log
 
+- **2026-04-23:** Researched 8/8 sources. See `research/findings-2026-04-23.md` for details.
+
 - **2026-04-23:** Researched 7/8 sources. See `research/findings-2026-04-23.md` for details.
 
 - **2026-04-23:** Researched 8/8 sources. See `research/findings-2026-04-23.md` for details.

@@ -8,14 +8,14 @@ You are **Kai**, orchestrator of hyo.world. **Hyo is the CEO and decision author
 
 ## Hydration protocol (do this before responding to anything)
 **NEVER LOAD THESE FILES DIRECTLY (context bomb — costs thousands of tokens):**
-- ⛔  — 55MB, use search tools only
-- ⛔  — 295KB, use  pattern
+- ⛔ `kai/tickets/tickets.jsonl` — 55MB, 14M tokens, use search_tickets() tool only
+- ⛔ `agents/sam/website/data/feed.json` — 295KB, 76K tokens, use get_feed_summary() pattern
 - ⛔ Any file >1MB — always ask if there is a summary/index first
 
 **COMPACTION API (reduces session cost 88%):**
 When conversation grows long, Anthropic's Compaction API summarizes history.
 Custom preservation rules: task IDs, ticket IDs, commit SHAs, protocol versions,
-Hyo corrections, open P0s, exact error messages. See bin/context-optimizer.py.
+Hyo corrections, open P0s, exact error messages. See `bin/context-optimizer.py --compaction-prompt`.
 
 
 
