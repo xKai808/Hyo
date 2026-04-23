@@ -1,23 +1,23 @@
 {
   "month": "2026-04",
-  "generated_at": "2026-04-21T05:30:15.264893-06:00",
+  "generated_at": "2026-04-22T21:35:57.391637-06:00",
   "status": "open",
   "income": {
-    "trading_pnl_wtd": 3.59,
-    "trading_balance": 118.78,
+    "trading_pnl_wtd": 43.91,
+    "trading_balance": 159.1,
     "week_start": "2026-04-20",
     "streams": [
       {
         "name": "AetherBot Trading",
         "source": "aether-metrics.json",
-        "weekly_pnl": 3.59,
-        "pnl_pct": 3.12,
-        "balance": 118.78,
+        "weekly_pnl": 43.91,
+        "pnl_pct": 38.12,
+        "balance": 159.1,
         "week_start": "2026-04-20",
         "note": "Current week P&L from autonomous trading"
       }
     ],
-    "total_income_mtd": 3.59
+    "total_income_mtd": 43.91
   },
   "expenses": {
     "subscriptions": [
@@ -35,32 +35,42 @@
       }
     ],
     "api_anthropic_mtd": 0.2399,
-    "api_openai_mtd": 1.2408,
+    "api_openai_mtd": 1.3258,
     "total_fixed": 220.0,
-    "total_api_mtd": 1.4806,
-    "total_expenses": 221.4806
+    "total_api_mtd": 1.5657,
+    "total_expenses": 221.5657
   },
-  "net_position": -217.8906,
+  "net_position": -177.6557,
   "api_credits": {
     "anthropic": {
-      "monthly_budget": 40.0,
-      "used_mtd": 0.2399,
-      "remaining": 39.7601,
+      "remaining": 30.6715,
       "total": 40.0,
-      "used": 0.2399,
-      "source": "api-usage.jsonl MTD (budget-based fallback)",
-      "note": "No recent scrape. Run 'kai ant-scrape' to get real balance. Fallback for 2026-04.",
-      "expires": null
+      "used_since_scrape": 0.1185,
+      "used_all_time": 0.2399,
+      "used_mtd": 0.2399,
+      "burn_per_day": 0.0343,
+      "depletion_date": "2028-10-03",
+      "days_until_depleted": 895,
+      "expires": "2027-04-09",
+      "source": "console.anthropic.com (scraped 94h ago, adjusted by api-usage.jsonl)",
+      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
+      "confidence": "estimated",
+      "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-18. Run 'kai ant-scrape' to reset baseline."
     },
     "openai": {
-      "monthly_budget": 20.0,
-      "used_mtd": 1.2408,
-      "remaining": 18.7592,
+      "remaining": 17.9421,
       "total": 20.0,
-      "used": 1.2408,
-      "source": "api-usage.jsonl MTD (budget-based fallback)",
-      "note": "No recent scrape. Run 'kai ant-scrape' from Cowork.",
-      "expires": null
+      "used_since_scrape": 0.6979,
+      "used_all_time": 1.3258,
+      "used_mtd": 1.3258,
+      "burn_per_day": 0.1894,
+      "depletion_date": "2026-07-25",
+      "days_until_depleted": 95,
+      "expires": "2027-04-30",
+      "source": "platform.openai.com (scraped 94h ago, adjusted by api-usage.jsonl)",
+      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
+      "confidence": "estimated",
+      "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-18."
     }
   },
   "notes": []
