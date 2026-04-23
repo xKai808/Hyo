@@ -763,7 +763,27 @@ else:
       brief=$(build_implementation_brief "$agent" "$current_weakness" "$weakness_title")
 
       if [[ -z "$brief" ]]; then
-        log "  No implementation brief (confidence too low or research missing) — skipping"
+        log "  No implementation brief (confidence too low or research missing)"
+        # Check if research file flags this as needing infrastructure/approval
+        local research_file_check="$HYO_ROOT/agents/$agent/research/improvements/${current_weakness}-${TODAY}.md"
+        local needs_approval=0
+        local approval_reason=""
+        if [[ -f "$research_file_check" ]]; then
+          approval_reason=$(grep "^REQUIRES_APPROVAL:" "$research_file_check" | sed 's/REQUIRES_APPROVAL: //' | head -1)
+          [[ -n "$approval_reason" ]] && needs_approval=1
+        fi
+        if [[ $needs_approval -eq 1 ]]; then
+          # Queue for async approval instead of blocking indefinitely
+          local approval_id="${agent}-${current_weakness}-$(date +%Y%m%d)"
+          local approvals_file="$HYO_ROOT/kai/ledger/pending-approvals.jsonl"
+          if ! grep -q "\"id\":\"$approval_id\"" "$approvals_file" 2>/dev/null; then
+            echo "{\"id\":\"$approval_id\",\"agent\":\"$agent\",\"weakness\":\"$current_weakness\",\"reason\":\"$approval_reason\",\"blocks\":\"improvement cannot ship without infrastructure\",\"status\":\"pending\",\"created\":\"$NOW_MT\"}" >> "$approvals_file"
+            log "  → Queued for approval: $approval_reason (ID: $approval_id)"
+            log "  → Run: kai improvement-approval --approve $approval_id to unblock"
+          else
+            log "  → Already pending approval (ID: $approval_id)"
+          fi
+        fi
         save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"verify\",\"cycles\":$cycles,\"improvements\":[],\"last_run\":\"$NOW_MT\"}"
         return 0
       fi

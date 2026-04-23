@@ -1,6 +1,6 @@
 # Ra Research Archive — Index
 
-*Auto-generated 2026-04-23T10:01:12Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
+*Auto-generated 2026-04-23T12:29:14Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
 
 ## Briefs (8)
 
