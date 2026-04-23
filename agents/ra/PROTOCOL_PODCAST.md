@@ -1,7 +1,7 @@
 # PROTOCOL_PODCAST.md
 # Vale — Daily Morning Brief Protocol
 #
-# VERSION: 1.3
+# VERSION: 1.4
 # Author: Kai | Created: 2026-04-19
 # Canonical location: agents/ra/PROTOCOL_PODCAST.md
 #
@@ -409,13 +409,13 @@ Specifically — if the script contains ANY of these patterns, it needs rewritin
 |------------------------------|-----------|------------------------------------------|
 | `com.hyo.podcast`            | **06:05** | `kai/launchd/com.hyo.podcast.plist`      |
 
-The podcast runs at 06:05 MT — after Ra's newsletter pipeline (03:00 MT) completes,
+The podcast runs at 07:30 MT — after both the morning report (05:00 MT) AND Ra newsletter (07:30 MT (podcast)) complete,
 so Ra's stories are available. Before the morning report check (07:00 MT), so the
 podcast appears in the feed by the time Hyo wakes up.
 
 **Pipeline dependency:**
 ```
-03:00 MT — Ra newsletter → agents/ra/output/DATE.md
+03:00 MT — Ra newsletter pipeline runs
 05:00 MT — Morning report → agents/sam/website/data/morning-report.json
 06:05 MT — Podcast reads both → generates Vale brief → pushes MP3 + feed
 07:00 MT — Report completeness check — verifies podcast entry exists in feed
