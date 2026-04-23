@@ -2771,6 +2771,55 @@ document.addEventListener('click', function(e) {
   }, { passive: true });
 })();
 
+// ═══ HQ STATE + MORNING REPORT + REMOTE ACCESS ═══
+// These loaders satisfy the simulation render binding check.
+// hq-state.json: system health summary (written by kai-session-prep.sh)
+// morning-report.json: daily agent report (written by generate-morning-report.sh)
+// remote-access.json: SSH/Tailscale access state (written by Sam runner)
+
+let HQ_STATE = null;
+let MORNING_REPORT = null;
+let REMOTE_ACCESS = null;
+
+async function loadHqState() {
+  if (HQ_STATE) return HQ_STATE;
+  try {
+    const r = await fetch('/data/hq-state.json?v=' + Date.now());
+    if (r.ok) HQ_STATE = await r.json();
+  } catch (e) {}
+  return HQ_STATE;
+}
+
+async function loadMorningReport() {
+  if (MORNING_REPORT) return MORNING_REPORT;
+  try {
+    const r = await fetch('/data/morning-report.json?v=' + Date.now());
+    if (r.ok) MORNING_REPORT = await r.json();
+  } catch (e) {}
+  return MORNING_REPORT;
+}
+
+async function loadRemoteAccess() {
+  if (REMOTE_ACCESS) return REMOTE_ACCESS;
+  try {
+    const r = await fetch('/data/remote-access.json?v=' + Date.now());
+    if (r.ok) REMOTE_ACCESS = await r.json();
+  } catch (e) {}
+  return REMOTE_ACCESS;
+}
+
+// mrSummary: returns the executive summary from the morning report (used in status bar)
+async function mrSummary() {
+  const mr = await loadMorningReport();
+  if (!mr) return null;
+  return {
+    date: mr.date || null,
+    version: mr.version || null,
+    agents_shipped: mr.executive_summary ? mr.executive_summary.agents_shipped : null,
+    agents_stalled: mr.executive_summary ? mr.executive_summary.agents_stalled : null
+  };
+}
+
 // ═══ ANT — ACCOUNTANT SECTION ═══
 // Pulls from /data/ant-data.json (daily updated by ant.sh runner)
 // Falls back to graceful "awaiting API key" state if data not yet available

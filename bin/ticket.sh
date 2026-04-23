@@ -177,6 +177,11 @@ with open(ledger_path, 'r') as f:
                 entry['status'] = new_status
             if note:
                 entry['notes'].append({'timestamp': timestamp, 'text': note})
+                # ── NOTES SIZE GATE (structural fix for 55MB bomb) ──
+                # Cap notes array at 20 entries — trim oldest when exceeded
+                MAX_NOTES = 20
+                if len(entry['notes']) > MAX_NOTES:
+                    entry['notes'] = entry['notes'][-MAX_NOTES:]
             if field and value:
                 # Support nested fields like phase1_questions.intended_outcome
                 parts = field.split('.')

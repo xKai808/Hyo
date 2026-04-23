@@ -518,4 +518,45 @@ This protocol connects to and does NOT replace:
 42 sources consulted. Full bibliography: kai/research/briefs/2026-04-21.md
 Key frameworks applied: ITIL Problem Management, Google SRE Postmortem Culture, PagerDuty Escalation Policies, KCS Methodology, ITSM Known Error Database, 5 Whys Root Cause Analysis, Atlassian Definition of Done, AI Multi-Agent Orchestration patterns (QAT, Akira AI, MindStudio).
 
-<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+<!-- Last reviewed: 2026-04-23 by protocol-staleness-check.sh -->
+
+---
+
+## SECTION 14: S30 STRUCTURAL FIXES (2026-04-23)
+
+### Root cause of 55MB tickets.jsonl
+Tickets accumulated 11,318 cycle-run timestamps in the `notes` array per ticket
+because agent runners wrote `cycle_ran: <timestamp>` as notes on every cycle.
+Two structural fixes shipped:
+
+**Fix 1 — ticket.sh notes cap (line ~179):**
+```python
+MAX_NOTES = 20
+if len(entry['notes']) > MAX_NOTES:
+    entry['notes'] = entry['notes'][-MAX_NOTES:]
+```
+This gate is IN THE CODE. It cannot be bypassed by process failures.
+
+**Fix 2 — weekly-maintenance.sh (Saturday 02:00 MT):**
+Compacts notes arrays and archives resolved tickets autonomously.
+Result: tickets.jsonl permanent size target <2MB.
+
+### Gate: "Is this note informative or just a timestamp?"
+Before writing any note via `ticket.sh update --note`:
+- **YES (informative):** "Fixed: run_analysis.sh line 108, evidence: commit abc1234"
+- **NO (timestamp/operational):** "cycle_ran: 2026-04-21T14:16:45" → write to log.jsonl ONLY
+
+Agent runners MUST NOT write cycle timestamps as ticket notes.
+Cycle logs go to `agents/<name>/ledger/log.jsonl`.
+
+### Autonomous upkeep — full chain
+```
+Every 15 min → ticket-sla-enforcer.sh → escalate P1/P2 SLA breaches
+Every 6 h   → flywheel-doctor.sh CHECK 6/7 → flag stale ACTIVE tickets
+Every 72 h  → healthcheck → P1 alert on any ACTIVE ticket with no update
+Saturday    → weekly-maintenance.sh → archive CLOSED, compact notes
+```
+Zero manual intervention. Hyo does not need to manage tickets.
+
+### Protocol version bump
+v1.0 → v1.1: S30 notes cap gate, autonomous maintenance chain, cycle-log redirection rule.

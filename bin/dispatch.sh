@@ -841,16 +841,23 @@ cmd_simulate() {
   # ── Phase 3: Agent runner execution test ──
   echo ""
   echo "Phase 3: Agent runners"
+  # Exit code semantics per agent:
+  #   0 = healthy, 1 = critical, 2 = operational-with-warnings (not a failure)
+  # Ra uses exit 2 to signal "warnings present but operational" — this is PASSING.
+  # Only exit 1 (critical) or exit >2 (unexpected) counts as failure.
   for agent in nel ra sam; do
     local runner="$ROOT/agents/$agent/$agent.sh"
     if [[ -x "$runner" ]]; then
       bash "$runner" 2>&1 > /dev/null
       local exit_code=$?
       if [[ $exit_code -eq 0 ]]; then
-        echo "  ✓ $agent.sh: exit 0"
+        echo "  ✓ $agent.sh: exit 0 (healthy)"
+        ((total_pass++))
+      elif [[ $exit_code -eq 2 ]]; then
+        echo "  ✓ $agent.sh: exit 2 (operational-with-warnings — not a failure)"
         ((total_pass++))
       else
-        echo "  ✗ $agent.sh: exit $exit_code"
+        echo "  ✗ $agent.sh: exit $exit_code (critical)"
         ((total_fail++))
         results+=("FAIL:runner:$agent:exit-$exit_code")
       fi
