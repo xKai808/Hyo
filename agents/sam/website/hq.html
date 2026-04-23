@@ -2936,27 +2936,18 @@ async function renderAnt(container) {
     <div style="padding:0 16px 100px;">
   `;
 
-  // ── NET POSITION (lead with the thing Hyo cares most about) ──
-  // Income label: AetherBot shows weekly P&L (resets Monday) — label accurately
+  // ── EXPENSES / INCOME / NET ──
   const incomeStreams = (incomeData.streams || []);
   const tradingStream = incomeStreams.find(s => s.name && s.name.includes('Aether'));
-  const incomeLabel = tradingStream && tradingStream.week_start
-    ? `Trading P&L (wk ${tradingStream.week_start.slice(5)})`
-    : (totalIncomeMTD === 0 ? 'pre-launch' : 'trading P&L');
   const incomeSubLabel = tradingStream
-    ? `AetherBot · resets weekly · balance ${antFmt(tradingStream.balance || 0)}`
-    : 'all streams';
+    ? 'AetherBot trading · balance ' + antFmt(tradingStream.balance || 0)
+    : 'AetherBot trading';
+  const expSubLabel = 'Claude Max $200 · GPT Plus $20 · API ' + antFmt(expData.total_api || 0);
 
-  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-    ${antStatBox('Net Position', antFmt(netMonthly), netMonthly < 0 ? 'expenses > trading P&L' : 'profitable', netColor)}
-    ${antStatBox('Monthly Expenses', antFmt(totalAllExpenses), `subs $220 + API ${antFmt(costs.total || 0)}`, 'var(--error)')}
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-    ${antStatBox('AetherBot P&L', antFmt(totalIncomeMTD), incomeLabel, tradingStream && tradingStream.pnl_pct >= 0 ? 'var(--success)' : 'var(--error)')}
-    ${antStatBox("Today's API Cost", antFmt(totalToday), `tracked since Apr 16`, totalToday > (burn.dailyBudget || 50) ? 'var(--error)' : 'var(--text-primary)')}
-  </div>
-  <div style="font-size:0.75em;color:var(--text-muted);padding:8px 10px;background:var(--bg-secondary);border-radius:8px;margin-bottom:14px;line-height:1.5;">
-    <strong style="color:var(--text-secondary);">About these numbers:</strong> AetherBot P&L resets each Monday (current week only — goes up/down daily with trades). Monthly expenses = Claude Max $200 + GPT Plus $20 + API overages. API cost tracks metered calls only — Ra/Kai usage goes through Claude Max subscription.
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;">
+    ${antStatBox('Expenses', antFmt(totalAllExpenses), expSubLabel, 'var(--error)')}
+    ${antStatBox('Income', antFmt(totalIncomeMTD), incomeSubLabel, totalIncomeMTD >= 0 ? 'var(--success)' : 'var(--error)')}
+    ${antStatBox('Net', antFmt(netMonthly), netMonthly >= 0 ? 'profitable' : 'expenses exceed income', netColor)}
   </div>`;
 
   // ── CREDIT BALANCES (horizontal bars) ──
