@@ -574,6 +574,9 @@ if [[ $DOW -eq 6 ]]; then
   # Nel reviews Sam, Sam reviews Nel, Ra reviews Aether, Dex reviews all
   # Primary antidote to echo chamber dynamics in the self-improvement flywheel
   check_and_dispatch 6 45 "cross-agent-review" \
+  check_and_dispatch 6 0 "aether-weekly-summary" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aether-weekly-summary.sh >> $HYO_ROOT/agents/aether/logs/weekly-summary.log 2>&1" \
+    "aether_weekly_summary_run"  # Saturday only — see Saturday block above
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/cross-agent-review.sh >> $HYO_ROOT/kai/ledger/cross-agent-review.log 2>&1" \
     "cross_agent_review_run"
 fi
@@ -620,10 +623,22 @@ check_and_dispatch 17 0 "flywheel-doctor-evening" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
   "flywheel_doctor_evening_run"
 
+# Context rotation (01:30 MT) — keep memory files from bloating, cap at 100 entries
+# Prevents context window cost from creeping back up (hyo-inbox, known-issues, session-errors)
+check_and_dispatch 1 30 "context-rotation" \
+  "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/bin/context-optimizer.py --rotate-logs >> $HYO_ROOT/kai/ledger/kai-autonomous.log 2>&1" \
+  "context_rotation_run"
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 7: HEALTH SCORE + REPORTING
 # ═══════════════════════════════════════════════════════════════════════════════
-log_section "PHASE 7: OUTCOME CHECK + HEALTH SCORE"
+log_section "PHASE 7: BUDGET CHECK + OUTCOME + HEALTH SCORE"
+
+# Ant's budget enforcement — <$1/day hard cap (Hyo directive 2026-04-23)
+if [[ -f "$HYO_ROOT/bin/ant-budget-enforcer.sh" ]]; then
+    HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/ant-budget-enforcer.sh" >> "$LOG" 2>&1 || \
+        log "⛔ BUDGET HARD CAP EXCEEDED — see Hyo inbox for P0 escalation"
+fi
 
 # Run outcome-based monitoring (not activity-based)
 # Research: agents silently fail for hours with perfect activity logs (DEV Community)

@@ -48,6 +48,37 @@ every dollar comes from. Ant is not a reporting agent — Ant is the financial s
 
 ---
 
+
+## PART 0 — ANT'S BUDGET MANDATE (Hyo directive 2026-04-23)
+
+**Ant owns the budget. No exceptions.**
+
+Hard limit: **<$1.00/day total API credit usage** (automated scripts + Cowork sessions combined).
+
+### Ant's enforcement responsibilities:
+1. **Daily monitoring**: `ant-update.sh` computes today's spend vs the $1.00 hard cap
+2. **Alert tiers**:
+   - $0.25 automated: INFO — "session capacity remaining"
+   - $0.75 automated: WARNING — sessions today may push over cap
+   - $1.00 total: **P0 escalation to Hyo inbox** — immediate action required
+3. **Budget gate**: if cap is exceeded, Ant opens a P0 ticket AND pages Hyo inbox
+4. **No exceptions**: even if income is positive, burning >$1/day is unsustainable at current scale
+
+### Budget math:
+- Automated scripts (Aether): ~$0.09-$0.20/day (OpenAI gpt_factcheck)
+- Cowork sessions: target <$0.50 per session with context optimization
+- Monthly budget: $1/day × 30 = $30/month maximum
+- Current credits: Anthropic $18.91 (quota resets May 1), OpenAI $17.94
+
+### What to do if budget is exceeded:
+1. Open P0 ticket immediately (automated via ant-budget-enforcer.sh)
+2. Page Hyo inbox with cost breakdown
+3. In morning report: include "BUDGET ALERT" in needsAttention
+4. Propose specific cuts (reduce session frequency, reduce automated call frequency)
+
+Gate question: "Did today's spend stay under $1.00?" NO → P0 escalation. No exceptions.
+
+---
 ## PART 1 — ANT'S RESPONSIBILITIES
 
 ### 1.1 What Ant tracks (always)

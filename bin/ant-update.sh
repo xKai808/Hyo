@@ -271,13 +271,31 @@ daily_avg    = sum(recent_costs) / max(len(recent_costs), 1)
 today_spend  = sum(by_date_provider[today_str].values())
 
 # ── Alerts ────────────────────────────────────────────────────────────────────
-DAILY_ALERT_USD   = 1.00
-PROCESS_ALERT_USD = 0.50
+# HARD BUDGET CAP — Ant owns enforcement per Hyo directive 2026-04-23
+# Target: <$1/day total (automated + Cowork sessions combined)
+# Automated scripts alone: target <$0.25/day to leave room for 1-2 sessions
+DAILY_HARD_CAP_USD  = 1.00    # Hard limit — flag P0 if exceeded
+DAILY_ALERT_USD     = 0.75    # Warn at 75% of cap
+DAILY_CRITICAL_USD  = 0.25    # Scripts-only: if automated hits $0.25+ it crowds out sessions
+PROCESS_ALERT_USD   = 0.25    # Per-process threshold
+
 alerts = []
-if today_spend > DAILY_ALERT_USD:
+if today_spend >= DAILY_HARD_CAP_USD:
+    alerts.append({
+        "level": "CRITICAL",
+        "msg":   f"BUDGET HARD CAP EXCEEDED: ${today_spend:.4f} >= ${DAILY_HARD_CAP_USD:.2f}/day. Hyo must review and reduce. Sessions suspended until resolved.",
+        "ts":    datetime.now(tz_mt).isoformat()
+    })
+elif today_spend > DAILY_ALERT_USD:
     alerts.append({
         "level": "WARNING",
-        "msg":   f"Today's API spend (${today_spend:.4f}) exceeds daily alert threshold (${DAILY_ALERT_USD:.2f})",
+        "msg":   f"Daily API at {today_spend/DAILY_HARD_CAP_USD*100:.0f}% of cap: ${today_spend:.4f} of ${DAILY_HARD_CAP_USD:.2f}. Review if sessions ran today.",
+        "ts":    datetime.now(tz_mt).isoformat()
+    })
+elif today_spend > DAILY_CRITICAL_USD:
+    alerts.append({
+        "level": "INFO",
+        "msg":   f"Automated scripts at ${today_spend:.4f} (${DAILY_HARD_CAP_USD - today_spend:.4f} remaining for Cowork sessions today)",
         "ts":    datetime.now(tz_mt).isoformat()
     })
 for proc, stats in by_process.items():

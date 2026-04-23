@@ -1,18 +1,13 @@
 {
-  "ts": "2026-04-23T14:46:05Z",
+  "ts": "2026-04-23T14:46:44Z",
   "status": "ISSUES",
   "issues": 6,
-  "warnings": 2,
+  "warnings": 1,
   "findings": [
     {
       "severity": "P1",
       "area": "flags",
       "detail": "1 unaddressed P0/P1 flags in last 2h"
-    },
-    {
-      "severity": "P2",
-      "area": "queue",
-      "detail": "3 commands pending \u2014 worker may be stalled"
     },
     {
       "severity": "P3",
@@ -45,36 +40,36 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues; Kicked queue worker for 3 stalled commands",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "event-nel-flag-nel-001",
+      "id": "cmd-1776955579-524",
       "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/agents/nel/nel.sh",
+      "command": "cd ~/Documents/Projects/Hyo && cp agents/sam/website/data/hq-state.json website/",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776954749-237",
+      "id": "cmd-1776955564-498",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Fix context window s",
+      "command": "cd ~/Documents/Projects/Hyo && cp website/data/feed.json agents/sam/website/data",
       "exit_code": 0
     },
     {
-      "id": "831d89a4-639e-4ee7-967d-5f56af692db8",
+      "id": "cmd-1776955511-465",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Reduce context windo",
+      "exit_code": 0
+    },
+    {
+      "id": "recheck-flag-nel-001",
+      "status": "ok",
+      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "b6fc6451-8726-44e1-bfd1-91e193536284",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776954523-540",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Build GVU semantic g",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776954445-436",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Build affordable aut",
       "exit_code": 0
     }
   ],
