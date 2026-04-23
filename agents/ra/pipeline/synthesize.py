@@ -391,8 +391,52 @@ def pick_backend(preferred: str | None) -> tuple[str, str]:
 # output writing
 # ---------------------------------------------------------------------------
 
+def strip_llm_artifacts(text: str) -> str:
+    """Remove code fences and preamble artifacts that LLMs output despite being told not to.
+
+    The synthesis prompt says 'no code fences, no preamble' but LLMs ignore this.
+    Stripping at write time is more reliable than relying on prompt compliance.
+
+    Handles:
+    - Leading/trailing ```markdown or ```yaml fences wrapping the entire output
+    - Unclosed fenced code blocks at the start of the output (no closing fence)
+    - Leading prose like 'Here is the newsletter:' before the first heading
+    """
+    import re
+
+    t = text.strip()
+
+    # Strip outer wrapping fence (e.g. ```markdown\n...\n```)
+    outer = re.match(r"^```[^\n]*\n([\s\S]*?)```\s*$", t)
+    if outer:
+        t = outer.group(1).strip()
+
+    # Strip unclosed leading fence (```yaml\n... with no closing ```)
+    # Keep content after the fence if there is a heading later
+    if re.match(r"^```[^\n]*\n", t):
+        first_heading = re.search(r"^#+\s", t, re.MULTILINE)
+        if first_heading:
+            t = t[first_heading.start():]
+        else:
+            # No heading found — strip everything up to end of code block or keep all
+            t = re.sub(r"^```[^\n]*\n[\s\S]*?```\n?", "", t).strip()
+
+    # Strip leading non-newsletter prose (e.g. "Here is your newsletter:")
+    first_heading = re.search(r"^#+\s", t, re.MULTILINE)
+    if first_heading and first_heading.start() > 0:
+        preamble = t[:first_heading.start()]
+        # Only strip if preamble looks like commentary, not actual content
+        if len(preamble.strip().split('\n')) <= 3:
+            t = t[first_heading.start():]
+
+    return t
+
+
 def write_markdown(text: str, path: Path, date_str: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    # Strip code fences and preamble artifacts before writing.
+    # LLMs ignore "no code fences" instructions; strip at write time instead.
+    text = strip_llm_artifacts(text)
     header = (
         f"---\n"
         f"date: {date_str}\n"
