@@ -301,11 +301,19 @@ def _log_api_usage(provider: str, model: str, in_tok: int, out_tok: int, notes: 
 
 def call_claude(messages: list) -> str:
     def _do():
+        # Prompt caching: tag system prompt as cacheable (10% cost vs 100% on re-read)
+        # Source: Anthropic prompt caching docs | 90% cost reduction research finding
+        # Min cacheable block: 1,024 tokens. CLAUDE_SYSTEM is typically 2K+ tokens → qualifies.
         response = anthropic_client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=4096,
-            system=CLAUDE_SYSTEM,
-            messages=messages
+            system=[{
+                "type": "text",
+                "text": CLAUDE_SYSTEM,
+                "cache_control": {"type": "ephemeral"}
+            }],
+            messages=messages,
+            betas=["prompt-caching-2024-07-31"]
         )
         try:
             _u = getattr(response, "usage", None)
