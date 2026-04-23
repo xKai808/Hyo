@@ -1239,29 +1239,28 @@ function renderAgentView(container, agentId) {
       </div>
       <div class="ap-responsibilities">"${agent.responsibilities}"</div>
 
-      \${(() => {
+      ${(() => {
         const sc = agent.scores;
         if (!sc) return '';
         const barColor = (s, min) => s >= min ? 'var(--accent)' : s >= min * 0.67 ? '#e8c96a' : '#f55066';
         const scoreCard = (label, s, min) => {
           const col = barColor(s, min);
-          return `<div style="flex:1;min-width:120px;background:var(--bg-secondary);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);">
-            <div style="font-size:0.72em;font-weight:600;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">\${label}</div>
-            <div style="display:flex;align-items:baseline;gap:6px;">
-              <span style="font-size:1.6em;font-weight:700;color:\${col};">\${s}</span>
-              <span style="font-size:0.8em;color:var(--text-muted);">/100</span>
-            </div>
-            <div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">
-              <div style="width:\${s}%;height:100%;background:\${col};border-radius:2px;"></div>
-            </div>
-            \${s < min ? `<div style="font-size:0.7em;color:#f55066;margin-top:4px;">&#9888; Below minimum (\${min})</div>` : ''}
-          </div>`;
+          const warn = s < min ? '<div style="font-size:0.7em;color:#f55066;margin-top:4px;">&#9888; Below minimum (' + min + ')</div>' : '';
+          return '<div style="flex:1;min-width:120px;background:var(--bg-secondary);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);">'
+            + '<div style="font-size:0.72em;font-weight:600;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">' + label + '</div>'
+            + '<div style="display:flex;align-items:baseline;gap:6px;">'
+            + '<span style="font-size:1.6em;font-weight:700;color:' + col + ';">' + s + '</span>'
+            + '<span style="font-size:0.8em;color:var(--text-muted);">/100</span>'
+            + '</div>'
+            + '<div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">'
+            + '<div style="width:' + s + '%;height:100%;background:' + col + ';border-radius:2px;"></div>'
+            + '</div>' + warn + '</div>';
         };
-        let html = `<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;">`;
-        if (sc.sicq) html += scoreCard('SICQ Quality', sc.sicq.score, sc.sicq.min || 60);
-        if (sc.omp)  html += scoreCard('OMP Outcomes', sc.omp.score,  sc.omp.min  || 70);
-        html += `</div>`;
-        return html;
+        let sc_html = '<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;">';
+        if (sc.sicq) sc_html += scoreCard('SICQ Quality', sc.sicq.score, sc.sicq.min || 60);
+        if (sc.omp)  sc_html += scoreCard('OMP Outcomes', sc.omp.score,  sc.omp.min  || 70);
+        sc_html += '</div>';
+        return sc_html;
       })()}
 
       <div class="goals-grid">
@@ -1463,29 +1462,28 @@ function renderKaiView(container, agent) {
       </div>
       <div class="ap-responsibilities">"${agent.responsibilities}"</div>
 
-      \${(() => {
+      ${(() => {
         const sc = agent.scores;
         if (!sc) return '';
         const barColor = (s, min) => s >= min ? 'var(--accent)' : s >= min * 0.67 ? '#e8c96a' : '#f55066';
         const scoreCard = (label, s, min) => {
           const col = barColor(s, min);
-          return `<div style="flex:1;min-width:120px;background:var(--bg-secondary);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);">
-            <div style="font-size:0.72em;font-weight:600;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">\${label}</div>
-            <div style="display:flex;align-items:baseline;gap:6px;">
-              <span style="font-size:1.6em;font-weight:700;color:\${col};">\${s}</span>
-              <span style="font-size:0.8em;color:var(--text-muted);">/100</span>
-            </div>
-            <div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">
-              <div style="width:\${s}%;height:100%;background:\${col};border-radius:2px;"></div>
-            </div>
-            \${s < min ? `<div style="font-size:0.7em;color:#f55066;margin-top:4px;">&#9888; Below minimum (\${min})</div>` : ''}
-          </div>`;
+          const warn = s < min ? '<div style="font-size:0.7em;color:#f55066;margin-top:4px;">&#9888; Below minimum (' + min + ')</div>' : '';
+          return '<div style="flex:1;min-width:120px;background:var(--bg-secondary);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);">'
+            + '<div style="font-size:0.72em;font-weight:600;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">' + label + '</div>'
+            + '<div style="display:flex;align-items:baseline;gap:6px;">'
+            + '<span style="font-size:1.6em;font-weight:700;color:' + col + ';">' + s + '</span>'
+            + '<span style="font-size:0.8em;color:var(--text-muted);">/100</span>'
+            + '</div>'
+            + '<div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">'
+            + '<div style="width:' + s + '%;height:100%;background:' + col + ';border-radius:2px;"></div>'
+            + '</div>' + warn + '</div>';
         };
-        let html = `<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;">`;
-        if (sc.sicq) html += scoreCard('SICQ Quality', sc.sicq.score, sc.sicq.min || 60);
-        if (sc.omp)  html += scoreCard('OMP Outcomes', sc.omp.score,  sc.omp.min  || 70);
-        html += `</div>`;
-        return html;
+        let sc_html = '<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;">';
+        if (sc.sicq) sc_html += scoreCard('SICQ Quality', sc.sicq.score, sc.sicq.min || 60);
+        if (sc.omp)  sc_html += scoreCard('OMP Outcomes', sc.omp.score,  sc.omp.min  || 70);
+        sc_html += '</div>';
+        return sc_html;
       })()}
 
       <div class="goals-grid">
