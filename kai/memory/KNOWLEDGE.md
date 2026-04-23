@@ -500,3 +500,40 @@ Run ad-hoc: `kai cross-agent-review nel sam` (nel reviews sam only) or `kai cros
 they were never saved to the project after the April 16 session. KAI_BRIEF.md captured status but
 NOT knowledge. The knowledge layer (this file) did not exist. Fix: KNOWLEDGE.md created, both files
 saved to kai/memory/feedback/, hydration protocol updated to read KNOWLEDGE.md every session.
+
+---
+
+## SESSION 29 — 2026-04-22 KEY LEARNINGS (permanent)
+
+**Ant dashboard — canonical data structure (PROTOCOL_ANT.md v1.4):**
+- `history[]` must have: `{date, anthropic, openai, total}` — all four fields. Missing any breaks the stacked bar chart.
+- History window = current month day 1 → today (zero-filled). NOT 14-day rolling window.
+- Month rollover: previous month closed to `monthly-YYYY-MM.json` before new month starts.
+- HQ Ant tab shows three boxes: Expenses | Income | Net (not four — no "Today's API" top-level box).
+- `total_anthropic` must be computed BEFORE the scraped-credits block in ant-update.sh or NameError on scraped path.
+- Gate: before rewriting ant-data.json, read PROTOCOL_ANT.md schema. Always verify history[] fields.
+
+**HQ login — sessionStorage vs localStorage:**
+- HQ token was in `sessionStorage` — clears on tab/browser close.
+- Fixed: `localStorage` with 30-day expiry. Login now persists across sessions.
+- Root cause of lockout: my JS error forced page reload, clearing the session token.
+
+**hq.html modifications — mandatory pre-commit gate:**
+- `bin/validate-hq-js.sh` must pass before any hq.html commit.
+- Template literals cannot be nested directly — use string concatenation inside outer template literals.
+- The outer `html += \`...\`` template literal: inner code blocks using backticks must be inside proper `${...}` expressions with UNescaped `$`. Escaped `\${` produces literal string, not evaluated expression.
+
+**Verification discipline (session 29 confirmed pattern):**
+- Never declare a fix done without checking the deployed output. git push ≠ verified.
+- Before modifying any data file: read the consumer (HQ renderer, protocol doc) to understand exact field names and structure needed.
+- When something breaks after my changes: check what I changed FIRST, not external systems.
+
+**verified-state.json (new — 2026-04-22):**
+- `kai/ledger/verified-state.json` is pre-computed truth for: credits, SICQ, OMP, report freshness, stale tickets, Aether balance.
+- Written by `bin/kai-session-prep.sh` — runs every 15 min via kai-autonomous.sh, 5x daily via launchd.
+- All claims about system state MUST come from this file or a live read. Not from memory.
+
+**SICQ health gate (updated 2026-04-22):**
+- Morning report health gate now uses `< 60` (below minimum), not `<= 40` (critical only).
+- Agents below 60 show in health sentence as "quality issues" — system not "healthy."
+

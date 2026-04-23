@@ -2,37 +2,41 @@
 
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
-**Updated:** 2026-04-21 (Session 27 cont. 9 — Schedule resequencing + simulation tickets + autonomy audit)
+**Updated:** 2026-04-22 (Session 29 — HQ fixes, Ant dashboard, verification discipline)
 
-## Shipped today (2026-04-21 — Session 27 cont. 9)
+## Shipped today (2026-04-22 — Session 29)
 
-**SCHEDULE RESEQUENCING + SIMULATION TICKET SWEEP:**
+**S29 SUMMARY — 6 original Hyo issues + multiple regressions caused and fixed:**
 
-**`bin/kai-autonomous.sh`** Phase 6 completely resequenced to dependency-correct order:
-- 04:30 MT: flywheel self-improve (was 08:00 — was AFTER morning report, useless)
-- 05:30 MT: flywheel doctor MORNING (new) — provides fresh SICQ before morning report
-- 06:00 MT: OMP measurement (was 06:45 — now before morning report)
-- 06:15 MT: Memory snapshot (new) — pushes SICQ+OMP to SQLite immediately
-- 07:00 MT: Morning report — NOW has ALL fresh data (aric-latest, SICQ, OMP all current)
-- 07:15 MT: Completeness check
-- 09:30 MT: Flywheel doctor MIDDAY (was 09:00)
-- 17:00 MT: Flywheel doctor EVENING (new — third SICQ write before night agents run)
-- Saturday conflict resolved: OMP 06:00, cross-agent review 06:45 (no overlap)
+**WHAT SHIPPED (working):**
+- `kai/ledger/verified-state.json` + `bin/kai-session-prep.sh` — pre-computed truth, runs every 15min
+- `analysis-quality-gate.sh` QC13 — arithmetic reconciliation catches P&L gaps (caught $3.43 gap)
+- `bin/kai-hydration-check.sh` — verifies 12 hydration files fresh, wired into kai-autonomous.sh Phase 0
+- `bin/validate-hq-js.sh` — mandatory gate before any hq.html commit
+- `bin/pre-publish-check.py` — dedup algorithm, 90% threshold for daily reports, 60% for research
+- `kai-autonomous.sh` — staleness escalation with dedup, Phase 0 session-prep
+- `generate-morning-report.sh` — sicqScores/ompScores in sections{}, SICQ health gate < 60
+- `PROTOCOL_MORNING_REPORT.md` v1.2 — data-source table for reproducibility
+- `PROTOCOL_DAILY_ANALYSIS.md` v2.6 — GPT-first pre-generation rule
+- `PROTOCOL_ANT.md` v1.4 — month-to-date history schema gate, month-close log behavior
+- `ant-update.sh` — month-to-date history (April 1→today), fixed NameError on total_anthropic
+- `hq.html` — localStorage (not sessionStorage) for HQ login, Ant shows Expenses/Income/Net
+- `aether-publish-analysis.sh` — Pipeline note stripped, GPT machine headers stripped, no readLink
+- `kai_analysis.py` — GPT-first, reuses GPT_Independent_DATE.txt (0 Anthropic calls on reuse)
+- `ant-data.json` — corrected from source (history, credits, costs), 22-day April window
 
-**`kai/protocols/SYSTEM_SCHEDULE.md`** (NEW): Master schedule document all agents read during hydration. Contains dependency chain diagram, full schedule table, algorithm reference table (SICQ/OMP/Kai SICQ/Kai OMP/ARIC/Flywheel/WAI/cross-agent review/CLEAR), memory writes per event, simulation failure status, agent creation protocol reference.
+**ERRORS I CAUSED AND HAD TO FIX:**
+- hq.html JS syntax error (nested backtick template literal) → locked Hyo out of HQ
+- ant-data.json history structure broken (missing anthropic/openai fields per-entry)
+- ant-data.json history window wrong (14-day instead of full month)
+- ant-update.sh NameError (total_anthropic used before definition on scraped path)
+- Blamed Vercel/DNS before checking my own JS change
+- sessionStorage token cleared → Hyo locked out of HQ (fixed: localStorage 30-day expiry)
 
-**`kai/AGENT_ALGORITHMS.md`** — QUALITY METRIC SYSTEM section added at end. All agents now know SICQ, OMP, Kai OMP, ARIC, Flywheel, WAI exist — survivable across memory wipes.
-
-**7 tickets opened** (simulation failures that had been silently accumulating for 8 days):
-- P0 `TASK-20260421-ra-P0-runner-exit2`: Ra runner exit-2 since Apr 13 — 8 days no ticket
-- P1 `TASK-20260421-sim-P1-hq-state-unbound`: hq-state.json unbound in simulation
-- P1 `TASK-20260421-sim-P1-morning-report-render`: 3 morning-report render variants
-- P1 `TASK-20260421-sim-P1-remote-access-unbound`: remote-access.json unbound
-- P1 `TASK-20260421-infra-P1-active-md-missing`: ACTIVE.md missing for ALL agents (Phase 1 always 999h stale)
-- P2 `TASK-20260421-sim-P2-aether-balance`: aether-default-balance render
-- P2 `TASK-20260421-sim-P2-regression-issues`: regression:1-issues recurring
-
-Commits queued: `s27c9-schedule-algorithms-commit.json` + `s27c9-tickets-commit.json`
+**CURRENT STATE:**
+- HQ accessible, Ant showing Expenses/Income/Net correctly, month chart deployed
+- All 6 original Hyo issues addressed (Issues 1-6 from session start)
+- verified-state.json running autonomously every 15min on Mini
 
 ## Current open P0s
 - **Ra runner exit-2** — 8 days silent failure, TASK-20260421-ra-P0-runner-exit2 (ACTIVE)

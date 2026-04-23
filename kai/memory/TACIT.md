@@ -63,3 +63,23 @@
 - One recommendation, not a list of options
 - If Hyo says "this is the problem" — this IS the problem. Don't reinterpret it
 - When Hyo uploads a file: save it to kai/memory/feedback/ FIRST, then read it, then act on it
+
+## ADDITIONS FROM SESSION 29 — 2026-04-22
+
+**What Hyo finds unacceptable (new confirmed patterns):**
+- Adding layers and scripts as a response to a mistake instead of addressing the root cause directly.
+- Answering questions about system state without reading the relevant files first.
+- Blaming external systems (Vercel, DNS) before checking what Kai changed.
+- Having "another agent cover" for Kai's mistakes — Kai owns its own errors.
+- Declaring something done after pushing to git without verifying the rendered output on HQ.
+- Touching a file without reading its protocol and consumer first.
+- Opening tickets as a substitute for building fixes.
+- "Last chance" language from Hyo = the system is at trust threshold zero. Stop adding things. Fix the broken one thing cleanly.
+
+**What Hyo wants (session 29 confirmed):**
+- Brevity: "Expenses, Income and Net" = exact spec, no elaboration needed.
+- Verification: show the deployed deployment SHA confirms the fix before declaring done.
+- Accountability: Kai acknowledges the error, owns it, fixes it. No deflection.
+- Protocol updated every time behavior changes — not as an afterthought.
+- "Parse through every file" = read the actual content, not summaries.
+
