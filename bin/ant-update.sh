@@ -160,6 +160,10 @@ recent_7d = [(today - timedelta(days=i)).isoformat() for i in range(7)]
 burn_anthropic = sum(by_date_provider[d].get("anthropic", 0.0) for d in recent_7d) / 7
 burn_openai    = sum(by_date_provider[d].get("openai",    0.0) for d in recent_7d) / 7
 
+total_anthropic = by_provider.get("anthropic", 0.0)
+total_openai    = by_provider.get("openai", 0.0)
+total_cost      = total_anthropic + total_openai
+
 if _scraped:
     _ant = _scraped.get("anthropic", {})
     _oai = _scraped.get("openai", {})
@@ -285,10 +289,7 @@ for proc, stats in by_process.items():
             "ts":    datetime.now(tz_mt).isoformat()
         })
 
-# ── Totals ─────────────────────────────────────────────────────────────────────
-total_anthropic = by_provider.get("anthropic", 0.0)
-total_openai    = by_provider.get("openai", 0.0)
-total_cost      = total_anthropic + total_openai
+# ── Totals (already computed above before credits block) ──────────────────────
 
 # ── Revenue: AetherBot P&L ────────────────────────────────────────────────────
 aether_pnl = 0.0

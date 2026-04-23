@@ -1,11 +1,11 @@
 # Aether Active Tasks
 
-Last updated: 2026-04-23T02:43:26Z
+Last updated: 2026-04-23T03:34:51Z
 
 ## In Progress
 
-- **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-23T02:29:55Z
+- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-23T03:30:04Z
   - Status: DELEGATED
 
 ## Queued

@@ -1,9 +1,14 @@
 {
-  "ts": "2026-04-23T02:29:54Z",
+  "ts": "2026-04-23T03:30:03Z",
   "status": "ISSUES",
-  "issues": 5,
+  "issues": 6,
   "warnings": 0,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "1 unaddressed P0/P1 flags in last 2h"
+    },
     {
       "severity": "P1",
       "area": "dead-loop",
@@ -22,7 +27,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (bottleneck_stuck): dashboard out-of-sync \u2014 data exists but HQ doesn't render "
+      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
     },
     {
       "severity": "P1",
@@ -30,36 +35,36 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776911310-753",
+      "id": "cmd-1776914873-206",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git stash drop && git add -A && git commit -m 'Mi",
+      "command": "cd ~/Documents/Projects/Hyo && git add agents/sam/website/data/ant-data.json web",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776911303-729",
+      "id": "cmd-1776914793-106",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git stash && git pull --rebase origin main && git",
+      "command": "cd ~/Documents/Projects/Hyo && git log --oneline -- agents/sam/website/data/ant-",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776911299-705",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git pull --rebase origin main && git push origin ",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1776911292-681",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add   bin/kai-hydration-check.sh   bin/kai-au",
-      "exit_code": 0
-    },
-    {
-      "id": "f0882fa1-e8d2-43c3-8991-efe405a3392d",
+      "id": "fc87b702-5575-4e9f-b281-cda497e3bae5",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "exit_code": 0
+    },
+    {
+      "id": "a6bda808-6500-412c-85ba-720a23b6eec0",
+      "status": "ok",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1776914537-141",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add agents/ant/PROTOCOL_ANT.md && git commit ",
       "exit_code": 0
     }
   ],
