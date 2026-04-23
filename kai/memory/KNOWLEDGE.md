@@ -690,3 +690,61 @@ NEXT IMPLEMENTATIONS (not yet built — prioritized):
 3. Langfuse/OpenTelemetry tracing per agent
 4. Per-agent GVU verifiable oracle
 5. Event-driven architecture (Redis Streams replacing polling)
+
+**Podcast missing days (2026-04-23 investigation):**
+- Podcast runs at 03:00 MT daily via com.hyo.aurora.plist
+- podcast.py requires: morning-report.json OR ra_newsletter_md OR aurora_brief_md
+- Skips with exit(1) if ALL three sources missing: "SKIP {date}: no content sources available"
+- Apr 20, 22, 23 missing because: morning-report published after 05:00 (AFTER podcast runs at 03:00)
+- The newsletter runs at 03:00 as well but sometimes fails (cascade from source health issues)
+- Fix needed: either move podcast to 08:00 MT (after morning report), or use previous day's report as fallback
+
+**Aether analysis timing architecture (2026-04-23):**
+- run_analysis.sh triggers at 23:00 MT via com.hyo.aether-analysis.plist
+- At 23:00, AetherBot log may be sparse (trading just started that minute)
+- Broken line 108 (bash/Python hybrid) picked up 3-line stub instead of full log → gate fails
+- By 03:54 AM, gpt_factcheck.py creates complete Analysis file overnight
+- FIXED: line 108 rewritten in pure bash; com.hyo.aether-analysis-retry.plist runs at 06:15 MT
+- Retry checks if already published (idempotent), publishes if not
+
+**No font issue in Aether analysis on HQ:**
+- Analysis renders through renderAetherAnalysis() which uses mdToHtml() — no pre/code blocks
+- synthesize.py is for Ra newsletter; Aether uses aether-publish-analysis.sh which extracts sections directly
+- aether-publish-analysis.sh runs clean_machine_headers() + strip Pipeline note
+- HQ renderer: mdToHtml converts markdown → styled HTML. No terminal font.
+- The only font issue was the NEWSLETTER (fixed: strip_llm_artifacts in synthesize.py)
+
+**Protocols updated this session (2026-04-23):**
+- PROTOCOL_MORNING_REPORT.md v1.3: scores MANDATORY, bug documented, v1.3 added
+- PROTOCOL_ANT.md v1.4: Cowork cost tracking gap, month-to-date history, schema gate
+- PROTOCOL_DAILY_ANALYSIS.md v2.6: GPT-first rule (already from S29)
+- PROTOCOL_HQ_PUBLISH.md: agent-reflection schema updated to match actual output
+- PROTOCOL_NEWSLETTER.md v1.0: CREATED (was missing entirely)
+- PROTOCOL_CEO_REPORT.md v1.0: CREATED
+- PROTOCOL_RESEARCH_DROP.md v1.0: CREATED
+- PROTOCOL_SELF_IMPROVE_REPORT.md v1.0: CREATED
+- Rule: schema registry (kai/schemas/) is the machine enforcement. Protocols are the human contract.
+  Any new HQ report type requires BOTH before publish-to-feed.sh will accept it.
+
+**Bottlenecks identified (research + audit, 2026-04-23):**
+1. Context window stuffing: CLAUDE.md+KAI_BRIEF+KNOWLEDGE.md+TACIT.md = 30K+ tokens before work
+   Fix: prompt caching (90% reduction), selective injection via verified-state.json
+2. Sequential tool execution: 10 sequential tool calls at 200ms each = 2s; 7 could be parallel = 600ms
+3. Polling architecture: cron/queue wakes agents every N minutes regardless of events
+   Fix: event-driven (Redis Streams) reduces idle token cost to zero
+4. Orchestrator as SPOF: Kai handles all routing; if Kai fails, all agents stall
+   Fix: domain sub-orchestrators per area (Sam for engineering, Nel for security)
+5. LLM vendor concentration: all agents on Claude = single failure point
+   Fix: AI gateway with automatic fallback (LiteLLM/Portkey)
+6. Vercel deployment rate: 96/day from aether metrics hits daily limit
+   Fix: throttled to 1/hour (done)
+
+**Automation opportunities (research-backed):**
+- Prompt caching: 90% input cost reduction, zero architecture change (API config only)
+- Outcome monitoring: already built (agent-outcome-check.sh)
+- Schema validation: already built (schema registry + flywheel CHECK 11)
+- Reflexion cycle: automate per agent (verbal critique → evolution.jsonl each cycle)
+- AI gateway failover: LiteLLM as middleware, 30% additional cost reduction from routing
+- Plan caching (APC): reuse planning steps for repeated task types (Aether daily, Ra newsletter)
+- Langfuse tracing: open source, zero cost, traces every tool call for debugging
+

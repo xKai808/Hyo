@@ -4,6 +4,43 @@
 
 **Updated:** 2026-04-23 (sentinel-hyo-daily scheduled run #136 — 0 new, P0 day 111 carry-forward)
 
+## Shipped this session (2026-04-23 — S30)
+
+**MAJOR WORK:**
+- 3 code bugs in agent-self-improve.sh fixed: flock→mkdir, mktemp collision, empty research gate
+- Aether analysis: MINIMUM_TICKER_CLOSES 15→4, line 108 bash bug fixed, 06:15 retry plist
+- Aurora terminal font: synthesize.py strip_llm_artifacts() strips unclosed code fences at source
+- Morning report scores: fixed two-process Python bug (FEED_PYEOF reads files directly now)
+- Aether deploy throttle: max 1 push/hour (was 96/day, hit Vercel limit)
+- Schema registry: kai/schemas/ with 8 report types + registry.json
+- flywheel-doctor CHECK 11: daily protocol/JSON alignment audit
+- publish-to-feed.sh SCHEMA GATE: blocks new types without protocol
+- JSON/Protocol alignment: 5 missing self-improve-state.json created, Ant GROWTH.md, ACTIVE.md moved
+- 6 new protocols: PROTOCOL_NEWSLETTER, PROTOCOL_CEO_REPORT, PROTOCOL_RESEARCH_DROP, PROTOCOL_SELF_IMPROVE_REPORT + 3 existing
+- External research: 65+ sources → autonomous company architecture (kai/research/raw/2026-04-23-autonomous-company-research.md)
+- agent-outcome-check.sh: outcome-based monitoring wired into kai-autonomous.sh Phase 7
+- Session-handoff.json: now written automatically by kai-session-prep.sh every 15min (no prompting)
+- verified-state.json: pre-computed truth, runs every 15min
+
+**CURRENT SYSTEM STATE:**
+- Anthropic credits: $18.91 remaining (quota resets May 1)
+- OpenAI credits: $17.94 remaining
+- Aether: analysis failing to publish due to line 108 bug (now fixed) + retry plist added
+- Podcast: missing Apr 20, Apr 22, Apr 23 — podcast.py skips when morning-report.json missing
+- SICQ: Nel=20(critical), Sam=45, Ra=55, Aether=60, Kai=50 (all below 60 minimum)
+- Vercel: hit daily deploy limit (96/day from aether) — now throttled to 1/hour
+- Schema registry: kai/schemas/ — 8 types registered
+- Protocols: 24 total, all HQ report types now covered
+
+**OPEN ISSUES:**
+- Podcast missing 3 days: morning-report.json absent at 03:00 MT when aurora runs (after cascade)
+- Prompt caching: NOT yet implemented (90% cost reduction opportunity)
+- Langfuse tracing: NOT yet implemented
+- AI gateway failover: NOT yet implemented  
+- GVU verifiers per agent: NOT yet implemented
+- Event-driven architecture: NOT yet implemented
+
+
 ## Shipped today (2026-04-22 — Session 29)
 
 **S29 SUMMARY — 6 original Hyo issues + multiple regressions caused and fixed:**
