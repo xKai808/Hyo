@@ -1,16 +1,16 @@
-# ra Self-Review — 2026-04-23T00:30
+# ra Self-Review — 2026-04-23T09:12
 
 ## Gate 1: Trigger Validation
-- ✓ 17 files checked, all have triggers.
+- ✗ **2026-04-23-ra-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **ra-agent-reflection-2026-04-23.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
 Questions for ra to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
-- ✗ **hq-state.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **morning-report.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **remote-access.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-007** is relevant to ra
@@ -52,6 +52,6 @@ Questions for ra to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 13
-- Gate results: trigger=17/17, visibility=checked, resolutions=5, adoption=-5/5
+- Findings: 12
+- Gate results: trigger=26/28, visibility=checked, resolutions=5, adoption=-5/5
 

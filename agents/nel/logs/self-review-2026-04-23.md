@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-04-23T08:45
+# nel Self-Review — 2026-04-23T12:10
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-23-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -15,9 +15,6 @@ Questions for nel to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
-- ✗ **hq-state.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **morning-report.json**: data exists but is NOT referenced in hq.html — invisible to user
-- ✗ **remote-access.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-002** is relevant to nel
@@ -65,6 +62,6 @@ Questions for nel to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 17
-- Gate results: trigger=16/20, visibility=checked, resolutions=7, adoption=-5/5
+- Findings: 14
+- Gate results: trigger=24/28, visibility=checked, resolutions=7, adoption=-5/5
 

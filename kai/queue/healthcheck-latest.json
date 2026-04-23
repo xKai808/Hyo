@@ -1,19 +1,9 @@
 {
-  "ts": "2026-04-23T14:46:44Z",
+  "ts": "2026-04-23T20:34:35Z",
   "status": "ISSUES",
   "issues": 6,
-  "warnings": 1,
+  "warnings": 0,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "1 unaddressed P0/P1 flags in last 2h"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "hyo has no output today"
-    },
     {
       "severity": "P1",
       "area": "dead-loop",
@@ -38,36 +28,41 @@
       "severity": "P1",
       "area": "dead-loop",
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
+    },
+    {
+      "severity": "P1",
+      "area": "ticket-sla",
+      "detail": "232 tickets have breached SLA"
     }
   ],
   "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1776955579-524",
+      "id": "c3cb0770-edfd-48fb-b687-3630929c41c8",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && cp agents/sam/website/data/hq-state.json website/",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776955564-498",
+      "id": "962a9406-e1dd-4078-b6e9-b4185c476d5f",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && cp website/data/feed.json agents/sam/website/data",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1776955511-465",
+      "id": "cmd-1776975450-93773",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add -A && git commit -m 'Reduce context windo",
+      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-nel-001",
+      "id": "75e1d4e9-558e-4f18-9062-266c557ac42f",
       "status": "ok",
-      "command": "bash /Users/kai/Documents/Projects/Hyo/kai/queue/healthcheck.sh",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "b6fc6451-8726-44e1-bfd1-91e193536284",
+      "id": "5c6ab08b-1093-4936-9083-6063d255b528",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0

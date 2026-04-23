@@ -4,6 +4,8 @@
 
 **Updated:** 2026-04-23 (sentinel-hyo-daily scheduled run #136 — 0 new, P0 day 111 carry-forward)
 
+**[HEALTHCHECK 2026-04-23T20:02Z]** Status=ISSUES. 1 P1 open: 81 tickets breaching SLA (down from 202 at 19:48Z — auto-remediation working). 2 P2 warnings: verified-state.json ~6h old (expected <2h), 3 queue failures (2 malformed JSON bodies, 1 security-blocked vercel). Queue worker healthy (0 pending/running). All ACTIVE.md fresh. 33 agent logs today. Dead-loop flags (nel/sam/ra/aether/dex) from prior check did not re-raise — held by auto-remediation. See kai/queue/healthcheck-latest.json.
+
 ## ## Shipped this session (2026-04-23 — S30)
 
 **MAJOR WORK:**
@@ -157,7 +159,47 @@
 - **Agents still in dead-loop** — sam (assessment_stuck), ra (assessment_stuck), aether (bottleneck_stuck). Guidance DELEGATEs firing every ~15min with no change in behavior; need to escalate beyond open-ended questions.
 - **No kai runner log for 2026-04-21** — `agents/kai/logs/` has nothing dated today.
 
-## ## Current state (as of 2026-04-23T14:04Z / 08:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-23T18:04Z / 12:04 MT — automated 2h healthcheck)
+
+**Healthcheck findings (Cowork-scheduled probe, 12:04 MT):**
+- **P1 — dex-002 JSONL corruption AUTO-REMEDIATE still DELEGATED since 2026-04-18 (5+ days stale).** Root-cause trace + append-time schema-validation gate not shipped. Every night the dex cycle re-detects the same 2 corrupt files and emits the same P2 flag. No structural fix in flight.
+- **P1 — flag-aether-001 dashboard publish mismatch open 9 days.** API timestamp is no longer frozen (saw reconcile at 17:59:33Z showing `dashboard: synced`) but it drifts back to `out-of-sync` within 1-2 cycles every time. Publish→verify→reconcile loop from flag-aether-002 (2026-04-18) still not built. Aether is emitting a P2 flag every 30-90s against this one symptom — log-noise dominated by a single chronic condition.
+- **P2 — autonomous healthchecker false-positive pattern.** Every 2h probe flags nel/sam/ra/aether/dex as "dead-loop assessment_stuck" against routine cycle-completion text (`routine maintenance run`, `metrics cycle complete`, etc.). Agents ARE producing output (nel=19, sam=1, ra=3, aether=2, dex=3 log files today). Tighten the matcher so normal steady-state doesn't emit P1 noise, or the P1 tier loses meaning.
+- **P2 — ticket store divergence.** SQLite says 61 total / 5 open P1; JSONL says 152 active; autonomous checker reports 131 SLA-breached; raw scan by sla_deadline field says 0 past-deadline. Pick one source of truth and reconcile — the healthchecker and the SLA enforcer are not agreeing with each other or with the live DB.
+- **P2 — `cmd-1776912672-157` vercel token op** still in failed/ — blocked by security check (secret-in-command pattern). Route through a whitelisted kai.sh subcommand.
+
+**Queue & agents:**
+- Queue healthy: 0 pending, 0 running. Last 3 completed exit_code=0 (ra newsletter 55s, queue-hygiene x2).
+- All 6 ACTIVE.md files <1h old — freshness OK.
+- Today's output: nel=19, sam=1, ra=3, aether=2, dex=3 log files. All runners active.
+
+**Most important single item:** dex-002 root-cause trace. It's the oldest P1 in DELEGATED status (5 days) and every day of inaction means more corrupt JSONL rows the nightly pipelines have to work around. Ship the schema-validation gate at append-time and the corruption stops accumulating.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## ## Current state (as of 2026-04-23T16:05Z / 10:05 MT — automated 2h healthcheck) [SUPERSEDED]
+
+**Healthcheck findings (Cowork-scheduled probe, 10:05 MT):**
+- **P1 — aether dashboard API frozen at 09:11:33-06:00** while the local runner keeps advancing. This single frozen timestamp is the root cause of (a) 306 P2 dashboard-mismatch flags emitted in the last 2h, (b) aether's "dead-loop" signal in every recent probe, and (c) the 9-day-old `flag-aether-001`. Aether's latest REPORT (16:02:55Z) still reads `dashboard: out-of-sync`. Fix the publish→verify path once and a third of the noise goes away. This is the highest-leverage item.
+- **P1 — delegation-closure backlog unchanged.** `ra-002/003/004` (newsletter auto-remediate) from 2026-04-14 are still in DELEGATED status — 9 days stale. `sam-004 / nel-003 / nel-004` from 2026-04-18 are 5 days stale. Broken-links auto-remediate (kai-001) was dispatched 5+ times in the last 2h alone with no RESOLVE. Same pattern as the 08:04 MT probe — REPORTs flow, nothing flips to RESOLVE.
+- **P1 — dex JSONL corruption** still unresolved (flag-dex-001/002). Dex reported 2 corrupt entries at 06:25Z and is stuck in `bottleneck_stuck` dead-loop. Need a schema-validation gate at append time, not post-hoc detection.
+- **P1 — flag-emission rate-limit missing.** aether alone fired 306 flags in 2h (mostly 2 duplicate payloads re-emitted every runner cycle). Dedup at the flag emitter, or the signal drowns in noise and we stop reading the log.
+- **P2 — old failed queue jobs** (vercel token ops, zero-byte sentinels) carry-forward from earlier probes. Archive next session.
+
+**Queue & agents:**
+- Queue healthy: 0 pending, 0 running. Last 3 completed exit_code=0 (cipher.sh, ra newsletter, queue-hygiene).
+- All 6 ACTIVE.md files <1h old — freshness OK.
+- Today's output: nel, sam, ra, aether, dex, ant all produced logs. hyo = user, no runner log expected.
+
+**Most important single item:** The aether dashboard publish/verify loop. It produces 300+ flags per probe, keeps aether in dead-loop, and has been open 9 days as `flag-aether-001`. Everything else downstream is symptoms. No more auto-remediation cascades until the publish/verify path is wired — each new DELEGATE adds to the closure backlog without a matching RESOLVE.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## ## Current state (as of 2026-04-23T14:04Z / 08:04 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (Cowork-scheduled probe, 08:04 MT):**
 - **P1 — dead-loop detector still flagging 5 agents (nel/sam/ra/aether/dex) as "assessment_stuck."** This is the 6th+ consecutive probe with the same cluster. Root cause is not that agents are halted — all 5 produced log output and evolution entries in the last 2h — but that their self-reported assessment text is unchanged ("routine maintenance", "metrics cycle complete"). Auto-remediation dispatch at 14:01:38Z added 5 more DELEGATE entries to an already-uncleared backlog. **Structural fix required:** either tune the dead-loop detector to accept healthy steady-state, or require agents emit a growth/ARIC ticket whenever assessment is unchanged 3+ cycles — whichever lands first closes the loop.
