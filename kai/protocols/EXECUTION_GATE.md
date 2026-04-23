@@ -278,3 +278,33 @@ DISCREPANCY DISCOVERED:
 - Gap = Kai's ticket discipline score. Target: 0 gap.
 
 <!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+
+---
+## IMPLEMENTATION VERIFICATION GATE (added 2026-04-23 — third occurrence of describe-not-build)
+
+This gate runs AFTER claiming any implementation is complete.
+Three occurrences (SE-010-008, SE-010-009, SE-S30-describe-001) prove that
+a rule in a document is insufficient. This gate requires a verifiable artifact.
+
+**Before saying "X is built/done/implemented":**
+
+1. **Does the code file exist?**
+   - Gate: `ls <file_path>` — if not found, it is NOT built
+   - A .md doc describing the feature ≠ the feature
+
+2. **Does the code actually run?**
+   - Gate: `python3 -c "import ast; ast.parse(open('<file>').read())"` for Python
+   - Gate: run the script with `--help` or a test flag
+   - "It should work" ≠ verified
+
+3. **Does the output exist?**
+   - Gate: check for the produced artifact (DB file, API response, log entry)
+   - For prompt caching: grep for `cache_control` in the actual .py file
+   - For SQLite: `ls kai/tickets/tickets.db` AND `python3 bin/tickets-db.py stats`
+   - For Compaction API: grep for `compact-2026-01-12` in the .py file
+
+4. **Is the trigger wired?**
+   - Gate: confirm the script is called from its scheduler (kai-autonomous.sh, launchd, runner)
+   - A script that exists but is never called = not implemented
+
+VERDICT: If any gate returns NO → it is not done. Do not report it as done.

@@ -1261,6 +1261,122 @@ Every 15 minutes launchd fires aether.sh:
 
 - **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
 
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
+- **2026-04-23:** Researched 7/7 sources. See `research/findings-2026-04-23.md` for details.
+
 - **2026-04-22:** Researched 7/7 sources. See `research/findings-2026-04-22.md` for details.
 
 - **2026-04-22:** Researched 7/7 sources. See `research/findings-2026-04-22.md` for details.
@@ -3576,3 +3692,28 @@ Every 15 minutes launchd fires aether.sh:
 - **2026-04-13:** Researched 6/6 sources. See `research/findings-2026-04-13.md` for details.
 
 <!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+
+
+---
+## SYSTEM MAINTENANCE — WHAT EVERY AGENT MUST KNOW (updated 2026-04-23)
+
+### Ticket system
+- PRIMARY store: `kai/tickets/tickets.db` (SQLite, FTS5 BM25 search)
+- Do NOT inject the full tickets.jsonl — it is a race-condition-prone duplicate-prone JSONL backup
+- To find relevant tickets: `HYO_ROOT=~/Documents/Projects/Hyo python3 bin/tickets-db.py search "your query"`
+- To create: `bash bin/ticket.sh create --agent <name> --title "..." --priority P1`
+- Notes are capped at 20 per ticket (structural cap in code) — do NOT write cycle timestamps as notes
+  Cycle logs go to `agents/<name>/ledger/log.jsonl`, NOT ticket notes
+- tickets.jsonl is deduplicated daily by `bin/daily-maintenance.sh` (race conditions from concurrent writes)
+
+### Maintenance schedule
+- Daily 01:30 MT: `bin/daily-maintenance.sh` — inbox trim (50 msgs), ticket dedup, log rotation
+- Saturday 02:00 MT: `bin/weekly-maintenance.sh` — archive resolved tickets, KAI_BRIEF/KAI_TASKS
+
+### Context cost awareness
+- Agents are responsible for not creating bloat. Before appending to ANY .jsonl file, ask:
+  "Will this line be read at session start? How many times per day does this run?"
+  If both answers are yes + >10x/day: write to log.jsonl only, NOT to inbox or ticket notes
+- Prompt caching is active in kai_analysis.py: stable blocks cost 90% less after first call
+- Session startup cost target: <89K tokens. Current maintenance keeps this achievable daily.
+

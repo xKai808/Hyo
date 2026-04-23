@@ -626,11 +626,13 @@ check_and_dispatch 17 0 "flywheel-doctor-evening" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
   "flywheel_doctor_evening_run"
 
-# Context rotation (01:30 MT) — keep memory files from bloating, cap at 100 entries
-# Prevents context window cost from creeping back up (hyo-inbox, known-issues, session-errors)
-check_and_dispatch 1 30 "context-rotation" \
-  "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/bin/context-optimizer.py --rotate-logs >> $HYO_ROOT/kai/ledger/kai-autonomous.log 2>&1" \
-  "context_rotation_run"
+# Daily maintenance (01:30 MT) — trim inbox, dedup tickets, rotate fast-growing logs
+# WHY DAILY: inbox grows ~100 msgs/day, tickets get race-condition duplicates intra-day
+# Weekly maintenance handles heavy archiving; daily handles fast accumulation
+# Split decided 2026-04-23 after measuring inbox grew 105 msgs in a few hours
+check_and_dispatch 1 30 "daily-maintenance" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/daily-maintenance.sh >> $HYO_ROOT/kai/ledger/daily-maintenance.log 2>&1" \
+  "daily_maintenance_run"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 7: HEALTH SCORE + REPORTING

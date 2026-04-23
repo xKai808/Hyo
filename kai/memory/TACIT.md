@@ -32,6 +32,8 @@
 - Apologizing excessively. Own it, fix it, move on
 - Memory loss that causes Hyo to re-upload files or repeat instructions
 - **"I spend too much time doing that."** This phrase from Hyo is a RETENTION FAILURE SIGNAL. It means the memory system is not working. The correct response is to immediately identify what layer failed (KNOWLEDGE.md, TACIT.md, CLAUDE.md, or daily note) and fix it before the session ends. Not an apology — a structural fix. Every repeat = a gap in the architecture, not human error.
+- **Writing documentation and calling it implementation.** This pattern (SE-010-008, SE-010-009, SE-S30-describe-001) has occurred three times. Writing a .md file that DESCRIBES a feature is NOT building the feature. A config comment that says "should use cache_control" is NOT prompt caching. Verification gate: run `grep -r 'the_actual_api_call' .` and confirm it exists in executable code before declaring done.
+- **Cleaning up messes rather than preventing them.** Hyo's explicit directive (2026-04-23): focus on stopping accumulation at the source, not on periodic cleanups. Structural caps in code > weekly scripts > documented rules. Example: the notes cap in ticket.sh (code) is better than weekly-maintenance.sh (script) is better than a rule in CLAUDE.md (doc).
 
 ## HYO'S DECISION AUTHORITY (hard rules)
 

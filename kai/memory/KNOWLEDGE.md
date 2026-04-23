@@ -780,11 +780,37 @@ NEXT IMPLEMENTATIONS (not yet built — prioritized):
 - hq.html JS syntax: nested backtick template literals → string concatenation
 - ant-update.sh NameError: moved total_anthropic definition before if _scraped: block
 
+**S30 COMPLETE (all three built and verified):**
+- kai_analysis.py: prompt caching (3 cached blocks) + compact-2026-01-12 beta — LIVE
+- bin/tickets-db.py: SQLite DB at kai/tickets/tickets.db — 61 tickets, BM25 search working
+- bin/daily-maintenance.sh: DAILY at 01:30 MT (inbox trim, ticket dedup, log rotation)
+- bin/weekly-maintenance.sh: WEEKLY Saturday 02:00 MT (heavy archiving)
+
+**MAINTENANCE ARCHITECTURE (2026-04-23 — know this):**
+Split into two tiers after measuring actual growth rates:
+- Daily (01:30 MT): inbox grew 105 msgs in a few hours → must trim daily not weekly
+  Script: bin/daily-maintenance.sh → deduplicates tickets.jsonl, trims inbox to 50, rotates logs
+- Weekly (Saturday 02:00 MT): KAI_BRIEF/KAI_TASKS archiving, resolved ticket archiving, full stats
+  Script: bin/weekly-maintenance.sh
+- Tickets also have a STRUCTURAL cap (MAX_NOTES=20) baked into ticket.sh line ~179
+  AND daily-maintenance.sh deduplicates any race-condition duplicates
+
+**TICKET SYSTEM (2026-04-23):**
+- PRIMARY: kai/tickets/tickets.db (SQLite, 61 tickets, FTS5 BM25 search)
+- BACKUP: kai/tickets/tickets.jsonl (6 active tickets, deduped daily)
+- Search: python3 bin/tickets-db.py search "query" → top-10 results (~2K tokens)
+- OLD WAY was 55MB JSONL = 14M tokens uninjectable. New way = 2K tokens for relevant tickets.
+- Gate: NEVER inject the full tickets.jsonl. Always use search_tickets() or tickets-db.py search.
+
+**DESCRIBE-NOT-BUILD ERROR (S30, third occurrence):**
+Compaction API, prompt caching, and SQLite migration were described in docs but not built.
+Hyo caught it. Pattern: SE-010-008, SE-010-009, SE-S30-describe-001.
+Gate question added: "Does the code file exist and does it run? YES → done. NO → not done."
+This is NOT a process fix. Process fixes have failed twice. The fix must be structural:
+every claimed implementation must have a verification step that reads the actual file.
+
 **Still pending (S30 → S31):**
-- Compaction API: needs Anthropic `compact-2026-01-12` beta header in Cowork API calls (infrastructure)
-- Prompt caching on CLAUDE.md + KAI_BRIEF + KNOWLEDGE + TACIT blocks (same)
-- tickets.jsonl → Git LFS (GitHub warning on 53MB, now 0.8MB but LFS still better)
-- Context rotation gate in ticket.sh (prevent notes accumulating again)
+- tickets.jsonl → full SQLite migration: ticket.sh still writes JSONL as primary; needs flip
 - Anthropic billing API for individual accounts: not available (no admin key option)
   → Best available: browser scrape + daily diff via ant-fetch-balance.py (one-time Keychain auth needed)
 
