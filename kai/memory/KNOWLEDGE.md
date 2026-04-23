@@ -600,3 +600,27 @@ NEXT STEP: One-time on Mini Terminal:
   security find-generic-password -s "Chrome Safe Storage" -a "Chrome" -w
   Click "Allow Always" in dialog → headless access works from then on.
   Then run: HYO_ROOT=~/Documents/Projects/Hyo python3 ~/Documents/Projects/Hyo/bin/ant-fetch-balance.py
+
+**Autonomy Gap Audit — 2026-04-22 (full doc: kai/research/raw/2026-04-22-autonomy-audit.md):**
+
+System health is RED (28/100). Zero new code shipped in 10 days. Only 4 improvements ever shipped (both in week 1). 14 improvements remain theater.
+
+THREE CODE BUGS blocking the flywheel:
+1. flock missing on macOS → state.json never saved atomically → aether cycles reset to 0 every run
+2. mktemp collision in /tmp → HQ feed publish silently skipped → Hyo never sees self-improve progress
+3. Empty research gate → fix_approach="" still advances to implement → garbage-in execution fails silently
+
+THREE STRUCTURAL GAPS:
+1. Kai deadlock: Kai's own weaknesses require modifying kai-autonomous.sh while it's running (impossible)
+2. Infrastructure blocking: Sam W2 (Vercel KV) needs provisioning; no async approval mechanism exists
+3. Cascade failure: Ra W1 shipped (disables broken sources) but W2/W3 not shipped (can't replace or score them) → newsletter at 0 for 3 days
+
+AETHER FROZEN BY DESIGN: execution engine explicitly disabled per PROTOCOL_AETHER_ISOLATION.
+KAI SELF-IMPROVEMENT IS MANUAL: every session to fix Kai costs $5-9 in API credits.
+
+BIGGEST MISSED OPPORTUNITIES:
+- No cross-agent learning (Nel's pattern not propagated to Sam/Ra)
+- No compounding (improvements don't build on each other — no dependency graph)
+- Memory consolidation misses all direct file edits (only reads daily-notes/)
+- AetherBot analysis findings never fed back into bot improvement automatically
+
