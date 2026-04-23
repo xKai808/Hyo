@@ -155,7 +155,19 @@ print(json.dumps({'ts': '$NOW_MT', 'from': 'kai-autonomous', 'priority': 'URGENT
 # Verifies all 12 hydration files are fresh. Logs stale files to session-errors.
 # Gate question: "Did hydration-check pass?" NO → log warning, continue (non-blocking)
 # ═══════════════════════════════════════════════════════════════════════════════
-log_section "PHASE 0: HYDRATION CHECK"
+log_section "PHASE 0: SESSION PREP + HYDRATION CHECK"
+
+# Run session prep first — computes verified state from all source files.
+# This is the structural fix for assumption-based claims: truth is pre-computed,
+# Kai reads it, no prompting required to get accurate answers.
+if [[ -f "$HYO_ROOT/bin/kai-session-prep.sh" ]]; then
+    HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/kai-session-prep.sh" >> "$LOG" 2>&1 && \
+        log "Session prep: PASS — verified-state.json written" || \
+        log "Session prep: WARN — some sections failed (see log)"
+else
+    log "Session prep: SKIP — kai-session-prep.sh not found"
+fi
+
 if [[ -f "$HYO_ROOT/bin/kai-hydration-check.sh" ]]; then
     if HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/kai-hydration-check.sh" >> "$LOG" 2>&1; then
         log "Hydration check: PASS — all files fresh"
