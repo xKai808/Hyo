@@ -97,11 +97,30 @@ save_state() {
   local agent="$1" state="$2"
   local state_file="$HYO_ROOT/agents/$agent/self-improve-state.json"
   local lock_file="${state_file}.lock"
-  # Atomic write with flock — prevents concurrent runner + kai-autonomous corruption
-  (
-    flock -x -w 10 200 || { log "WARN: could not acquire lock for $agent state — skipping write"; return 1; }
-    echo "$state" > "$state_file"
-  ) 200>"$lock_file"
+  # Atomic write — macOS-compatible locking via mkdir (works on both macOS and Linux)
+  # flock requires Linux; mkdir-based locking is POSIX portable and atomic on HFS+/APFS
+  local lock_acquired=0
+  for attempt in 1 2 3 4 5; do
+    if mkdir "$lock_file" 2>/dev/null; then
+      lock_acquired=1
+      break
+    fi
+    # Check if lock is stale (>30s old) and clean it up
+    if [[ -d "$lock_file" ]]; then
+      local lock_age
+      lock_age=$(python3 -c "import os,time; print(int(time.time()-os.path.getmtime('$lock_file')))" 2>/dev/null || echo 0)
+      if [[ $lock_age -gt 30 ]]; then
+        rmdir "$lock_file" 2>/dev/null || true
+      fi
+    fi
+    sleep 0.5
+  done
+  if [[ $lock_acquired -eq 0 ]]; then
+    log "WARN: could not acquire lock for $agent state — skipping write"
+    return 1
+  fi
+  echo "$state" > "$state_file"
+  rmdir "$lock_file" 2>/dev/null || true
 }
 
 # ─── Phase 1: Parse weaknesses + expansion opportunities from GROWTH.md ────────
@@ -693,12 +712,30 @@ else:
       # Run research
       research_weakness "$agent" "$current_weakness" "$weakness_title" "$evidence" > /dev/null
 
-      # ── EMPTY-RESEARCH GATE (P0 fix) ────────────────────────────────────────
-      # Old bug: empty research silently advanced state → implement → verify → "resolved"
-      # New rule: if research file was not written, keep stage at research, increment failure
+      # ── EMPTY-RESEARCH GATE (P0 fix + content validation) ──────────────────
+      # Bug 1: empty research silently advanced state → implement → verify → "resolved"
+      # Bug 2: research file could EXIST but have empty fix_approach/confidence fields
+      # New rule: file must exist AND contain non-empty FIX_APPROACH + CONFIDENCE=HIGH|MEDIUM
       local expected_research="$HYO_ROOT/agents/$agent/research/improvements/${current_weakness}-${TODAY}.md"
+      local gate_fail=0
+      local gate_reason=""
       if [[ ! -f "$expected_research" ]]; then
-        log "  GATE: Research file not written — Claude Code returned empty or failed"
+        gate_fail=1
+        gate_reason="research file not written"
+      else
+        local fix_approach_check confidence_check
+        fix_approach_check=$(grep "^FIX_APPROACH:" "$expected_research" | sed 's/FIX_APPROACH: //' | head -1)
+        confidence_check=$(grep "^CONFIDENCE:" "$expected_research" | sed 's/CONFIDENCE: //' | head -1)
+        if [[ -z "$fix_approach_check" ]]; then
+          gate_fail=1
+          gate_reason="FIX_APPROACH field is empty in research file"
+        elif [[ "$confidence_check" != "HIGH" && "$confidence_check" != "MEDIUM" ]]; then
+          gate_fail=1
+          gate_reason="CONFIDENCE='${confidence_check:-empty}' — need HIGH or MEDIUM"
+        fi
+      fi
+      if [[ $gate_fail -eq 1 ]]; then
+        log "  GATE: Research content invalid — $gate_reason"
         log "  → Keeping stage at 'research', incrementing failure ($((failure_count+1))/$MAX_RETRIES)"
         if [[ -f "$TICKET_SH" ]]; then
           HYO_ROOT="$HYO_ROOT" bash "$TICKET_SH" create \
@@ -887,7 +924,10 @@ PYEOF
   local publish_sh="$HYO_ROOT/bin/publish-to-feed.sh"
   if [[ -f "$publish_sh" ]]; then
     local sections_tmp
-    sections_tmp=$(mktemp /tmp/si-sections-XXXXXX.json)
+    # macOS mktemp: use -t flag (template prefix) not positional path
+    # Clean up any stale temp files from crashed previous runs first
+    rm -f /tmp/si-sections-*.json 2>/dev/null || true
+    sections_tmp=$(mktemp -t si-sections.XXXXXX) && mv "$sections_tmp" "${sections_tmp}.json" && sections_tmp="${sections_tmp}.json"
 
     # Build research note: what was researched today (from research file if exists)
     local research_note="No research file yet for this cycle."
@@ -963,7 +1003,8 @@ SECEOF
   # so the research findings appear in the Research tab with full detail.
   if [[ "$agent" == "kai" && -f "$publish_sh" ]]; then
     local research_drop_tmp
-    research_drop_tmp=$(mktemp /tmp/kai-research-drop-XXXXXX.json)
+    rm -f /tmp/kai-research-drop-*.json 2>/dev/null || true
+    research_drop_tmp=$(mktemp -t kai-research-drop.XXXXXX) && mv "$research_drop_tmp" "${research_drop_tmp}.json" && research_drop_tmp="${research_drop_tmp}.json"
 
     # Build rich research findings from the research file (if it exists)
     local rc_line="" fix_line="" impl_lines="" research_finding="" research_implications="" next_steps_json
