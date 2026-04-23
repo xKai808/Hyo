@@ -331,3 +331,14 @@ with open(handoff_path, 'w') as f:
     json.dump(handoff, f, indent=2)
 print(f"session-handoff.json auto-written: top_priority={top_priority[:60]}")
 PYEOF
+
+# ── CONTEXT SAFETY GUARD: tickets.jsonl size check ──────────────────────────
+# tickets.jsonl is 55MB+ (14M tokens). NEVER inject this file.
+# If any session reads this file wholesale, cost = thousands of dollars.
+TICKETS_FILE="$ROOT/kai/tickets/tickets.jsonl"
+if [[ -f "$TICKETS_FILE" ]]; then
+    TICKETS_SIZE=$(wc -c < "$TICKETS_FILE" 2>/dev/null || echo 0)
+    if [[ $TICKETS_SIZE -gt 5242880 ]]; then  # 5MB threshold
+        echo "[session-prep] SAFETY: tickets.jsonl is ${TICKETS_SIZE} bytes — use search_tickets(), NEVER read directly" >> "$LOG" 2>&1
+    fi
+fi
