@@ -88,28 +88,91 @@
     <div class="sub">2026-04-22 · morning brief</div>
   </header>
   <article>
-<h1>Ra — 2026-04-22</h1>
-<h2>Apple's Privacy Patch and the Fed's Steady Hand</h2>
-<p>Good morning! Today, we're diving into Apple's latest move to bolster privacy, a steady stance from the Federal Reserve, and a look at Bitcoin's recent performance. We'll also explore a new AI capability that's reshaping how we approach complex problems. Let's get started.</p>
-<h2>The Story · Apple's Privacy Patch</h2>
-<p>Apple has rolled out a crucial update that fixes a bug previously exploited by law enforcement to extract deleted chat messages from iPhones. This bug fix is a significant step in Apple's ongoing efforts to enhance user privacy, a core tenet of its brand identity. The bug allowed unauthorized access to messages that users believed were permanently deleted, raising concerns about privacy and data security.</p>
-<p>The fix comes amid a broader debate over the balance between user privacy and the needs of law enforcement. While privacy advocates hail the update as a win for user rights, law enforcement agencies argue that such measures hinder their ability to investigate crimes effectively. This tension between privacy and security is not new, but Apple's decisive action underscores the tech giant's commitment to safeguarding user data.</p>
-<p>The implications of this update are far-reaching. It could influence how other tech companies approach privacy and security, potentially setting a new standard in the industry. Moreover, it may reignite discussions around encryption and the extent to which tech companies should cooperate with law enforcement. As privacy becomes an increasingly critical issue, Apple's actions will likely be closely watched by both advocates and critics alike.</p>
-<h2>Also Moving · Macro and Crypto</h2>
-<p>In the macroeconomic realm, the Federal Reserve has decided to hold interest rates steady, signaling caution amid mixed economic signals. With inflation concerns still looming, the Fed's decision reflects a wait-and-see approach as it monitors upcoming CPI data. This stance suggests that while the economy shows signs of resilience, uncertainties remain, particularly in the labor market and consumer spending.</p>
-<p>Meanwhile, in the crypto world, Bitcoin has experienced modest gains, with its price rising by 1.96% to $78,282. This uptick comes as the broader crypto market shows signs of stability, despite ongoing regulatory uncertainties. The resilience of Bitcoin and other cryptocurrencies highlights their growing acceptance and integration into mainstream financial systems. However, regulatory developments in major markets could still pose challenges for the crypto landscape.</p>
-<h2>The Lab · What AI can newly do this week</h2>
-<p>A new AI capability, dubbed AI Scientist-v2, is making waves in the research community. Unlike traditional AI models that focus on token prediction, this agent searches over research moves, enabling it to tackle process-heavy problems where the right loop is more crucial than the right answer. This capability is particularly useful for debugging, workflow optimization, pricing, go-to-market strategies, and system integration.</p>
-<p>The potential applications of AI Scientist-v2 are vast. By focusing on the process rather than the outcome, it offers a novel approach to problem-solving that could revolutionize fields requiring complex reasoning and decision-making. This tool is filed under <code>kai/research/2026-04-22-ai-scientist-v2.md</code> for future reference.</p>
-<h2>Worth Sitting With</h2>
-<p>As we consider the implications of Apple's privacy update and the Fed's cautious approach, it's worth pondering the broader question: How do we balance the need for privacy with the demands of security? In a world where data is both a valuable asset and a potential liability, finding the right equilibrium is crucial. What role should tech companies play in this balancing act, and how can they ensure that their actions align with both user expectations and societal needs?</p>
-<h2>Kai's Desk · P.S.</h2>
-<ul>
-<li>Shipped the latest privacy update analysis for internal review.</li>
-<li>Preparing a deep dive on AI Scientist-v2 for next week's briefing.</li>
-<li>Need your thoughts on prioritizing upcoming macroeconomic reports for analysis.</li>
-</ul>
-<p>— Kai</p>
+<pre><code class="lang-yaml">---
+date: 2026-04-22
+kind: ra-daily
+edition: v2
+voice: kai.hyo
+entities:
+  - slug: apple
+    name: Apple
+    aliases: [Apple Inc., iPhone]
+    category: tech
+    take: &quot;Fixed a bug that allowed extraction of deleted messages from iPhones&quot;
+    data: &quot;Bug exploited by law enforcement to access deleted iMessages&quot;
+    hinge: &quot;Impact on privacy debates and future security updates&quot;
+    confidence: high
+  - slug: firefox
+    name: Firefox
+    aliases: [Mozilla, Tor]
+    category: tech
+    take: &quot;Identified a stable identifier linking Tor identities&quot;
+    data: &quot;Privacy vulnerability in Firefox&#x27;s IndexedDB&quot;
+    hinge: &quot;Mozilla&#x27;s response and patch timeline&quot;
+    confidence: medium
+  - slug: google
+    name: Google
+    aliases: [TPU, Google Cloud]
+    category: tech
+    take: &quot;Released eighth-generation TPUs for AI workloads&quot;
+    data: &quot;TPUs designed for the agentic era of AI&quot;
+    hinge: &quot;Adoption rate and performance benchmarks&quot;
+    confidence: medium-high
+topics:
+  - slug: tech-privacy
+    name: &quot;Tech &amp; Privacy&quot;
+    signal: &quot;Privacy vulnerabilities and security updates&quot;
+    take: &quot;Apple and Mozilla face scrutiny over privacy issues&quot;
+  - slug: ai-hardware
+    name: &quot;AI &amp; Hardware&quot;
+    signal: &quot;Advancements in AI processing power&quot;
+    take: &quot;Google&#x27;s new TPUs mark a shift in AI infrastructure&quot;
+lab_items:
+  - slug: ai-scientist-v2
+    name: &quot;AI Scientist-v2&quot;
+    what: &quot;Agent that searches over research moves, not tokens&quot;
+    why: &quot;Enables reasoning on process-heavy problems where the right loop matters more than the right answer&quot;
+    when: &quot;Debugging, workflow optimization, pricing, go-to-market, system integration&quot;
+    paper_url: &quot;https://arxiv.org/...&quot;
+---
+
+# Ra — 2026-04-22
+## Apple and Mozilla Face Privacy Challenges
+
+Good morning! Today, we&#x27;re diving into some significant developments in tech privacy and AI hardware. Apple has patched a bug that allowed law enforcement to extract deleted messages from iPhones, raising questions about privacy and security. Meanwhile, Mozilla&#x27;s Firefox has been found to have a vulnerability linking Tor identities, sparking concerns in the privacy community. On the AI front, Google has unveiled its eighth-generation TPUs, designed to power the next wave of AI applications. Let&#x27;s explore these stories and their implications.
+
+## The Story · Apple&#x27;s Privacy Patch
+
+Apple has recently addressed a critical bug in its iPhone software that allowed law enforcement agencies to extract deleted iMessages. This bug, which was reportedly used by police to access private communications, has been a significant concern for privacy advocates. The fix comes as part of Apple&#x27;s ongoing efforts to enhance user privacy and security, a core tenet of its brand identity.
+
+The bug exploited a flaw in the way iMessages were stored and deleted, allowing for recovery even after users had removed them from their devices. This revelation has reignited debates about the balance between privacy and law enforcement access, with Apple standing firm on its commitment to user privacy. The company&#x27;s swift action to patch this vulnerability underscores its proactive stance on security.
+
+This incident also highlights the broader challenges tech companies face in safeguarding user data while complying with legal requests. As privacy concerns continue to grow, Apple&#x27;s response will likely influence future discussions and policies around digital privacy and security.
+
+*This isn&#x27;t financial advice. It&#x27;s framing. You make the trade, you own the trade.*
+
+## Also Moving · Privacy and AI Hardware
+
+In a related privacy story, Mozilla&#x27;s Firefox browser has been found to contain a stable identifier that links Tor identities, posing a significant privacy risk. This vulnerability, discovered in Firefox&#x27;s IndexedDB implementation, could potentially expose users&#x27; browsing habits and identities. Mozilla is expected to address this issue promptly, but the discovery has already stirred concerns within the privacy community about the security of Tor users.
+
+On the hardware front, Google has announced the release of its eighth-generation TPUs, designed to meet the demands of the agentic era of AI. These new TPUs promise enhanced processing power and efficiency, catering to the growing needs of AI applications. As AI continues to evolve, hardware advancements like these are crucial in supporting more complex and resource-intensive tasks.
+
+## The Lab · What AI can newly do this week
+
+This week in AI, we&#x27;re spotlighting a novel agentic approach to scientific research. The AI Scientist-v2 is an agent that focuses on searching over research moves rather than individual tokens. This capability is particularly useful in scenarios where the process or workflow is more critical than the specific outcome. For instance, in debugging or optimizing workflows, having an agent that can reason about the sequence of actions rather than just the end result can be invaluable.
+
+This tool is filed under `kai/research/2026-04-22-ai-scientist-v2.md` for future reference.
+
+## Worth Sitting With
+
+As we navigate the ever-evolving landscape of technology and privacy, it&#x27;s worth considering the broader implications of these developments. How do we balance the need for privacy with the demands of security and law enforcement? And as AI hardware continues to advance, what ethical considerations should guide its deployment? These are questions that will shape the future of technology and our relationship with it. What are your thoughts on these challenges?
+
+## Kai&#x27;s Desk · P.S.
+- Shipped the latest privacy-focused updates for our internal tools.
+- In-flight: Exploring new AI capabilities for workflow optimization.
+- Need your input on the upcoming security webinar. Yes or no?
+
+— Kai</code></pre>
   </article>
   <footer class="sig">
     <span class="left"><span class="dot"></span><span class="label">System online</span></span>
