@@ -1,21 +1,21 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-22T21:35:57.391046-06:00",
+  "updatedAt": "2026-04-22T22:05:23.832509-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-22T21:35:57.391050-06:00",
+    "lastUpdated": "2026-04-22T22:05:23.832512-06:00",
     "staleAfterHours": 24,
-    "creditScrapedAt": "2026-04-18T23:13:41.287965-06:00",
-    "creditScrapeAgeH": 94.4,
+    "creditScrapedAt": "2026-04-22T22:05:14.990668-06:00",
+    "creditScrapeAgeH": 0.0,
     "creditScrapeStale": false,
     "note": "ant-data.json updates nightly 23:45 MT. Credits use scraped baseline + continuous api-usage.jsonl adjustment. Run 'kai ant-scrape' weekly or when credits change."
   },
   "credit_refresh_guide": {
     "how_to_refresh": "kai ant-scrape (browser automation via Cowork session)",
     "recommended_frequency": "weekly or after any credit purchase",
-    "last_scraped": "2026-04-18T23:13:41.287965-06:00",
-    "scrape_age_hours": 94.4,
+    "last_scraped": "2026-04-22T22:05:14.990668-06:00",
+    "scrape_age_hours": 0.0,
     "action_needed": false
   },
   "alerts": [],
@@ -103,34 +103,34 @@
   },
   "credits": {
     "anthropic": {
-      "remaining": 30.6715,
+      "remaining": 18.91,
       "total": 40.0,
-      "used_since_scrape": 0.1185,
+      "used_since_scrape": 0.0,
       "used_all_time": 0.2399,
       "used_mtd": 0.2399,
       "burn_per_day": 0.0343,
-      "depletion_date": "2028-10-03",
-      "days_until_depleted": 895,
+      "depletion_date": "2027-10-25",
+      "days_until_depleted": 552,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (scraped 94h ago, adjusted by api-usage.jsonl)",
-      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
-      "confidence": "estimated",
-      "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-18. Run 'kai ant-scrape' to reset baseline."
+      "source": "console.anthropic.com (scraped 0h ago, adjusted by api-usage.jsonl)",
+      "scraped_at": "2026-04-22T22:05:14.990668-06:00",
+      "confidence": "high",
+      "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22. Run 'kai ant-scrape' to reset baseline."
     },
     "openai": {
-      "remaining": 17.9421,
+      "remaining": 18.555,
       "total": 20.0,
-      "used_since_scrape": 0.6979,
+      "used_since_scrape": 0.085,
       "used_all_time": 1.3258,
       "used_mtd": 1.3258,
       "burn_per_day": 0.1894,
-      "depletion_date": "2026-07-25",
-      "days_until_depleted": 95,
+      "depletion_date": "2026-07-28",
+      "days_until_depleted": 98,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (scraped 94h ago, adjusted by api-usage.jsonl)",
-      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
-      "confidence": "estimated",
-      "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-18."
+      "source": "platform.openai.com (scraped 0h ago, adjusted by api-usage.jsonl)",
+      "scraped_at": "2026-04-22T22:05:14.990668-06:00",
+      "confidence": "high",
+      "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22."
     }
   },
   "models": [
