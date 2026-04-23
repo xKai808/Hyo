@@ -45,6 +45,14 @@ Commits queued: `s27c9-schedule-algorithms-commit.json` + `s27c9-tickets-commit.
 - **P2 `task-queue-size` — day 11 escalated** — 29 P0 tasks vs threshold 5. Real signal: KAI_TASKS P0 section is bloated. Already tracked — not duplicating.
 - **No new findings filed to KAI_TASKS** (all recurring, already present). Sentinel auto-pushed to HQ via `kai push sentinel` if dispatcher reachable.
 
+### From 2026-04-23T00:03Z (2026-04-22 18:03 MT) scheduled health check (8th consecutive — issues persist)
+- **Status: ISSUES** — 8 P1, 1 P2 findings. Queue healthy (pending=0, running=0, 1495 completed, 21 failed). All 6 ACTIVE.md fresh (<0.1h). Today's logs present for all agents (nel 25, sam 1, ra 3, aether 2, dex 3).
+- **P1 — sam-004 / sam-005 stale ~4d** — both delegated 2026-04-18T08:07:18Z (dashboard sync drift safeguard + auto-remediate). Exceeds 72h staleness threshold. Related to the unresolved flag-aether-002 / flag-aether-001 publish-pipeline root cause called out in prior check.
+- **P1 — flag-nel-001 unresolved** — FLAG 2026-04-22T20:42:51Z "1 broken links detected" has no corresponding RESOLVE entry in log.jsonl. Nel needs to close the loop on its own broken-link scan.
+- **P1 — 5 dead-loop carry-forwards** (nel/sam/ra/aether/dex) from 23:59Z healthcheck not yet verified RESOLVED; auto-remediation was dispatched but RESOLVE entries absent. Same log-hygiene gap as last cycle — remediation commands must emit RESOLVE on success.
+- **P2 — flag-aether-002 long-open since 2026-04-14** (9 days). Dashboard sync drift. Publish-pipeline fix still owed (sam-005).
+- **Recurring diagnostic gap:** scheduled task file still references `/sessions/sharp-gracious-franklin/...`; this run used `/sessions/quirky-amazing-hopper/...`. Task definition needs a session-agnostic path via `HYO_ROOT`.
+
 ### From 2026-04-22T20:05Z scheduled health check (7th consecutive — dead-loop pattern now diagnosed to root cause)
 - **NEW P1 (elevated from P2): aether publish-pipeline broken, not "detection"** — API `/dashboard` stuck at 2026-04-21T11:13:42-06:00 for ~24h. Local data is current. Every aether cycle (~78s) re-emits the mismatch FLAG → **90 duplicate P2 flags in the last 2h** (plus 100s more earlier today). This isn't a dead-loop in aether's logic; aether IS correctly detecting that publish failed. **Fix direction:** (a) find and repair the job that publishes `/dashboard` endpoint — likely a failed Vercel deploy, a stale data-sync cron, or a dual-path mismatch (website/ vs agents/sam/website/); (b) add coalesce rule to FLAG emitter so continuous mismatches produce ONE flag per window, not one per cycle.
 - **Earlier 4 P1 dead-loops (sam/ra/aether/dex, 17:58Z healthcheck)** — no re-flag in the last 2h, but no explicit RESOLVE entry either. Either auto-remediation cleared them or they were superseded by the P2 aether spam. Close the loop: require remediation commands to emit RESOLVE on success so the distinction is unambiguous.
@@ -804,7 +812,27 @@ Full details: `kai/queue/healthcheck-latest.json`. **Most important single item:
 
 ---
 
-## Current state (as of 2026-04-22T20:03Z / 14:03 MT — automated 2h healthcheck)
+## Current state (as of 2026-04-22T22:02Z / 16:02 MT — automated 2h healthcheck)
+
+**Healthcheck findings (auto-probe):**
+- **P1 — flag-nel-001 (1 broken link) unclosed since 20:42:51Z.** Auto-remediation was dispatched by the 21:59Z cycle but no RESOLVE entry yet. 5th healthcheck in a row where nel's broken-link class of issue lingers without confirmed heal. **Action:** verify next interactive session whether the link actually got fixed or the remediator is looping.
+- **P1 — Aether dashboard-sync STILL looping (5th consecutive healthcheck).** Since the 21:59Z check (3 min window), aether has emitted `flag-aether-001 dashboard data mismatch` 9 times and reported `cycle complete … dashboard: out-of-sync` 5 times. Local/API drift ~73s. The [GUIDANCE] question dispatched at 21:59:18Z has NOT broken the loop. Per protocol: stop asking, ship the fix. **Action:** delegate to Sam to repair the local → API publish path for aether-analysis. This recommendation is now 5 cycles old.
+- **P1 — Dead-loop guidance just sent (21:59:17-18Z) to all 5 agents (nel/sam/ra/aether/dex).** Awaiting next-cycle evidence that guidance broke the loop. If aether re-enters dead-loop at next HC, escalate from question to engineering ticket.
+- **P2 — Queue artifact cleanup:** 1 empty (0-byte) failed job at `failed/4ae87c70-…json` from 06:24. Safe to archive.
+- **P2 — kai/logs/ empty for today.** kai-daily-2026-04-22 not yet produced (due 23:30 MT). Not overdue; monitor at 07:00 MT completeness check.
+
+**Queue & agents:**
+- Queue healthy: 0 pending, 0 running. Last 3 completed exit_code=0 (queue-hygiene, newsletter, queue-hygiene).
+- All 6 ACTIVE.md files <1h old — no staleness.
+- Today's logs: nel(23), sam(1), ra(3), aether(2), dex(3), kai(0).
+
+**Most important single item:** Aether dashboard-sync publish path is the hard problem blocking progress — 5 consecutive healthchecks have recommended delegating a fix to Sam. Guidance is being ignored. Next interactive session MUST delegate the engineering fix instead of another [GUIDANCE] question.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## Current state (as of 2026-04-22T20:03Z / 14:03 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (auto-probe):**
 - **P1 — Aether dead-loop now at cycle 4+ WITHOUT escalation.** Guidance dispatched again at 19:59:01Z (4 min before this check). Aether continues cycling "dashboard: out-of-sync" — same bottleneck flagged in 20:04Z (yesterday session-cont.), 18:03Z, and 16:04Z healthchecks. Per KAI GUIDANCE PROTOCOL: after 3 same-question cycles, stop asking and ship the fix. **Action for next interactive session:** delegate to Sam to repair the local-data → API publish path for aether-analysis. This is now the 4th consecutive healthcheck repeating this recommendation.

@@ -371,57 +371,102 @@ def run_analysis():
     )
     claude_messages = [{"role": "user", "content": log_payload}]
 
-    GPT_FALLBACK_MODE = False
-    try:
-        claude_analysis = call_claude(claude_messages)
-        print(f"Claude: {len(claude_analysis):,} chars")
-    except ClaudeQuotaExceeded as _qe:
-        print(f"[fallback] Anthropic quota exceeded — switching to GPT-4o for all steps.")
-        print(f"[fallback] Quota resets: check KNOWLEDGE.md or Anthropic console for date.")
-        send_telegram("Kai: Anthropic API quota exceeded — using GPT-4o fallback for full analysis.")
-        GPT_FALLBACK_MODE = True
-        # GPT-4o primary analysis using Claude system prompt as context
-        claude_analysis = call_gpt(
-            f"[GPT-4o FALLBACK — Claude API at quota]\n\n"
-            f"System context: {CLAUDE_SYSTEM[:2000]}\n\n"
+    # STEP 2 REDESIGN: GPT-first approach — no Anthropic API calls.
+    # Gate question: "Does GPT_Independent_DATE.txt already exist from gpt_factcheck.py?"
+    # YES → load it (0 API calls for primary analysis, massive token savings)
+    # NO  → call GPT-4o directly (never call Claude — Anthropic quota was burning daily budget)
+    #
+    # Rationale (Issue 1, Session 28):
+    # - gpt_factcheck.py runs every 30 minutes and generates GPT_Independent_DATE.txt
+    # - kai_analysis.py was calling Claude AGAIN for the same log it already analyzed
+    # - This burned Anthropic credits needlessly + failed when quota was hit
+    # - Solution: reuse the existing GPT Phase 1 output as the primary analysis
+    # - Only call GPT-4o for the final synthesis (1 call total, not 2-3)
+    # Updated: 2026-04-22 (SE-028-API-001 prevention)
+
+    _out_date = os.environ.get("AETHER_LOG_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")
+    gpt_independent_path = os.path.join(
+        HYO_ROOT, "agents/aether/analysis", f"GPT_Independent_{_out_date}.txt"
+    )
+
+    # Try to load pre-generated GPT Phase 1 (gpt_factcheck.py output)
+    primary_analysis = ""
+    phase1_source = "none"
+    if os.path.exists(gpt_independent_path):
+        try:
+            with open(gpt_independent_path, "r") as f:
+                phase1_content = f.read().strip()
+            if len(phase1_content) > 500:
+                primary_analysis = phase1_content
+                phase1_source = f"pre-generated (GPT_Independent_{_out_date}.txt)"
+                print(f"[phase1] Loaded pre-generated GPT Phase 1: {len(primary_analysis):,} chars")
+        except Exception as e:
+            print(f"[phase1] Failed to load pre-generated file: {e!r}")
+
+    if not primary_analysis:
+        # Phase 1 not yet generated — run GPT-4o directly (no Claude call)
+        print("\nStep 2: No pre-generated Phase 1 — calling GPT-4o for primary analysis...")
+        send_telegram("Kai: GPT-4o analyzing (no pre-generated Phase 1 found)...")
+        primary_analysis = call_gpt(
+            f"[PRIMARY ANALYSIS — GPT-4o]\n\n"
+            f"System context (PROTOCOL_DAILY_ANALYSIS.md):\n{CLAUDE_SYSTEM[:3000]}\n\n"
             f"{log_payload}"
         )
-        print(f"GPT-fallback primary: {len(claude_analysis):,} chars")
+        phase1_source = "new GPT-4o call"
+        print(f"GPT primary: {len(primary_analysis):,} chars")
+    else:
+        print(f"\nStep 2: Using pre-generated GPT Phase 1 ({len(primary_analysis):,} chars) — 0 API calls")
+        send_telegram("Kai: Using pre-generated GPT Phase 1 for analysis...")
 
-    # STEP 3: GPT fact-check / critique
-    print("\nStep 3: Sending to GPT...")
-    send_telegram("Kai: GPT fact-checking...")
+    # Label for the final document
+    claude_analysis = primary_analysis  # renamed for backward compat with save step
 
-    gpt_critique = call_gpt(
-        f"Review this analysis for errors and simulation gaps:\n\n{claude_analysis}"
+    # STEP 3: GPT cross-check / critique (always runs — this is the adversarial layer)
+    print("\nStep 3: GPT cross-check...")
+    send_telegram("Kai: GPT adversarial cross-check running...")
+
+    # Check for pre-generated GPT Review too
+    gpt_review_path = os.path.join(
+        HYO_ROOT, "agents/aether/analysis", f"GPT_Review_{_out_date}.txt"
     )
-    print(f"GPT: {len(gpt_critique):,} chars")
+    gpt_critique = ""
+    if os.path.exists(gpt_review_path):
+        try:
+            with open(gpt_review_path, "r") as f:
+                gpt_critique = f.read().strip()
+            if len(gpt_critique) > 300:
+                print(f"[phase2] Loaded pre-generated GPT Review: {len(gpt_critique):,} chars")
+        except Exception:
+            gpt_critique = ""
 
-    # STEP 4: Final synthesis (Claude if available, GPT if quota exceeded)
+    if not gpt_critique:
+        gpt_critique = call_gpt(
+            f"Cross-check this AetherBot daily analysis. Find what the primary analyst missed.\n"
+            f"Apply the 8-dimension adversarial framework (strategy drift, risk concentration, "
+            f"entry quality, harvest efficiency, timing regression, issue progress, simulation gaps, "
+            f"tomorrow's failure mode).\n\n{primary_analysis}"
+        )
+        print(f"GPT cross-check: {len(gpt_critique):,} chars")
+
+    # STEP 4: Final synthesis (1 GPT call — the only mandatory new API call)
     print("\nStep 4: Final synthesis...")
     send_telegram("Kai: Synthesizing final recommendation...")
 
-    if GPT_FALLBACK_MODE:
-        final_synthesis = call_gpt(
-            f"[FINAL SYNTHESIS — GPT-4o fallback]\n\n"
-            f"Primary analysis:\n{claude_analysis}\n\n"
-            f"GPT critique:\n{gpt_critique}\n\n"
-            f"VERDICT: Provide ONE final recommendation: build {NEXT_VERSION} with exact specs, "
-            f"or collect more data. Include: VERDICT, DAY GRADE, CORRECTIONS APPLIED."
-        )
-        print(f"GPT synthesis: {len(final_synthesis):,} chars")
-    else:
-        claude_messages.append({"role": "assistant", "content": claude_analysis})
-        claude_messages.append({
-            "role": "user",
-            "content": (
-                f"GPT critique:\n\n{gpt_critique}\n\n"
-                f"Synthesize. ONE final recommendation: "
-                f"build {NEXT_VERSION} with exact specs, or collect more data."
-            )
-        })
-        final_synthesis = call_claude(claude_messages)
-        print(f"Synthesis: {len(final_synthesis):,} chars")
+    final_synthesis = call_gpt(
+        f"[FINAL SYNTHESIS — AetherBot Daily Analysis {_out_date}]\n\n"
+        f"Primary analysis (Phase 1):\n{primary_analysis[:4000]}\n\n"
+        f"Adversarial cross-check (Phase 2):\n{gpt_critique[:2000]}\n\n"
+        f"Synthesize into a concise daily summary for Hyo. Include:\n"
+        f"- PRIMARY FINDINGS: balance, trade count, win/loss by family\n"
+        f"- RISK EXPOSURE ASSESSMENT: key risks, what to monitor\n"
+        f"- STRATEGY WATCH: each family verdict (HOLD/WATCH/ACT)\n"
+        f"- VERDICT: one-line day grade\n"
+        f"- RECOMMENDATION: next build decision or monitoring directive\n"
+        f"- BALANCE LEDGER: markdown table (Date | Opening | Closing | Net)\n\n"
+        f"Phase 1 source: {phase1_source}\n"
+        f"Build {NEXT_VERSION} threshold: if data supports a clear improvement."
+    )
+    print(f"Final synthesis: {len(final_synthesis):,} chars")
 
     # STEP 5: Surface to Hyo
     print("\nStep 5: Sending to Telegram...")
@@ -437,10 +482,13 @@ def run_analysis():
     # Save outputs
     output_dir = os.path.expanduser("~/Documents/Projects/AetherBot/Kai analysis")
     os.makedirs(output_dir, exist_ok=True)
-    _out_date = os.environ.get("AETHER_LOG_DATE") or datetime.datetime.now().strftime("%Y-%m-%d")
+    # _out_date already set above during Phase 1 check — reuse it
     output_path = os.path.join(output_dir, f"Analysis_{_out_date}.txt")
     with open(output_path, "w") as f:
-        f.write(f"=== CLAUDE PRIMARY ANALYSIS ===\n{claude_analysis}\n\n")
+        f.write(f"=== CLAUDE PRIMARY ANALYSIS ===\n")
+        f.write(f"[NOTE: GPT-first pipeline — Phase 1 source: {phase1_source}]\n")
+        f.write(f"[Anthropic API not used — zero Anthropic credits consumed]\n\n")
+        f.write(f"{claude_analysis}\n\n")
         f.write(f"=== GPT CRITIQUE ===\n{gpt_critique}\n\n")
         f.write(f"=== FINAL SYNTHESIS ===\n{final_synthesis}\n")
 

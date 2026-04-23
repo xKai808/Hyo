@@ -98,7 +98,38 @@ def first_para(t, limit=600):
     return t[:limit].strip()
 
 summary_src = final or primary
-summary = first_para(summary_src, 800)
+
+def clean_machine_headers(t):
+    """Remove GPT pipeline machine headers (=====, Generated:, Tokens:, NOTE: independence).
+    Keeps the substantive analytical content. Human-readable result."""
+    lines = t.split('\n')
+    cleaned = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+        # Skip separator lines (=====, ------)
+        if re.match(r'^[=\-]{10,}$', stripped):
+            i += 1
+            continue
+        # Skip machine header lines at top of GPT sections
+        if re.match(r'^(GPT-4o PHASE \d+|Generated:|Source:|Tokens:|Independence gate:|Kai analysis:|NOTE: This file was generated)', stripped):
+            i += 1
+            continue
+        cleaned.append(line)
+        i += 1
+    return '\n'.join(cleaned).strip()
+
+def first_meaningful_para(t, limit=900):
+    """Extract first meaningful paragraph, skipping machine headers."""
+    t = clean_machine_headers(t)
+    for p in re.split(r"\n\s*\n", t.strip()):
+        p = p.strip()
+        if len(p) > 60 and not p.startswith("===") and not p.startswith("---"):
+            return p[:limit]
+    return t[:limit].strip()
+
+summary = first_meaningful_para(summary_src, 900)
 
 # Simple section extractors — scan known keywords in text
 def grab_line(patterns, t, max_len=600):
@@ -113,14 +144,14 @@ def grab_line(patterns, t, max_len=600):
             return t[start:end].strip()[:max_len]
     return ""
 
-def grab_section(patterns, t, max_len=1200):
-    """Like grab_line but captures multi-paragraph content: match to next === header."""
+def grab_section(patterns, t, max_len=1500):
+    """Like grab_line but captures multi-paragraph content: match to next === or PART header."""
     for pat in patterns:
         m = re.search(pat, t, re.IGNORECASE)
         if m:
             start = m.start()
-            # find next section boundary (=== header or PART N: heading)
-            end_m = re.search(r'\n={4,}|\nPART \d+:', t[start+len(m.group()):])
+            # find next section boundary (=== header or PART N: heading or CRITICAL RULES)
+            end_m = re.search(r'\n={4,}|\nPART \d+[:\s]|\nCRITICAL RULES', t[start+len(m.group()):])
             if end_m:
                 end = start + len(m.group()) + end_m.start()
             else:
@@ -128,10 +159,41 @@ def grab_section(patterns, t, max_len=1200):
             return t[start:end].strip()[:max_len]
     return ""
 
-trades  = grab_section([r"PART 3:.*STRATEGY FAMILY", r"STRATEGY FAMILY PERFORMANCE"], text)
-risk    = grab_line([r"risk\b", r"phantom", r"harvest miss", r"stop(?:/harvest)? event"], text)
-balance = grab_line([r"balance\b", r"net p&?l", r"end balance", r"start(ing)?\s*balance"], text)
+# Trades: look for both PART 2 (trade-by-trade ledger) AND PART 3 (strategy family performance)
+# PART 2 is the per-trade log; PART 3 is the aggregated view — prefer whichever has more content
+trades_p2 = grab_section([r"\*?\*?PART 2[:\s]+TRADE.BY.TRADE", r"TRADE.BY.TRADE LEDGER"], text)
+trades_p3 = grab_section([r"\*?\*?PART 3[:\s]+(?:SESSION|STRATEGY)", r"STRATEGY FAMILY PERFORMANCE"], text)
+# Pick the richer of the two; combine if both exist
+if trades_p2 and trades_p3:
+    trades = trades_p2[:800] + "\n\n" + trades_p3[:700]
+else:
+    trades = trades_p2 or trades_p3
+
+# Risk: prefer FINAL SYNTHESIS risk section, fall back to primary text
+risk_in_final = grab_section([r"RISK EXPOSURE", r"RISK ASSESSMENT"], final) if final else ""
+risk = risk_in_final or grab_line([r"risk\b", r"phantom", r"harvest miss", r"stop(?:/harvest)? event"], text)
+
+# Balance: prefer BALANCE LEDGER table at the end (FINAL SYNTHESIS), not the first raw mention
+# Look for the balance table (markdown table or key-value format) in FINAL SYNTHESIS first
+balance_in_final = ""
+if final:
+    # Try to grab the full balance ledger section from FINAL SYNTHESIS
+    balance_in_final = grab_section([r"BALANCE LEDGER", r"BALANCE:"], final)
+if not balance_in_final:
+    # Fall back to any balance line in text — prefer lines with actual $ numbers
+    bal_lines = []
+    for line in text.split('\n'):
+        if re.search(r'(opening|closing|first|last|day net|net change|start|end).*\$[\d.,]+', line, re.IGNORECASE):
+            bal_lines.append(line.strip())
+    balance = '\n'.join(bal_lines[:6]) if bal_lines else ""
+else:
+    balance = balance_in_final
+
 btc     = grab_line([r"\bbtc\b", r"bitcoin"], text)
+
+# Strategy verdict / recommendation (for the Risk section if it's empty)
+if not risk:
+    risk = grab_section([r"STRATEGY WATCH", r"VERDICT", r"RECOMMENDATION"], final or text)
 
 # Derive title suffix from balance — use LAST match (most recent day for multi-day analyses).
 # BUG FIX (SE-AETHER-001): re.search returns FIRST match. For 2-day analyses this picks Day 1's
@@ -182,13 +244,31 @@ if version_refs:
 else:
     print(f"[publish] VERSION NOTICE: No vNNN version references found in analysis.", file=sys.stderr)
 
-# Read GPT phase files — only include if real content (not PENDING stubs)
+# Read GPT phase files — clean machine headers, keep substantive content
 def load_gpt(path, min_chars=200):
+    """Load GPT file, strip machine headers (====, Generated:, Tokens:, NOTE:), return clean content."""
     try:
         with open(path, "r", errors="replace") as f:
-            content = f.read().strip()
-        if len(content) >= min_chars and not content.startswith("PENDING"):
-            return content
+            raw = f.read().strip()
+        if len(raw) < min_chars or raw.startswith("PENDING"):
+            return ""
+        # Strip machine header block: everything before first real content line
+        lines = raw.split('\n')
+        cleaned = []
+        header_done = False
+        for line in lines:
+            stripped = line.strip()
+            if not header_done:
+                # Skip separator lines and machine headers at top
+                if re.match(r'^[=\-]{10,}$', stripped):
+                    continue
+                if re.match(r'^(GPT-4o PHASE \d+|Generated:|Source:|Tokens:|Independence gate:|Kai analysis:|NOTE: This file)', stripped):
+                    continue
+                # First real content line — header is done
+                if stripped and not re.match(r'^[=\-]{10,}$', stripped):
+                    header_done = True
+            cleaned.append(line)
+        return '\n'.join(cleaned).strip()
     except Exception:
         pass
     return ""
@@ -200,21 +280,23 @@ gpt_review = load_gpt(os.path.join(analysis_dir, f"GPT_Review_{date}.txt"))
 if not gpt_review:
     gpt_review = load_gpt(os.path.join(analysis_dir, f"GPT_CrossCheck_{date}.txt"))
 
-# readLink: use static rich page if it exists, fall back to dynamic page
-static_html = os.path.join(os.path.dirname(feed_git), "..", "daily", f"aether-{date}.html")
-static_html = os.path.normpath(static_html)
-read_link = f"/daily/aether-{date}" if os.path.exists(static_html) else f"/aether-analysis?date={date}"
+# NO readLink — all content is rendered inline. Hyo should not have to navigate to another page.
+# The aether-analysis.html page exists for historical lookups but is not the primary viewer.
+# Gate question: "Did I set readLink to empty?" YES → good. NO → fix it.
 
 sections = {
     "summary": summary or "(no summary extracted)",
-    "trades":  trades  or "See full analysis for trade-by-trade breakdown.",
-    "risk":    risk    or "See full analysis for risk events.",
-    "balance": balance or "See full analysis for balance ledger update.",
-    "btc":     btc     or "See full analysis for BTC context.",
+    "trades":  trades  or "(trade data not extracted — check Analysis file for PART 2)",
+    "risk":    risk    or "(risk section not extracted)",
+    "balance": balance or "(balance data not extracted)",
 }
+if btc:
+    sections["btc"] = btc
 if gpt_independent:
+    # gptIndependent: the 8-dimension independent review (human-readable, machine headers stripped)
     sections["gptIndependent"] = gpt_independent
 if gpt_review:
+    # gptReview: the cross-check verdict (human-readable)
     sections["gptReview"] = gpt_review
 
 new_entry = {
@@ -226,7 +308,8 @@ new_entry = {
     "authorColor": "#e8c96a",
     "timestamp": now_mt,
     "date": date,
-    "readLink": read_link,
+    # readLink intentionally omitted — all content renders inline on HQ.
+    # Hyo should not need to navigate to a separate page to read the analysis.
     "sections": sections,
 }
 

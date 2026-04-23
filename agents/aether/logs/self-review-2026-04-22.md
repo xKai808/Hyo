@@ -1,7 +1,7 @@
-# aether Self-Review — 2026-04-22T14:41
+# aether Self-Review — 2026-04-22T19:18
 
 ## Gate 1: Trigger Validation
-- ✓ 5 files checked, all have triggers.
+- ✓ 12 files checked, all have triggers.
 
 ## Gate 2: Visibility Check
 Questions for aether to answer:
@@ -56,5 +56,5 @@ Questions for aether to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 13
-- Gate results: trigger=5/5, visibility=checked, resolutions=6, adoption=-5/5
+- Gate results: trigger=12/12, visibility=checked, resolutions=6, adoption=-5/5
 

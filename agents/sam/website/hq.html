@@ -1630,6 +1630,14 @@ function renderReport(report) {
   `;
 }
 
+function renderScoreBar(score, maxScore) {
+  const pct = Math.min(100, Math.round((score / maxScore) * 100));
+  const color = score >= 70 ? 'var(--accent)' : score >= 50 ? '#e8c96a' : '#f55066';
+  return `<div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;width:100%;overflow:hidden;margin-top:4px;">
+    <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width 0.5s;"></div>
+  </div>`;
+}
+
 function renderMorningReport(s) {
   let html = '';
   if (s.summary) {
@@ -1640,6 +1648,37 @@ function renderMorningReport(s) {
   }
   if (s.needsAttention?.length) {
     html += sec('Needs Attention', `<ul>${s.needsAttention.map(w => `<li class="warn">${w}</li>`).join('')}</ul>`);
+  }
+  // Agent scores — SICQ + OMP displayed as score cards
+  if (s.sicqScores || s.ompScores) {
+    const agents = Object.keys(s.sicqScores || s.ompScores || {});
+    let scoreHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:6px 0;">`;
+    for (const agent of agents) {
+      const agentData = FEED_DATA?.agents?.[agent];
+      const icon = agentData?.icon || '🤖';
+      const name = agentData?.name || agent.charAt(0).toUpperCase() + agent.slice(1);
+      const sicq = s.sicqScores?.[agent];
+      const omp = s.ompScores?.[agent];
+      scoreHtml += `<div style="background:var(--bg-tertiary,var(--bg-secondary));border-radius:8px;padding:10px 12px;border:1px solid rgba(255,255,255,0.06);">
+        <div style="font-size:0.78em;font-weight:600;color:var(--text-muted);margin-bottom:6px;">${icon} ${name}</div>`;
+      if (sicq) {
+        const sicqColor = sicq.score >= 70 ? 'var(--accent)' : sicq.score >= 50 ? '#e8c96a' : '#f55066';
+        scoreHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+          <span style="font-size:0.72em;color:var(--text-muted);">SICQ</span>
+          <span style="font-size:0.82em;font-weight:700;color:${sicqColor};">${sicq.score}</span>
+        </div>${renderScoreBar(sicq.score, 100)}`;
+      }
+      if (omp) {
+        const ompColor = omp.score >= 70 ? 'var(--accent)' : omp.score >= 50 ? '#e8c96a' : '#f55066';
+        scoreHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;margin-top:6px;">
+          <span style="font-size:0.72em;color:var(--text-muted);">OMP</span>
+          <span style="font-size:0.82em;font-weight:700;color:${ompColor};">${omp.score}</span>
+        </div>${renderScoreBar(omp.score, 100)}`;
+      }
+      scoreHtml += `</div>`;
+    }
+    scoreHtml += `</div><div style="font-size:0.72em;color:var(--text-muted);margin-top:6px;">SICQ = system quality (0–100) · OMP = outcome profile (0–100) · updated daily by flywheel</div>`;
+    html += sec('Agent Scores', scoreHtml);
   }
   if (s.agentHighlights) {
     let ah = '';
@@ -1779,31 +1818,79 @@ function renderPodcast(s, report) {
   return html;
 }
 
+function mdToHtml(text) {
+  // Convert markdown-ish text to safe HTML for display in report sections.
+  // Handles: **bold**, bullet lists (- item), newlines, tables (| row |)
+  if (!text) return '';
+  // Escape HTML
+  let s = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // Bold
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Process line by line
+  const lines = s.split('\n');
+  let out = '';
+  let inUl = false;
+  let inTable = false;
+  for (let i = 0; i < lines.length; i++) {
+    const t = lines[i].trim();
+    if (!t) {
+      if (inUl) { out += '</ul>'; inUl = false; }
+      if (inTable) { out += '</table>'; inTable = false; }
+      continue;
+    }
+    // Markdown table row: | a | b | c |
+    if (t.startsWith('|') && t.endsWith('|')) {
+      if (!inTable) { out += '<table style="border-collapse:collapse;width:100%;font-size:13px;margin:8px 0;">'; inTable = true; }
+      // Skip separator row (|---|---|)
+      if (/^\|[\s\-|]+\|$/.test(t)) continue;
+      const cells = t.slice(1, -1).split('|').map(c => `<td style="padding:4px 8px;border:1px solid var(--border-color,rgba(255,255,255,0.1));">${c.trim()}</td>`).join('');
+      out += `<tr>${cells}</tr>`;
+      continue;
+    }
+    if (inTable) { out += '</table>'; inTable = false; }
+    // Bullet list
+    if (t.startsWith('- ') || t.startsWith('* ')) {
+      if (!inUl) { out += '<ul style="padding-left:18px;margin:6px 0;">'; inUl = true; }
+      out += `<li style="margin-bottom:4px;">${t.slice(2)}</li>`;
+      continue;
+    }
+    if (inUl) { out += '</ul>'; inUl = false; }
+    // Numbered list
+    const num = t.match(/^(\d+)\.\s+(.+)/);
+    if (num) { out += `<p style="margin:4px 0;"><strong>${num[1]}.</strong> ${num[2]}</p>`; continue; }
+    // Regular paragraph
+    out += `<p style="margin:4px 0;">${t}</p>`;
+  }
+  if (inUl) out += '</ul>';
+  if (inTable) out += '</table>';
+  return out;
+}
+
 function renderAetherAnalysis(s, report) {
   let html = '';
   if (s.summary) {
-    html += sec('Summary', `<p>${s.summary}</p>`);
+    html += sec('Summary', `<div style="line-height:1.6;">${mdToHtml(s.summary)}</div>`);
   }
   if (s.balance) {
-    html += `<div style="background:var(--bg-tertiary);border-radius:8px;padding:12px 16px;margin:8px 0 12px;font-family:var(--font-mono,'JetBrains Mono',monospace);font-size:13px;color:var(--text-primary);">${s.balance}</div>`;
+    html += sec('Balance', `<div style="line-height:1.6;">${mdToHtml(s.balance)}</div>`);
   }
   if (s.trades) {
-    html += sec('Trades', `<p>${s.trades}</p>`);
+    html += sec('Trades', `<div style="line-height:1.6;">${mdToHtml(s.trades)}</div>`);
   }
   if (s.risk) {
-    html += sec('Risk & Anomalies', `<p>${s.risk}</p>`);
+    html += sec('Risk & Strategy Watch', `<div style="line-height:1.6;">${mdToHtml(s.risk)}</div>`);
   }
   if (s.btc) {
-    html += sec('BTC Context', `<p>${s.btc}</p>`);
+    html += sec('BTC Context', `<div style="line-height:1.6;">${mdToHtml(s.btc)}</div>`);
   }
-  const readLink = s.readLink || report.readLink || '';
-  if (readLink) {
-    html += `<div style="padding:12px 0 4px;">
-      <a href="${readLink}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:600;text-decoration:none;font-size:0.95em;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-        View full analysis with trade tables <span style="font-size:1.1em;">\u2192</span>
-      </a>
-    </div>`;
+  // GPT cross-check rendered inline — no need to click to another page
+  if (s.gptIndependent) {
+    html += sec('GPT Independent Review', `<div style="line-height:1.6;color:var(--text-secondary);">${mdToHtml(s.gptIndependent)}</div>`);
   }
+  if (s.gptReview) {
+    html += sec('GPT Cross-Check', `<div style="line-height:1.6;color:var(--text-secondary);">${mdToHtml(s.gptReview)}</div>`);
+  }
+  // readLink removed — all content is inline. Hyo should not need to navigate out.
   return html;
 }
 

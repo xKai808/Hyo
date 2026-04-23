@@ -1,8 +1,8 @@
 {
   "status": "active",
-  "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-21T05:30:15.264060-06:00",
-  "dataSource": "api-usage.jsonl + aether-metrics.json",
+  "note": "Costs from api-usage.jsonl. Credits from scraped billing console data (2026-04-18 scrape).",
+  "updatedAt": "2026-04-22T19:17:19.770305-06:00",
+  "dataSource": "api-usage.jsonl + scraped-credits.json + aether-metrics.json",
   "staleness": {
     "lastUpdated": "2026-04-21T05:30:15.264062-06:00",
     "staleAfterHours": 24,
@@ -94,23 +94,25 @@
   "credits": {
     "anthropic": {
       "monthly_budget": 40.0,
-      "used_mtd": 0.2399,
-      "remaining": 39.7601,
+      "used_mtd": 9.21,
+      "remaining": 30.79,
       "total": 40.0,
-      "used": 0.2399,
-      "source": "api-usage.jsonl MTD (budget-based fallback)",
-      "note": "No recent scrape. Run 'kai ant-scrape' to get real balance. Fallback for 2026-04.",
-      "expires": null
+      "used": 9.21,
+      "source": "scraped \u2014 console.anthropic.com (2026-04-18)",
+      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
+      "expires": "2027-04-09",
+      "note": "Real balance from billing console scrape. Run kai ant-scrape to refresh."
     },
     "openai": {
       "monthly_budget": 20.0,
-      "used_mtd": 1.2408,
-      "remaining": 18.7592,
+      "used_mtd": 1.36,
+      "remaining": 18.64,
       "total": 20.0,
-      "used": 1.2408,
-      "source": "api-usage.jsonl MTD (budget-based fallback)",
-      "note": "No recent scrape. Run 'kai ant-scrape' from Cowork.",
-      "expires": null
+      "used": 1.36,
+      "source": "scraped \u2014 platform.openai.com (2026-04-18)",
+      "scraped_at": "2026-04-18T23:13:41.287965-06:00",
+      "expires": "2027-04-30",
+      "note": "Real balance from billing console scrape. Run kai ant-scrape to refresh."
     }
   },
   "models": [
