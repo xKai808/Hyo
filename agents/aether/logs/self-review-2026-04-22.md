@@ -1,8 +1,7 @@
-# aether Self-Review — 2026-04-22T21:34
+# aether Self-Review — 2026-04-22T23:59
 
 ## Gate 1: Trigger Validation
-- ✗ **validate-hq-js.sh**: WHAT triggers this? Found 0 callers.
-  - Agent: investigate. Is this dead or newly created?
+- ✓ 23 files checked, all have triggers.
 
 ## Gate 2: Visibility Check
 Questions for aether to answer:
@@ -56,6 +55,6 @@ Questions for aether to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 14
-- Gate results: trigger=20/21, visibility=checked, resolutions=6, adoption=-5/5
+- Findings: 13
+- Gate results: trigger=23/23, visibility=checked, resolutions=6, adoption=-5/5
 

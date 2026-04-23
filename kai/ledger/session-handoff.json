@@ -1,17 +1,14 @@
 {
-  "session_id": "20260422-2243",
-  "ended_at": "2026-04-22T22:43:44-0600",
-  "written_by": "session-close.sh",
-  "top_priority": "See KAI_TASKS.md \u2605 block",
-  "shipped_this_session": [
-    "See KAI_BRIEF.md Shipped today section"
-  ],
+  "session_id": "auto-2026-04-23",
+  "ended_at": "2026-04-23T02:42:12-0600",
+  "written_by": "kai-session-prep.sh (automated \u2014 no prompting required)",
+  "top_priority": "> Session 27 ended 2026-04-21 ~21:30 MT. Hyo is done for the night.",
+  "shipped_this_session": [],
   "open_p0s": [
     "TASK-20260414-ra-001: Ship daily newsletter autonomously - API key on Mini",
     "TASK-20260414-nel-001: Reduce false positive rate in cipher security scanning",
     "TASK-20260414-sam-001: Wire Vercel KV for console.log persistence",
     "TASK-20260414-aether-001: Resolve phantom position tracking in trade logs",
-    "TASK-20260414-aether-002: Wire kai_analysis.py into launchd as daily 23:00 MT task",
     "TASK-20260414-aether-003: Fix AetherBot trade counting to read from raw logs, not API",
     "IMP-20260414-nel-003: Build local intelligence cache for sandbox-restricted research",
     "IMP-20260414-ra-002: Build content quality scoring \u2014 editorial feedback loop",
@@ -30,15 +27,9 @@
     "TASK-20260416-sam-001: SE-011-016: Claude Code CLI auth broken in launchd \u2014 needs root fix, not workaro",
     "TASK-20260416-ra-001: Ra daily brief 2026-04-16 exists in output/ but never published to feed.json or ",
     "TASK-20260417-nel-001: Health score below 70 (65) \u2014 persistent failures blocking improvement",
-    "TASK-20260417-aether-002: Aether metrics never auto-pushed to Vercel \u2014 HQ dashboard showed stale data sinc",
-    "TASK-20260417-kai-002: Morning report generated but not published \u2014 git index.lock blocked auto-push",
-    "DEPLOY-001: Dual-path drift: website/ and agents/sam/website/ are separate dirs, Vercel depl",
-    "S17-001: Aether daily analysis dead-loop \u2014 same bottleneck 3+ cycles, no breakout",
-    "S17-002: Morning report not rendering on HQ \u2014 feed.json stale",
     "TASK-20260418-nel-001: Research surfaced blindspot or CVE \u2014 coverage gap to close",
     "S18-002: Aurora post-registration has no account page \u2014 subscriber cannot access their br",
     "S18-011: Ant HQ metrics stale \u2014 bookkeeping not updated daily, needs daily refresh",
-    "S18-013: Remote connection broken \u2014 bore.pub port 22246 connection refused",
     "S18-015: Aether 'view full analysis' link gives 404 \u2014 broken link in feed entry",
     "S18-017: GPT independence gate missing from Aether analysis \u2014 must verify GPT received ra",
     "S18-018: Aurora daily brief 404 on 'view formatted version' \u2014 broken link",
@@ -106,7 +97,8 @@
     "TASK-20260422-ra-001: Newsletter missing for 2026-04-22 (after 06:00 MT)",
     "TASK-20260422-kai-P0-morning-report-publish: P0: Morning report generated but not published \u2014 dual-path git add bug + broken ",
     "TASK-20260422-ra-001: Newsletter missing for 2026-04-22 (after 06:00 MT)",
-    "TASK-20260422-aether-P0-api-quota: Anthropic API quota exceeded on Mini \u2014 analysis pipeline blocked"
+    "TASK-20260422-aether-P0-api-quota: Anthropic API quota exceeded on Mini \u2014 analysis pipeline blocked",
+    "TASK-20260422-kai-001: Schema validation failed: ceo-report missing {'direction'}"
   ],
   "hyo_actions_pending": [
     "RESEND_API_KEY needed for Aurora retention email.",
@@ -117,15 +109,15 @@
   ],
   "commits_queued": [],
   "commits_to_verify": [
-    "Run: git log --oneline -8 to confirm queue jobs landed"
+    "Run: git log --oneline -8"
   ],
   "memory_freshness": {
-    "kai_brief_mtime": "2026-04-22T22:43:21",
-    "kai_tasks_mtime": "2026-04-22T20:28:24",
-    "daily_note_exists": true,
-    "handoff_written_at": "2026-04-22T22:43:44-0600"
+    "kai_brief": "2026-04-22T22:43:21",
+    "kai_tasks": "2026-04-23T00:10:19",
+    "knowledge": "2026-04-22T22:55:14",
+    "tacit": "2026-04-22T21:49:18"
   },
   "prep_failures": [],
   "continuity_protocol": "kai/protocols/SESSION_CONTINUITY_PROTOCOL.md",
-  "notes": "Read this file FIRST next session \u2014 before KAI_BRIEF, before anything else."
+  "notes": "Auto-written every 15min by kai-session-prep.sh. No manual session-close required for continuity."
 }

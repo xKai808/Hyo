@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-22T22:12:00Z",
+  "updatedAt": "2026-04-23T06:14:11Z",
   "morningReport": {
     "date": "2026-04-22",
     "generatedAt": "2026-04-22T16:12:00-0600",
@@ -28,8 +28,8 @@
       "Stderr: nel runner grep -P unsupported on BSD \u2014 P3 fix-it carried forward (day 6)"
     ],
     "lastOpsSync": {
-      "ts": "2026-04-22T22:12:00Z",
-      "note": "Ops sync cycle @ 16:11 MT (2026-04-22, hq-ops-sync scheduled task, 5th of day). Sentinel run #133: 7p/2f stable vs #131 \u2014 0 new, 2 recurring, 0 resolved. Remaining recurring: P1 scheduled-tasks-fired day 24 (sandbox-benign, aurora runs on Mini), P2 task-queue-size day 16 (29 P0 tasks). Cipher clean: 0 findings, 7 permission autofixes (.secrets/ + 6 key files), 0 leaks, HQ push 200. Nel score 85 STABLE, 4p/0f cross-project, 13 self-review findings. Flags: P2 broken-links 20, P3 code-optimizations 8, P2 audit 7 (all flat). Self-delegated P2 20-broken-symlink fix + P3 cycle summary. Growth IMP idle (no open IMP tickets). Stderr: nel runner grep -P unsupported on BSD (P3 fix-it carried, day 6)."
+      "ts": "2026-04-23T06:14:11Z",
+      "note": "Ops sync cycle @ 00:14 MT on 2026-04-23 (hq-ops-sync scheduled task, cowork). Sentinel #134 4p/0f (silent, exit 0). Cipher clean: 0 findings, 7 autofixes, 0 leaks, HQ push 200. Nel score 85 STABLE, ARIC research complete, reflection published. Flags flat (P2 links 20, P3 optimizations 8, P2 audit 7). Growth idle (no open IMP tickets). Dual-path sync enforced."
     }
   },
   "events": [
@@ -491,6 +491,12 @@
       "agent": "nel",
       "msg": "System sweep \u2014 score 65/100 (below 70 target). 2 project test failures (hyo 2p/2f, aether 1p/1f). 16 broken links, 23 untested scripts, 3 inefficient patterns, 5 audit issues, 1 untriggered file, 0 verified leaks. Flags emitted: nel-007 (P2 sentinel failures), nel-008 (P2 broken links), nel-009 (P3 code optimization), nel-010 (P2 audit issues), nel-011 (P2 untriggered file). Self-delegated: nel-004 (P2) broken-link fix, nel-005 (P3) cycle summary. Growth phase: IMP-nel-002 CVE scanner still blocked \u2014 no package.json at root.",
       "doc": "/viewer?agent=nel&file=2026-04-18"
+    },
+    {
+      "ts": "2026-04-23T06:14:11Z",
+      "agent": "kai",
+      "msg": "Ops sync cycle @ 00:14 MT on 2026-04-23 (hq-ops-sync scheduled task). Sentinel #134: 4p/0f silent run (exit 0). Cipher: 0 findings, 7 permission autofixes (secretsDir 0755, founder token 600), 0 leaks, HQ push 200 OK. Nel: score 85 STABLE, 4p/0f cross-project sentinel, ARIC research cycle completed (new findings archived to ra/research/briefs/nel-2026-04-23.md), reflection published to HQ feed. Flags re-filed: P2 broken-links 20 (flat), P3 code-optimizations 8 (flat), P2 audit 7 (flat). Self-delegated: nel-001 P2 (20 broken symlinks), nel-001 P3 (cycle summary). Growth phase idle \u2014 no open IMP tickets. Stderr: nel runner grep -P unsupported on BSD (P3 fix-it carried, day 7). Dual-path hq-state.json sync enforced.",
+      "severity": "info"
     }
   ],
   "ra": {
@@ -504,22 +510,24 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRunId": 133,
-    "lastRunAt": "2026-04-22T22:12:00Z",
-    "passed": 7,
-    "failed": 2,
+    "lastRunId": 134,
+    "lastRunAt": "2026-04-23T06:14:11Z",
+    "passed": 4,
+    "failed": 0,
     "new": 0,
-    "recurring": 2,
+    "recurring": 0,
     "resolved": 0,
-    "regression": false
+    "regression": false,
+    "note": "sentinel.sh exit 0, silent \u2014 cross-project 4p/0f per nel cycle"
   },
   "cipher": {
-    "lastRunAt": "2026-04-22T22:12:00Z",
+    "lastRunAt": "2026-04-23T06:14:11Z",
     "findings": 0,
     "autofixes": 7,
     "leaks": 0,
     "founderToken": "600",
-    "secretsDir": "700"
+    "secretsDir": "700",
+    "hqPush": "200 OK"
   },
   "sim": {
     "lastRun": "2026-04-10T16:14:00-06:00",
@@ -531,12 +539,12 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-23T02:43:28Z",
+    "lastRun": "2026-04-23T08:00:06Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 20,
-    "untested": 33,
+    "untested": 34,
     "inefficient": 8,
     "sentinel": {
       "pass": 4,

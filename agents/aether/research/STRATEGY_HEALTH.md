@@ -1,10 +1,10 @@
 # Aether Strategy Health Report
 **Generated:** 2026-04-23
-**Period:** 2026-04-15 → 2026-04-17 (8 sessions)
+**Period:** 2026-04-17 → 2026-04-17 (8 sessions)
 
 ## Overall Performance
-- Total net P&L: **$+0.49**
-- Win rate: **50.0%** (1W / 1L)
+- Total net P&L: **$+0.86**
+- Win rate: **100.0%** (1W / 0L)
 - Total gross profit: **$0.00**
 
 ## ✓ No Health Flags
@@ -22,5 +22,4 @@
 | EVENING | $+5.14 | $+5.14 | 100.0% | 1 | **+EV** |
 
 ## Daily P&L Series
-- 2026-04-15: **$-0.37**
 - 2026-04-17: **+$0.86**

@@ -682,3 +682,5 @@ _(2026-04-13 cleanup: removed 4 stale sentinel escalations referencing old sessi
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/admiring-hopeful-hypatia/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:aeb20fa2] _(filed 2026-04-22)_
 
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/nice-gifted-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:cdc05baa] _(filed 2026-04-22)_
+
+- [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-23.md [sentinel:aurora-ran-today:c5026fed] _(filed 2026-04-23)_
