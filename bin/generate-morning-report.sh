@@ -1129,6 +1129,48 @@ if si_no_rpt:
     flywheel_detail.append(f"No report from: {', '.join(si_no_rpt)}")
 
 now_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+
+# Build sicqScores dict for HQ feed (from _scores loaded above at line ~842)
+_sicq_for_feed = {}
+try:
+    _sicq_labels = {100: "Excellent", 80: "Good", 60: "Fair", 40: "Low", 0: "Critical"}
+    for _a, _s in (_scores if "_scores" in dir() else {}).items():
+        _lbl = next((_sicq_labels[k] for k in sorted(_sicq_labels.keys(), reverse=True) if _s >= k), "Critical")
+        _sicq_for_feed[_a] = {"score": _s, "label": _lbl}
+except Exception:
+    pass
+
+# Build ompScores dict for HQ feed (from _omp_agents loaded above at line ~862)
+_omp_for_feed = {}
+try:
+    for _a, _ad in (_omp_agents if "_omp_agents" in dir() else {}).items():
+        _ms = _ad.get("specific_score") or _ad.get("overall")
+        if _ms is not None:
+            _pct = int(_ms * 100)
+            _lbl = "Excellent" if _pct >= 80 else ("Good" if _pct >= 70 else ("Adequate" if _pct >= 60 else ("Needs Improvement" if _pct >= 40 else "Critical")))
+            _omp_for_feed[_a] = {"score": _pct, "label": _lbl}
+except Exception:
+    pass
+
+_sections = {
+    "summary": summary_text,
+    "wentWell": went_well,
+    "needsAttention": needs_attention,
+    "agentHighlights": highlights,
+    "selfImprovementFlywheel": {
+        "summary": flywheel_summary,
+        "detail": flywheel_detail,
+        "resolved_today": si_resolved,
+    }
+}
+
+# Inject scores INTO sections — renderMorningReport(s) reads s = report.sections
+# Gate question: "Are sicqScores/ompScores inside sections?" NO → renderer sees nothing.
+if _sicq_for_feed:
+    _sections["sicqScores"] = _sicq_for_feed
+if _omp_for_feed:
+    _sections["ompScores"] = _omp_for_feed
+
 entry = {
     "id": f"morning-report-kai-{today}-{datetime.now().strftime('%H%M%S')}",
     "type": "morning-report",
@@ -1138,17 +1180,7 @@ entry = {
     "authorColor": "#d4a853",
     "timestamp": now_ts,
     "date": today,
-    "sections": {
-        "summary": summary_text,
-        "wentWell": went_well,
-        "needsAttention": needs_attention,
-        "agentHighlights": highlights,
-        "selfImprovementFlywheel": {
-            "summary": flywheel_summary,
-            "detail": flywheel_detail,
-            "resolved_today": si_resolved,
-        }
-    }
+    "sections": _sections,
 }
 
 reports.insert(0, entry)
