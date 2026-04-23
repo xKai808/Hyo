@@ -888,7 +888,17 @@ let AETHER_SECTIONS = null;
 let RESEARCH_ARCHIVE = null;
 let currentView = 'feed';
 let currentMonth = null; // for agent history
-let HQ_TOKEN = sessionStorage.getItem('hq_token') || null;
+// Use localStorage so the token persists across browser sessions (not cleared on tab close).
+// Token has a 30-day expiry checked on load.
+let HQ_TOKEN = (() => {
+  try {
+    const stored = localStorage.getItem('hq_token');
+    if (!stored) return null;
+    const { token, expires } = JSON.parse(stored);
+    if (expires && Date.now() > expires) { localStorage.removeItem('hq_token'); return null; }
+    return token;
+  } catch(e) { return null; }
+})();
 
 // ═══ THEME ═══
 function initTheme() {
@@ -941,7 +951,8 @@ authInput.addEventListener('keydown', async e => {
     const j = await r.json();
     if (j.ok && j.token) {
       HQ_TOKEN = j.token;
-      sessionStorage.setItem('hq_token', HQ_TOKEN);
+      // Persist in localStorage with 30-day expiry so login survives tab/browser close
+      localStorage.setItem('hq_token', JSON.stringify({ token: HQ_TOKEN, expires: Date.now() + 30*24*60*60*1000 }));
       authGate.classList.add('hidden');
       document.getElementById('shell').style.display = 'flex';
       boot();
