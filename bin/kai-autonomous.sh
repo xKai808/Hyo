@@ -151,6 +151,23 @@ print(json.dumps({'ts': '$NOW_MT', 'from': 'kai-autonomous', 'priority': 'URGENT
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# PHASE 0: HYDRATION CHECK (Kai W1 fix — runs first, every cycle)
+# Verifies all 12 hydration files are fresh. Logs stale files to session-errors.
+# Gate question: "Did hydration-check pass?" NO → log warning, continue (non-blocking)
+# ═══════════════════════════════════════════════════════════════════════════════
+log_section "PHASE 0: HYDRATION CHECK"
+if [[ -f "$HYO_ROOT/bin/kai-hydration-check.sh" ]]; then
+    if HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/kai-hydration-check.sh" >> "$LOG" 2>&1; then
+        log "Hydration check: PASS — all files fresh"
+    else
+        log "Hydration check: WARN — stale files detected (see receipt in kai/ledger/)"
+        # Non-blocking: log the warning but continue. Blocking would prevent autonomous ops.
+    fi
+else
+    log "Hydration check: SKIP — kai-hydration-check.sh not found"
+fi
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 1: AGENT FRESHNESS + SELF-HEALING
 # ═══════════════════════════════════════════════════════════════════════════════
 log_section "PHASE 1: AGENT FRESHNESS"

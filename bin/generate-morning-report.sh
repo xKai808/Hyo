@@ -756,13 +756,25 @@ print("MORNING REPORT — " + today)
 print("="*80 + "\n")
 
 # Executive summary: 3 human sentences
-# Q1: System healthy?
+# Q1: System healthy? — checks queue liveness AND score thresholds
+# Gate: "healthy" requires queue alive AND no agent SICQ critically below threshold
+_sicq_critical_agents = []
+try:
+    _sq = json.load(open(os.path.join(root, "kai/ledger/sicq-latest.json"))) if os.path.exists(os.path.join(root, "kai/ledger/sicq-latest.json")) else {}
+    for _a, _s in _sq.get("scores", {}).items():
+        if _s <= 40:  # SICQ_LOW_THRESHOLD — same as flywheel-doctor.sh
+            _sicq_critical_agents.append(f"{_a.capitalize()}({_s}/100)")
+except Exception:
+    pass
+
 if not exec_layer["alive"]:
     health_sentence = f"The execution layer is down — queue worker has been stalled for {exec_layer['stall_hours']}h, which means no delegated commands have run."
+elif _sicq_critical_agents:
+    health_sentence = f"System has quality issues that need attention — {', '.join(_sicq_critical_agents)} scored critically low. Improvements are being built but the system is not fully healthy."
 elif hyo_attention:
     health_sentence = f"Something needs your attention this morning: {hyo_attention}"
 else:
-    health_sentence = "System is healthy — the queue is active and all agents ran overnight."
+    health_sentence = "System is healthy — the queue is active, all agents ran overnight, and quality scores are within range."
 
 # Q2: Biggest thing to know
 if wins:

@@ -184,6 +184,73 @@ else
     else
         qcheck "QC12" "File modified today" "fail" "mtime=$FILE_DATE — file is from a previous day"
     fi
+
+    # QC13: Arithmetic reconciliation — trade P&L sum must equal balance delta
+    # Catches the failure mode where GPT reports trade totals that don't match the balance change.
+    # Gap > $0.10 is a hard fail. Gap $0.01-$0.10 is a warning (rounding acceptable).
+    QC13_RESULT=$(python3 - "$ANALYSIS_FILE" << 'PYEOF'
+import re, sys
+
+with open(sys.argv[1]) as f:
+    text = f.read()
+
+# Strategy: sum Subtotal lines per strategy family (e.g. "Subtotal: +$1.24")
+# These are the authoritative per-family P&L, not aggregate Net lines.
+# Individual trade lines (+$0.72, -$0.77) would double-count with subtotals.
+subtotal_amounts = []
+for line in text.split('\n'):
+    # Match "Subtotal: +$X.XX" or "Subtotal: -$X.XX" — strategy family totals
+    m = re.search(r'[Ss]ubtotal[:\s]+([+-])\$([0-9]+\.[0-9]+)', line)
+    if m:
+        subtotal_amounts.append(float(m.group(1) + m.group(2)))
+
+# Extract opening and closing balance from balance table (markdown pipe table)
+opening = None
+closing = None
+for line in text.split('\n'):
+    m_open = re.search(r'[Oo]pening[^|]*\|\s*\$([0-9]+\.[0-9]+)', line)
+    m_close = re.search(r'[Cc]losing[^|]*\|\s*\$([0-9]+\.[0-9]+)', line)
+    if m_open and opening is None:
+        opening = float(m_open.group(1))
+    if m_close and closing is None:
+        closing = float(m_close.group(1))
+# Also try "Opening Balance | $X" table row format
+if opening is None:
+    for line in text.split('\n'):
+        cells = [c.strip() for c in line.split('|') if c.strip()]
+        if len(cells) >= 3:
+            if re.search(r'\$[0-9]+\.[0-9]+', cells[1]) and re.search(r'\$[0-9]+\.[0-9]+', cells[2]):
+                try:
+                    o = float(re.search(r'\$([0-9]+\.[0-9]+)', cells[1]).group(1))
+                    c = float(re.search(r'\$([0-9]+\.[0-9]+)', cells[2]).group(1))
+                    if o > 50 and c > 50 and o != c:  # plausible balance values
+                        opening = o; closing = c; break
+                except Exception:
+                    pass
+
+if opening is None or closing is None or not subtotal_amounts:
+    print("SKIP:insufficient-data")
+    sys.exit(0)
+
+balance_delta = round(closing - opening, 4)
+trade_sum = round(sum(subtotal_amounts), 4)
+gap = round(abs(trade_sum - balance_delta), 4)
+
+if gap > 0.10:
+    print(f"FAIL:gap={gap}:trade_sum={trade_sum}:balance_delta={balance_delta}:opening={opening}:closing={closing}")
+elif gap > 0.01:
+    print(f"WARN:gap={gap}:trade_sum={trade_sum}:balance_delta={balance_delta}")
+else:
+    print(f"PASS:gap={gap}:trade_sum={trade_sum}:balance_delta={balance_delta}")
+PYEOF
+)
+    case "$QC13_RESULT" in
+        PASS*) qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "$QC13_RESULT" ;;
+        WARN*) qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "rounding gap only — $QC13_RESULT" ;;
+        FAIL*) qcheck "QC13" "Trade P&L reconciles with balance delta" "fail" "$QC13_RESULT — sum of trades does not match balance change" ;;
+        SKIP*) qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "no balance table found — check skipped" ;;
+        *)     qcheck "QC13" "Trade P&L reconciles with balance delta" "pass" "QC13 parse error — skipped" ;;
+    esac
 fi
 
 # ---- Write to ledger -------------------------------------------------

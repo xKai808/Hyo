@@ -507,11 +507,34 @@ The morning report is DONE when:
 
 ---
 
-## PART 11 — VERSION HISTORY
+## PART 11 — DATA SOURCE TABLE (v1.2 — REPRODUCIBILITY REQUIREMENT)
+
+Every field in the morning report feed entry must trace to a specific source file.
+Any re-run on the same source data must produce identical output.
+Gate: "Can I reproduce this number without Kai's judgment?" NO → it is not reportable.
+
+| Feed Field | Source File | Extraction Method | Verify By |
+|---|---|---|---|
+| sections.summary | Synthesized by generate-morning-report.sh | Q1/Q2/Q3 sentences from exec_layer + wins + risks | Read the 3 sentences — each must cite a fact from a source below |
+| sections.wentWell | agents/{name}/logs/self-improve-latest.json | improvement_description where status=shipped | Confirm git commit exists for each item listed |
+| sections.needsAttention | agents/{name}/logs/self-improve-latest.json + kai/ledger/kai-autonomous-state.json | hyo_attention flag + agents with stall_hours>24 | Check the flag is set in the source file |
+| sections.agentHighlights | agents/{name}/logs/self-improve-latest.json | shipped_since_last, next_action, priority per agent | Each entry traceable to agent's ACTIVE.md or self-improve log |
+| sections.sicqScores | kai/ledger/sicq-latest.json | scores{} dict | Compare directly — must match sicq-latest.json scores |
+| sections.ompScores | kai/ledger/omp-summary.json | agents{}.specific_score * 100 | Compare directly — must match omp-summary.json |
+| sections.selfImprovementFlywheel | agents/{name}/logs/self-improve-latest.json | resolved_today[], in_progress[] | Each resolved item must have a git commit |
+| health status ("healthy") | kai/ledger/sicq-latest.json + kai/queue/healthcheck-latest.json | queue alive AND no SICQ ≤40 | If any agent SICQ ≤40, status MUST say "quality issues" not "healthy" |
+| timestamp / date | System clock (America/Denver) | datetime.now() at report generation | Should match the date in the report filename |
+
+**Reproduction test:** Given source files frozen at a timestamp, run `generate-morning-report.sh` twice. Output must be identical. If it is not, a non-deterministic dependency exists — find and remove it.
+
+---
+
+## PART 12 — VERSION HISTORY
 
 | Version | Date       | Change |
 |---------|------------|--------|
 | v1.0    | 2026-04-21 | Initial protocol. Adds 5 mandatory questions, new JSON fields, action_type classification, executive summary agent counts, 10 failure modes, HQ color table, cold start reproduction. Incorporates GPT critique verbatim. |
 | v1.1    | 2026-04-21 | HYO_FEEDBACK_GATE (Part 0): constitutional meta-algorithm — Hyo feedback → protocol update in same session, every time. WRITING STANDARD (Part 0b): BLUF + inverted pyramid, plain English, human CEO audience. "NOT this / THIS" examples for every agent section and executive summary. Max 2 technical terms per section rule. |
+| v1.2    | 2026-04-22 | DATA SOURCE TABLE (Part 11): every feed field mapped to source file, extraction method, and verification step. Reproducibility requirement: same source data → identical output. Health gate updated: SICQ ≤40 blocks "healthy" status. |
 
-<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+<!-- Last reviewed: 2026-04-22 by Kai (S29 Hyo feedback response) -->
