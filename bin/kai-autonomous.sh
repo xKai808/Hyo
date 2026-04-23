@@ -569,6 +569,9 @@ if [[ $DOW -eq 6 ]]; then
   check_and_dispatch 6 0 "weekly-report" \
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/weekly-report.sh >> $HYO_ROOT/kai/ledger/weekly-report.log 2>&1" \
     "weekly_report_run"
+  check_and_dispatch 2 0 "weekly-maintenance" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/weekly-maintenance.sh >> $HYO_ROOT/kai/ledger/weekly-maintenance.log 2>&1" \
+    "weekly_maintenance_run"
 
   # Cross-agent adversarial peer review (Saturday 06:45)
   # Nel reviews Sam, Sam reviews Nel, Ra reviews Aether, Dex reviews all
