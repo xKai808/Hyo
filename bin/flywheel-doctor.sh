@@ -633,6 +633,61 @@ report = {"last_computed": ts, "today": today, "scores": scores, "history": hist
 json.dump(report, open(path, 'w'), indent=2)
 print(f"SICQ report written: {path}")
 PYEOF
+
+  # ── Write scores into feed.json agents block (both paths) ─────────────────
+  # This is what populates the per-agent score cards on HQ site daily.
+  python3 - "$HYO_ROOT" "$scores_json" "$NOW_MT" << 'SCORE_PYEOF'
+import json, sys, os
+
+root, scores_str, ts = sys.argv[1:4]
+sicq_scores = json.loads(scores_str)
+
+# Load OMP scores if available
+omp_scores = {}
+omp_path = os.path.join(root, 'kai/ledger/omp-summary.json')
+if os.path.exists(omp_path):
+    try:
+        omp_data = json.load(open(omp_path)).get('agents', {})
+        for a, d in omp_data.items():
+            omp_scores[a] = int(d.get('overall', 0))
+    except Exception:
+        pass
+
+sicq_labels = {100:'Excellent',80:'Good',60:'Fair',40:'Low',0:'Critical'}
+def slabel(s): return next(sicq_labels[k] for k in sorted(sicq_labels.keys(), reverse=True) if s >= k)
+omp_labels = {80:'Excellent',70:'Good',60:'Adequate',40:'Needs Improvement',0:'Critical'}
+def olabel(s): return next(omp_labels[k] for k in sorted(omp_labels.keys(), reverse=True) if s >= k)
+
+paths = [
+    os.path.join(root, 'agents/sam/website/data/feed.json'),
+    os.path.join(root, 'website/data/feed.json'),
+]
+for feed_path in paths:
+    if not os.path.exists(feed_path): continue
+    try:
+        with open(feed_path) as f:
+            feed = json.load(f)
+        updated = 0
+        for agent_id, agent_data in feed.get('agents', {}).items():
+            scores = {}
+            if agent_id in sicq_scores:
+                s = int(sicq_scores[agent_id])
+                scores['sicq'] = {'score': s, 'label': slabel(s), 'min': 60,
+                                  'status': 'critical' if s <= 40 else ('warn' if s <= 60 else 'ok')}
+            if agent_id in omp_scores:
+                s = int(omp_scores[agent_id])
+                scores['omp'] = {'score': s, 'label': olabel(s), 'min': 70,
+                                 'status': 'critical' if s <= 40 else ('warn' if s <= 70 else 'ok')}
+            if scores:
+                agent_data['scores'] = scores
+                updated += 1
+        feed['agents'] = feed.get('agents', {})
+        with open(feed_path, 'w') as f:
+            json.dump(feed, f, indent=2)
+        print(f"Updated {updated} agent score cards in {feed_path}")
+    except Exception as e:
+        print(f"ERROR updating {feed_path}: {e}", file=sys.stderr)
+SCORE_PYEOF
 }
 
 # ─── Check 9: No resolutions in N days ───────────────────────────────────────

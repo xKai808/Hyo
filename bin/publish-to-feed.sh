@@ -62,6 +62,35 @@ print('ok' if has_source else 'blocked')
   fi
 fi
 
+# ── PRE-PUBLISH DEDUP GATE ────────────────────────────────────────────────────
+# Blocks publish if content has >60% Jaccard overlap with a recent entry.
+# Prevents research redundancy across agents and repeat-publishing same content.
+# Override: PRE_PUBLISH_OVERRIDE=1 bash publish-to-feed.sh ...
+# Gate question: "Did dedup check pass?" NO → exit 1 (unless override set)
+if [[ -f "$ROOT/bin/pre-publish-check.py" ]] && [[ "${SKIP_DEDUP:-0}" != "1" ]]; then
+    SECTIONS_PREVIEW=""
+    if [[ -f "$SECTIONS_FILE" ]]; then
+        SECTIONS_PREVIEW=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+    print(' '.join(str(v) for v in d.values() if isinstance(v, str))[:500])
+except: pass
+" "$SECTIONS_FILE" 2>/dev/null || true)
+    fi
+    DEDUP_RESULT=$(HYO_ROOT="$ROOT" python3 "$ROOT/bin/pre-publish-check.py" \
+        --agent "$AUTHOR" \
+        --type "$TYPE" \
+        --title "$TITLE" \
+        --content "$SECTIONS_PREVIEW" 2>&1)
+    DEDUP_EXIT=$?
+    echo "[publish-to-feed] Dedup check: $DEDUP_RESULT"
+    if [[ $DEDUP_EXIT -eq 1 ]]; then
+        echo "ERROR: DEDUP GATE BLOCKED — duplicate content detected. Set PRE_PUBLISH_OVERRIDE=1 to force." >&2
+        exit 1
+    fi
+fi
+
 # Agent metadata lookup (bash 3.x compatible — no associative arrays)
 AUTHOR_LC=$(echo "$AUTHOR" | tr '[:upper:]' '[:lower:]')
 

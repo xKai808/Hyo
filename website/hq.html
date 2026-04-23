@@ -1239,6 +1239,31 @@ function renderAgentView(container, agentId) {
       </div>
       <div class="ap-responsibilities">"${agent.responsibilities}"</div>
 
+      \${(() => {
+        const sc = agent.scores;
+        if (!sc) return '';
+        const barColor = (s, min) => s >= min ? 'var(--accent)' : s >= min * 0.67 ? '#e8c96a' : '#f55066';
+        const scoreCard = (label, s, min) => {
+          const col = barColor(s, min);
+          return `<div style="flex:1;min-width:120px;background:var(--bg-secondary);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);">
+            <div style="font-size:0.72em;font-weight:600;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">\${label}</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:1.6em;font-weight:700;color:\${col};">\${s}</span>
+              <span style="font-size:0.8em;color:var(--text-muted);">/100</span>
+            </div>
+            <div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">
+              <div style="width:\${s}%;height:100%;background:\${col};border-radius:2px;"></div>
+            </div>
+            \${s < min ? `<div style="font-size:0.7em;color:#f55066;margin-top:4px;">&#9888; Below minimum (\${min})</div>` : ''}
+          </div>`;
+        };
+        let html = `<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;">`;
+        if (sc.sicq) html += scoreCard('SICQ Quality', sc.sicq.score, sc.sicq.min || 60);
+        if (sc.omp)  html += scoreCard('OMP Outcomes', sc.omp.score,  sc.omp.min  || 70);
+        html += `</div>`;
+        return html;
+      })()}
+
       <div class="goals-grid">
         <div class="goal-col short">
           <h4>Short-term</h4>
@@ -1315,7 +1340,7 @@ function renderAgentView(container, agentId) {
 // ═══ RESEARCH VIEW (keeps sidebar) ═══
 function renderResearch(container) {
   // Pull ALL agent reports for Research tab
-  const researchTypes = new Set(['agent-reflection', 'research-drop', 'agent-daily', 'agent-weekly']);
+  const researchTypes = new Set(['agent-reflection', 'research-drop', 'agent-daily', 'agent-weekly', 'self-improve-report']);
   const allReports = (FEED_DATA.reports || [])
     .filter(r => researchTypes.has(r.type))
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -1338,7 +1363,7 @@ function renderResearch(container) {
   for (const r of allReports) {
     const time = formatTime(r.timestamp);
     const s = r.sections || {};
-    const typeLabel = r.type === 'research-drop' ? 'Research' : 'Reflection';
+    const typeLabel = r.type === 'research-drop' ? 'Research' : r.type === 'self-improve-report' ? '🔧 Self-Improve' : 'Reflection';
     const borderColor = r.authorColor || 'var(--accent)';
     let body = '';
     if (r.type === 'research-drop') {
@@ -1391,7 +1416,7 @@ function renderResearch(container) {
           arcHtml += `<div style="margin-left:14px;margin-bottom:10px">
             <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px">${month} (${entries.length})</div>`;
           for (const r of entries) {
-            const rtype = r.type === 'agent-weekly' ? '📊 Weekly' : r.type === 'agent-daily' ? '📋 Daily' : r.type === 'agent-reflection' ? '🔍 Reflection' : '📄';
+            const rtype = r.type === 'agent-weekly' ? '📊 Weekly' : r.type === 'agent-daily' ? '📋 Daily' : r.type === 'agent-reflection' ? '🔍 Reflection' : r.type === 'self-improve-report' ? '🔧 Self-Improve' : '📄';
             arcHtml += `<div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--border-color);font-size:11px">
               <span style="color:var(--text-muted);font-family:var(--font-mono);min-width:72px">${r.date || ''}</span>
               <span style="color:var(--text-muted);min-width:72px">${rtype}</span>
@@ -1437,6 +1462,31 @@ function renderKaiView(container, agent) {
         </div>
       </div>
       <div class="ap-responsibilities">"${agent.responsibilities}"</div>
+
+      \${(() => {
+        const sc = agent.scores;
+        if (!sc) return '';
+        const barColor = (s, min) => s >= min ? 'var(--accent)' : s >= min * 0.67 ? '#e8c96a' : '#f55066';
+        const scoreCard = (label, s, min) => {
+          const col = barColor(s, min);
+          return `<div style="flex:1;min-width:120px;background:var(--bg-secondary);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);">
+            <div style="font-size:0.72em;font-weight:600;color:var(--text-muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">\${label}</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:1.6em;font-weight:700;color:\${col};">\${s}</span>
+              <span style="font-size:0.8em;color:var(--text-muted);">/100</span>
+            </div>
+            <div style="margin-top:6px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">
+              <div style="width:\${s}%;height:100%;background:\${col};border-radius:2px;"></div>
+            </div>
+            \${s < min ? `<div style="font-size:0.7em;color:#f55066;margin-top:4px;">&#9888; Below minimum (\${min})</div>` : ''}
+          </div>`;
+        };
+        let html = `<div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap;">`;
+        if (sc.sicq) html += scoreCard('SICQ Quality', sc.sicq.score, sc.sicq.min || 60);
+        if (sc.omp)  html += scoreCard('OMP Outcomes', sc.omp.score,  sc.omp.min  || 70);
+        html += `</div>`;
+        return html;
+      })()}
 
       <div class="goals-grid">
         <div class="goal-col short">
@@ -1592,7 +1642,7 @@ function renderReport(report) {
     body = renderMorningReport(s);
   } else if (report.type === 'ceo-report') {
     body = renderCeoReport(s);
-  } else if (report.type === 'agent-reflection') {
+  } else if (report.type === 'agent-reflection' || report.type === 'self-improve-report') {
     body = renderAgentReflection(s);
   } else if (report.type === 'newsletter') {
     body = renderNewsletter(s, report);
@@ -1649,6 +1699,7 @@ function renderMorningReport(s) {
   if (s.needsAttention?.length) {
     html += sec('Needs Attention', `<ul>${s.needsAttention.map(w => `<li class="warn">${w}</li>`).join('')}</ul>`);
   }
+  // Agent scores — SICQ + OMP displayed as score cards
   if (s.sicqScores || s.ompScores) {
     const agents = Object.keys(s.sicqScores || s.ompScores || {});
     let scoreHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:6px 0;">`;
@@ -1819,9 +1870,13 @@ function renderPodcast(s, report) {
 
 function mdToHtml(text) {
   // Convert markdown-ish text to safe HTML for display in report sections.
+  // Handles: **bold**, bullet lists (- item), newlines, tables (| row |)
   if (!text) return '';
+  // Escape HTML
   let s = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // Bold
   s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Process line by line
   const lines = s.split('\n');
   let out = '';
   let inUl = false;
@@ -1833,22 +1888,27 @@ function mdToHtml(text) {
       if (inTable) { out += '</table>'; inTable = false; }
       continue;
     }
+    // Markdown table row: | a | b | c |
     if (t.startsWith('|') && t.endsWith('|')) {
       if (!inTable) { out += '<table style="border-collapse:collapse;width:100%;font-size:13px;margin:8px 0;">'; inTable = true; }
+      // Skip separator row (|---|---|)
       if (/^\|[\s\-|]+\|$/.test(t)) continue;
       const cells = t.slice(1, -1).split('|').map(c => `<td style="padding:4px 8px;border:1px solid var(--border-color,rgba(255,255,255,0.1));">${c.trim()}</td>`).join('');
       out += `<tr>${cells}</tr>`;
       continue;
     }
     if (inTable) { out += '</table>'; inTable = false; }
+    // Bullet list
     if (t.startsWith('- ') || t.startsWith('* ')) {
       if (!inUl) { out += '<ul style="padding-left:18px;margin:6px 0;">'; inUl = true; }
       out += `<li style="margin-bottom:4px;">${t.slice(2)}</li>`;
       continue;
     }
     if (inUl) { out += '</ul>'; inUl = false; }
+    // Numbered list
     const num = t.match(/^(\d+)\.\s+(.+)/);
     if (num) { out += `<p style="margin:4px 0;"><strong>${num[1]}.</strong> ${num[2]}</p>`; continue; }
+    // Regular paragraph
     out += `<p style="margin:4px 0;">${t}</p>`;
   }
   if (inUl) out += '</ul>';
@@ -1873,13 +1933,14 @@ function renderAetherAnalysis(s, report) {
   if (s.btc) {
     html += sec('BTC Context', `<div style="line-height:1.6;">${mdToHtml(s.btc)}</div>`);
   }
+  // GPT cross-check rendered inline — no need to click to another page
   if (s.gptIndependent) {
     html += sec('GPT Independent Review', `<div style="line-height:1.6;color:var(--text-secondary);">${mdToHtml(s.gptIndependent)}</div>`);
   }
   if (s.gptReview) {
     html += sec('GPT Cross-Check', `<div style="line-height:1.6;color:var(--text-secondary);">${mdToHtml(s.gptReview)}</div>`);
   }
-  // readLink removed — all content is inline. No external navigation needed.
+  // readLink removed — all content is inline. Hyo should not need to navigate out.
   return html;
 }
 
@@ -2102,6 +2163,7 @@ function getTypeLabel(type) {
     'aether-analysis': 'Trading Analysis',
     'podcast': '🎙️ Podcast',
     'agent-goals': 'Goals & Progress',
+    'self-improve-report': '🔧 Self-Improvement',
   };
   return map[type] || type;
 }

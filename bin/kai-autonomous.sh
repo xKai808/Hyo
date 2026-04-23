@@ -343,6 +343,80 @@ log "Ticket SLA: ${SLA_PCT}% within SLA | P0 open: $P0_OPEN | score: $TICKET_HEA
 [[ "$P0_OPEN" -gt 0 ]] && \
   log "⚠️ P0 tickets open: $P0_OPEN — ticket-sla-enforcer will handle escalation"
 
+# ── ACTIVE.md ticket staleness check (runs inside Phase 4) ──────────────────
+# Any ticket in any agent's ACTIVE.md with Delegated/Created date >72h without
+# "Status: CLOSED" or "Status: RESOLVED" is escalated to P1 automatically.
+# Gate question: "Did staleness check run?" YES → stale tickets have P1 tickets.
+STALE_TICKET_COUNT=$(python3 - "$HYO_ROOT" "$NOW_EPOCH" << 'STALE_PYEOF'
+import re, os, sys, json
+from datetime import datetime, timezone
+
+root = sys.argv[1]
+now_epoch = int(sys.argv[2])
+STALE_THRESHOLD_H = 72
+agents = ['nel', 'sam', 'ra', 'aether', 'kai', 'dex']
+stale = []
+
+for agent in agents:
+    active_path = os.path.join(root, f'agents/{agent}/ledger/ACTIVE.md')
+    if agent == 'kai':
+        active_path = os.path.join(root, 'kai/ledger/ACTIVE.md')
+    if not os.path.exists(active_path):
+        continue
+    with open(active_path) as f:
+        content = f.read()
+
+    # Find all ticket blocks: ** ticket-id ** ... Status: or Created/Delegated:
+    blocks = re.split(r'\n(?=- \*\*)', content)
+    for block in blocks:
+        # Extract ticket ID
+        id_match = re.search(r'\*\*(\S+)\*\*', block)
+        if not id_match:
+            continue
+        ticket_id = id_match.group(1)
+
+        # Skip already closed/resolved
+        if re.search(r'Status:\s*(CLOSED|RESOLVED|COMPLETED|DONE)', block, re.IGNORECASE):
+            continue
+
+        # Find oldest timestamp in this block (Delegated or Created)
+        timestamps = re.findall(r'(?:Delegated|Created)[:\s]+(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z?)', block)
+        if not timestamps:
+            continue
+
+        oldest_ts = min(timestamps)
+        try:
+            dt = datetime.fromisoformat(oldest_ts.replace('Z', '+00:00'))
+            age_h = (now_epoch - int(dt.timestamp())) / 3600
+            if age_h > STALE_THRESHOLD_H:
+                stale.append({'agent': agent, 'ticket': ticket_id, 'age_h': round(age_h, 1)})
+        except Exception:
+            continue
+
+print(len(stale))
+for s in stale:
+    print(f"STALE:{s['agent']}:{s['ticket']}:{s['age_h']}h")
+STALE_PYEOF
+)
+
+STALE_COUNT=$(echo "$STALE_TICKET_COUNT" | head -1)
+if [[ "$STALE_COUNT" -gt 0 ]]; then
+    log "⚠️ ACTIVE.md staleness: $STALE_COUNT ticket(s) >72h without resolution"
+    while IFS= read -r stale_line; do
+        [[ "$stale_line" != STALE:* ]] && continue
+        IFS=: read -r _ s_agent s_ticket s_age <<< "$stale_line"
+        log "  → $s_agent/$s_ticket (${s_age} old) — opening P1 escalation"
+        if [[ -f "$HYO_ROOT/bin/ticket.sh" ]]; then
+            HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/ticket.sh" create \
+              --agent "$s_agent" \
+              --title "Staleness escalation: $s_ticket open ${s_age} without resolution" \
+              --priority "P1" --type "escalation" --created-by "kai-autonomous" 2>/dev/null || true
+        fi
+    done <<< "$STALE_TICKET_COUNT"
+else
+    log "✓ ACTIVE.md staleness: all tickets updated within 72h"
+fi
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 5: SYSTEM QUALITY METRICS
 # ═══════════════════════════════════════════════════════════════════════════════
