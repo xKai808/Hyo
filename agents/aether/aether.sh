@@ -1002,21 +1002,36 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     push_to_hq
   fi
 
-  # ─── Git push metrics to Vercel (every 15-min cycle) ─────────────────────
-  # The API push_to_hq is ephemeral (serverless cold starts reset it).
-  # Git push ensures the static site always has fresh metrics.
-  (
-    cd "$ROOT" || exit 1
-    # Remove stale lock files (e.g., from crashed processes)
-    rm -f .git/index.lock 2>/dev/null
-    git add website/data/aether-metrics.json 2>/dev/null
-    if ! git diff --cached --quiet website/data/aether-metrics.json 2>/dev/null; then
-      git commit -m "aether: metrics update $(TZ=America/Denver date +%H:%M)" 2>/dev/null \
-        && git push origin main 2>/dev/null \
-        && log "Git push: metrics deployed to Vercel" \
-        || log "Git push: failed (will retry next cycle)"
-    fi
-  )
+  # ─── Git push metrics to Vercel (throttled: max once per hour) ───────────
+  # PROBLEM: pushing every 15-min cycle = ~96 deploys/day → hits Vercel limit.
+  # FIX: only push if metrics changed AND last push was >55 min ago.
+  # 55 min gives slight buffer below 60 min to avoid drift accumulation.
+  # Vercel gets ~24 deploys/day (down from 96) — well within limits.
+  local PUSH_MARKER="$ROOT/agents/aether/ledger/.last-metrics-push"
+  local NOW_EPOCH
+  NOW_EPOCH=$(date +%s)
+  local LAST_PUSH=0
+  [[ -f "$PUSH_MARKER" ]] && LAST_PUSH=$(cat "$PUSH_MARKER" 2>/dev/null || echo 0)
+  local MINS_SINCE=$(( (NOW_EPOCH - LAST_PUSH) / 60 ))
+
+  if [[ $MINS_SINCE -ge 55 ]]; then
+    (
+      cd "$ROOT" || exit 1
+      rm -f .git/index.lock 2>/dev/null
+      git add website/data/aether-metrics.json agents/sam/website/data/aether-metrics.json 2>/dev/null
+      if ! git diff --cached --quiet 2>/dev/null; then
+        git commit -m "aether: metrics update $(TZ=America/Denver date +%H:%M)" 2>/dev/null \
+          && git push origin main 2>/dev/null \
+          && log "Git push: metrics deployed to Vercel (${MINS_SINCE}min since last push)" \
+          && echo "$NOW_EPOCH" > "$PUSH_MARKER" \
+          || log "Git push: failed (will retry next cycle)"
+      else
+        log "Git push: skipped (no metric changes since last push)"
+      fi
+    )
+  else
+    log "Git push: throttled (${MINS_SINCE}min since last push, need 55+)"
+  fi
 
   verify_dashboard
 

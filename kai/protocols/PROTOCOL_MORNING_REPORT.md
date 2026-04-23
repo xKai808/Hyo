@@ -519,8 +519,8 @@ Gate: "Can I reproduce this number without Kai's judgment?" NO → it is not rep
 | sections.wentWell | agents/{name}/logs/self-improve-latest.json | improvement_description where status=shipped | Confirm git commit exists for each item listed |
 | sections.needsAttention | agents/{name}/logs/self-improve-latest.json + kai/ledger/kai-autonomous-state.json | hyo_attention flag + agents with stall_hours>24 | Check the flag is set in the source file |
 | sections.agentHighlights | agents/{name}/logs/self-improve-latest.json | shipped_since_last, next_action, priority per agent | Each entry traceable to agent's ACTIVE.md or self-improve log |
-| sections.sicqScores | kai/ledger/sicq-latest.json | scores{} dict | Compare directly — must match sicq-latest.json scores |
-| sections.ompScores | kai/ledger/omp-summary.json | agents{}.specific_score * 100 | Compare directly — must match omp-summary.json |
+| sections.sicqScores | kai/ledger/sicq-latest.json | scores{} dict | Compare directly — must match sicq-latest.json scores. **MANDATORY — must appear every report.** |
+| sections.ompScores | kai/ledger/omp-summary.json | agents{}.overall (integer 0-100) | Compare directly — must match omp-summary.json. **MANDATORY — must appear every report.** |
 | sections.selfImprovementFlywheel | agents/{name}/logs/self-improve-latest.json | resolved_today[], in_progress[] | Each resolved item must have a git commit |
 | health status ("healthy") | kai/ledger/sicq-latest.json + kai/queue/healthcheck-latest.json | queue alive AND no SICQ ≤40 | If any agent SICQ ≤40, status MUST say "quality issues" not "healthy" |
 | timestamp / date | System clock (America/Denver) | datetime.now() at report generation | Should match the date in the report filename |
@@ -536,5 +536,6 @@ Gate: "Can I reproduce this number without Kai's judgment?" NO → it is not rep
 | v1.0    | 2026-04-21 | Initial protocol. Adds 5 mandatory questions, new JSON fields, action_type classification, executive summary agent counts, 10 failure modes, HQ color table, cold start reproduction. Incorporates GPT critique verbatim. |
 | v1.1    | 2026-04-21 | HYO_FEEDBACK_GATE (Part 0): constitutional meta-algorithm — Hyo feedback → protocol update in same session, every time. WRITING STANDARD (Part 0b): BLUF + inverted pyramid, plain English, human CEO audience. "NOT this / THIS" examples for every agent section and executive summary. Max 2 technical terms per section rule. |
 | v1.2    | 2026-04-22 | DATA SOURCE TABLE (Part 11): every feed field mapped to source file, extraction method, and verification step. Reproducibility requirement: same source data → identical output. Health gate updated: SICQ ≤40 blocks "healthy" status. |
+| v1.3    | 2026-04-23 | MANDATORY SCORES: sicqScores + ompScores are now mandatory in every morning report. Bug fixed: generate-morning-report.sh used two separate Python processes — _scores from PYEOF never reached FEED_PYEOF. Fixed by reading score files directly in FEED_PYEOF. Protocol updated to mark scores as MANDATORY. |
 
-<!-- Last reviewed: 2026-04-22 by Kai (S29 Hyo feedback response) -->
+<!-- Last reviewed: 2026-04-23 by Kai (scores mandatory, aether throttle, JSON vs protocol) -->

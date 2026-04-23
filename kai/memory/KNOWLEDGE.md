@@ -624,3 +624,22 @@ BIGGEST MISSED OPPORTUNITIES:
 - Memory consolidation misses all direct file edits (only reads daily-notes/)
 - AetherBot analysis findings never fed back into bot improvement automatically
 
+
+**Aether Vercel deployment throttle (2026-04-23):**
+- Aether metrics ran every 60s, committed when metrics changed → ~96 deploys/day → hit Vercel limit
+- Fix: aether.sh now throttles git push to max once per 55 minutes using .last-metrics-push marker
+- Result: ~24 deploys/day, well within limits
+- File: agents/aether/aether.sh — "Git push metrics" section
+
+**Morning report agent scores bug (2026-04-23):**
+- Bug: generate-morning-report.sh has TWO Python processes: PYEOF (lines 89-979) and FEED_PYEOF (lines 999-1207)
+- _scores variable set in PYEOF was NEVER available in FEED_PYEOF (separate processes)
+- _scores in dir() always False → sicqScores/ompScores always empty in feed entry
+- Fix: FEED_PYEOF now reads sicq-latest.json and omp-summary.json directly
+- Protocol: PROTOCOL_MORNING_REPORT.md v1.3 — scores now MANDATORY in every morning report
+- OMP values: overall field is integer 0-100 (NOT 0-1 float) — read as int(_ad.get("overall"))
+
+**JSON vs Protocol — Kai's view (2026-04-23):**
+- See response in session for full thoughts
+- Short version: JSON = machine state (what IS), Protocol = human intent (what SHOULD BE)
+- Both needed, complementary. JSON without protocol = no accountability. Protocol without JSON = no ground truth.
