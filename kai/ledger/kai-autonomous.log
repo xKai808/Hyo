@@ -19146,3 +19146,417 @@ session-handoff.json auto-written: top_priority=> Session 27 ended 2026-04-21 ~2
 [2026-04-23T06:44:08-0600] System health: RED (28/100)
 [2026-04-23T06:44:08-0600] Agents online: 6/6 | Newsletter: 0 | Queue: 1679 items | Recurring: 0 patterns
 [2026-04-23T06:44:08-0600] Agents online: 6/6 | Newsletter: 0 | Queue: 1679 items | Recurring: 0 patterns
+
+══ PHASE 0: SESSION PREP + HYDRATION CHECK ══
+══ PHASE 0: SESSION PREP + HYDRATION CHECK ══
+verified-state.json written: /Users/kai/Documents/Projects/Hyo/kai/ledger/verified-state.json
+  credits: OK
+  sicq: OK
+  omp: OK
+  report_freshness: OK
+  stale_tickets: OK
+  open_tickets: OK
+  aether_balance: OK
+session-handoff.json auto-written: top_priority=> Session 27 ended 2026-04-21 ~21:30 MT. Hyo is done for the
+[2026-04-23T06:59:11-0600] Session prep: PASS — verified-state.json written
+[2026-04-23T06:59:11-0600] Session prep: PASS — verified-state.json written
+/Users/kai/Documents/Projects/Hyo/bin/kai-hydration-check.sh: line 30: session: unbound variable
+[2026-04-23T06:59:11-0600] Hydration check: PASS — all files fresh
+[2026-04-23T06:59:11-0600] Hydration check: PASS — all files fresh
+
+══ PHASE 1: AGENT FRESHNESS ══
+══ PHASE 1: AGENT FRESHNESS ══
+[2026-04-23T06:59:11-0600] ✓ nel — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ nel — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ ra — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ ra — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ sam — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ sam — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ aether — 0h ago (within 1h threshold)
+[2026-04-23T06:59:11-0600] ✓ aether — 0h ago (within 1h threshold)
+[2026-04-23T06:59:11-0600] ✓ dex — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ dex — 0h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ hyo — 19h ago (within 26h threshold)
+[2026-04-23T06:59:11-0600] ✓ hyo — 19h ago (within 26h threshold)
+
+══ PHASE 2: NEWSLETTER FRESHNESS ══
+══ PHASE 2: NEWSLETTER FRESHNESS ══
+[2026-04-23T06:59:11-0600] ✗ Newsletter: missing for 2026-04-23
+[2026-04-23T06:59:11-0600] ✗ Newsletter: missing for 2026-04-23
+[2026-04-23T06:59:11-0600]   → Queued: 5bcae9ad-3c89-4b2b-96c0-ee85531c300f
+[2026-04-23T06:59:11-0600]   → Queued: 5bcae9ad-3c89-4b2b-96c0-ee85531c300f
+[2026-04-23T06:59:11-0600]   → Newsletter pipeline re-queued
+[2026-04-23T06:59:11-0600]   → Newsletter pipeline re-queued
+
+══ PHASE 3: HQ REPORT COMPLETENESS ══
+══ PHASE 3: HQ REPORT COMPLETENESS ══
+[2026-04-23T06:59:11-0600] ✓ Report: morning-report published today
+[2026-04-23T06:59:11-0600] ✓ Report: morning-report published today
+[2026-04-23T06:59:11-0600] ✗ Report: nel-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: nel-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: ra-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: ra-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: sam-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: sam-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: aether-daily NOT published today
+[2026-04-23T06:59:11-0600] ✗ Report: aether-daily NOT published today
+
+══ PHASE 4: TICKET SLA COMPLIANCE ══
+══ PHASE 4: TICKET SLA COMPLIANCE ══
+[2026-04-23T06:59:11-0600] Ticket SLA: 33% within SLA | P0 open: 96 | score: 0/15
+[2026-04-23T06:59:11-0600] Ticket SLA: 33% within SLA | P0 open: 96 | score: 0/15
+[2026-04-23T06:59:11-0600] ⚠️ P0 tickets open: 96 — ticket-sla-enforcer will handle escalation
+[2026-04-23T06:59:11-0600] ⚠️ P0 tickets open: 96 — ticket-sla-enforcer will handle escalation
+[2026-04-23T06:59:11-0600] ⚠️ ACTIVE.md staleness: 81 ticket(s) >72h without resolution
+[2026-04-23T06:59:11-0600] ⚠️ ACTIVE.md staleness: 81 ticket(s) >72h without resolution
+[2026-04-23T06:59:11-0600]   → nel/nel-003 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-003 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-003 open 124.9h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/nel-004 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-004 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-004 open 124.9h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/nel-005 (207.1h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-005 (207.1h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-005 open 207.1h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/nel-007 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-007 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-007 open 249.5h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/nel-010 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-010 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-010 open 249.5h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/nel-015 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-015 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-015 open 249.4h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-006 (256.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-006 (256.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-006 open 256.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-007 (256.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-007 (256.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-007 open 256.7h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-008 (256.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-008 (256.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-008 open 256.7h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-009 (256.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-009 (256.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-009 open 256.4h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/nel-019 (254.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/nel-019 (254.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: nel-019 open 254.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-010 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-010 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-010 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-011 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-011 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-011 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-012 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-012 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-012 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-013 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-013 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-013 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-014 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-014 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-014 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-015 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-015 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-015 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-016 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-016 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-016 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-017 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-017 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-017 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-018 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-018 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-018 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-019 (250.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-019 (250.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-019 open 250.8h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-001 (250.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-001 (250.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-001 open 250.7h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-002 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-002 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-002 open 249.5h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-003 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-003 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-003 open 249.5h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-004 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-004 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-004 open 249.5h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-005 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-005 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-005 open 249.5h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-020 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-020 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-020 open 249.4h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-021 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-021 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-021 open 249.4h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-022 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-022 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-022 open 249.4h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-023 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → nel/flag-nel-023 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-nel-001 (P1) → nel: Staleness escalation: flag-nel-023 open 249.4h without resolution
+TASK-20260423-nel-001
+[2026-04-23T06:59:11-0600]   → sam/sam-004 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/sam-004 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: sam-004 open 124.9h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/sam-005 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/sam-005 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: sam-005 open 124.9h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/sam-006 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/sam-006 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: sam-006 open 124.9h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/sam-009 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/sam-009 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: sam-009 open 249.4h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/flag- (256.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/flag- (256.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: flag- open 256.7h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/flag-sam-001 (256.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/flag-sam-001 (256.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: flag-sam-001 open 256.7h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/flag-sam-002 (256.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/flag-sam-002 (256.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: flag-sam-002 open 256.7h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → sam/flag-sam-003 (256.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → sam/flag-sam-003 (256.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-sam-001 (P1) → sam: Staleness escalation: flag-sam-003 open 256.4h without resolution
+TASK-20260423-sam-001
+[2026-04-23T06:59:11-0600]   → ra/ra-002 (210.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/ra-002 (210.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: ra-002 open 210.8h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/ra-003 (207.1h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/ra-003 (207.1h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: ra-003 open 207.1h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/ra-004 (226.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/ra-004 (226.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: ra-004 open 226.8h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/ra-005 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/ra-005 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: ra-005 open 249.5h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/ra-006 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/ra-006 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: ra-006 open 249.5h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/ra-009 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/ra-009 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: ra-009 open 249.4h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/flag-ra-001 (256.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/flag-ra-001 (256.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: flag-ra-001 open 256.7h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/flag-ra-002 (256.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/flag-ra-002 (256.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: flag-ra-002 open 256.4h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → ra/flag-ra-003 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → ra/flag-ra-003 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-ra-001 (P1) → ra: Staleness escalation: flag-ra-003 open 249.4h without resolution
+TASK-20260423-ra-001
+[2026-04-23T06:59:11-0600]   → aether/flag-aether-001 (224.1h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → aether/flag-aether-001 (224.1h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-aether-001 (P1) → aether: Staleness escalation: flag-aether-001 open 224.1h without resolution
+TASK-20260423-aether-001
+[2026-04-23T06:59:11-0600]   → aether/flag-aether-002 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → aether/flag-aether-002 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-aether-001 (P1) → aether: Staleness escalation: flag-aether-002 open 124.9h without resolution
+TASK-20260423-aether-001
+[2026-04-23T06:59:11-0600]   → kai/sam-004 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/sam-004 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: sam-004 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/sam-005 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/sam-005 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: sam-005 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-003 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-003 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-003 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-004 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-004 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-004 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-005 (207.1h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-005 (207.1h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-005 open 207.1h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/sam-006 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/sam-006 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: sam-006 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/ra-002 (210.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/ra-002 (210.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: ra-002 open 210.8h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/ra-003 (207.1h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/ra-003 (207.1h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: ra-003 open 207.1h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/ra-004 (226.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/ra-004 (226.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: ra-004 open 226.8h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/ra-005 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/ra-005 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: ra-005 open 249.5h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-007 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-007 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-007 open 249.5h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/ra-006 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/ra-006 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: ra-006 open 249.5h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/sam-009 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/sam-009 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: sam-009 open 249.4h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-010 (249.5h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-010 (249.5h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-010 open 249.5h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/ra-009 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/ra-009 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: ra-009 open 249.4h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-015 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-015 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-015 open 249.4h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/kai-002 (172.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/kai-002 (172.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: kai-002 open 172.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/dex-002 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/dex-002 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: dex-002 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/nel-019 (254.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/nel-019 (254.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: nel-019 open 254.8h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-dex-001 (251.3h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-dex-001 (251.3h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-dex-001 open 251.3h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-nel-001 (250.7h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-nel-001 (250.7h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-nel-001 open 250.7h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-ra-003 (249.4h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-ra-003 (249.4h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-ra-003 open 249.4h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-001 (196.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-001 (196.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-kai-001 open 196.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-002 (172.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-002 (172.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-kai-002 open 172.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-003 (172.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-003 (172.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-kai-003 open 172.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-004 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-004 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-kai-004 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-aether-002 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-aether-002 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-aether-002 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-dex-002 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-dex-002 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-dex-002 open 124.9h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-005 (76.8h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → kai/flag-kai-005 (76.8h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-kai-001 (P1) → kai: Staleness escalation: flag-kai-005 open 76.8h without resolution
+TASK-20260423-kai-001
+[2026-04-23T06:59:11-0600]   → dex/dex-002 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → dex/dex-002 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-dex-001 (P1) → dex: Staleness escalation: dex-002 open 124.9h without resolution
+TASK-20260423-dex-001
+[2026-04-23T06:59:11-0600]   → dex/flag-dex-001 (222.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → dex/flag-dex-001 (222.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-dex-001 (P1) → dex: Staleness escalation: flag-dex-001 open 222.9h without resolution
+TASK-20260423-dex-001
+[2026-04-23T06:59:11-0600]   → dex/flag-dex-002 (124.9h old) — opening P1 escalation
+[2026-04-23T06:59:11-0600]   → dex/flag-dex-002 (124.9h old) — opening P1 escalation
+[0;32m[ticket][0m Created TASK-20260423-dex-001 (P1) → dex: Staleness escalation: flag-dex-002 open 124.9h without resolution
+TASK-20260423-dex-001
+[2026-04-23T06:59:11-0600]   Escalations opened this cycle: 81 (existing skipped)
+[2026-04-23T06:59:11-0600]   Escalations opened this cycle: 81 (existing skipped)
+
+══ PHASE 5: QUALITY METRICS ══
+══ PHASE 5: QUALITY METRICS ══
+[2026-04-23T06:59:11-0600] ✗ Queue hygiene: 1688 items — triggering cleanup
+[2026-04-23T06:59:11-0600] ✗ Queue hygiene: 1688 items — triggering cleanup
+[2026-04-23T06:59:11-0600]   → Queued: c101b868-d25a-4397-8770-f07f16189432
+[2026-04-23T06:59:11-0600]   → Queued: c101b868-d25a-4397-8770-f07f16189432
+[2026-04-23T06:59:11-0600] ✓ Recurring patterns: 0 (threshold: 20)
+[2026-04-23T06:59:11-0600] ✓ Recurring patterns: 0 (threshold: 20)
+
+══ PHASE 6: SCHEDULED DISPATCH ══
+══ PHASE 6: SCHEDULED DISPATCH ══
+[2026-04-23T06:59:11-0600] → Dispatching: morning-report
+[2026-04-23T06:59:11-0600] → Dispatching: morning-report
+[2026-04-23T06:59:11-0600]   → Queued: d469a116-c2d3-44db-bfea-ad91d81c8489
+[2026-04-23T06:59:11-0600]   → Queued: d469a116-c2d3-44db-bfea-ad91d81c8489
+
+══ PHASE 7: HEALTH SCORE ══
+══ PHASE 7: HEALTH SCORE ══
+[2026-04-23T06:59:11-0600]   → Paged Hyo: System health: RED (score: 28/100). Check kai-autonomous.log for details.
+[2026-04-23T06:59:11-0600]   → Paged Hyo: System health: RED (score: 28/100). Check kai-autonomous.log for details.
+[2026-04-23T06:59:11-0600] System health: RED (28/100)
+[2026-04-23T06:59:11-0600] System health: RED (28/100)
+[2026-04-23T06:59:11-0600] Agents online: 6/6 | Newsletter: 0 | Queue: 1688 items | Recurring: 0 patterns
+[2026-04-23T06:59:11-0600] Agents online: 6/6 | Newsletter: 0 | Queue: 1688 items | Recurring: 0 patterns
