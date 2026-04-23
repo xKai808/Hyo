@@ -53,19 +53,22 @@ mkdir -p "$(dirname "$LEDGER")"
 # Try multiple naming patterns used by aether.sh
 find_analysis_file() {
     local date="$1"
+    # GATE: Only accept proper analysis documents — NOT log files.
+    # Log files (aether-DATE.log) are operational runner output and will always
+    # fail content checks (QC03-QC11). Removing them from candidates prevents
+    # misleading 8-check failures when the real issue is "analysis didn't run."
+    # Gate question: "Is this a proper analysis doc?" NO → return 1 → QC01 FAIL (clear error).
+    # (SE-028-AETHER-GATE-001)
     local candidates=(
-        "$ROOT/agents/aether/logs/aether-${date}.log"
-        "$ROOT/ANALYSIS_BRIEFING.txt"
         "$ROOT/agents/aether/analysis/Analysis_${date}.txt"
+        "$ROOT/ANALYSIS_BRIEFING.txt"
         "$ROOT/agents/aether/analysis/aether-${date}.md"
     )
     for f in "${candidates[@]}"; do
         [[ -f "$f" ]] && echo "$f" && return 0
     done
-    # Last resort: newest file in logs/ containing the date
-    local found
-    found=$(find "$ROOT/agents/aether/logs" -name "*${date}*" -type f 2>/dev/null | sort -r | head -1)
-    [[ -n "$found" ]] && echo "$found" && return 0
+    # DO NOT fall back to log files — operational logs are not analysis documents.
+    # If no analysis file found, return 1 so QC01 fires with a clear message.
     return 1
 }
 

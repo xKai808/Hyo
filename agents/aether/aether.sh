@@ -1327,17 +1327,16 @@ PYEOF
     if [[ -f "$REPORT_PUBLISH_MARKER" ]]; then
       log "Self-authored report: skipping publish (already published today)"
     else
-      # QUALITY GATE (Aether W2 — shipped 2026-04-21): block publish if analysis fails QC
-      QUALITY_GATE="$ROOT/agents/aether/analysis-quality-gate.sh"
-      GATE_DATE="$(TZ=America/Denver date +%Y-%m-%d)"
-      if [[ -x "$QUALITY_GATE" ]] && ! bash "$QUALITY_GATE" "$GATE_DATE" >/dev/null 2>&1; then
-        log "WARN: Quality gate FAIL — analysis blocked from HQ publish"
-        log "  Fix issues then re-run: bash agents/aether/analysis-quality-gate.sh $GATE_DATE"
-      else
-        bash "$PUBLISH_SCRIPT" "agent-reflection" "aether" "Aether — Trading Report" "$AETHER_REFLECTION" 2>/dev/null || true
-        touch "$REPORT_PUBLISH_MARKER"
-        log "Self-authored report published to HQ feed (quality gate passed)"
-      fi
+      # GATE FIX (SE-028-AETHER-GATE-001): analysis-quality-gate.sh gates the ANALYSIS
+      # publish (in run_analysis.sh), NOT this reflection. The reflection is self-authored
+      # operational content that does not depend on Analysis_DATE.txt existing.
+      # Removing the gate here prevents: reflection blocked all day because analysis API
+      # key expired, causing misleading "Quality gate FAIL" with 8 confusing content errors
+      # on the operational log file (which was never meant to be checked).
+      # Gate question: "Is this a reflection (not analysis)?" YES → publish without analysis gate.
+      bash "$PUBLISH_SCRIPT" "agent-reflection" "aether" "Aether — Trading Report" "$AETHER_REFLECTION" 2>/dev/null || true
+      touch "$REPORT_PUBLISH_MARKER"
+      log "Self-authored report published to HQ feed"
     fi
 
     # Report to Kai — closed-loop upward communication (always, for metrics tracking)

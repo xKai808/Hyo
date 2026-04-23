@@ -259,12 +259,26 @@ def get_historical_logs(limit=5):
 
 
 import time as _time
+
+class ClaudeQuotaExceeded(Exception):
+    """Raised when Anthropic API returns a usage-limit 400 error.
+    Triggers automatic GPT-4o fallback in run_analysis().
+    Gate question: 'Is this a quota error?' YES → raise ClaudeQuotaExceeded → GPT fallback.
+    """
+    pass
+
 def _retry_api(fn, *, what='api', attempts=4, base_sleep=3.0):
     last = None
     for i in range(attempts):
         try:
             return fn()
         except Exception as e:
+            # Detect Anthropic quota error — no retry, fail fast, trigger fallback
+            err_str = str(e)
+            if what == 'claude' and ('specified API usage limits' in err_str or
+                                     'You have reached your' in err_str):
+                print(f'[{what}] QUOTA EXCEEDED — Anthropic API limit hit. Triggering GPT-4o fallback.')
+                raise ClaudeQuotaExceeded(f'Anthropic quota: {err_str[:200]}')
             last = e
             sleep_s = base_sleep * (2 ** i)
             print(f'[{what}] attempt {i+1}/{attempts} failed: {e!r} — sleeping {sleep_s:.1f}s')
@@ -347,22 +361,34 @@ def run_analysis():
 
     print(f"Historical logs: {len(historical)} sessions")
 
-    # STEP 2: Claude primary analysis
+    # STEP 2: Claude primary analysis (with GPT-4o quota fallback)
     print("\nStep 2: Sending to Claude...")
     send_telegram("Kai: Claude analyzing...")
 
-    claude_messages = [{
-        "role": "user",
-        "content": (
-            f"Today's log ({log_filename}) — last 8000 chars:\n\n{log_content[-8000:]}\n\n"
-            f"Historical data for simulation:\n{historical_context}"
+    log_payload = (
+        f"Today's log ({log_filename}) — last 8000 chars:\n\n{log_content[-8000:]}\n\n"
+        f"Historical data for simulation:\n{historical_context}"
+    )
+    claude_messages = [{"role": "user", "content": log_payload}]
+
+    GPT_FALLBACK_MODE = False
+    try:
+        claude_analysis = call_claude(claude_messages)
+        print(f"Claude: {len(claude_analysis):,} chars")
+    except ClaudeQuotaExceeded as _qe:
+        print(f"[fallback] Anthropic quota exceeded — switching to GPT-4o for all steps.")
+        print(f"[fallback] Quota resets: check KNOWLEDGE.md or Anthropic console for date.")
+        send_telegram("Kai: Anthropic API quota exceeded — using GPT-4o fallback for full analysis.")
+        GPT_FALLBACK_MODE = True
+        # GPT-4o primary analysis using Claude system prompt as context
+        claude_analysis = call_gpt(
+            f"[GPT-4o FALLBACK — Claude API at quota]\n\n"
+            f"System context: {CLAUDE_SYSTEM[:2000]}\n\n"
+            f"{log_payload}"
         )
-    }]
+        print(f"GPT-fallback primary: {len(claude_analysis):,} chars")
 
-    claude_analysis = call_claude(claude_messages)
-    print(f"Claude: {len(claude_analysis):,} chars")
-
-    # STEP 3: GPT fact-check
+    # STEP 3: GPT fact-check / critique
     print("\nStep 3: Sending to GPT...")
     send_telegram("Kai: GPT fact-checking...")
 
@@ -371,22 +397,31 @@ def run_analysis():
     )
     print(f"GPT: {len(gpt_critique):,} chars")
 
-    # STEP 4: Claude final synthesis
-    print("\nStep 4: Claude final synthesis...")
+    # STEP 4: Final synthesis (Claude if available, GPT if quota exceeded)
+    print("\nStep 4: Final synthesis...")
     send_telegram("Kai: Synthesizing final recommendation...")
 
-    claude_messages.append({"role": "assistant", "content": claude_analysis})
-    claude_messages.append({
-        "role": "user",
-        "content": (
-            f"GPT critique:\n\n{gpt_critique}\n\n"
-            f"Synthesize. ONE final recommendation: "
-            f"build {NEXT_VERSION} with exact specs, or collect more data."
+    if GPT_FALLBACK_MODE:
+        final_synthesis = call_gpt(
+            f"[FINAL SYNTHESIS — GPT-4o fallback]\n\n"
+            f"Primary analysis:\n{claude_analysis}\n\n"
+            f"GPT critique:\n{gpt_critique}\n\n"
+            f"VERDICT: Provide ONE final recommendation: build {NEXT_VERSION} with exact specs, "
+            f"or collect more data. Include: VERDICT, DAY GRADE, CORRECTIONS APPLIED."
         )
-    })
-
-    final_synthesis = call_claude(claude_messages)
-    print(f"Synthesis: {len(final_synthesis):,} chars")
+        print(f"GPT synthesis: {len(final_synthesis):,} chars")
+    else:
+        claude_messages.append({"role": "assistant", "content": claude_analysis})
+        claude_messages.append({
+            "role": "user",
+            "content": (
+                f"GPT critique:\n\n{gpt_critique}\n\n"
+                f"Synthesize. ONE final recommendation: "
+                f"build {NEXT_VERSION} with exact specs, or collect more data."
+            )
+        })
+        final_synthesis = call_claude(claude_messages)
+        print(f"Synthesis: {len(final_synthesis):,} chars")
 
     # STEP 5: Surface to Hyo
     print("\nStep 5: Sending to Telegram...")
