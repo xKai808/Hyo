@@ -1,8 +1,8 @@
 # PROTOCOL_ANT.md
 # Ant — Complete Agent Execution Protocol
 #
-# VERSION: 1.3
-# Author: Kai | Created: 2026-04-18 | Updated: 2026-04-19
+# VERSION: 1.4
+# Author: Kai | Created: 2026-04-18 | Updated: 2026-04-22
 # Canonical location: agents/ant/PROTOCOL_ANT.md
 #
 # PURPOSE: Every execution of Ant — automated or manual — follows this protocol.
@@ -21,6 +21,13 @@
 #                      ant-gate.py instead of inline Python; git push failure sends Telegram
 #                      alert; scraped-credits >24h staleness flagged in gate; ANT-GAP-003
 #                      (failure alert) resolved via Telegram integration
+#   v1.4 (2026-04-22): SCHEMA ENFORCEMENT — after a session rewrote ant-data.json without
+#                      reading this protocol, breaking the daily credit chart (history entries
+#                      missing anthropic/openai fields). Added hard schema gate. Any script
+#                      or agent rewriting ant-data.json MUST read Part 10 schema first.
+#                      Gate question: "Did I verify history[] has {date,anthropic,openai,total}?"
+#                      NO → do not write. Credits factchecked: Anthropic $30.67 remaining,
+#                      OpenAI $17.94 remaining (scraped 2026-04-18, adjusted for spend).
 
 ---
 
@@ -573,6 +580,14 @@ PYEOF
 ```
 
 **`history` is at the TOP LEVEL of the JSON object, not nested under `costs`.**
+
+**SCHEMA GATE (added v1.4 — non-negotiable):**
+Before writing ant-data.json by any means (script, manual edit, session rewrite):
+1. Read this schema.
+2. Confirm history[] entries contain ALL FOUR fields: date, anthropic, openai, total.
+3. Confirm credits.anthropic and credits.openai exist and are non-null.
+4. Run ant-gate.py after writing — it checks history[] non-empty and credits non-null.
+Gate question: "Does every history entry have anthropic AND openai fields?" NO → do not commit.
 
 ---
 
