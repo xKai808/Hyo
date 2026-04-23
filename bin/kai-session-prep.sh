@@ -223,3 +223,111 @@ for k, v in state.items():
     elif isinstance(v, dict) and 'error' in v:
         print(f"  {k}: ERROR — {v['error']}")
 PYEOF
+
+# ── Write session-handoff.json (automated, no prompting required) ─────────────
+# This replaces the manual session-close step for handoff purposes.
+# The handoff is computed entirely from existing files — no human input needed.
+# session-close.sh still handles daily note, commit queue, and verification.
+# The handoff runs every 15 min so every session starts with fresh continuity data.
+
+HANDOFF="$ROOT/kai/ledger/session-handoff.json"
+TASKS="$ROOT/KAI_TASKS.md"
+
+python3 - "$ROOT" "$NOW_MT" "$TODAY" "$HANDOFF" "$TASKS" << 'PYEOF'
+import json, sys, os, re, glob
+from datetime import datetime, timezone
+
+root, ts, today, handoff_path, tasks_path = sys.argv[1:6]
+
+# Top priority: read from KAI_TASKS.md ★ NEXT SESSION block
+top_priority = "See KAI_TASKS.md ★ block"
+try:
+    with open(tasks_path) as f:
+        content = f.read()
+    # Find the ★ block
+    m = re.search(r'★.*?NEXT SESSION.*?\n(.*?)(?=\n★|\n##|\Z)', content, re.DOTALL | re.IGNORECASE)
+    if m:
+        lines = [l.strip() for l in m.group(1).split('\n') if l.strip() and not l.strip().startswith('#')]
+        if lines:
+            top_priority = lines[0].lstrip('- *').strip()[:200]
+except Exception:
+    pass
+
+# What shipped: last 5 meaningful commits (exclude autonomous script commits)
+shipped = []
+try:
+    import subprocess
+    result = subprocess.run(
+        ['git', '-C', root, 'log', '--oneline', '-20', '--no-merges'],
+        capture_output=True, text=True, timeout=10
+    )
+    for line in result.stdout.strip().split('\n'):
+        msg = line[8:].strip()  # skip hash
+        # Skip autonomous/housekeeping commits
+        if any(skip in msg.lower() for skip in ['aether: metrics', 'newsletter: publish', 'ant: daily', 'nel-qa:']):
+            continue
+        shipped.append(msg)
+        if len(shipped) >= 5:
+            break
+except Exception:
+    shipped = ["See git log"]
+
+# Open P0s from tickets
+open_p0s = []
+try:
+    tickets_path = os.path.join(root, 'kai/tickets/tickets.jsonl')
+    with open(tickets_path) as f:
+        for line in f:
+            if not line.strip(): continue
+            t = json.loads(line)
+            if t.get('priority') == 'P0' and t.get('status') not in ('CLOSED','RESOLVED','ARCHIVED'):
+                open_p0s.append(t.get('id','?') + ': ' + t.get('title','')[:80])
+except Exception:
+    pass
+
+# Hyo-pending actions (from KAI_TASKS [H] markers)
+hyo_pending = []
+try:
+    items = re.findall(r'- \[ \] \*\*\[H\]\*\* \*\*(.*?)\*\*', content)
+    hyo_pending = [i.strip() for i in items[:5]]
+except Exception:
+    pass
+
+# Queued commits
+queued = [os.path.basename(p) for p in glob.glob(os.path.join(root, 'kai/queue/pending/*.json'))]
+
+# Memory freshness
+freshness = {}
+for label, path in [
+    ('kai_brief', 'KAI_BRIEF.md'),
+    ('kai_tasks', 'KAI_TASKS.md'),
+    ('knowledge', 'kai/memory/KNOWLEDGE.md'),
+    ('tacit', 'kai/memory/TACIT.md'),
+]:
+    full = os.path.join(root, path)
+    if os.path.exists(full):
+        mtime = datetime.fromtimestamp(os.path.getmtime(full)).strftime('%Y-%m-%dT%H:%M:%S')
+        freshness[label] = mtime
+    else:
+        freshness[label] = 'missing'
+
+handoff = {
+    "session_id": f"auto-{today}",
+    "ended_at": ts,
+    "written_by": "kai-session-prep.sh (automated — no prompting required)",
+    "top_priority": top_priority,
+    "shipped_this_session": shipped,
+    "open_p0s": open_p0s,
+    "hyo_actions_pending": hyo_pending,
+    "commits_queued": queued,
+    "commits_to_verify": ["Run: git log --oneline -8"],
+    "memory_freshness": freshness,
+    "prep_failures": [],
+    "continuity_protocol": "kai/protocols/SESSION_CONTINUITY_PROTOCOL.md",
+    "notes": "Auto-written every 15min by kai-session-prep.sh. No manual session-close required for continuity."
+}
+
+with open(handoff_path, 'w') as f:
+    json.dump(handoff, f, indent=2)
+print(f"session-handoff.json auto-written: top_priority={top_priority[:60]}")
+PYEOF
