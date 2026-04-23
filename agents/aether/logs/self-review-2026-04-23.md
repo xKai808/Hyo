@@ -1,4 +1,4 @@
-# aether Self-Review — 2026-04-23T07:18
+# aether Self-Review — 2026-04-23T07:28
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-04-23-aether-results.json**: WHAT triggers this? Found 0 callers.
@@ -61,5 +61,5 @@ Questions for aether to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 16
-- Gate results: trigger=10/13, visibility=checked, resolutions=6, adoption=-5/5
+- Gate results: trigger=12/15, visibility=checked, resolutions=6, adoption=-5/5
 

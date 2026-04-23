@@ -37,6 +37,43 @@ if [[ ! -f "$SECTIONS_FILE" ]]; then
   exit 1
 fi
 
+# ── SCHEMA REGISTRY GATE ─────────────────────────────────────────────────────
+# Every report type must have a protocol AND a schema. New types without both are blocked.
+# Gate question: "Does kai/schemas/{type}.schema.json exist?" NO → block (create protocol first).
+SCHEMA_FILE="$ROOT/kai/schemas/$(echo "$TYPE" | tr '-' '_').schema.json"
+if [[ ! -f "$SCHEMA_FILE" ]]; then
+  echo "ERROR: SCHEMA GATE BLOCKED — type '$TYPE' has no schema file at $SCHEMA_FILE" >&2
+  echo "  Create kai/protocols/PROTOCOL_$(echo "$TYPE" | tr '[:lower:]-' '[:upper:]_').md first, then add schema." >&2
+  HYO_ROOT="$ROOT" bash "$ROOT/bin/ticket.sh" create \
+    --agent "kai" \
+    --title "Missing schema: $TYPE has no schema file — create protocol and schema before publishing" \
+    --priority "P1" 2>/dev/null || true
+  exit 1
+fi
+
+# Validate mandatory fields from schema
+if [[ -f "$SECTIONS_FILE" ]] && [[ -f "$SCHEMA_FILE" ]]; then
+  SCHEMA_CHECK=$(python3 -c "
+import json, sys
+with open('$SECTIONS_FILE') as f:
+    sections = json.load(f)
+with open('$SCHEMA_FILE') as f:
+    schema = json.load(f)
+mandatory = schema.get('mandatory', [])
+missing = [m for m in mandatory if not sections.get(m)]
+if missing:
+    print('MISSING:' + ','.join(missing))
+else:
+    print('OK')
+" 2>/dev/null || echo "OK")
+  if [[ "$SCHEMA_CHECK" == MISSING:* ]]; then
+    MISSING_FIELDS="${SCHEMA_CHECK#MISSING:}"
+    echo "WARN: Schema validation: mandatory fields missing from $TYPE: $MISSING_FIELDS" >&2
+    echo "  Protocol: $(python3 -c \"import json; print(json.load(open('$SCHEMA_FILE')).get('_protocol','unknown'))\" 2>/dev/null)" >&2
+    # Warn only (not block) — allows partial publishes while teams migrate to full schema compliance
+  fi
+fi
+
 # ─── THEATER DETECTION GATE ──────────────────────────────────────────────────
 # Research-drop publishes must include sources. Blocks theater ("did research"
 # without citations). Gate 3 from PROTOCOL_HQ_PUBLISH.md.

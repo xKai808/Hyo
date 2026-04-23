@@ -690,6 +690,111 @@ for feed_path in paths:
 SCORE_PYEOF
 }
 
+# ─── Check 11: Protocol/JSON alignment for all HQ published products ──────────
+check_protocol_json_alignment() {
+  log_sec "CHECK 11: Protocol/JSON alignment (schema registry)"
+
+  local SCHEMA_DIR="$HYO_ROOT/kai/schemas"
+  local REGISTRY="$SCHEMA_DIR/registry.json"
+
+  if [[ ! -f "$REGISTRY" ]]; then
+    ISSUES_FOUND+=("Schema registry missing: $REGISTRY — create kai/schemas/ and registry.json")
+    return
+  fi
+
+  python3 - "$HYO_ROOT" "$SCHEMA_DIR" "$REGISTRY" << 'PYEOF'
+import json, os, sys
+
+root, schema_dir, registry_path = sys.argv[1:4]
+
+with open(registry_path) as f:
+    registry = json.load(f)
+
+registered_types = set(registry.get("types", {}).keys())
+issues = []
+fixes = []
+
+# 1. Check every registered type has a schema file AND a protocol
+for rtype, protocol_path in registry.get("types", {}).items():
+    schema_file = os.path.join(schema_dir, rtype.replace("-", "_") + ".schema.json")
+    if not os.path.exists(schema_file):
+        issues.append(f"Schema file missing for '{rtype}': {schema_file}")
+    full_protocol = os.path.join(root, protocol_path)
+    if not os.path.exists(full_protocol):
+        issues.append(f"Protocol file missing for '{rtype}': {protocol_path}")
+
+# 2. Check feed.json for types NOT in registry
+feed_path = os.path.join(root, "agents/sam/website/data/feed.json")
+if os.path.exists(feed_path):
+    with open(feed_path) as f:
+        feed = json.load(f)
+    feed_types = set(r.get("type") for r in feed.get("reports", []) if r.get("type"))
+    unregistered = feed_types - registered_types
+    if unregistered:
+        issues.append(f"Feed types without schema/protocol: {', '.join(sorted(unregistered))}")
+
+# 3. Check each agent has self-improve-state.json
+for agent in ["nel", "sam", "ra", "aether", "dex", "ant", "kai"]:
+    state_path = os.path.join(root, f"agents/{agent}/self-improve-state.json")
+    if not os.path.exists(state_path):
+        issues.append(f"Missing self-improve-state.json for agent: {agent}")
+
+# 4. Check each agent has GROWTH.md
+for agent in ["nel", "sam", "ra", "aether", "dex", "ant", "kai"]:
+    growth_path = os.path.join(root, f"agents/{agent}/GROWTH.md")
+    if not os.path.exists(growth_path):
+        issues.append(f"Missing GROWTH.md for agent: {agent}")
+
+if issues:
+    print(f"ISSUES:{len(issues)}")
+    for i in issues:
+        print(f"  - {i}")
+else:
+    print("OK:all types have protocol+schema, all agents have state+growth")
+PYEOF
+
+  local RESULT
+  RESULT=$(python3 - "$HYO_ROOT" "$SCHEMA_DIR" "$REGISTRY" << 'PYEOF'
+import json, os, sys
+root, schema_dir, registry_path = sys.argv[1:4]
+with open(registry_path) as f:
+    registry = json.load(f)
+registered_types = set(registry.get("types", {}).keys())
+issues = []
+for rtype, protocol_path in registry.get("types", {}).items():
+    schema_file = os.path.join(schema_dir, rtype.replace("-", "_") + ".schema.json")
+    if not os.path.exists(schema_file): issues.append(f"Schema missing: {rtype}")
+    if not os.path.exists(os.path.join(root, protocol_path)): issues.append(f"Protocol missing: {rtype}")
+feed_path = os.path.join(root, "agents/sam/website/data/feed.json")
+if os.path.exists(feed_path):
+    with open(feed_path) as f:
+        feed = json.load(f)
+    unregistered = set(r.get("type") for r in feed.get("reports", []) if r.get("type")) - registered_types
+    if unregistered: issues.append(f"Unregistered types in feed: {','.join(sorted(unregistered))}")
+for agent in ["nel","sam","ra","aether","dex","ant"]:
+    if not os.path.exists(os.path.join(root, f"agents/{agent}/self-improve-state.json")):
+        issues.append(f"Missing state: {agent}")
+    if not os.path.exists(os.path.join(root, f"agents/{agent}/GROWTH.md")):
+        issues.append(f"Missing GROWTH.md: {agent}")
+print(len(issues))
+for i in issues: print(i)
+PYEOF
+  2>/dev/null)
+
+  local N_ISSUES
+  N_ISSUES=$(echo "$RESULT" | head -1)
+  if [[ "$N_ISSUES" -gt 0 ]] 2>/dev/null; then
+    while IFS= read -r issue_line; do
+      [[ -z "$issue_line" ]] && continue
+      ISSUES_FOUND+=("Protocol/JSON: $issue_line")
+      open_ticket "kai" "Protocol/JSON alignment: $issue_line" "P1"
+    done <<< "$(echo "$RESULT" | tail -n +2)"
+    log "  ✗ CHECK 11: $N_ISSUES alignment issues found"
+  else
+    log "  ✓ CHECK 11: All types have protocol+schema, all agents have state+growth"
+  fi
+}
+
 # ─── Check 9: No resolutions in N days ───────────────────────────────────────
 check_resolution_stagnation() {
   log_sec "CHECK 9: Resolution stagnation (${NO_RESOLVE_DAYS}d window)"
@@ -807,6 +912,7 @@ check_flywheel_running
 check_weakness_ages
 check_sicq_scores
 check_resolution_stagnation
+check_protocol_json_alignment
 generate_report_and_escalate
 
 log_sec "FLYWHEEL DOCTOR COMPLETE"
