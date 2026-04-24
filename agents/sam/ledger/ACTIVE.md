@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-23T20:45:22Z
+Last updated: 2026-04-24T02:46:00Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-23T20:45:22Z
+  - Delegated: 2026-04-24T02:46:00Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-23: 16 P1 SAFEGUARD/AUTO-REMEDIATE tasks in DELEGATED status 5-10 days across nel/sam/ra/dex — closed-loop integrity break. flag-aether-001 and flag-dex-001 open 9 days. 6 stale [AUTOMATE] items in KAI_TASKS.
-  - Delegated: 2026-04-23T08:06:50Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-24 — past 06:00 MT deadline
+  - Delegated: 2026-04-24T02:09:45Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

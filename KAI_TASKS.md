@@ -443,3 +443,7 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-23.md [sentinel:aurora-ran-today:c5026fed] _(filed 2026-04-23)_
 
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/zealous-peaceful-ritchie/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:94baf896] _(filed 2026-04-23)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/inspiring-intelligent-darwin/mnt/Hyo/newsletters/2026-04-24.md [sentinel:aurora-ran-today:e32bfe8b] _(filed 2026-04-24)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/inspiring-intelligent-darwin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f04c792c] _(filed 2026-04-24)_
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 112 runs in a row: health endpoint not green or token unconfigured [sentinel:api-health-green:82547bfc:escalated]
