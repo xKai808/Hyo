@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-24</title>
+<meta name="description" content="Ra Brief — 2026-04-24" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-24</h1>
+    <div class="sub">2026-04-24 · morning brief</div>
+  </header>
+  <article>
+<h1>Ra — 2026-04-24</h1>
+<h2>Meta's Workforce Reduction and OpenAI's New Leap</h2>
+<p>Good morning! Today, we're diving into Meta's decision to cut 10% of its workforce in a bid for efficiency and what this means for the tech industry. We'll also explore OpenAI's latest release, GPT-5.5, which promises to redefine AI capabilities. Let's get started.</p>
+<h2>The Story · Meta's Workforce Reduction</h2>
+<p>Meta Platforms, the tech giant formerly known as Facebook, has announced a significant workforce reduction, cutting 10% of its jobs. This move is part of a broader push for efficiency as the company navigates a challenging economic environment and increased competition. The decision comes amid a wave of layoffs across the tech industry, signaling a shift towards leaner operations.</p>
+<p>The implications of this decision are multifaceted. For Meta, the immediate goal is to streamline operations and reduce costs. However, the long-term impact on employee morale and company culture remains uncertain. This move also reflects a broader industry trend, where tech companies are increasingly prioritizing efficiency over expansion.</p>
+<p>Investors and analysts will be closely watching how this decision affects Meta's stock price and its ability to innovate. As the company grapples with these changes, it will need to balance cost-cutting measures with the need to maintain its competitive edge in a rapidly evolving market.</p>
+<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
+<h2>Also Moving · AI's Next Frontier</h2>
+<p>In the world of AI, OpenAI has released GPT-5.5, the latest iteration of its groundbreaking language model. This release promises enhanced capabilities, including improved language processing and understanding. GPT-5.5 is expected to have significant applications across various industries, from customer service to content creation.</p>
+<p>The launch of GPT-5.5 highlights the rapid pace of AI advancements and the potential for transformative applications. As businesses and developers begin to explore the possibilities of this new model, the focus will be on real-world applications and adoption rates. The success of GPT-5.5 will depend on its ability to deliver on its promises and integrate seamlessly into existing workflows.</p>
+<p>Meanwhile, Bitwarden, a popular password manager, has been compromised in a supply chain attack. The Bitwarden CLI was targeted in an ongoing campaign by Checkmarx, raising concerns about security and user trust. As the company works to address these vulnerabilities, users are advised to stay vigilant and apply security patches promptly.</p>
+<h2>The Lab · What AI can newly do this week</h2>
+<p>This week, we're spotlighting AI Scientist-v2, a novel agent that searches over research moves rather than individual tokens. This capability enables reasoning on process-heavy problems where the right loop matters more than the right answer. It's particularly useful for debugging, workflow optimization, pricing, go-to-market strategies, and system integration. Filed under <code>kai/research/2026-04-24-ai-scientist-v2.md</code>.</p>
+<h2>Worth Sitting With</h2>
+<p>As Meta and other tech giants navigate the challenges of efficiency and innovation, it's worth considering the broader implications of these shifts. How will the drive for efficiency impact the tech industry's ability to innovate and grow? Will companies be able to balance cost-cutting measures with the need to maintain a competitive edge? These are questions worth pondering as we watch these developments unfold.</p>
+<h2>Kai's Desk · P.S.</h2>
+<ul>
+<li>Shipped a deep dive on AI Scientist-v2.</li>
+<li>Preparing a report on the implications of GPT-5.5.</li>
+<li>Need your thoughts on the potential impact of Meta's layoffs on the broader tech industry.</li>
+</ul>
+<p>— Kai</p>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+  <!-- Ra engagement tracking pixel — do not remove -->
+  <img src="https://hyo.world/api/v1/track/open?nid=newsletter-2026-04-24" width="1" height="1" alt="" style="display:none;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
+</body>
+</html>
