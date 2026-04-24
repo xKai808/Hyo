@@ -1,43 +1,67 @@
 {
-  "generated_at": "2026-04-23T08:00:05.162727+00:00",
-  "total_entries": 278,
-  "total_clusters": 129,
-  "singleton_clusters": 118,
-  "multi_entry_clusters": 11,
+  "generated_at": "2026-04-24T08:00:05.261136+00:00",
+  "total_entries": 186,
+  "total_clusters": 105,
+  "singleton_clusters": 100,
+  "multi_entry_clusters": 5,
   "agent_breakdown": {
-    "ra": 75,
-    "sam": 64,
-    "unknown": 37,
-    "dex": 37,
-    "aether": 25,
-    "nel": 19,
-    "kai": 16,
-    "ant": 5
+    "sam": 51,
+    "ra": 46,
+    "unknown": 31,
+    "aether": 23,
+    "dex": 13,
+    "kai": 12,
+    "nel": 6,
+    "ant": 4
   },
   "status_breakdown": {
-    "active": 86,
-    "mitigated": 12,
-    "resolved_fp": 84,
-    "fixed": 9,
-    "resolved": 20,
+    "resolved_fp": 56,
+    "active": 41,
+    "resolved": 13,
     "logged": 19,
-    "unknown": 44,
+    "mitigated": 5,
+    "unknown": 45,
     "open": 3,
+    "fixed": 3,
     "fixed-in-session": 1
   },
   "top_clusters": [
     {
-      "size": 32,
-      "score": 43.58,
+      "size": 24,
+      "score": 34.5,
+      "label": "1 broken links detected",
+      "dominant_agent": "unknown",
+      "agent_breakdown": {
+        "unknown": 24
+      },
+      "status_breakdown": {
+        "active": 24
+      },
+      "first_seen": "2026-04-18T08:14:45+00:00",
+      "last_seen": "2026-04-24T02:46:00+00:00",
+      "sources": [
+        "kai/ledger/known-issues.jsonl"
+      ],
+      "member_descriptions": [
+        "1 broken links detected",
+        "1 broken links detected",
+        "1 broken links detected",
+        "1 broken links detected",
+        "1 broken links detected"
+      ]
+    },
+    {
+      "size": 21,
+      "score": 28.92,
       "label": "/api/hq?action=data returned HTTP 401",
       "dominant_agent": "sam",
       "agent_breakdown": {
-        "sam": 32
+        "sam": 21
       },
       "status_breakdown": {
-        "resolved_fp": 32
+        "resolved_fp": 21
       },
-      "first_seen": "2026-04-13T02:17:15+00:00",
+      "first_seen": "2026-04-15T16:59:36+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
@@ -51,17 +75,17 @@
       ]
     },
     {
-      "size": 27,
-      "score": 37.25,
+      "size": 21,
+      "score": 28.92,
       "label": "Aether metrics JSON exists but hq.html has NO rendering code",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 27
+        "ra": 21
       },
       "status_breakdown": {
-        "resolved_fp": 27
+        "resolved_fp": 21
       },
-      "first_seen": "2026-04-14T03:39:04+00:00",
+      "first_seen": "2026-04-15T16:59:36+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
@@ -75,80 +99,8 @@
       ]
     },
     {
-      "size": 21,
-      "score": 30.28,
-      "label": "5 broken links detected",
-      "dominant_agent": "unknown",
-      "agent_breakdown": {
-        "unknown": 21
-      },
-      "status_breakdown": {
-        "active": 21
-      },
-      "first_seen": "2026-04-13T15:13:52+00:00",
-      "last_seen": "2026-04-23T02:43:26+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "5 broken links detected",
-        "1 broken links detected",
-        "1 broken links detected",
-        "1 broken links detected",
-        "1 broken links detected"
-      ]
-    },
-    {
-      "size": 20,
-      "score": 26.35,
-      "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
-      "dominant_agent": "dex",
-      "agent_breakdown": {
-        "dex": 20
-      },
-      "status_breakdown": {
-        "active": 20
-      },
-      "first_seen": "2026-04-13T01:43:51+00:00",
-      "last_seen": "2026-04-22T06:18:48+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "Dex Phase 4: 13 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 59 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 86 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 90 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 96 recurrent patterns detected \u2014 check safeguard status"
-      ]
-    },
-    {
-      "size": 19,
-      "score": 24.02,
-      "label": "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 19
-      },
-      "status_breakdown": {
-        "active": 19
-      },
-      "first_seen": "2026-04-13T02:10:28+00:00",
-      "last_seen": "2026-04-15T00:25:45+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline"
-      ]
-    },
-    {
       "size": 14,
-      "score": 20.05,
+      "score": 19.7,
       "label": "/api/usage returned HTTP 404",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -171,101 +123,32 @@
       ]
     },
     {
-      "size": 11,
-      "score": 14.13,
-      "label": "agents/nel/security is NOT gitignored",
-      "dominant_agent": "nel",
-      "agent_breakdown": {
-        "nel": 11
-      },
-      "status_breakdown": {
-        "resolved_fp": 11
-      },
-      "first_seen": "2026-04-13T02:17:15+00:00",
-      "last_seen": "2026-04-15T10:59:06+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored"
-      ]
-    },
-    {
-      "size": 10,
-      "score": 12.7,
-      "label": "Dex Phase 1 FAILED: 1 JSONL files have corrupt entries",
+      "size": 6,
+      "score": 8.3,
+      "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 10
+        "dex": 6
       },
       "status_breakdown": {
-        "active": 10
+        "active": 6
       },
-      "first_seen": "2026-04-13T01:43:50+00:00",
-      "last_seen": "2026-04-14T06:25:55+00:00",
+      "first_seen": "2026-04-16T06:07:04+00:00",
+      "last_seen": "2026-04-22T06:18:48+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
       "member_descriptions": [
-        "Dex Phase 1 FAILED: 1 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries"
-      ]
-    },
-    {
-      "size": 2,
-      "score": 3.9,
-      "label": "Kai skipped GPT cross-check when rewriting analysis files. Reformatted executive summary without re-",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 1,
-        "aether": 1
-      },
-      "status_breakdown": {
-        "mitigated": 2
-      },
-      "first_seen": "2026-04-14T20:30:00-06:00",
-      "last_seen": "2026-04-14T21:50:00-06:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl",
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "Kai skipped GPT cross-check when rewriting analysis files. Reformatted executive",
-        "Rewrote analysis executive summaries without re-sending to GPT for verification."
-      ]
-    },
-    {
-      "size": 2,
-      "score": 3.9,
-      "label": "Kai built single-phase GPT pipeline (send finished analysis for review) instead of Hyo's specified d",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 2
-      },
-      "status_breakdown": {
-        "mitigated": 2
-      },
-      "first_seen": "2026-04-14T21:00:00-06:00",
-      "last_seen": "2026-04-14T22:20:00-06:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl",
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "Kai built single-phase GPT pipeline (send finished analysis for review) instead ",
-        "Built single-phase GPT pipeline (send finished analysis for review = rubber stam"
+        "Dex Phase 4: 162 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 175 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 209 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 215 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 225 recurrent patterns detected \u2014 check safeguard status"
       ]
     },
     {
       "size": 1,
-      "score": 3.0,
+      "score": 2.95,
       "label": "generate-morning-report.sh staged website/data/feed.json but not agents/sam/website/data/feed.json. ",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -285,7 +168,7 @@
     },
     {
       "size": 1,
-      "score": 3.0,
+      "score": 2.95,
       "label": "Anthropic API key on Mini hit usage quota (until 2026-05-01). kai_analysis.py had no fallback \u2014 fail",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -305,7 +188,7 @@
     },
     {
       "size": 1,
-      "score": 3.0,
+      "score": 2.95,
       "label": "Answered 12 Hyo questions without reading source files first. Made two wrong claims: (1) no follow-u",
       "dominant_agent": "unknown",
       "agent_breakdown": {
@@ -325,7 +208,7 @@
     },
     {
       "size": 1,
-      "score": 3.0,
+      "score": 2.95,
       "label": "Injected score card JS into hq.html via Python string replace. Used escaped dollar (backslash-dollar",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -345,7 +228,7 @@
     },
     {
       "size": 1,
-      "score": 2.8,
+      "score": 2.75,
       "label": "Bare YYYY-MM-DD.html filenames cause Vercel 404 for current date. Prefixed filenames (newsletter-DAT",
       "dominant_agent": "aether",
       "agent_breakdown": {
@@ -365,7 +248,7 @@
     },
     {
       "size": 1,
-      "score": 2.75,
+      "score": 2.7,
       "label": "Dual-path drift: all session 14 website changes committed to agents/sam/website/ only. Vercel deploy",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -385,7 +268,7 @@
     },
     {
       "size": 1,
-      "score": 2.75,
+      "score": 2.7,
       "label": "Service worker sw.js cached stale hq.html under hq-v1 forever. When Ant section was added (c1d8c85),",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -405,7 +288,7 @@
     },
     {
       "size": 1,
-      "score": 2.75,
+      "score": 2.7,
       "label": "Clean URL /hq not in network-first branch \u2014 service worker isDataOrPage check used endsWith(.html) b",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -425,7 +308,7 @@
     },
     {
       "size": 1,
-      "score": 2.75,
+      "score": 2.7,
       "label": "Claimed ant was deployed and working based on: (a) code was in hq.html, (b) Vercel MCP showed READY ",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -445,7 +328,7 @@
     },
     {
       "size": 1,
-      "score": 2.7,
+      "score": 2.65,
       "label": "Aether metrics 15-min refresh (extract_aether_metrics_from_logs) only updated balance. Did NOT updat",
       "dominant_agent": "aether",
       "agent_breakdown": {
@@ -462,28 +345,126 @@
       "member_descriptions": [
         "Aether metrics 15-min refresh (extract_aether_metrics_from_logs) only updated ba"
       ]
+    },
+    {
+      "size": 1,
+      "score": 2.65,
+      "label": "Morning report generated but never verified present on HQ feed. GPT crosscheck files exist but GPT_I",
+      "dominant_agent": "ra",
+      "agent_breakdown": {
+        "ra": 1
+      },
+      "status_breakdown": {
+        "resolved": 1
+      },
+      "first_seen": "2026-04-16T19:05:00-06:00",
+      "last_seen": "2026-04-16T19:05:00-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "Morning report generated but never verified present on HQ feed. GPT crosscheck f"
+      ]
+    },
+    {
+      "size": 1,
+      "score": 2.65,
+      "label": "synthesize.py had no fallthrough \u2014 claude_code CLI failure fell directly to bundle mode, skipping av",
+      "dominant_agent": "ra",
+      "agent_breakdown": {
+        "ra": 1
+      },
+      "status_breakdown": {
+        "resolved": 1
+      },
+      "first_seen": "2026-04-16T19:20:00-06:00",
+      "last_seen": "2026-04-16T19:20:00-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "synthesize.py had no fallthrough \u2014 claude_code CLI failure fell directly to bund"
+      ]
+    },
+    {
+      "size": 1,
+      "score": 2.65,
+      "label": "GPT received 28K chars of a 307K log (9%). gpt_crosscheck.py read from agents/aether/logs/ (32K sync",
+      "dominant_agent": "aether",
+      "agent_breakdown": {
+        "aether": 1
+      },
+      "status_breakdown": {
+        "resolved": 1
+      },
+      "first_seen": "2026-04-16T19:45:00-06:00",
+      "last_seen": "2026-04-16T19:45:00-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "GPT received 28K chars of a 307K log (9%). gpt_crosscheck.py read from agents/ae"
+      ]
+    },
+    {
+      "size": 1,
+      "score": 2.65,
+      "label": "Aether metrics manually edited with plugged-in numbers instead of parsing from raw logs. Hyo had to ",
+      "dominant_agent": "ra",
+      "agent_breakdown": {
+        "ra": 1
+      },
+      "status_breakdown": {
+        "resolved": 1
+      },
+      "first_seen": "2026-04-16T21:00:00-06:00",
+      "last_seen": "2026-04-16T21:00:00-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "Aether metrics manually edited with plugged-in numbers instead of parsing from r"
+      ]
+    },
+    {
+      "size": 1,
+      "score": 2.65,
+      "label": "Used $132.39 as session start instead of $115.09. Hyo corrected: '17:00 MT is the session boundary. ",
+      "dominant_agent": "aether",
+      "agent_breakdown": {
+        "aether": 1
+      },
+      "status_breakdown": {
+        "resolved": 1
+      },
+      "first_seen": "2026-04-16T21:00:00-06:00",
+      "last_seen": "2026-04-16T21:00:00-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "Used $132.39 as session start instead of $115.09. Hyo corrected: '17:00 MT is th"
+      ]
     }
   ],
   "temporal_patterns": [
     {
       "tokens": [
-        "exists",
-        "code",
-        "aether",
-        "json",
-        "html"
+        "detected",
+        "links",
+        "broken"
       ],
-      "occurrences": 27,
-      "avg_interval_hours": 6.9,
-      "consistency_pct": 60.2,
-      "first_seen": "2026-04-14T03:39:04+00:00",
-      "last_seen": "2026-04-21T14:40:51+00:00"
+      "occurrences": 24,
+      "avg_interval_hours": 6.0,
+      "consistency_pct": 99.1,
+      "first_seen": "2026-04-18T08:14:45+00:00",
+      "last_seen": "2026-04-24T02:46:00+00:00"
     },
     {
       "tokens": [
-        "api/usage",
+        "http",
         "returned",
-        "http"
+        "api/usage"
       ],
       "occurrences": 14,
       "avg_interval_hours": 6.0,
@@ -493,29 +474,56 @@
     },
     {
       "tokens": [
-        "gitignored",
-        "agents/nel/security"
+        "phase",
+        "detected",
+        "check",
+        "dex",
+        "patterns"
       ],
-      "occurrences": 11,
-      "avg_interval_hours": 5.7,
-      "consistency_pct": 69.6,
-      "first_seen": "2026-04-13T02:17:15+00:00",
-      "last_seen": "2026-04-15T10:59:06+00:00"
+      "occurrences": 5,
+      "avg_interval_hours": 30.0,
+      "consistency_pct": 65.4,
+      "first_seen": "2026-04-16T06:07:04+00:00",
+      "last_seen": "2026-04-21T06:17:08+00:00"
     }
   ],
   "dedup_candidates": [
     {
-      "size": 32,
-      "score": 43.58,
+      "size": 24,
+      "score": 34.5,
+      "label": "1 broken links detected",
+      "dominant_agent": "unknown",
+      "agent_breakdown": {
+        "unknown": 24
+      },
+      "status_breakdown": {
+        "active": 24
+      },
+      "first_seen": "2026-04-18T08:14:45+00:00",
+      "last_seen": "2026-04-24T02:46:00+00:00",
+      "sources": [
+        "kai/ledger/known-issues.jsonl"
+      ],
+      "member_descriptions": [
+        "1 broken links detected",
+        "1 broken links detected",
+        "1 broken links detected",
+        "1 broken links detected",
+        "1 broken links detected"
+      ]
+    },
+    {
+      "size": 21,
+      "score": 28.92,
       "label": "/api/hq?action=data returned HTTP 401",
       "dominant_agent": "sam",
       "agent_breakdown": {
-        "sam": 32
+        "sam": 21
       },
       "status_breakdown": {
-        "resolved_fp": 32
+        "resolved_fp": 21
       },
-      "first_seen": "2026-04-13T02:17:15+00:00",
+      "first_seen": "2026-04-15T16:59:36+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
@@ -529,17 +537,17 @@
       ]
     },
     {
-      "size": 27,
-      "score": 37.25,
+      "size": 21,
+      "score": 28.92,
       "label": "Aether metrics JSON exists but hq.html has NO rendering code",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 27
+        "ra": 21
       },
       "status_breakdown": {
-        "resolved_fp": 27
+        "resolved_fp": 21
       },
-      "first_seen": "2026-04-14T03:39:04+00:00",
+      "first_seen": "2026-04-15T16:59:36+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
@@ -553,80 +561,8 @@
       ]
     },
     {
-      "size": 21,
-      "score": 30.28,
-      "label": "5 broken links detected",
-      "dominant_agent": "unknown",
-      "agent_breakdown": {
-        "unknown": 21
-      },
-      "status_breakdown": {
-        "active": 21
-      },
-      "first_seen": "2026-04-13T15:13:52+00:00",
-      "last_seen": "2026-04-23T02:43:26+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "5 broken links detected",
-        "1 broken links detected",
-        "1 broken links detected",
-        "1 broken links detected",
-        "1 broken links detected"
-      ]
-    },
-    {
-      "size": 20,
-      "score": 26.35,
-      "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
-      "dominant_agent": "dex",
-      "agent_breakdown": {
-        "dex": 20
-      },
-      "status_breakdown": {
-        "active": 20
-      },
-      "first_seen": "2026-04-13T01:43:51+00:00",
-      "last_seen": "2026-04-22T06:18:48+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "Dex Phase 4: 13 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 59 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 86 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 90 recurrent patterns detected \u2014 check safeguard status",
-        "Dex Phase 4: 96 recurrent patterns detected \u2014 check safeguard status"
-      ]
-    },
-    {
-      "size": 19,
-      "score": 24.02,
-      "label": "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 19
-      },
-      "status_breakdown": {
-        "active": 19
-      },
-      "first_seen": "2026-04-13T02:10:28+00:00",
-      "last_seen": "2026-04-15T00:25:45+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline",
-        "No newsletter produced for 2026-04-12 \u2014 past 06:00 MT deadline"
-      ]
-    },
-    {
       "size": 14,
-      "score": 20.05,
+      "score": 19.7,
       "label": "/api/usage returned HTTP 404",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -649,124 +585,34 @@
       ]
     },
     {
-      "size": 11,
-      "score": 14.13,
-      "label": "agents/nel/security is NOT gitignored",
-      "dominant_agent": "nel",
-      "agent_breakdown": {
-        "nel": 11
-      },
-      "status_breakdown": {
-        "resolved_fp": 11
-      },
-      "first_seen": "2026-04-13T02:17:15+00:00",
-      "last_seen": "2026-04-15T10:59:06+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored",
-        "agents/nel/security is NOT gitignored"
-      ]
-    },
-    {
-      "size": 10,
-      "score": 12.7,
-      "label": "Dex Phase 1 FAILED: 1 JSONL files have corrupt entries",
+      "size": 6,
+      "score": 8.3,
+      "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 10
+        "dex": 6
       },
       "status_breakdown": {
-        "active": 10
+        "active": 6
       },
-      "first_seen": "2026-04-13T01:43:50+00:00",
-      "last_seen": "2026-04-14T06:25:55+00:00",
+      "first_seen": "2026-04-16T06:07:04+00:00",
+      "last_seen": "2026-04-22T06:18:48+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
       "member_descriptions": [
-        "Dex Phase 1 FAILED: 1 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries",
-        "Dex Phase 1 FAILED: 2 JSONL files have corrupt entries"
-      ]
-    },
-    {
-      "size": 2,
-      "score": 3.9,
-      "label": "Kai skipped GPT cross-check when rewriting analysis files. Reformatted executive summary without re-",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 1,
-        "aether": 1
-      },
-      "status_breakdown": {
-        "mitigated": 2
-      },
-      "first_seen": "2026-04-14T20:30:00-06:00",
-      "last_seen": "2026-04-14T21:50:00-06:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl",
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "Kai skipped GPT cross-check when rewriting analysis files. Reformatted executive",
-        "Rewrote analysis executive summaries without re-sending to GPT for verification."
-      ]
-    },
-    {
-      "size": 2,
-      "score": 3.9,
-      "label": "Kai built single-phase GPT pipeline (send finished analysis for review) instead of Hyo's specified d",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 2
-      },
-      "status_breakdown": {
-        "mitigated": 2
-      },
-      "first_seen": "2026-04-14T21:00:00-06:00",
-      "last_seen": "2026-04-14T22:20:00-06:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl",
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "Kai built single-phase GPT pipeline (send finished analysis for review) instead ",
-        "Built single-phase GPT pipeline (send finished analysis for review = rubber stam"
-      ]
-    },
-    {
-      "size": 2,
-      "score": 2.67,
-      "label": "Daily audit: 1 critical issues found",
-      "dominant_agent": "dex",
-      "agent_breakdown": {
-        "dex": 2
-      },
-      "status_breakdown": {
-        "active": 2
-      },
-      "first_seen": "2026-04-15T08:06:09+00:00",
-      "last_seen": "2026-04-16T08:04:35+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "Daily audit: 1 critical issues found",
-        "Daily audit: 1 critical issues found"
+        "Dex Phase 4: 162 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 175 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 209 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 215 recurrent patterns detected \u2014 check safeguard status",
+        "Dex Phase 4: 225 recurrent patterns detected \u2014 check safeguard status"
       ]
     }
   ],
   "signal_summary": {
-    "noise_reduction": "278 entries \u2192 129 clusters (53.6% dedup rate)",
-    "top_agent": "ra",
-    "largest_cluster_size": 32,
+    "noise_reduction": "186 entries \u2192 105 clusters (43.5% dedup rate)",
+    "top_agent": "sam",
+    "largest_cluster_size": 24,
     "recurring_patterns": 3
   }
 }

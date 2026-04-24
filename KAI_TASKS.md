@@ -447,3 +447,10 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] missing or empty /sessions/inspiring-intelligent-darwin/mnt/Hyo/newsletters/2026-04-24.md [sentinel:aurora-ran-today:e32bfe8b] _(filed 2026-04-24)_
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/inspiring-intelligent-darwin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f04c792c] _(filed 2026-04-24)_
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 112 runs in a row: health endpoint not green or token unconfigured [sentinel:api-health-green:82547bfc:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/laughing-peaceful-mccarthy/mnt/Hyo/newsletters/2026-04-24.md [sentinel:aurora-ran-today:80479518] _(filed 2026-04-24)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/laughing-peaceful-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4da17c1d] _(filed 2026-04-24)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/laughing-peaceful-mccarthy/mnt/Hyo/newsletters/2026-04-24.md [sentinel:aurora-ran-today:80479518:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/laughing-peaceful-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4da17c1d:escalated]
