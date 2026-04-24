@@ -1,27 +1,27 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-24T08:46:34Z
+Last updated: 2026-04-24T14:46:41Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-24T08:46:34Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-24T14:39:17Z
   - Status: DELEGATED
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-24T08:46:34Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-24T14:39:17Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-24T08:37:14Z
+  - Delegated: 2026-04-24T14:39:17Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-24T08:37:14Z
+  - Delegated: 2026-04-24T14:39:17Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-24T08:37:15Z
+  - Delegated: 2026-04-24T14:39:18Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit 2026-04-24: Duplicate P0 ticket writes — TASK-20260424-aether-001 written multiple times in tickets.jsonl (non-idempotent ticket create)
@@ -106,4 +106,22 @@ Last updated: 2026-04-24T08:46:34Z
 
 - **flag-kai-005** [P2] Daily audit 2026-04-24: All 5 agents have GUIDANCE tickets indicating dead-loop (same assessment 3+ cycles) — systemic stagnation
   - Created: 2026-04-24T08:09:18Z
+
+- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-04-24T11:30:25Z
+
+- **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-24T14:10:14Z
+
+- **flag-nel-003** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-24T14:10:19Z
+
+- **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-24T14:11:35Z
+
+- **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-24T14:12:42Z
+
+- **flag-nel-006** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-24T14:12:46Z
 
