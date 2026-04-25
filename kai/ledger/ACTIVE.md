@@ -1,27 +1,27 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-25T02:48:43Z
+Last updated: 2026-04-25T03:09:32Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-25T02:48:43Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-25T02:56:11Z
   - Status: DELEGATED
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-25T02:48:43Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-25T02:56:11Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-25T02:41:09Z
+  - Delegated: 2026-04-25T02:56:11Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-25T02:41:09Z
+  - Delegated: 2026-04-25T02:56:11Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-25T02:41:09Z
+  - Delegated: 2026-04-25T02:56:11Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-25 — past 06:00 MT deadline
@@ -44,8 +44,8 @@ Last updated: 2026-04-25T02:48:43Z
   - Delegated: 2026-04-25T02:11:00Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-25 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-04-25T02:41:10Z
+- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
+  - Delegated: 2026-04-25T02:56:12Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-24: Queue cleanup not reducing completed items — threshold triggered at 2006, still at 2007 after run
