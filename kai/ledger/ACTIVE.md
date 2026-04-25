@@ -1,27 +1,27 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-25T08:49:17Z
+Last updated: 2026-04-25T14:49:57Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-25T08:49:17Z
+  - Delegated: 2026-04-25T14:49:57Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-25T08:42:00Z
+  - Delegated: 2026-04-25T14:46:35Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-25T08:42:00Z
+  - Delegated: 2026-04-25T14:46:35Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-25T08:42:00Z
+  - Delegated: 2026-04-25T14:46:35Z
   - Status: DELEGATED
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-25T08:49:17Z
+  - Delegated: 2026-04-25T14:49:57Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit 2026-04-25: Nel cascade storm — 11 duplicate flags in 30h, deduplication broken
@@ -32,8 +32,8 @@ Last updated: 2026-04-25T08:49:17Z
   - Delegated: 2026-04-25T08:08:23Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-25: daily-audit.sh defaults to $HOME/Documents/Projects/Hyo — broken in cowork sandbox; needs HYO_ROOT export or sandbox detection (flagged by kai)
-  - Delegated: 2026-04-25T08:42:01Z
+- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
+  - Delegated: 2026-04-25T10:42:42Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit 2026-04-25: Newsletter sentinel timezone bug — fires at 02:10 UTC (20:10 MT) before 06:00 MT deadline
@@ -76,4 +76,16 @@ Last updated: 2026-04-25T08:49:17Z
 
 - **flag-kai-003** [P2] Daily audit 2026-04-25: daily-audit.sh defaults to $HOME/Documents/Projects/Hyo — broken in cowork sandbox; needs HYO_ROOT export or sandbox detection
   - Created: 2026-04-25T08:08:24Z
+
+- **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-25T10:10:20Z
+
+- **flag-nel-003** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-25T10:10:25Z
+
+- **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-25T10:11:21Z
+
+- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-04-25T11:30:19Z
 

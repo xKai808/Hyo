@@ -1,23 +1,18 @@
 {
-  "ts": "2026-04-25T08:42:00Z",
+  "ts": "2026-04-25T14:46:34Z",
   "status": "ISSUES",
   "issues": 6,
-  "warnings": 2,
+  "warnings": 1,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "6 unaddressed P0/P1 flags in last 2h"
-    },
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "hyo has no output today"
     },
     {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "sam has no output today"
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
     },
     {
       "severity": "P1",
@@ -42,39 +37,39 @@
     {
       "severity": "P1",
       "area": "ticket-sla",
-      "detail": "55 tickets have breached SLA"
+      "detail": "355 tickets have breached SLA"
     }
   ],
   "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "83d53742-e4c4-41cb-8d1f-c895a6795d18",
+      "id": "be573e51-244f-4f88-b9d6-d64c87c41c5a",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "9ac1ed2c-e07b-4284-bd37-904386ac67f9",
+      "id": "55b1128d-3afd-4aa2-992e-74196f96f65a",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-kai-003",
+      "id": "cmd-1777126417-6",
       "status": "ok",
-      "command": "bash /sessions/modest-beautiful-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
+      "command": "cd ~/Documents/Projects/Hyo && git log -1 --oneline && echo '---PUSH' && git pus",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-kai-002",
+      "id": "cmd-1777126412-6",
       "status": "ok",
-      "command": "bash /sessions/modest-beautiful-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
+      "command": "cd ~/Documents/Projects/Hyo && git -c user.name='Kai' -c user.email='kai@hyo.wor",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-kai-001",
+      "id": "cmd-1777126402-6",
       "status": "ok",
-      "command": "bash /sessions/modest-beautiful-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
+      "command": "cd ~/Documents/Projects/Hyo && git status --short | wc -l && echo '---STAGED' &&",
       "exit_code": 0
     }
   ],

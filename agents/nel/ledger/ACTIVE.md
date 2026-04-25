@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-25T08:49:17Z
+Last updated: 2026-04-25T14:49:57Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-25T08:49:17Z
+  - Delegated: 2026-04-25T14:49:57Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
