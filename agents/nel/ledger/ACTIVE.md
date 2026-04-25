@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-24T20:48:05Z
+Last updated: 2026-04-25T02:48:43Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-24T20:48:05Z
+  - Delegated: 2026-04-25T02:48:43Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit 2026-04-24: Duplicate P0 ticket writes — TASK-20260424-aether-001 written multiple times in tickets.jsonl (non-idempotent ticket create)
-  - Delegated: 2026-04-24T08:09:18Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-25 — past 06:00 MT deadline
+  - Delegated: 2026-04-25T02:13:27Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit 2026-04-24: Nel duplicate flag generation — flag-nel-001..007 contains duplicates for same sentinel test failures and broken doc links (no dedup per cycle)
-  - Delegated: 2026-04-24T08:09:18Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-25 — past 06:00 MT deadline
+  - Delegated: 2026-04-25T02:11:00Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-24: Queue cleanup not reducing completed items — threshold triggered at 2006, still at 2007 after run
@@ -51,4 +51,16 @@ Last updated: 2026-04-24T20:48:05Z
 
 - **flag-nel-007** [P2] Found 20 broken documentation links — fix or cleanup needed
   - Created: 2026-04-24T06:14:04Z
+
+- **flag-nel-008** [P2] No newsletter produced for 2026-04-25 — past 06:00 MT deadline
+  - Created: 2026-04-25T02:11:00Z
+
+- **flag-nel-009** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-25T02:13:27Z
+
+- **flag-nel-010** [P2] No newsletter produced for 2026-04-25 — past 06:00 MT deadline
+  - Created: 2026-04-25T02:13:27Z
+
+- **flag-nel-011** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-25T02:13:31Z
 

@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-24T18:12:00Z",
+  "updatedAt": "2026-04-25T02:11:00Z",
   "morningReport": {
     "date": "2026-04-22",
     "generatedAt": "2026-04-22T16:12:00-0600",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync @ 08:14 MT 2026-04-24 (hq-ops-sync scheduled task, cowork, 2nd cycle of day). IMPROVEMENT: Sentinel 6p/3f vs prior 5p/4f — 1 finding RESOLVED (aurora-ran-today P0 clear; newsletters/2026-04-24.md produced 14:00Z at 3677 bytes). Remaining: P0 api-health-green day 118 (long-running, structural), P1 scheduled-tasks-fired day 3 (aurora logs absent from sandbox — benign), P2 task-queue-size day 31 (29 P0 tasks). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, .secrets 755 (symlink cosmetic), HQ push 200 OK. Nel cross-project sentinel STABLE 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f). Broken links 20 (flat), untested scripts 40 (flat), no stale files, growth idle (ARIC complete today). nel.sh again sandbox-timed out at Phase 6 (45s budget) — Phases 7–11 (audit, scoring, dispatch, publish, reflection) did not run; launchd on Mini will complete full pipeline. Score carried 85.",
+    "summary": "Ops sync @ 20:11 MT 2026-04-24 (hq-ops-sync scheduled task, cowork, 5th cycle of day). Sentinel #156 5p/4f UTC-rollover regression — aurora-ran-today P0 returned (newsletters/2026-04-25.md not due until 03:00 MT 2026-04-25; 2026-04-24 newsletter present at 3677 bytes). Recurring P0 api-health-green day 126, P1 scheduled-tasks-fired day 3, P2 task-queue-size day 39 (29 P0 tasks). Cipher CLEAN. Nel partial Phase 1-5 (sandbox timeout at Phase 6) — cross-project sentinel stable 2p/2f, broken links 20 flat, untested 40 flat, no stale files, growth idle. Score carried 85. New flags: flag-nel-009 P2 sentinel, flag-nel-010 P1 newsletter UTC artifact, flag-nel-011 P2 broken-links.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,25 +14,80 @@
       "dex": "active"
     },
     "topIssues": [
-      "IMPROVEMENT: Sentinel 6p/3f vs prior 5p/4f — 1 P0 resolved (aurora-ran-today cleared)",
-      "RESOLVED: aurora-ran-today P0 — newsletters/2026-04-24.md produced at 14:00Z (3677 bytes)",
-      "P0 api-health-green day 118 — health endpoint not green or token unconfigured (long-running, structural)",
+      "REGRESSION (UTC-rollover artifact): aurora-ran-today P0 returned — sentinel checks newsletters/2026-04-25.md (UTC); MT date still 2026-04-24 so file not due until 03:00 MT",
+      "P0 api-health-green day 126 (+3) — health endpoint not green or token unconfigured in sandbox (long-running, structural)",
       "P1 scheduled-tasks-fired day 3 — aurora logs absent from sandbox path (structural — aurora runs on Mini)",
-      "P2 task-queue-size 29 P0 tasks day 31 (overload threshold 5)",
+      "P2 task-queue-size day 39 (+3) — 29 P0 tasks vs threshold 5",
       "Cross-project sentinel stable 2p/2f (hyo 2p/2f, aether 1p/1f, aurora-ra 4p/0f, kai-ceo 4p/0f)",
-      "Broken doc links 20 (flat) — P2 nel-007 self-delegated",
-      "Untested scripts 40 (flat) — P3 Sam fix-it candidate",
+      "Broken doc links 20 (flat) — flag-nel-011 P2 self-delegated",
+      "Untested scripts 40 (flat) — Sam fix-it candidate",
       "Cipher: clean (0 findings, 0 leaks, secrets perms healthy)",
       "Nel growth idle: ARIC complete for 2026-04-24, no open IMP tickets",
-      "Sandbox limitation: nel.sh exceeded 45s budget at Phase 6 again — launchd on Mini will run full pipeline (Phases 7–11)"
+      "Sandbox limitation: nel.sh exceeded 40s budget at Phase 6 — launchd on Mini will run full pipeline (Phases 7-11)"
     ],
     "lastOpsSync": {
-      "ts": "2026-04-24T18:12:00Z",
-      "cycle": "3rd of 2026-04-24",
-      "summary": "Ops sync @ 12:12 MT 2026-04-24 (hq-ops-sync scheduled task, cowork, 3rd cycle of day). Sentinel #150 6p/3f FLAT vs morning #148 — 0 new, 3 recurring, 0 resolved. Counters ticking: P0 api-health-green day 120 (+2 vs morning 118), P1 scheduled-tasks-fired day 2, P2 task-queue-size day 33 (+2). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, .secrets 755 cosmetic, dep-audit 3p/0w/0f, HQ push 200 OK. Nel cross-project STABLE 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f). Broken links 20 flat, untested scripts 40 flat, no stale files. nel.sh sandbox-bounded to Phases 1-6; launchd on Mini completes full pipeline (scoring/audit/publish/reflection). Growth idle (ARIC done today, no open IMP tickets). Dual-path hq-state.json sync enforced."
+      "at": "2026-04-25T02:11:00Z",
+      "cycle": "20:11 MT 2026-04-24 (5th cycle of day, hq-ops-sync cowork run)",
+      "summary": "Ops sync @ 20:11 MT 2026-04-24 (hq-ops-sync scheduled task, cowork, 5th cycle of day). Sentinel #156 5p/4f UTC-rollover regression vs 16:10 #153 6p/3f — aurora-ran-today P0 returned because sentinel checks for newsletters/2026-04-25.md (UTC) but current MT date is still 2026-04-24; 2026-04-24 newsletter present, 2026-04-25 not due until 03:00 MT. 0 new findings, 4 recurring, 0 resolved. Day counters: aurora-ran-today day 3 (UTC artifact), api-health-green day 126 (+3, structural — token unconfigured in sandbox), scheduled-tasks-fired day 3 (aurora logs absent — runs on Mini), task-queue-size day 39 (+3, 29 P0 tasks). Cipher CLEAN: 0 findings/0 autofixes/0 leaks, founder.token 600, .secrets 755 cosmetic, dep-audit 3p/0w/0f, HQ push 200 OK. Nel partial Phase 1-5: cross-project sentinel STABLE 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f); broken links 20 flat; untested 40 flat; no stale files; growth idle (ARIC complete, no IMP tickets). Phase 6+ sandbox-timed out — launchd on Mini completes scoring/audit/dispatch/publish/reflection. New flags: flag-nel-009 P2 sentinel, flag-nel-010 P1 newsletter (UTC artifact), flag-nel-011 P2 broken-links."
     }
   },
   "events": [
+    {
+      "ts": "2026-04-25T02:11:00Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 20:11 MT, 5th cycle of 2026-04-24)",
+      "detail": "sentinel #156 5p/4f UTC-rollover REGRESSION (aurora-ran-today P0 returned; MT date still 2026-04-24 so 2026-04-25 newsletter not yet due); cipher clean 0 findings/0 leaks; nel partial Phase 1-5 (sandbox); cross-project sentinel 2p/2f STABLE (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f); broken links 20 flat; untested 40 flat; day counters advancing: api-health-green 126, scheduled-tasks-fired 3, task-queue-size 39",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-04-25T02:11:00Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #156",
+      "msg": "QA sweep run #156 — 5 passed, 4 failed. UTC-rollover regression vs 16:10 #153 (6p/3f) — aurora-ran-today P0 returned because sentinel checks for newsletters/2026-04-25.md but MT date is still 2026-04-24; 2026-04-24 newsletter present (3677 bytes); 2026-04-25 not due until 03:00 MT 2026-04-25. 0 new, 4 recurring, 0 resolved. Day counters: aurora-ran-today day 3 (UTC artifact), api-health-green day 126 (+3, token unconfigured in sandbox), scheduled-tasks-fired day 3 (aurora logs absent — runs on Mini), task-queue-size day 39 (+3, 29 P0 tasks vs threshold 5).",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-04-25T02:11:00Z",
+      "agent": "cipher",
+      "event": "Scan — 0 findings, 0 autofixes",
+      "msg": "Security scan — 0 findings, 0 autofixes, 0 leaks. .secrets/ 755 (symlink cosmetic — target 700), founder.token 600. gitleaks unavailable in sandbox (authoritative scan on Mini). dep-audit: 3 pass/0 warn/0 fail. HQ push 200 OK.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-04-25T02:11:00Z",
+      "agent": "nel",
+      "event": "Weekly sweep partial (Phases 1-5)",
+      "msg": "Weekly sweep partial: cross-project sentinel STABLE 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f). Broken links 20 (flat), untested scripts 40 (flat), no stale files. Phases 1-5 complete in sandbox; Phase 6+ (inefficient pattern detection, scoring, audit, dispatch, publish, reflection) skipped at 40s sandbox budget — launchd on Mini completes full pipeline. Growth phase idle (ARIC already ran today, no open IMP tickets). Flags: flag-nel-009 P2 sentinel (2 projects failing), flag-nel-010 P1 newsletter (UTC-rollover artifact — MT date still 2026-04-24), flag-nel-011 P2 broken-links (20).",
+      "type": "nel"
+    },
+    {
+      "ts": "2026-04-24T22:10:00Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 16:10 MT, 4th cycle of 2026-04-24)",
+      "detail": "sentinel #153 6p/3f FLAT (same as 08:14 #148 and 12:12 #150); cipher clean 0 findings/0 leaks/dep-audit green; nel partial Phase 1-6 (sandbox); cross-project sentinel 2p/2f STABLE (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f); broken links 20 flat; untested 40 flat; day counters advancing: api-health-green 123, scheduled-tasks-fired 3, task-queue-size 36",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-04-24T22:10:00Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #153",
+      "msg": "QA sweep run #153 — 6 passed, 3 failed (FLAT vs 12:12 #150 6p/3f). 0 new, 3 recurring, 0 resolved this cycle. Day-counters advanced: P0 api-health-green day 123 (+3 structural, token unconfigured in sandbox), P1 scheduled-tasks-fired day 3 (+1, aurora logs absent from sandbox — benign, runs on Mini), P2 task-queue-size day 36 (+3, 29 P0 tasks vs threshold 5).",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-04-24T22:10:00Z",
+      "agent": "cipher",
+      "event": "Scan — 0 findings, 0 autofixes",
+      "msg": "Security scan — 0 findings, 0 autofixes, 0 leaks. .secrets/ 755 (symlink cosmetic — target 700), founder.token 600. gitleaks unavailable in sandbox (authoritative scan on Mini). dep-audit: 3 pass/0 warn/0 fail (W2 CVE scanner GREEN). HQ push 200 OK.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-04-24T22:10:00Z",
+      "agent": "nel",
+      "event": "Weekly sweep partial (Phases 1-6)",
+      "msg": "Weekly sweep partial: cross-project sentinel STABLE 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f). Broken links 20 (flat), untested scripts 40 (flat), no stale files. Phases 1-6 complete in sandbox; Phases 7-11 (scoring/audit/dispatch/publish/reflection) skipped — launchd on Mini completes full pipeline. Growth phase idle (ARIC already ran today, no open IMP tickets). Flags: flag-nel-002 P2 Sentinel (2 projects failing), flag-nel-003 P2 broken-links (20).",
+      "type": "nel"
+    },
     {
       "ts": "2026-04-24T18:12:00Z",
       "agent": "kai",
@@ -241,20 +296,20 @@
     "subscribers": []
   },
   "sentinel": {
-    "lastRunId": 148,
-    "lastRunAt": "2026-04-24T14:14:00Z",
-    "passed": 6,
-    "failed": 3,
+    "lastRunId": 156,
+    "lastRunAt": "2026-04-25T02:11:00Z",
+    "passed": 5,
+    "failed": 4,
     "new": 0,
-    "recurring": 3,
+    "recurring": 4,
     "resolved": 0,
-    "regression": false,
-    "note": "sentinel.sh — 6p/3f FLAT vs 08:14 cycle. 0 new, 3 recurring, 0 resolved. Escalations day counters ticking (api-health-green day 120, task-queue-size day 33).",
-    "runId": 148,
-    "ts": "2026-04-24T14:14:00Z",
+    "regression": true,
+    "note": "sentinel.sh run #156 — 5p/4f vs prior 6p/3f. 0 new, 4 recurring, 0 resolved. UTC-date rollover regression: aurora-ran-today P0 returned (sentinel checks newsletters/2026-04-25.md; current MT date is still 2026-04-24, so 2026-04-25 newsletter isn't due until 03:00 MT 2026-04-25). Day counters: aurora-ran-today day 3, api-health-green day 126 (+3), scheduled-tasks-fired day 3, task-queue-size day 39 (+3, 29 P0 tasks).",
+    "runId": 156,
+    "ts": "2026-04-25T02:11:00Z",
     "newIssues": 0,
-    "status": "degraded-stable",
-    "lastRun": "2026-04-24T18:12:00Z",
+    "status": "degraded-regression-utc",
+    "lastRun": "2026-04-25T02:11:00Z",
     "projects": {
       "hyo": {
         "pass": 2,
@@ -278,45 +333,45 @@
       "fail": 3,
       "newIssues": 0,
       "recurring": 3,
-      "resolvedThisRun": 1
+      "resolvedThisRun": 0
     },
     "escalations": [
       {
         "id": "api-health-green",
         "severity": "P0",
-        "days": 120,
+        "days": 123,
         "note": "health endpoint not green or token unconfigured (structural, long-running)"
       },
       {
         "id": "scheduled-tasks-fired",
         "severity": "P1",
-        "days": 2,
+        "days": 3,
         "note": "no aurora logs in sandbox path (structural — aurora runs on Mini)"
       },
       {
         "id": "task-queue-size",
         "severity": "P2",
-        "days": 33,
+        "days": 36,
         "note": "29 P0 tasks (overload threshold 5)"
       }
     ],
     "newFindings": [],
-    "runNumber": 150,
+    "runNumber": 153,
     "report": "agents/nel/logs/sentinel-2026-04-24.md"
   },
   "cipher": {
-    "lastRunAt": "2026-04-24T14:14:00Z",
+    "lastRunAt": "2026-04-25T02:11:00Z",
     "findings": 0,
     "autofixes": 0,
     "leaks": 0,
     "founderToken": "600",
     "secretsDir": "755",
     "hqPush": "200 OK",
-    "note": "gitleaks not installed in sandbox — authoritative scan runs on Mini; .secrets symlink shows 755 but target is 700 (cosmetic)",
-    "ts": "2026-04-24T14:14:00Z",
+    "note": "Security scan clean — 0 findings, 0 autofixes, 0 leaks. founder.token 600, .secrets 755 (symlink cosmetic, target 700). gitleaks unavailable in sandbox (authoritative scan on Mini). dep-audit 3p/0w/0f.",
+    "ts": "2026-04-25T02:11:00Z",
     "status": "clean",
-    "log": "agents/nel/logs/cipher-2026-04-24T14.log",
-    "lastRun": "2026-04-24T18:12:00Z",
+    "log": "agents/nel/logs/cipher-2026-04-25T02.log",
+    "lastRun": "2026-04-25T02:11:00Z",
     "founderTokenMode": "600",
     "secretsDirMode": "755 (symlink cosmetic; target 700)",
     "depAudit": "3 pass/0 warn/0 fail"
@@ -331,59 +386,37 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-04-24T18:12:00Z",
+    "lastRun": "2026-04-25T02:11:00Z",
     "improvementScore": 85,
-    "scoreNote": "carried — sandbox did not reach scoring phase (Phase 7+); authoritative score on Mini",
-    "findingsCount": 2,
+    "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 20,
     "untested": 40,
-    "inefficient": "n/a (Phase 6 did not complete)",
+    "inefficient": 8,
     "sentinel": {
-      "pass": 11,
-      "fail": 3,
-      "projects": "2p/2f"
+      "pass": 2,
+      "fail": 2
     },
     "cipher": {
-      "leaks": 0,
-      "depAudit": "clean"
+      "leaks": 0
     },
-    "ts": "2026-04-24T18:12:00Z",
-    "score": 85,
-    "projects": "2p/2f",
-    "findings": {
-      "brokenLinks": 20,
-      "untestedScripts": 40,
-      "inefficientPatterns": "n/a (Phase 6 partial)",
-      "auditIssues": "n/a",
-      "selfReviewFindings": "n/a",
-      "untriggeredFiles": "n/a",
-      "leaks": 0,
-      "staleFiles": 0
-    },
-    "status": "health-degraded",
-    "report": "agents/nel/logs/nel-2026-04-24.md",
-    "untestedScripts": 40,
-    "inefficientPatterns": "n/a",
-    "phasesCompleted": "1-6 (of 11) — sandbox, launchd completes on Mini",
-    "flagsRaised": [
+    "flags": [
       {
-        "id": "flag-nel-002",
+        "id": "flag-nel-009",
         "severity": "P2",
-        "detail": "Sentinel: 2 project(s) with test failures"
+        "desc": "Sentinel: 2 project(s) with test failures"
       },
       {
-        "id": "flag-nel-003",
+        "id": "flag-nel-010",
+        "severity": "P1",
+        "desc": "No newsletter produced for 2026-04-25 — past 06:00 MT deadline (UTC-rollover artifact; MT date still 2026-04-24)"
+      },
+      {
+        "id": "flag-nel-011",
         "severity": "P2",
-        "detail": "Found 20 broken documentation links"
+        "desc": "20 broken documentation links"
       }
     ],
-    "delegations": [],
-    "crossProject": {
-      "hyo": "2p/2f",
-      "aurora-ra": "4p/0f",
-      "aether": "1p/1f",
-      "kai-ceo": "4p/0f"
-    }
+    "phasesRun": "1-5 (Phase 6+ sandbox-timed out at 40s budget)"
   }
 }
