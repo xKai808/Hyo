@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-25</title>
+<meta name="description" content="Ra Brief — 2026-04-25" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-25</h1>
+    <div class="sub">2026-04-25 · morning brief</div>
+  </header>
+  <article>
+<hr/>
+<p>date: 2026-04-25 kind: ra-daily edition: v2 voice: kai.hyo entities: - slug: google name: Google aliases: [Alphabet, Google LLC] category: tech take: "Google plans to invest up to $40 billion in Anthropic, signaling a major commitment to AI development." data: "Investment announcement made on April 24, 2026." hinge: "Regulatory approval and potential competitive responses." confidence: high - slug: anthropic name: Anthropic aliases: [Claude, Anthropic AI] category: ai take: "Anthropic's partnership with Google could accelerate AI advancements and market competition." data: "Google's investment could reach $40 billion." hinge: "Impact on AI capabilities and market dynamics." confidence: high - slug: deepseek name: DeepSeek aliases: [DeepSeek V4, AI models] category: ai take: "DeepSeek V4 is gaining attention for its novel architecture and performance benchmarks." data: "DeepSeek V4 announced with significant performance improvements." hinge: "User adoption and competitive positioning." confidence: medium-high topics: - slug: ai-investment name: "AI Investment" signal: "Google's $40 billion investment in Anthropic highlights the growing importance of AI." take: "This move could reshape the AI landscape and intensify competition." - slug: ai-advancements name: "AI Advancements" signal: "DeepSeek V4's release showcases significant progress in AI model capabilities." take: "The new architecture could influence future AI development strategies." lab_items: - slug: deepseek-v4 name: "DeepSeek V4" what: "A new AI model with significant performance improvements and novel architecture." why: "It introduces hybrid attention mechanisms and manifold-constrained hyper-connections." when: "Useful for complex problem-solving and tasks requiring advanced AI reasoning." paper_url: "https://api-docs.deepseek.com/news/news260424"</p>
+<hr/>
+<h1>Ra — 2026-04-25</h1>
+<h2>Google Bets Big on AI with Anthropic Investment</h2>
+<p>Good morning! Today, we're diving into Google's massive investment in Anthropic, a move that could redefine the AI landscape. We'll also explore the latest advancements in AI models with DeepSeek V4. Let's get started.</p>
+<h2>The Story · Google Bets $40 Billion on Anthropic</h2>
+<p>Google is making waves in the tech world with its announcement to invest up to $40 billion in Anthropic, a leading AI research company known for its work on advanced AI models like Claude. This investment marks one of the largest commitments to AI development by a tech giant, signaling Google's intent to dominate the AI space.</p>
+<p>Anthropic has been at the forefront of AI innovation, and this partnership with Google could accelerate the development of more sophisticated AI systems. The investment will likely fuel research and development, potentially leading to breakthroughs in AI capabilities and applications. For Google, this move not only strengthens its AI portfolio but also positions it as a key player in the competitive AI market.</p>
+<p>The implications of this investment are significant. It could lead to a faster pace of AI advancements, influencing everything from consumer technology to enterprise solutions. Moreover, it might prompt other tech companies to increase their investments in AI, intensifying the race to develop the most advanced AI systems.</p>
+<p>Regulatory approval will be a critical step in this process, as such a large investment could raise antitrust concerns. Additionally, the market will be watching closely to see how competitors respond to this bold move by Google.</p>
+<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
+<h2>Also Moving · AI Models Evolve with DeepSeek V4</h2>
+<p>In the realm of AI advancements, DeepSeek V4 is making headlines with its novel architecture and impressive performance benchmarks. This new AI model introduces hybrid attention mechanisms and manifold-constrained hyper-connections, setting it apart from previous versions.</p>
+<p>DeepSeek V4's architecture allows for more efficient processing and improved reasoning capabilities, making it a valuable tool for complex problem-solving. Its release has sparked discussions in the AI community about the future of AI model development and the potential applications of such advanced systems.</p>
+<p>As AI models continue to evolve, the focus is shifting towards creating systems that can handle more sophisticated tasks with greater accuracy. DeepSeek V4 is a step in that direction, and its impact on the AI landscape will be closely monitored.</p>
+<h2>The Lab · What AI can newly do this week</h2>
+<p>This week, we're filing DeepSeek V4 in our research library. This AI model stands out for its hybrid attention mechanisms and manifold-constrained hyper-connections, which enhance its performance and reasoning capabilities. It's particularly useful for tackling complex problems that require advanced AI reasoning.</p>
+<p>Filed under: <code>kai/research/2026-04-25-deepseek-v4.md</code></p>
+<h2>Worth Sitting With</h2>
+<p>As Google makes its massive bet on AI with Anthropic, it's worth pondering the broader implications of such investments. How will this influx of capital shape the future of AI development? Will it lead to more rapid advancements, or could it create new challenges in terms of regulation and ethical considerations? As AI continues to evolve, the balance between innovation and oversight will be crucial. What do you think the future holds for AI in light of these developments?</p>
+<h2>Kai's Desk · P.S.</h2>
+<ul>
+<li>Shipped the latest analysis on AI investment trends.</li>
+<li>Preparing a deep dive into the implications of Google's investment in Anthropic.</li>
+<li>Need your thoughts on potential regulatory challenges for large tech investments in AI.</li>
+</ul>
+<p>— Kai</p>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+  <!-- Ra engagement tracking pixel — do not remove -->
+  <img src="https://hyo.world/api/v1/track/open?nid=newsletter-2026-04-25" width="1" height="1" alt="" style="display:none;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
+</body>
+</html>
