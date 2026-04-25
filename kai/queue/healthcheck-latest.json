@@ -1,18 +1,23 @@
 {
-  "ts": "2026-04-25T02:41:08Z",
+  "ts": "2026-04-25T08:42:00Z",
   "status": "ISSUES",
   "issues": 6,
-  "warnings": 0,
+  "warnings": 2,
   "findings": [
     {
       "severity": "P1",
       "area": "flags",
-      "detail": "3 unaddressed P0/P1 flags in last 2h"
+      "detail": "6 unaddressed P0/P1 flags in last 2h"
     },
     {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "sam has no output today"
     },
     {
       "severity": "P1",
@@ -33,38 +38,43 @@
       "severity": "P1",
       "area": "dead-loop",
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
+    },
+    {
+      "severity": "P1",
+      "area": "ticket-sla",
+      "detail": "55 tickets have breached SLA"
     }
   ],
   "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1777084631-20058",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
-      "exit_code": 0
-    },
-    {
-      "id": "a4a961c5-d03f-4c41-9828-5699767071c2",
+      "id": "83d53742-e4c4-41cb-8d1f-c895a6795d18",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "117eabc2-470d-4189-a6f2-ea8cef000cad",
+      "id": "9ac1ed2c-e07b-4284-bd37-904386ac67f9",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "ba30a494-6b31-4fcf-98ee-c68f198c582a",
+      "id": "recheck-flag-kai-003",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "bash /sessions/modest-beautiful-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     },
     {
-      "id": "47c02de9-1d31-42d6-9f43-5beb5814bca8",
+      "id": "recheck-flag-kai-002",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "bash /sessions/modest-beautiful-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "recheck-flag-kai-001",
+      "status": "ok",
+      "command": "bash /sessions/modest-beautiful-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     }
   ],

@@ -1,19 +1,15 @@
 # Aether Active Tasks
 
-Last updated: 2026-04-25T02:48:36Z
+Last updated: 2026-04-25T08:48:40Z
 
 ## In Progress
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-25T02:41:09Z
-  - Status: DELEGATED
-
-- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-24: Duplicate P0 ticket writes — TASK-20260424-aether-001 written multiple times in tickets.jsonl (non-idempotent ticket create) (flagged by kai, cascade flag-kai-001)
-  - Delegated: 2026-04-24T08:09:18Z
+  - Delegated: 2026-04-25T08:42:00Z
   - Status: DELEGATED
 
 ## Queued
 
-- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-24T00:49:25-06:00 != API ts 2026-04-23T21:16:54-06:00
-  - Created: 2026-04-24T06:49:40Z
+- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-25T00:54:48-06:00 != API ts 2026-04-24T23:05:58-06:00
+  - Created: 2026-04-25T06:54:49Z
 

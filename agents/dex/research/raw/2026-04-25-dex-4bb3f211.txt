@@ -1,0 +1,364 @@
+# Source: Event Sourcing Patterns
+# URL: https://microservices.io/patterns/data/event-sourcing.html
+# Fetched: 2026-04-25
+# Focus: Event sourcing architecture — could improve our JSONL ledger system
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Pattern: Event sourcing</title>
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="microservices.io" />
+
+<script type="application/ld+json">
+{ "@context" : "http://schema.org",
+  "@id": "http://microservices.io#website",
+  "url": "http://microservices.io",
+  "@type": "WebSite",
+  "name": "Microservices.io",
+  "alternateName": "Microservice Architecture",
+  "about": {
+    "@type": "Intangible",
+	"name": "Microservices",
+	"alternateName": "Microservice Architecture",
+	"sameAs": [
+	  "http://dbpedia.org/resource/Microservices",
+	  "https://www.wikidata.org/wiki/Q18344624",
+	  "https://en.wikipedia.org/wiki/Microservices"
+	]
+  },
+  "publisher": {
+    "@type": "Person",
+	"@id": "http://www.chrisrichardson.net#chris",
+	"name": "Chris Richardson",
+	"image": "https://gravatar.com/avatar/a290a8643359e2495e1c6312e662012f",
+	"sameAs": [
+	  "https://twitter.com/crichardson",
+	  "http://www.slideshare.net/chris.e.richardson",
+	  "http://www.linkedin.com/in/pojos/",
+	  "https://github.com/cer"
+	],
+	"description": "Chris Richardson is an experienced software architect, author of POJOs in Action and the creator of the original CloudFoundry.com. His latest startup is eventuate.io, a microservices application platform. Chris offers a comprehensive set of resources for learning about microservices including articles, an O'Reilly training video, and example code. Chris offers a comprehensive consulting services, workshops and hands on training classes to help you use microservices effectively.",
+	"worksFor": {
+	  "@type": "Organization",
+	  "name": "eventuate.io",
+	  "logo": {
+	    "@type": "ImageObject",
+		"url": "http://eventuate.io/i/logo.gif",
+		"height": "33",
+		"width": "92",
+		"name": "eventuate.io logo"
+	  },
+	  "url": "http://eventuate.io/"
+	},
+	"jobTitle": "Founder",
+	"affiliation": {
+	  "@type": "Organization",
+	  "name": "CloudFoundry.com",
+	  "alternateName": "CloudFoundry",
+	  "url": "http://CloudFoundry.com"
+	}
+  },
+  "copyrightYear": "2017",
+  "offers": {
+    "@type": "Offer",
+	"itemOffered": {
+	  "@type": "Service",
+	  "name": "Microservices consulting and training",
+	  "description": "Chris offers a comprehensive consulting services, workshops and hands on training classes to help you use microservices effectively.",
+	  "url": "http://www.chrisrichardson.net/microserviceslanding.html"
+	  }
+    }
+}
+</script>
+
+
+<meta property="og:title" content="Microservices Pattern: Pattern: Event sourcing" />
+
+
+<meta property="og:image" content="http://microservices.io/i/data/storingevents.png" />
+
+
+<meta property="og:url" content="http://microservices.io/patterns/data/event-sourcing.html" />
+
+
+<meta property="og:description" content="Use event sourcing, which persists aggregates as a sequence of domain events" />
+
+
+<script type="application/ld+json">
+{
+"@context": "http://schema.org",
+"@type": "WebPage",
+"@id": "http://microservices.io/patterns/data/event-sourcing.html#webpage",
+"isPartOf": {
+  "@id": "http://microservices.io#website"
+  },
+"headline": "Pattern: Event sourcing",
+"description": "A pattern language for microservices",
+
+
+
+"primaryImageOfPage": {
+  "@type": "ImageObject",
+  "contentUrl": "http://microservices.io/i/data/storingevents.png",
+  "representativeOfPage": "True"
+},
+
+
+
+"mainEntity": {
+  "@type": "Intangible",
+  "name": "Pattern: Pattern: Event sourcing"
+
+  
+  ,
+  "description": "Use event sourcing, which persists aggregates as a sequence of domain events"
+  
+
+  
+  ,
+  "image": {
+    "@type": "ImageObject",
+	"name": "Event sourcing",
+	"width": "735",
+	"height": "428",
+	"url": "http://microservices.io/i/data/storingevents.png"
+  }
+  
+
+ },
+"url": "http://microservices.io/patterns/data/event-sourcing.html"
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{ "@context" : "http://schema.org",
+  "@type": "Question",
+  "name": "How to reliably publish events when data changes?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Use event sourcing, which persists aggregates as a sequence of domain events"
+  }
+}
+</script>
+
+
+
+
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/mystyle.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+
+    <meta name="google-site-verification" content="rB3uSmJcbvKTM81SmaySzRyq4bSjan7d0vZ-8rH7i4w" />
+<meta name="msvalidate.01" content="FCD5343EE325466BFFCA1D990110980F" />
+
+<!-- -->
+
+<script src="//load.sumome.com/" data-sumo-site-id="429d272781758132dd5f1fe73308c66cf5a1344b1f41666282845fcb2dab7c38" async="async"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7DBL155M0H"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7DBL155M0H');
+</script>
+
+
+<!-- Begin Constant Contact Active Forms -->
+<script> var _ctct_m = "173e7057e76408bde3aa3ca9eb698799"; </script>
+<script id="signupScript" src="//static.ctctcdn.com/js/signup-form-widget/current/signup-form-widget.min.js" async defer></script>
+<!-- End Constant Contact Active Forms -->
+
+</head>
+<body>
+
+<script src="/scripts/jquery.min.js"></script>
+<script src="/scripts/bootstrap.js"></script>
+<script src="/scripts/popup-anchors.js"></script>
+<script src="/scripts/rotate-ads.js"></script>
+
+<div class="site">
+
+    <div class="container-fluid">
+        <div class="row">
+    <div class="col-md-2">
+        <h4><a href="/index.html">Microservice Architecture</a></h4>
+        <strong>Supported by <a href="https://konghq.com/">Kong</a></strong>
+    </div>
+    <div class="col-md-8">
+        <nav class="navbar navbar-default" role="navigation">
+            <ul class="nav navbar-nav">
+                <li><a href="/patterns/index.html">Patterns</a></li>
+                <li><a href="/articles/index.html">Articles</a></li>
+                <li><a href="/presentations/index.html">Presentations</a></li>
+                <li><a href="/adopt/index.html">Adopt</a></li>
+                <li><a href="/refactoring/index.html">Refactoring</a></li>
+                <li><a href="/testing/index.html">Testing</a></li>
+                <li><a href="https://chrisrichardson.net/">Modernization Help</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/about.html">About</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-push-3">
+                <div class="page-content">                
+                  <h1>Pattern: Event sourcing</h1>             
+                  
+ 
+
+<span style="font-size: 2rem;">
+<a href="/tags/pattern">
+    <i class="bi-tags" style="font-size: 2rem; color: cornflowerblue;"></i>
+    pattern
+</a>&nbsp;
+</span>
+
+<br/>
+<hr/>
+
+
+                  <h2 id="context">Context</h2>
+
+<p>A service command typically needs to create/update/delete <a href="aggregate.html">aggregates</a> in the database <strong>and</strong> send messages/events to a message broker.
+For example, a service that participates in a <a href="/patterns/data/saga.html">saga</a> needs to update business entities and send messages/events.
+Similarly, a service that publishes a <a href="domain-event.html">domain event</a> must update an <a href="aggregate.html">aggregate</a> and publish an event.</p>
+
+<p>The command must atomically update the database and send messages in order to avoid data inconsistencies and bugs.
+However, it is not viable to use a traditional distributed transaction (2PC) that spans the database and the message broker
+The database and/or the message broker might not support 2PC.
+And even if they do, it’s often undesirable to couple the service to both the database and the message broker.</p>
+
+<p>But without using 2PC, sending a message in the middle of a transaction is not reliable.
+There’s no guarantee that the transaction will commit.
+Similarly, if a service sends a message after committing the transaction there’s no guarantee that it won’t crash before sending the message.</p>
+
+<p>In addition, messages must be sent to the message broker in the order they were sent by the service.
+They must usually be delivered to each consumer in the same order although that’s outside the scope of this pattern.
+For example, let’s suppose that an aggregate is updated by a series of transactions <code class="language-plaintext highlighter-rouge">T1</code>, <code class="language-plaintext highlighter-rouge">T2</code>, etc.
+This transactions might be performed by the same service instance or by different service instances.
+Each transaction publishes a corresponding event: <code class="language-plaintext highlighter-rouge">T1 -&gt; E1</code>, <code class="language-plaintext highlighter-rouge">T2 -&gt; E2</code>, etc.
+Since <code class="language-plaintext highlighter-rouge">T1</code> precedes <code class="language-plaintext highlighter-rouge">T2</code>, event <code class="language-plaintext highlighter-rouge">E1</code> must be published before <code class="language-plaintext highlighter-rouge">E2</code>.</p>
+
+<h2 id="problem">Problem</h2>
+
+<p>How to atomically update the database and send messages to a message broker?</p>
+
+<h2 id="forces">Forces</h2>
+
+<ul>
+  <li>2PC is not an option. The database and/or the message broker might not support 2PC. Also, it’s often undesirable to couple the service to both the database and the message broker.</li>
+  <li>If the database transaction commits then the messages must be sent. Conversely, if the database rolls back, the messages must not be sent</li>
+  <li>Messages must be sent to the message broker in the order they were sent by the service. This ordering must be preserved across multiple service instances that update the same aggregate.</li>
+</ul>
+
+<h2 id="solution">Solution</h2>
+
+<p>A good solution to this problem is to use event sourcing.
+Event sourcing persists the state of a business entity such an Order or a Customer as a sequence of state-changing events.
+Whenever the state of a business entity changes, a new event is appended to the list of events.
+Since saving an event is a single operation, it is inherently atomic.
+The application reconstructs an entity’s current state by replaying the events.</p>
+
+<p>Applications persist events in an event store, which is a database of events.
+The store has an API for adding and retrieving an entity’s events.
+The event store also behaves like a message broker.
+It provides an API that enables services to subscribe to events.
+When a service saves an event in the event store, it is delivered to all interested subscribers.</p>
+
+<p>Some entities, such as a Customer, can have a large number of events.
+In order to optimize loading, an application can periodically save a snapshot of an entity’s current state.
+To reconstruct the current state, the application finds the most recent snapshot and the events that have occurred since that snapshot.
+As a result, there are fewer events to replay.</p>
+
+<h2 id="example">Example</h2>
+
+<p><a href="https://github.com/eventuate-examples/eventuate-examples-java-customers-and-orders">Customers and Orders</a> is an example of an application that is built using Event Sourcing and <a href="cqrs.html">CQRS</a>.
+The application is written in Java, and uses Spring Boot.
+It is built using <a href="http://eventuate.io">Eventuate</a>, which is an application platform based on event sourcing and CQRS.</p>
+
+<p>The following diagram shows how it persist orders.</p>
+
+<p><img class="img-responsive" src="/i/storingevents.png" /></p>
+
+<p>Instead of simply storing the current state of each order as a row in an <code class="language-plaintext highlighter-rouge">ORDERS</code> table, the application persists each <code class="language-plaintext highlighter-rouge">Order</code> as a sequence of events.
+The <code class="language-plaintext highlighter-rouge">CustomerService</code> can subscribe to the order events and update its own state.</p>
+
+<p>Here is the <code class="language-plaintext highlighter-rouge">Order</code> aggregate:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Order</span> <span class="kd">extends</span> <span class="nc">ReflectiveMutableCommandProcessingAggregate</span><span class="o">&lt;</span><span class="nc">Order</span><span class="o">,</span> <span class="nc">OrderCommand</span><span class="o">&gt;</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="nc">OrderState</span> <span class="n">state</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="nc">String</span> <span class="n">customerId</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nc">OrderState</span> <span class="nf">getState</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">state</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Event</span><span class="o">&gt;</span> <span class="nf">process</span><span class="o">(</span><span class="nc">CreateOrderCommand</span> <span class="n">cmd</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">EventUtil</span><span class="o">.</span><span class="na">events</span><span class="o">(</span><span class="k">new</span> <span class="nc">OrderCreatedEvent</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">getCustomerId</span><span class="o">(),</span> <span class="n">cmd</span><span class="o">.</span><span class="na">getOrderTotal</span><span class="o">()));</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Event</span><span class="o">&gt;</span> <span class="nf">process</span><span class="o">(</span><span class="nc">ApproveOrderCommand</span> <span class="n">cmd</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">EventUtil</span><span class="o">.</span><span class="na">events</span><span class="o">(</span><span class="k">new</span> <span class="nc">OrderApprovedEvent</span><span class="o">(</span><span class="n">customerId</span><span class="o">));</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Event</span><span class="o">&gt;</span> <span class="nf">process</span><span class="o">(</span><span class="nc">RejectOrderCommand</span> <span class="n">cmd</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="nc">EventUtil</span><span class="o">.</span><span class="na">events</span><span class="o">(</span><span class="k">new</span> <span class="nc">OrderRejectedEvent</span><span class="o">(</span><span class="n">customerId</span><span class="o">));</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">apply</span><span class="o">(</span><span class="nc">OrderCreatedEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">state</span> <span class="o">=</span> <span class="nc">OrderState</span><span class="o">.</span><span class="na">CREATED</span><span class="o">;</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">customerId</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getCustomerId</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">apply</span><span class="o">(</span><span class="nc">OrderApprovedEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">state</span> <span class="o">=</span> <span class="nc">OrderState</span><span class="o">.</span><span class="na">APPROVED</span><span class="o">;</span>
+  <span class="o">}</span>
+
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">apply</span><span class="o">(</span><span class="nc">OrderRejectedEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">state</span> <span class="o">=</span> <span class="nc">OrderState</span><span class="o">.</span><span class="na">REJECTED</span><span class="o">;</span>
+  <span class="o">}</span>
+</code></pre></div></div>
+
+<p>Here is an example of an event handler in the <code class="language-plaintext highlighter-rouge">CustomerService</code> that subscribes to <code class="language-plaintext highlighter-rouge">Order</code> events:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@EventSubscriber</span><span class="o">(</span><span class="n">id</span> <span class="o">=</span> <span class="s">"customerWorkflow"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomerWorkflow</span> <span class="o">{</span>
+
+  <span class="nd">@EventHandlerMethod</span>
+  <span class="kd">public</span> <span class="nc">CompletableFuture</span><span class="o">&lt;</span><span class="nc">EntityWithIdAndVersion</span><span class="o">&lt;</span><span class="nc">Customer</span><span class="o">&gt;&gt;</span> <span class="nf">reserveCredit</span><span class="o">(</span>
+          <span class="nc">EventHandlerContext</span><span class="o">&lt;</span><span class="nc">OrderCreatedEvent</span><span class="o">&gt;</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">OrderCreatedEvent</span> <span class="n">event</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getEvent</span><span class="o">();</span>
+    <span class="nc">Money</span> <span class="n">orderTotal</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getOrderTotal</span><span class="o">();</span>
+    <span class="nc">String</span> <span class="n">customerId</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">getCustomerId</span><span class="o">();</span>
+    <span class="nc">String</span> <span class="n">orderId</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getEntityId</span><span class="o">();</span>
+
+    <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="nc">Customer</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">customerId</span><span class="o">,</span> <span class="k">new</span> <span class="nc">ReserveCreditCommand</span><span class="o">(</span><span class="n">orderTotal</span><span class="o">,</span> <span class="n">orderId</span><span class="o">));</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>It processes an <code class="language-plaintext highlighter-rouge">OrderCreated</code> event by attempting to reserve credit for the orders customer.</p>
+
+<p>Th

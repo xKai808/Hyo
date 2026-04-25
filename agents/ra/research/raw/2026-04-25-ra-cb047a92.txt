@@ -1,0 +1,183 @@
+# Source: Buttondown Blog
+# URL: https://buttondown.com/blog
+# Fetched: 2026-04-25
+# Focus: Email newsletter infrastructure, deliverability, formatting best practices
+
+<!DOCTYPE html><html lang="en" class="h-full"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/next-assets/img/blog/x400-vs-smtp-email/featuredImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/founder-led-company-newsletter/featuredImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/inbox-history-to-today/featuredImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/email-survived-government/featuredImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/how-to-unsubscribe/featuredImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/not-ai-email-agents/featureImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/how-spam-button-works/featuredImage.jpg" as="image"/><link rel="preload" href="/next-assets/img/blog/email-in-space/featuredImage.jpg" as="image"/><link rel="stylesheet" href="/_next/static/chunks/0~-r7u.h1kb_a.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0w_-4.y76ld.3.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/1247ec1axds_7.js"/><script src="/_next/static/chunks/12a4.b.46s8d-.js" async=""></script><script src="/_next/static/chunks/0v3-j_e~1-16l.js" async=""></script><script src="/_next/static/chunks/0a5usvy85qft8.js" async=""></script><script src="/_next/static/chunks/0w_2l0x-34as5.js" async=""></script><script src="/_next/static/chunks/turbopack-0e0lvgul736q3.js" async=""></script><script src="/_next/static/chunks/0lrk~cjg3vsxs.js" async=""></script><script src="/_next/static/chunks/1550pggo8k4w5.js" async=""></script><script src="/_next/static/chunks/0.r79ch40e0t3.js" async=""></script><script src="/_next/static/chunks/162n29vf1uh7c.js" async=""></script><script src="/_next/static/chunks/0iwhp-4~ivrag.js" async=""></script><script src="/_next/static/chunks/0ofie55cac8ti.js" async=""></script><script src="/_next/static/chunks/0itgio_.jon0q.js" async=""></script><script src="/_next/static/chunks/0-t7~cu0busg4.js" async=""></script><script src="/_next/static/chunks/134etpv9ovqfr.js" async=""></script><script src="/_next/static/chunks/0~2mmm9_1e.za.js" async=""></script><script src="/_next/static/chunks/0~320tadjnigx.js" async=""></script><script src="/_next/static/chunks/0-h65h8s~mxs0.js" async=""></script><script src="/_next/static/chunks/0w838lza_mrr5.js" async=""></script><script src="/_next/static/chunks/10ty9ngsorxo4.js" async=""></script><script src="/_next/static/chunks/0nhcamxx.0_w9.js" async=""></script><link rel="preload" href="https://cdn.seline.com/seline.js" as="script"/><link rel="icon" href="https://static-assets.buttondown.com/images/icons/icon@72.png"/><title>Buttondown Blog</title><meta name="description" content="Buttondown&#x27;s engineers, writers, and biggest fans write about the whole thing: engineering challenges, useful tips and tricks, new features, and more."/><meta name="robots" content="index, follow"/><link rel="canonical" href="https://buttondown.com/blog"/><link rel="alternate" type="application/rss+xml" href="https://buttondown.com/rss/blog.xml"/><meta property="og:title" content="Buttondown Blog"/><meta property="og:description" content="Buttondown&#x27;s engineers, writers, and biggest fans write about the whole thing: engineering challenges, useful tips and tricks, new features, and more."/><meta property="og:url" content="https://buttondown.com/blog"/><meta property="og:image" content="https://buttondown.com/next-assets/img/banner.png"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Buttondown Blog"/><meta name="twitter:description" content="Buttondown&#x27;s engineers, writers, and biggest fans write about the whole thing: engineering challenges, useful tips and tricks, new features, and more."/><meta name="twitter:image" content="https://buttondown.com/next-assets/img/banner.png"/><link rel="icon" href="https://static-assets.buttondown.com/images/icons/icon@72.png"/><link href="https://buttondown.com/rss/blog.xml" rel="alternate" type="application/rss+xml" title="RSS"/><script src="/_next/static/chunks/03~yq9q893hmn.js" noModule=""></script></head><body class="bg-background text-foreground h-full flex flex-col flex-1"><div hidden=""><!--$--><!--/$--></div><div class="dark h-full flex flex-col flex-1"><div class="fixed top-0 left-0 right-0 py-2 duration-200 z-20 font-system"><div class="pr-3 lg:mx-auto"><div class="flex items-center max-w-full"><div class="flex items-center gap-2 min-w-0 flex-shrink"><a class="px-3 text-sm font-bold group py-1 hover:text-brand transition-all whitespace-nowrap items-center inline-flex gap-2 hover:bg-transparent flex-shrink-0" href="/"><svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="75 75 150 150" width="24" height="24" xmlns="http://www.w3.org/2000/svg" class="size-[20px] rounded border-[2px] border-foreground group-hover:border-brand transition-all" aria-label="Buttondown logo"><path d="m236.952 86.698v125.405c0 13.279-10.781 24.06-24.061 24.06h-123.739c-13.279 0-24.061-10.781-24.061-24.06v-125.405c0-13.279 10.782-24.06 24.061-24.06h123.739c13.28 0 24.061 10.781 24.061 24.06zm-150.958 39.097c-5.12 5.121-9.337 9.84-9.337 10.342 0 1.707 13.542 13.341 23.047 20.42 6.942 5.169 25.807 20.237 33.715 23.755 8.364 3.721 24.127 3.679 32.934.369 12.467-4.685 23.134-13.842 42.132-30.187l14.859-14.558-9.839-9.839c-5.422-5.422-10.141-9.84-10.442-9.84-.402 0-10.593 9.554-14.227 13.155-5.329 5.279-8.873 8.363-21.378 18.577-1.724 1.408-7.341 5.687-16.209 5.687-8.869 0-15.148-4.656-17.12-5.687-5.305-2.774-16.601-12.688-22.934-17.977-5.218-4.358-14.558-13.755-15.06-13.755-.502.101-5.121 4.317-10.141 9.538z" fill="currentColor"></path></svg><span class="font-semibold hidden md:block">Buttondown</span></a><nav aria-label="Main" data-orientation="horizontal" dir="ltr" class="relative hidden md:flex items-center"><div style="position:relative"><ul data-orientation="horizontal" class="flex items-center gap-0.5" dir="ltr"><li><button id="radix-_R_dcnqbqtb_-trigger-radix-_R_5tcnqbqtb_" data-state="closed" aria-expanded="false" aria-controls="radix-_R_dcnqbqtb_-content-radix-_R_5tcnqbqtb_" class="rounded-full px-3 text-sm font-semibold py-1 hover:bg-muted data-[state=open]:bg-muted transition-all whitespace-nowrap flex items-center gap-1" data-radix-collection-item="">Features<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="mt-px" aria-hidden="true"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li><li><button id="radix-_R_dcnqbqtb_-trigger-radix-_R_9tcnqbqtb_" data-state="closed" aria-expanded="false" aria-controls="radix-_R_dcnqbqtb_-content-radix-_R_9tcnqbqtb_" class="rounded-full px-3 text-sm font-semibold py-1 hover:bg-muted data-[state=open]:bg-muted transition-all whitespace-nowrap flex items-center gap-1" data-radix-collection-item="">Resources<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="mt-px" aria-hidden="true"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></li></ul></div><div class="perspective-[2000px] absolute top-full flex left-0 justify-start"></div></nav></div><div class="flex-1 flex gap-1 md:gap-3 items-center justify-end"><a href="/pricing"><div class="rounded-full px-3 text-sm font-semibold py-1 hover:bg-muted transition-all whitespace-nowrap">Pricing</div></a><a href="/login"><div class="rounded-full px-3 text-sm font-semibold py-1 hover:bg-muted transition-all whitespace-nowrap">Log in</div></a><a href="/register"><div class="rounded-full px-3 text-sm font-semibold py-1 transition-all whitespace-nowrap bg-brand text-white hover:bg-blue-600"><span class="hidden md:block">Build your newsletter</span><span class="block md:hidden">Sign up</span></div></a></div></div></div></div><div class="lg:flex mt-20 mb-10 justify-center lg:space-x-12 items-start flex-1"><div class="text-left w-full"><div class="relative w-full"><div class="mb-16 w-full"><div class="max-w-prose mx-auto"><div class="mb-4 md:-mb-8 md:mt-12"></div><h1 class="text-4xl md:text-6xl font-black text-center md:my-12 text-balance">Blog</h1><h2 class="text-center text-muted-foreground md:-mt-8 text-2xl mb-8 text-pretty">Buttondown&#x27;s engineers, writers, and biggest fans write about the whole thing: engineering challenges, useful tips and tricks, new features, and more.</h2></div></div><div></div><div class="mb-20 text-lg px-4 max-w-screen-xl mx-auto"><div class="flex items-center justify-center w-full -mt-12 mb-32"><a class="text-sm bg-blue-600 text-white px-4 py-2 mx-auto mb-4 items-center gap-2 rounded-full inline-flex font-system" href="/rss/blog.xml"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-4"><path d="M5 3a1 1 0 000 2c5.523 0 10 4.477 10 10a1 1 0 102 0C17 8.373 11.627 3 5 3z"></path><path d="M4 9a1 1 0 011-1 7 7 0 017 7 1 1 0 11-2 0 5 5 0 00-5-5 1 1 0 01-1-1zM3 15a2 2 0 114 0 2 2 0 01-4 0z"></path></svg>Subscribe to RSS</a></div><ul class="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"><li class="items-center col-span-full hidden md:flex flex-col gap-4"><div class="flex items-center w-full"><a class="text-sm font-system hover:text-foreground rounded-full px-3 py-1 whitespace-nowrap text-foreground bg-muted" href="/blog">Blog</a><a class="text-muted-foreground text-sm font-system hover:text-foreground rounded-full px-3 py-1 whitespace-nowrap" href="/blog?category=changelog">Product updates</a><a class="text-muted-foreground text-sm font-system hover:text-foreground rounded-full px-3 py-1 whitespace-nowrap" href="/blog?category=behind-the-scenes">Behind the scenes</a><a class="text-muted-foreground text-sm font-system hover:text-foreground rounded-full px-3 py-1 whitespace-nowrap" href="/blog?category=customer-story">Customer stories</a><a class="text-muted-foreground text-sm font-system hover:text-foreground rounded-full px-3 py-1 whitespace-nowrap" href="/blog?category=guides-and-tips">Guides and tips</a><a class="text-muted-foreground text-sm font-system hover:text-foreground rounded-full px-3 py-1 whitespace-nowrap" href="/blog?category=just-for-fun">Just for fun</a></div></li><a class="" href="blog/2026-04-20-paywall-changes"><li class="bg-card group border border-border rounded-md transition-all hover:shadow-md hover:border-muted-foreground dark:hover:border-white/50 list-none rounded-t-lg flex flex-col justify-center max-md:h-auto pb-4 h-auto min-h-24"><div class="flex gap-2 text-sm p-4 pb-0"><div class="text-muted-foreground tabular-nums whitespace-nowrap">April 20, 2026<!-- --> </div></div><div class="font-bold px-4 text-2xl line-clamp-2">Three features are moving behind the paywall</div></li></a><a class="row-span-3" href="blog/2026-04-19-firewall-improvements"><li class="bg-card group border border-border rounded-md transition-all hover:shadow-md hover:border-muted-foreground dark:hover:border-white/50 list-none rounded-t-lg flex flex-col pb-4 h-full min-h-80"><div class="flex-1 flex justify-center text-muted-foreground border-b border-border group-hover:border-muted-foreground dark:group-hover:border-white/50 overflow-hidden rounded-t-lg" style="align-items:center;width:auto"><iframe srcDoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=900, height=600&quot;&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+  :root {
+    --bg: #f0efed;
+    --fg: #000;
+    --muted: #6b7280;
+    --input-bg: #fff;
+    --border: #e5e7eb;
+    --focus-blue: #3b82f6;
+    --check-blue: #60a5fa;
+    --check-green: #22c55e;
+    --highlight: rgba(59, 130, 246, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --fg: #fff;
+      --muted: #9ca3af;
+      --input-bg: #232320;
+      --border: rgba(255,255,255,0.15);
+      --highlight: rgba(255,255,255,0.04);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    font-family: &#x27;Inter&#x27;, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg);
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;style&gt;
+  .robots-block {
+    font-family: &#x27;JetBrains Mono&#x27;, monospace;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--fg);
+    width: 340px;
+  }
+  .robots-label {
+    font-family: &#x27;Inter&#x27;, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .directive {
+    color: var(--muted);
+  }
+  .agent {
+    color: var(--focus-blue);
+    font-weight: 500;
+  }
+  .disallow {
+    color: var(--fg);
+  }
+  .spacer {
+    height: 8px;
+  }
+&lt;/style&gt;
+
+&lt;div class=&quot;robots-block&quot;&gt;
+  &lt;div class=&quot;robots-label&quot;&gt;/robots.txt&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;directive&quot;&gt;User-agent:&lt;/span&gt; &lt;span class=&quot;agent&quot;&gt;GPTBot&lt;/span&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;directive&quot;&gt;Disallow:&lt;/span&gt; &lt;span class=&quot;disallow&quot;&gt;/&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;directive&quot;&gt;User-agent:&lt;/span&gt; &lt;span class=&quot;agent&quot;&gt;ClaudeBot&lt;/span&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;directive&quot;&gt;Disallow:&lt;/span&gt; &lt;span class=&quot;disallow&quot;&gt;/&lt;/span&gt;&lt;/div&gt;
+  &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;directive&quot;&gt;User-agent:&lt;/span&gt; &lt;span class=&quot;agent&quot;&gt;facebookexternalhit&lt;/span&gt;&lt;/div&gt;
+  &lt;div&gt;&lt;span class=&quot;directive&quot;&gt;Disallow:&lt;/span&gt; &lt;span class=&quot;disallow&quot;&gt;/&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;" title="Firewall changes and improvements" class="w-full h-full border-0 pointer-events-none" loading="lazy"></iframe></div><div class="flex gap-2 text-sm p-4 pb-0"><div class="text-muted-foreground tabular-nums whitespace-nowrap">April 19, 2026<!-- --> </div></div><div class="font-bold px-4 text-lg line-clamp-2">Firewall changes and improvements</div></li></a><a class="row-span-3" href="blog/x400-vs-smtp-email"><li class="bg-card group border border-border rounded-md transition-all hover:shadow-md hover:border-muted-foreground dark:hover:border-white/50 list-none rounded-t-lg flex flex-col pb-4 h-full min-h-80"><div class="flex-1 flex justify-center text-muted-foreground border-b border-border group-hover:border-muted-foreground dark:group-hover:border-white/50 overflow-hidden rounded-t-lg" style="align-items:center;width:auto"><img src="/next-assets/img/blog/x400-vs-smtp-email/featuredImage.jpg" alt="Email could have been X.400 times better" class="text-muted-foreground " style="object-fit:cover;width:100%;max-width:none;height:100%"/></div><div class="flex gap-2 text-sm p-4 pb-0"><div class="text-muted-foreground tabular-nums whitespace-nowrap">April 17, 2026<!-- --> </div></div><div class="font-bold px-4 text-lg line-clamp-2">Email could have been X.400 times better</div></li></a><a class="row-span-3" href="blog/founder-led-company-newsletter"><li class="bg-card group border border-border rounded-md transition-all hover:shadow-md hover:border-muted-foreground dark:hover:border-white/50 list-none rounded-t-lg flex flex-col pb-4 h-full min-h-80"><div class="flex-1 flex justify-center text-muted-foreground border-b border-border group-hover:border-muted-foreground dark:group-hover:border-white/50 overflow-hidden rounded-t-lg" style="align-items:center;width:auto"><img src="/next-assets/img/blog/founder-led-company-newsletter/featuredImage.jpg" alt="Put your name and voice into your company newsletter" class="text-muted-foreground " style="object-fit:cover;width:100%;max-width:none;height:100%"/></div><div class="flex gap-2 text-sm p-4 pb-0"><div class="text-muted-foreground tabular-nums whitespace-nowrap">April 10, 2026<!-- --> </div></div><div class="font-bold px-4 text-lg line-clamp-2">Put your name and voice into your company newsletter</div></li></a><a class="" href="blog/2026-04-05-sending-email-address"><li class="bg-card group border border-border rounded-md transition-all hover:shadow-md hover:border-muted-foreground dark:hover:border-white/50 list-none rounded-t-lg flex flex-col justify-center max-md:h-auto pb-4 h-auto min-h-24"><div class="flex gap-2 text-sm p-4 pb-0"><div class="text-muted-foreground tabular-nums whitespace-nowrap">April 9, 2026<!-- --> </div></div><div class="font-bold px-4 text-2xl line-clamp-2">Simplified email address settings</div></li></a><a class="row-span-3" href="blog/2026-04-09-subscription-wall"><li class="bg-card group border border-border rounded-md transition-all hover:shadow-md hover:border-muted-foreground dark:hover:border-white/50 list-none rounded-t-lg flex flex-col pb-4 h-full min-h-80"><div class="flex-1 flex justify-center text-muted-foreground border-b border-border group-hover:border-muted-foreground dark:group-hover:border-white/50 overflow-hidden rounded-t-lg" style="align-items:center;width:auto"><iframe srcDoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;UTF-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=900, height=600&quot;&gt;
+&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+  :root {
+    --bg: #f0efed;
+    --fg: #000;
+    --muted: #6b7280;
+    --input-bg: #fff;
+    --border: #e5e7eb;
+    --focus-blue: #3b82f6;
+    --check-blue: #60a5fa;
+    --check-green: #22c55e;
+    --highlight: rgba(59, 130, 246, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --fg: #fff;
+      --muted: #9ca3af;
+      --input-bg: #232320;
+      --border: rgba(255,255,255,0.15);
+      --highlight: rgba(255,255,255,0.04);
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    font-family: &#x27;Inter&#x27;, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg);
+  }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;style&gt;
+  .archive-preview {
+    font-family: &#x27;Inter&#x27;, sans-serif;
+    width: 380px;
+    text-align: left;
+  }
+  .article-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--fg);
+    margin-bottom: 16px;
+  }
+  .article-content p {
+    margin: 0 0 10px;
+  }
+  .article-fade {
+    position: relative;
+  }
+  .article-fade::after {
+    content: &#x27;&#x27;;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, var(--bg));
+  }
+  .subscribe-card {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+  }
+  .subscribe-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: 16px;
+  }
+  .subscribe-form {
+    display: flex;
+    gap: 8px;
+  }
+  .subscribe-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--bord

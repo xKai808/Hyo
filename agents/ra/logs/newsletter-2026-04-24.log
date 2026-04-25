@@ -2680,3 +2680,649 @@ Source summary:
 [2026-04-25T02:48:16Z] synthesize.py ...
 [info] loaded 365 unique records across 5 topics
 [info] context size: 31,434 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 21.0s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T02:48:16Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T02:49:01.744266+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T02:48:16Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T02:48:16Z] publishing to HQ feed...
+[2026-04-25T02:48:16Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 25 insertions(+), 17 deletions(-)
+   c12acdc..791007c  main -> main
+[2026-04-25T02:48:16Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T02:48:16Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T03:03:17Z] hyo-newsletter: starting pipeline
+[2026-04-25T03:03:17Z] gather.py ...
+
+Run took 24.7s
+Source summary:
+  hn_front_page                    50  ok in 1.5s
+  arxiv_cs_AI                      50  ok in 1.3s
+  arxiv_cs_LG                      50  ok in 1.7s
+  arxiv_cs_CL                      50  ok in 1.5s
+  reddit_singularity               25  ok in 1.4s
+  reddit_LocalLLaMA                25  ok in 1.7s
+  reddit_macro                      2  ok in 1.6s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            12  ok in 1.9s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 8.0s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 364 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 364 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T03:03:17Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 364 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T03:03:17Z] synthesize.py ...
+[info] loaded 364 unique records across 5 topics
+[info] context size: 31,220 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 29.0s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T03:03:17Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T03:04:11.024822+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T03:03:17Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T03:03:17Z] publishing to HQ feed...
+[2026-04-25T03:03:17Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (3 stories)
+ 3 files changed, 74 insertions(+), 32 deletions(-)
+   791007c..053c6da  main -> main
+[2026-04-25T03:03:17Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T03:03:17Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T03:18:18Z] hyo-newsletter: starting pipeline
+[2026-04-25T03:18:18Z] gather.py ...
+
+Run took 25.1s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 2.3s
+  arxiv_cs_LG                      50  ok in 2.8s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               25  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      2  ok in 0.9s
+  reddit_artificial                25  ok in 1.4s
+  github_trending_daily            12  ok in 3.4s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.5s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 364 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 364 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T03:18:18Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 364 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T03:18:18Z] synthesize.py ...
+[info] loaded 364 unique records across 5 topics
+[info] context size: 31,198 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 19.2s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T03:18:18Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T03:19:02.428279+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T03:18:18Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T03:18:18Z] publishing to HQ feed...
+[2026-04-25T03:18:18Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 25 insertions(+), 75 deletions(-)
+   6362b16..0a41833  main -> main
+[2026-04-25T03:18:18Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T03:18:18Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T03:33:19Z] hyo-newsletter: starting pipeline
+[2026-04-25T03:33:19Z] gather.py ...
+
+Run took 24.6s
+Source summary:
+  hn_front_page                    50  ok in 2.0s
+  arxiv_cs_AI                      50  ok in 1.3s
+  arxiv_cs_LG                      50  ok in 1.1s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity               25  ok in 1.5s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      2  ok in 2.1s
+  reddit_artificial                25  ok in 1.7s
+  github_trending_daily            12  ok in 1.8s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 1.3s
+  yahoo_indices                     0  ok in 7.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 364 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 364 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T03:33:19Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 364 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T03:33:19Z] synthesize.py ...
+[info] loaded 364 unique records across 5 topics
+[info] context size: 31,137 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 22.9s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T03:33:19Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 1 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T03:34:06.864959+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T03:33:19Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T03:33:19Z] publishing to HQ feed...
+[2026-04-25T03:33:19Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 25 insertions(+), 18 deletions(-)
+   0a41833..690c58a  main -> main
+[2026-04-25T03:33:19Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T03:33:19Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T03:48:20Z] hyo-newsletter: starting pipeline
+[2026-04-25T03:48:20Z] gather.py ...
+
+Run took 24.5s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 2.4s
+  arxiv_cs_LG                      50  ok in 2.7s
+  arxiv_cs_CL                      50  ok in 1.5s
+  reddit_singularity               25  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      2  ok in 0.8s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            12  ok in 2.0s
+  product_hunt                     50  ok in 2.2s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.3s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 364 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 364 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T03:48:20Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 364 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T03:48:20Z] synthesize.py ...
+[info] loaded 364 unique records across 5 topics
+[info] context size: 31,197 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 20.7s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T03:48:20Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T03:49:05.452040+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T03:48:20Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T03:48:20Z] publishing to HQ feed...
+[2026-04-25T03:48:20Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 21 insertions(+), 21 deletions(-)
+   f6a6b94..fec5f91  main -> main
+[2026-04-25T03:48:20Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T03:48:20Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T04:03:21Z] hyo-newsletter: starting pipeline
+[2026-04-25T04:03:21Z] gather.py ...
+
+Run took 23.7s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                       0  ok in 0.8s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 0.7s
+  reddit_singularity               25  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      2  ok in 1.0s
+  reddit_artificial                25  ok in 2.3s
+  github_trending_daily            12  ok in 2.6s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 9.2s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T04:03:21Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T04:03:21Z] synthesize.py ...
+[info] loaded 214 unique records across 5 topics
+[info] context size: 25,482 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 22.0s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T04:03:21Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T04:04:07.284173+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T04:03:21Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T04:03:21Z] publishing to HQ feed...
+[2026-04-25T04:03:21Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 25 insertions(+), 24 deletions(-)
+   fec5f91..d1ca898  main -> main
+[2026-04-25T04:03:21Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T04:03:21Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T04:18:22Z] hyo-newsletter: starting pipeline
+[2026-04-25T04:18:22Z] gather.py ...
+
+Run took 24.1s
+Source summary:
+  hn_front_page                    50  ok in 1.8s
+  arxiv_cs_AI                       0  ok in 0.7s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 0.7s
+  reddit_singularity               25  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      2  ok in 1.1s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            12  ok in 3.7s
+  product_hunt                     50  ok in 1.3s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 8.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T04:18:22Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T04:18:22Z] synthesize.py ...
+[info] loaded 214 unique records across 5 topics
+[info] context size: 25,558 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 20.1s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T04:18:22Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T04:19:06.721858+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T04:18:22Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T04:18:22Z] publishing to HQ feed...
+[2026-04-25T04:18:22Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (3 stories)
+ 3 files changed, 76 insertions(+), 32 deletions(-)
+   cc1e48e..57a8d4c  main -> main
+[2026-04-25T04:18:22Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T04:18:22Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T04:33:23Z] hyo-newsletter: starting pipeline
+[2026-04-25T04:33:23Z] gather.py ...
+
+Run took 22.7s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                       0  ok in 0.7s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 2.0s
+  reddit_singularity               24  ok in 2.1s
+  reddit_LocalLLaMA                25  ok in 1.1s
+  reddit_macro                      2  ok in 1.0s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            12  ok in 1.7s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 1.1s
+  yahoo_indices                     0  ok in 7.9s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 213 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 213 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T04:33:23Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 213 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T04:33:23Z] synthesize.py ...
+[info] loaded 213 unique records across 5 topics
+[info] context size: 25,960 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 24.1s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T04:33:23Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T04:34:10.656942+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T04:33:23Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T04:33:23Z] publishing to HQ feed...
+[2026-04-25T04:33:23Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (3 stories)
+ 3 files changed, 43 insertions(+), 45 deletions(-)
+   57a8d4c..ba93c52  main -> main
+[2026-04-25T04:33:23Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T04:33:23Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T04:48:24Z] hyo-newsletter: starting pipeline
+[2026-04-25T04:48:24Z] gather.py ...
+
+Run took 22.7s
+Source summary:
+  hn_front_page                    50  ok in 1.6s
+  arxiv_cs_AI                       0  ok in 0.7s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 0.7s
+  reddit_singularity               25  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.2s
+  reddit_macro                      2  ok in 0.9s
+  reddit_artificial                25  ok in 2.7s
+  github_trending_daily            12  ok in 3.2s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 7.3s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T04:48:24Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T04:48:24Z] synthesize.py ...
+[info] loaded 214 unique records across 5 topics
+[info] context size: 25,775 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 18.6s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T04:48:24Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T04:49:05.942877+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T04:48:24Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T04:48:24Z] publishing to HQ feed...
+[2026-04-25T04:48:24Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (3 stories)
+ 3 files changed, 38 insertions(+), 38 deletions(-)
+   ba93c52..9c59a97  main -> main
+[2026-04-25T04:48:24Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T04:48:24Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T05:03:25Z] hyo-newsletter: starting pipeline
+[2026-04-25T05:03:25Z] gather.py ...
+
+Run took 23.4s
+Source summary:
+  hn_front_page                    50  ok in 1.4s
+  arxiv_cs_AI                       0  ok in 2.5s
+  arxiv_cs_LG                       0  ok in 0.9s
+  arxiv_cs_CL                       0  ok in 0.8s
+  reddit_singularity               25  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      2  ok in 1.0s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            12  ok in 2.4s
+  product_hunt                     50  ok in 2.3s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.5s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T05:03:25Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T05:03:25Z] synthesize.py ...
+[info] loaded 214 unique records across 5 topics
+[info] context size: 25,876 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 27.8s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T05:03:25Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T05:04:16.930464+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T05:03:25Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T05:03:25Z] publishing to HQ feed...
+[2026-04-25T05:03:25Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 22 insertions(+), 71 deletions(-)
+   9cdf29c..935598a  main -> main
+[2026-04-25T05:03:25Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T05:03:25Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T05:18:26Z] hyo-newsletter: starting pipeline
+[2026-04-25T05:18:26Z] gather.py ...
+
+Run took 23.7s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                       0  ok in 0.7s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 0.7s
+  reddit_singularity               25  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 1.7s
+  reddit_macro                      2  ok in 1.9s
+  reddit_artificial                25  ok in 1.8s
+  github_trending_daily            12  ok in 1.8s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 9.2s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T05:18:26Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T05:18:26Z] synthesize.py ...
+[info] loaded 214 unique records across 5 topics
+[info] context size: 25,885 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 20.0s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T05:18:26Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T05:19:10.704758+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T05:18:26Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T05:18:26Z] publishing to HQ feed...
+[2026-04-25T05:18:26Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 23 insertions(+), 18 deletions(-)
+   c2905ac..078ec27  main -> main
+[2026-04-25T05:18:26Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T05:18:26Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T05:33:28Z] hyo-newsletter: starting pipeline
+[2026-04-25T05:33:28Z] gather.py ...
+
+Run took 21.7s
+Source summary:
+  hn_front_page                    50  ok in 1.6s
+  arxiv_cs_AI                       0  ok in 1.6s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 0.7s
+  reddit_singularity               25  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.5s
+  reddit_macro                      2  ok in 1.0s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            12  ok in 3.4s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.0s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T05:33:28Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T05:33:28Z] synthesize.py ...
+[info] loaded 214 unique records across 5 topics
+[info] context size: 25,884 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 26.5s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T05:33:28Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T05:34:16.471952+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T05:33:28Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T05:33:28Z] publishing to HQ feed...
+[2026-04-25T05:33:28Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (0 stories)
+ 3 files changed, 18 insertions(+), 23 deletions(-)
+   8e38ef5..15b84a2  main -> main
+[2026-04-25T05:33:28Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T05:33:28Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-25T05:48:29Z] hyo-newsletter: starting pipeline
+[2026-04-25T05:48:29Z] gather.py ...
+
+Run took 21.4s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                       0  ok in 0.8s
+  arxiv_cs_LG                       0  ok in 0.7s
+  arxiv_cs_CL                       0  ok in 0.9s
+  reddit_singularity               25  ok in 1.7s
+  reddit_LocalLLaMA                25  ok in 1.8s
+  reddit_macro                      2  ok in 1.8s
+  reddit_artificial                25  ok in 1.0s
+  github_trending_daily            12  ok in 1.9s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.7s
+  yahoo_indices                     0  ok in 7.1s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 214 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-24.jsonl
+[ok] appended 214 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-25T05:48:29Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-24: 214 records, 0 entity hits, 0 topic hits, 0 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-25T05:48:29Z] synthesize.py ...
+[info] loaded 213 unique records across 5 topics
+[info] context size: 25,772 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[ok] synthesized in 20.1s via openai/gpt-4o
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.md
+[2026-04-25T05:48:29Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-24
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'date': '2026-04-24', 'kind': 'hyo-daily', 'generated': '2026-04-25T05:49:11.162925+00:00'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-24.html
+[2026-04-25T05:48:29Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-24: archived 0 entities, 0 topics, 0 lab items
+[2026-04-25T05:48:29Z] publishing to HQ feed...
+[2026-04-25T05:48:29Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-24.html
+[feed] published newsletter-ra-2026-04-24 (3 stories)
+ 3 files changed, 112 insertions(+), 64 deletions(-)
+   15b84a2..13a5472  main -> main
+[2026-04-25T05:48:29Z] pushed to Vercel — /daily/2026-04-24 will be live
+[2026-04-25T05:48:29Z] hyo-newsletter: done

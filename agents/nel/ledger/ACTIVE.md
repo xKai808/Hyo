@@ -1,56 +1,48 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-25T02:48:43Z
+Last updated: 2026-04-25T08:49:17Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-25T02:48:43Z
+  - Delegated: 2026-04-25T08:49:17Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-25 — past 06:00 MT deadline
-  - Delegated: 2026-04-25T02:13:27Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit 2026-04-25: Nel cascade storm — 11 duplicate flags in 30h, deduplication broken
+  - Delegated: 2026-04-25T08:08:23Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-25 — past 06:00 MT deadline
-  - Delegated: 2026-04-25T02:11:00Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit 2026-04-25: Newsletter sentinel timezone bug — fires at 02:10 UTC (20:10 MT) before 06:00 MT deadline
+  - Delegated: 2026-04-25T08:08:23Z
   - Status: DELEGATED
 
-- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-24: Queue cleanup not reducing completed items — threshold triggered at 2006, still at 2007 after run
-  - Delegated: 2026-04-24T08:09:18Z
-  - Status: DELEGATED
-
-- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit 2026-04-24: 54 unread URGENT hyo-inbox messages (duplicates from repeating SLA + RED health) — inbox notification deduplication needed
-  - Delegated: 2026-04-24T08:09:18Z
-  - Status: DELEGATED
-
-- **nel-006** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit 2026-04-24: All 5 agents have GUIDANCE tickets indicating dead-loop (same assessment 3+ cycles) — systemic stagnation
-  - Delegated: 2026-04-24T08:09:18Z
+- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-25: daily-audit.sh defaults to $HOME/Documents/Projects/Hyo — broken in cowork sandbox; needs HYO_ROOT export or sandbox detection
+  - Delegated: 2026-04-25T08:08:24Z
   - Status: DELEGATED
 
 ## Queued
 
 - **flag-nel-001** [P2] Found 20 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-23T20:45:35Z
+  - Created: 2026-04-24T20:48:57Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-24T02:09:44Z
+  - Created: 2026-04-24T22:10:06Z
 
-- **flag-nel-003** [P2] No newsletter produced for 2026-04-24 — past 06:00 MT deadline
-  - Created: 2026-04-24T02:09:45Z
+- **flag-nel-003** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-24T22:10:10Z
 
-- **flag-nel-004** [P2] Found 20 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-24T02:09:49Z
+- **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-25T02:10:05Z
 
-- **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-24T06:11:47Z
+- **flag-nel-005** [P2] No newsletter produced for 2026-04-25 — past 06:00 MT deadline
+  - Created: 2026-04-25T02:10:05Z
 
-- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-24T06:14:00Z
+- **flag-nel-006** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-25T02:10:09Z
 
-- **flag-nel-007** [P2] Found 20 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-24T06:14:04Z
+- **flag-nel-007** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-25T02:11:00Z
 
 - **flag-nel-008** [P2] No newsletter produced for 2026-04-25 — past 06:00 MT deadline
   - Created: 2026-04-25T02:11:00Z

@@ -1,36 +1,28 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-25T02:48:43Z
+Last updated: 2026-04-25T08:49:17Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-25T02:48:43Z
+  - Delegated: 2026-04-25T08:49:17Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-010): No newsletter produced for 2026-04-25 — past 06:00 MT deadline
-  - Delegated: 2026-04-25T02:13:27Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): Daily audit 2026-04-25: Nel cascade storm — 11 duplicate flags in 30h, deduplication broken
+  - Delegated: 2026-04-25T08:08:23Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-008): No newsletter produced for 2026-04-25 — past 06:00 MT deadline
-  - Delegated: 2026-04-25T02:11:00Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit 2026-04-25: Newsletter sentinel timezone bug — fires at 02:10 UTC (20:10 MT) before 06:00 MT deadline
+  - Delegated: 2026-04-25T08:08:23Z
   - Status: DELEGATED
 
-- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-24: Queue cleanup not reducing completed items — threshold triggered at 2006, still at 2007 after run
-  - Delegated: 2026-04-24T08:09:18Z
-  - Status: DELEGATED
-
-- **sam-005** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-004): Daily audit 2026-04-24: 54 unread URGENT hyo-inbox messages (duplicates from repeating SLA + RED health) — inbox notification deduplication needed
-  - Delegated: 2026-04-24T08:09:18Z
-  - Status: DELEGATED
-
-- **sam-006** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-005): Daily audit 2026-04-24: All 5 agents have GUIDANCE tickets indicating dead-loop (same assessment 3+ cycles) — systemic stagnation
-  - Delegated: 2026-04-24T08:09:18Z
+- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-25: daily-audit.sh defaults to $HOME/Documents/Projects/Hyo — broken in cowork sandbox; needs HYO_ROOT export or sandbox detection
+  - Delegated: 2026-04-25T08:08:24Z
   - Status: DELEGATED
 
 ## Queued
 
-- **flag-sam-001** [P2] SIM-TEST: upward flag communication test
-  - Created: 2026-04-23T15:08:02Z
+- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-04-24T11:30:25Z
 

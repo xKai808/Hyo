@@ -171,3 +171,11 @@
 **Open tasks across all projects:** 82
 **Completed tasks across all projects:** 29
 **Session continuity files current:** KAI_BRIEF.md + KAI_TASKS.md ✓
+
+## 2026-04-25 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in kai/
+**Open tasks across all projects:** 82
+**Completed tasks across all projects:** 29
+**Session continuity files current:** KAI_BRIEF.md + KAI_TASKS.md ✓

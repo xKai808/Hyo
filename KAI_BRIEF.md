@@ -4,6 +4,8 @@
 
 **Updated:** 2026-04-23 (sentinel-hyo-daily scheduled run #136 — 0 new, P0 day 111 carry-forward)
 
+**[HEALTHCHECK 2026-04-25T08:03Z]** Status=ISSUES. 3 P1, 4 P2. **P1 — sam zero output today**: nel=17, ra=3, aether=4, dex=3 logs today; sam=0. Same throughput-imbalance pattern flagged in 4 consecutive prior healthchecks (04-24 02:05Z, 06:05Z, 16:05Z, 22:04Z) — sam.sh runner appears under-firing. **P1 — aether dashboard publish STILL frozen**: API ts stuck at 01:51:34 MT while local cycles continue advancing (~11min behind at 02:02 MT and growing). flag-aether-001 "dashboard data mismatch" re-firing every minute — 6 P2 raises in last 3 min, no dedupe. This is the 5th consecutive healthcheck flagging aether HQ publish failure (since 04-23 22:03Z). **P1 — prior healthcheck (07:56Z, 6min ago) flagged sam/ra/dex dead-loops + 6 SLA-breached tickets and dispatched auto-remediation**; zero REPORT entries from sam/ra/dex in log.jsonl since dispatch — verification pending next agent cycle. P2 — log-spam from aether flag dedupe broken (same flag, same minute, repeating). P2 — nel: 20 broken doc links + 7 audit issues + 2 untriggered files awaiting cleanup (P2 flags 08:00Z). P2 — aether: 2 untriggered files self-review. Queue healthy (0/0; last 3 cmds exit=0; 2232 completed lifetime, 24 failed). All 6 ACTIVE.md fresh (0h). 0 stale tasks >72h. **NEXT INTERACTIVE SESSION: (1) diagnose sam.sh under-firing — 5th healthcheck in a row, this is now systemic; (2) fix aether HQ publish pipeline + add flag dedupe so the same flag doesn't fire 6x/3min; (3) confirm whether 07:56Z auto-remediation actually closed the sam/ra/dex dead-loops or just suppressed the flag; (4) tackle the 12 SAFEGUARD/AUTO-REMEDIATE tasks still DELEGATED from prior cycle.** See kai/queue/healthcheck-latest.json.
+
 **[HEALTHCHECK 2026-04-25T00:04Z]** Status=ISSUES. 1 P1, 3 P2/P3. **P1 — 12 P1 SAFEGUARD/AUTO-REMEDIATE tasks DELEGATED >15h with no resolution**: nel-002..006 (5x SAFEGUARD cross-ref), sam-002..006 (5x SAFEGUARD test-coverage), aether-002 (duplicate P0 ticket writes), ra-002 (newsletter — but newsletter 2026-04-24 .md/.html WAS produced 23:48Z, so ra-002 is closeable; auto-remediation isn't closing tasks even when underlying work shipped). 0 NEW P0/P1 FLAGs raised in log.jsonl in last 2h (2610 FLAGs scanned). P2 — newsletter synthesize.py reported `claude_code exited 1` and `GROK_API_KEY not set` at 00:03Z — output exists but may be degraded; verify quality. P2 — 2 zero-byte files in kai/queue/failed/ (975413d6..., 00e62347...) — failed-handler losing payloads. P3 — only nel has today-stamped (2026-04-25 UTC) log files; sam/ra/aether/dex still 2026-04-24 stamps (expected, MT cycle still on 04-24). Queue: 1 pending, 1 running (newsletter-2026-04-24 just kicked at 00:03Z, age 0min), 2157 completed, 24 failed lifetime. All 6 ACTIVE.md fresh (0h). 0 stale tasks >72h. Previous 23:55Z healthcheck dispatched auto-remediation for 5 dead-loops; no re-raise this cycle. **NEXT INTERACTIVE SESSION: (1) close ra-002 manually since newsletter shipped; (2) audit why nel-002..006 + sam-002..006 SAFEGUARD tasks have been DELEGATED 15.9h with no progress — same broken cascade pattern as flag-nel-001 broken-link loop; (3) get GROK_API_KEY into ra pipeline secrets so synthesize fallback works.** See kai/queue/healthcheck-latest.json.
 
 **[HEALTHCHECK 2026-04-24T22:04Z]** Status=ISSUES. 5 P1, 1 P2. **P1 — flag-nel-001 "1 broken links detected" STILL unresolved** (raised 2026-04-24T20:48:05Z; same auto-remediate loop that has been spinning since 04-23 20:45Z — now ~25h and 20+ delegations with no RESOLVE event). **P1 dead-loops persist for nel/sam/ra/aether** — each shows 3 consecutive identical assessments in evolution.jsonl: nel "routine maintenance run", sam "routine engineering check" (also still 1 log/day vs nel 29), ra "health check with 1 warning(s)", aether "metrics cycle complete; WARNING: dashboard out-of-sync" (dashboard publish drift, 4th consecutive healthcheck flagging this). **P2 — dex downgrade**: 'pattern detection' count dropped 231→110 day-over-day and the 'corrupt JSONL' bottleneck is gone from today's entry; no longer P1 stuck. No new P0. Queue healthy (0/0, last 3 commands exit=0). All 6 ACTIVE.md fresh (0h). 0 stale tasks >72h. Agent output today: nel=29 sam=1 ra=3 aether=2 dex=3. **NEXT INTERACTIVE SESSION: (1) manually resolve the broken link + install circuit-breaker on kai-001 auto-delegate cascade after N failures, (2) fix aether HQ/API publish (4 healthchecks in a row — 04-23 22:03Z, 04-24 06:05Z, 04-24 16:05Z, 04-24 22:04Z), (3) diagnose why sam.sh is firing once/day while nel fires ~29x/day, (4) cut dead-loop auto-remediation — agents either respond to GUIDANCE or escalate to manual review, no re-dispatch.** See kai/queue/healthcheck-latest.json.
@@ -177,7 +179,40 @@
 - **Agents still in dead-loop** — sam (assessment_stuck), ra (assessment_stuck), aether (bottleneck_stuck). Guidance DELEGATEs firing every ~15min with no change in behavior; need to escalate beyond open-ended questions.
 - **No kai runner log for 2026-04-21** — `agents/kai/logs/` has nothing dated today.
 
-## ## Current state (as of 2026-04-25T02:04Z / 20:04 MT — automated 2h healthcheck)
+## ## Current state (as of 2026-04-25T06:03Z / 00:03 MT — automated 2h healthcheck)
+
+**Healthcheck findings (Cowork-scheduled probe, 00:03 MT 2026-04-25):**
+- **1x P1: aether dashboard out-of-sync persists.** Local ts 2026-04-25T00:03 MT vs API ts 2026-04-24T23:05 MT — aether's publish/dashboard sync step is still broken across multiple cycles tonight. Carried over from the prior 05:56Z healthcheck (the auto-remediation cleared the dead-loop framing but did not fix the underlying publish path). Needs a structural fix in the next interactive session.
+- **No P0/P1 FLAG entries in the last 2h log stream.** Prior cycle's 5x P1 dead-loops (nel/sam/ra/aether/dex `assessment_stuck`) did not recur — auto-remediation appears effective for that class.
+- **P2: dex stuck at PHASE_1_INTEGRITY.** `agents/dex/logs/dex-activity-2026-04-25.jsonl` has only one entry — `PHASE_1_INTEGRITY in_progress` at 06:00:05Z — with no completion. ~2h stale. Either the phase hung or the terminal log write is missing.
+- **P2: sam has no dated log for 2026-04-25 yet.** Latest dated artifact is `self-review-2026-04-24.md` and `podcast.log` mtime Apr 24 13:05. ACTIVE.md is fresh (6 min) so the runner is touching the ledger but not producing a dated log file. Verify next sam run produces a dated log.
+- **P2 noise:** 291 P2 FLAG entries in the last 2h with empty severity/area fields after parsing — flag emitter still dropping fields (carried over from prior briefs).
+- **Queue healthy:** 0 pending, 0 running. Last 3 completed exit_code=0 (git add tickets+ledger, agent runners). Cumulative: 2222 completed, 24 failed.
+- **All 6 ACTIVE.md files fresh:** kai 0min, aether 0min, nel/sam/ra/dex 6min.
+
+**Most important single item:** the aether dashboard out-of-sync P1 is now a recurring multi-cycle issue, not a transient. Auto-remediation isn't fixing the root cause (publish path). Next interactive session: trace the aether HQ publish step — why does the API ts lag the local ts by ~1h every cycle? Likely a stale CDN/build artifact or an API push that's silently no-op'ing.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## ## Current state (as of 2026-04-25T04:04Z / 22:04 MT — automated 2h healthcheck) [SUPERSEDED]
+
+**Healthcheck findings (Cowork-scheduled probe, 22:04 MT 2026-04-24):**
+- **4x P1 FLAGS in last 2h, all from nel.** Three duplicate `flag-nel-*` entries titled `"No newsletter produced for 2026-04-25 — past 06:00 MT deadline"` fired at 02:10Z / 02:11Z / 02:13Z. **This is a Nel logic bug** — current time is 22:04 MT on 2026-04-24 (i.e. 04:04Z 2026-04-25). The 06:00 MT 2026-04-25 deadline is ~8h in the future, not past. The newsletter pipeline runs at 03:00 MT 2026-04-25 (~5h from now). Nel's deadline check is comparing against the wrong day boundary.
+- **1x P1 from nel:** `"1 broken links detected"` at 02:48Z. Real signal — needs a Sam ticket to identify and fix the broken link.
+- **Queue healthy:** 0 pending, 0 running. Last 3 completed exit_code=0. One historical failure surfaced (`cmd-1776912672-157` — `vercel ls` token expansion failure, old; not from this 2h window).
+- **All 6 ACTIVE.md files <1h mtime** — kai/nel/sam/ra/aether/dex all fresh.
+- **Today's logs (MT 2026-04-24):** nel=37, sam=1, ra=3, aether=2, dex=3, kai=(no logs dir). Nel and aether visibly cycling; sam still at 1 file for the day.
+- **Aether still emitting P2 dashboard-mismatch flags every ~2 min** (local ts vs API ts). Pre-existing issue carried over from prior brief — publish step is broken.
+
+**Most important single item:** the nel "newsletter past deadline" P1 is a false-positive driven by a date-boundary bug. Nel is computing the 06:00 MT deadline against the wrong day — likely treating "today" as `2026-04-25` while it's still the evening of `2026-04-24` MT. Fix: in nel's deadline check, ensure the comparison day matches the local MT calendar day, not UTC. The broken-link P1 is a real ticket to file. No auto-remediation dispatched this run — the false-positive flags would just re-trigger.
+
+Full detail: `kai/queue/healthcheck-latest.json`.
+
+---
+
+## ## Current state (as of 2026-04-25T02:04Z / 20:04 MT — automated 2h healthcheck) [SUPERSEDED]
 
 **Healthcheck findings (Cowork-scheduled probe, 20:04 MT 2026-04-24):**
 - **5x P1 dead-loop — same 5 agents, same assessments as the 01:56Z check 8 minutes earlier.** No agent has produced a new evolution.jsonl entry since the prior check, so the auto-remediation dispatched at 01:56Z has not yet caused any agent to break out. nel/sam/ra/aether/dex all flagged `assessment_stuck` (or `bottleneck_stuck` for dex).
