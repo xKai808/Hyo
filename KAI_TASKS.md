@@ -492,3 +492,10 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/determined-optimistic-pascal/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1cdc5509] _(filed 2026-04-25)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/determined-optimistic-pascal/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1cdc5509:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/amazing-magical-faraday/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:066c4186] _(filed 2026-04-26)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/amazing-magical-faraday/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:81e96cf7] _(filed 2026-04-26)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/amazing-magical-faraday/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:066c4186:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/amazing-magical-faraday/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:81e96cf7:escalated]

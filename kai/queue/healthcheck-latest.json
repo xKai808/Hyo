@@ -1,13 +1,23 @@
 {
-  "ts": "2026-04-26T02:41:12Z",
+  "ts": "2026-04-26T08:42:03Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 0,
+  "issues": 6,
+  "warnings": 2,
   "findings": [
     {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
+      "area": "flags",
+      "detail": "5 unaddressed P0/P1 flags in last 2h"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "sam has no output today"
     },
     {
       "severity": "P1",
@@ -28,38 +38,43 @@
       "severity": "P1",
       "area": "dead-loop",
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
+    },
+    {
+      "severity": "P1",
+      "area": "ticket-sla",
+      "detail": "60 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "dcb49833-2b1d-473b-bd0c-4b2fc0517157",
+      "id": "5352609b-d7e0-4924-bd63-4742c9f0074c",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "c0480fe2-1766-458c-8885-6e0a277a265d",
+      "id": "01b84dca-0fea-41ab-b767-839b639ab3f5",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "d7f3533e-8494-42f3-8eb1-8685b03d6da0",
+      "id": "recheck-flag-aether-002",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "bash /sessions/brave-eloquent-curie/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     },
     {
-      "id": "7633cc29-bad6-40d4-9fc0-f3bdbebaae2e",
+      "id": "event-aether-flag-aether-002",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "bash /sessions/brave-eloquent-curie/mnt/Hyo/agents/aether/aether.sh",
       "exit_code": 0
     },
     {
-      "id": "cmd-1777169635-8",
+      "id": "recheck-flag-kai-002",
       "status": "ok",
-      "command": "curl -sf https://www.hyo.world/api/health 2>&1",
+      "command": "bash /sessions/brave-eloquent-curie/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     }
   ],
