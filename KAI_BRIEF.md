@@ -1,5 +1,35 @@
 # KAI_BRIEF.md
 
+> **[HEALTHCHECK 2026-04-26T14:04Z] ISSUES — 4 P1, 1 P3 (verification of 11:58Z/12:04Z auto-remediation)**
+> - **P1 (carried, NOT cleared):** 4 dead-loops persist post-remediation — sam (`routine engineering check`), ra (`health check with 1 warning(s)`), aether (`metrics cycle complete; WARNING: dashboard out-of-sync`), dex (`bottleneck_stuck: 2 corrupt JSONL entries`). The 12:04Z brief explicitly stated "auto-remediation dispatched at 11:58:32Z; verification due at 14:00Z healthcheck" — verification FAILED. Auto-remediation provably suppresses re-flag without producing RESOLVE. This pattern is now 4+ consecutive cycles for sam/ra/aether and the constitutional fix (Kai Guidance Protocol — open-ended questions, not dispatch) requires the next interactive session.
+> - **P1 (NEW):** ant ACTIVE.md 74h stale (>72h threshold) — flagged by kai memory update during this healthcheck. ant runner not reporting since 04-23.
+> - **P3:** hyo has 0 logs today (informational; expected — Sunday/CEO).
+> - **CLEARED since 12:04Z:** the 2 P0s from 12:04Z (223-dup aether-001 flood, 17-dup outcome-check tickets) and the 39-SLA-breach P1 from 13:59Z run are no longer in findings — auto-remediation provably worked on the structural P0 backlog this time, even though the dead-loops did not clear.
+> - **Healthy:** queue 0 pending / 0 running, 2490 completed / 26 failed lifetime; last 5 cmds exit=0; today's logs nel=21, dex=3, ra=3, aether=2, sam=1, ant=1, hyo=0; 0 NEW P0/P1 FLAGs in log.jsonl in last 2h.
+> - **TOP ITEM (P1):** the carried sam/ra/aether/dex dead-loops have now survived two auto-remediation dispatches in 2h — this is the masking-vs-resolving pattern flagged 6+ healthchecks ago. Next interactive session must: (a) replace dispatch with open-ended Kai-guidance questions to each agent ("what would have to be true for this assessment to change?"); (b) install circuit-breaker on auto-remediate (N=3 → manual queue); (c) diagnose ant runner staleness; (d) ensure remediation commands emit explicit RESOLVE on success so masking is unambiguous. See `kai/queue/healthcheck-latest.json`.
+
+> **[HEALTHCHECK 2026-04-26T12:04Z] ISSUES — 6 findings (2 P0, 2 P1, 1 P2, 1 P3)**
+> - **P0:** Ticket flood — 263 open P0 tickets; **223 are duplicates** of `Self-improve: empty research for aether/W1 — Claude Code returned nothing` (no per-(title, agent) dedup; emitter has been running since 04-24). Squash into 1 parent + patch ticket creator.
+> - **P0:** 17 open P0 `Outcome check: 1 agent output(s) missing for 2026-04-26` — outcome-check is treating `hyo` (CEO, non-agent) as a missing producer. Add `hyo` to outcome-check exclude list.
+> - **P1:** 4 carried dead-loops (sam, ra, aether, dex) — auto-remediation dispatched at 11:58:32Z; verification due at 14:00Z healthcheck. Per Kai Guidance Protocol, next interactive session must replace dispatch with open-ended questions.
+> - **P1:** Doctor: SICQ critically low for dex (40/100) — 3 open self-improve tickets.
+> - **P2:** ceo-report failing schema validation: missing `direction` field (2 tickets).
+> - **P3:** hyo has 0 logs today (informational; expected — hyo is CEO).
+> 
+> **Healthy:** queue 0/0, last 5 cmds exit=0, 2470 completed / 25 failed lifetime; all 6 ACTIVE.md fresh (<2h); today's logs nel=19, dex=3, aether=2, ra=2, ant=1, sam=1, kai=0; no NEW FLAGs in last 2h (only P2 dropped-field emitter spam continues).
+> 
+> **TOP ITEM (P0):** the 223-dup ticket flood is a direct downstream consequence of the aether-001 emitter that has been carried for 9+ healthchecks. Two fixes that close 85% of the P0 backlog in one move: (a) install `(title, agent, status=ACTIVE)` dedup at the ticket creator; (b) fix or escalate the aether/W1 Claude Code research call returning empty. See `kai/queue/healthcheck-latest.json`.
+
+> **[HEALTHCHECK 2026-04-26T10:04Z] ISSUES — 7 findings**
+> - **P0:** TASK-20260426-aether-001 (aether self-improve empty research) being recreated in a tight loop → 100+ duplicate P0 entries in tickets.jsonl. Aether runner needs dedupe before it floods the ticket system further.
+> - **P1:** 3 stuck dead-loops — sam ('routine engineering check' x3 days), ra ('health check with 1 warning(s)' x3 days), aether ('dashboard out-of-sync' every ~1min).
+> - **P1:** 6 open FLAGs in log.jsonl from 08:08–08:51Z not yet marked resolved (flag-kai-001/002, flag-aether-002, flag-nel-001).
+> - **P1:** aether_balance reconciliation gap — opening/closing/delta all null in verified-state.json.
+> - **P1:** 127 SLA-breached tickets including 12+ stale P0 daily-report-missing for 2026-04-24/25 across all agents.
+> - **P3:** sam produced no logs today; hyo produced none (expected for hyo).
+> Action recommended next interactive session: (1) kill aether self-improve duplicate loop, (2) resolve or close 6 open flags, (3) investigate sam/ra/aether dead-loop assessments.
+
+
 **Purpose:** This is the persistent memory layer for Kai across sessions and devices. Any new Claude/Kai instance — Cowork Pro, Claude Code on the Mini, future agents — reads this first and gets oriented in under 60 seconds.
 
 **Updated:** 2026-04-26T08:03Z (automated 2h healthcheck — Sun 02:03 MT; 4 P1, 2 P2 + carried P0 backlog; dead-loops persisting 3+ cycles for sam/ra/aether; nel SICQ=20 critical; see latest [HEALTHCHECK] block below)
@@ -121,6 +151,14 @@
 ## ## Current open P0s
 - **Ra runner exit-2** — 8 days silent failure, TASK-20260421-ra-P0-runner-exit2 (ACTIVE)
 - **ACTIVE.md missing** — all 5 agents, Phase 1 freshness checks broken (P1 TASK-20260421-infra-P1-active-md-missing)
+
+### Sentinel run — 2026-04-26 (sentinel-hyo-daily scheduled task, ~10:04Z / 04:04 MT)
+- **Run #178** — 5 passed, 4 failed, **0 new**, 4 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-04-26.md`.
+- **P0 `aurora-ran-today` — day 2 escalated** — `newsletters/2026-04-26.md` missing/empty in sandbox mount. Same sandbox-path artifact as prior days (newsletter pipeline runs on Mini, sandbox mount sees it after FUSE sync). Already tracked via prior recurring entries — not duplicating.
+- **P0 `api-health-green` — day 145 escalated** — health endpoint not green or token unconfigured from sandbox. Same environmental cause as prior 144 runs (sandbox network policy blocks outbound to hyo.world). Already tracked in KAI_TASKS (`[sentinel:api-health-green:82547bfc:escalated]`). **Action carried forward 4+ days now: make the check environment-aware** (skip + note when `HEALTH_CHECK_URL` is unreachable, or run only on Mini). 145 consecutive unactionable escalations = the check is the problem, not the system.
+- **P1 `scheduled-tasks-fired` — day 2** — no aurora logs in sandbox mount's `agents/nel/logs/`. Environmental, same pattern as 04-23.
+- **P2 `task-queue-size` — day 61 escalated** — 29 P0 tasks vs threshold 5. Real signal; KAI_TASKS P0 section bloated with stale sandbox-path-scoped sentinel entries from prior Cowork sessions. Prune pass still owed (carried forward from 04-23 brief).
+- **No new findings filed to KAI_TASKS** (all 4 recurring, already tracked from prior runs).
 
 ### Sentinel run — 2026-04-23 (sentinel-hyo-daily scheduled task)
 - **Run #136** — 6 passed, 3 failed, **0 new**, 3 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-04-23.md`.

@@ -499,3 +499,19 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/amazing-magical-faraday/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:066c4186:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/amazing-magical-faraday/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:81e96cf7:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/trusting-awesome-newton/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:6aa702dc] _(filed 2026-04-26)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/trusting-awesome-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:3548e890] _(filed 2026-04-26)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/trusting-awesome-newton/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:6aa702dc:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/busy-intelligent-hamilton/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:193f2a6a] _(filed 2026-04-26)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/busy-intelligent-hamilton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f5162ac9] _(filed 2026-04-26)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/busy-intelligent-hamilton/mnt/Hyo/newsletters/2026-04-26.md [sentinel:aurora-ran-today:193f2a6a:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/busy-intelligent-hamilton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f5162ac9:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/gallant-relaxed-turing/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:708a3fc4] _(filed 2026-04-26)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/gallant-relaxed-turing/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:708a3fc4:escalated]

@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-26T08:51:55Z
+Last updated: 2026-04-26T14:52:34Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-26T08:51:55Z
+  - Delegated: 2026-04-26T14:52:34Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): Daily audit 2026-04-26: 6 [AUTOMATE] tasks open >14 days (since 2026-04-12) — review for quick wins
-  - Delegated: 2026-04-26T08:08:43Z
+- **sam-002** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-26T14:04:05Z
   - Status: DELEGATED
 
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl — chronic system health RED (25/100) and 5+ P0 SLA breaches for 2026-04-24/25 daily reports across ra/nel/sam/aether/dex

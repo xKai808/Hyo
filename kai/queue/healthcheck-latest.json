@@ -1,23 +1,13 @@
 {
-  "ts": "2026-04-26T08:42:03Z",
+  "ts": "2026-04-26T14:44:33Z",
   "status": "ISSUES",
-  "issues": 6,
-  "warnings": 2,
+  "issues": 5,
+  "warnings": 1,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "5 unaddressed P0/P1 flags in last 2h"
-    },
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "sam has no output today"
     },
     {
       "severity": "P1",
@@ -42,39 +32,39 @@
     {
       "severity": "P1",
       "area": "ticket-sla",
-      "detail": "60 tickets have breached SLA"
+      "detail": "76 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "5352609b-d7e0-4924-bd63-4742c9f0074c",
+      "id": "cmd-1777214196-44370",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
+      "exit_code": 0
+    },
+    {
+      "id": "07b74db4-ed64-4c46-9906-2b2fe6470144",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "01b84dca-0fea-41ab-b767-839b639ab3f5",
+      "id": "f64fe53a-e8f9-4923-ad8d-d5fd97ba3188",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "recheck-flag-aether-002",
+      "id": "2c80a025-e878-4796-9a37-21dc26f1ef4a",
       "status": "ok",
-      "command": "bash /sessions/brave-eloquent-curie/mnt/Hyo/kai/queue/healthcheck.sh",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "event-aether-flag-aether-002",
+      "id": "cmd-1777212303-11316",
       "status": "ok",
-      "command": "bash /sessions/brave-eloquent-curie/mnt/Hyo/agents/aether/aether.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "recheck-flag-kai-002",
-      "status": "ok",
-      "command": "bash /sessions/brave-eloquent-curie/mnt/Hyo/kai/queue/healthcheck.sh",
+      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
       "exit_code": 0
     }
   ],
