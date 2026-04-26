@@ -814,3 +814,8 @@ every claimed implementation must have a verification step that reads the actual
 - Anthropic billing API for individual accounts: not available (no admin key option)
   → Best available: browser scrape + daily diff via ant-fetch-balance.py (one-time Keychain auth needed)
 
+
+---
+## Memory Engine Sync — 2026-04-26 (nightly consolidation)
+
+- [TECHNICAL] instruction_2026-04-18: **[HYO_INSTRUCTION]** Kai is the orchestrator, Hyo is the CEO and decision authority (conf=1.00)
