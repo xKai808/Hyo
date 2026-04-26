@@ -1,13 +1,13 @@
 {
-  "ts": "2026-04-26T14:44:33Z",
+  "ts": "2026-04-26T20:47:34Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 1,
+  "issues": 6,
+  "warnings": 0,
   "findings": [
     {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "hyo has no output today"
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
     },
     {
       "severity": "P1",
@@ -32,39 +32,39 @@
     {
       "severity": "P1",
       "area": "ticket-sla",
-      "detail": "76 tickets have breached SLA"
+      "detail": "74 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1777214196-44370",
+      "id": "c92ecc3c-6590-408f-8c53-a42cf6f0b6ae",
+      "status": "ok",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "exit_code": 0
+    },
+    {
+      "id": "00f1755f-8fb1-4488-a31e-5c4a9d6d26f6",
+      "status": "ok",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1777235185-54186",
       "status": "ok",
       "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
       "exit_code": 0
     },
     {
-      "id": "07b74db4-ed64-4c46-9906-2b2fe6470144",
+      "id": "91c9cce1-84ab-43a6-8eaf-7eb2d649ba77",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "f64fe53a-e8f9-4923-ad8d-d5fd97ba3188",
+      "id": "80514cba-ac14-47d9-8dc7-51aefea27e4f",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "2c80a025-e878-4796-9a37-21dc26f1ef4a",
-      "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "cmd-1777212303-11316",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
       "exit_code": 0
     }
   ],
