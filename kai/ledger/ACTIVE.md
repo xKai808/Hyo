@@ -1,23 +1,23 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-26T14:04:36Z
+Last updated: 2026-04-26T14:35:45Z
 
 ## In Progress
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-26T13:59:23Z
+  - Delegated: 2026-04-26T14:29:30Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-26T13:59:23Z
+  - Delegated: 2026-04-26T14:29:30Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-26T13:59:23Z
+  - Delegated: 2026-04-26T14:29:30Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-26T13:59:24Z
+  - Delegated: 2026-04-26T14:29:30Z
   - Status: DELEGATED
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
@@ -99,4 +99,19 @@ Last updated: 2026-04-26T14:04:36Z
 
 - **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
   - Created: 2026-04-26T11:30:18Z
+
+- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-26T14:10:30Z
+
+- **flag-nel-007** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-26T14:10:35Z
+
+- **flag-nel-008** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-26T14:11:43Z
+
+- **flag-nel-009** [P2] Found 20 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-26T14:11:47Z
+
+- **flag-nel-010** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-26T14:12:54Z
 
