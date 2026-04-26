@@ -1,16 +1,16 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-04-26T07:29:20-0600
+**Last updated:** 2026-04-26T08:04:06-0600
 
 ## System Health
-- Status: ISSUES (6 P0/P1)
+- Status: ISSUES (5 P0/P1)
 - Warnings: 3
-- Actions taken: Dispatched auto-remediation for 5 P0/P1 issues
+- Actions taken: Dispatched auto-remediation for 4 P0/P1 issues
 
 ## Agent ACTIVE.md Status
 - aether: updated 0h ago
-- ant: updated 73h ago
+- ant: updated 74h ago
 - dex: updated 0h ago
-- hyo: updated 20h ago
+- hyo: updated 21h ago
 - kai: NO ACTIVE.md
 - manifests: NO ACTIVE.md
 - nel: updated 3h ago
