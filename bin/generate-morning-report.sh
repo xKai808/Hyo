@@ -152,12 +152,32 @@ def parse_growth_md(agent_name):
     return result
 
 def read_aric_phase7(agent_name):
-    """Read aric-latest.json for an agent. This is Phase 7 output."""
+    """Read aric-latest.json for an agent. This is Phase 7 output.
+
+    FRESHNESS GATE (2026-04-27): If the file is > 24h old, it is stale.
+    Stale data must NEVER be presented as today's work.
+    We attach _stale=True and _stale_date so callers can label it honestly.
+    """
     path = os.path.join(root, "agents", agent_name, "research", "aric-latest.json")
     data = read_json_safe(path)
     if data:
-        # Add flag that data came from ARIC
         data["_source"] = "aric-phase7"
+        # ── FRESHNESS CHECK ──────────────────────────────────────────────────
+        try:
+            mtime = os.path.getmtime(path)
+            age_hours = (datetime.now(timezone.utc).timestamp() - mtime) / 3600
+            if age_hours > 24:
+                stale_date = datetime.fromtimestamp(mtime, tz=timezone.utc).strftime("%Y-%m-%d")
+                data["_stale"] = True
+                data["_stale_hours"] = round(age_hours, 1)
+                data["_stale_date"] = stale_date
+            else:
+                data["_stale"] = False
+                data["_stale_hours"] = round(age_hours, 1)
+                data["_stale_date"] = None
+        except Exception:
+            data["_stale"] = False
+            data["_stale_date"] = None
         return data
     return None
 
@@ -512,15 +532,32 @@ for agent_name in agents_list:
             "report_date": si.get("report_date", ""),
         }
 
+    # ── STALENESS LABEL ──────────────────────────────────────────────────────
+    # If ARIC data is stale (>24h), every field from it must carry a label
+    # so the reader knows when it was actually generated.
+    aric_stale = aric.get("_stale", False) if aric else False
+    aric_stale_date = aric.get("_stale_date") if aric else None
+    aric_stale_hours = aric.get("_stale_hours", 0) if aric else 0
+    _stale_prefix = f"[DATA FROM {aric_stale_date}] " if aric_stale and aric_stale_date else ""
+
+    # Apply stale prefix to text fields sourced from ARIC
+    def _maybe_stale(val, fallback="N/A"):
+        """Prefix val with stale label if ARIC data is stale."""
+        if val and val not in ("N/A", "unknown", "?", "none", ""):
+            return f"{_stale_prefix}{val}" if _stale_prefix else val
+        return fallback
+
     # Compile agent report
     agent_reports[agent_name] = {
-        "novel_work": novel_work,
-        "weakness_identified": weakness_research.get("weakness", "?"),
+        "novel_work": _maybe_stale(novel_work, novel_work),
+        "weakness_identified": _maybe_stale(weakness_research.get("weakness", "?"), "?"),
         "research_conducted": weakness_research.get("sources", "none"),
         "research_findings": weakness_research.get("findings", "none"),
         "research_count": weakness_research.get("count", 0),
         "improvement_status": improvement_status,
-        "improvement_description": aric.get("improvement_built", {}).get("description") if aric else "N/A",
+        "improvement_description": (
+            _maybe_stale(aric.get("improvement_built", {}).get("description"), "N/A") if aric else "N/A"
+        ),
         "improvement_commit": (aric.get("improvement_built", {}).get("commit") if aric else None),
         "metric_before": metric_move.get("before") if metric_move else "N/A",
         "metric_after": metric_move.get("after") if metric_move else "N/A",
@@ -528,6 +565,9 @@ for agent_name in agents_list:
         "external_opportunity_type": external.get("type") if external else "none",
         "external_opportunity_desc": external.get("description") if external else "none",
         "has_aric_data": aric is not None,
+        "aric_stale": aric_stale,
+        "aric_stale_date": aric_stale_date,
+        "aric_stale_hours": aric_stale_hours,
         "aric_cycle_date": aric.get("cycle_date", "unknown") if aric else None,
         # ── v6 new fields (PROTOCOL_MORNING_REPORT.md Part 2) ──
         "shipped_since_last": shipped_since_last,
@@ -566,6 +606,20 @@ if aric_claimed > 0 and not synthesis_ran:
         f"⚠️ SIMULATION: {aric_claimed} agent(s) show ARIC data but $0 API spend confirms "
         f"synthesis phase did not execute. Research output = raw source snippets, not synthesized findings. "
         f"Agents ran in sandbox context without LLM synthesis path."
+    )
+
+# STALE ARIC WARNING: any agent with ARIC data >24h is presenting recycled content as fresh
+stale_agents = [
+    f"{a} ({agent_reports[a]['aric_stale_date']}, {round(agent_reports[a].get('aric_stale_hours',0))}h ago)"
+    for a in agents_list
+    if agent_reports[a].get("aric_stale") and agent_reports[a].get("aric_stale_date")
+]
+stale_aric_warning = None
+if stale_agents:
+    stale_aric_warning = (
+        f"⚠️ STALE ARIC DATA: {len(stale_agents)} agent(s) have not completed a fresh ARIC cycle — "
+        f"{', '.join(stale_agents)}. Their sections below show data from a prior date, not today. "
+        f"Root cause: ARIC cycle runner not executing or Claude Code auth expired."
     )
 
 # Growth trajectory
@@ -661,6 +715,7 @@ report = {
         "system_online": exec_layer["alive"],
         "execution_layer": exec_layer,
         "simulation_warning": simulation_warning,
+        "stale_aric_warning": stale_aric_warning,
         "research_theater_warning": research_theater_warning,
         "growth_trajectory": trajectory,
         # Growth trajectory confidence: only count agents with shipped commits
@@ -715,8 +770,18 @@ def build_agent_narrative(name, report):
     has_aric = report.get("has_aric_data", False)
     imp_desc = report.get("improvement_description", "")
     commit = report.get("improvement_commit", "")
+    aric_stale = report.get("aric_stale", False)
+    aric_stale_date = report.get("aric_stale_date")
+    aric_stale_hours = report.get("aric_stale_hours", 0)
 
     parts = []
+
+    # ── FRESHNESS GATE: stale ARIC data must be labeled, not presented as today's ──
+    if aric_stale and aric_stale_date:
+        parts.append(
+            f"⚠️ {label}: ARIC data is {round(aric_stale_hours)}h old (last cycle: {aric_stale_date}) — "
+            f"the details below are from that date, not today. Self-improvement cycle may be broken."
+        )
 
     if imp_status == "shipped" and imp_desc:
         # Something real shipped — lead with that
@@ -789,6 +854,8 @@ else:
 # Q3: Watch for
 if risks:
     watch_sentence = f"Watch: {risks[0]}."
+elif stale_aric_warning:
+    watch_sentence = f"Watch: {stale_aric_warning}"
 elif simulation_warning:
     watch_sentence = "Watch: API synthesis didn't run, so agent 'research' is raw source snippets, not analyzed findings."
 else:
@@ -797,6 +864,8 @@ else:
 print(health_sentence)
 print(big_thing)
 print(watch_sentence)
+if stale_aric_warning:
+    print(f"\n{stale_aric_warning}")
 if hyo_attention and not exec_layer["alive"]:
     print(f"\n⚠️  {hyo_attention}")
 print()
@@ -1033,6 +1102,11 @@ if exec_summary.get("hyo_attention"):
 if simulation_warning:
     needs_attention.append(simulation_warning)
 
+# STALE ARIC WARNING — third priority (drives recycled content problem)
+stale_aric_warning_feed = exec_summary.get("stale_aric_warning")
+if stale_aric_warning_feed:
+    needs_attention.append(stale_aric_warning_feed)
+
 for name, data in agents.items():
     parts = []
     nw = data.get("novel_work", "")
@@ -1109,9 +1183,17 @@ elif agents_building and agents_building > 0:
 else:
     q2 = "No improvements shipped overnight — agents are in research or haven't started building."
 
+stale_aric_warning_feed = exec_summary.get("stale_aric_warning")
 biggest_risk = exec_summary.get("biggest_risk", "")
 if simulation_warning:
     q3 = "Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings."
+elif stale_aric_warning_feed:
+    # Stale ARIC is the #1 reason morning report recycles content — surface it prominently
+    stale_agents_feed = [
+        a for a in agents.keys()
+        if agents[a].get("aric_stale")
+    ]
+    q3 = f"Watch: {len(stale_agents_feed)} agent(s) have stale ARIC data — content below is from a prior date, not today."
 elif biggest_risk and "no blocker" not in biggest_risk.lower():
     q3 = f"Watch: {biggest_risk}."
 else:
@@ -1120,6 +1202,8 @@ else:
 summary_text = f"{q1} {q2} {q3}"
 if simulation_warning:
     summary_text += " ⚠️ Synthesis did not run."
+if stale_aric_warning_feed:
+    summary_text += f" ⚠️ {stale_aric_warning_feed}"
 
 # ── Self-improvement flywheel section for feed entry ──
 si_flywheel = mr.get("self_improvement_flywheel", {})

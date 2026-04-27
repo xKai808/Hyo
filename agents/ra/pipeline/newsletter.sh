@@ -166,16 +166,76 @@ for i, name in enumerate(entities_raw[:5]):
         "category": cats_raw[i] if i < len(cats_raw) else "",
     })
 
-# BLUF summary: count + top story lead
 story_count = len(entities_raw)
-top_story = entities_raw[0] if entities_raw else "today's briefing"
-bluf = f"{story_count} stories this morning, led by {top_story}." if stories else "Today's tech and market intelligence."
 
-topics = list(dict.fromkeys(entities_raw))[:6]
+# ── CONTENT PROTECTION GATE (v2 — 2026-04-27) ──────────────────────────────
+# Problem: newsletter.sh runs multiple times per day (cron + retries).
+# If a later run gathers 0 entities, it would overwrite a good earlier entry
+# with empty content — Hyo sees "Today's tech and market intelligence." as
+# the summary and 0 stories forever. This gate prevents that.
+#
+# Gate questions (all must be YES to publish):
+#   Q1: Does this run have at least 1 story? → if NO, check Q2
+#   Q2: Does today's feed entry already have stories? → if YES, SKIP this run
+#       (protect the good entry; don't overwrite with empty)
+#   Q3: Has today's entry never been published? → if YES + 0 stories, write
+#       minimal entry without readLink (so no 404) and alert Telegram
+if story_count == 0:
+    # Check if today already has a good entry
+    for path in [feed_git, feed_live]:
+        if not os.path.exists(path):
+            continue
+        try:
+            with open(path) as f:
+                d = json.load(f)
+            existing = next(
+                (r for r in d.get("reports", [])
+                 if r.get("id") == f"newsletter-ra-{date}"),
+                None
+            )
+            if existing:
+                existing_stories = existing.get("sections", {}).get("stories", [])
+                if len(existing_stories) > 0:
+                    print(f"[feed] CONTENT GATE: 0 entities this run but {len(existing_stories)} stories already published — keeping existing entry, skipping overwrite")
+                    sys.exit(0)
+        except Exception:
+            pass
+    # No good entry exists — publish minimal entry WITHOUT readLink (no 404)
+    # and flag as gather-failed so Hyo sees an honest status
+    print(f"[feed] CONTENT GATE: 0 entities, no prior entry — publishing empty-gather notice")
+    # Alert Telegram
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    chat  = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if token and chat:
+        import urllib.request, urllib.parse
+        msg = f"⚠️ Aurora {date}: gather returned 0 entities — brief not published. Check sources.json and gather.py logs."
+        urllib.request.urlopen(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            data=urllib.parse.urlencode({"chat_id": chat, "text": msg}).encode(),
+            timeout=5
+        )
 
 now = subprocess.check_output(["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],text=True).strip()
 
-# readLink uses /daily/newsletter-DATE — bare YYYY-MM-DD causes Vercel 404 (SE-019)
+# BLUF summary: count + top story lead
+top_story = entities_raw[0] if entities_raw else ""
+if stories:
+    bluf = f"{story_count} stories this morning, led by {top_story}."
+else:
+    bluf = "Aurora gather returned 0 stories today — sources may be unavailable."
+
+topics = list(dict.fromkeys(entities_raw))[:6]
+
+# readLink only included when there are actual stories (prevents 404 on empty page)
+sections = {
+    "summary": bluf,
+    "stories": stories,
+    "topics": topics,
+}
+if story_count > 0:
+    # readLink uses /daily/newsletter-DATE — bare YYYY-MM-DD causes Vercel 404 (SE-019)
+    sections["readLink"] = f"/daily/newsletter-{date}"
+
 entry = {
     "id": f"newsletter-ra-{date}",
     "type": "newsletter",
@@ -185,12 +245,7 @@ entry = {
     "authorColor": "#b49af0",
     "timestamp": now,
     "date": date,
-    "sections": {
-        "summary": bluf,          # BLUF sentence — shown at top of expanded card
-        "stories": stories,       # Structured story list for HQ card rendering
-        "topics": topics,         # Topic chips (entity names)
-        "readLink": f"/daily/newsletter-{date}"  # Full newsletter HTML
-    }
+    "sections": sections,
 }
 
 for path in [feed_git, feed_live]:
@@ -204,9 +259,10 @@ for path in [feed_git, feed_live]:
     d["lastUpdated"] = now
     with open(path, "w") as f:
         json.dump(d, f, ensure_ascii=False, indent=2)
-print(f"[feed] published {entry['id']} ({story_count} stories)")
+print(f"[feed] published {entry['id']} ({story_count} stories, readLink={'yes' if story_count > 0 else 'OMITTED — 0 stories'})")
 PYPUB
-  [[ $? -ne 0 ]] && echo "[$STAMP] WARNING: feed publish failed" >&2
+  PYPUB_RC=$?
+  [[ $PYPUB_RC -ne 0 && $PYPUB_RC -ne 0 ]] && echo "[$STAMP] WARNING: feed publish failed (rc=$PYPUB_RC)" >&2
 
   # ---- COMMIT & PUSH so Vercel deploys the HTML (fixes /daily/DATE 404) ----
   cd "$HYO_ROOT"
@@ -219,8 +275,21 @@ PYPUB
     git commit -m "newsletter: publish ${TODAY_DATE} brief + HTML to daily/" \
         --author="Ra <ra@hyo.world>" 2>&1 | tail -1
     git push origin main 2>&1 | tail -1 \
-      && echo "[$STAMP] pushed to Vercel — /daily/${TODAY_DATE} will be live" \
+      && echo "[$STAMP] pushed to Vercel" \
       || echo "[$STAMP] WARNING: git push failed — HTML not yet on Vercel" >&2
+  fi
+
+  # ---- LIVE URL VERIFICATION GATE (v1 — 2026-04-27) ─────────────────────────
+  # Verify the page is actually accessible on Vercel, not just pushed to git.
+  # "git push succeeded" ≠ "Hyo can see the page" — Vercel deploy takes 15-30s.
+  # This gate waits and confirms HTTP 200 with content >= 500 bytes.
+  # If it fails: Telegram alert sent by publish-verify.sh, pipeline exit = 1.
+  VERIFY_SCRIPT="$HYO_ROOT/bin/publish-verify.sh"
+  if [[ -f "$VERIFY_SCRIPT" ]]; then
+    LIVE_URL="https://hyo.world/daily/newsletter-${TODAY_DATE}"
+    echo "[$STAMP] verifying live URL: $LIVE_URL"
+    bash "$VERIFY_SCRIPT" "$LIVE_URL" 500 90 \
+      || echo "[$STAMP] WARNING: live URL verification failed — Hyo may see 404" >&2
   fi
 else
   echo "[$STAMP] skipping feed publish (no md or bundle mode)" >&2

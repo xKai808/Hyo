@@ -794,6 +794,9 @@ SECTION EXPANSION RULES:
 - Closing: 100–120 words. One synthesis observation that connects agents + world + market. Something the listener couldn't have assembled themselves from the individual parts. End with CTA to HQ, then sign off as Vale.
 - If data is sparse: add context from genuine domain knowledge (trading mechanics, AI security, content curation, market structure). Do NOT invent specific numbers or trades.
 
+WORD COUNT ENFORCEMENT — this is a hard requirement, not a suggestion:
+The episode MUST be 1,400–1,600 words. No exceptions. If source data is sparse, DO NOT shorten the script. Instead: expand each section using genuine domain knowledge (trading mechanics, AI infrastructure, content curation strategy, market microstructure, agent architecture). The listener tunes in expecting 10 minutes. Deliver 10 minutes. A script below 1,200 words is a failed episode — it means Vale ran out of things to say, which never happens. When in doubt, go deeper on the mechanism, the implication, or the broader trend.
+
 OUTPUT: Only the words Vale speaks. No meta-commentary. No section labels. No "HOOK:" headers. Start immediately with the first word of the hook.
 
 DRAFT SCRIPT:
@@ -802,7 +805,7 @@ DRAFT SCRIPT:
 DATA CONTEXT:
 {context}
 
-Write 1,400–1,600 words. Lead with substance. Begin with the hook, mid-thought, right now."""
+Write 1,400–1,600 words minimum. Lead with substance. Begin with the hook, mid-thought, right now."""
 
 
 def expand_script_with_gpt(draft: str, context: str, api_key: str) -> str:
@@ -815,7 +818,7 @@ def expand_script_with_gpt(draft: str, context: str, api_key: str) -> str:
             model=GPT_EXPAND_MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=2500,
+            max_tokens=3000,  # 1600 words ≈ 2133 tokens; 3000 gives full headroom
         )
         expanded = response.choices[0].message.content.strip()
         log(f"GPT expansion: {len(expanded.split())} words")
@@ -1022,6 +1025,26 @@ def main():
             )
             if push_result.returncode == 0:
                 log("Committed and pushed")
+                # ── LIVE URL VERIFICATION GATE (2026-04-27) ──────────────────
+                # git push exited 0 ≠ Hyo can play the episode. Vercel takes
+                # 15-30s to deploy. We wait and confirm HTTP 200 + real content.
+                verify_script = os.path.join(HYO_ROOT, "bin/publish-verify.sh")
+                live_url = f"https://hyo.world/daily/podcast-{date_str}.mp3"
+                if os.path.exists(verify_script):
+                    log(f"Verifying live URL: {live_url}")
+                    verify_result = subprocess.run(
+                        ["bash", verify_script, live_url, "10000", "90"],
+                        cwd=HYO_ROOT, capture_output=True, timeout=120
+                    )
+                    if verify_result.returncode == 0:
+                        log("LIVE URL VERIFY: PASS — podcast accessible on Vercel")
+                    else:
+                        err_out = (verify_result.stdout or b"").decode()[:200]
+                        msg = f"LIVE URL VERIFY FAIL {date_str}: {err_out}"
+                        log(f"WARNING: {msg}")
+                        send_telegram_alert(msg)
+                else:
+                    log(f"WARN: publish-verify.sh not found at {verify_script} — skipping live URL check")
             else:
                 err = (push_result.stderr or b"").decode()[:200]
                 msg = f"GIT PUSH FAILED {date_str}: {err}"
