@@ -1,23 +1,23 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-27T02:13:04Z
+Last updated: 2026-04-27T02:44:30Z
 
 ## In Progress
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-27T02:04:40Z
+  - Delegated: 2026-04-27T02:34:49Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-27T02:04:40Z
+  - Delegated: 2026-04-27T02:34:49Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-27T02:04:40Z
+  - Delegated: 2026-04-27T02:34:49Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-27T02:04:41Z
+  - Delegated: 2026-04-27T02:34:49Z
   - Status: DELEGATED
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
