@@ -1,5 +1,22 @@
 # KAI_BRIEF.md
 
+> **[SENTINEL 2026-04-27T10:05Z] run #199 — 6 passed, 3 failed (0 new, 3 recurring). Recurring: P0 api-health-green (day 166, sandbox-network — actual API green per healthcheck T-2min), P1 scheduled-tasks-fired (day 2, no aurora logs in this sandbox path), P2 task-queue-size (day 82, 29 P0 tasks ≥ overload threshold 5). Escalations: P0 api-health-green (166 runs), P2 task-queue-size (82 runs). No new KAI_TASKS entries — all 3 recurring already filed (103 sentinel markers in queue). Report: agents/nel/logs/sentinel-2026-04-27.md.**
+
+> **[HEALTHCHECK 2026-04-27T10:03Z] ISSUES — 1 P0, 5 P1, 3 P2 (MAJOR WIN: aether-001 emitter dedup is now WORKING — 281 -> 1 ACTIVE row; only ticket-enforcer.log bloat remains as carried P0)**
+> - **P0 (carried, structural — last remaining):** kai/ledger/ticket-enforcer.log = **435MB** (400MB -> 435MB in ~2h, +35MB still growing). 4.35x GitHub 100MB hard limit. Blocks git push. Carried unresolved 13+ healthchecks. Needs `git filter-repo --path kai/ledger/ticket-enforcer.log --invert-paths` purge + emitter throttling. Runner-level intervention only — auto-remediate dispatch ineffective.
+> - **MAJOR PROGRESS:** TASK-20260426-aether-001 emitter dedup is now effective. tickets.jsonl shows **1 ACTIVE row** (was 281 at 06:05Z brief). Per-(title,agent,status=ACTIVE) emitter dedup confirmed working. Carried structural P0 #1 of 2 has resolved at the source. The 4 P0 SLA-breach inbox notifications from 03:59Z are residual; need explicit RESOLVE entries.
+> - **P1 (auth):** Aether self-improve research file contains "Not logged in · Please" — Claude Code auth session expired. W1 research returns auth-error pages instead of analysis. Logged by daily-audit at 08:07Z. Likely root cause of the P2 dashboard cascade as well — runner produces output but publish step fails.
+> - **P1 (daily-reports):** Daily-audit at 08:07Z flagged 5 reports missing for today (aether-daily, morning-report, others). Today is Monday — full daily cadence applies. 07:00Z completeness check should auto-remediate but did not propagate.
+> - **P1 (audit-tool):** daily-audit.sh false-positive — claims reports ACTIVE.md missing for nel/ when file is present (verified 0h fresh). Audit script has wrong path or stale glob. Wastes a P1 slot every audit.
+> - **P1 (queue-triage):** 26 failed items in kai/queue/failed/ untriaged (4 zero-byte daily markers from Apr 23-26 + 22 older real failures). Same finding 4+ healthchecks. Needs hygiene script extension.
+> - **P1 (broken-link):** Nel flagged 1 broken link at 08:54Z (flag-nel-001), followed at 08:54:48Z by P2 "Found 20 broken documentation links". Single P1 with batch P2 follow-up. Quick win.
+> - **P2 (flag-cascade):** 383 P2 flags from aether in last 2h: 96 [SELF-REVIEW] 2 untriggered files + ~287 dashboard data mismatch. Per-(title,status=ACTIVE) emitter dedup not installed for flag-aether-001. Same P0-replacement pattern warned about in 06:05Z brief — now realized.
+> - **P2 (dashboard-sync):** Aether dashboard publish/sync still broken — local ts advances every 75s, API ts lags (~2min behind). Likely linked to the P1 Claude Code auth issue.
+> - **P2 (hyo-inbox):** 84 unread messages in hyo-inbox.jsonl. Includes the 4 residual P0 SLA-breach notifications from 03:59Z.
+> - **Healthy:** queue 0 pending / 0 running; ACTIVE.md freshness 0h across all 6 agents; verified-state.json fresh (11min); today's logs nel=16, ra=2, aether=2, dex=3 (sam=0, hyo=0, kai=0 — Monday 04:03 MT, full cadence kicks in at 22:00 MT).
+> - **NO new auto-remediation dispatched this run** — sibling at 09:52Z (T-11min) already dispatched 7. Stacking deepens masking. Both remaining P0 (log bloat) and P2 cascades cannot be remediated via dispatch.
+> - **TOP ITEM (P0):** `git filter-repo --path kai/ledger/ticket-enforcer.log --invert-paths` to purge the 435MB log + install emitter throttling. Same fix queue as the (now-resolved) aether-001 emitter. Unblocks git push. Plus: install per-(title,status=ACTIVE) dedup on flag-aether-001 emitter to kill the P2 cascade. Plus: re-auth Claude Code for aether self-improve runner.
+
 > **[HEALTHCHECK 2026-04-27T06:05Z] ISSUES — 2 P0, 3 P1, 1 P2 (structural P0s ESCALATED: aether-001 emitter 249->281 dup rows in 2h; ticket-enforcer.log 371MB->400MB in 2h; new P2 cascade dominating log.jsonl)**
 > - **P0 (escalating, structural):** TASK-20260426-aether-001 has **281 duplicate ACTIVE rows** (1 distinct ID, 99.6% of 284 total ACTIVE tickets). Grew 249 -> 281 in ~2h (~16/h, slowing slightly but still flooding). Per-(title,agent,status=ACTIVE) dedup at the EMITTER still NOT installed across 13+ carried healthchecks. Aether W1 self-improve cycle re-tickets every cycle when Claude Code research returns empty. Auto-remediation dispatch is provably ineffective.
 > - **P0 (escalating, structural):** kai/ledger/ticket-enforcer.log = **400MB** (371MB -> 400MB in 2h, +29MB). 4x GitHub 100MB hard limit. Blocks git push. Carried unresolved 11+ healthchecks. Needs git filter-repo purge + emitter throttling — same fix queue as the aether-001 emitter (both flow from the same runner).
@@ -300,7 +317,39 @@
 - **Agents still in dead-loop** — sam (assessment_stuck), ra (assessment_stuck), aether (bottleneck_stuck). Guidance DELEGATEs firing every ~15min with no change in behavior; need to escalate beyond open-ended questions.
 - **No kai runner log for 2026-04-21** — `agents/kai/logs/` has nothing dated today.
 
-## ## Current state (as of 2026-04-27T08:03Z / 02:03 MT 2026-04-27 — automated 2h healthcheck)
+## ## Current state (as of 2026-04-27T12:04Z / 06:04 MT 2026-04-27 — automated 2h healthcheck)
+
+**[HEALTHCHECK 2026-04-27T12:04Z]** Status=ISSUES. **1 P0 (REGRESSION), 1 P0 (carried), 3 P1, 2 P2, 1 P3, 1 RESOLVED.**
+
+**P0 — REGRESSION: aether-001 emitter dedup has FAILED again.** 10:03Z brief reported the dedup as confirmed working with 1 ACTIVE row ("MAJOR WIN"). Current scan: **224 ACTIVE rows across 2 distinct IDs** — `TASK-20260426-aether-001` plus a new `TASK-20260427-aether-001` (rolled over at midnight). Most-recent ACTIVE row created 2026-04-27T06:06 MT — emitter is currently producing one fresh duplicate row every ~80 seconds. The "fix" between 06:05Z and 10:03Z either did not survive the date rollover or was reverted. Per-(title,agent,status=ACTIVE) dedup needs to key on `agent+title`, not `agent+exact-id`, so it survives the daily TASK-DATE-* ID change. **Highest-leverage interactive fix in the system.**
+
+**P0 — ticket-enforcer.log = 415MB** (4.15x GitHub 100MB hard limit). Slight decrease from 435MB @ 10:03Z (~−20MB, suggests a rotation or partial purge during the cycle), but still well over the limit and growing again with the regressed emitter. Needs `git filter-repo --path kai/ledger/ticket-enforcer.log --invert-paths` purge + emitter throttling tied to the aether-001 dedup fix above.
+
+**P1 — 3-day Gate-1 dead-loop streak (nel/sam/aether)**: identical "WHAT triggers this? Found 0 callers" failure on `YYYY-MM-DD-{agent}-results.json` files for 04-25 / 04-26 / 04-27. Auto-remediation dispatched at 11:53Z has not broken the loop in 2h. Guidance-only dispatch is provably failing — 5+ consecutive cycles with no agent removing the orphan emitter. **Structural fix required**: either delete the writer or wire a real renderer/consumer. nel additionally has `nel-agent-reflection-2026-04-27.json` with 0 callers (second dead artifact, today only).
+
+**P1 — SLA breaches downstream of aether-001 regression**: ~224 ACTIVE P0 rows past sla_deadline; clears the moment the emitter dedup is correctly re-applied for the new daily ID.
+
+**P1 — Aether Claude Code auth still expired** (carried from 10:03Z): "Not logged in · Please" in research outputs. Likely the upstream cause of the empty-research → re-ticket loop driving the P0 regression. Re-auth aether's Claude Code session in the next interactive session.
+
+**P2 — ra "Operational but with warnings"** persists (1 warning, not blocking).
+**P2 — sam=1 log today** vs nel=19 — 13th+ consecutive low-volume flag, confirmed systemic in sam runner cadence.
+**P3 — hyo no output today** (expected; hyo is the human user).
+
+**RESOLVED — dex JSONL corruption**: Phase 1.5 auto-repair logged "All fixable corruption repaired" at 06:00:05Z. Genuine clearance, not framing-away.
+
+**Healthy:** queue idle (0 pending / 0 running, last 5 cmds exit=0); all 6 ACTIVE.md fresh (0h); 0 NEW P0/P1 FLAG entries in `log.jsonl` last 2h. **No new auto-remediation dispatched this cycle** — prior dispatch (11:53Z) still in flight; stacking duplicates worsens masking. Structural P0s cannot be remediated via dispatch.
+
+**TOP ITEM (P0):** the aether-001 emitter regression. Required interactive-session sequence:
+1. Re-auth Claude Code for aether self-improve runner (root cause of empty-research loop).
+2. Fix the dedup key to use (agent, title-fingerprint, status=ACTIVE) instead of (agent, exact-id) so it survives the daily TASK-YYYYMMDD-* ID rollover. Verify by simulating tomorrow's date.
+3. Collapse 224 duplicate aether-001 rows into 1 INVESTIGATING row.
+4. `git filter-repo` purge ticket-enforcer.log and install emitter throttling.
+5. Circuit-breaker on auto-remediate (N=3 → manual queue) with explicit RESOLVE on success.
+6. Decide on the orphan `*-results.json` Gate-1 emitter — same structural-fix pattern.
+
+---
+
+## ## Current state (as of 2026-04-27T08:03Z / 02:03 MT 2026-04-27 — automated 2h healthcheck) [SUPERSEDED]
 
 **[HEALTHCHECK 2026-04-27T08:03Z]** Status=ISSUES. 5 P1, 1 P3. **P1 — 4 dead-loops persisting from 07:52Z run**: sam (assessment_stuck: routine engineering check), ra (assessment_stuck: health check with 1 warning), aether (assessment_stuck: standby; dashboard out-of-date), dex (bottleneck_stuck: 2 corrupt JSONL entries — auto-repair status unverified). Prior cycle dispatched auto-remediation; dead-loops have NOT cleared in the 11 minutes between healthchecks — open-ended guidance not breaking through. **P1 — 5 tickets have breached SLA** (carried from 07:52Z). **P3 — sam has 0 logs for 2026-04-27** (consistent with sam dead-loop; nel=14, ra=2, aether=2, dex=3 logged today). **Healthy:** queue idle (0 pending / 0 running, last 3 commands exit=0: queue-hygiene×2 + daily-maintenance); all 6 ACTIVE.md fresh (0h); 0 NEW P0/P1 FLAG entries in `log.jsonl` last 2h; verified-state.json freshness OK. **TOP ITEM (P1):** sam dead-loop has now compounded with 0 sam output today — escalate beyond guidance dispatch. Manual unstick required: read `agents/sam/ledger/ACTIVE.md` + most-recent `agents/sam/logs/`, identify what "routine engineering check" is blocking on, and unblock directly rather than re-dispatching the same DELEGATE. Same pattern as session 27 dead-loops noted in 04-22 brief — guidance-only remediation has now failed for the 5th+ consecutive cycle on this set of agents. dex's "corrupt JSONL entries" is the most concrete — fix the 2 entries before next cycle.
 

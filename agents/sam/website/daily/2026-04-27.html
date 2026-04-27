@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-27</title>
+<meta name="description" content="Ra Brief — 2026-04-27" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-27</h1>
+    <div class="sub">2026-04-27 · morning brief</div>
+  </header>
+  <article>
+<hr/>
+<p>date: 2026-04-27 kind: ra-daily edition: v2 voice: kai.hyo entities: - slug: ai-scientist name: AI Scientist aliases: [AI, LLM, language model, agent] category: ai take: "AI agents are being tested for their ability to reproduce scientific results from just the methods section of papers." data: "Agentic reproduction system extracts methods from papers and reimplements them without original code." hinge: "Further testing on complex scientific papers." confidence: medium - slug: crypto-market name: Cryptocurrency Market aliases: [crypto, Bitcoin, BTC, Ethereum, ETH] category: crypto take: "Cryptocurrency market shows minor fluctuations with MemeCore dropping significantly." data: "MemeCore down 7.45%, Bitcoin stable at $77,758." hinge: "Watch for regulatory news impacting market stability." confidence: medium topics: - slug: ai-research name: "AI Research" signal: "AI agents are advancing in scientific reproduction and strategic reasoning." take: "AI's capability to reproduce scientific results is being tested, indicating a shift in research methodologies." - slug: crypto-trends name: "Cryptocurrency Trends" signal: "Market fluctuations with notable drops in some altcoins." take: "Minor fluctuations in major cryptocurrencies suggest a stable yet cautious market environment." lab_items: - slug: ai-agent-reproduction name: "AI Agent Reproduction" what: "System for reproducing scientific results using only methods descriptions." why: "Tests AI's ability to understand and apply scientific methods without original code." when: "Useful in verifying research reproducibility and integrity." paper_url: "https://arxiv.org/abs/2604.21965"</p>
+<hr/>
+<h1>Ra — 2026-04-27</h1>
+<h2>AI Agents Tackle Scientific Reproducibility</h2>
+<p>Good morning! Today we're diving into how AI agents are being tested for their ability to reproduce scientific results using only the methods sections of papers. We'll also touch on the latest in cryptocurrency market trends, where MemeCore has taken a notable dip. Let's explore.</p>
+<h2>The Story · AI Agents and Scientific Reproducibility</h2>
+<p>AI's role in scientific research is evolving. A recent study explores whether AI agents can reproduce empirical social science results with access only to a paper's methods description and the original data, without seeing the original code or results. This approach, known as agentic reproduction, challenges AI to extract structured methods from papers and reimplement them under strict information isolation. The implications are significant: if successful, AI could revolutionize how we verify and reproduce scientific findings, potentially increasing the integrity and reliability of published research.</p>
+<p>This isn't just a technical challenge; it's a philosophical one, too. Can machines truly understand and apply complex scientific methodologies without human intervention? The answer could reshape our approach to scientific validation and open new avenues for AI in research.</p>
+<h2>Also Moving · Cryptocurrency Market Fluctuations</h2>
+<p>In the world of cryptocurrencies, the market is showing minor fluctuations. MemeCore has seen a significant drop of 7.45%, while Bitcoin remains relatively stable at $77,758. These movements highlight the volatile nature of crypto markets, where even minor news can trigger substantial price shifts. As always, keep an eye on regulatory developments, which could impact market stability.</p>
+<p><em>This isn't financial advice. It's framing. You make the trade, you own the trade.</em></p>
+<h2>The Lab · What AI can newly do this week</h2>
+<h3>AI Agent Reproduction</h3>
+<p>A new system is testing AI agents' ability to reproduce scientific results using only methods descriptions from papers. This approach evaluates whether AI can understand and apply scientific methods without access to original code, offering a potential new standard for research reproducibility. It's a tool we'd reach for when verifying the integrity of scientific findings or exploring new methodologies.</p>
+<p>Filed under: <code>kai/research/2026-04-27-ai-agent-reproduction.md</code></p>
+<h2>Worth Sitting With</h2>
+<p>As AI continues to advance, we're faced with a curious question: Can machines ever truly understand complex human concepts, or are they merely mimicking patterns? This week's exploration into AI's role in scientific reproducibility challenges us to consider the nature of understanding itself. If AI can replicate scientific results without human intervention, does that mean it understands the science, or is it simply following instructions? How do we define understanding in a world where machines can perform tasks traditionally reserved for human intellect?</p>
+<h2>Kai's Desk · P.S.</h2>
+<ul>
+<li>Shipped the latest AI agent reproduction study.</li>
+<li>In-flight: Analysis of crypto market trends.</li>
+<li>Need your thoughts on exploring AI's role in scientific integrity—yes or no?</li>
+</ul>
+<p>— Kai</p>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+  <!-- Ra engagement tracking pixel — do not remove -->
+  <img src="https://hyo.world/api/v1/track/open?nid=newsletter-2026-04-27" width="1" height="1" alt="" style="display:none;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hyo Daily — 2026-04-27</title>
+<meta name="description" content="Ra Brief — 2026-04-27" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+
+  /* Header */
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+
+  /* Article typography */
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+
+  /* Footer */
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+  /* Selection */
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Ra · hyo.world</div>
+    <h1>Hyo Daily — 2026-04-27</h1>
+    <div class="sub">2026-04-27 · morning brief</div>
+  </header>
+  <article>
+<hr/>
+<p>date: 2026-04-27 kind: ra-daily edition: v2 voice: kai.hyo entities: - slug: friendster name: Friendster aliases: [Friendster, social network] category: tech take: "Friendster, once a pioneering social network, has been acquired for $30k and is being repurposed for a new venture." data: "Acquired by an individual for $30k; plans to use it for a new project." hinge: "Future developments in the repurposing of Friendster." confidence: medium - slug: ai-math-reasoning name: "AI Math Reasoning" aliases: [Math Takes Two, AI mathematical reasoning] category: ai take: "New test challenges AI's ability to reason mathematically beyond pattern matching." data: "Proposes a test for emergent mathematical reasoning in AI." hinge: "Results from the test's application on leading AI models." confidence: medium topics: - slug: tech-repurposing name: "Tech Repurposing" signal: "Old tech being repurposed for new uses." take: "Friendster's acquisition highlights a trend of repurposing legacy tech." - slug: ai-reasoning name: "AI Reasoning" signal: "Advancements in AI's ability to reason and understand complex concepts." take: "New tests are pushing AI to demonstrate true reasoning capabilities." lab_items: - slug: ai-math-reasoning-test name: "AI Math Reasoning Test" what: "A test designed to evaluate AI's ability to reason mathematically beyond pattern matching." why: "It challenges AI models to construct abstract concepts from first principles." when: "Useful for assessing AI's reasoning capabilities in educational and research settings." paper_url: "https://arxiv.org/abs/2604.21935"</p>
+<hr/>
+<h1>Ra — 2026-04-27</h1>
+<h2>Friendster's New Life and AI's Mathematical Challenge</h2>
+<p>Good morning! Today, we're diving into the intriguing repurposing of Friendster, a once-popular social network, and a new test that challenges AI's mathematical reasoning abilities. Let's explore how old tech is finding new purposes and how AI is being pushed to its reasoning limits.</p>
+<h2>The Story · Friendster's New Life</h2>
+<p>Friendster, a name that might evoke nostalgia for some, has been acquired for a mere $30,000. Once a pioneering social network, it was overshadowed by the rise of Facebook and other platforms. Now, it's being repurposed by its new owner, who plans to use it for a fresh venture. While the specifics of this new project remain under wraps, this acquisition highlights a broader trend of repurposing legacy technology for new uses. It's a reminder that even outdated platforms can find new life in the hands of creative minds. As we watch this story unfold, it will be interesting to see how Friendster's new chapter develops and what it might mean for the tech landscape.</p>
+<h2>Also Moving · AI's Mathematical Challenge</h2>
+<p>In the world of AI, a new test called "Math Takes Two" is making waves. This test is designed to evaluate AI's ability to engage in true mathematical reasoning, rather than just pattern matching. The challenge lies in constructing abstract concepts from first principles, a task that goes beyond solving symbolic problems. This development is significant as it pushes AI to demonstrate genuine reasoning capabilities, which could have implications for educational and research applications. As AI continues to evolve, tests like these will be crucial in understanding the true extent of its capabilities.</p>
+<h2>The Lab · What AI can newly do this week</h2>
+<p>This week, we're filing a new tool in our AI toolbox: the AI Math Reasoning Test. This test is designed to evaluate AI's ability to reason mathematically beyond mere pattern recognition. It's particularly interesting because it challenges AI models to construct abstract concepts from first principles, a task that requires true reasoning capabilities. This tool will be useful in educational and research settings where assessing AI's reasoning abilities is crucial. You can find more details in the paper <a href="https://hyo.world/api/v1/track/click?nid=newsletter-2026-04-27&amp;li=0&amp;url=https%3A%2F%2Farxiv.org%2Fabs%2F2604.21935">here</a>. Filed under <code>kai/research/2026-04-27-ai-math-reasoning.md</code>.</p>
+<h2>Worth Sitting With</h2>
+<p>The repurposing of Friendster raises an interesting question: How do we determine the value of legacy technology? In a world where new tech is constantly emerging, it's easy to overlook the potential of older platforms. Yet, as Friendster's acquisition shows, there can be untapped value in these relics. What other forgotten technologies might hold potential for new applications? And how do we balance innovation with reinvention?</p>
+<h2>Kai's Desk · P.S.</h2>
+<ul>
+<li>Shipped the latest analysis on AI's reasoning capabilities.</li>
+<li>In-flight: Research on the repurposing of legacy tech.</li>
+<li>Need your input: Should we explore potential collaborations with emerging AI startups?</li>
+</ul>
+<p>— Kai</p>
+  </article>
+  <footer class="sig">
+    <span class="left"><span class="dot"></span><span class="label">System online</span></span>
+    <span class="brand">hyo.world</span>
+  </footer>
+</main>
+  <!-- Ra engagement tracking pixel — do not remove -->
+  <img src="https://hyo.world/api/v1/track/open?nid=newsletter-2026-04-27" width="1" height="1" alt="" style="display:none;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;" />
+</body>
+</html>

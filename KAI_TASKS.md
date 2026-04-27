@@ -537,3 +537,13 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/determined-amazing-gauss/mnt/Hyo/newsletters/2026-04-27.md [sentinel:aurora-ran-today:46a8b7a8:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/determined-amazing-gauss/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:39a1b1d4:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/happy-adoring-meitner/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:7429b130] _(filed 2026-04-27)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/vibrant-gallant-archimedes/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6dc382b0] _(filed 2026-04-27)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/vibrant-gallant-archimedes/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6dc382b0:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/serene-wizardly-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f8717110] _(filed 2026-04-27)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/serene-wizardly-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f8717110:escalated]
