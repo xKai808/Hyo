@@ -1,9 +1,29 @@
 {
-  "ts": "2026-04-27T02:49:53Z",
+  "ts": "2026-04-27T08:52:26Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 0,
+  "issues": 7,
+  "warnings": 2,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "8 unaddressed P0/P1 flags in last 2h"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "sam has no output today"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
+    },
     {
       "severity": "P1",
       "area": "dead-loop",
@@ -17,7 +37,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
+      "detail": "aether stuck in dead-loop (assessment_stuck): standby mode: no trades this cycle; WARNING: dashboard out-o"
     },
     {
       "severity": "P1",
@@ -27,39 +47,39 @@
     {
       "severity": "P1",
       "area": "ticket-sla",
-      "detail": "113 tickets have breached SLA"
+      "detail": "60 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 7 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1777257899-54018",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
-      "exit_code": 0
-    },
-    {
-      "id": "bb3ff759-a43c-49e5-9b73-15b38a609a97",
+      "id": "15821372-bc04-482c-8f9a-6a40f9170aa8",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "64aafdec-e30c-4b9a-b295-600dca7678a8",
+      "id": "2be8bf97-84ea-49e8-98a7-6c7eae3680c4",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "d6b24cae-3dee-4fc3-8307-7e9d67ff224c",
+      "id": "25b390de-28bd-4dcf-9a83-b8f0fb3a7bf2",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "4ecf391a-2261-4b1d-b85c-c429d60aa8e0",
+      "id": "recheck-flag-kai-004",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "bash /sessions/gracious-exciting-darwin/mnt/Hyo/kai/queue/healthcheck.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "recheck-flag-kai-003",
+      "status": "ok",
+      "command": "bash /sessions/gracious-exciting-darwin/mnt/Hyo/kai/queue/healthcheck.sh",
       "exit_code": 0
     }
   ],

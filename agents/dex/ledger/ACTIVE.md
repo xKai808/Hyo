@@ -1,11 +1,11 @@
 # Dex Active Tasks
 
-Last updated: 2026-04-27T02:49:54Z
+Last updated: 2026-04-27T08:52:27Z
 
 ## In Progress
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-27T02:49:54Z
+  - Delegated: 2026-04-27T08:52:27Z
   - Status: DELEGATED
 
 - **dex-002** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
@@ -15,5 +15,5 @@ Last updated: 2026-04-27T02:49:54Z
 ## Queued
 
 - **flag-dex-001** [P2] agent research stale: kai (no brief exists)
-  - Created: 2026-04-26T06:12:37Z
+  - Created: 2026-04-27T06:15:08Z
 

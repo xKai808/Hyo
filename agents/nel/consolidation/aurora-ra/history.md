@@ -151,3 +151,10 @@
 **Cipher:** leaks=0 in agents/ra/pipeline/
 **Newsletters shipped:** 17
 **Research archive entries:** 0
+
+## 2026-04-27 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in agents/ra/pipeline/
+**Newsletters shipped:** 18
+**Research archive entries:** 0
