@@ -2,7 +2,7 @@
 # Updated automatically by ant-update.sh
 
 **Agent:** Ant (Accountant)
-**Last run:** 2026-04-26T05:30:25-0600
+**Last run:** 2026-04-27T00:45:05-0600
 **Status:** PASS
 **Protocol version:** 1.2
 
@@ -11,13 +11,13 @@
 | Provider   | Remaining | Total | Used MTD | Source |
 |------------|-----------|-------|----------|--------|
 | Anthropic  | $18.91 | $40.0 | $0.2399 | console.anthropic.com |
-| OpenAI     | $17.928 | $20.0 | $1.9528 | platform.openai.com |
+| OpenAI     | $17.8714 | $20.0 | $2.0094 | platform.openai.com |
 
 ## Net position (this month)
 
-- Income: $3.53
-- Expenses: $222.19
-- **Net: $-218.66**
+- Income: $0.00
+- Expenses: $222.25
+- **Net: $-222.25**
 
 ## Open tickets
 
@@ -29,6 +29,6 @@
 
 ## Next scheduled run
 
-2026-04-27
-2026-04-27T23:45:00-0600 (via com.hyo.ant-daily launchd)
+2026-04-28
+2026-04-28T23:45:00-0600 (via com.hyo.ant-daily launchd)
 
