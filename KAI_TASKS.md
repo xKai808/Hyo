@@ -519,3 +519,14 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/amazing-vibrant-cannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4d7e2b18] _(filed 2026-04-26)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/amazing-vibrant-cannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4d7e2b18:escalated]
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/optimistic-nice-lamport/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6a508a55] _(filed 2026-04-26)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-nice-lamport/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6a508a55:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/inspiring-gallant-mccarthy/mnt/Hyo/newsletters/2026-04-27.md [sentinel:aurora-ran-today:9d40160b] _(filed 2026-04-27)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/inspiring-gallant-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:93bcbbf8] _(filed 2026-04-27)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/inspiring-gallant-mccarthy/mnt/Hyo/newsletters/2026-04-27.md [sentinel:aurora-ran-today:9d40160b:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/inspiring-gallant-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:93bcbbf8:escalated]
