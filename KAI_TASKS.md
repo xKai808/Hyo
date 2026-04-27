@@ -117,6 +117,12 @@ Format: `{"timestamp":"...","decision":"...","rationale":"...","type":"orchestra
 
 - [ ] **[K]** **S20-001: `/api/health` returns empty JSON in production.** Sentinel run #106 (2026-04-20) hit `https://www.hyo.world/api/health` and got HTTP 200 with body `{}` — no `ok` field, no `founderTokenConfigured` field. This is DIFFERENT from "sandbox can't reach Mini" (the curl succeeded). The endpoint is reachable but the handler is returning an empty object. Next Mini interactive session: (1) check `agents/sam/website/api/health.js` handler — is the response body actually being populated? (2) verify `FOUNDER_TOKEN` env var is set in Vercel production (not just preview); (3) test `curl -s https://www.hyo.world/api/health | jq .` and compare to handler code. Day 99 chronic sentinel P0 may be a real production bug, not sandbox environmental as previously classified.
 
+## P0 — Session 31 queue (2026-04-27) — Mini must execute
+- [ ] **[K]** **S31-closed-loop-infrastructure.json in queue** — commits dead-loop-detector, aric-verifier, content-guard, ticket proof gates, TTL memory, AGENT_RESEARCH_CYCLE Phase 7.5, AGENT_ALGORITHMS closed-loop section. Will execute when kai-autonomous picks it up.
+- [ ] **[K]** **Fix aether-001 emitter dedup regression** (P0 from healthcheck). Dedup key must use `agent + title_fingerprint`, not `agent + exact_task_id`. Survives daily TASK-YYYYMMDD-* rollover. Collapse 224 duplicate rows → 1 INVESTIGATING row.
+- [ ] **[K]** **Fix ticket-enforcer.log 415MB** — `git filter-repo --path kai/ledger/ticket-enforcer.log --invert-paths` + install emitter throttling tied to aether-001 dedup fix.
+- [ ] **[K]** **Re-auth Aether Claude Code session** — "Not logged in" blocking ARIC research. Root cause of empty-research loop.
+
 ## P1 — NEXT SESSION
 
 - [x] **[B]** **S17-006: Wire Aurora Stripe billing.** SUBSTANTIALLY DONE 2026-04-21. Keys set in Vercel. Checkout works (tested live). Webhook persistence wired (GitHub API). Remaining: Stripe dashboard webhook registration (see P0 Hyo action) + RESEND_API_KEY.

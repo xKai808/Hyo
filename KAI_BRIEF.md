@@ -317,6 +317,28 @@
 - **Agents still in dead-loop** — sam (assessment_stuck), ra (assessment_stuck), aether (bottleneck_stuck). Guidance DELEGATEs firing every ~15min with no change in behavior; need to escalate beyond open-ended questions.
 - **No kai runner log for 2026-04-21** — `agents/kai/logs/` has nothing dated today.
 
+## ## Shipped today (Session 31 — 2026-04-27 Cowork)
+
+**Closed-loop self-improvement infrastructure (SE-031)** — responding to Hyo's structural feedback on agent theater, dead-loops, and publish verification gaps.
+
+1. **`bin/dead-loop-detector.py`** — Ring buffer circuit breaker (arXiv:2512.02731 GVU + Reflexion + TokenFence). 6-step fingerprint window per agent. WARN at 3+ identical, HARD_STOP at 5+, ESCALATE at null_progress≥3. Wired into `bin/agent-growth.sh` before execution. Alerts Hyo inbox + Telegram on HARD_STOP.
+
+2. **`bin/aric-verifier.py`** — Adversarial Phase 7.5 verifier (Constitutional AI / D3 / GVU). 5 questions, 0–100 score, gate at 70. Blocks execution if plan lacks substance (no files_changed, <3 sources, no metric_before, stale date). Wired into `bin/agent-growth.sh` inside `execute_next_improvement()`.
+
+3. **`bin/content-guard.py`** — Content regression guard. BLOCK if new artifact < 10% of prior bytes (silent gather failure). WARN if < 30%. Checks against git HEAD or saved baseline. Called by all agent runners before commit.
+
+4. **`bin/ticket.sh transition`** — Proof-gate state transitions. RESEARCHED needs 3+ sources. IMPLEMENTED needs commit SHA. VERIFIED needs live URL HTTP 200. No more claimed progress without proof.
+
+5. **Memory TTL extension** — `memory_engine.py` extended with `ttl_days`, `verified_at`, `expires_at`, `staleness_flag` on semantic facts. New `revalidate` command. `promote_semantic_with_ttl()` for scoped fact writes. Wired into `kai-autonomous.sh` at 01:45 MT daily. Flags [STALE]/[EXPIRED] and sends Hyo inbox alerts.
+
+6. **`kai/protocols/AGENT_RESEARCH_CYCLE.md`** — Phase 7.5 documented with gate, 5 adversarial questions, source citations.
+
+7. **`kai/AGENT_ALGORITHMS.md`** — Closed-loop infrastructure section added.
+
+8. **Aurora 404 resolved** — `newsletter-2026-04-27.html` confirmed committed (commit 1593e55 at 08:42 MT). Content protection gate now prevents future zero-entity overwrites.
+
+Pending: S31-closed-loop-infrastructure.json commit task in queue (Mini will execute).
+
 ## ## Current state (as of 2026-04-27T12:04Z / 06:04 MT 2026-04-27 — automated 2h healthcheck)
 
 **[HEALTHCHECK 2026-04-27T12:04Z]** Status=ISSUES. **1 P0 (REGRESSION), 1 P0 (carried), 3 P1, 2 P2, 1 P3, 1 RESOLVED.**

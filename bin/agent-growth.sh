@@ -252,6 +252,36 @@ execute_next_improvement() {
     return 1
   fi
 
+  # ── ARIC Phase 7.5: Adversarial Verifier Gate ──────────────────────────────
+  # Before the execution engine runs, challenge the improvement plan with
+  # 5 adversarial questions. Block execution if score < 70/100.
+  # Based on: arXiv:2212.08073 (Constitutional AI critique-revision loop),
+  #           arXiv:2410.04663 (D3 Debate-Deliberate-Decide),
+  #           arXiv:2512.02731 (GVU — Generator/Verifier separation).
+  local aric_verifier="$HYO_ROOT/bin/aric-verifier.py"
+  if [[ -f "$aric_verifier" ]]; then
+    growth_log "$agent" "ARIC Phase 7.5: running adversarial verifier..."
+    local verifier_exit=0
+    local verifier_output
+    verifier_output=$(python3 "$aric_verifier" --agent "$agent" --mode heuristic 2>&1) || verifier_exit=$?
+    if [[ "$verifier_exit" -eq 1 ]]; then
+      growth_log "$agent" "ARIC Phase 7.5 REQUIRES_REVISION — execution blocked. Verifier output:"
+      echo "$verifier_output" | tail -5 | while read -r line; do
+        growth_log "$agent" "  [verifier] $line"
+      done
+      # Update ticket to flag the revision requirement
+      update_ticket_status "$ticket_id" "OPEN" >/dev/null 2>&1 || true
+      "$HYO_ROOT/bin/ticket.sh" update "$ticket_id" \
+        --note "ARIC Phase 7.5 BLOCKED: adversarial verifier score < 70 — revision required before execution" \
+        2>/dev/null || true
+      return 1
+    elif [[ "$verifier_exit" -eq 0 ]]; then
+      growth_log "$agent" "ARIC Phase 7.5 APPROVED — proceeding to execution"
+    else
+      growth_log "$agent" "ARIC Phase 7.5 verifier error (exit $verifier_exit) — proceeding anyway (non-blocking)"
+    fi
+  fi
+
   local execute_script="$HYO_ROOT/bin/agent-execute-improvement.sh"
   if [[ ! -f "$execute_script" ]]; then
     growth_log "$agent" "agent-execute-improvement.sh not found at $execute_script"
@@ -625,6 +655,31 @@ PYEOF
     if grep -q "## Growth Log" "$growth_file" 2>/dev/null; then
       echo "| $today_date | $next_ticket ($next_weakness): $short_result | Automated assessment → execution |" >> "$growth_file"
       growth_log "$agent" "Updated GROWTH.md growth log"
+    fi
+
+    # ── Dead-Loop Circuit Breaker (Phase 7.5 pre-check) ──────────────────
+    # Before executing: record this cycle in the dead-loop detector ring buffer.
+    # If we're producing the same fingerprint 3+ times without state change,
+    # the agent is cognitively entrenched — inject probe or hard stop.
+    # Based on: arXiv:2512.02731 (GVU Variance Inequality), TokenFence.dev circuit breaker.
+    local dead_loop_script="$HYO_ROOT/bin/dead-loop-detector.py"
+    if [[ -f "$dead_loop_script" ]]; then
+      local content_hash
+      content_hash=$(echo "$result" | md5sum | cut -c1-12 2>/dev/null || echo "nohash")
+      local fp_json
+      fp_json=$(python3 -c "import json; print(json.dumps({'weakness_id':'${next_weakness}','action_type':'execute_improvement','content_hash':'${content_hash}','improvement_status':'running','files_changed':[]}))")
+      local dl_exit=0
+      python3 "$dead_loop_script" record "$agent" "$fp_json" || dl_exit=$?
+      if [[ "$dl_exit" -eq 3 ]]; then
+        growth_log "$agent" "HARD STOP: dead-loop circuit breaker triggered — skipping execution. Agent must produce text summary before next tool use."
+        return 1
+      elif [[ "$dl_exit" -eq 4 ]]; then
+        growth_log "$agent" "ESCALATE: $agent has had 3+ null-progress cycles — escalated to Hyo inbox. Halting."
+        return 1
+      elif [[ "$dl_exit" -eq 2 ]]; then
+        growth_log "$agent" "WARN: dead-loop probe injected — same cycle pattern detected. Proceeding with caution."
+        result="[DEAD-LOOP PROBE] What information is missing that would change the assessment? What external signal would confirm or refute the current plan? ORIGINAL RESULT: $result"
+      fi
     fi
 
     # ── Execute the improvement via Claude API ─────────────────────────────

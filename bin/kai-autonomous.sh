@@ -634,6 +634,14 @@ check_and_dispatch 1 30 "daily-maintenance" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/daily-maintenance.sh >> $HYO_ROOT/kai/ledger/daily-maintenance.log 2>&1" \
   "daily_maintenance_run"
 
+# Memory TTL revalidation (01:45 MT) — scan semantic facts for TTL expiry
+# Flags STALE/EXPIRED facts, sends Hyo inbox alert if any newly expired.
+# Based on: MemGPT tiered memory (arXiv:2310.08560), KNOWLEDGE.md MEMORY INTEGRITY RULE.
+# A fact unverified for >ttl_days is marked [STALE]; at 2x TTL it becomes [EXPIRED].
+check_and_dispatch 1 45 "memory-revalidate" \
+  "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/kai/memory/agent_memory/memory_engine.py revalidate >> $HYO_ROOT/kai/ledger/memory-revalidate.log 2>&1" \
+  "memory_revalidate_run"
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 7: HEALTH SCORE + REPORTING
 # ═══════════════════════════════════════════════════════════════════════════════

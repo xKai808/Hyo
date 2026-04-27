@@ -200,6 +200,43 @@ RESEARCH SOURCES (ordered by priority):
      → ERROR-TO-GATE: gate exists, is placed, is blocking.
 ```
 
+### PHASE 7.5: ADVERSARIAL CHALLENGE (Before execution — independent verifier gate)
+
+This phase runs BEFORE Phase 6 execution and BEFORE Phase 7 reporting.
+The verifier is architecturally separate from the generator (GVU Variance Inequality, arXiv:2512.02731).
+A generator that self-verifies produces noise > signal. This phase forces external challenge.
+
+**Implementation:** `bin/aric-verifier.py` — exits 0 (APPROVED), 1 (REQUIRES_REVISION), 2 (ERROR)
+**Threshold:** Score ≥ 70/100 required to proceed. Below threshold → execution blocked, ticket remains OPEN for revision.
+**Dead-Loop Guard:** `bin/dead-loop-detector.py` runs simultaneously — records cycle fingerprint, warns/stops if identical fingerprints ≥ 3/6 in ring buffer.
+
+```
+7.5-Q1  "Is there evidence this improvement actually ran? (files_changed not empty)"
+        → No files_changed → BLOCKS execution (score: 5/20). Talking about doing is not doing.
+
+7.5-Q2  "Does the research cite 3+ concrete external sources?"
+        → < 3 sources → BLOCKS execution (score: 6/20). No source, no finding.
+
+7.5-Q3  "Is there a specific weakness being addressed, with a metric before?"
+        → No weakness or no metric_before → BLOCKS (score: 4/20). Measure before you fix.
+
+7.5-Q4  "Does the improvement plan describe concrete file changes, not vague intent?"
+        → Vague plan → BLOCKS (score: 5/20). "Add better error handling" ≠ "Edit api/ingest.js line 42."
+
+7.5-Q5  "Is the cycle_date fresh? (< 3 days)"
+        → Stale cycle date (> 3 days) → caps all scores at 10/20. Stale data = stale plan.
+
+GATE: Total score ≥ 70 → APPROVED (Phase 6 proceeds)
+      Total score < 70 → REQUIRES_REVISION (Phase 6 blocked, ticket stays OPEN)
+
+SOURCES:
+  - arXiv:2512.02731 (GVU Operator — Generator/Verifier separation)
+  - arXiv:2212.08073 (Constitutional AI — external critique-revision loop)
+  - arXiv:2410.04663 (D3 Debate-Deliberate-Decide — adversarial multi-agent evaluation)
+  - arXiv:2512.20845 (MAR — prevents cognitive entrenchment via genuinely separate evaluators)
+  - TokenFence.dev circuit breaker pattern (dead-loop fingerprint ring buffer)
+```
+
 ### PHASE 7: REPORT (What changed? What's next?)
 
 This is what appears in the morning report. Not Phase 1 data. Not "conducted research." The OUTCOME.

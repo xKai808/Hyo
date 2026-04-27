@@ -543,27 +543,154 @@ print("═══ END REPORT ═══")
 PYEOF
 }
 
+# ─── PROOF-GATE TRANSITION ───
+# Enforces required artifacts at each ticket state transition.
+# State machine for improvement tickets (ticket_type=improvement):
+#   IDENTIFIED → RESEARCHED : requires --sources (min 3 comma-separated URLs/refs)
+#   RESEARCHED → IMPLEMENTED : requires --commit (git SHA)
+#   IMPLEMENTED → SHIPPED   : requires --commit (git SHA) + push verification
+#   SHIPPED → VERIFIED      : requires --url (live URL) with HTTP 200 check
+# Operational tickets follow the same gates where evidence is provided.
+#
+# Usage:
+#   ticket transition <ticket-id> --to <status> [--sources "url1,url2,url3"] [--commit <sha>] [--url <live_url>]
+cmd_transition() {
+  local ticket_id="$1"; shift
+  local to_status="" sources="" commit_sha="" live_url=""
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --to)      to_status="$2"; shift 2 ;;
+      --sources) sources="$2"; shift 2 ;;
+      --commit)  commit_sha="$2"; shift 2 ;;
+      --url)     live_url="$2"; shift 2 ;;
+      *) shift ;;
+    esac
+  done
+
+  if [[ -z "$ticket_id" || -z "$to_status" ]]; then
+    log_err "Usage: ticket transition <ticket-id> --to <status> [--sources ...] [--commit <sha>] [--url <url>]"
+    return 1
+  fi
+
+  # ── Gate: RESEARCHED — requires 3+ sources ──
+  if [[ "$to_status" == "RESEARCHED" ]]; then
+    if [[ -z "$sources" ]]; then
+      log_err "GATE BLOCKED: Transition to RESEARCHED requires --sources (minimum 3)"
+      log_err "Provide: --sources \"url1,url2,url3\""
+      return 3
+    fi
+    local source_count
+    source_count=$(echo "$sources" | tr ',' '\n' | grep -c '.' || true)
+    if [[ "$source_count" -lt 3 ]]; then
+      log_err "GATE BLOCKED: RESEARCHED requires minimum 3 sources. Provided: $source_count"
+      log_err "Sources: $sources"
+      return 3
+    fi
+    cmd_update "$ticket_id" --status "RESEARCHED" \
+      --note "RESEARCHED — sources($source_count): $sources"
+    log_ok "✓ GATE PASSED: RESEARCHED with $source_count sources"
+    return 0
+  fi
+
+  # ── Gate: IMPLEMENTED — requires commit SHA ──
+  if [[ "$to_status" == "IMPLEMENTED" ]]; then
+    if [[ -z "$commit_sha" ]]; then
+      log_err "GATE BLOCKED: Transition to IMPLEMENTED requires --commit <git-sha>"
+      log_err "Get it with: git rev-parse HEAD"
+      return 3
+    fi
+    # Verify commit SHA looks valid (7-40 hex chars)
+    if ! echo "$commit_sha" | grep -qE '^[0-9a-f]{7,40}$'; then
+      log_err "GATE BLOCKED: commit SHA looks invalid: $commit_sha"
+      return 3
+    fi
+    cmd_update "$ticket_id" --status "IMPLEMENTED" \
+      --note "IMPLEMENTED — commit: $commit_sha"
+    log_ok "✓ GATE PASSED: IMPLEMENTED — commit $commit_sha"
+    return 0
+  fi
+
+  # ── Gate: SHIPPED — requires commit SHA + push ──
+  if [[ "$to_status" == "SHIPPED" ]]; then
+    if [[ -z "$commit_sha" ]]; then
+      log_err "GATE BLOCKED: Transition to SHIPPED requires --commit <git-sha>"
+      return 3
+    fi
+    if ! echo "$commit_sha" | grep -qE '^[0-9a-f]{7,40}$'; then
+      log_err "GATE BLOCKED: commit SHA looks invalid: $commit_sha"
+      return 3
+    fi
+    # Verify the commit exists in remote (best-effort)
+    local push_verified="unverified"
+    if git -C "$HYO_ROOT" branch -r --contains "$commit_sha" 2>/dev/null | grep -q "origin"; then
+      push_verified="pushed"
+    fi
+    cmd_update "$ticket_id" --status "SHIPPED" \
+      --note "SHIPPED — commit: $commit_sha push: $push_verified"
+    if [[ "$push_verified" == "pushed" ]]; then
+      log_ok "✓ GATE PASSED: SHIPPED — commit $commit_sha confirmed pushed"
+    else
+      log_warn "SHIPPED (push not confirmed) — commit $commit_sha may not be on remote yet"
+    fi
+    return 0
+  fi
+
+  # ── Gate: VERIFIED — requires live URL returning HTTP 200 ──
+  if [[ "$to_status" == "VERIFIED" ]]; then
+    if [[ -z "$live_url" ]]; then
+      log_err "GATE BLOCKED: Transition to VERIFIED requires --url <live_url>"
+      log_err "The URL must return HTTP 200 to pass the gate."
+      return 3
+    fi
+    log_info "Verifying live URL: $live_url"
+    local http_code
+    http_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$live_url" 2>/dev/null || echo "000")
+    if [[ "$http_code" != "200" ]]; then
+      log_err "GATE BLOCKED: $live_url returned HTTP $http_code (expected 200)"
+      log_err "Transition to VERIFIED rejected — URL is not live."
+      cmd_update "$ticket_id" \
+        --note "VERIFIED GATE FAILED — $live_url returned HTTP $http_code at $TIMESTAMP"
+      return 3
+    fi
+    cmd_update "$ticket_id" --status "VERIFIED" \
+      --note "VERIFIED — live URL: $live_url (HTTP 200 confirmed at $TIMESTAMP)"
+    log_ok "✓ GATE PASSED: VERIFIED — $live_url is live (HTTP 200)"
+    return 0
+  fi
+
+  # ── All other transitions: pass through without proof gate ──
+  cmd_update "$ticket_id" --status "$to_status" --note "Transition to $to_status at $TIMESTAMP"
+  log_ok "Updated $ticket_id → $to_status"
+}
+
 # ─── MAIN DISPATCH ───
 command="${1:-help}"; shift || true
 
 case "$command" in
-  create)    cmd_create "$@" ;;
-  update)    cmd_update "$@" ;;
-  close)     cmd_close "$@" ;;
-  escalate)  cmd_escalate "$@" ;;
-  verify)    cmd_verify "$@" ;;
-  sla-check) cmd_sla_check ;;
-  list)      cmd_list "$@" ;;
-  report)    cmd_report ;;
+  create)     cmd_create "$@" ;;
+  update)     cmd_update "$@" ;;
+  transition) cmd_transition "$@" ;;
+  close)      cmd_close "$@" ;;
+  escalate)   cmd_escalate "$@" ;;
+  verify)     cmd_verify "$@" ;;
+  sla-check)  cmd_sla_check ;;
+  list)       cmd_list "$@" ;;
+  report)     cmd_report ;;
   help|*)
     echo "Usage: ticket <command> [args]"
-    echo "  create   --agent <name> --title <title> --priority <P1|P2|P3>"
-    echo "  update   <ticket-id> --status <status> [--note <text>]"
-    echo "  close    <ticket-id> --evidence <path> --summary <text>"
-    echo "  escalate <ticket-id> [--reason <text>]"
-    echo "  verify   <ticket-id>"
+    echo "  create     --agent <name> --title <title> --priority <P1|P2|P3>"
+    echo "  update     <ticket-id> --status <status> [--note <text>]"
+    echo "  transition <ticket-id> --to <status> [--sources ...] [--commit <sha>] [--url <url>]"
+    echo "               RESEARCHED → requires --sources (3+ refs)"
+    echo "               IMPLEMENTED → requires --commit <sha>"
+    echo "               SHIPPED → requires --commit <sha>"
+    echo "               VERIFIED → requires --url <live-url> (HTTP 200 checked)"
+    echo "  close      <ticket-id> --evidence <path> --summary <text>"
+    echo "  escalate   <ticket-id> [--reason <text>]"
+    echo "  verify     <ticket-id>"
     echo "  sla-check"
-    echo "  list     [--agent <name>] [--status <status>] [--priority <P1|P2|P3>]"
+    echo "  list       [--agent <name>] [--status <status>] [--priority <P1|P2|P3>]"
     echo "  report"
     ;;
 esac

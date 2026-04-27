@@ -2218,4 +2218,67 @@ Protocol: `docs/AGENT_CREATION_PROTOCOL.md` (v3.0). Battle-tested on 8 agents.
 Required files every agent must have: PLAYBOOK.md, GROWTH.md, evolution.jsonl, self-improve-state.json, ACTIVE.md (freshness marker), runner with ARIC integration, launchd plist.
 ACTIVE.md MUST be updated at the end of every agent runner cycle — it is the freshness marker kai-autonomous.sh uses to detect stale agents. Missing ACTIVE.md = always stale in Phase 1 checks.
 
-<!-- Last reviewed: 2026-04-21 by protocol-staleness-check.sh -->
+---
+
+## CLOSED-LOOP SELF-IMPROVEMENT INFRASTRUCTURE (v1.0, 2026-04-27)
+
+These five tools form the circuit breaker layer for the self-improvement flywheel.
+Every agent cycle passes through them. No bypasses. No silent failures.
+
+### 1. Dead-Loop Circuit Breaker (`bin/dead-loop-detector.py`)
+
+**Purpose:** Detect cognitive entrenchment — agent cycling through same assessment/action without progress.
+**Based on:** arXiv:2512.02731 (GVU Variance Inequality), arXiv:2303.11366 (Reflexion), TokenFence.dev.
+**Mechanism:** Ring buffer of 6 cycle fingerprints per agent: `md5(agent|weakness_id|action_type|content_hash)[:12]`
+**Thresholds:**
+- WARN (exit 2): ≥3/6 identical fingerprints → inject probe question into agent context
+- HARD_STOP (exit 3): ≥5/6 identical fingerprints → block execution, alert Hyo inbox + Telegram
+- ESCALATE_HUMAN (exit 4): null_progress ≥ 3 (state hash unchanged across 3 cycles) → halt + P0 alert
+**Called by:** `bin/agent-growth.sh` → `run_growth_phase()` before `execute_next_improvement()`
+**State file:** `kai/ledger/dead-loop-state.json`
+**Reset:** `bin/dead-loop-detector.py reset <agent>` — call after genuine progress (new commit, new weakness)
+
+### 2. ARIC Adversarial Verifier (`bin/aric-verifier.py`)
+
+**Purpose:** Prevent "theater" improvements — plans that look valid but lack substance.
+**Based on:** arXiv:2212.08073 (Constitutional AI), arXiv:2410.04663 (D3), arXiv:2512.02731 (GVU).
+**Mechanism:** 5 adversarial questions, 20 points each, total 0–100. Gate at 70.
+- Q1: files_changed present? Q2: ≥3 research sources? Q3: weakness + metric_before? Q4: concrete file plan? Q5: cycle_date fresh?
+- Stale cycle_date (>3 days) caps all scores at 10/20.
+**Modes:** `--mode heuristic` (free, rule-based), `--mode llm` (Claude Haiku, deeper analysis).
+**Called by:** `bin/agent-growth.sh` → `execute_next_improvement()` after `write_aric_for_ticket()`, before execution engine.
+**Output:** `agents/<name>/research/aric-verifier-latest.json`
+
+### 3. Content Regression Guard (`bin/content-guard.py`)
+
+**Purpose:** Prevent silent gather/synthesize failures from overwriting good content with empty output.
+**Mechanism:** Compares new artifact byte count vs prior (from explicit baseline, git HEAD, or saved baseline).
+- BLOCK (exit 3): new < 10% of prior → hard stop + Hyo inbox + Telegram
+- WARN (exit 2): new < 30% of prior → log warning but commit
+- OK (exit 0): new ≥ 30% of prior
+**Called by:** newsletter.sh, podcast.py, generate-morning-report.sh, any agent runner before `git commit` of data files.
+**Baseline recording:** `content-guard.py record <filepath>` — call after verified successful publish.
+**State file:** `kai/ledger/content-guard-baselines.json`
+
+### 4. Ticket Execution Proof Gates (`bin/ticket.sh transition`)
+
+**Purpose:** Block state transitions without required artifacts — no more claimed progress without proof.
+**Usage:** `ticket transition <id> --to <status> [--sources ...] [--commit <sha>] [--url <url>]`
+**Gates:**
+- `RESEARCHED`: requires `--sources "url1,url2,url3"` (minimum 3)
+- `IMPLEMENTED`: requires `--commit <sha>` (7–40 hex chars, validated)
+- `SHIPPED`: requires `--commit <sha>` + checks if commit exists on remote
+- `VERIFIED`: requires `--url <live-url>` (curl HTTP 200 confirmed live)
+**All other transitions:** pass through without proof gate.
+
+### 5. Memory TTL Revalidation (`memory_engine.py revalidate`)
+
+**Purpose:** Flag semantic facts that haven't been re-verified within their TTL window.
+**Based on:** MemGPT tiered memory (arXiv:2310.08560), KNOWLEDGE.md MEMORY INTEGRITY RULE (>7 days = STALE).
+**Mechanism:** `promote_semantic_with_ttl()` writes facts with `ttl_days`, `verified_at`, `expires_at`.
+- STALE: fact_value prefixed with `[STALE:date]`, confidence unchanged
+- EXPIRED (2x TTL exceeded): confidence capped at 0.10
+**Triggered:** `kai-autonomous.sh` at 01:45 MT daily via `check_and_dispatch`.
+**Alert:** Hyo inbox P2 (stale) or P1 (expired) when new flags found.
+
+<!-- Last reviewed: 2026-04-27 — closed-loop infrastructure added (SE-030) -->

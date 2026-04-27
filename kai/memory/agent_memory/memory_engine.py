@@ -295,13 +295,31 @@ def observe(
     return raw_id
 
 
-def observe_hyo(content: str, event_type: str = "instruction", session_id: Optional[str] = None) -> Optional[int]:
+def observe_hyo(
+    content: str,
+    event_type: str = "instruction",
+    session_id: Optional[str] = None,
+    ttl_days: Optional[int] = None,
+    confidence: float = 1.0,
+) -> Optional[int]:
     """
     Shortcut for recording Hyo instructions/feedback/corrections.
     These are the highest-priority events — always stored, never dropped.
+
+    ttl_days: optional TTL for the resulting semantic fact (None = permanent)
+    confidence: initial confidence for semantic promotion (default 1.0)
     """
     formatted = f"**[HYO_{event_type.upper()}]** {content}"
-    return observe(formatted, event_type=event_type, source="hyo", session_id=session_id)
+    raw_id = observe(formatted, event_type=event_type, source="hyo", session_id=session_id)
+    # If TTL specified, promote immediately to semantic with TTL
+    if ttl_days is not None and raw_id is not None:
+        conn = init_db()
+        migrate_add_ttl_columns(conn)
+        fact_key = f"hyo:{event_type}:{hashlib.md5(content.encode()).hexdigest()[:12]}"
+        promote_semantic_with_ttl(conn, "HYO_INSTRUCTION", fact_key, formatted,
+                                   confidence=confidence, ttl_days=ttl_days)
+        conn.close()
+    return raw_id
 
 
 def observe_upload(filename: str, description: str, session_id: Optional[str] = None) -> Optional[int]:
@@ -580,6 +598,210 @@ def promote_episodic_to_semantic(conn: sqlite3.Connection):
     return promoted_count
 
 
+def migrate_add_ttl_columns(conn: sqlite3.Connection):
+    """
+    Add TTL/staleness columns to semantic_memory if they don't exist.
+    Safe to run multiple times — no-ops if columns already present.
+
+    New columns:
+      ttl_days       INTEGER  — how many days this fact is valid (NULL = permanent)
+      verified_at    TEXT     — last time this fact was confirmed still true
+      expires_at     TEXT     — computed: verified_at + ttl_days (NULL = never expires)
+      staleness_flag TEXT     — NULL | STALE | EXPIRED — updated by revalidate()
+
+    Based on: MemGPT tiered memory (arXiv:2310.08560) explicit eviction with retrieval,
+              KNOWLEDGE.md MEMORY INTEGRITY RULE — >7 days without re-verification = [STALE].
+    """
+    existing_cols = [row[1] for row in conn.execute("PRAGMA table_info(semantic_memory)").fetchall()]
+    migrations = [
+        ("ttl_days",      "INTEGER DEFAULT NULL"),
+        ("verified_at",   "TEXT DEFAULT NULL"),
+        ("expires_at",    "TEXT DEFAULT NULL"),
+        ("staleness_flag", "TEXT DEFAULT NULL"),
+    ]
+    for col_name, col_def in migrations:
+        if col_name not in existing_cols:
+            conn.execute(f"ALTER TABLE semantic_memory ADD COLUMN {col_name} {col_def}")
+    conn.commit()
+
+
+def promote_semantic_with_ttl(
+    conn: sqlite3.Connection,
+    category: str,
+    fact_key: str,
+    fact_value: str,
+    confidence: float = 1.0,
+    ttl_days: Optional[int] = None,
+    source: str = "system",
+) -> int:
+    """
+    Write a fact directly to semantic memory with optional TTL.
+
+    ttl_days=None  → permanent (no expiry)
+    ttl_days=7     → re-verify within 7 days or flagged [STALE]
+    ttl_days=30    → re-verify within 30 days
+
+    Returns: semantic memory row id
+    """
+    migrate_add_ttl_columns(conn)
+    now = mt_now()
+    expires = None
+    if ttl_days is not None:
+        # expires_at = now + ttl_days
+        dt_now = datetime.datetime.fromisoformat(now.replace("T", " ").rstrip("Z")[:19])
+        dt_exp = dt_now + datetime.timedelta(days=ttl_days)
+        expires = dt_exp.strftime("%Y-%m-%dT%H:%M:%S")
+
+    # Check for existing fact
+    existing = conn.execute(
+        "SELECT id, confidence, reinforcement_count FROM semantic_memory WHERE fact_key = ? AND superseded_by IS NULL",
+        (fact_key,)
+    ).fetchone()
+
+    if existing:
+        new_conf = min(1.0, existing["confidence"] + 0.05)
+        conn.execute(
+            """UPDATE semantic_memory
+               SET fact_value=?, confidence=?, reinforcement_count=?, last_reinforced=?,
+                   verified_at=?, expires_at=?, staleness_flag=NULL, ttl_days=?
+               WHERE id=?""",
+            (fact_value, new_conf, existing["reinforcement_count"] + 1, now,
+             now, expires, ttl_days, existing["id"])
+        )
+        conn.commit()
+        return existing["id"]
+    else:
+        cursor = conn.execute(
+            """INSERT INTO semantic_memory
+               (category, fact_key, fact_value, confidence, reinforcement_count,
+                last_reinforced, created_at, ttl_days, verified_at, expires_at, staleness_flag)
+               VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?, ?, NULL)""",
+            (category, fact_key, fact_value, confidence, now, now, ttl_days, now, expires)
+        )
+        conn.commit()
+        return cursor.lastrowid
+
+
+def revalidate_semantic_facts(conn: sqlite3.Connection) -> dict:
+    """
+    Scan semantic_memory for facts that have exceeded their TTL.
+    Mark them as STALE (within grace period) or EXPIRED (past 2x TTL).
+
+    STALE  → fact_value prefixed with [STALE:date] but not removed
+    EXPIRED → fact_value prefixed with [EXPIRED:date], confidence set to 0.1
+
+    Also sends a Hyo inbox alert listing all newly stale/expired facts.
+
+    Returns: {"stale": int, "expired": int, "checked": int}
+    """
+    migrate_add_ttl_columns(conn)
+    now_str = mt_now()
+    now_dt = datetime.datetime.fromisoformat(now_str.replace("T", " ").rstrip("Z")[:19])
+
+    results = conn.execute(
+        """SELECT id, fact_key, fact_value, ttl_days, verified_at, expires_at, staleness_flag,
+                  confidence, category
+           FROM semantic_memory
+           WHERE superseded_by IS NULL AND ttl_days IS NOT NULL""",
+    ).fetchall()
+
+    stale_count = 0
+    expired_count = 0
+    newly_flagged = []
+
+    for row in results:
+        row = dict(row)
+        if not row.get("expires_at"):
+            continue
+
+        try:
+            exp_dt = datetime.datetime.fromisoformat(row["expires_at"].replace("T", " ").rstrip("Z")[:19])
+        except Exception:
+            continue
+
+        if now_dt <= exp_dt:
+            # Still valid — clear staleness flag if it was set
+            if row.get("staleness_flag"):
+                conn.execute("UPDATE semantic_memory SET staleness_flag=NULL WHERE id=?", (row["id"],))
+            continue
+
+        days_overdue = (now_dt - exp_dt).days
+        double_ttl = (row.get("ttl_days") or 0) * 2
+        is_expired = days_overdue >= double_ttl
+
+        if is_expired:
+            expired_count += 1
+            flag = "EXPIRED"
+            new_conf = min(row.get("confidence", 1.0), 0.10)
+        else:
+            stale_count += 1
+            flag = "STALE"
+            new_conf = row.get("confidence", 1.0)
+
+        if row.get("staleness_flag") != flag:
+            newly_flagged.append({
+                "fact_key": row["fact_key"],
+                "category": row["category"],
+                "flag": flag,
+                "days_overdue": days_overdue,
+                "fact_value_preview": str(row.get("fact_value", ""))[:80],
+            })
+
+        # Update fact_value with [STALE:date] or [EXPIRED:date] prefix
+        fv = str(row.get("fact_value", ""))
+        # Strip existing prefix
+        import re as _re
+        fv = _re.sub(r"^\[(STALE|EXPIRED):[^\]]+\]\s*", "", fv)
+        fv_updated = f"[{flag}:{now_str[:10]}] {fv}"
+
+        conn.execute(
+            "UPDATE semantic_memory SET staleness_flag=?, confidence=?, fact_value=? WHERE id=?",
+            (flag, new_conf, fv_updated, row["id"])
+        )
+
+    conn.commit()
+
+    # Alert Hyo inbox if new flags
+    if newly_flagged:
+        _send_staleness_alert(newly_flagged)
+
+    return {"stale": stale_count, "expired": expired_count, "checked": len(results),
+            "newly_flagged": len(newly_flagged)}
+
+
+def _send_staleness_alert(flagged_facts: list):
+    """Write stale/expired fact list to Hyo inbox."""
+    import time
+    hyo_inbox = ROOT / "kai/ledger/hyo-inbox.jsonl"
+    stale = [f for f in flagged_facts if f["flag"] == "STALE"]
+    expired = [f for f in flagged_facts if f["flag"] == "EXPIRED"]
+    lines = []
+    if expired:
+        lines.append(f"🔴 EXPIRED ({len(expired)} facts past 2x TTL — confidence capped at 0.10):")
+        for f in expired[:5]:
+            lines.append(f"  [{f['category']}] {f['fact_key']} (+{f['days_overdue']}d overdue): {f['fact_value_preview']}")
+    if stale:
+        lines.append(f"🟡 STALE ({len(stale)} facts past TTL — confidence unchanged):")
+        for f in stale[:5]:
+            lines.append(f"  [{f['category']}] {f['fact_key']} (+{f['days_overdue']}d overdue): {f['fact_value_preview']}")
+    body = "\n".join(lines)
+    entry = {
+        "id": f"memory-ttl-{int(time.time())}",
+        "ts": mt_now(),
+        "from": "memory-engine",
+        "severity": "P2" if not expired else "P1",
+        "subject": f"Memory TTL: {len(expired)} expired, {len(stale)} stale facts need re-verification",
+        "body": body,
+        "status": "unread"
+    }
+    try:
+        hyo_inbox.parent.mkdir(parents=True, exist_ok=True)
+        with open(hyo_inbox, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception:
+        pass
+
+
 def apply_confidence_decay(conn: sqlite3.Connection):
     """
     Decay confidence of semantic facts that haven't been reinforced recently.
@@ -827,6 +1049,9 @@ def main():
     prm = sub.add_parser("promote", help="Run promotion pipeline (nightly)")
     prm.add_argument("--date", default=None)
 
+    # revalidate
+    sub.add_parser("revalidate", help="Scan semantic facts for TTL expiry — flag STALE/EXPIRED")
+
     # init
     sub.add_parser("init", help="Initialize database")
 
@@ -869,6 +1094,13 @@ def main():
         apply_confidence_decay(conn)
         conn.close()
         print(f"Promotion complete: episodic_id={ep_id}, semantic_promoted={sem_count}")
+
+    elif args.cmd == "revalidate":
+        conn = init_db()
+        migrate_add_ttl_columns(conn)
+        result = revalidate_semantic_facts(conn)
+        conn.close()
+        print(f"Revalidation complete: checked={result['checked']} stale={result['stale']} expired={result['expired']} newly_flagged={result['newly_flagged']}")
 
     else:
         parser.print_help()
