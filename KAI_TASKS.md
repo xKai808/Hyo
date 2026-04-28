@@ -556,3 +556,15 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/determined-vibrant-planck/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6d24e925] _(filed 2026-04-27)_
 - [ ] **[K]** [sentinel] 33 P0 tasks (overload threshold 5) [sentinel:task-queue-size:611f797a] _(filed 2026-04-27)_
+
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/eager-upbeat-pasteur/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:df747a1a] _(filed 2026-04-27)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/eager-upbeat-pasteur/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:df747a1a:escalated]
+- [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 33 P0 tasks (overload threshold 5) [sentinel:task-queue-size:611f797a:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/upbeat-hopeful-maxwell/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:2529cd25] _(filed 2026-04-28)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/upbeat-hopeful-maxwell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:86dc6368] _(filed 2026-04-28)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/upbeat-hopeful-maxwell/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:2529cd25:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/upbeat-hopeful-maxwell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:86dc6368:escalated]
