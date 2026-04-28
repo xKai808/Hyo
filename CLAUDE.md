@@ -55,6 +55,17 @@ Any [EXPIRED-INFERENCE] or [STALE] entries must be resolved before Kai makes cla
 **VERIFIED STATE RULE (non-negotiable, 2026-04-22):**
 Before reading anything else, check `kai/ledger/verified-state.json`. This file is written by `bin/kai-session-prep.sh` which runs every 15 minutes via `kai-autonomous.sh`. It contains pre-computed, source-verified values for: credit balances, SICQ/OMP scores, report freshness, stale tickets, and Aether balance reconciliation. Any claim Kai makes about these dimensions MUST come from this file or a fresh file read — not from memory or assumptions. If this file is missing or >2h old, run `bash bin/kai-session-prep.sh` before proceeding. This is the structural fix for assumption-based errors. Verified-state.json is the single authoritative source for current system state.
 
+**⚠️ REASONING PATTERNS (read before any action, every session — 2026-04-27):**
+`kai/ledger/kai-reasoning-patterns.md` — Kai's 8 active failure modes with gate questions.
+These are not rules. They are STOPS. Before any significant action, answer the applicable
+gate questions. A NO answer = do not proceed until resolved.
+Core gates that apply to EVERY session start:
+- Am I describing state or reading it? (Pattern 2 — assumption: 28 logged instances)
+- Have I tested a failure path? (Pattern 3 — happy path only)
+- Is my lesson encoded in something that runs, not just prose? (Pattern 7)
+Run `bash bin/kai-pre-action-check.sh complete "<what you're about to do>"` before declaring
+any pipeline, fix, or cycle complete. Non-zero exit = blocked. Do not bypass.
+
 0. `kai/ledger/verified-state.json` — **READ THIS BEFORE ANYTHING ELSE.** Pre-computed truth for credits, scores, tickets, freshness. If a claim cannot be sourced to this file or a live read, it is an assumption. Do not make it.
 0.5. `kai/ledger/session-handoff.json` — **READ THIS SECOND.** Machine-readable handoff written at the end of every session by `bin/session-close.sh`. Contains: top priority for this session, what shipped last session, open P0s, Hyo-pending actions, which commits are still queued vs landed. If this file is missing or older than 48h, that itself is a signal — note it and proceed with extra caution. This file was created 2026-04-21 as part of SESSION_CONTINUITY_PROTOCOL.md. Machine-readable handoff written at the end of every session by `bin/session-close.sh`. Contains: top priority for this session, what shipped last session, open P0s, Hyo-pending actions, which commits are still queued vs landed. If this file is missing or older than 48h, that itself is a signal — note it and proceed with extra caution. This file was created 2026-04-21 as part of SESSION_CONTINUITY_PROTOCOL.md.
 1.0. `KAI_BRIEF.md` — persistent memory, current state, known blockers

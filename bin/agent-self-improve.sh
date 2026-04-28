@@ -48,6 +48,23 @@ TODAY=$(TZ=America/Denver date +%Y-%m-%d)
 log()     { echo "[$NOW_MT] $*" | tee -a "$LOG"; }
 log_section() { echo "" >> "$LOG"; echo "══ $* ══" | tee -a "$LOG"; }
 
+# ─── Reasoning patterns reminder (Pattern 7: encode lessons in running things) ─
+# Source the pre-action check so it's available throughout this script.
+# The patterns file is read here so tomorrow's self-improve run loads active failure modes,
+# not just rules from a doc that gets ignored.
+PRE_ACTION_CHECK="$HYO_ROOT/bin/kai-pre-action-check.sh"
+REASONING_PATTERNS="$HYO_ROOT/kai/ledger/kai-reasoning-patterns.md"
+if [[ -f "$PRE_ACTION_CHECK" ]]; then
+  source "$PRE_ACTION_CHECK" 2>/dev/null || true
+fi
+# Log if reasoning patterns file exists and is current — stale = not being maintained
+if [[ -f "$REASONING_PATTERNS" ]]; then
+  patterns_age_days=$(python3 -c "import os,time; print(int((time.time()-os.path.getmtime('$REASONING_PATTERNS'))/86400))" 2>/dev/null || echo "?")
+  if [[ "${patterns_age_days:-99}" -gt 7 ]]; then
+    log "WARN: kai-reasoning-patterns.md is ${patterns_age_days} days old — update after any session where Hyo catches a mistake"
+  fi
+fi
+
 # ─── Source delegate (defines _find_claude_bin) ───────────────────────────────
 [[ -f "$DELEGATE_SH" ]] && source "$DELEGATE_SH" || true
 
@@ -1422,6 +1439,23 @@ PYEOF
   esac
 
   log "  Cycle complete for $agent"
+
+  # ── Pre-action gate: Pattern 7 enforcement ────────────────────────────────────
+  # Pattern 7: The Report Instead of the System — every lesson must be encoded in
+  # something that runs, not just prose. This check fires each cycle to verify:
+  # - Is the research file present (not just described)?
+  # - Is the state machine in a valid stage (not stale)?
+  # - Did something actually change this cycle (not theater)?
+  local expected_state_file="$HYO_ROOT/agents/$agent/ledger/self-improve-state.json"
+  if [[ -f "$expected_state_file" ]]; then
+    local state_age_s
+    state_age_s=$(python3 -c "import os,time; print(int(time.time()-os.path.getmtime('$expected_state_file')))" 2>/dev/null || echo "999")
+    if [[ "${state_age_s:-999}" -lt 300 ]]; then
+      log "  ✓ Gate P7: state file updated this cycle (${state_age_s}s ago) — cycle produced real output"
+    else
+      log "  WARN Gate P7: state file not updated this cycle (${state_age_s}s old) — was this cycle theater?"
+    fi
+  fi
 
   # ── Report to Kai ────────────────────────────────────────────────────────────
   # Pass the stage that was COMPLETED this cycle (save_state already wrote next stage,
