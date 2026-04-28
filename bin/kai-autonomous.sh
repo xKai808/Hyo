@@ -213,6 +213,8 @@ for agent in nel ra sam aether dex hyo; do
         ;;
       aether)
         queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/aether/aether.sh >> $HYO_ROOT/agents/aether/logs/aether-${TODAY}.log 2>&1"
+        # SE-031-004: Run trade monitor every 15 min — checks actual BUY SNAPSHOTs in log window
+        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aetherbot-monitor.sh"
         open_ticket_if_missing "aether" "Aether stale: ${freshness}h since last metrics update" "P0"
         ;;
       dex)
