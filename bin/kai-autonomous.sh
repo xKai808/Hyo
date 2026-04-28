@@ -550,6 +550,14 @@ check_and_dispatch 5 30 "flywheel-doctor-morning" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
   "flywheel_doctor_morning_run"
 
+# Self-improve health check (05:45) — binary Q1-Q5 per agent, fires P1 alerts on any NO
+# Runs AFTER 04:30 cycle has had 75min to complete. Catches: missing state files,
+# stale last_run, stuck state machine, invalid research, maxed failure_count.
+# Root cause: 6-day miss had zero alerting. This is the gate that prevents recurrence.
+check_and_dispatch 5 45 "self-improve-health" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/self-improve-health.sh >> $HYO_ROOT/kai/ledger/self-improve-health.log 2>&1" \
+  "self_improve_health_run"
+
 # OMP measurement (06:00) — outcome quality, after SICQ is fresh
 # Moved from 06:45: gives more buffer before morning report + allows Saturday
 # cross-agent review to stay at 06:45 without conflict.

@@ -96,31 +96,37 @@ get_state() {
 save_state() {
   local agent="$1" state="$2"
   local state_file="$HYO_ROOT/agents/$agent/self-improve-state.json"
-  local lock_file="${state_file}.lock"
-  # Atomic write — macOS-compatible locking via mkdir (works on both macOS and Linux)
-  # flock requires Linux; mkdir-based locking is POSIX portable and atomic on HFS+/APFS
-  local lock_acquired=0
-  for attempt in 1 2 3 4 5; do
-    if mkdir "$lock_file" 2>/dev/null; then
-      lock_acquired=1
-      break
-    fi
-    # Check if lock is stale (>30s old) and clean it up
-    if [[ -d "$lock_file" ]]; then
-      local lock_age
-      lock_age=$(python3 -c "import os,time; print(int(time.time()-os.path.getmtime('$lock_file')))" 2>/dev/null || echo 0)
-      if [[ $lock_age -gt 30 ]]; then
-        rmdir "$lock_file" 2>/dev/null || true
-      fi
-    fi
-    sleep 0.5
-  done
-  if [[ $lock_acquired -eq 0 ]]; then
-    log "WARN: could not acquire lock for $agent state — skipping write"
+
+  # Pre-run: purge any stale .lock artifacts (file OR directory) unconditionally.
+  # Root cause of 6-day miss: mkdir-based locking created file-type .lock artifacts
+  # (not directories) that made `mkdir "$lock_file"` fail on every subsequent call,
+  # `[[ -d ]]` return false (skipping stale cleanup), and rmdir fail silently.
+  # Result: state never written. Fix: use Python atomic write — no external lock needed.
+  rm -f "${state_file}.lock" 2>/dev/null || true
+  rmdir "${state_file}.lock" 2>/dev/null || true
+
+  # Python atomic write: write to tmp, then rename (rename is atomic on APFS/HFS+/ext4)
+  python3 - << PYEOF
+import json, os, sys, tempfile
+state_file = "$state_file"
+state_json = '''$state'''
+try:
+    data = json.loads(state_json)
+except json.JSONDecodeError as e:
+    print(f"[save_state] WARN: invalid JSON for $agent — {e}", file=sys.stderr)
+    sys.exit(1)
+os.makedirs(os.path.dirname(state_file), exist_ok=True)
+tmp = state_file + ".tmp"
+with open(tmp, "w") as f:
+    json.dump(data, f, indent=2)
+os.replace(tmp, state_file)  # atomic on POSIX
+PYEOF
+  local rc=$?
+  if [[ $rc -ne 0 ]]; then
+    log "ERROR: save_state failed for $agent (exit $rc)"
     return 1
   fi
-  echo "$state" > "$state_file"
-  rmdir "$lock_file" 2>/dev/null || true
+  log "  ✓ State saved for $agent"
 }
 
 # ─── Phase 1: Parse weaknesses + expansion opportunities from GROWTH.md ────────
