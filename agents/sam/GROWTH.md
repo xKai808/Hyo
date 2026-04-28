@@ -26,6 +26,12 @@ Sam's test suite was built to verify correctness (does the API return valid JSON
 - Can't diagnose slowdowns: is it a new code change? A cold start? A database query?
 - No data to answer: "Are we faster or slower than last week?" SLA violations undiscovered.
 
+**Fix approach:**
+Build performance instrumentation into the deploy pipeline:
+1. **Baseline phase (after deploy):** Run Lighthouse on key pages (index, hq, research). Record: performance score, SEO score, accessibility score, largest contentful paint (LCP), cumulative layout shift (CLS)
+2. **API response time tracking:** Measure response time for all 5 API endpoints (/health, /hq, /register-founder, /marketplace-re
+(See I1 in Improvement Plan for full details)
+
 ### W2: Ephemeral State Everywhere — Subscriber Records, Tokens, Push Data Vanish on Cold Start
 
 **Severity:** P0
@@ -47,6 +53,13 @@ HQ was built as a prototype (globalThis in-memory store works for testing). When
 - HQ dashboard data is "best effort" — no guarantees data persists
 - Subscribers can't be tracked; Aurora Public can't remember preferences between function calls
 
+**Fix approach:**
+This is one infrastructure change that unblocks 4 different features:
+1. **Provision Vercel KV:** Add KV database to Hyo's Vercel project (free tier includes 1000 daily operations)
+2. **Migrate HQ state:** Move globalThis storage → Vercel KV with key `hyo:hq:state`. Schema: { timestamp, hq_data: {...} }
+3. **Migrate founder tokens:** Move .secrets/founder.token → Vercel KV key `hyo:founder:token` 
+(See I2 in Improvement Plan for full details)
+
 ### W3: Error Handling Is Incomplete — 3 API Endpoints Lack Try/Catch, Edge Cases Unhandled
 
 **Severity:** P1
@@ -65,6 +78,13 @@ API endpoints were written to be happy-path optimized. "This should work" was th
 - Users encounter silent failures: "I registered but it didn't work" — no error message, no recovery path
 - Kai can't diagnose production failures: no structured error logs, no alerting
 - Every API failure is a black box until Hyo manually inspects Vercel logs
+
+**Fix approach:**
+1. Add try/catch wrappers to all 5 API endpoints (/health, /hq, /register-founder, /marketplace-request, /morning-report)
+2. Create `agents/sam/website/api/error-logger.js` — structured error logging with format: { timestamp, endpoint, error_type, error_message, stack_trace, request_data }
+3. Write errors to `agents/sam/ledger/api-errors.jsonl` (or Vercel logging if available)
+4. Return graceful e
+(See I3 in Improvement Plan for full details)
 
 ## Improvement Plan
 

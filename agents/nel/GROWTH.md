@@ -43,6 +43,14 @@ Cipher was written to solve immediate security gaps (leaked private keys, hardco
 - When a new CVE drops (e.g., XZ backdoor class), Nel has no way to know if we're affected.
 - Time to detect a compromised package = manual audit, not automated scanning.
 
+**Fix approach:**
+Build a new phase in cipher.sh (Phase 7: Supply Chain Audit) that:
+1. Parses `package.json` → extract all npm dependencies with versions
+2. Parses `requirements.txt` + any Python setup.py → extract Python package versions
+3. Local vulnerability scanner: compare each dependency against GitHub Advisory Database (which is reachable — nel already pulls from it)
+4. Output: `agents/nel/ledger/dependency
+(See I2 in Improvement Plan for full details)
+
 ### W3: Research Sources Are Broken — 5 of 6 External Security Feeds Fail From Sandbox
 
 **Severity:** P1
@@ -60,6 +68,15 @@ Nel's research phase assumes network egress. Cowork sandbox blocks outbound HTTP
 - Nel blind on emerging threats, new attack patterns, best practice changes.
 - Can't validate whether discovered CVEs are actually in our dependency tree (requires CVE database lookups).
 - Nel's own reports based on 3-day-old cached data or nothing at all.
+
+**Fix approach:**
+Nel research phase builds a local cache:
+1. When research sources ARE reachable (from Mini), fetch and cache results in `agents/nel/ledger/intelligence-cache.jsonl`
+2. Cache structure: { source_id, fetch_time, data_hash, summary_points, full_content }
+3. When running from sandbox (blocked), use cached data from the last 48h
+4. Cache auto-invalidates after 48h (research >= 2 days old is stale)
+5. S
+(See I3 in Improvement Plan for full details)
 
 ## Improvement Plan
 

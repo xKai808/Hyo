@@ -269,8 +269,13 @@ research_weakness() {
       cat "$research_file"
       return 0
     else
-      log "  Research file invalid (auth failure or too small: ${file_size}B, auth_errors=${has_auth_error}) — re-running"
-      rm -f "$research_file"
+      # C3 fix C3-P1-2: preserve the old research file before overwriting on retry.
+      # If previous research was Claude Code quality and retry falls back to Python,
+      # we'd silently lose the better version. Archive it as -vN before removal.
+      local v=1
+      while [[ -f "${research_file%.md}-v${v}.md" ]]; do v=$((v+1)); done
+      mv "$research_file" "${research_file%.md}-v${v}.md" 2>/dev/null || rm -f "$research_file"
+      log "  Research file invalid (auth failure or too small: ${file_size}B, auth_errors=${has_auth_error}) — archived to v${v}, re-running"
     fi
   fi
 
@@ -536,6 +541,29 @@ if growth_path.exists():
         # Extract evidence
         ev = re.search(r'\*\*Evidence[:\*]+\s*\n(.+?)(?=\n\*\*|\Z)', block, re.DOTALL)
         if ev: canonical_evidence_from_growth = ev.group(1).strip().replace('\n', ' ')[:300]
+
+# ── Cycle 3 fix C3-P0-1: fallback to Improvement Plan when weakness body has no Fix approach ─
+# Existing GROWTH.md files store fix approaches in Improvement Plan (### I1: ... Addresses W1)
+# not in the weakness body. If the weakness body search found nothing, search the Improvement Plan.
+if not canonical_fix_approach and growth_path.exists():
+    # Find the improvement section that addresses this weakness (e.g. Addresses W1)
+    imp_pattern = rf'###\s+I\d+:[^\n]+\n(?:[^\n]*\n)*?Addresses\s+{re.escape(weakness_id)}\b'
+    imp_m = re.search(imp_pattern, growth_content, re.DOTALL)
+    if imp_m:
+        # Extract the full improvement block (up to next ### or ## section)
+        start = imp_m.start()
+        end_search = re.search(r'\n###\s+[WEI]\d+|\n##\s', growth_content[start + 1:])
+        imp_block = growth_content[start: start + 1 + (end_search.start() if end_search else len(growth_content) - start)]
+        # Extract **Approach:** content from the improvement block
+        approach_m = re.search(r'\*\*Approach:\*\*\s*\n(.+?)(?=\n\*\*|\n###|\n##|\Z)', imp_block, re.DOTALL)
+        if approach_m:
+            fa_text_imp = approach_m.group(1).strip()
+            fa_parts_imp = [p.strip() for p in fa_text_imp.split('\n\n') if p.strip()]
+            canonical_fix_approach = fa_parts_imp[0][:500] if fa_parts_imp else fa_text_imp[:500]
+            canonical_fix_approach_2 = fa_parts_imp[1][:300] if len(fa_parts_imp) > 1 else ""
+            if not canonical_root_cause:
+                rc_imp = re.search(r'\*\*Root cause:\*\*\s*\n(.+?)(?=\n\*\*|\Z)', imp_block, re.DOTALL)
+                if rc_imp: canonical_root_cause = rc_imp.group(1).strip().replace('\n', ' ')[:400]
 
 # ── SECONDARY SOURCES: logs, evolution, ACTIVE.md ─────────────────────────────
 active_md = read_tail(agent_dir / "ledger" / "ACTIVE.md", 100)
@@ -1377,6 +1405,17 @@ PYEOF
 
       else
         log "  ✗ Verification failed — regression risk, rolling back to research stage (failure $((failure_count+1))/$MAX_RETRIES)"
+        # C3 fix C3-P1-4: if verify failed but files WERE changed, the changes are still applied.
+        # Log this to daily-issues so Kai knows to manually review and potentially revert.
+        local uncommitted_changes
+        uncommitted_changes=$(cd "$HYO_ROOT" && git diff --name-only "agents/$agent/" 2>/dev/null | head -10 || echo "")
+        if [[ -n "$uncommitted_changes" ]]; then
+          local verify_fail_key="verify-fail-changes-${agent}-${current_weakness}-${TODAY}"
+          if ! grep -q "\"key\":\"${verify_fail_key}\"" "$HYO_ROOT/kai/ledger/daily-issues.jsonl" 2>/dev/null; then
+            echo "{\"ts\":\"$NOW_MT\",\"key\":\"$verify_fail_key\",\"agent\":\"$agent\",\"question\":\"VERIFY\",\"severity\":\"P1\",\"description\":\"Verify failed for $agent/$current_weakness but files were changed: $uncommitted_changes — changes NOT committed (awaiting manual review). Check if the implementation was partially applied and decide whether to revert.\",\"remediated\":false,\"date\":\"$TODAY\"}" >> "$HYO_ROOT/kai/ledger/daily-issues.jsonl"
+            log "  → P1 logged: uncommitted changes from failed verify — manual review needed"
+          fi
+        fi
         save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"research\",\"cycles\":$((cycles+1)),\"failure_count\":$((failure_count+1)),\"improvements\":[],\"last_run\":\"$NOW_MT\"}"
       fi
       ;;

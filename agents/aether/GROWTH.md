@@ -31,6 +31,12 @@ External intelligence was added to Aether's scope implicitly, not with a structu
 - No early warning when Fed pivot signals or inflation data is imminent.
 - Hyo doesn't have macro context paired with AetherBot performance data to see if external conditions explain why trading is up or down.
 
+**Fix approach:**
+Build a daily macro intelligence phase in Aether's research cycle:
+1. **Fed calendar integration:** Pull FOMC meeting dates, rate decision dates from public Fed calendar. Flag upcoming events in external_factors section with "FOMC in N days — elevated volatility risk."
+2. **CPI/PCE release monitoring:** Automate detection of upcoming inflation data releases. Flag: "CPI release on [date] — historic
+(See I1 in Improvement Plan for full details)
+
 ### W2: No On-Chain Signal Integration — AetherBot Operating Blind to BTC Structural Shifts
 
 **Severity:** P1
@@ -49,6 +55,13 @@ Aether's research scope was defined around price-level observation rather than s
 - External intelligence layer is reactive rather than predictive; doesn't surface leading indicators.
 - AetherBot may increase position size during periods Aether should be recommending REDUCE_EXPOSURE.
 
+**Fix approach:**
+Build a quality gate that runs after daily analysis is written but before it's published:
+1. **Coverage check:** Does analysis cover all session windows? Count: (windows_analyzed / windows_in_log) * 100. Target: 100%.
+2. **Classification completeness:** Does every loss have a classification (BUG, MARKET, RISK, SKILL, RECOVERY)? Score: (classified / total_trades) * 100. Target: 100%.
+3. **Anti-patc
+(See I2 in Improvement Plan for full details)
+
 ### W3: Kalshi Platform Monitoring Not Systematic — Fee/Rule Changes Discovered Reactively
 
 **Severity:** P2
@@ -66,6 +79,15 @@ Kalshi monitoring was assumed to happen organically (via trade results). No dedi
 - AetherBot could be trading under outdated fee assumptions if Kalshi changed fees without Aether noticing.
 - New market opportunities on Kalshi go undetected.
 - Regulatory risk to Kalshi itself (which would require AetherBot to pause or exit) is not surfaced proactively.
+
+**Fix approach:**
+Build a weekly aggregation script that runs after each day's analysis is published:
+1. **Read all Analysis_*.txt files from the past 7 days**
+2. **Per-strategy edge calculation:**
+   - For each strategy family (e.g., "COVERED_CALL", "SYNTHETIC_LONG"): sum realized P&L, count contracts risked
+   - Edge = P&L / contracts_risked (answer: how much profit per 1 contract of risk?)
+   - Trend: has edge i
+(See I3 in Improvement Plan for full details)
 
 ## Improvement Plan
 

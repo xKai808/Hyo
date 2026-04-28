@@ -26,6 +26,14 @@ Newsletter pipeline was built as a one-way feed: gather → synthesize → rende
 - Can't optimize: which topics drive engagement? Which sources are best? Unknown.
 - Hyo can't tell if the newsletter is achieving its goal (daily intelligence for founder).
 
+**Fix approach:**
+Add Phase 4.5 (post-synthesis quality check) to newsletter pipeline:
+1. After render.py produces newsletter content, analyze:
+   - **Topic diversity:** Count unique topics represented in the output. Score: (topics_found / 30) * 100
+   - **Freshness:** Are all items from last 24h? % of items meeting freshness target
+   - **Length compliance:** Is final word count within target range (900-1200 words
+(See I2 in Improvement Plan for full details)
+
 ### W2: Source Quality Is Unverified — 7 of 15 Sources Return Empty/Broken Data
 
 **Severity:** P1
@@ -44,6 +52,14 @@ Gather.py was written to aggregate. It assumes sources are healthy. There's no s
 - Dead sources silently return 0 records. Newsletter becomes sparse/unbalanced. Quality degrades undetected.
 - Hyo sees "no newsletter" (known-issues line 11, 16: "No newsletter produced for 2026-04-12 — past 06:00 MT deadline") 3 days in a row. Ra doesn't know why until someone debugs manually.
 - Source coverage unknown. Ra can't answer: "Is this source worth keeping?" "How often does it fail?"
+
+**Fix approach:**
+Add Phase 0 (pre-gather) to the newsletter pipeline:
+1. For each of the 15 sources, make a test request with the same params as the real gather
+2. Validate: content returned? Parse valid? Content >= 100 chars? Timestamp recent (last 24h)?
+3. Score each source 0-100: (returns_data ? 50 : 0) + (parse_ok ? 25 : 0) + (content_fresh ? 25 : 0)
+4. Log results to `agents/ra/ledger/source-health.jsonl`: { 
+(See I1 in Improvement Plan for full details)
 
 ### W3: Content Diversity Gap — 7 of 30 Target Topics Have Zero Dedicated Sources
 
@@ -64,6 +80,15 @@ Ra started with available free sources (Hacker News, CoinGecko, OpenAI blog, etc
 - Newsletter doesn't serve diverse readers. A founder interested in cultural trends gets nothing.
 - Hyo's goal ("daily intelligence across all domains") not achieved for 23% of topics.
 - Content synthesis phase has unequal input — tech topics have 9 sources (high quality), culture topics have 0 (no representation).
+
+**Fix approach:**
+1. Create coverage matrix: 30 topics × 15 current sources = identify which topics have 0, 1, 2, or 3+ sources
+2. Research and document 2-3 free/low-cost sources for each gap topic:
+   - **Culture:** cultural-news APIs, arts blogs, museum feeds
+   - **Sports:** ESPN free API, sports news RSS feeds
+   - **Arts:** ArtsAxis, Artsy API, museum APIs
+   - **Lifestyle:** home/garden/wellness newsletters, 
+(See I3 in Improvement Plan for full details)
 
 ## Improvement Plan
 

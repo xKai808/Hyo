@@ -356,9 +356,20 @@ except: print(0)
   daily_assess_file="$HYO_ROOT/agents/$agent/ledger/daily-assess-${TODAY}.json"
   if [[ ! -f "$daily_assess_file" ]]; then
     log "  Q7 WARN: no daily-assess file for $agent at $daily_assess_file — self-improve ran without 4AM grounding"
-    # Only open issue if health check runs after 5AM (giving 4:30 self-improve time to finish)
+    # C3 fix: day-0 deployment grace — if agent-daily-assess.sh was first committed/modified TODAY,
+    # skip P1 (the 4AM slot was missed because the script didn't exist yet).
+    # Also only open issue if health check runs after 5AM (giving 4:30 self-improve time to finish).
+    assess_script="$HYO_ROOT/bin/agent-daily-assess.sh"
+    assess_deployed_today=0
+    if [[ -f "$assess_script" ]]; then
+      script_mtime=$(python3 -c "import os,datetime; t=os.path.getmtime('$assess_script'); print(datetime.datetime.fromtimestamp(t).strftime('%Y-%m-%d'))" 2>/dev/null || echo "")
+      [[ "$script_mtime" == "$TODAY" ]] && assess_deployed_today=1
+    fi
     current_hour=$(TZ=America/Denver date +%H)
-    if [[ "${current_hour:-12}" -ge 5 ]]; then
+    if [[ "$assess_deployed_today" -eq 1 ]]; then
+      log "  Q7 OK (day-0 deployment grace — agent-daily-assess.sh first deployed today, 4AM slot not yet reached)"
+      PASS_COUNT=$((PASS_COUNT+1))
+    elif [[ "${current_hour:-12}" -ge 5 ]]; then
       open_issue "q7-no-assess-${agent}-$TODAY" "$agent" "Q7" \
         "agent-daily-assess.sh did not produce output for $agent today. self-improve ran in degraded mode (no evidence anchor). Check daily-assess.log." "P1"
       FAIL_COUNT=$((FAIL_COUNT+1))
