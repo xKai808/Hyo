@@ -1,5 +1,5 @@
 {
-  "ts": "2026-04-27T20:41:25Z",
+  "ts": "2026-04-28T04:57:34Z",
   "status": "ISSUES",
   "issues": 5,
   "warnings": 0,
@@ -22,7 +22,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): standby mode: no trades this cycle; WARNING: dashboard out-o"
+      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
     },
     {
       "severity": "P1",
@@ -33,33 +33,33 @@
   "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "ed331888-1cb1-4cd2-b214-b6ec6f5eae0d",
+      "id": "cmd-1777352021-1479",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && vercel --prod --yes 2>&1 | tail -20",
+      "exit_code": 0
+    },
+    {
+      "id": "b86bd520-0765-4abc-b219-0b0670c8b90c",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "26c529b4-1f1e-4c79-bc48-a9308cf13abf",
+      "id": "81d958fc-5d69-42e0-af07-baa1d41e7e97",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "ee6380bd-b8c2-404b-9084-aa41825b06dd",
+      "id": "cmd-1777352012-1455",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "cd ~/Documents/Projects/Hyo/agents/sam/website && vercel --prod --yes 2>&1 | tai",
       "exit_code": 0
     },
     {
-      "id": "aa1c35da-5a5b-447e-a801-7a8156d04b69",
+      "id": "cmd-1777351998-1430",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "e53ef8cd-0aca-4317-a9f4-6836223f6dc8",
-      "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "cd ~/Documents/Projects/Hyo/website && vercel --prod --yes 2>&1 | tail -20",
       "exit_code": 0
     }
   ],

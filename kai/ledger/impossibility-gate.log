@@ -1,0 +1,13 @@
+[2026-04-27T22:40:29][BLOCK] Gate IG-READ-BEFORE-CLAIM BLOCKED: No file path provided. Claim 'something exists' has no evidence source. This is an assumption.
+[2026-04-27T22:40:29][BLOCK] Gate IG-READ-BEFORE-CLAIM BLOCKED: Evidence file '/nonexistent/path' does not exist. Cannot verify claim: 'something exists'.
+[2026-04-27T22:40:29][PASS] Gate IG-READ-BEFORE-CLAIM cleared: File 'bin/kai-impossibility-gates.sh' exists (7s old). Claim: 'this script exists'.
+[2026-04-27T22:40:29][BLOCK] Gate IG-CYCLE-COUNT BLOCKED: Only 1 cycle(s) completed. Required: 2. First cycle cannot see failures created by the fix.
+[2026-04-27T22:40:29][PASS] Gate IG-CYCLE-COUNT cleared: 2 cycle(s) completed (required: 2).
+[2026-04-27T22:40:29][BLOCK] Gate IG-FAILURE-PATH BLOCKED: No failure path was tested. Name one specific failure scenario and show code handles it. Not 'it should handle it.'
+[2026-04-27T22:40:29][PASS] Gate IG-FAILURE-PATH cleared: Failure path tested: 'missing GROWTH.md — first-run degraded mode'.
+[2026-04-27T22:40:29][BLOCK] Gate IG-NO-ASSUMPTION BLOCKED: Belief 'gate fires correctly' has no proof source. Providing a belief without evidence = assumption. Verify first.
+[2026-04-27T22:40:29][BLOCK] Gate IG-NO-ASSUMPTION BLOCKED: Proof source 'I think it should work' contains weak language ('think'). This is still an assumption. Provide file read or command output.
+[2026-04-27T22:40:29][PASS] Gate IG-NO-ASSUMPTION cleared: Belief 'gate fires correctly' sourced from: 'ran bash bin/kai-pre-action-check.sh, exit code 0'.
+[2026-04-27T22:42:39][BLOCK] Gate IG-READ-BEFORE-CLAIM BLOCKED: No file path provided. Claim 'test claim' has no evidence source. This is an assumption.
+[2026-04-27T22:42:39][BLOCK] Gate IG-CYCLE-COUNT BLOCKED: Only 1 cycle(s) completed. Required: 2. First cycle cannot see failures created by the fix.
+[2026-04-27T22:42:39][BLOCK] Gate IG-FAILURE-PATH BLOCKED: No failure path was tested. Name one specific failure scenario and show code handles it. Not 'it should handle it.'

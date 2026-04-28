@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-04-27T20:55:53Z
+Last updated: 2026-04-28T05:00:47Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-27T20:55:53Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-28T04:57:35Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit 2026-04-27: Aether self-improve research file contains 'Not logged in · Please run /login' — Claude Code CLI auth broken; recurring P0 every cycle
-  - Delegated: 2026-04-27T08:07:28Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-011) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:12:12Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit 2026-04-27: 5 daily reports missing for today (aether-daily, morning-report, nel-daily, ra-daily, sam-daily); only agent-reflection entries published
-  - Delegated: 2026-04-27T08:07:35Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:11:22Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit 2026-04-27: daily-audit.sh false-positive — reports ACTIVE.md missing for nel/sam/ra/aether/dex; files exist; script path bug
@@ -56,4 +56,7 @@ Last updated: 2026-04-27T20:55:53Z
 
 - **flag-nel-008** [P2] [SELF-REVIEW] 1 untriggered files found
   - Created: 2026-04-26T22:12:00Z
+
+- **flag-nel-011** [P2] No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Created: 2026-04-28T02:12:12Z
 

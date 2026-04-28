@@ -1,0 +1,31 @@
+{
+  "generated": "2026-04-27T22:42:35",
+  "date": "2026-04-27",
+  "status": "warning",
+  "error_counts": {
+    "total": 96,
+    "assumption": 28,
+    "skip_verification": 29,
+    "reinterpret_instructions": 16,
+    "wrong_path": 4,
+    "technical_failure": 7,
+    "impossibility_gate": 6
+  },
+  "thresholds": {
+    "assumption_critical": 30,
+    "skip_verify_critical": 35,
+    "reinterpret_warning": 15
+  },
+  "layer1_blocks_today": 6,
+  "layer2_critical_findings_total": 0,
+  "alerts": [
+    "P1: assumption errors at 28 \u2014 approaching P0 threshold (30). Trend: worsening.",
+    "P1: reinterpret-instructions at 16 (threshold: 15). Layer 2 challenger must compare against original spec."
+  ],
+  "trending": {
+    "assumption": "chronic",
+    "skip_verification": "chronic",
+    "reinterpret": "chronic"
+  },
+  "recommended_action": "P1: monitor and enforce gates"
+}

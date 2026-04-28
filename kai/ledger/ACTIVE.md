@@ -1,47 +1,47 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-27T20:55:53Z
+Last updated: 2026-04-28T05:07:12Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-27T20:55:53Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-28T04:57:35Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-27T20:41:26Z
+  - Delegated: 2026-04-28T04:57:35Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-27T20:41:26Z
+  - Delegated: 2026-04-28T04:57:35Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-27T20:41:26Z
+  - Delegated: 2026-04-28T04:57:35Z
   - Status: DELEGATED
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-27T20:55:53Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-28T04:57:35Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-001) — scan entire codebase for similar patterns: Daily audit 2026-04-27: Aether self-improve research file contains 'Not logged in · Please run /login' — Claude Code CLI auth broken; recurring P0 every cycle
-  - Delegated: 2026-04-27T08:07:28Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-011) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:12:12Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): Daily audit 2026-04-27: Aether self-improve research file contains 'Not logged in · Please run /login' — Claude Code CLI auth broken; recurring P0 every cycle
-  - Delegated: 2026-04-27T08:07:28Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-011): No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:12:12Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
-  - Delegated: 2026-04-27T16:40:55Z
+  - Delegated: 2026-04-28T04:42:33Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit 2026-04-27: 5 daily reports missing for today (aether-daily, morning-report, nel-daily, ra-daily, sam-daily); only agent-reflection entries published
-  - Delegated: 2026-04-27T08:07:35Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:11:22Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit 2026-04-27: 5 daily reports missing for today (aether-daily, morning-report, nel-daily, ra-daily, sam-daily); only agent-reflection entries published
-  - Delegated: 2026-04-27T08:07:35Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-008): No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:11:22Z
   - Status: DELEGATED
 
 - **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-27: 5 daily reports missing for today (aether-daily, morning-report, nel-daily, ra-daily, sam-daily); only agent-reflection entries published (flagged by kai, cascade flag-kai-002)
@@ -70,6 +70,14 @@ Last updated: 2026-04-27T20:55:53Z
 
 - **sam-006** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-27: 26 failed items in kai/queue/failed/ (no triage); SICQ all below min, Nel critical (20) (flagged by kai, cascade flag-kai-004)
   - Delegated: 2026-04-27T08:07:35Z
+  - Status: DELEGATED
+
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-28 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-011)
+  - Delegated: 2026-04-28T02:12:12Z
+  - Status: DELEGATED
+
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-28 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-008)
+  - Delegated: 2026-04-28T02:11:22Z
   - Status: DELEGATED
 
 ## Queued
@@ -115,4 +123,13 @@ Last updated: 2026-04-27T20:55:53Z
 
 - **flag-nel-008** [P2] Sentinel: 2 project(s) with test failures
   - Created: 2026-04-27T14:11:49Z
+
+- **flag-nel-009** [P2] Found 22 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-28T02:11:29Z
+
+- **flag-nel-010** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-28T02:12:12Z
+
+- **flag-nel-011** [P2] No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Created: 2026-04-28T02:12:12Z
 

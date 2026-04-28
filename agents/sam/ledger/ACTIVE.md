@@ -1,20 +1,20 @@
 # Sam Active Tasks
 
-Last updated: 2026-04-27T20:55:53Z
+Last updated: 2026-04-28T04:57:35Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-27T20:55:53Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-04-28T04:57:35Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): Daily audit 2026-04-27: Aether self-improve research file contains 'Not logged in · Please run /login' — Claude Code CLI auth broken; recurring P0 every cycle
-  - Delegated: 2026-04-27T08:07:28Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-011): No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:12:12Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit 2026-04-27: 5 daily reports missing for today (aether-daily, morning-report, nel-daily, ra-daily, sam-daily); only agent-reflection entries published
-  - Delegated: 2026-04-27T08:07:35Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-008): No newsletter produced for 2026-04-28 — past 06:00 MT deadline
+  - Delegated: 2026-04-28T02:11:22Z
   - Status: DELEGATED
 
 - **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit 2026-04-27: daily-audit.sh false-positive — reports ACTIVE.md missing for nel/sam/ra/aether/dex; files exist; script path bug

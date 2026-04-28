@@ -2,57 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-27T18:10:00Z",
-  "totalRuns": 207,
+  "lastRunAt": "2026-04-28T02:10:12Z",
+  "totalRuns": 213,
   "runHistory": [
-    {
-      "ts": "2026-04-26T10:04:34Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-26T10:09:39Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 2,
-      "recurringIssues": 2,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-04-26T10:09:43Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-26T10:09:49Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-26T14:09:49Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 1,
-      "recurringIssues": 2,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-04-26T14:09:53Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
     {
       "ts": "2026-04-26T14:10:05Z",
       "passed": 6,
@@ -243,6 +195,54 @@
       "failed": 2,
       "newIssues": 0,
       "recurringIssues": 2,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-27T22:09:56Z",
+      "passed": 7,
+      "failed": 2,
+      "newIssues": 1,
+      "recurringIssues": 1,
+      "resolved": 1
+    },
+    {
+      "ts": "2026-04-27T22:09:59Z",
+      "passed": 7,
+      "failed": 2,
+      "newIssues": 0,
+      "recurringIssues": 2,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-27T22:10:03Z",
+      "passed": 7,
+      "failed": 2,
+      "newIssues": 0,
+      "recurringIssues": 2,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-28T02:09:52Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 1
+    },
+    {
+      "ts": "2026-04-28T02:10:02Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-04-28T02:10:12Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
       "resolved": 0
     }
   ],
@@ -714,15 +714,44 @@
       "firstSeen": "2026-04-27T18:09:54Z",
       "lastSeen": "2026-04-27T18:10:00Z",
       "daysFailing": 2,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-27T22:09:56Z"
     },
     "task-queue-size:611f797a": {
       "severity": "P2",
       "check_id": "task-queue-size",
       "detail": "33 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-27T18:09:54Z",
-      "lastSeen": "2026-04-27T18:10:00Z",
-      "daysFailing": 2,
+      "lastSeen": "2026-04-28T02:10:12Z",
+      "daysFailing": 8,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:df747a1a": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/eager-upbeat-pasteur/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-27T22:09:56Z",
+      "lastSeen": "2026-04-27T22:10:03Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-04-28T02:09:52Z"
+    },
+    "aurora-ran-today:2529cd25": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/upbeat-hopeful-maxwell/mnt/Hyo/newsletters/2026-04-28.md",
+      "firstSeen": "2026-04-28T02:09:52Z",
+      "lastSeen": "2026-04-28T02:10:12Z",
+      "daysFailing": 3,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:86dc6368": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/upbeat-hopeful-maxwell/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-28T02:09:52Z",
+      "lastSeen": "2026-04-28T02:10:12Z",
+      "daysFailing": 3,
       "status": "open"
     }
   },
