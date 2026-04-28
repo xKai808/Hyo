@@ -437,16 +437,38 @@ def write_markdown(text: str, path: Path, date_str: str) -> None:
     # Strip code fences and preamble artifacts before writing.
     # LLMs ignore "no code fences" instructions; strip at write time instead.
     text = strip_llm_artifacts(text)
-    header = (
-        f"---\n"
-        f"date: {date_str}\n"
-        f"kind: hyo-daily\n"
-        f"generated: {dt.datetime.now(dt.timezone.utc).isoformat()}\n"
-        f"---\n\n"
-    )
-    with path.open("w") as f:
-        f.write(header)
-        f.write(text.rstrip() + "\n")
+
+    # SE-031-002: Only prepend hyo-daily header if LLM output does NOT already
+    # start with its own frontmatter block. The synthesize prompt instructs the
+    # LLM to emit a full YAML frontmatter (kind: ra-daily, entities, topics,
+    # lab_items). Prepending a second block causes render.py to see double
+    # frontmatter — split_frontmatter() strips only the first (hyo-daily),
+    # leaving the ra-daily block as raw YAML visible in the expand view.
+    generated_ts = dt.datetime.now(dt.timezone.utc).isoformat()
+    if text.lstrip("\n").startswith("---\n"):
+        # LLM emitted its own frontmatter — inject generated/date into it instead
+        # of prepending a second block.
+        text_stripped = text.lstrip("\n")
+        # Insert our generated timestamp after the first "---\n" opening
+        text_stripped = text_stripped.replace(
+            "---\n",
+            f"---\ngenerated: {generated_ts}\n",
+            1  # only replace first occurrence
+        )
+        with path.open("w") as f:
+            f.write(text_stripped.rstrip() + "\n")
+    else:
+        # LLM did not emit frontmatter — safe to prepend ours
+        header = (
+            f"---\n"
+            f"date: {date_str}\n"
+            f"kind: hyo-daily\n"
+            f"generated: {generated_ts}\n"
+            f"---\n\n"
+        )
+        with path.open("w") as f:
+            f.write(header)
+            f.write(text.rstrip() + "\n")
 
 
 def write_bundle(prompt: str, context: str, path: Path) -> None:

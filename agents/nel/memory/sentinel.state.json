@@ -2,25 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-04-27T14:09:57Z",
-  "totalRuns": 205,
+  "lastRunAt": "2026-04-27T18:10:00Z",
+  "totalRuns": 207,
   "runHistory": [
-    {
-      "ts": "2026-04-26T06:09:50Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 0,
-      "recurringIssues": 4,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-26T10:04:31Z",
-      "passed": 5,
-      "failed": 4,
-      "newIssues": 2,
-      "recurringIssues": 2,
-      "resolved": 2
-    },
     {
       "ts": "2026-04-26T10:04:34Z",
       "passed": 5,
@@ -244,6 +228,22 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-04-27T18:09:54Z",
+      "passed": 7,
+      "failed": 2,
+      "newIssues": 2,
+      "recurringIssues": 0,
+      "resolved": 3
+    },
+    {
+      "ts": "2026-04-27T18:10:00Z",
+      "passed": 7,
+      "failed": 2,
+      "newIssues": 0,
+      "recurringIssues": 2,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -254,8 +254,8 @@
       "firstSeen": "2026-04-11T10:04:55Z",
       "lastSeen": "2026-04-27T14:09:57Z",
       "daysFailing": 172,
-      "status": "open",
-      "resolvedAt": "2026-04-26T02:10:05Z"
+      "status": "resolved",
+      "resolvedAt": "2026-04-27T18:09:54Z"
     },
     "founder-token-integrity:92e7b89e": {
       "severity": "P0",
@@ -314,7 +314,8 @@
       "firstSeen": "2026-04-21T18:10:52Z",
       "lastSeen": "2026-04-27T14:09:57Z",
       "daysFailing": 88,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-04-27T18:09:54Z"
     },
     "kai-dispatcher-present:d08345bd": {
       "severity": "P2",
@@ -703,6 +704,25 @@
       "firstSeen": "2026-04-27T14:09:51Z",
       "lastSeen": "2026-04-27T14:09:57Z",
       "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-04-27T18:09:54Z"
+    },
+    "scheduled-tasks-fired:6d24e925": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/determined-vibrant-planck/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-04-27T18:09:54Z",
+      "lastSeen": "2026-04-27T18:10:00Z",
+      "daysFailing": 2,
+      "status": "open"
+    },
+    "task-queue-size:611f797a": {
+      "severity": "P2",
+      "check_id": "task-queue-size",
+      "detail": "33 P0 tasks (overload threshold 5)",
+      "firstSeen": "2026-04-27T18:09:54Z",
+      "lastSeen": "2026-04-27T18:10:00Z",
+      "daysFailing": 2,
       "status": "open"
     }
   },

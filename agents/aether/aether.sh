@@ -589,6 +589,109 @@ print(f"Trade recorded: {trade.get('pair','')} {trade.get('side','')} PNL={pnl}"
 PYEOF
 }
 
+# ─── Auth Failure Detector ───────────────────────────────────────────────────
+# Scans today's AetherBot log for Kalshi 401 auth failures.
+# If ≥3 failures AND 0 successful orders → P0 Hyo inbox + Telegram.
+# Rate-limited: only fires once per hour to avoid Telegram spam.
+# This is the fix for SE-031-001: AetherBot 401 failures were invisible.
+# Aether reported "standby: no trades" instead of "AUTH FAILURE — orders blocked."
+check_auth_failures() {
+  local today
+  today=$(TZ="America/Denver" date +%Y-%m-%d)
+  local log_file=""
+  local agents_log="$LOGS/AetherBot_${today}.txt"
+  local aetherbot_log="$HOME/Documents/Projects/AetherBot/Logs/AetherBot_${today}.txt"
+
+  if [[ -f "$agents_log" ]]; then
+    log_file="$agents_log"
+  elif [[ -f "$aetherbot_log" ]]; then
+    log_file="$aetherbot_log"
+  fi
+
+  if [[ -z "$log_file" ]]; then
+    log "AUTH CHECK: no log found for today — skipping"
+    return 0
+  fi
+
+  # Count 401 auth failures
+  local auth_failures
+  auth_failures=$(grep -c "Order failed: 401" "$log_file" 2>/dev/null || echo "0")
+  # Count successful orders (BUY SNAPSHOT = order attempted, TICKER CLOSE = outcome recorded)
+  local successful_orders
+  successful_orders=$(grep -c "BUY SNAPSHOT" "$log_file" 2>/dev/null || echo "0")
+
+  log "AUTH CHECK: $auth_failures x 401 failures, $successful_orders successful orders today"
+
+  # Gate: ≥3 auth failures AND zero successful orders = hard auth failure
+  if [[ "$auth_failures" -ge 3 && "$successful_orders" -eq 0 ]]; then
+    # Rate-limit: only alert once per hour
+    local rate_flag="/tmp/aether-auth-fail-$(TZ=America/Denver date +%Y%m%d%H)"
+    if [[ -f "$rate_flag" ]]; then
+      log "AUTH CHECK: P0 already fired this hour — skipping duplicate alert"
+      return 0
+    fi
+    touch "$rate_flag"
+
+    local alert_msg="🚨 AETHERBOT P0 — AUTH FAILURE: Kalshi API key rejected. $auth_failures x 401 errors, 0 orders placed today ($(TZ=America/Denver date +%H:%M) MT). ACTION REQUIRED: (1) Log into kalshi.com → Settings → API Keys. (2) Check if key is expired/revoked. (3) Regenerate key if needed. (4) Run on Mini: export AETHERBOT_KEY='<new-key-id>' → update ~/.zshrc or .env. This is blocking ALL trading revenue."
+    log "AUTH CHECK: P0 FIRING — $auth_failures failures, 0 orders"
+
+    # Write to Hyo inbox (P0)
+    local inbox="$ROOT/kai/ledger/hyo-inbox.jsonl"
+    local ts
+    ts=$(TZ="America/Denver" date +"%Y-%m-%dT%H:%M:%S-06:00")
+    printf '{"ts":"%s","from":"aether","priority":"P0","status":"unread","subject":"AetherBot AUTH FAILURE — Kalshi API key rejected","body":"%s"}\n' \
+      "$ts" \
+      "AetherBot has logged $auth_failures x 'Order failed: 401 INVALID_PARAMETER' errors today and placed 0 successful orders. The Kalshi API key ID (AETHERBOT_KEY env var) is rejected. Fix: (1) Log into kalshi.com → Settings → API Keys. (2) Verify key is active. (3) If expired/revoked: create new key, copy the KEY ID. (4) On Mini: kai exec \"export AETHERBOT_KEY='<new-key-id>'\" and update the .secrets env file. Until fixed: 0 trades, 0 revenue." \
+      >> "$inbox" 2>/dev/null || true
+
+    # Send Telegram alert
+    python3 - "$ROOT" "$alert_msg" <<'TELEGRAM_PY'
+import sys, os, json, urllib.request
+
+root = sys.argv[1]
+message = sys.argv[2]
+
+# Load creds
+token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+
+token_path = os.path.join(root, "agents/nel/security/.telegram_token")
+chat_path  = os.path.join(root, "agents/nel/security/.telegram_chat_id")
+if not token and os.path.isfile(token_path):
+    token = open(token_path).read().strip()
+if not chat_id and os.path.isfile(chat_path):
+    chat_id = open(chat_path).read().strip()
+
+if not token or not chat_id:
+    print("TELEGRAM: no creds — skipping", flush=True)
+    sys.exit(0)
+
+payload = json.dumps({"chat_id": chat_id, "text": message}).encode()
+req = urllib.request.Request(
+    f"https://api.telegram.org/bot{token}/sendMessage",
+    data=payload,
+    headers={"Content-Type": "application/json"}
+)
+try:
+    resp = urllib.request.urlopen(req, timeout=10)
+    print(f"TELEGRAM: sent (status {resp.status})", flush=True)
+except Exception as e:
+    print(f"TELEGRAM: failed — {e}", flush=True)
+TELEGRAM_PY
+
+    # Also dispatch flag via dispatch.sh
+    local dispatch_bin="$ROOT/bin/dispatch.sh"
+    if [[ -x "$dispatch_bin" ]]; then
+      bash "$dispatch_bin" flag aether P0 \
+        "AetherBot auth failure: $auth_failures x 401 errors, 0 orders placed. Kalshi API key rejected. Hyo inbox updated with fix steps." \
+        2>> "$LOG" || true
+    fi
+  elif [[ "$auth_failures" -ge 1 ]]; then
+    # Warn but don't P0 if we have some successful orders (partial failure)
+    log "AUTH CHECK: WARN — $auth_failures x 401 errors but $successful_orders orders succeeded (possible intermittent auth issue)"
+  fi
+}
+
 # ─── GPT Fact-Check ──────────────────────────────────────────────────────────
 # Aether owns all GPT/OpenAI API calls for trade verification.
 # Kai does NOT call GPT. If something needs external LLM validation,
@@ -867,6 +970,11 @@ INIT_PYEOF
 
   # Extract real data from AetherBot logs
   extract_aether_metrics_from_logs
+
+  # ─── Auth Failure Gate (SE-031-001) ──────────────────────────────────────
+  # Must run immediately after log parsing — before HQ push.
+  # Fires P0 to Hyo inbox + Telegram if Kalshi auth is broken.
+  check_auth_failures
 
   # ─── GPT Two-Phase Analysis (S18-017 Independence Gate) ──────────────────
   # Phase 1: GPT sees raw log ONLY → GPT_Independent_DATE.txt

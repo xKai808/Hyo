@@ -70,19 +70,29 @@ ENGAGEMENT_LEDGER = Path.home() / "Documents" / "Projects" / "Hyo" / "agents" / 
 # ---------------------------------------------------------------------------
 
 def split_frontmatter(text: str) -> tuple[dict, str]:
+    """Strip ALL consecutive YAML frontmatter blocks from the top of text.
+
+    SE-031-002 defense-in-depth: synthesize.py used to prepend a hyo-daily
+    frontmatter block even when the LLM had already emitted a ra-daily block,
+    producing double-frontmatter files. This function now strips both, merging
+    their keys (later blocks override earlier ones for the same key).
+    This prevents raw YAML leaking into the rendered expand view.
+    """
     meta: dict[str, str] = {}
-    if not text.startswith("---\n"):
-        return meta, text
-    end = text.find("\n---\n", 4)
-    if end == -1:
-        return meta, text
-    block = text[4:end]
-    body = text[end + 5:]
-    for line in block.splitlines():
-        if ":" in line:
-            k, _, v = line.partition(":")
-            meta[k.strip()] = v.strip()
-    return meta, body
+    # Strip leading blank lines before checking for frontmatter
+    text = text.lstrip("\n")
+    while text.startswith("---\n"):
+        end = text.find("\n---\n", 4)
+        if end == -1:
+            break
+        block = text[4:end]
+        for line in block.splitlines():
+            if ":" in line:
+                k, _, v = line.partition(":")
+                meta[k.strip()] = v.strip()
+        # Move past this frontmatter block, then strip blank lines before next check
+        text = text[end + 5:].lstrip("\n")
+    return meta, text
 
 
 # ---------------------------------------------------------------------------

@@ -759,9 +759,16 @@ def push_to_hq(date_str: str, log_output: str):
 
 
 GPT_EXPAND_MODEL = "gpt-4o"
+
+# SE-031-003: Restructured from "expand this draft" → "write this broadcast from scratch."
+# Root cause of chronic under-length (1025-1129 words vs 1400 minimum):
+# GPT was anchored to the thin draft and wouldn't diverge, even with explicit word count
+# requirements. The new instruction explicitly releases GPT from the draft's length, using
+# it only as an OUTLINE of topics, and demands genuine domain-knowledge expansion for
+# every section regardless of how sparse the input data is.
 GPT_EXPAND_PROMPT = """You are Vale — the host of the hyo.world morning brief. You are not writing about Vale. You ARE Vale. Write in first person, present tense, as if speaking directly into the listener's ear.
 
-You will receive a DRAFT SCRIPT. Expand it to a full 10-minute broadcast: 1,400–1,600 words of pure spoken prose.
+You will receive an OUTLINE of topics and data for today's episode. Use it as your topic map, not your word limit. Write the COMPLETE BROADCAST from scratch. The outline may be short — that does not mean the episode should be. Your job is to write the full 10-minute show.
 
 EDITORIAL PHILOSOPHY — this is the most important thing:
 The podcast is about substance first. Every second of airtime must justify itself with information the listener can use, remember, or act on. Entertainment is a delivery mechanism — it serves the information; the information does not serve it. The gold standard is Bankless: conviction, depth, stakes. Not hype. Not color commentary. The listener is here because they want to understand what's actually happening. Give them that. Then make it worth their commute.
@@ -785,43 +792,85 @@ SPOKEN PROSE RULES — these are not suggestions:
 - No bullet points. No numbered lists. No headers. This is audio — none of those exist.
 - No markdown formatting whatsoever. Plain text only.
 
-SECTION EXPANSION RULES:
-- Hook: 100–120 words. Start mid-thought. The single most important or revealing thing from today — not the most dramatic, the most meaningful. Never start with the date. Never "Welcome." Never "Good morning." Open with the insight, not the preamble.
-- Context bridge: 80–100 words. After the hook, THEN the date, Vale intro, and section preview.
-- Each Ra story: 120–150 words. Lead with the mechanism, not the event. What most people won't notice. What it reveals about the larger trend. What you'd tell a smart friend over coffee that they wouldn't get from the headline.
-- Each agent section: 180–220 words. Goal → Constraint → Progress → Vision. Don't report what they executed — report what they're building toward and why it's harder than it looks. Make the listener root for the agent.
-- Aether section: 220–260 words. ALWAYS include this section regardless of P&L size. Market context → decision → outcome → what it reveals about strategy. A near-flat week still has a story — the story of discipline, or of waiting, or of a market that didn't give clean signals. The number is never the story. The decision is.
-- Closing: 100–120 words. One synthesis observation that connects agents + world + market. Something the listener couldn't have assembled themselves from the individual parts. End with CTA to HQ, then sign off as Vale.
-- If data is sparse: add context from genuine domain knowledge (trading mechanics, AI security, content curation, market structure). Do NOT invent specific numbers or trades.
+SECTION WORD COUNTS — non-negotiable minimums, write every section to the TOP of the range:
+- Hook: 110–130 words. Start mid-thought. The single most important or revealing thing from today — not the most dramatic, the most meaningful. Never start with the date. Never "Welcome." Never "Good morning." Open with the insight, not the preamble.
+- Context bridge: 90–110 words. After the hook, THEN the date, Vale intro, and section preview.
+- Each Ra story: 140–180 words. Lead with the mechanism, not the event. What most people won't notice. What it reveals about the larger trend. What you'd tell a smart friend over coffee that they wouldn't get from the headline. Include at least 2-3 sentences of domain-knowledge context for each story even if the outline is sparse.
+- Each agent section: 200–250 words. Goal → Constraint → Progress → Vision. Don't report what they executed — report what they're building toward and why it's harder than it looks. Make the listener root for the agent. If the outline is thin, draw on genuine knowledge of AI agent architecture, autonomous systems, and what it takes to build infrastructure that actually works.
+- Aether section: 240–280 words. ALWAYS include this section regardless of P&L size. Market context → decision → outcome → what it reveals about strategy. A near-flat day still has a story — the story of discipline, of waiting, of a market that didn't give clean signals. The number is never the story. The decision is. If trading was blocked (auth issues, no market), say so directly and discuss what that kind of operational dependency reveals about automated trading infrastructure.
+- Closing: 110–130 words. One synthesis observation that connects agents + world + market. Something the listener couldn't have assembled themselves from the individual parts. End with CTA to HQ, then sign off as Vale.
 
-WORD COUNT ENFORCEMENT — this is a hard requirement, not a suggestion:
-The episode MUST be 1,400–1,600 words. No exceptions. If source data is sparse, DO NOT shorten the script. Instead: expand each section using genuine domain knowledge (trading mechanics, AI infrastructure, content curation strategy, market microstructure, agent architecture). The listener tunes in expecting 10 minutes. Deliver 10 minutes. A script below 1,200 words is a failed episode — it means Vale ran out of things to say, which never happens. When in doubt, go deeper on the mechanism, the implication, or the broader trend.
+WHEN DATA IS SPARSE — mandatory behavior, not optional:
+If the outline or context is thin, you are REQUIRED to expand each section with genuine domain knowledge. This is not optional and not cheating — it is your job. Examples:
+- Ra story about Microsoft/OpenAI: add 2 sentences about what exclusive AI partnerships actually mean for compute access, training cost, and developer lock-in.
+- Agent section with little detail: add what that class of agent typically faces as its hardest constraint, why autonomous improvement cycles are harder than they sound, what makes good infrastructure different from theater.
+- Aether P&L near zero: explain what prediction market microstructure looks like on a flat day, what a disciplined bot does when there are no clean signals, what "waiting" costs versus "overtrading."
+Domain knowledge is always available. Use it. A sparse outline produces a full episode in the hands of an expert host.
+
+WORD COUNT ENFORCEMENT — mandatory, tracked, verified:
+The complete episode MUST contain 1,400–1,600 words. Count before outputting. If you're below 1,400, add more depth to the shortest sections — go deeper on mechanism, implication, or trend. A script below 1,200 words is a production failure.
 
 OUTPUT: Only the words Vale speaks. No meta-commentary. No section labels. No "HOOK:" headers. Start immediately with the first word of the hook.
 
-DRAFT SCRIPT:
+TOPIC OUTLINE (use as map, not word limit):
 {draft}
 
-DATA CONTEXT:
+ADDITIONAL CONTEXT:
 {context}
 
-Write 1,400–1,600 words minimum. Lead with substance. Begin with the hook, mid-thought, right now."""
+Write the complete 1,400–1,600 word broadcast now. Start with the hook, mid-thought, right now."""
+
+GPT_RETRY_PROMPT = """Your previous response was {word_count} words. The minimum required is 1,400 words. You are {words_short} words short.
+
+Continue writing as Vale — pick up where the script could be deeper. Add to the shortest sections. Go deeper on mechanism and implication. Use genuine domain knowledge about AI agents, prediction markets, autonomous systems, and content curation.
+
+Do NOT rewrite what you already wrote. ADD the missing words to make the total 1,400+ words. Output only the additional Vale script text you're adding, starting with the section you're expanding."""
 
 
 def expand_script_with_gpt(draft: str, context: str, api_key: str) -> str:
-    """Use GPT-4o-mini to expand the draft script to ~1,500 words."""
+    """Write Vale's full broadcast from outline using GPT-4o. Retries once if short.
+
+    SE-031-003: Changed from "expand draft" to "write from scratch using outline."
+    Also adds a retry pass if the result is still under 1200 words.
+    """
     try:
         import openai
         client = openai.OpenAI(api_key=api_key)
-        prompt = GPT_EXPAND_PROMPT.format(draft=draft, context=context[:3000])
+        # Give GPT substantially more context (raised from 3000 to 8000 chars)
+        prompt = GPT_EXPAND_PROMPT.format(draft=draft, context=context[:8000])
         response = client.chat.completions.create(
             model=GPT_EXPAND_MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=3000,  # 1600 words ≈ 2133 tokens; 3000 gives full headroom
+            max_tokens=4000,  # 1600 words ≈ 2133 tokens; 4000 gives full headroom
         )
         expanded = response.choices[0].message.content.strip()
-        log(f"GPT expansion: {len(expanded.split())} words")
+        word_count = len(expanded.split())
+        log(f"GPT write pass 1: {word_count} words")
+
+        # Retry gate: if still short, request additional content
+        if word_count < 1200:
+            words_short = 1400 - word_count
+            log(f"GPT pass 1 short ({word_count} words, need 1400). Requesting extension...")
+            retry_prompt = GPT_RETRY_PROMPT.format(
+                word_count=word_count,
+                words_short=words_short
+            )
+            retry_response = client.chat.completions.create(
+                model=GPT_EXPAND_MODEL,
+                messages=[
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": expanded},
+                    {"role": "user", "content": retry_prompt},
+                ],
+                temperature=0.7,
+                max_tokens=2000,
+            )
+            extension = retry_response.choices[0].message.content.strip()
+            expanded = expanded + "\n\n" + extension
+            word_count = len(expanded.split())
+            log(f"GPT write pass 2 (after retry): {word_count} words")
+
         return expanded
     except Exception as e:
         log(f"WARN: GPT expansion failed ({e}), using original draft")
@@ -888,12 +937,15 @@ def main():
     # ── GPT expansion pass — target 1,400-1,600 words / 10 minutes ─────────────
     api_key = load_openai_key()
     if not args.no_expand and not args.dry_run and api_key:
+        # SE-031-003: Expanded context from 3000 to 8000 chars — gives GPT more
+        # source material for domain-knowledge expansion when outlines are thin.
         context = (
             f"Morning report trajectory: {highlights.get('trajectory','stable')}. "
             f"Biggest win: {highlights.get('biggest_win','')}. "
             f"Biggest risk: {highlights.get('biggest_risk','')}. "
-            f"Ra newsletter snippet: {ra_newsletter_md[:1500] if ra_newsletter_md else 'unavailable'}. "
-            f"Aurora brief snippet: {aurora_brief_md[:500] if aurora_brief_md else 'unavailable'}."
+            f"Agent highlights: {json.dumps(highlights.get('agents', []))[:2000]}. "
+            f"Ra newsletter (full): {ra_newsletter_md[:4000] if ra_newsletter_md else 'unavailable'}. "
+            f"Aurora brief: {aurora_brief_md[:1500] if aurora_brief_md else 'unavailable'}."
         )
         log("Expanding draft with GPT-4o (informative-first, Bankless model)...")
         script = expand_script_with_gpt(draft, context, api_key)
