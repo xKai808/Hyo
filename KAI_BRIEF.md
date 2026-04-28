@@ -1,5 +1,14 @@
 # KAI_BRIEF.md
 
+> **[HEALTHCHECK 2026-04-27T22:05Z] ISSUES — 1 P1, 3 P2 — broken-link flag unaddressed; aether dashboard cascade still flooding; failed/ contains stale-but-actually-shipped S31 marker.**
+> - **P1 (carried, unresolved):** flag-nel-001 "1 broken links detected" FLAGGED at 20:55:53Z (T-70m), no RESOLVE entry in last 2h. Nel log shows **20 broken documentation links** identified in Phase 4. This is the same broken-link pattern that's been carrying across briefs (08:07Z, 08:54Z, 14:55Z earlier today, plus 02:53Z + 04:04Z brief). Quick win for interactive session: pull the URL list from `agents/nel/logs/nel-2026-04-27.md`, fix or remove from source, emit RESOLVE.
+> - **P2 (carried, structural cascade):** flag-aether-001 dashboard data mismatch still flooding every ~75s. Local ts now `2026-04-27T16:02:48-06:00`, API ts frozen at `2026-04-27T14:13:59-06:00` — **~2h lag** (was 36min at 18:04Z brief). Per-(title,status=ACTIVE) emitter dedup STILL not installed (carried 10+ healthchecks). The same cascade also generates `[SELF-REVIEW] 1 untriggered files found` every ~2min. Dashboard publish has been broken for 4+ hours.
+> - **P2 (carried):** dex stuck in same `bottleneck_stuck` assessment 3+ cycles ("20 recurrent issues found"). GUIDANCE tickets dex-001 (21:56Z) + dex-002 (yesterday 14:04Z) dispatched per Kai Guidance Protocol — neither has produced an answer. Suggests dex doesn't have the autonomy hooks to act on guidance prompts, only acknowledge them.
+> - **P2 (queue-hygiene gap):** `kai/queue/failed/S31-closed-loop-infrastructure.json` (15:12 today) is stale — the underlying SE-031 work IS on main (commit `478c2a7`, "closed-loop: circuit breaker + adversarial verifier + content guard + ticket gates + TTL memory"). The queue marked it failed but the work landed via another path. queue-hygiene.sh needs a "work shipped under different ID" detector or this file misleads every healthcheck. Same pattern as the 4 zero-byte daily failure markers (Apr 23–26 12:0X, untriaged across 4+ healthchecks).
+> - **Healthy:** queue 0 pending / 0 running; ACTIVE.md freshness 0h across all 6 agents (kai/nel/sam/ra/aether/dex); last 3 completed all exit=0 (queue-hygiene + 2× ra newsletter); today's logs nel=29, sam=1, ra=3, aether=2, dex=3.
+> - **NO new auto-remediation dispatched this run.** Sibling 21:56Z healthcheck already dispatched cascades for 6 P0/P1; stacking deepens the masking pattern called out in 16:03Z brief. P1 broken-link is the only fresh actionable; everything else is structural carry-over for interactive session.
+> - **TOP ITEM (P1):** Resolve flag-nel-001 — pull the 20 broken URLs from `agents/nel/logs/nel-2026-04-27.md` Phase 4 section, fix or remove from source, emit RESOLVE. Same pattern blocking 5+ healthchecks today; it'll keep re-firing every nel cycle until source is fixed.
+
 > **[HEALTHCHECK 2026-04-27T18:04Z] ISSUES — 2 P1, 3 P2/P3 — queue worker orphan worsening; aether dashboard publish broken 36+ min.**
 > - **P1 (queue-orphan, WORSENING):** `kai/queue/running/recheck-flag-nel-001.json` stuck **188 min** (was 68min in 16:03Z brief — +120min). Same task ID exists in `completed/` so the underlying healthcheck did finish, but the worker is not removing the running/ entry. Manual move to failed/ + worker-bug investigation needed. Likely the same path that's letting other recheck triggers fail to propagate.
 > - **P1 (aether-dashboard-stale, USER-VISIBLE):** Aether HQ dashboard API ts frozen at `2026-04-27T11:27:49-06:00` while local ts advances every cycle (12:03 MT now, ~36min lag and growing). User-visible — Hyo's HQ feed is showing stale Aether state. Aether re-flags P2 every ~60-75s — 18+ flags in last 8min, log.jsonl growth uncapped (no per-(title,status=ACTIVE) emitter dedup despite this being noted in 06:05Z, 10:03Z, and 16:03Z briefs).
@@ -335,6 +344,18 @@
 - **aether dashboard publish broken** — local ts advances each cycle but API ts frozen at `2026-04-21T11:13:42-06:00`. Causes the recurring P2 dashboard-mismatch flag + aether's bottleneck_stuck dead-loop. Trace the publish step.
 - **Agents still in dead-loop** — sam (assessment_stuck), ra (assessment_stuck), aether (bottleneck_stuck). Guidance DELEGATEs firing every ~15min with no change in behavior; need to escalate beyond open-ended questions.
 - **No kai runner log for 2026-04-21** — `agents/kai/logs/` has nothing dated today.
+
+## ## Shipped (Session 31b — 2026-04-27/28 Cowork continuation)
+
+**Three P0/P1 bugs executed and verified** — commit `66903b2`, 103 files, pushed `main`.
+
+1. **AetherBot 401 auth failure detector (SE-031-001)** — `check_auth_failures()` added to `agents/aether/aether.sh`. Fires every 15 min. Scans AetherBot log for `Order failed: 401`. If ≥3 failures AND 0 successful orders: writes P0 to `kai/ledger/hyo-inbox.jsonl` + sends Telegram alert with exact Kalshi dashboard fix steps. Rate-limited to 1 alert/hour. **Root cause still requires Hyo action: log into kalshi.com → Settings → API Keys → regenerate key → update AETHERBOT_KEY env var on Mini.** P0 inbox entry already written for today's 44 failures.
+
+2. **Ra expand YAML frontmatter fix (SE-031-002)** — `synthesize.py:write_markdown()` now detects if LLM already emitted frontmatter and injects `generated:` into it instead of prepending a second `---` block. `render.py:split_frontmatter()` now strips all consecutive `---` blocks (defense-in-depth). Verified: `2026-04-27.html` article now opens with `<h1>Ra — 2026-04-27</h1>` and the "Good morning!" hook paragraph — no raw YAML visible.
+
+3. **Podcast GPT from-scratch rewrite (SE-031-003)** — `GPT_EXPAND_PROMPT` reframed from "expand this draft" → "write this broadcast from scratch using this outline." Section minimums raised. Sparse-data mandatory expansion rule added (must use domain knowledge even when source data is thin). Retry pass added if pass 1 < 1,200 words. Context raised from 3,000 → 8,000 chars. max_tokens raised 3,000 → 4,000. **Verified: 1,831 words produced on 2026-04-27 run** (was 529 words without GPT, previously 1,025-1,129 words with old prompt).
+
+**AetherBot status: still blocked.** 44 x 401 auth failures today, 0 trades. Detector now wired. Hyo must regenerate Kalshi API key to resume trading.
 
 ## ## Shipped today (Session 31 — 2026-04-27 Cowork)
 
