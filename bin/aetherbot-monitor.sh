@@ -72,14 +72,34 @@ BUY_IN_WINDOW=$(awk -v ws="$WINDOW_START" '
     END {print count+0}
 ' "$LOG_FILE" 2>/dev/null)
 
-AUTH_FAIL_TODAY=$(grep -c "Order failed: 401" "$LOG_FILE" 2>/dev/null || echo 0)
-BUY_TODAY=$(grep -c "BUY SNAPSHOT" "$LOG_FILE" 2>/dev/null || echo 0)
+AUTH_FAIL_TODAY=$(grep -c "Order failed: 401" "$LOG_FILE" 2>/dev/null; true)
+AUTH_FAIL_TODAY="${AUTH_FAIL_TODAY:-0}"
+BUY_TODAY=$(grep -c "BUY SNAPSHOT" "$LOG_FILE" 2>/dev/null; true)
+BUY_TODAY="${BUY_TODAY:-0}"
 
 # Check if AETHERBOT_KEY is actually configured
+# Check env var first, then fall back to reading the .env file (bot may have loaded it)
 KEY_CHECK=$(python3 -c "
-import os; k=os.environ.get('AETHERBOT_KEY','');
-print('MISSING' if not k or k == 'PASTE_YOUR_AETHERBOT_KEY_ID_HERE' else 'OK')
-" 2>/dev/null)
+import os
+# Check env var
+k = os.environ.get('AETHERBOT_KEY', '')
+if k and k != 'PASTE_YOUR_AETHERBOT_KEY_ID_HERE':
+    print('OK')
+else:
+    # Check .env file (where aetherbot_logger.py loads it from)
+    env_file = os.path.expanduser('~/Documents/Projects/Hyo/agents/nel/security/env')
+    try:
+        with open(env_file) as f:
+            for line in f:
+                if line.strip().startswith('AETHERBOT_KEY='):
+                    v = line.strip().split('=', 1)[1].strip()
+                    if v and v != 'PASTE_YOUR_AETHERBOT_KEY_ID_HERE':
+                        print('OK (from env file)')
+                        exit()
+    except Exception:
+        pass
+    print('MISSING')
+" 2>/dev/null || echo "MISSING")
 
 # ─── Rate-limit alerts (once per 4 hours per type) ───────────────────────────
 AUTH_FLAG="/tmp/aether-auth-monitor-$(TZ=America/Denver date +%Y%m%d%H | head -c 11)"
