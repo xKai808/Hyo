@@ -95,7 +95,7 @@ check_claude_health() {
     local today_key
     today_key=$(TZ=America/Denver date +%Y-%m-%d)
     if ! grep -q "\"key\":\"claude-auth-expired-$today_key\"" "$issues_log" 2>/dev/null; then
-      echo "{\"ts\":\"$ts_now\",\"key\":\"claude-auth-expired-$today_key\",\"agent\":\"kai\",\"question\":\"AUTH\",\"severity\":\"P1\",\"description\":\"Claude Code auth expired. Implement stage for all agents is disabled. Python fallback active. Run: claude auth login on the Mini.\",\"remediated\":false,\"date\":\"$today_key\"}" >> "$issues_log"
+      echo "{\"ts\":\"$ts_now\",\"key\":\"claude-auth-expired-$today_key\",\"agent\":\"kai\",\"question\":\"AUTH\",\"severity\":\"P0\",\"description\":\"Claude Code auth expired. Implement stage for ALL agents is disabled until renewed. Python fallback active for research only. ACTION REQUIRED: claude auth login on the Mini.\",\"remediated\":false,\"date\":\"$today_key\"}" >> "$issues_log"
       log "  → Auth expiry logged to daily-issues.jsonl for morning report"
     fi
     CLAUDE_AUTH_REASON="auth_expired"
@@ -276,31 +276,83 @@ research_weakness() {
 
   log "  Researching $weakness_id ($agent): $weakness_title"
 
+  # ── Pull external research context if available (agent-research.sh findings) ──
+  local external_context=""
+  local sources_file="$HYO_ROOT/agents/$agent/research-sources.json"
+  local findings_file="$HYO_ROOT/agents/$agent/research/findings-${TODAY}.md"
+  if [[ -f "$findings_file" ]]; then
+    # Today's external research already ran — pull the relevant section
+    external_context=$(grep -A 5 -i "$weakness_title\|$weakness_id" "$findings_file" 2>/dev/null | head -20 || true)
+    [[ -n "$external_context" ]] && log "  External context: pulled ${#external_context} chars from today's findings"
+  elif [[ -f "$sources_file" ]]; then
+    # Trigger external research now — this is synchronous but fast (15-30s)
+    log "  Triggering external research pull for $agent..."
+    HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/agent-research.sh" "$agent" >> "$HYO_ROOT/kai/ledger/self-improve.log" 2>&1 || true
+    [[ -f "$findings_file" ]] && external_context=$(grep -A 5 -i "$weakness_title\|$weakness_id" "$findings_file" 2>/dev/null | head -20 || true)
+    log "  External research triggered: ${#external_context} chars found"
+  fi
+
+  # ── Goal deadline urgency: check if this weakness has an overdue goal ─────────
+  local goal_urgency=""
+  local growth_file_path="$HYO_ROOT/agents/$agent/GROWTH.md"
+  if [[ -f "$growth_file_path" ]]; then
+    goal_urgency=$(python3 -c "
+import re, sys
+from pathlib import Path
+from datetime import datetime, timezone
+content = Path('$growth_file_path').read_text()
+today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+# Find goals table rows linking to this weakness
+pattern = r'\|\s*G\d+\s*\|[^|]+\|\s*(\d{4}-\d{2}-\d{2})\s*\|[^|]+\|\s*$weakness_id\s*\|'
+overdue = []
+for m in re.finditer(pattern, content):
+    deadline = m.group(1)
+    if deadline < today:
+        overdue.append(deadline)
+if overdue:
+    print(f'OVERDUE GOAL: linked goal deadline {overdue[0]} has passed. This weakness is URGENT — P0 priority.')
+" 2>/dev/null || echo "")
+    [[ -n "$goal_urgency" ]] && log "  $goal_urgency"
+  fi
+
   # Use Claude Code to research if available, otherwise use agent-research.sh
   local claude_bin
   if claude_bin=$(_find_claude_bin 2>/dev/null); then
     local research_prompt
     research_prompt=$(cat << PROMPT
-You are researching a weakness in the hyo.world agent system to find a concrete fix.
+You are researching a weakness in the hyo.world agent system to find a concrete, executable fix.
+You have access to external findings and internal evidence. Use ALL of it.
 
 Agent: $agent
 Weakness ID: $weakness_id
 Weakness: $weakness_title
 Evidence: $evidence
+${goal_urgency:+Goal status: $goal_urgency}
+
+GROWTH.md fix approach (canonical — implement exactly this):
+$(grep -A 20 "### ${weakness_id}:" "$HYO_ROOT/agents/$agent/GROWTH.md" 2>/dev/null | grep -A 10 "Fix approach\|fix_approach" | head -15 || echo "(not found — derive from evidence)")
+
+External research findings (from agent-research.sh):
+${external_context:-"(no external findings today — use internal analysis)"}
+
+Recent agent evolution (last 3 entries):
+$(tail -3 "$HYO_ROOT/agents/$agent/evolution.jsonl" 2>/dev/null | python3 -c "import json,sys; [print(json.loads(l).get('assessment','')) for l in sys.stdin if l.strip()]" 2>/dev/null || echo "(none)")
 
 Your job:
-1. Analyze the root cause of this weakness
-2. Research best practices for fixing it (think about what patterns solve this class of problem)
-3. Propose a SPECIFIC, IMPLEMENTABLE fix — name the exact files to change, the exact logic to add
-4. Estimate the fix complexity (hours) and confidence it will work
+1. Use the GROWTH.md fix approach as your primary source — it is what the agent planned
+2. Augment with external findings if relevant
+3. Make the implementation steps SPECIFIC: exact file paths, exact function names, exact logic
+4. If the GROWTH.md approach is sound, execute it exactly — do not invent a different approach
+5. If goal is overdue, treat as P0 and prioritize speed-to-ship over perfection
 
-Output format:
+Output format (machine-parsed):
 ROOT_CAUSE: <one sentence>
-FIX_APPROACH: <specific technical approach>
+FIX_APPROACH: <specific technical approach — must match or improve on GROWTH.md>
 FILES_TO_CHANGE: <comma-separated file paths relative to HYO_ROOT>
-IMPLEMENTATION: <step-by-step what to code>
+IMPLEMENTATION: <numbered step-by-step — be specific enough that implement stage can execute without further research>
 CONFIDENCE: HIGH|MEDIUM|LOW
 COMPLEXITY: <estimated hours>
+EXTERNAL_SOURCES_USED: <list sources that informed this, or "none">
 PROMPT
 )
     local research_output
@@ -366,62 +418,105 @@ def read_jsonl(path, n=20):
         return []
 
 agent_dir = Path(hyo_root) / "agents" / agent
-# Gather data sources
+
+# ── PRIMARY SOURCE: Read GROWTH.md for this specific weakness ─────────────────
+# The fix approach is ALREADY in GROWTH.md — the agent wrote it there.
+# Always extract from GROWTH.md first. Only fall back to heuristics if GROWTH.md
+# doesn't have a fix approach for this weakness. This prevents the fallback from
+# producing generic wrong content when the real answer is sitting in the file.
+growth_path = agent_dir / "GROWTH.md"
+canonical_root_cause = ""
+canonical_fix_approach = ""
+canonical_fix_approach_2 = ""
+canonical_files = ""
+canonical_implementation = ""
+canonical_evidence_from_growth = ""
+
+if growth_path.exists():
+    growth_content = growth_path.read_text()
+    # Find the specific weakness block by ID (e.g. ### W1:)
+    pattern = rf'###\s+{re.escape(weakness_id)}[:\s](.+?)(?=\n###\s+[WE]\d+|\n##\s|\Z)'
+    m = re.search(pattern, growth_content, re.DOTALL)
+    if m:
+        block = m.group(0)
+        # Extract Root cause
+        rc = re.search(r'\*\*Root cause[:\*]+\s*\n(.+?)(?=\n\*\*|\Z)', block, re.DOTALL)
+        if rc: canonical_root_cause = rc.group(1).strip().replace('\n', ' ')[:400]
+        # Extract Fix approach (may be labeled "Fix approach:" or "**Fix approach:**")
+        fa = re.search(r'\*\*Fix approach[:\*]+\s*\n(.+?)(?=\n\*\*|\n---|\Z)', block, re.DOTALL)
+        if fa:
+            fa_text = fa.group(1).strip()
+            # Split into primary and secondary if multiple paragraphs
+            fa_parts = [p.strip() for p in fa_text.split('\n\n') if p.strip()]
+            canonical_fix_approach = fa_parts[0][:500] if fa_parts else fa_text[:500]
+            canonical_fix_approach_2 = fa_parts[1][:300] if len(fa_parts) > 1 else ""
+        # Extract evidence
+        ev = re.search(r'\*\*Evidence[:\*]+\s*\n(.+?)(?=\n\*\*|\Z)', block, re.DOTALL)
+        if ev: canonical_evidence_from_growth = ev.group(1).strip().replace('\n', ' ')[:300]
+
+# ── SECONDARY SOURCES: logs, evolution, ACTIVE.md ─────────────────────────────
 active_md = read_tail(agent_dir / "ledger" / "ACTIVE.md", 100)
 evolution = read_jsonl(agent_dir / "evolution.jsonl", 30)
-recent_log = read_tail(list(sorted((agent_dir / "logs").glob("*.md"), key=os.path.getmtime))[-1] if (agent_dir / "logs").exists() else Path("/dev/null"), 150)
-growth_md = read_tail(agent_dir / "GROWTH.md", 80) if (agent_dir / "GROWTH.md").exists() else ""
+try:
+    log_files = sorted((agent_dir / "logs").glob("*.md"), key=os.path.getmtime) if (agent_dir / "logs").exists() else []
+    recent_log = read_tail(log_files[-1], 150) if log_files else ""
+except Exception:
+    recent_log = ""
+growth_md_raw = read_tail(growth_path, 80) if growth_path.exists() else ""
 
-# Count recent failures in evolution
-fail_patterns = [e for e in evolution if e.get("outcome","").lower() in ("fail","failure","error","blocked")]
-pass_patterns = [e for e in evolution if e.get("outcome","").lower() in ("success","pass","complete","shipped")]
+# Count recent outcomes
+fail_patterns = [e for e in evolution if str(e.get("outcome","")).lower() in ("fail","failure","error","blocked")]
+pass_patterns = [e for e in evolution if str(e.get("outcome","")).lower() in ("success","pass","complete","shipped")]
 recent_outcomes = [e.get("outcome","?") for e in evolution[-10:]]
 
-# Root cause analysis from evidence keywords
-root_cause_hints = []
-if "empty" in evidence.lower() or "zero" in evidence.lower() or "no output" in evidence.lower():
-    root_cause_hints.append("Output production gate is missing or silent-failing")
-if "stale" in evidence.lower() or "old" in evidence.lower():
-    root_cause_hints.append("Cache/memo not being invalidated on cycle boundary")
-if "auth" in evidence.lower() or "401" in evidence.lower() or "403" in evidence.lower():
-    root_cause_hints.append("Credential not being passed into subprocess environment")
-if "slow" in evidence.lower() or "timeout" in evidence.lower():
-    root_cause_hints.append("No timeout guard on external calls creating blocking")
-if not root_cause_hints:
-    root_cause_hints.append("Process skips step silently when precondition fails")
-
-# Build fix approach from weakness context
-fix_hints = []
-if "aric" in weakness_title.lower() or "research" in weakness_title.lower():
-    fix_hints.append("Add non-Claude fallback: parse RSS/web sources directly in bash + python3 requests")
-    fix_hints.append("Gate research phase: if output <100 chars, mark as EMPTY and skip to next cycle")
-    files = f"bin/agent-self-improve.sh, bin/agent-research.sh, agents/{agent}/GROWTH.md"
-elif "report" in weakness_title.lower() or "publish" in weakness_title.lower():
-    fix_hints.append("Add empty-check gate before publish: len(content) > 500 chars required")
-    fix_hints.append("Wire Telegram alert when publish skipped due to empty content")
-    files = f"agents/{agent}/{agent}.sh, bin/kai-autonomous.sh"
-elif "score" in weakness_title.lower() or "sicq" in weakness_title.lower() or "metric" in weakness_title.lower():
-    fix_hints.append("Pull score from verified-state.json instead of recalculating each cycle")
-    fix_hints.append("Add score trend line: compare to 7-day rolling average, alert on >10pt drop")
-    files = f"agents/{agent}/{agent}.sh, kai/ledger/verified-state.json"
+# ── Determine outputs ─────────────────────────────────────────────────────────
+# GROWTH.md canonical content takes priority over heuristics
+if canonical_fix_approach:
+    root_cause = canonical_root_cause or f"As documented in GROWTH.md {weakness_id}: {weakness_title}"
+    fix_approach = canonical_fix_approach
+    fix_approach_2 = canonical_fix_approach_2 or "Verify with regression test in sentinel.sh after implementation"
+    # Files: if not in GROWTH.md, derive from weakness ID and agent
+    files = canonical_files or f"bin/agent-self-improve.sh, agents/{agent}/GROWTH.md, agents/{agent}/ledger/ACTIVE.md"
+    implementation = f"Follow Fix approach from GROWTH.md {weakness_id}. Step 1: {fix_approach[:200]}. Step 2: Test idempotency. Step 3: Update GROWTH.md status to in_progress. Step 4: Add regression test."
+    confidence = "HIGH"
+    complexity = "2-4 hours"
+    source_note = f"PRIMARY SOURCE: GROWTH.md {weakness_id} canonical fix approach extracted directly."
 else:
-    fix_hints.append("Add explicit success check after each phase: output must be non-empty")
-    fix_hints.append("Log phase completion time to detect which step is failing")
-    files = f"agents/{agent}/{agent}.sh, agents/{agent}/ledger/ACTIVE.md"
-
-root_cause = root_cause_hints[0] if root_cause_hints else "Silent failure in upstream dependency"
+    # Heuristic fallback (GROWTH.md had no fix approach for this ID — unusual)
+    if "empty" in evidence.lower() or "zero" in evidence.lower():
+        root_cause = "Output production gate is missing or silent-failing"
+        fix_approach = "Add non-empty output guard after each phase: exit non-zero if output is empty"
+        fix_approach_2 = "Log phase completion time to detect which step stalls"
+    elif "stale" in evidence.lower() or "drift" in evidence.lower() or "continuity" in evidence.lower():
+        root_cause = "State not being refreshed on cycle boundary — reading cached values"
+        fix_approach = "Force re-read from source files at cycle start, not from in-memory state"
+        fix_approach_2 = "Add modification-time check: if file unchanged >24h, flag STALE before reading"
+    elif "auth" in evidence.lower() or "login" in evidence.lower():
+        root_cause = "Credential not being passed into subprocess environment"
+        fix_approach = "Export auth token before subprocess call; add auth test at top of pipeline"
+        fix_approach_2 = "Gate entire pipeline on auth check result — don't proceed on auth failure"
+    else:
+        root_cause = "Process skips step silently when precondition fails"
+        fix_approach = "Add explicit precondition checks with non-zero exit on failure"
+        fix_approach_2 = "Log skip reason to hyo-inbox.jsonl for morning report visibility"
+    files = f"agents/{agent}/{agent}.sh, agents/{agent}/GROWTH.md"
+    implementation = "1. Add precondition check 2. Log failure reason 3. Notify hyo-inbox 4. Regression test in sentinel.sh"
+    confidence = "MEDIUM"
+    complexity = "1-3 hours"
+    source_note = f"WARNING: GROWTH.md had no fix_approach for {weakness_id} — heuristic fallback used. Add Fix approach section to GROWTH.md."
 
 print(f"ROOT_CAUSE: {root_cause}")
-print(f"FIX_APPROACH: {fix_hints[0]}")
-print(f"FIX_APPROACH_2: {fix_hints[1] if len(fix_hints)>1 else 'Add explicit phase completion logging'}")
+print(f"FIX_APPROACH: {fix_approach}")
+print(f"FIX_APPROACH_2: {fix_approach_2}")
 print(f"FILES_TO_CHANGE: {files}")
-print(f"IMPLEMENTATION: 1. Add empty-output guard returning non-zero exit 2. Log failure with context 3. Notify via hyo-inbox.jsonl 4. Add regression test to sentinel.sh")
-print(f"CONFIDENCE: MEDIUM")
-print(f"COMPLEXITY: 1-2 hours")
+print(f"IMPLEMENTATION: {implementation}")
+print(f"CONFIDENCE: {confidence}")
+print(f"COMPLEXITY: {complexity}")
 print()
-print(f"DATA_SOURCES_ANALYZED: ACTIVE.md ({len(active_md)} chars), evolution.jsonl ({len(evolution)} entries, {len(fail_patterns)} failures, {len(pass_patterns)} successes), recent_log ({len(recent_log)} chars)")
+print(f"DATA_SOURCES_ANALYZED: GROWTH.md-{weakness_id} (canonical), ACTIVE.md ({len(active_md)} chars), evolution.jsonl ({len(evolution)} entries, {len(fail_patterns)} failures, {len(pass_patterns)} successes), recent_log ({len(recent_log)} chars)")
 print(f"RECENT_OUTCOMES: {recent_outcomes}")
-print(f"NOTE: Generated by Python data-driven fallback (Claude Code auth unavailable). Re-run after claude auth login for deeper analysis.")
+print(f"{source_note}")
+print(f"NOTE: Python fallback (Claude Code auth unavailable). Re-run with valid auth for full analysis + external source integration.")
 PYEOF
 )
 
@@ -782,6 +877,43 @@ print(remaining[0] if remaining else (ids[0] if ids else 'W1'))
     save_state "$agent" "{\"current_weakness\":\"$next_wid\",\"stage\":\"research\",\"cycles\":$cycles,\"failure_count\":0,\"improvements\":[],\"last_run\":\"$NOW_MT\"}"
     log "  → Advanced to $next_wid (failure cap)"
     return 0
+  fi
+
+  # ── Goal deadline urgency check ────────────────────────────────────────────────
+  # If any goal linked to a weakness has an overdue deadline, override current_weakness
+  # to that weakness and log a P0. Goals with past deadlines take priority.
+  local growth_file_g="$HYO_ROOT/agents/$agent/GROWTH.md"
+  if [[ -f "$growth_file_g" ]]; then
+    local urgent_weakness
+    urgent_weakness=$(python3 -c "
+import re, sys
+from pathlib import Path
+from datetime import datetime, timezone
+content = Path('$growth_file_g').read_text()
+today_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+# Goals table format: | G1 | description | 2026-04-28 | pending | W1 |
+pattern = r'\|\s*(G\d+)\s*\|[^|]+\|\s*(\d{4}-\d{2}-\d{2})\s*\|[^|]+\|\s*([WE]\d+)\s*\|'
+overdue = []
+for m in re.finditer(pattern, content):
+    gid, deadline, wid = m.group(1), m.group(2), m.group(3)
+    if deadline < today_str:
+        overdue.append((deadline, wid, gid))
+if overdue:
+    overdue.sort()  # oldest overdue first
+    print(overdue[0][1])  # weakness ID with oldest overdue goal
+" 2>/dev/null || echo "")
+    if [[ -n "$urgent_weakness" && "$urgent_weakness" != "$current_weakness" ]]; then
+      log "  GOAL URGENCY: $urgent_weakness has overdue deadline — overriding current_weakness from $current_weakness"
+      current_weakness="$urgent_weakness"
+      stage="research"  # restart from research for the urgent weakness
+      failure_count=0
+      # Open P0 issue
+      local issues_log="$HYO_ROOT/kai/ledger/daily-issues.jsonl"
+      local urg_key="goal-overdue-${agent}-${urgent_weakness}-${TODAY}"
+      if ! grep -q "\"key\":\"${urg_key}\"" "$issues_log" 2>/dev/null; then
+        echo "{\"ts\":\"$NOW_MT\",\"key\":\"$urg_key\",\"agent\":\"$agent\",\"question\":\"GOAL\",\"severity\":\"P0\",\"description\":\"Goal deadline passed for $agent/$urgent_weakness. Overriding cycle to address urgent weakness now.\",\"remediated\":false,\"date\":\"$TODAY\"}" >> "$issues_log"
+      fi
+    fi
   fi
 
   # Parse weaknesses
