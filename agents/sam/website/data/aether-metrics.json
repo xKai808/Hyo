@@ -6,34 +6,23 @@
     "currentBalance": 115.58,
     "pnl": -3.14,
     "pnlPercent": -2.64,
-    "trades": 5,
-    "wins": 2,
-    "losses": 0,
-    "winRate": 100.0,
+    "trades": 6,
+    "wins": 3,
+    "losses": 1,
+    "winRate": 75.0,
     "stoplossTriggers": 1,
     "harvestEvents": 12,
     "strategies": [
       {
         "name": "BCDP_FAST_COMMIT",
-        "status": "idle this week",
+        "status": "active",
         "pnl": 1.8,
         "trades": 1,
-        "winRate": 0.0,
-        "lastAction": "2026-04-27T17:00:00-06:00",
-        "wins": 0,
-        "losses": 0,
-        "note": "T4 +$1.80 UNCONFIRMED \u2014 settlement pending at log close"
-      },
-      {
-        "name": "bps_premium",
-        "status": "active",
-        "pnl": 1.04,
-        "trades": 1,
         "winRate": 100.0,
-        "lastAction": "2026-04-27T23:18:44-06:00",
+        "lastAction": "2026-04-27T23:59:32-06:00",
         "wins": 1,
         "losses": 0,
-        "note": "T1 +$1.04 clean win; T3 -$5.53 mechanism failure (21 zero-fill exits)"
+        "note": "T4 +$1.80 UNCONFIRMED \u2014 settlement pending at log close"
       },
       {
         "name": "PAQ_EARLY_AGG",
@@ -41,7 +30,7 @@
         "pnl": 0.39,
         "trades": 1,
         "winRate": 100.0,
-        "lastAction": "2026-04-27T23:18:44-06:00",
+        "lastAction": "2026-04-27T23:59:32-06:00",
         "wins": 1,
         "losses": 0
       },
@@ -76,6 +65,17 @@
         "trades": 0,
         "winRate": 0.0,
         "lastAction": "2026-04-26T23:58:41-06:00"
+      },
+      {
+        "name": "bps_premium",
+        "status": "active",
+        "pnl": -4.49,
+        "trades": 2,
+        "winRate": 50.0,
+        "lastAction": "2026-04-27T23:59:32-06:00",
+        "wins": 1,
+        "losses": 1,
+        "note": "T1 +$1.04 clean win; T3 -$5.53 mechanism failure (21 zero-fill exits)"
       }
     ],
     "dailyPnl": [
@@ -83,12 +83,12 @@
         "date": "2026-04-27",
         "pnl": -3.14,
         "balance": 115.58,
-        "trades": 5,
+        "trades": 6,
         "balanceStart": 118.72,
         "balanceEnd": 115.58,
-        "wins": 2,
-        "losses": 0,
-        "winRate": 100.0,
+        "wins": 3,
+        "losses": 1,
+        "winRate": 75.0,
         "note": "v255 launch day; T4 +$1.80 unconfirmed"
       },
       {
@@ -170,8 +170,8 @@
       }
     ]
   },
-  "updatedAt": "2026-04-27T23:18:44-06:00",
-  "lastUpdated": "2026-04-27T23:18:44-06:00",
+  "updatedAt": "2026-04-27T23:59:32-06:00",
+  "lastUpdated": "2026-04-27T23:59:32-06:00",
   "dataSource": "BUY SNAPSHOT for trades, TICKER CLOSE for outcomes, balance math for P&L",
   "dataGateStatus": "PASS"
 }
