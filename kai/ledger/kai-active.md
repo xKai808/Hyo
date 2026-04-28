@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-04-27T22:57:36-0600
+**Last updated:** 2026-04-27T23:12:38-0600
 
 ## System Health
 - Status: ISSUES (6 P0/P1)
@@ -10,8 +10,8 @@
 - aether: updated 0h ago
 - ant: updated 113h ago
 - dex: updated 0h ago
-- hyo: updated 11h ago
-- kai: updated 1h ago
+- hyo: updated 12h ago
+- kai: updated 2h ago
 - manifests: NO ACTIVE.md
 - nel: updated 0h ago
 - ra: updated 0h ago
@@ -23,3 +23,4 @@
 - [P1] dead-loop: ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)
 - [P1] dead-loop: aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: d
 - [P1] dead-loop: dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries — ch
+
