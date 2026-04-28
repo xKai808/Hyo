@@ -277,7 +277,15 @@ PROMPT
     research_output=$(echo "$research_prompt" | "$claude_bin" \
       -p --output-format text --dangerously-skip-permissions 2>/dev/null || echo "")
 
-    if [[ -n "$research_output" ]]; then
+    # Detect Claude Code auth failure — treat as empty output and fall through to Python fallback
+    local _auth_fail=0
+    if echo "$research_output" | grep -q "Not logged in\|Please run /login\|Authentication required\|Error: API"; then
+      _auth_fail=1
+      log "  [WARN] Claude Code auth failure detected — falling back to Python analysis"
+      research_output=""
+    fi
+
+    if [[ -n "$research_output" && "$_auth_fail" -eq 0 ]]; then
       cat > "$research_file" << RESEOF
 # Research: $weakness_id — $weakness_title
 **Agent:** $agent
