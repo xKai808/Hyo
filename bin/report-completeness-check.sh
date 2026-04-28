@@ -225,15 +225,52 @@ if [[ "$PREV_DOW" != "6" && "$PREV_DOW" != "7" ]]; then
   fi
 fi
 
-# 5. Commit check results
+# 5. Self-improve health check verification
+# The health check runs at 05:45 MT. By 08:00 its summary file must exist.
+# If it didn't run (e.g. kai-autonomous crashed between 04:30 and 05:45), re-trigger it.
+HEALTH_SUMMARY="$ROOT/kai/ledger/self-improve-health-${TODAY}.json"
+HEALTH_LOG="$ROOT/kai/ledger/self-improve-health.log"
+HEALTH_SH="$ROOT/bin/self-improve-health.sh"
+
+if [[ ! -f "$HEALTH_SUMMARY" ]]; then
+  fail "self-improve-health: summary file missing (check did not run today)"
+  log "Re-triggering health check..."
+  if [[ -x "$HEALTH_SH" ]]; then
+    HYO_ROOT="$ROOT" bash "$HEALTH_SH" 2>&1 | tail -5
+    if [[ -f "$HEALTH_SUMMARY" ]]; then
+      pass "self-improve-health — triggered and completed"
+    else
+      fail "self-improve-health — re-trigger failed"
+      ((FAILURES++)) || true
+    fi
+  else
+    fail "self-improve-health — $HEALTH_SH not executable"
+    ((FAILURES++)) || true
+  fi
+else
+  # Parse summary for failures
+  health_fail=$(python3 -c "import json; d=json.load(open('$HEALTH_SUMMARY')); print(d.get('failed',0))" 2>/dev/null || echo "?")
+  health_fixed=$(python3 -c "import json; d=json.load(open('$HEALTH_SUMMARY')); print(d.get('auto_fixed',0))" 2>/dev/null || echo "0")
+  is_healthy=$(python3 -c "import json; d=json.load(open('$HEALTH_SUMMARY')); print(d.get('is_healthy',False))" 2>/dev/null || echo "False")
+  if [[ "$is_healthy" == "True" ]]; then
+    pass "self-improve-health: all agents healthy (auto_fixed=$health_fixed)"
+  else
+    fail "self-improve-health: $health_fail unresolved failures (auto_fixed=$health_fixed)"
+    ((FAILURES++)) || true
+  fi
+fi
+
+# 6. Commit check results
 cd "$ROOT"
-git add kai/tickets/tickets.jsonl agents/sam/website/data/feed.json website/data/feed.json 2>/dev/null || true
+git add kai/tickets/tickets.jsonl agents/sam/website/data/feed.json website/data/feed.json \
+  kai/ledger/self-improve-health.log kai/ledger/self-improve-health-"${TODAY}".json \
+  kai/ledger/daily-issues.jsonl 2>/dev/null || true
 git diff --cached --quiet || git commit -m "chore: completeness check $TODAY — failures=$FAILURES" 2>/dev/null || true
 git push origin main 2>&1 | tail -2 || true
 
 log "=== Completeness check done. Failures: $FAILURES ==="
 if [[ $FAILURES -gt 0 ]]; then
-  log "ACTION REQUIRED: $FAILURES report(s) failed auto-remediation"
+  log "AUTONOMOUS ACTION NEEDED: $FAILURES item(s) require resolution — check daily-issues.jsonl"
   exit 1
 fi
 exit 0

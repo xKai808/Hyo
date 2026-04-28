@@ -65,30 +65,22 @@ if ! declare -f _find_claude_bin > /dev/null 2>&1; then
   }
 fi
 
-# ─── Telegram alert helper ────────────────────────────────────────────────────
-send_telegram_alert() {
-  local msg="$1"
-  local token chat_id
-  token=$(cat "$HYO_ROOT/agents/nel/security/.telegram_token" 2>/dev/null || echo "")
-  chat_id=$(cat "$HYO_ROOT/agents/nel/security/.telegram_chat_id" 2>/dev/null || echo "")
-  if [[ -n "$token" && -n "$chat_id" ]]; then
-    curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
-      -d "chat_id=${chat_id}" -d "text=${msg}" >/dev/null 2>&1 || true
-  fi
-}
-
 # ─── Circuit breaker: verify Claude Code responds AND auth is valid ────────────
 # P0 fix: never run a cycle when the tool is unavailable — advances state on nothing
 # Auth fix: --version passes even with expired auth; use -p to test actual auth.
 CLAUDE_AUTH_OK=false  # module-level flag set once, read by all agents
+CLAUDE_AUTH_REASON=""
+
 check_claude_health() {
   local claude_bin
   if ! claude_bin=$(_find_claude_bin 2>/dev/null); then
     log "  CIRCUIT BREAKER: Claude Code binary not found"
+    CLAUDE_AUTH_REASON="binary_not_found"
     return 1
   fi
   if ! "$claude_bin" --version > /dev/null 2>&1; then
     log "  CIRCUIT BREAKER: Claude Code binary unresponsive"
+    CLAUDE_AUTH_REASON="binary_unresponsive"
     return 1
   fi
   # Auth test: --version passes even when auth is expired; probe with a real call
@@ -96,7 +88,17 @@ check_claude_health() {
   auth_test=$("$claude_bin" -p "echo auth_ok" --output-format text 2>&1 | head -3 || true)
   if echo "$auth_test" | grep -qiE "Not logged in|Please run /login|Authentication required|Error: API|Unauthorized"; then
     log "  CIRCUIT BREAKER: Claude Code auth expired — implement stage disabled for all agents"
-    send_telegram_alert "⚠️ Kai self-improve: Claude Code auth EXPIRED. Implement stage disabled until you run: claude auth login on the Mini. Research + Python fallback still active."
+    # Log to daily-issues.jsonl for morning report pickup (no Telegram — Kai handles silently)
+    local issues_log="$HYO_ROOT/kai/ledger/daily-issues.jsonl"
+    local ts_now
+    ts_now=$(TZ=America/Denver date +"%Y-%m-%dT%H:%M:%S%z")
+    local today_key
+    today_key=$(TZ=America/Denver date +%Y-%m-%d)
+    if ! grep -q "\"key\":\"claude-auth-expired-$today_key\"" "$issues_log" 2>/dev/null; then
+      echo "{\"ts\":\"$ts_now\",\"key\":\"claude-auth-expired-$today_key\",\"agent\":\"kai\",\"question\":\"AUTH\",\"severity\":\"P1\",\"description\":\"Claude Code auth expired. Implement stage for all agents is disabled. Python fallback active. Run: claude auth login on the Mini.\",\"remediated\":false,\"date\":\"$today_key\"}" >> "$issues_log"
+      log "  → Auth expiry logged to daily-issues.jsonl for morning report"
+    fi
+    CLAUDE_AUTH_REASON="auth_expired"
     return 1
   fi
   return 0

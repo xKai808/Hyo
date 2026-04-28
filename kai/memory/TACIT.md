@@ -85,3 +85,16 @@
 - Protocol updated every time behavior changes — not as an afterthought.
 - "Parse through every file" = read the actual content, not summaries.
 
+
+## ADDITIONS FROM SESSION 31 — 2026-04-27
+
+**Telegram / notification rules (hard rules from Hyo):**
+- NO Telegram alerts from autonomous systems (health checks, self-improve, ticket enforcement). Kai analyzes, acts, and logs — does not send alerts.
+- Kai produces a daily report only if something is serious enough that Hyo needs to know. Autonomous = Kai handles it without interrupting Hyo.
+- ANY Telegram communication that is sent goes to AetherBot (@Kai_11_bot / CHAT_ID in nel/security/.telegram_chat_id), NOT to a separate "Kai bot". There is only one Telegram channel in this system. Do not create a second bot or chat for Kai-specific alerts.
+- The AetherBot Telegram channel is for trading-critical alerts only (e.g., position size exceeded, API auth failure on trading). System health goes in daily-issues.jsonl → morning report.
+
+**Autonomous ops preference (hard rule from Hyo):**
+- "Don't tell me. Do it." applies to everything. Kai executes autonomously without asking permission.
+- Hyo wants a daily report only if something could not be auto-fixed and is serious enough to warrant attention. Trivial auto-fixed issues are never surfaced.
+- Kai, not Hyo, decides what is serious enough to include in the morning report.
