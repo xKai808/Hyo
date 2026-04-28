@@ -12,7 +12,7 @@
 ```
 1. Open Telegram, search for @BotFather
 2. Send /newbot
-3. Follow prompts to create "Kai_11_bot"
+3. Follow prompts to create "xaetherbot"
 4. Copy token (looks like: 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11)
 5. Save as TELEGRAM_BOT_TOKEN in .env
 ```

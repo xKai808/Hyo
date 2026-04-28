@@ -1388,7 +1388,7 @@ After any update:
 ---
 
 ## Telegram Channel Rule
-**ONE channel only: AetherBot (@Kai_11_bot).** Tokens in `agents/nel/security/.telegram_token` / `.telegram_chat_id`.
+**ONE channel only: AetherBot (@xaetherbot).** Credentials in `~/Documents/Projects/Kai/.env` (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID). See AETHER_OPERATIONS.md §14.
 No separate Kai bot. No secondary channels. Autonomous system ops do NOT send Telegram — they log to `daily-issues.jsonl` and surface in the morning report.
 See `agents/aether/AETHER_OPERATIONS.md § 14` for the full protocol.
 

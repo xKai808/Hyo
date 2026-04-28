@@ -655,8 +655,9 @@ message = sys.argv[2]
 token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
 
-token_path = os.path.join(root, "agents/nel/security/.telegram_token")
-chat_path  = os.path.join(root, "agents/nel/security/.telegram_chat_id")
+# @xaetherbot — credentials in ~/Documents/Projects/Kai/.env (AETHER_OPERATIONS.md §14)
+        kai_env = os.path.expanduser("~/Documents/Projects/Kai/.env")
+
 if not token and os.path.isfile(token_path):
     token = open(token_path).read().strip()
 if not chat_id and os.path.isfile(chat_path):

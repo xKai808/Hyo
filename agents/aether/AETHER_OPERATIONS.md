@@ -395,16 +395,18 @@ This manual is the bridge between the existing AetherBot operation and the Aethe
 
 ## 14. Telegram Channel Protocol
 
-**There is ONE Telegram channel for this entire system: AetherBot (@Kai_11_bot).**
+**There is ONE Telegram channel for this entire system: @xaetherbot.**
 
-- Tokens: `agents/nel/security/.telegram_token` and `.telegram_chat_id`
-- These are the AetherBot Telegram credentials. All Telegram communication goes through this single channel.
-- Do NOT create a separate "Kai bot" or secondary channel.
+- Do NOT create a separate Kai bot or secondary channel. @xaetherbot is the only channel.
 - Telegram from autonomous infrastructure (health checks, self-improve, ticket enforcement) is **disabled** — Kai handles autonomously and reports via morning report.
-- Telegram from AetherBot itself (bot.py → aetherbot_logger.py) is the only authorized sender. Alerts are trading-critical only: position entry/exit, API auth failure, balance threshold breach.
-- When writing any script that sends Telegram: use `agents/nel/security/.telegram_token` and `.telegram_chat_id`. Do not hardcode tokens. Do not create alternate bot tokens.
+- Telegram from AetherBot (bot.py → aetherbot_logger.py) is the authorized sender for trading-critical alerts only: position entry/exit, API auth failure, balance threshold breach.
 
-**Token locations (priority order):**
-1. `~/Documents/Projects/Hyo/agents/nel/security/env` (canonical)
-2. `~/Documents/Projects/Kai/.env` (fallback)
-3. Environment variables `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`
+**Actual credential locations (verified 2026-04-27):**
+- `nel/security/env` does NOT contain Telegram credentials — only `AETHERBOT_KEY` and `KALSHI_PRIVATE_KEY_PATH`
+- **Canonical location: `~/Documents/Projects/Kai/.env`** — contains `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
+- When writing any script that sends Telegram, read from `~/Documents/Projects/Kai/.env` first:
+  ```bash
+  TOKEN=$(grep '^TELEGRAM_BOT_TOKEN=' ~/Documents/Projects/Kai/.env | cut -d= -f2)
+  CHAT=$(grep '^TELEGRAM_CHAT_ID=' ~/Documents/Projects/Kai/.env | head -1 | cut -d= -f2 | tr -d '[:space:]')
+  ```
+- Do not hardcode tokens. Do not create alternate bot tokens. Do not reference `.telegram_token` files that don't exist.

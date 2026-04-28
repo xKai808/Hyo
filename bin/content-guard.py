@@ -138,12 +138,17 @@ def send_telegram(message):
     token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not (token and chat):
-        env_path = os.path.join(ROOT, "agents/nel/security/.telegram_token")
+        # @xaetherbot channel — credentials in ~/Documents/Projects/Kai/.env (AETHER_OPERATIONS.md §14)
+        kai_env = os.path.expanduser("~/Documents/Projects/Kai/.env")
         try:
-            token = Path(env_path).read_text().strip()
-            chat_path = os.path.join(ROOT, "agents/nel/security/.telegram_chat_id")
-            chat = Path(chat_path).read_text().strip()
+            for line in open(kai_env):
+                if line.startswith("TELEGRAM_BOT_TOKEN=") and not token:
+                    token = line.split("=",1)[1].strip().strip('"').strip("'")
+                elif line.startswith("TELEGRAM_CHAT_ID=") and not chat:
+                    chat = line.split("=",1)[1].strip().strip('"').strip("'")
         except Exception:
+            return
+        if not (token and chat):
             return
     try:
         import urllib.request, urllib.parse

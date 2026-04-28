@@ -87,12 +87,12 @@ else
   echo "[$NOW] publish-verify: FAIL — $URL result=$RESULT http=$HTTP_CODE bytes=${BODY_BYTES}" >&2
 
   # ── Telegram alert on failure ────────────────────────────────────────────────
-  # PROTOCOL: Send to AetherBot only (@Kai_11_bot). There is ONE Telegram channel.
-  # Tokens are in nel/security/.telegram_token and .telegram_chat_id.
-  # Do NOT create a separate Kai bot. AetherBot is the only channel. (TACIT.md S31)
+  # PROTOCOL: @xaetherbot is the ONLY Telegram channel. (AETHER_OPERATIONS.md §14)
+  # Credentials live in ~/Documents/Projects/Kai/.env (not nel/security/ — those files don't exist).
   ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-  TOKEN=$(cat "$ROOT/agents/nel/security/.telegram_token" 2>/dev/null || echo "${TELEGRAM_BOT_TOKEN:-}")
-  CHAT=$(cat "$ROOT/agents/nel/security/.telegram_chat_id" 2>/dev/null || echo "${TELEGRAM_CHAT_ID:-}")
+  KAI_ENV="$HOME/Documents/Projects/Kai/.env"
+  TOKEN=$(grep '^TELEGRAM_BOT_TOKEN=' "$KAI_ENV" 2>/dev/null | cut -d= -f2 | tr -d '"'"'" || echo "${TELEGRAM_BOT_TOKEN:-}")
+  CHAT=$(grep '^TELEGRAM_CHAT_ID=' "$KAI_ENV" 2>/dev/null | head -1 | cut -d= -f2 | tr -d '"'"'" | tr -d '[:space:]' || echo "${TELEGRAM_CHAT_ID:-}")
   if [[ -n "$TOKEN" && -n "$CHAT" ]]; then
     MSG="🚨 PUBLISH VERIFY FAIL | $URL | result=$RESULT | http=$HTTP_CODE | ${ELAPSED}s waited"
     curl -s -X POST "https://api.telegram.org/bot${TOKEN}/sendMessage" \
