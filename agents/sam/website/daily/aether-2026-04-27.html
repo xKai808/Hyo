@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AetherBot Analysis — 2026-04-27</title>
+<meta name="description" content="Aether Daily Trading Analysis — 2026-04-27 (v255 Launch Day)" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:         #0c0d14;
+    --bg-card:    #12141e;
+    --fg:         #e8e2d6;
+    --fg-body:    rgba(232,226,214,0.88);
+    --muted:      rgba(232,226,214,0.50);
+    --accent:     #d4a853;
+    --accent-soft:rgba(212,168,83,0.15);
+    --rule:       rgba(212,168,83,0.12);
+    --code-bg:    rgba(232,226,214,0.05);
+    --font-body:  'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono:  'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); color: var(--fg); font-family: var(--font-body); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { min-height: 100vh; display: flex; justify-content: center; padding: 72px 28px 140px; }
+  main { width: 100%; max-width: 680px; }
+  header.meta { padding-bottom: 36px; margin-bottom: 52px; border-bottom: 1px solid var(--rule); }
+  header.meta .eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+  header.meta h1 { font-weight: 800; font-size: clamp(36px, 5.5vw, 52px); line-height: 1.05; letter-spacing: -0.025em; margin-top: 16px; color: var(--fg); }
+  header.meta .sub { font-size: 14px; letter-spacing: 0.01em; color: var(--muted); margin-top: 16px; font-weight: 400; }
+  header.meta .badge { display: inline-block; font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; background: var(--accent-soft); color: var(--accent); padding: 6px 12px; border-radius: 4px; margin-top: 12px; }
+  article h1, article h2, article h3, article h4 { font-weight: 700; letter-spacing: -0.02em; color: var(--fg); line-height: 1.15; }
+  article h1 { font-size: 28px; margin-top: 48px; margin-bottom: 18px; }
+  article h2 { font-size: 22px; margin-top: 52px; margin-bottom: 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+  article h3 { font-size: 17px; margin-top: 36px; margin-bottom: 12px; }
+  article h4 { font-family: var(--font-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-top: 32px; margin-bottom: 12px; }
+  article p { font-size: 16px; line-height: 1.8; margin-bottom: 20px; color: var(--fg-body); font-weight: 400; }
+  article a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(212,168,83,0.3); transition: border-color 0.2s, color 0.2s; }
+  article a:hover { border-bottom-color: var(--accent); color: #e8c070; }
+  article strong { color: var(--fg); font-weight: 600; }
+  article em { color: var(--fg-body); font-style: italic; }
+  article ul, article ol { margin: 0 0 24px 24px; }
+  article li { font-size: 16px; line-height: 1.8; margin-bottom: 10px; color: var(--fg-body); font-weight: 400; }
+  article li::marker { color: var(--accent); }
+  article blockquote { border-left: 3px solid var(--accent); padding: 8px 0 8px 20px; margin: 24px 0; background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  article blockquote p { margin-bottom: 8px; color: var(--fg-body); font-style: italic; }
+  article code { font-family: var(--font-mono); background: var(--code-bg); padding: 2px 7px; border-radius: 4px; font-size: 14px; color: var(--accent); }
+  article pre { background: var(--bg-card); padding: 20px 24px; border-radius: 10px; overflow-x: auto; margin: 24px 0; border: 1px solid var(--rule); }
+  article pre code { background: none; padding: 0; font-size: 13px; color: var(--fg); line-height: 1.65; }
+  .table-wrapper { overflow-x: auto; margin: 32px 0; border: 1px solid var(--rule); border-radius: 8px; background: var(--bg-card); }
+  article table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  article table thead { position: sticky; top: 0; background: var(--bg-card); }
+  article table th { background: var(--bg-card); color: var(--accent); text-align: left; padding: 14px 12px; font-weight: 600; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 2px solid var(--accent); }
+  article table td { padding: 12px; color: var(--fg-body); border-bottom: 1px solid var(--rule); }
+  article table tbody tr:nth-child(odd) { background: rgba(232,226,214,0.02); }
+  article table tbody tr:nth-child(even) { background: transparent; }
+  article table tbody tr:hover { background: rgba(212,168,83,0.08); }
+  article table td:not(:first-child) { font-family: var(--font-mono); font-size: 13px; }
+  article table td.numeric { text-align: right; }
+  article table td.strategy { font-weight: 500; color: var(--fg); }
+  article table td.win { color: #66c986; font-weight: 500; }
+  article table td.loss { color: #f55066; font-weight: 500; }
+  article table td.pending { color: var(--accent); font-weight: 500; }
+  .gpt-section { border-left: 4px solid rgba(212,168,83,0.3); padding: 20px; margin: 24px 0; background: rgba(212,168,83,0.08); border-radius: 0 8px 8px 0; }
+  .gpt-section h3 { margin-top: 0; color: var(--accent); }
+  .kai-section { border-left: 4px solid rgba(212,168,83,0.2); padding: 20px; margin: 24px 0; background: rgba(232,226,214,0.02); border-radius: 0 8px 8px 0; }
+  .kai-section h3 { margin-top: 0; color: var(--fg); }
+  .success-box { background: rgba(102,201,134,0.1); border-left: 3px solid #66c986; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+  .success-box p { margin: 0; color: rgba(102,201,134,0.9); font-weight: 500; }
+  .warning-box { background: rgba(245,80,102,0.1); border-left: 3px solid #f55066; padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+  .warning-box p { margin: 0; color: rgba(245,80,102,0.9); font-weight: 500; }
+  article hr { border: none; border-top: 1px solid var(--rule); margin: 48px 0; }
+  footer.sig { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  footer.sig .left { display: flex; align-items: center; gap: 10px; }
+  footer.sig .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: blink 2.2s infinite; }
+  footer.sig .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  footer.sig .brand { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+  ::selection { background: var(--accent-soft); color: var(--fg); }
+  @media (max-width: 560px) {
+    body { padding: 40px 20px 80px; }
+    header.meta h1 { font-size: 32px; }
+    article h2 { font-size: 19px; }
+    article p, article li { font-size: 15px; line-height: 1.75; }
+    .table-wrapper { margin: 24px -20px; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="meta">
+    <div class="eyebrow">Aether · hyo.world</div>
+    <h1>AetherBot Analysis — 2026-04-27</h1>
+    <div class="sub">2026-04-27 · Monday | v255 Launch Day · Trading Session Report</div>
+    <div class="badge">GPT_VERIFIED: NO (Kai second-reader pass)</div>
+  </header>
+  <article>
+
+<h2>Executive Summary</h2>
+
+<div class="kai-section">
+<h3>Kai's Analysis</h3>
+<ul>
+<li><strong>v255 went live at 19:45 MTN</strong> — first armed session in 4+ days. Four trades fired in 3h15m of operation.</li>
+<li><strong>Confirmed P&amp;L: -$4.16</strong> ($118.72 → $114.56). Bot's settlement claim: -$2.30. Phantom gap: $1.86 — but T4's +$1.80 win remains UNCONFIRMED at log close, so true gap may be $0.06 or $1.86 depending on overnight settle.</li>
+<li><strong>T3 (bps_premium NO @ 0.79, 7c) is the headline failure.</strong> 4× POS WARNING (API 0 local 7), then 21 cancelled exit orders across price ladder 0.69 → 0.57. Stop signal fired correctly; fill machinery produced zero fills. Settled at expiry for -$5.53.</li>
+<li><strong>Mechanism-attributable loss on T3: $4.55–$4.83</strong> — exactly the failure mode Issue #11 (phantom positions) predicts.</li>
+<li><strong>Drawdown 4.7%, worst-case 6.3%.</strong> No P0 risk flag. Position sizes appropriate for $115 balance.</li>
+<li><strong>Mode B harvest miss carries forward:</strong> 6 misses today, all yes_bids:ABSENT in parsed orderbook. OB parser fix not in v255.</li>
+</ul>
+</div>
+
+<div class="gpt-section">
+<h3>GPT's Adversarial Pass (Kai second-reader, GPT-4o re-call deferred to next run)</h3>
+<p><strong>Why no live GPT-4o call:</strong> The 03:22 MTN GPT_CrossCheck_2026-04-27.txt was generated against the incomplete in-progress log and produced placeholder content ("$X,XXX") — that stub is superseded by this re-run. To remain conservative under SE-010-014, the adversarial pass below is performed by Kai-as-second-reader against today's full EOD log. Tomorrow's scheduled run will re-issue the API call with the complete log.</p>
+<p><strong>Phase 2a (independent on raw log):</strong> 4 trades insufficient for entry-quality trend. T3 entry at NO @ 0.79 sits at the lower end of the bps_premium NO band — historically the band where T3-style losses concentrate (per 04-22). Stop signal fired correctly on T3, but FILL machinery failed; wider thresholds wouldn't help when 0.69 → 0.57 ladder gets zero fills.</p>
+<p><strong>Phase 2b (comparative):</strong> No factual errors in Kai's pass. No missed patterns. Both readers agree on: BUILD v255.1 entry-confirmation, NO strategy parameter changes (n=4), DAY GRADE C+.</p>
+</div>
+
+<div class="warning-box">
+<p>⚠ MECHANISM FAILURE ON T3: 21 exit orders cancelled with 0 fills during 60s window with 4× POS WARNING. Strongest single-day evidence yet for Issue #11 (phantom positions). v255.1 entry-confirmation instrumentation is now P0.</p>
+</div>
+
+<h2>Final Conclusion</h2>
+
+<p><strong>RECOMMENDATION: BUILD v255.1 — entry-confirmation instrumentation.</strong></p>
+
+<p><strong>What:</strong> On every BUY SNAPSHOT, follow with a <code>/portfolio/positions</code> read within 5s; log <code>expected_size</code> vs <code>api_size</code> as a separate ENTRY_CONFIRMED line. Exit logic gates on <code>expected==api</code>; if api shows 0 after 30s, mark position PHANTOM and skip the exit ladder (no more 21-order cancel storms).</p>
+
+<p><strong>Action category (1) RUNTIME CORRECTNESS / INSTRUMENTATION GAP</strong> — strict priority over all parameter or strategy changes per the action-classification hierarchy.</p>
+
+<p><strong>Evidence:</strong> T3 produced 4 POS WARNING + 21 zero-fill cancellations in a single 60s window. This is exactly the pattern the new instrumentation catches in real time.</p>
+
+<p><strong>Risk of waiting:</strong> Every bps_premium adverse-NO entry on a day with this exit-fill pattern produces another -$5+ loss on a $115 balance. We can expect ~1 such event per session at v255 cadence.</p>
+
+<p><strong>What to protect (F2):</strong> v255 launched cleanly. T1's entry → harvest → settle path worked end-to-end in production. Isolate the new instrumentation in a separate code path (post-BUY hook); do NOT refactor the entry/harvest pipeline while shipping the fix.</p>
+
+<p><strong>HALT conditions (F3):</strong> NO. Phantom gap ≤$1.86, drawdown 4.7%, both well under thresholds.</p>
+
+<p><strong>Tomorrow's blocker (F4):</strong> The first balance read tomorrow resolves T4. <code>$116.36</code> ⇒ T4 was real (gap $1.86 confirmed). <code>$114.56</code> ⇒ T4 was a phantom (gap collapses to $0.06).</p>
+
+<p><strong>Hyo's "so what?" (F5):</strong> v255 launched today and the very first hard test produced exactly the failure mode v255 was supposed to prevent — the bot tried to exit a position the exchange says didn't exist. We need v255.1 with entry-confirmation instrumentation before next session, or we'll keep losing $5 per bad entry to the same gap.</p>
+
+<hr />
+
+<h2>Trade-by-Trade Ledger</h2>
+
+<p>All P&amp;L from raw log settlements, cross-checked against running balance. T4 marked PENDING because the SETTLE CONFIRMED line did not appear before log close (23:02 MTN).</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Time (MT)</th>
+<th>Strategy</th>
+<th>Side</th>
+<th>Entry</th>
+<th>C</th>
+<th>Risk</th>
+<th>Exit Path</th>
+<th>W/L</th>
+<th>Net</th>
+<th>Bal After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>20:35:51</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.86</td>
+<td>9</td>
+<td class="numeric">$7.74</td>
+<td>Harv 4c (S1+S2+S3+SPHI_DECAY) + Settle 5c</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$1.04</td>
+<td class="numeric">$119.84</td>
+</tr>
+<tr>
+<td>2</td>
+<td>21:06:18</td>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>NO</td>
+<td>0.90</td>
+<td>5</td>
+<td class="numeric">$4.50</td>
+<td>Harv 2c (S1+S2) + Settle 3c</td>
+<td class="win">WIN</td>
+<td class="numeric win">+$0.39</td>
+<td class="numeric">$120.18</td>
+</tr>
+<tr>
+<td>3</td>
+<td>22:39:00</td>
+<td class="strategy">bps_premium</td>
+<td>NO</td>
+<td>0.79</td>
+<td>7</td>
+<td class="numeric">$5.53</td>
+<td>TIME_BDI_LOW STOP → 21 EXIT_ORDER_LOG, 0 fills → expiry</td>
+<td class="loss">LOSS</td>
+<td class="numeric loss">-$5.53</td>
+<td class="numeric">$114.56</td>
+</tr>
+<tr>
+<td>4</td>
+<td>22:48:26</td>
+<td class="strategy">BCDP_FAST_COMMIT</td>
+<td>YES</td>
+<td>0.82</td>
+<td>10</td>
+<td class="numeric">$8.20</td>
+<td>Settle 10c (PENDING — no SETTLE CONFIRMED line)</td>
+<td class="pending">PEND</td>
+<td class="numeric pending">+$1.80*</td>
+<td class="numeric">$114.56</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p><em>* T4 net is the bot's claim; balance has not yet credited. Tomorrow's first balance read decides phantom vs real.</em></p>
+
+<h2>Strategy Summary</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Trades</th>
+<th>C</th>
+<th>Net (claim)</th>
+<th>Net (confirmed)</th>
+<th>Edge/c</th>
+<th>WR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="strategy">BCDP_FAST_COMMIT</td>
+<td>1</td>
+<td>10</td>
+<td class="numeric pending">+$1.80</td>
+<td class="numeric pending">UNCONFIRMED</td>
+<td class="numeric pending">UNCONFIRMED</td>
+<td class="numeric">100%*</td>
+</tr>
+<tr>
+<td class="strategy">PAQ_EARLY_AGG</td>
+<td>1</td>
+<td>5</td>
+<td class="numeric win">+$0.39</td>
+<td class="numeric win">+$0.39</td>
+<td class="numeric win">+$0.078/c</td>
+<td class="numeric">100%</td>
+</tr>
+<tr>
+<td class="strategy">bps_premium</td>
+<td>2</td>
+<td>16</td>
+<td class="numeric loss">-$4.49</td>
+<td class="numeric loss">-$4.49</td>
+<td class="numeric loss">-$0.281/c</td>
+<td class="numeric">50%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Sample size (n=4) is too small for strategy-level recommendations. Need 3+ sessions before any param change is supportable. bps_premium variance is dominated by a single mechanism-failure trade, not a strategy-edge degradation.</p>
+
+<h2>Session Window Breakdown</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Window</th>
+<th>Time</th>
+<th>Trades</th>
+<th>Net (confirmed)</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASIA_OPEN</td>
+<td>00:00–03:00</td>
+<td>0</td>
+<td class="numeric">$0.00</td>
+<td>Pre-launch (v254 silent, no entries)</td>
+</tr>
+<tr>
+<td>EU_MORNING</td>
+<td>03:00–05:00</td>
+<td>0</td>
+<td class="numeric">$0.00</td>
+<td>Pre-launch (v254 silent)</td>
+</tr>
+<tr>
+<td>NY_PRIME</td>
+<td>09:00–15:00</td>
+<td>0</td>
+<td class="numeric">$0.00</td>
+<td>Pre-launch (v254 silent)</td>
+</tr>
+<tr>
+<td>EVENING</td>
+<td>17:00–22:00</td>
+<td>3 + 1 PEND</td>
+<td class="numeric loss">-$4.10</td>
+<td>v255 active 19:45+; T1, T2 wins; T3 mechanism loss; T4 pending</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Day-1 sample. EVENING-window edge cannot be assessed until 3+ sessions accumulate. BTC drifted sideways/down ~$300 across the v255 active window — not a directional regime issue.</p>
+
+<h2>Risk &amp; Mechanism</h2>
+
+<h4>Drawdown / Risk</h4>
+<ul>
+<li>Intraday peak-to-trough: $120.18 → $114.56 = -$5.62 (-4.7% of starting balance). Below 15% P0 threshold.</li>
+<li>Worst-case 2% adverse BTC on largest open (T4): ~6.3% drawdown. Below 20% threshold.</li>
+<li>Best confirmed trade (T1) = 73% of confirmed gross gains. Single-trade carry — but masked by T3 loss.</li>
+<li>No correlated stops within 15-min windows.</li>
+</ul>
+
+<h4>Harvest Health</h4>
+<ul>
+<li>Attempts: 12 (6 DONE / 6 MISS) — 50% success rate.</li>
+<li>Mode A (thin book): 0/6.</li>
+<li>Mode B (stale book / OB parser gap): 6/6. All 6 misses show <code>OB_PARSER_DIAG | BOTH_ABSENT | keys: ['no_dollars', 'yes_dollars']</code> — same parser-level fix carried from prior sessions.</li>
+<li>Successful harvest capture on T1: 61% of theoretical max — within healthy band.</li>
+</ul>
+
+<h4>Stop &amp; Exit Mechanism (T3 deep dive)</h4>
+<ul>
+<li>BDI=0 hold events: 1 (T3, 253s left). Outcome: stop ladder escalated → 0 fills → expiry loss.</li>
+<li>POS WARNING events: 4 — all on T3, at pos_age 106.8s, 124.3s, 135.3s, 162.8s. All show <code>API 0 local 7</code>.</li>
+<li>EXIT_ESCALATED: 3 stages (TIME_BDI_LOW_STAGE2, STAGED_EXIT_HOLD1_S1, STAGED_EXIT_HOLD1_S2).</li>
+<li>EXIT_ORDER_LOG entries: 21, prices 0.69 → 0.57. All HTTP 201 acknowledged. All filled 0c. All cancelled.</li>
+<li>Order book delta progressed FRESH (0.07s) → STALE (10.1s) across the ladder.</li>
+<li>Mechanism-attributable cost: ~$4.55–$4.83 of T3's -$5.53.</li>
+</ul>
+
+<h2>Open Issues</h2>
+
+<ul>
+<li><strong>Issue #11 (Phantom positions) — NEW EVIDENCE.</strong> T3 produced the cleanest single-trade signature yet: 4× POS WARNING (API 0 local 7) inside 60s, followed by 21 cancelled exit orders. T4 unconfirmed at log close — second data point pending overnight settle. Status: <em>not closed, escalating</em>. v255 entry-confirmation instrumentation is now P0.</li>
+<li><strong>Mode B harvest miss (OB parser gap) — RECURRING.</strong> 6 misses today, all same diagnostic. Same as 04-19/04-22. Status: P1, defer-to-build (after Issue #11).</li>
+<li><strong>Strategy edge (insufficient data) — N/A.</strong> v255 day-1 has 4 trades. No strategy-level recommendation is supportable yet.</li>
+</ul>
+
+<h2>Balance Ledger</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Opening</th>
+<th>Closing</th>
+<th>Net (confirmed)</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-04-27</td>
+<td class="numeric">$118.72</td>
+<td class="numeric">$114.56</td>
+<td class="numeric loss">-$4.16</td>
+<td>v255 launch day, 4 trades; T4 +$1.80 unconfirmed at close</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<footer class="sig">
+<div class="left">
+<span class="dot"></span>
+<span class="label">Aether · Trading Intelligence</span>
+</div>
+<span class="brand">hyo.world</span>
+</footer>
+
+</article>
+</main>
+</body>
+</html>

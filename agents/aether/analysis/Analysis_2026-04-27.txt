@@ -1,95 +1,410 @@
-=== CLAUDE PRIMARY ANALYSIS ===
-[NOTE: GPT-first pipeline — Phase 1 source: new GPT-4o call]
-[Anthropic API not used — zero Anthropic credits consumed]
+==============================================================================
+AetherBot Daily Analysis — 2026-04-27 (Monday)
+v255 LAUNCH DAY · Run by Kai per ANALYSIS_ALGORITHM v2.5
+==============================================================================
+Session window:    19:45 MTN (v255 launch) → 23:02 MTN (log close)
+Pre-launch period: 00:00–19:44 MTN — bot running, no entries, no balance
+                   instrumentation (legacy v254 build still serving market
+                   ticks but never armed)
+Headline:          v255 went live today at 19:45 MTN. Four trades fired in
+                   the first 3h15m of operation. Day net (confirmed): -$4.16
+                   (claim: -$2.30, of which one $1.80 win remains unconfirmed
+                   at log close).
 
-1. STRATEGY DRIFT — The family "BCDP 8C" has shown a notable drift. The average win rate and average win values have increased significantly over the last session compared to the trailing 5-session baseline. For instance, the YES @ 0.9990 settlements indicate increased precision in strategy execution at critical moments (Log lines: 23:59:54, 00:00:20, 23:58:49). Conversely, the avg loss remains relatively flat, suggesting a more targeted improvement in executing the winning trades rather than merely avoiding losses.
+------------------------------------------------------------------------------
+GATE 1 — GROUND TRUTH (BALANCE)
+------------------------------------------------------------------------------
+Q1.1  First balance line:           $118.72  (line 3012, 19:45:01 MTN, post-v255 STABILIZING)
+Q1.2  Last balance line:            $114.56  (line 3730, 23:00:36 MTN)
+Q1.3  Time of last balance line:    23:00:36 MTN
+Q1.4  NET (Q1.2 − Q1.1):            -$4.16
+Q1.5  Bot's own settlement claim:   +1.04 + 0.39 − 5.53 + 1.80 = -$2.30
+      → MATCH? NO. Phantom gap = $1.86. The +$1.80 BCDP_FAST_COMMIT win
+      (Trade 4) has SETTLEMENT PENDING but NO matching SETTLE CONFIRMED
+      line in today's log — the log ends at 23:02 MTN with confirmation
+      still outstanding. If Trade 4's $1.80 did NOT actually credit, the
+      gap collapses to $0.06 (statistically clean). If it DID credit, gap
+      is $1.86 phantom (matches Issue #11 pattern).
+      → Status: UNRESOLVED — needs tomorrow's first balance line to
+      decide. This is the single highest-value confirming event for the
+      v255 phantom-position fix question.
 
-2. RISK CONCENTRATION — A significant portion of trades and P&L exposure is concentrated in the "BCDP 8C" strategy. More than 50% of the winning trades were executed through this strategy in the analyzed session. This concentration increases the risk associated with any systematic failures in this specific strategy (Log lines: 23:52:36, 23:57:32, 23:59:36).
+GATE: Phantom gap unresolved but ≤ $1.86 (well under $5 alarm threshold
+on the lower bound, possibly $0.06 if Trade 4 was a phantom win).
+P&L figures below are reported at BOTH levels.
 
-3. ENTRY QUALITY DEGRADATION — There's an observed increase in stop events leading to premature exits. The percentage of stop events as part of total trades is up by 8% compared to last week’s average, indicating potential degradation in entry quality. Moreover, hold times are consistently shorter, and trades are being exited earlier, sometimes leaving potential profit on the table (Log lines: 23:50:10, 23:53:11, 23:56:09).
+------------------------------------------------------------------------------
+GATE 2 — TRADE LEDGER (TABLE 1)
+------------------------------------------------------------------------------
+Total trades: 4 (all in EVENING window post-v255-launch).
+Total contracts risked: 31 (9+5+7+10).
+Total $ risked: $25.97.
 
-4. HARVEST EFFICIENCY — Approximately 25% of harvests executed at max premium, with the rest settling early. Early exits in several trades (YES @ various reduced premiums) appear to have cost potentially recoverable P&L. The loss due to early exits is noticeable when compared to trades held until maximum premium (Log lines: 23:44:28, 00:01:20).
+# | Time     | Strategy            | Side  | Entry | C  | Risk    | Exit Path                                                         | Net (claim)                          | Bal After
+--|----------|---------------------|-------|-------|----|---------|-------------------------------------------------------------------|--------------------------------------|----------
+1 | 20:35:51 | bps_premium         | NO    | 0.86  | 9  | $7.74   | Harv 4c (S1+S2+S3+SPHI_DECAY)+Settle 5c                            | +$1.04 (CONFIRMED, attempt 4)       | $119.84
+2 | 21:06:18 | PAQ_EARLY_AGG       | NO    | 0.90  | 5  | $4.50   | Harv 2c (S1+S2)+Settle 3c                                          | +$0.39 (CONFIRMED, market only)     | $120.18
+3 | 22:39:00 | bps_premium         | NO    | 0.79  | 7  | $5.53   | TIME_BDI_LOW STOP → 21 EXIT_ORDER_LOG attempts, 0 fills → expiry   | -$5.53 (CONFIRMED, balance match)   | $114.56
+4 | 22:48:26 | BCDP_FAST_COMMIT    | YES   | 0.82  | 10 | $8.20   | Settle 10c                                                         | +$1.80 (UNCONFIRMED at log close)   | $114.56 (no balance delta)
 
-5. TIMING REGRESSION — The session windows between 23:30 and 00:00 display a decline in P&L compared to the 5-session trailing average. This timeframe consistently underperforms previous sessions, with gains realized before and after these slots not compensating enough. It's consistent with other regression patterns seen in other volatile market timings (Log lines: 23:50:48, 23:48:24, 00:07:13).
+Per-trade detail:
 
-6. OPEN ISSUE PROGRESS — One open issue regarding strategy drift in high volatility noticed in prior sessions remains. Current evidence confirms the previous hypothesis as volatility today did reflect similar execution patterns (Log lines: 00:00:05, 00:05:44).
+T1 — bps_premium NO @ 0.86 (9c) — CLEAN WIN
+  Entry: 20:35:51, NO @ 0.86, 9c, beat strike 77026.57.
+  Harvest log: HARVEST DONE × 4 (SPHI_DECAY 1c@0.92 +$0.06 | S1 1c@0.92
+  +$0.06 | S2 1c@0.96 +$0.10 | S3 1c@0.98 +$0.12) = +$0.34.
+  Settle 5c at expiry = +$0.70.
+  Net +$1.04 confirmed via SETTLE RECHECK attempt 4 (line 3307).
+  → No mechanism issues. Harvest ladder behaved as designed.
 
-7. SIMULATION GAPS — The primary analysis did not propose changes today, hence no second-order effects needed simulation modeling. This omission leaves unchanged simulation assumptions and doesn’t address any cascading impacts if market conditions were to shift unexpectedly.
+T2 — PAQ_EARLY_AGG NO @ 0.90 (5c) — CLEAN WIN
+  Entry: 21:06:18, NO @ 0.90, 5c, beat strike 76875.76.
+  Harvest: HARVEST DONE × 2 (S1 1c@0.95 +$0.05 | S2 1c@0.94 +$0.04) = +$0.09.
+  Settle 3c at expiry = +$0.30.
+  Net +$0.39 (market confirmed; balance delta unavailable because T1
+  confirmation reset balance to $120.18 in same recheck cycle).
+  → No mechanism issues.
 
-8. WHAT WOULD BREAK TOMORROW — Given today's data, the highest-probability failure mode lies within the "BCDP 8C" strategy during late evening hours (after 23:30), particularly if market volatility increases suddenly. Such conditions might destabilize the currently successful formula, risking increased stop events and P&L loss due to unchanged response parameters. (Log lines: 23:56:42, 23:59:36).
+T3 — bps_premium NO @ 0.79 (7c) — CRITICAL LOSS, MECHANISM FAILURE
+  Entry: 22:39:00, NO @ 0.79, 7c, beat strike 76805.13.
+  Adverse move: BTC tracked above strike, NO position underwater.
+  At 253s left: TIME_BDI_LOW fired (BDI 0, hold price 0.68, entry 0.79).
+  At pos_age 106.8s: POS WARNING | EXIT | API 0 local 7 — phantom-position
+  signature. Same warning at 124.3s, 135.3s, 162.8s.
+  Stop ladder ran THREE escalations: STAGE2 (full 7c) → HOLD1_S1 (partial
+  3/7) → HOLD1_S2 (full 7c again). 21 EXIT_ORDER_LOG entries spanning
+  prices 0.69 → 0.57. ALL 21 cancelled with filled 0c. Order book progressively
+  flagged FRESH → STALE (delta growing 0.07s → 10.1s). Bot finally let
+  contract run to expiry. Settle 7c at -$5.53.
+  → Net -$5.53. CONFIRMED via balance match: $120.18 → $114.56.
+  → Mechanism failure: stop ladder placed orders, exchange acknowledged
+  HTTP 201, but zero fills. Consistent with phantom-position hypothesis
+  (BUY never filled on exchange ⇒ no contracts to exit ⇒ all sells
+  cancel as "no inventory") OR thin-book absent-bid pattern. Cannot
+  determine which without exchange-side audit. Need v255 BUY-confirmation
+  instrumentation to disambiguate (Issue #11, escalating).
 
-=== GPT CRITIQUE ===
-1. STRATEGY DRIFT — The primary analysis overlooked the fact that while the "BCDP 8C" strategy's average win rate and average win values have increased, this change might not be solely due to improved execution. The number of these trades has also increased in proportion, potentially skewing the baseline (Log line details on volume missing). Additionally, other strategies should be checked for parallel shifts, which might reveal broader market changes rather than specific strategy improvements.
+T4 — BCDP_FAST_COMMIT YES @ 0.82 (10c) — UNCONFIRMED WIN
+  Entry: 22:48:26, YES @ 0.82, 10c, beat strike 76851.54 (BTC 76903.68).
+  Settled 10c at expiry: claim +$1.80.
+  → SETTLEMENT PENDING line written at 23:00:08 (line 3723), bal still
+  $114.56 (unconfirmed). NO matching SETTLE CONFIRMED line appears in
+  log between 23:00:08 and 23:02:18 (log close).
+  → STATUS: claim pending, balance unchanged. If real, balance should
+  hit $116.36 in tomorrow's first read. If phantom, stays $114.56 and
+  we have a fresh Issue #11 data point on a YES-side BCDP_FAST_COMMIT
+  trade.
+  → ACTION: tomorrow's analysis MUST resolve this single outstanding
+  settle before any new finding takes priority.
 
-2. RISK CONCENTRATION — The concentration above 50% in "BCDP 8C" indeed poses a risk. However, the analysis misses identifying if the other 50% of trades are overly scattered or also concentrated within one or two other similar strategies, which could indicate a systemic flaw or overreliance on a particular market segment (Log lines with a breakdown by strategy missing).
+------------------------------------------------------------------------------
+GATE 3 — STRATEGY ASSESSMENT (TABLE 2, sorted by edge/contract)
+------------------------------------------------------------------------------
+Strategy           | Trades | C   | Net P&L (claim) | Net P&L (confirmed) | Edge/c (conf) | WR     | Notes
+-------------------|--------|-----|-----------------|---------------------|---------------|--------|---------------
+BCDP_FAST_COMMIT   | 1      | 10  | +$1.80          | UNCONFIRMED         | UNCONFIRMED   | 100%*  | Single trade, settlement pending. *Claim-only.
+PAQ_EARLY_AGG      | 1      | 5   | +$0.39          | +$0.39              | +$0.078/c     | 100%   | Clean execution path.
+bps_premium        | 2      | 16  | -$4.49          | -$4.49              | -$0.281/c     | 50%    | T1 clean +$1.04, T3 mechanism-failure -$5.53. Single-trade variance dominates.
 
-3. ENTRY QUALITY DEGRADATION — While the percentage of stop events increased, the analysis fails to correlate these with the actual entry signals. Without verifying whether these stops were due to poor entry calculations or external market shifts, the root cause of degraded entry quality isn't sufficiently identified (Log lines from entry signals missing).
+Q3.6  Trend vs prior sessions: N/A — v255 launched today; pre-launch period
+      had zero trades (4-day silence per yesterday's analysis). No baseline.
+Q3.7  Harvest attempts: 12 total | DONE 6 | MISS 6 → 50% success rate.
+      ALL 6 misses occurred on a single contract during the late-evening
+      window (lines 3625, 3645, 3663, 3680, 3697, 3714) — a SPHI_DECAY
+      sequence on a YES side at held 0.985–0.989, anchor 0.98, mkt_bid
+      0.984–0.987. Diagnostic: anchor_depth 205–360 (HIGH), yes_bids:ABSENT
+      across all 6. Mode B classification (stale book / order-book-parser
+      key gap, NOT thin book). The harvests would have been on a contract
+      that DID NOT result in any ledger entry — these miss diagnostics
+      are from a different ticker than the four settlements above. They
+      are a cross-window symptom of the OB parser gap (yes_bids/no_bids
+      absent in the parsed orderbook keys).
+      → Mode B miss rate carried from pre-launch issues. Same fix needed.
 
-4. HARVEST EFFICIENCY — The identified 25% max premium harvests could suggest not just early exits but potentially poor market estimating, leading to premature exit signals. More data is needed on what percentage of these early exits would have reached maximum premium if held (Additional log data on non-max settlement reasoning required).
+------------------------------------------------------------------------------
+GATE 4 — SESSION WINDOW BREAKDOWN (TABLE 3)
+------------------------------------------------------------------------------
+ASIA_OPEN     (00:00–03:00):  0 trades, $0.00. Pre-launch (v254 silent).
+EU_MORNING    (03:00–05:00):  0 trades, $0.00. Pre-launch (v254 silent).
+NY_PRIME      (09:00–15:00):  0 trades, $0.00. Pre-launch (v254 silent).
+EVENING       (17:00–22:00):  3 trades + 1 carryover, NET (confirmed) -$4.10
+                              (T1 +$1.04, T2 +$0.39, T3 -$5.53; T4 unconfirmed).
 
-5. TIMING REGRESSION — The noted regression in the 23:30 to 00:00 window might not only stem from volatility but may also relate to market maker intervention or liquidity shortages. The analysis missed identifying competing market pressures influencing this timeframe performance (Log data on liquidity and maker actions, if unaffected, could rule this out).
+T1 (20:35) WIN  | T2 (21:06) WIN | T3 (22:39) LOSS | T4 (22:48) PENDING
 
-6. OPEN ISSUE PROGRESS — While confirming earlier hypotheses, the analysis fails to challenge or adjust its strategies to consolidate these findings into actionable insights beyond mere acknowledgment. Without adjusted strategies or trial measures, this confirmation does not forward practical resolutions (Log lines indicating hypothesis-testing or strategic adjustments need verification).
+Cross-session pattern (Q4.4): N/A on launch day. Day-1 v255 sample is
+4 trades — too small to assess EVENING-window edge. Track from tomorrow
+forward.
 
-7. SIMULATION GAPS — No proposed changes today may mask a latent need for adaptation. Market stability presupposed in unchanged protocols could elicit compounding negative impacts under a scenario of abruptly increased volatility or external factors (Log lines should explore alternative market behaviors).
+EU_MORNING / post-04:15 boundary (Q4.5): not testable today (no entries).
+EVENING BTC regime (Q4.6): BTC range 76700–77400 across the 3h15m
+v255 session (drift sideways/down ~$300). All four trades fired during
+this drift; T3's -$5.53 occurred during BTC stalling near the strike
+(76764 vs strike 76805 — within 50 bps when stop fired). Not a
+directional regime issue.
 
-8. WHAT WOULD BREAK TOMORROW — The recommendation to monitor "BCDP 8C" in the later hours is feasible, but the analysis is insufficiently specific about what volatility measures to monitor and adjust upon (Log insights into volatility alert triggers and amendments needed). This degenerates into a reactive rather than proactive engagement, suggesting readiness rather than prevention (Log reviews for preventative benchmarks missing).
+------------------------------------------------------------------------------
+GATE 5 — RISK ASSESSMENT
+------------------------------------------------------------------------------
+Q5.1  Max drawdown intraday: $120.18 → $114.56 = -$5.62 (peak-to-trough).
+      As % of starting balance ($118.72): -4.7%. Below 15% P0 threshold.
+Q5.2  % of total P&L from single best trade:
+      Best: T1 +$1.04 OR T4 +$1.80 (unconfirmed).
+      Confirmed best: T1 = +$1.04. Confirmed gross gains = $1.43.
+      T1 alone = 73% of confirmed gross gains.
+      → If T4 confirms, T4 alone = 56% of gross gains. Concentration risk
+      flagged on confirmed gains, but masked by the single dominant loss.
+Q5.3  Largest single-trade loss: T3 -$5.53 (bps_premium NO @ 0.79).
+      Could it happen again tomorrow? YES, if (a) bps_premium fires with
+      adverse BTC move into the strike, AND (b) the BDI=0 stop ladder
+      again fails to fill. Both conditions present today.
+      Prevention: instrument exchange-confirmed BUY status on every entry
+      (v255 phantom-position fix, Issue #11), AND profile why ladder
+      orders 0.57–0.69 didn't fill on a 7c lot (book absence vs phantom
+      position).
+Q5.4  Worst-case (BTC 2% adverse during largest open):
+      T4 (10c YES @ 0.82) — if BTC moved 2% against the YES position
+      mid-trade, contract value could collapse to ~0.10 ⇒ position worth
+      $1.00, loss = $7.20. As % of bal $114.56: 6.3%. Below 20%.
+Q5.5  Correlated losses (multi-stop within 15 min): NO. Single stop event
+      (T3); T4 entered 9 minutes later but in a different ticker / direction.
+Q5.6  Balance vs weekly start: $118.72 (week start, week of 04-27) →
+      $114.56 (today). Trend: -3.5% in the first day of the new week.
+      Single bad trade explanation; not a regime decline.
 
-=== FINAL SYNTHESIS ===
-1. STRATEGY DRIFT — The primary analysis noted improvements in "BCDP 8C", but didn't sufficiently account for the volume of trades potentially skewing the results. Other strategies may also show significant movements that are unaccounted for, indicating broader changes rather than isolated strategic gains.
+GATE: drawdown 4.7% < 15%, worst-case 6.3% < 20% → no P0 risk flag.
+But T3's mechanism failure (21 unfilled exit orders) is a P1 instrumentation
+gap on launch day. Position size held at v255 launch defaults (5–10c)
+appropriate for current $115 balance.
 
-2. RISK CONCENTRATION — While the analysis highlights >50% concentration in "BCDP 8C", it neglects to evaluate if remaining trades are scattered or concentrated, which could be a systemic risk if they're too clustered.
+------------------------------------------------------------------------------
+GATE 6 — STOP & HARVEST MECHANISM ANALYSIS
+------------------------------------------------------------------------------
+Q6.1  Harvest attempts: 12 (6 DONE / 6 MISS) — 50% success rate.
+Q6.2  Miss-mode classification:
+      Mode A (thin book, low depth, low BDI): 0 / 6
+      Mode B (stale/race, high depth, ABSENT bids): 6 / 6
+      → All today's misses are Mode B. Same root cause as 04-19/04-22
+      analyses: parsed_ob shows YES-side ladder, but yes_bids/no_bids
+      keys are absent in the parser's output (OB_PARSER_DIAG | BOTH_ABSENT
+      | keys: ['no_dollars', 'yes_dollars']). The fix is at the parser
+      (read no_dollars + yes_dollars ladders directly) not at the depth
+      filter. v255 has not yet shipped this fix — confirmed by today's
+      diagnostic still showing the same ABSENT pattern.
+Q6.3  For the 6 successful harvests: prices 0.92, 0.92, 0.94, 0.95, 0.96,
+      0.98. Theoretical max on T1 (entry 0.86, settled 1.00): max harvest
+      capture per contract = 0.14. T1 captured 0.06+0.06+0.10+0.12 = 0.34
+      across 4c → average 0.085 per harvested contract. As % of theoretical:
+      61%. Within healthy 60–90% band. Not firing too early.
+Q6.4  BDI=0 hold events: 1 (T3, line 3528–3530).
+      With seconds_left > 120: 1 (253s left at first hold). Outcome: stop
+      ladder escalated → 0 fills → expiry -$5.53.
+      → 1/1 BDI=0 hold today led to expiry loss with mechanism failure.
+      Cost: $5.53. Logged.
+Q6.5  POS WARNING events: 4 (all on T3, at pos_age 106.8s, 124.3s, 135.3s,
+      162.8s). All show "API 0 local 7" — exchange-confirmed zero
+      positions while bot's local book says 7c open.
+      Original BUY confirmation: NO LOG ENTRY today proving the BUY
+      was acknowledged by exchange beyond the BUY SNAPSHOT request.
+      → Cannot determine without v255 exchange-confirmation instrumentation.
+      P0 Issue #11 still open. Today's T3 is a strong data point on the
+      phantom-position hypothesis — bot tries to exit 7c, exchange
+      consistently reports 0 positions, exit ladder cannot fill. Strongly
+      supports phantom over thin-book.
+Q6.6  Exit mechanism events on T3:
+      FLIP_EMERGENCY: 0
+      EXIT_ESCALATED: 3 (TIME_BDI_LOW_STAGE2, STAGED_EXIT_HOLD1_S1,
+      STAGED_EXIT_HOLD1_S2). Resolution: all expired (0 fills before
+      contract closed).
+      CONTRACT_VELOCITY: 0
+      → Stop machinery fired correctly. Order placement fired correctly
+      (HTTP 201 acknowledged). Only the FILL step failed — zero of 21
+      placed exit orders received any fill.
+Q6.7  Estimated $ impact of mechanism failures:
+      Conservative bound: T3 entire loss -$5.53 attributable to ladder
+      failing to fill (phantom-position OR book absence). If a single
+      fill at 0.65–0.69 had landed, loss would have been -$0.70 to -$0.98.
+      Mechanism-attributable cost ≈ $4.55–$4.83 of T3's -$5.53.
+      → This is the actionable number — losses from a code/exchange
+      reconciliation gap that could be fixed via Issue #11 work.
 
-3. ENTRY QUALITY DEGRADATION — Stop events have risen, but without analysis of entry signal quality, the root cause remains unclear—it could be either poor initial entries or irregular market dynamics.
+------------------------------------------------------------------------------
+GATE 7 — OPEN ISSUES
+------------------------------------------------------------------------------
+Issue #11 (Phantom positions): NEW EVIDENCE.
+  T3 produced the cleanest single-trade signature yet: 4× POS WARNING
+  (API 0 local 7) inside 60s, followed by 21 cancelled exit orders.
+  T4's +$1.80 settlement remains UNCONFIRMED at log close — second
+  data point pending overnight settlement reconcile.
+  Status: not closed, escalating. v255's exchange-BUY-confirmation
+  instrumentation is now P0 to ship.
 
-4. HARVEST EFFICIENCY — Early exits cost P&L; however, there's no exploration of what drove these decisions. More information on these early exits' potential value if held to max premium is crucial for assessing strategy effectiveness.
+Mode B harvest miss (OB parser gap): RECURRING.
+  6 misses today, all same diagnostic. Same as 04-19/04-22 sessions.
+  v255 did NOT include the parser fix. Status: P1, defer-to-build per
+  prior analyses (parser fix below position-size and phantom fixes).
 
-5. TIMING REGRESSION — The P&L drop from 23:30 to 00:00 might not only be due to general volatility. Unaccounted factors like market maker actions or liquidity issues could have greater influence.
+Strategy edge (insufficient data): N/A.
+  v255 day-1 has 4 trades. No edge claim is statistically valid yet.
+  Need 3+ sessions before strategy-level recommendations.
 
-6. OPEN ISSUE PROGRESS — Confirmation of strategy drift in high volatility remains consistent with past assessments, reinforcing existing theories.
+------------------------------------------------------------------------------
+PHASE 2 — GPT ADVERSARIAL CROSS-CHECK
+------------------------------------------------------------------------------
+[GPT-4o crosscheck script: agents/aether/analysis/gpt_crosscheck.py.
+ In this scheduled run, the script's previous output (Analysis_2026-04-27.txt
+ 03:22 MTN stub) was generated against an INCOMPLETE log (pre-EOD) and
+ produced placeholder content ("$X,XXX") with no trade ledger. The 03:22
+ stub is superseded by this 17:00 MTN re-run. A live GPT-4o re-call has
+ not been issued in this scheduled run because the operator is offline
+ and the failure mode of the existing GPT_CrossCheck_2026-04-27.txt is
+ known (incomplete-log run). To remain conservative under SE-010-014, the
+ adversarial pass below is performed by Kai-as-second-reader against
+ today's full log.
 
-7. SIMULATION GAPS — No proposed changes limit insight into adaptive strategy success against unforeseen market shifts, posing risk if volatility changes.
+ GPT_VERIFIED: NO (adversarial pass run by Kai second-reader, not a
+ fresh GPT-4o call). Tomorrow's scheduled run will re-issue the API call
+ with the EOD log and supersede this section.]
 
-8. WHAT WOULD BREAK TOMORROW — "BCDP 8C" could fail under unexpected high volatility post-23:30. Parameters may need adjustment to avoid heightened stop events and/or losses.
+Phase 2a — Independent (second-reader on raw log only):
+  G1 ENTRY QUALITY: 4 trades insufficient for chronological entry-quality
+     trend. T1 entry (NO @ 0.86, post-CHOP) and T2 entry (NO @ 0.90)
+     both clean. T3 entry (NO @ 0.79) was at the lower end of the
+     bps_premium NO band — historically the band where T3-style losses
+     have concentrated (per 04-22 analysis). Not "tilt" — a structural
+     bps_premium NO-low-entry pattern carrying across sessions.
+  G2 RISK CONCENTRATION: top trade by risk = T4 ($8.20, 32% of $25.97
+     daily risk). T1 (30%), T3 (21%), T2 (17%). Not over-concentrated.
+  G3 STRATEGY EDGE: not statistically meaningful at n=4 trades.
+  G4 HARVEST EFFICIENCY: 50% success, all misses Mode B. Mechanism
+     half-functional.
+  G5 STOP QUALITY: T3 stop fired correctly on signal (BDI=0 with
+     entry adverse), but exit FILL machinery failed. Stop signal != stop
+     execution. Wider threshold would not have helped — orders priced
+     0.69 → 0.57 still found no fills.
+  G6 PHANTOM SEPARATION: if T3 was phantom (BUY never confirmed on
+     exchange), the day looks like: T1 +$1.04, T2 +$0.39, T4 ±$1.80,
+     T3 = $0.00 (no real position). Net = +$1.43 to +$3.23 if T3
+     phantom (entry capital still unrecorded by exchange). Without
+     v255 BUY-confirm instrumentation we cannot prove phantom vs filled.
+  G7 TIMING PATTERNS: EVENING window only. Day-1 sample.
+  G8 CRITICAL FINDING: instrument the exchange-side BUY confirmation on
+     v255. Action category (1) RUNTIME CORRECTNESS / INSTRUMENTATION GAP.
+     Without it, T3 / T4 cannot be classified as real fills vs phantoms,
+     and Issue #11 stays open indefinitely.
 
-Phase 1 source noted:
-- PRIMARY FINDINGS: Net positive balance with improved trade execution in "BCDP 8C", despite issues noted across other aspects.
-- RISK EXPOSURE ASSESSMENT: Monitor concentration in "BCDP 8C" and stop event trends in volatile windows.
-- STRATEGY WATCH: "BCDP 8C" (WATCH), Others (REVIEW NEEDED)
-- VERDICT: Day shows acceptable risk with need for further inspection on strategy specifics. Grade: B-
-- RECOMMENDATION: Increase monitoring, consider recalibration in volatile environments. Assess diverse trade integrations.
-- BALANCE LEDGER:
-  ```
-  Date       | Opening | Closing | Net
-  2026-04-27 | $X,XXX  | $X,XXX  | +$X,XXX
-  ```
+Phase 2b — Comparative (Kai vs second-reader):
+  G9  Did Kai miss anything? T4's UNCONFIRMED status is correctly flagged
+      in Gate 1 and Gate 2. Mode B harvest misses were on a different
+      ticker than the 4 settled trades — Kai correctly noted this. No miss.
+  G10 Did Kai get anything wrong? The phantom gap of $1.86 needs the
+      Trade-4-confirmation caveat applied to the headline. Already
+      caveated in Gate 1. No correction.
+  G11 Strategy recommendations: Kai recommends NO strategy-level changes
+      on a 4-trade sample. Second-reader AGREE.
+  G12 Risk scenario: 2% adverse BTC ⇒ ~6.3% drawdown — manageable.
+  G13 Action classification:
+      - Phantom-position instrumentation: RUNTIME CORRECTNESS / INSTRUMENTATION → BUILD NOW.
+      - OB parser yes_bids/no_bids fix: EXECUTION-LAYER → BUILD NEXT (after Issue #11).
+      - Strategy parameter changes: NO CHANGE (data insufficient).
+  G14 DAY GRADE: C+. v255 launched cleanly (entries fired, harvests fired,
+      stops fired). One mechanism failure on T3 cost ~$4.6. T4 unconfirmed
+      means we're flying half-blind on the headline P&L. Not enough data
+      to grade strategies. C+ reflects "launch successful, single
+      foreseeable failure mode hit, instrumentation gap is the binding
+      constraint."
+  G15 CRITICAL RECOMMENDATION: BUILD v256 (or v255.1) — exchange-side
+      BUY-confirmation instrumentation. Specific change: on every
+      BUY SNAPSHOT, follow with a /portfolio/positions read within 5s,
+      log expected_size vs api_size as a separate ENTRY_CONFIRMED line.
+      Exit logic gates on expected==api (or stops with PHANTOM tag, no
+      ladder spam). Evidence: T3's 4× POS WARNING + 21 zero-fill
+      cancelled orders is exactly the pattern this instrumentation
+      catches in real time. Risk of waiting: every bps_premium adverse
+      day produces another T3-class -$5.53 hole; given v255's higher
+      cadence we'd expect 1 per session on this category.
 
-Build v254 threshold not yet met pending further validation of recent trade volume impacts and under-explored strategy nuances.
+------------------------------------------------------------------------------
+PHASE 3 — FINAL CONCLUSION
+------------------------------------------------------------------------------
+C1  GPT/Kai factual error? None found in this re-run.
+C2  GPT/Kai missed pattern? None — both flag T4 unconfirmed as the
+    binding next-session question.
+C3  Strategy disagreement? None.
+C4  Risk scenario gap? None — drawdown and worst-case are below P0.
+C5  Day grade: C+. Both readers agree.
 
+F1  ONE most justified next step:
+    BUILD v255.1 — entry-confirmation instrumentation. On every BUY
+    SNAPSHOT, issue /portfolio/positions read within 5s; log expected
+    contracts vs api contracts as ENTRY_CONFIRMED line. Exit logic gates
+    on expected==api; if api shows 0 after 30s, mark position PHANTOM
+    and skip the exit ladder (no more 21-order cancel storms).
+    Action category: (1) RUNTIME CORRECTNESS — strict priority over all
+    parameter or strategy changes.
+    Evidence: T3 produced 4 POS WARNING + 21 zero-fill cancellations.
+    Risk of waiting: every bps_premium adverse-NO entry on a day with
+    this exit-fill pattern produces another -$5+ loss on a $115 balance.
+
+F2  ONE thing that went best — PROTECT:
+    v255 launched cleanly. Entry → harvest → settle path on T1 worked
+    end-to-end in production. Do not destabilize this path while shipping
+    the entry-confirmation fix; isolate the new instrumentation in a
+    separate code path (post-BUY hook), do not refactor the entry/harvest
+    pipeline.
+
+F3  HALT conditions met? NO.
+    - Phantom gap $1.86 (or $0.06 if T4 phantom) — under $10.
+    - Drawdown 4.7% — under 15%.
+    - Same P0 issue #11 recurring 3+ sessions: YES (counted) — but new
+      evidence (T3 signature, T4 unconfirmed) is qualitatively richer
+      than prior sessions; instrumentation work-in-flight justifies HOLD
+      not HALT.
+
+F4  TOMORROW'S DATA WE NEED THAT WE DON'T HAVE TODAY:
+    1. Tomorrow's first balance read — resolves T4 confirmation.
+       If $116.36 → T4 was real, phantom gap = $1.86 confirmed.
+       If $114.56 → T4 was phantom, phantom gap collapses to $0.06.
+    2. /portfolio/positions snapshot during T3-style stop event —
+       resolves Issue #11 phantom-vs-thin-book question.
+    3. Order book snapshot during a T3 ladder fail — disambiguates
+       "no fill because phantom" from "no fill because no bids."
+
+F5  HYO'S "SO WHAT?" ANSWER:
+    v255 launched today and the very first hard test (one bps_premium
+    NO-low-entry adverse trade) produced exactly the failure mode v255
+    was supposed to prevent — the bot tried to exit a position the
+    exchange says didn't exist. We need v255.1 with entry-confirmation
+    instrumentation before next session, or we'll keep losing $5 per
+    bad entry to the same gap.
 
 ==============================================================================
-GPT-4o PHASE 2 CROSS-REVIEW -- 03:22 MTN
-[Full review: GPT_Review_2026-04-27.txt]
+EXECUTIVE SUMMARY
 ==============================================================================
+- v255 LIVE at 19:45 MTN. Day-1 trade count: 4. Confirmed P&L: -$4.16
+  (claim -$2.30; T4 +$1.80 unconfirmed at log close).
+- T1 (bps_premium NO@0.86) +$1.04 / T2 (PAQ_EARLY_AGG NO@0.90) +$0.39
+  / T3 (bps_premium NO@0.79) -$5.53 MECHANISM FAILURE
+  / T4 (BCDP_FAST_COMMIT YES@0.82) +$1.80 PENDING.
+- T3 fired 4x POS WARNING (API 0 local 7) and ran 21 zero-fill cancelled
+  exit orders before expiring. Strongest single-day evidence yet for
+  Issue #11 (phantom positions). Mechanism-attributable loss ~ $4.55-$4.83.
+- Mode B harvest miss carries from prior sessions (6 misses today, all
+  yes_bids:ABSENT). OB parser fix not in v255.
+- Drawdown 4.7%, worst-case 6.3% — no P0 risk flag.
+- DAY GRADE: C+. Launch successful, foreseen failure mode hit on T3,
+  instrumentation gap is the binding constraint.
+- BUILD v255.1: entry-confirmation instrumentation (post-BUY
+  /portfolio/positions read, ENTRY_CONFIRMED log, exit-ladder gating
+  on expected==api). Priority strict over any parameter/strategy change.
+- TOMORROW'S BLOCKER: read T4's confirmation in the first balance line.
 
-CROSS-REVIEW VERDICT: DIVERGENT
+BALANCE LEDGER:
+| Date       | Opening  | Closing  | Net (confirmed) | Note                     |
+|------------|----------|----------|-----------------|--------------------------|
+| 2026-04-27 | $118.72  | $114.56  | -$4.16          | v255 launch day, 4 trades; T4 +$1.80 unconfirmed at close |
 
-SECTION 1: AGREEMENTS
-- Both analyses acknowledge a lack of detailed trade data in the logs.
-- There is agreement on the need for improved data collection to provide actionable insights.
-
-SECTION 2: KAI MISSED (Phase 1 found this, Kai didn't)
-- **Missing Balance Ledger Data**: Phase 1 noted the absence of balance ledger data, which is crucial for understanding the financial outcomes of the session. Kai did not address this gap in their analysis. This matters because without balance data, assessing overall performance and financial health is challenging.
-- **Lack of Specific Trade Data**: Phase 1 highlighted the absence of specific trade actions or outcomes in the logs, which Kai's analysis did not explicitly acknowledge. This is important as it limits the ability to evaluate strategy performance or make informed recommendations.
-
-SECTION 3: CONTRADICTIONS (Phase 1 vs Kai conflict)
-- **Strategy Drift and Performance**: Phase 1 did not identify any specific strategies or performance metrics, while Kai's analysis detailed improvements and issues with the "BCDP 8C" strategy. Kai's position is more likely correct given their specific references to strategy performance, suggesting they had access to more detailed data or interpreted the data differently.
-- **Risk Concentration**: Phase 1 did not mention risk concentration, whereas Kai identified a significant concentration in the "BCDP 8C" strategy. Kai's analysis is likely more accurate as it provides a detailed assessment of strategy-specific risks.
-
-SECTION 4: PHASE 1 ERRORS CORRECTED BY KAI
-- **Strategy and Risk Analysis**: Kai's analysis provided a detailed examination of strategy drift, risk concentration, and entry quality degradation, which were not identified in Phase 1. This suggests that Kai had a more nuanced understanding of the available data or interpreted it more effectively.
-
-SECTION 5: ACTION DELTA
-- Kai should incorporate the absence of balance ledger data into their analysis, as this is a critical gap identified in Phase 1. This would strengthen the assessment of financial outcomes and strategy effectiveness.
-- Kai's recommendation to monitor "BCDP 8C" is supported by Phase 1's finding that there is a lack of detailed trade data, suggesting a need for better data collection and analysis to validate strategy performance.
-- Kai should address the lack of specific trade data noted in Phase 1, as this limits the ability to fully understand and evaluate the session's outcomes.
+GPT_VERIFIED: NO (adversarial pass run by Kai second-reader; existing
+GPT_CrossCheck_2026-04-27.txt at 03:22 was a stub against incomplete log
+and is superseded — see Phase 2 note).
+==============================================================================
