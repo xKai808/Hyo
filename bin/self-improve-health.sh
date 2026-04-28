@@ -300,19 +300,29 @@ except: print(0)
   fi
 
   # ── Q4: Valid research file? ─────────────────────────────────────────────────
+  # P1 fix: Q4 previously fired false failures when weakness changed today.
+  # If current_stage is "research", the research file is legitimately absent —
+  # research is either about to run (4:30 cycle hasn't finished) or just started.
+  # Q4 should only fail if stage is "implement" or "verify" and research is missing.
+  # A missing research file in "research" stage means it will be created this cycle.
   research_file="$HYO_ROOT/agents/$agent/research/improvements/${current_weakness}-${TODAY}.md"
-  if [[ ! -f "$research_file" ]]; then
-    log "  Q4 FAIL: no research file at $research_file"
+  if [[ "$current_stage" == "research" && ! -f "$research_file" ]]; then
+    log "  Q4 OK (stage=research — research file will be written this cycle, absence expected)"
+    PASS_COUNT=$((PASS_COUNT+1))
+  elif [[ ! -f "$research_file" ]]; then
+    # In implement or verify stage with no research file — this IS a real failure
+    log "  Q4 FAIL: stage=$current_stage but no research file at $research_file"
     if respond "$agent" "Q4" "$research_file"; then
       log "  → Q4 AUTO-FIXED: re-triggered"
       AUTO_FIXED=$((AUTO_FIXED+1))
     else
       open_issue "q4-${agent}-$TODAY" "$agent" "Q4" \
-        "No research file for $current_weakness after re-trigger. Check self-improve.log." "P2"
+        "No research file for $current_weakness at stage=$current_stage after re-trigger. Check self-improve.log." "P2"
       FAIL_COUNT=$((FAIL_COUNT+1))
     fi
   else
     fix_approach=$(grep "^FIX_APPROACH:" "$research_file" 2>/dev/null | head -1)
+    verification_field=$(grep "^VERIFICATION:" "$research_file" 2>/dev/null | head -1)
     auth_error=$(grep -c "Not logged in\|Please run /login" "$research_file" 2>/dev/null; true)
     auth_error="${auth_error:-0}"
     if [[ -z "$fix_approach" || "${auth_error}" -gt 0 ]]; then
@@ -325,8 +335,55 @@ except: print(0)
           "Research file invalid (auth error or missing FIX_APPROACH). Re-trigger failed." "P1"
         FAIL_COUNT=$((FAIL_COUNT+1))
       fi
+    elif [[ -z "$verification_field" ]]; then
+      # VERIFICATION field is required — without it, we can't confirm the fix worked
+      log "  Q4 WARN: research file missing VERIFICATION field — implement will produce unverifiable fix"
+      open_issue "q4-no-verify-${agent}-$TODAY" "$agent" "Q4" \
+        "Research file for $current_weakness has no VERIFICATION field. Fix will ship but can't be confirmed." "P2"
+      # Not a hard fail — log as warning, don't block
+      PASS_COUNT=$((PASS_COUNT+1))
     else
-      log "  Q4 OK: valid FIX_APPROACH"
+      log "  Q4 OK: valid FIX_APPROACH + VERIFICATION field present"
+      PASS_COUNT=$((PASS_COUNT+1))
+    fi
+  fi
+
+  # ── Q7 (NEW): Daily assess file exists for today? ──────────────────────────────
+  # P1 fix: daily-assess runs at 04:00 before self-improve at 04:30.
+  # If it didn't run, self-improve proceeds without evidence grounding (degraded mode).
+  # This check alerts if the assessment is missing so we can investigate the 4AM failure.
+  # Not a hard block — self-improve still runs in degraded mode — but surfaced in morning report.
+  daily_assess_file="$HYO_ROOT/agents/$agent/ledger/daily-assess-${TODAY}.json"
+  if [[ ! -f "$daily_assess_file" ]]; then
+    log "  Q7 WARN: no daily-assess file for $agent at $daily_assess_file — self-improve ran without 4AM grounding"
+    # Only open issue if health check runs after 5AM (giving 4:30 self-improve time to finish)
+    current_hour=$(TZ=America/Denver date +%H)
+    if [[ "${current_hour:-12}" -ge 5 ]]; then
+      open_issue "q7-no-assess-${agent}-$TODAY" "$agent" "Q7" \
+        "agent-daily-assess.sh did not produce output for $agent today. self-improve ran in degraded mode (no evidence anchor). Check daily-assess.log." "P1"
+      FAIL_COUNT=$((FAIL_COUNT+1))
+    else
+      log "  Q7 OK (pre-5AM — assess may still be running)"
+      PASS_COUNT=$((PASS_COUNT+1))
+    fi
+  else
+    local da_quality
+    da_quality=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    d = json.loads(Path('$daily_assess_file').read_text())
+    print(d.get('assessment_quality', 'UNKNOWN'))
+except:
+    print('PARSE_ERROR')
+" 2>/dev/null || echo "UNKNOWN")
+    if [[ "$da_quality" == "LOW" || "$da_quality" == "PARSE_ERROR" ]]; then
+      log "  Q7 WARN: daily-assess quality=$da_quality — evidence anchor is weak"
+      open_issue "q7-low-assess-${agent}-$TODAY" "$agent" "Q7" \
+        "daily-assess ran but quality=$da_quality for $agent. Research may be poorly grounded. Check agent-daily-assess.sh." "P2"
+      PASS_COUNT=$((PASS_COUNT+1))  # Not a hard fail — warn only
+    else
+      log "  Q7 OK: daily-assess exists (quality=$da_quality)"
       PASS_COUNT=$((PASS_COUNT+1))
     fi
   fi

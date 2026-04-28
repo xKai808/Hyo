@@ -252,7 +252,7 @@ print(json.dumps(results[:3]))
 
 # ─── Phase 3: Research the weakness ──────────────────────────────────────────
 research_weakness() {
-  local agent="$1" weakness_id="$2" weakness_title="$3" evidence="$4"
+  local agent="$1" weakness_id="$2" weakness_title="$3" evidence="$4" prior_knowledge="${5:-[]}"
 
   local research_dir="$HYO_ROOT/agents/$agent/research/improvements"
   local research_file="$research_dir/${weakness_id}-${TODAY}.md"
@@ -396,6 +396,17 @@ $(grep -A 20 "### ${weakness_id}:" "$HYO_ROOT/agents/$agent/GROWTH.md" 2>/dev/nu
 Daily assessment (4AM evidence-based analysis — use as research anchor):
 Hypothesis: ${da_hypothesis:-"(not available — daily-assess may not have run yet)"}
 Success measure: ${da_success_measure:-"(not specified — derive from weakness title)"}
+
+Prior memory hits (from memory engine — what we already know about this weakness):
+$(echo "$prior_knowledge" | python3 -c "
+import json,sys
+hits = json.load(sys.stdin)
+if hits:
+    for i,h in enumerate(hits[:3]):
+        print(f'  [{i+1}] {h}')
+else:
+    print('  (no prior memory — first time researching this weakness)')
+" 2>/dev/null || echo "  (memory query failed)")
 
 External research findings (from agent-research.sh + daily-assess Q6):
 ${external_context:-"(no external findings today — use internal analysis)"}
@@ -980,6 +991,21 @@ if overdue:
     print(overdue[0][1])  # weakness ID with oldest overdue goal
 " 2>/dev/null || echo "")
     if [[ -n "$urgent_weakness" && "$urgent_weakness" != "$current_weakness" ]]; then
+      # P0 gate: do not override to an already-resolved weakness — that wastes a cycle
+      local urgent_status
+      urgent_status=$(echo "$weaknesses" | python3 -c "
+import json,sys
+ws = json.load(sys.stdin)
+for w in ws:
+    if w['id'] == '$urgent_weakness':
+        print(w.get('status','active'))
+        break
+else:
+    print('unknown')
+" 2>/dev/null || echo "unknown")
+      if [[ "$urgent_status" == "resolved" ]]; then
+        log "  GOAL URGENCY: $urgent_weakness is already RESOLVED — skipping override"
+      else
       log "  GOAL URGENCY: $urgent_weakness has overdue deadline — overriding current_weakness from $current_weakness"
       current_weakness="$urgent_weakness"
       stage="research"  # restart from research for the urgent weakness
@@ -990,6 +1016,7 @@ if overdue:
       if ! grep -q "\"key\":\"${urg_key}\"" "$issues_log" 2>/dev/null; then
         echo "{\"ts\":\"$NOW_MT\",\"key\":\"$urg_key\",\"agent\":\"$agent\",\"question\":\"GOAL\",\"severity\":\"P0\",\"description\":\"Goal deadline passed for $agent/$urgent_weakness. Overriding cycle to address urgent weakness now.\",\"remediated\":false,\"date\":\"$TODAY\"}" >> "$issues_log"
       fi
+      fi  # end: not resolved check
     fi
   fi
 
@@ -1019,10 +1046,27 @@ except Exception:
     print('')
 " 2>/dev/null || echo "")
     if [[ -n "$da_q4_weakness" && "$da_q4_weakness" != "$current_weakness" && "$da_q4_weakness" != "null" ]]; then
-      log "  DAILY-ASSESS Q4 OVERRIDE: $da_q4_weakness (daily evidence) → overriding $current_weakness (state machine)"
-      current_weakness="$da_q4_weakness"
-      stage="research"
-      failure_count=0
+      # P0 gate: never override to a resolved weakness — daily-assess Q4 may recommend
+      # a weakness that was just resolved in the last cycle. Check status first.
+      local da_q4_status
+      da_q4_status=$(echo "$weaknesses" | python3 -c "
+import json,sys
+ws = json.load(sys.stdin)
+for w in ws:
+    if w['id'] == '$da_q4_weakness':
+        print(w.get('status','active'))
+        break
+else:
+    print('unknown')
+" 2>/dev/null || echo "unknown")
+      if [[ "$da_q4_status" == "resolved" ]]; then
+        log "  DAILY-ASSESS Q4: $da_q4_weakness is already RESOLVED — ignoring override, keeping $current_weakness"
+      else
+        log "  DAILY-ASSESS Q4 OVERRIDE: $da_q4_weakness (daily evidence, status=$da_q4_status) → overriding $current_weakness (state machine)"
+        current_weakness="$da_q4_weakness"
+        stage="research"
+        failure_count=0
+      fi
     else
       log "  Daily-assess Q4: $da_q4_weakness — consistent with state machine ($current_weakness), no override"
     fi
@@ -1105,8 +1149,9 @@ else:
       prior_count=$(echo "$prior_knowledge" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
       log "  Prior memory hits: $prior_count"
 
-      # Run research
-      research_weakness "$agent" "$current_weakness" "$weakness_title" "$evidence" > /dev/null
+      # Run research — pass prior_knowledge so it enriches the research prompt
+      # Previously queried and logged but never forwarded (silent waste of memory engine value)
+      research_weakness "$agent" "$current_weakness" "$weakness_title" "$evidence" "$prior_knowledge" > /dev/null
 
       # ── EMPTY-RESEARCH GATE (P0 fix + content validation) ──────────────────
       # Bug 1: empty research silently advanced state → implement → verify → "resolved"
@@ -1119,15 +1164,30 @@ else:
         gate_fail=1
         gate_reason="research file not written"
       else
-        local fix_approach_check confidence_check
+        local fix_approach_check confidence_check verification_check source_note_check
         fix_approach_check=$(grep "^FIX_APPROACH:" "$expected_research" | sed 's/FIX_APPROACH: //' | head -1)
         confidence_check=$(grep "^CONFIDENCE:" "$expected_research" | sed 's/CONFIDENCE: //' | head -1)
+        verification_check=$(grep "^VERIFICATION:" "$expected_research" | sed 's/VERIFICATION: //' | head -1)
+        source_note_check=$(grep "WARNING: GROWTH.md had no fix_approach" "$expected_research" 2>/dev/null || echo "")
         if [[ -z "$fix_approach_check" ]]; then
           gate_fail=1
           gate_reason="FIX_APPROACH field is empty in research file"
         elif [[ "$confidence_check" != "HIGH" && "$confidence_check" != "MEDIUM" ]]; then
           gate_fail=1
           gate_reason="CONFIDENCE='${confidence_check:-empty}' — need HIGH or MEDIUM"
+        elif [[ -z "$verification_check" ]]; then
+          # P1 gate: research without a VERIFICATION criterion cannot be verified after implement.
+          # Force back to research so a proper verification measure is derived.
+          gate_fail=1
+          gate_reason="VERIFICATION field is empty — cannot verify fix after implement (re-research needed)"
+        elif [[ -n "$source_note_check" ]]; then
+          # P1 gate: Python heuristic fallback produced MEDIUM confidence with WARNING in source_note.
+          # This means GROWTH.md had no Fix approach for this weakness — heuristic guessed.
+          # Heuristic output passing the gate caused wrong implementations in production.
+          # Block and require GROWTH.md to have a Fix approach section added first.
+          gate_fail=1
+          gate_reason="Python heuristic fallback used (no Fix approach in GROWTH.md for $current_weakness) — add Fix approach to GROWTH.md first"
+          log "  → ACTION REQUIRED: Add '**Fix approach:**' section to agents/$agent/GROWTH.md under ### $current_weakness"
         fi
       fi
       if [[ $gate_fail -eq 1 ]]; then
@@ -1180,7 +1240,14 @@ else:
             log "  → Already pending approval (ID: $approval_id)"
           fi
         fi
-        save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"verify\",\"cycles\":$cycles,\"improvements\":[],\"last_run\":\"$NOW_MT\"}"
+        # P0 gate: do NOT advance to verify when implement was skipped.
+        # Saving to "verify" with no actual implementation creates a guaranteed fail loop:
+        # verify fails → failure_count++ → back to research → build brief → empty → verify → ...
+        # Instead: log, increment failure (so MAX_RETRIES eventually advances the weakness),
+        # and save back to "research" so we try building a better brief next cycle.
+        log "  GATE: implement skipped — saving back to research stage (failure $((failure_count+1))/$MAX_RETRIES)"
+        save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"research\",\"cycles\":$((cycles+1)),\"failure_count\":$((failure_count+1)),\"improvements\":[],\"last_run\":\"$NOW_MT\",\"skip_reason\":\"brief_empty\"}"
+        report_to_kai "$agent"
         return 0
       fi
 
@@ -1231,11 +1298,37 @@ else:
       if [[ $verify_exit -eq 0 ]]; then
         log "  ✓ Verification passed"
 
+        # P0 gate: mark weakness RESOLVED in GROWTH.md HERE, before identify_next_weakness.
+        # Previously RESOLVED was written inside identify_next_weakness() which requires
+        # Claude Code auth. If auth is unavailable, weakness was never marked resolved →
+        # next cycle re-researches and re-implements an already-fixed weakness (wasted cycle).
+        # Fix: always mark resolved immediately upon verify success, regardless of auth state.
+        local growth_file_v="$HYO_ROOT/agents/$agent/GROWTH.md"
+        if [[ -f "$growth_file_v" ]]; then
+          python3 - "$growth_file_v" "$current_weakness" << 'PYEOF' 2>/dev/null || true
+import sys, re
+path, wid = sys.argv[1], sys.argv[2]
+content = open(path).read()
+# Only add RESOLVED if not already present
+if f'### {wid}:' in content and 'RESOLVED' not in content[content.find(f'### {wid}:'):content.find(f'### {wid}:')+500]:
+    content = re.sub(
+        r'(### ' + re.escape(wid) + r': .+?\n)',
+        r'\1**Status:** ✓ RESOLVED — verified by agent-self-improve.sh\n',
+        content, count=1
+    )
+    open(path, 'w').write(content)
+    print(f"{wid} marked RESOLVED in GROWTH.md")
+else:
+    print(f"{wid} already marked or pattern not found — no change")
+PYEOF
+          log "  ✓ $current_weakness marked RESOLVED in GROWTH.md"
+        fi
+
         # Persist knowledge
         persist_knowledge "$agent" "$current_weakness" "$weakness_title" \
           "Fixed via Claude Code delegate — see agents/$agent/research/improvements/${current_weakness}-${TODAY}.md"
 
-        # Identify next weakness
+        # Identify next weakness (may fail if auth unavailable — that's OK, weakness is already marked RESOLVED above)
         local next_wid
         next_wid=$(identify_next_weakness "$agent" "$current_weakness")
         next_wid="${next_wid:-W1}"
@@ -1243,13 +1336,32 @@ else:
         log "  Next weakness: $next_wid"
         save_state "$agent" "{\"current_weakness\":\"$next_wid\",\"stage\":\"research\",\"cycles\":$((cycles+1)),\"failure_count\":0,\"improvements\":[\"$current_weakness\"],\"last_run\":\"$NOW_MT\"}"
 
-        # Commit all improvements
-        cd "$HYO_ROOT" 2>/dev/null && \
-          git add "agents/$agent/" "kai/memory/KNOWLEDGE.md" 2>/dev/null && \
-          git diff --cached --quiet 2>/dev/null || \
-          git commit -m "improve($agent): $current_weakness resolved — $weakness_title" 2>/dev/null && \
-          git push origin main 2>/dev/null && \
-          log "  ✓ Improvement committed and pushed" || true
+        # P0 gate: commit AND push. Never swallow push failure with || true.
+        # SE-010-015: 8 commits sat latent for 18h because push was || true.
+        # If push fails: log P1 to daily-issues so morning report surfaces it.
+        local git_push_ok=0
+        if cd "$HYO_ROOT" 2>/dev/null; then
+          git add "agents/$agent/" "kai/memory/KNOWLEDGE.md" 2>/dev/null || true
+          if ! git diff --cached --quiet 2>/dev/null; then
+            if git commit -m "improve($agent): $current_weakness resolved — $weakness_title" 2>/dev/null; then
+              if git push origin main 2>/dev/null; then
+                log "  ✓ Improvement committed and pushed"
+                git_push_ok=1
+              else
+                log "  ✗ PUSH FAILED for $agent/$current_weakness — staged but not on remote"
+                local push_key="git-push-fail-${agent}-${current_weakness}-${TODAY}"
+                if ! grep -q "\"key\":\"${push_key}\"" "$HYO_ROOT/kai/ledger/daily-issues.jsonl" 2>/dev/null; then
+                  echo "{\"ts\":\"$NOW_MT\",\"key\":\"$push_key\",\"agent\":\"$agent\",\"question\":\"PUSH\",\"severity\":\"P1\",\"description\":\"git push failed after $agent/$current_weakness improvement was committed. Commit exists locally but not on remote. Run: cd $HYO_ROOT && git push origin main\",\"remediated\":false,\"date\":\"$TODAY\"}" >> "$HYO_ROOT/kai/ledger/daily-issues.jsonl"
+                fi
+              fi
+            else
+              log "  WARN: git commit failed (nothing staged?) — skipping push"
+            fi
+          else
+            log "  INFO: No staged changes to commit (already clean)"
+            git_push_ok=1
+          fi
+        fi
 
       else
         log "  ✗ Verification failed — regression risk, rolling back to research stage (failure $((failure_count+1))/$MAX_RETRIES)"
@@ -1261,12 +1373,18 @@ else:
   log "  Cycle complete for $agent"
 
   # ── Report to Kai ────────────────────────────────────────────────────────────
-  report_to_kai "$agent"
+  # Pass the stage that was COMPLETED this cycle (save_state already wrote next stage,
+  # so reading state would give wrong stage in the report).
+  report_to_kai "$agent" "$stage"
 }
 
 # ─── Report to Kai (write self-improve-latest.json + dispatch) ───────────────
 report_to_kai() {
   local agent="$1"
+  # P1 fix: accept stage_completed as param so we report what HAPPENED this cycle,
+  # not what's next. Previously save_state ran before report_to_kai, so reading state
+  # gave the NEXT stage (e.g., "implement" after research was done → report was wrong).
+  local stage_completed="${2:-}"
   local report_dir="$HYO_ROOT/agents/$agent/research"
   local report_file="$report_dir/self-improve-latest.json"
   mkdir -p "$report_dir"
@@ -1299,13 +1417,14 @@ report_to_kai() {
     research_summary="Research completed (confidence: ${confidence:-unknown})"
   fi
 
-  # Determine outcome text
+  # Determine outcome text — use stage_completed to describe what happened THIS cycle
   local outcome_text
-  case "$stage" in
-    research)   outcome_text="Researched $current_weakness — advancing to implement next cycle" ;;
-    implement)  outcome_text="Implemented fix for $current_weakness — awaiting verification" ;;
-    verify)     outcome_text="Verified + knowledge persisted — next weakness queued" ;;
-    *)          outcome_text="Stage: $stage" ;;
+  local completed="${stage_completed:-$stage}"
+  case "$completed" in
+    research)   outcome_text="Researched $current_weakness — built research brief, advancing to implement" ;;
+    implement)  outcome_text="Implemented fix for $current_weakness — advancing to verify" ;;
+    verify)     outcome_text="Verified + knowledge persisted for $current_weakness — next weakness queued" ;;
+    *)          outcome_text="Completed stage: ${completed}" ;;
   esac
 
   # Write self-improve-latest.json (consumed by morning report generator)
@@ -1317,7 +1436,7 @@ report = {
     "agent": "$agent",
     "report_date": "$TODAY",
     "ts": "$NOW_MT",
-    "cycle_stage_completed": "$stage",
+    "cycle_stage_completed": "${stage_completed:-$stage}",
     "weakness_id": "$current_weakness",
     "weakness_title": "$weakness_title",
     "fix_approach": "$fix_approach",
