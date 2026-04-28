@@ -22,6 +22,14 @@ NOW_EPOCH=$(date +%s)
 
 mkdir -p "$(dirname "$ENFORCER_LOG")"
 
+# ─── Log rotation: keep last 10 000 lines (prevents runaway growth) ──────────
+if [[ -f "$ENFORCER_LOG" ]]; then
+    _log_lines=$(wc -l < "$ENFORCER_LOG" 2>/dev/null || echo 0)
+    if [[ $_log_lines -gt 10000 ]]; then
+        tail -10000 "$ENFORCER_LOG" > "${ENFORCER_LOG}.tmp" && mv "${ENFORCER_LOG}.tmp" "$ENFORCER_LOG"
+    fi
+fi
+
 log() { echo "[$(TZ=America/Denver date +%H:%M:%S)] $1" | tee -a "$ENFORCER_LOG"; }
 log_section() { echo "" >> "$ENFORCER_LOG"; echo "═══ $1 ═══" | tee -a "$ENFORCER_LOG"; }
 
