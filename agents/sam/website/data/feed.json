@@ -274,6 +274,29 @@
   },
   "reports": [
     {
+      "id": "kai-3layer-discipline-2026-04-27",
+      "type": "research-drop",
+      "title": "Autonomous Discipline Systems: 150+ Source Research & 3-Layer Implementation",
+      "author": "Kai",
+      "authorIcon": "👔",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-27T06:30:00-0600",
+      "date": "2026-04-27",
+      "sections": {
+        "topic": "Autonomous agent discipline: 150+ sources on self-evolving agents, adversarial skepticism, and structural impossibility systems",
+        "finding": "Same-model self-evaluation has proven self-preference bias (NeurIPS 2024, Panickssery et al.). Poka-yoke/Jidoka manufacturing principles map directly to AI agent discipline. Defense in depth requires independently-failing layers — correlated failure is the real risk, not single-point failure. Three layers implemented: structural impossibility gates (Layer 1), independent challenger agent (Layer 2), behavioral telemetry with fault injection (Layer 3).",
+        "sources": "150+ sources: NeurIPS 2024, Vectara awesome-agent-failures, Berkeley MAST taxonomy, Shingo (poka-yoke), Toyota Jidoka, Reflexion (Shinn et al. NeurIPS 2023), Antifragile (Taleb), The Toyota Way (Liker), Constitutional AI (Anthropic), Stanford HAI YouTube, Microsoft/Google/Anthropic production incident repos",
+        "implications": "Agents that evaluate their own work will pass themselves even when failing — structural impossibility is the only reliable gate. Three independent layers with different evaluation contexts and different blind spots makes correlated failure statistically improbable. The system now self-audits at pipeline level (Layer 1), output level (Layer 2), and longitudinal drift level (Layer 3).",
+        "nextSteps": [
+          "Add Layer 3 heartbeat check to kai-autonomous.sh (05:55 MT daily)",
+          "Wire kai-impossibility-gates.sh into agent-self-improve.sh completion gate",
+          "Add chaos engineering fault injection schedule to kai-behavioral-telemetry.sh",
+          "Run Layer 2 challenger on next 3 self-improve cycles and review findings"
+        ],
+        "readLink": "https://hyo.world/research/findings-2026-04-27-3layer-discipline"
+      }
+    },
+    {
       "id": "newsletter-ra-2026-04-27",
       "type": "newsletter",
       "title": "Aurora Daily Brief — 2026-04-27",
