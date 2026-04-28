@@ -292,6 +292,67 @@ research_weakness() {
     log "  External research triggered: ${#external_context} chars found"
   fi
 
+  # ── Daily assess integration: pull evidence-grounded Q7/Q8/Q6 from 4AM assessment ──
+  # agent-daily-assess.sh runs at 04:00 — 30 min before self-improve at 04:30.
+  # It answers 8 mandatory questions from LIVE evidence (logs, tickets, feed, GROWTH.md goals).
+  # Q4 = top weakness by severity+deadline (used by run_self_improve to override current_weakness)
+  # Q6 = external signal from findings file (enriches external_context below)
+  # Q7 = testable hypothesis derived from evidence (becomes research anchor — prevents stale prompts)
+  # Q8 = exact success measure (becomes verification criterion in the research output)
+  local daily_assess_file="$HYO_ROOT/agents/$agent/ledger/daily-assess-${TODAY}.json"
+  local da_hypothesis="" da_success_measure="" da_external_signal="" da_quality=""
+  if [[ -f "$daily_assess_file" ]]; then
+    da_hypothesis=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    d = json.loads(Path('$daily_assess_file').read_text())
+    print(d.get('Q7_hypothesis', '') or d.get('hypothesis', ''))
+except Exception:
+    print('')
+" 2>/dev/null || echo "")
+    da_success_measure=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    d = json.loads(Path('$daily_assess_file').read_text())
+    print(d.get('Q8_success_measure', '') or d.get('success_measure', ''))
+except Exception:
+    print('')
+" 2>/dev/null || echo "")
+    da_external_signal=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    d = json.loads(Path('$daily_assess_file').read_text())
+    print(d.get('Q6_external_signal', '') or d.get('external_signal', ''))
+except Exception:
+    print('')
+" 2>/dev/null || echo "")
+    da_quality=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    d = json.loads(Path('$daily_assess_file').read_text())
+    print(d.get('assessment_quality', 'UNKNOWN'))
+except Exception:
+    print('UNKNOWN')
+" 2>/dev/null || echo "UNKNOWN")
+    if [[ -n "$da_hypothesis" ]]; then
+      log "  Daily-assess Q7: hypothesis loaded (${#da_hypothesis} chars, quality=$da_quality)"
+      # Merge Q6 external signal into external_context if not duplicate
+      if [[ -n "$da_external_signal" ]]; then
+        external_context="${external_context}
+[Daily-assess Q6 external signal]: ${da_external_signal}"
+        log "  Daily-assess Q6: external signal merged into context"
+      fi
+    else
+      log "  Daily-assess: file found but Q7 empty (quality=$da_quality) — running without hypothesis anchor"
+    fi
+  else
+    log "  Daily-assess: no assessment file for today — Phase 3 running without 4AM grounding"
+  fi
+
   # ── Goal deadline urgency: check if this weakness has an overdue goal ─────────
   local goal_urgency=""
   local growth_file_path="$HYO_ROOT/agents/$agent/GROWTH.md"
@@ -321,7 +382,7 @@ if overdue:
     local research_prompt
     research_prompt=$(cat << PROMPT
 You are researching a weakness in the hyo.world agent system to find a concrete, executable fix.
-You have access to external findings and internal evidence. Use ALL of it.
+You have access to external findings, a pre-computed daily assessment, and internal evidence. Use ALL of it.
 
 Agent: $agent
 Weakness ID: $weakness_id
@@ -332,7 +393,11 @@ ${goal_urgency:+Goal status: $goal_urgency}
 GROWTH.md fix approach (canonical — implement exactly this):
 $(grep -A 20 "### ${weakness_id}:" "$HYO_ROOT/agents/$agent/GROWTH.md" 2>/dev/null | grep -A 10 "Fix approach\|fix_approach" | head -15 || echo "(not found — derive from evidence)")
 
-External research findings (from agent-research.sh):
+Daily assessment (4AM evidence-based analysis — use as research anchor):
+Hypothesis: ${da_hypothesis:-"(not available — daily-assess may not have run yet)"}
+Success measure: ${da_success_measure:-"(not specified — derive from weakness title)"}
+
+External research findings (from agent-research.sh + daily-assess Q6):
 ${external_context:-"(no external findings today — use internal analysis)"}
 
 Recent agent evolution (last 3 entries):
@@ -340,19 +405,23 @@ $(tail -3 "$HYO_ROOT/agents/$agent/evolution.jsonl" 2>/dev/null | python3 -c "im
 
 Your job:
 1. Use the GROWTH.md fix approach as your primary source — it is what the agent planned
-2. Augment with external findings if relevant
-3. Make the implementation steps SPECIFIC: exact file paths, exact function names, exact logic
-4. If the GROWTH.md approach is sound, execute it exactly — do not invent a different approach
-5. If goal is overdue, treat as P0 and prioritize speed-to-ship over perfection
+2. Use the daily assessment hypothesis as your research anchor — it was derived from live evidence
+3. Augment with external findings if relevant
+4. Make the implementation steps SPECIFIC: exact file paths, exact function names, exact logic
+5. If the GROWTH.md approach is sound, execute it exactly — do not invent a different approach
+6. If goal is overdue, treat as P0 and prioritize speed-to-ship over perfection
+7. Your VERIFICATION criterion MUST match the daily assessment success measure (if provided)
 
 Output format (machine-parsed):
 ROOT_CAUSE: <one sentence>
 FIX_APPROACH: <specific technical approach — must match or improve on GROWTH.md>
 FILES_TO_CHANGE: <comma-separated file paths relative to HYO_ROOT>
 IMPLEMENTATION: <numbered step-by-step — be specific enough that implement stage can execute without further research>
+VERIFICATION: <exact check that proves the fix worked — matches daily-assess Q8 success measure>
 CONFIDENCE: HIGH|MEDIUM|LOW
 COMPLEXITY: <estimated hours>
 EXTERNAL_SOURCES_USED: <list sources that informed this, or "none">
+ASSESSMENT_ANCHOR: <one sentence — how the daily hypothesis shaped this research>
 PROMPT
 )
     local research_output
@@ -396,6 +465,9 @@ weakness_id = "$weakness_id"
 weakness_title = """$weakness_title"""
 evidence = """$evidence"""
 today = "$TODAY"
+# Daily-assess grounding (from 4AM evidence-based assessment)
+da_hypothesis = """${da_hypothesis}"""
+da_success_measure = """${da_success_measure}"""
 
 def read_tail(path, n=200):
     try:
@@ -505,15 +577,20 @@ else:
     complexity = "1-3 hours"
     source_note = f"WARNING: GROWTH.md had no fix_approach for {weakness_id} — heuristic fallback used. Add Fix approach section to GROWTH.md."
 
+verification = da_success_measure if da_success_measure.strip() else f"Verify {weakness_id} fix: run agent {agent} cycle and confirm output shows fix applied (check logs/{today}.md)"
+assessment_anchor = f"Daily-assess hypothesis: {da_hypothesis[:200]}" if da_hypothesis.strip() else "No daily-assess hypothesis available — fallback used"
+
 print(f"ROOT_CAUSE: {root_cause}")
 print(f"FIX_APPROACH: {fix_approach}")
 print(f"FIX_APPROACH_2: {fix_approach_2}")
 print(f"FILES_TO_CHANGE: {files}")
 print(f"IMPLEMENTATION: {implementation}")
+print(f"VERIFICATION: {verification}")
 print(f"CONFIDENCE: {confidence}")
 print(f"COMPLEXITY: {complexity}")
+print(f"ASSESSMENT_ANCHOR: {assessment_anchor}")
 print()
-print(f"DATA_SOURCES_ANALYZED: GROWTH.md-{weakness_id} (canonical), ACTIVE.md ({len(active_md)} chars), evolution.jsonl ({len(evolution)} entries, {len(fail_patterns)} failures, {len(pass_patterns)} successes), recent_log ({len(recent_log)} chars)")
+print(f"DATA_SOURCES_ANALYZED: GROWTH.md-{weakness_id} (canonical), ACTIVE.md ({len(active_md)} chars), evolution.jsonl ({len(evolution)} entries, {len(fail_patterns)} failures, {len(pass_patterns)} successes), recent_log ({len(recent_log)} chars), daily-assess ({len(da_hypothesis)} chars hypothesis)")
 print(f"RECENT_OUTCOMES: {recent_outcomes}")
 print(f"{source_note}")
 print(f"NOTE: Python fallback (Claude Code auth unavailable). Re-run with valid auth for full analysis + external source integration.")
@@ -914,6 +991,43 @@ if overdue:
         echo "{\"ts\":\"$NOW_MT\",\"key\":\"$urg_key\",\"agent\":\"$agent\",\"question\":\"GOAL\",\"severity\":\"P0\",\"description\":\"Goal deadline passed for $agent/$urgent_weakness. Overriding cycle to address urgent weakness now.\",\"remediated\":false,\"date\":\"$TODAY\"}" >> "$issues_log"
       fi
     fi
+  fi
+
+  # ── Daily assess Q4 override: use evidence-based top weakness from 4AM assessment ──
+  # agent-daily-assess.sh runs at 04:00 and derives Q4_top_weakness from severity + goal deadlines.
+  # If its recommendation differs from the state-machine's current_weakness AND we're in
+  # research stage (not mid-implement), override. This prevents the self-improve loop from
+  # working on stale weakness priority — daily data wins over state machine order.
+  # Only applies in research stage to avoid interrupting in-progress implementations.
+  local daily_assess_run_file="$HYO_ROOT/agents/$agent/ledger/daily-assess-${TODAY}.json"
+  if [[ -f "$daily_assess_run_file" && "$stage" == "research" ]]; then
+    local da_q4_weakness
+    da_q4_weakness=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    d = json.loads(Path('$daily_assess_run_file').read_text())
+    q4 = d.get('Q4_top_weakness', {})
+    if isinstance(q4, dict):
+        wid = q4.get('weakness_id', '')
+    else:
+        wid = str(q4)
+    # Only accept valid weakness/expansion IDs (W1-W9, E1-E9)
+    import re
+    print(wid if re.match(r'^[WE]\d+$', wid) else '')
+except Exception:
+    print('')
+" 2>/dev/null || echo "")
+    if [[ -n "$da_q4_weakness" && "$da_q4_weakness" != "$current_weakness" && "$da_q4_weakness" != "null" ]]; then
+      log "  DAILY-ASSESS Q4 OVERRIDE: $da_q4_weakness (daily evidence) → overriding $current_weakness (state machine)"
+      current_weakness="$da_q4_weakness"
+      stage="research"
+      failure_count=0
+    else
+      log "  Daily-assess Q4: $da_q4_weakness — consistent with state machine ($current_weakness), no override"
+    fi
+  else
+    [[ ! -f "$daily_assess_run_file" ]] && log "  Daily-assess: no 4AM assessment file — state machine weakness order used"
   fi
 
   # Parse weaknesses

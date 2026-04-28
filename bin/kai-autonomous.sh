@@ -522,18 +522,27 @@ check_and_dispatch() {
 #
 # Sequence rationale:
 #   Agents report (22-23h) → Consolidation (01-01:15h) → Ra newsletter (03h)
-#   → Flywheel/growth cycle (04:30h) → Doctor+SICQ morning (05:30h)
+#   → Daily assess (04:00h) → Flywheel/growth cycle (04:30h) → Doctor+SICQ morning (05:30h)
 #   → OMP+memory snapshot (06h) → Morning report (07h, has ALL fresh data)
 #   → Completeness check (07:15h) → Midday maintenance (09-15h)
 #
 # DEPENDENCY CHAIN (critical path for morning report):
 #   Nel/Sam/Aether runners (22:00-22:45) MUST precede morning report
 #   Ra newsletter (03:00) MUST precede morning report
+#   Daily assess (04:00) MUST precede flywheel/self-improve (04:30)
 #   Flywheel/self-improve (04:30) MUST precede morning doctor+SICQ (05:30)
 #   Flywheel doctor/SICQ (05:30) MUST precede OMP (06:00)
 #   OMP (06:00) MUST precede morning report (07:00)
 #   Morning report (07:00) MUST precede completeness check (07:15)
 # ════════════════════════════════════════════════════════════════════════════
+
+# Daily assessment for all agents (04:00) — runs 30min BEFORE self-improve
+# Answers 8 mandatory evidence-based questions per agent from live data.
+# Self-improve Phase 3 reads this output instead of doing inline weak-id at trigger time.
+# Structural fix for: "Phase 3 is heavily reliant on structured prompt → stale results"
+check_and_dispatch 4 0 "agent-daily-assess-all" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-daily-assess.sh all >> $HYO_ROOT/kai/ledger/daily-assess.log 2>&1" \
+  "daily_assess_run"
 
 # Self-improvement cycle for all agents (04:30) — runs BEFORE morning report
 # Moved from 08:00: flywheel results (aric-latest.json) must exist before morning report
