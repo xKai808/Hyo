@@ -567,6 +567,16 @@ check_and_dispatch 5 45 "self-improve-health" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/self-improve-health.sh >> $HYO_ROOT/kai/ledger/self-improve-health.log 2>&1" \
   "self_improve_health_run"
 
+# Behavioral telemetry (05:55) — Layer 3 of 3-layer discipline system
+# Reads session-errors.jsonl + impossibility-gate.log + challenger-log.jsonl.
+# Detects chronic error patterns (assumption/skip-verify/reinterpret at threshold).
+# Writes behavioral-telemetry.json — morning report reads status from this file.
+# Alert: P1 written to daily-issues.jsonl if any pattern exceeds threshold.
+# Independence: operates at longitudinal pattern level — independent of Layer 1+2.
+check_and_dispatch 5 55 "behavioral-telemetry" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/kai-behavioral-telemetry.sh --report >> $HYO_ROOT/kai/ledger/behavioral-telemetry.log 2>&1" \
+  "behavioral_telemetry_run"
+
 # OMP measurement (06:00) — outcome quality, after SICQ is fresh
 # Moved from 06:45: gives more buffer before morning report + allows Saturday
 # cross-agent review to stay at 06:45 without conflict.
