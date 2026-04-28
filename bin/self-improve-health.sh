@@ -28,7 +28,7 @@ NOW_EPOCH=$(date +%s)
 MAX_RETRIES=3
 STALE_SECONDS=100800  # 28 hours
 
-AGENTS=(nel sam aether ra dex kai)
+AGENTS="nel sam aether ra dex kai"
 
 log() { echo "[$TS] $*" | tee -a "$HEALTH_LOG"; }
 
@@ -36,22 +36,38 @@ mkdir -p "$(dirname "$HEALTH_LOG")"
 
 log "=== Self-improve health check: $TODAY ==="
 
-# Load last-stage snapshot (to detect stuck state)
-declare -A LAST_WEAKNESS LAST_STAGE
-if [[ -f "$LAST_STAGE_FILE" ]]; then
-    while IFS= read -r line; do
-        agent=$(echo "$line" | python3 -c "import json,sys; d=json.loads(sys.stdin.read()); print(d.get('agent',''))" 2>/dev/null)
-        wid=$(echo "$line"   | python3 -c "import json,sys; d=json.loads(sys.stdin.read()); print(d.get('weakness',''))" 2>/dev/null)
-        stg=$(echo "$line"   | python3 -c "import json,sys; d=json.loads(sys.stdin.read()); print(d.get('stage',''))" 2>/dev/null)
-        [[ -n "$agent" ]] && LAST_WEAKNESS[$agent]="$wid" && LAST_STAGE[$agent]="$stg"
-    done < "$LAST_STAGE_FILE"
-fi
+# Load last-stage snapshot via Python (bash 3.2 compat — no declare -A)
+get_last_weakness() { python3 -c "
+import json, sys
+from pathlib import Path
+f = Path('$LAST_STAGE_FILE')
+if not f.exists(): print(''); sys.exit(0)
+for line in f.read_text().splitlines():
+    try:
+        d = json.loads(line)
+        if d.get('agent') == sys.argv[1]: print(d.get('weakness','')); sys.exit(0)
+    except: pass
+print('')
+" "$1" 2>/dev/null; }
+
+get_last_stage() { python3 -c "
+import json, sys
+from pathlib import Path
+f = Path('$LAST_STAGE_FILE')
+if not f.exists(): print(''); sys.exit(0)
+for line in f.read_text().splitlines():
+    try:
+        d = json.loads(line)
+        if d.get('agent') == sys.argv[1]: print(d.get('stage','')); sys.exit(0)
+    except: pass
+print('')
+" "$1" 2>/dev/null; }
 
 FAIL_COUNT=0
 PASS_COUNT=0
 NEW_STAGE_ENTRIES=""
 
-for agent in "${AGENTS[@]}"; do
+for agent in $AGENTS; do
     state_file="$HYO_ROOT/agents/$agent/self-improve-state.json"
     log "--- $agent ---"
 
@@ -92,8 +108,8 @@ for agent in "${AGENTS[@]}"; do
     fi
 
     # ── Q3: State machine advanced (not same weakness+stage 2 consecutive days)? ──
-    prev_weakness="${LAST_WEAKNESS[$agent]:-}"
-    prev_stage="${LAST_STAGE[$agent]:-}"
+    prev_weakness=$(get_last_weakness "$agent")
+    prev_stage=$(get_last_stage "$agent")
     if [[ -n "$prev_weakness" && "$prev_weakness" == "$current_weakness" && "$prev_stage" == "$current_stage" ]]; then
         log "  Q3 NO: stuck at $current_weakness/$current_stage (same as yesterday)"
         printf '{"ts":"%s","from":"self-improve-health","priority":"P1","status":"unread","subject":"Self-improve STUCK for %s — %s/%s unchanged","body":"Q3 FAIL: %s has been at weakness=%s stage=%s for 2+ consecutive days. State machine is not advancing. Check failure_count and research file content."}\n' \
@@ -113,8 +129,9 @@ for agent in "${AGENTS[@]}"; do
         FAIL_COUNT=$((FAIL_COUNT+1))
     else
         fix_approach=$(grep "^FIX_APPROACH:" "$research_file" 2>/dev/null | head -1)
-        auth_error=$(grep -c "Not logged in\|Please run /login" "$research_file" 2>/dev/null || echo 0)
-        if [[ -z "$fix_approach" || "$auth_error" -gt 0 ]]; then
+        auth_error=$(grep -c "Not logged in\|Please run /login" "$research_file" 2>/dev/null; true)
+        auth_error="${auth_error:-0}"
+        if [[ -z "$fix_approach" || "${auth_error}" -gt 0 ]]; then
             log "  Q4 NO: research file exists but content is invalid (fix_approach empty or auth garbage)"
             printf '{"ts":"%s","from":"self-improve-health","priority":"P1","status":"unread","subject":"Self-improve INVALID research content for %s/%s","body":"Q4 FAIL: %s exists but lacks FIX_APPROACH field or contains auth error text. Python fallback may have failed."}\n' \
                 "$TS" "$agent" "$current_weakness" "$research_file" >> "$INBOX"
@@ -137,11 +154,12 @@ for agent in "${AGENTS[@]}"; do
     fi
 
     # Record current stage for tomorrow's Q3 check
-    NEW_STAGE_ENTRIES="${NEW_STAGE_ENTRIES}{\"agent\":\"${agent}\",\"weakness\":\"${current_weakness}\",\"stage\":\"${current_stage}\",\"ts\":\"${TS}\"}"$'\n'
+    printf '{"agent":"%s","weakness":"%s","stage":"%s","ts":"%s"}\n' \
+        "$agent" "$current_weakness" "$current_stage" "$TS" >> "${LAST_STAGE_FILE}.new"
 done
 
-# Write new last-stage snapshot
-echo "$NEW_STAGE_ENTRIES" | grep -v '^$' > "$LAST_STAGE_FILE"
+# Atomically replace last-stage snapshot
+[[ -f "${LAST_STAGE_FILE}.new" ]] && mv "${LAST_STAGE_FILE}.new" "$LAST_STAGE_FILE"
 
 log "=== Health check complete: ${PASS_COUNT} passed, ${FAIL_COUNT} failed ==="
 
