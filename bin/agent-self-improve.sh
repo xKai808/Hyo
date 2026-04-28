@@ -949,6 +949,19 @@ run_self_improve() {
 
   log "  State: weakness=$current_weakness stage=$stage cycles=$cycles failures=$failure_count"
 
+  # Cycle 2 fix: parse weaknesses FIRST — before any override/gate logic that needs status checks.
+  # Previously parse_weaknesses ran at line ~1079, AFTER goal urgency and Q4 override blocks.
+  # urgent_status and da_q4_status checks queried $weaknesses when it was still empty string,
+  # meaning resolved-weakness protection never actually fired. Move here so all gate checks work.
+  local weaknesses
+  weaknesses=$(parse_weaknesses "$agent")
+  local weakness_count
+  weakness_count=$(echo "$weaknesses" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
+  local active_count resolved_count
+  active_count=$(echo "$weaknesses" | python3 -c "import json,sys; ws=json.load(sys.stdin); print(sum(1 for w in ws if w.get('status','active')!='resolved'))" 2>/dev/null || echo "0")
+  resolved_count=$((weakness_count - active_count))
+  log "  Weaknesses: $weakness_count total ($active_count active, $resolved_count resolved)"
+
   # fault-fix #6: max-retries gate — skip permanently-failing weaknesses
   if [[ "$failure_count" -ge "$MAX_RETRIES" ]]; then
     log "  MAX RETRIES ($MAX_RETRIES) reached for $current_weakness — skipping to next item"
@@ -1074,15 +1087,14 @@ else:
     [[ ! -f "$daily_assess_run_file" ]] && log "  Daily-assess: no 4AM assessment file — state machine weakness order used"
   fi
 
-  # Parse weaknesses
-  local weaknesses
-  weaknesses=$(parse_weaknesses "$agent")
-  local weakness_count
-  weakness_count=$(echo "$weaknesses" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null || echo "0")
-  log "  Weaknesses found: $weakness_count"
-
+  # weaknesses / weakness_count / active_count already populated at top of function (Cycle 2 fix)
   if [[ "$weakness_count" -eq 0 ]]; then
     log "  No weaknesses in GROWTH.md — nothing to improve"
+    return 0
+  fi
+  if [[ "$active_count" -eq 0 ]]; then
+    log "  All $weakness_count weaknesses are RESOLVED — nothing active to improve"
+    log "  → identify_next_weakness should have added new items. If GROWTH.md has no active items, update manually."
     return 0
   fi
 

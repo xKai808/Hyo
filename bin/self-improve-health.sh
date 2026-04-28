@@ -367,7 +367,6 @@ except: print(0)
       PASS_COUNT=$((PASS_COUNT+1))
     fi
   else
-    local da_quality
     da_quality=$(python3 -c "
 import json
 from pathlib import Path
