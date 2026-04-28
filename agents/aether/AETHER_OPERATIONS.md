@@ -390,3 +390,21 @@ AetherBot (Kalshi) → aether.sh (process) → aether-metrics.json (local) → /
 *Derived from: AetherBot Profile description, Kai analysis archive (4/7-4/12),
 GPT cross-checks, build specs v254/v255, simulation probes, and 6 days of trading logs.
 This manual is the bridge between the existing AetherBot operation and the Aether agent.*
+
+---
+
+## 14. Telegram Channel Protocol
+
+**There is ONE Telegram channel for this entire system: AetherBot (@Kai_11_bot).**
+
+- Tokens: `agents/nel/security/.telegram_token` and `.telegram_chat_id`
+- These are the AetherBot Telegram credentials. All Telegram communication goes through this single channel.
+- Do NOT create a separate "Kai bot" or secondary channel.
+- Telegram from autonomous infrastructure (health checks, self-improve, ticket enforcement) is **disabled** — Kai handles autonomously and reports via morning report.
+- Telegram from AetherBot itself (bot.py → aetherbot_logger.py) is the only authorized sender. Alerts are trading-critical only: position entry/exit, API auth failure, balance threshold breach.
+- When writing any script that sends Telegram: use `agents/nel/security/.telegram_token` and `.telegram_chat_id`. Do not hardcode tokens. Do not create alternate bot tokens.
+
+**Token locations (priority order):**
+1. `~/Documents/Projects/Hyo/agents/nel/security/env` (canonical)
+2. `~/Documents/Projects/Kai/.env` (fallback)
+3. Environment variables `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`

@@ -1387,9 +1387,16 @@ After any update:
 
 ---
 
+## Telegram Channel Rule
+**ONE channel only: AetherBot (@Kai_11_bot).** Tokens in `agents/nel/security/.telegram_token` / `.telegram_chat_id`.
+No separate Kai bot. No secondary channels. Autonomous system ops do NOT send Telegram — they log to `daily-issues.jsonl` and surface in the morning report.
+See `agents/aether/AETHER_OPERATIONS.md § 14` for the full protocol.
+
+---
+
 *This protocol is the single source of truth for AetherBot daily analysis.*
 *Any conflict with a prior spec: this document wins.*
-*Version 2.5 — 2026-04-18*
+*Version 2.7 — 2026-04-27 (added Telegram channel rule)*
 *Status: Production-ready with mechanical enforcement.*
 *v2.4 was verified by GPT adversarial review (two passes).*
 *v2.5 adds bin/analysis-gate.py as a hard block between analysis and publish.*
