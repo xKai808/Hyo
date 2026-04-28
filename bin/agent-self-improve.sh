@@ -65,8 +65,22 @@ if ! declare -f _find_claude_bin > /dev/null 2>&1; then
   }
 fi
 
-# ─── Circuit breaker: verify Claude Code responds before any cycle ─────────────
+# ─── Telegram alert helper ────────────────────────────────────────────────────
+send_telegram_alert() {
+  local msg="$1"
+  local token chat_id
+  token=$(cat "$HYO_ROOT/agents/nel/security/.telegram_token" 2>/dev/null || echo "")
+  chat_id=$(cat "$HYO_ROOT/agents/nel/security/.telegram_chat_id" 2>/dev/null || echo "")
+  if [[ -n "$token" && -n "$chat_id" ]]; then
+    curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
+      -d "chat_id=${chat_id}" -d "text=${msg}" >/dev/null 2>&1 || true
+  fi
+}
+
+# ─── Circuit breaker: verify Claude Code responds AND auth is valid ────────────
 # P0 fix: never run a cycle when the tool is unavailable — advances state on nothing
+# Auth fix: --version passes even with expired auth; use -p to test actual auth.
+CLAUDE_AUTH_OK=false  # module-level flag set once, read by all agents
 check_claude_health() {
   local claude_bin
   if ! claude_bin=$(_find_claude_bin 2>/dev/null); then
@@ -75,6 +89,14 @@ check_claude_health() {
   fi
   if ! "$claude_bin" --version > /dev/null 2>&1; then
     log "  CIRCUIT BREAKER: Claude Code binary unresponsive"
+    return 1
+  fi
+  # Auth test: --version passes even when auth is expired; probe with a real call
+  local auth_test
+  auth_test=$("$claude_bin" -p "echo auth_ok" --output-format text 2>&1 | head -3 || true)
+  if echo "$auth_test" | grep -qiE "Not logged in|Please run /login|Authentication required|Error: API|Unauthorized"; then
+    log "  CIRCUIT BREAKER: Claude Code auth expired — implement stage disabled for all agents"
+    send_telegram_alert "⚠️ Kai self-improve: Claude Code auth EXPIRED. Implement stage disabled until you run: claude auth login on the Mini. Research + Python fallback still active."
     return 1
   fi
   return 0
@@ -723,17 +745,12 @@ run_self_improve() {
 
   log_section "SELF-IMPROVE: $agent — $TODAY"
 
-  # ── Circuit breaker: Claude Code must be available before doing any work ────
-  if ! check_claude_health; then
-    log "  CIRCUIT BREAKER: Claude Code unavailable for $agent — skipping cycle (state unchanged)"
-    if [[ -f "$TICKET_SH" ]]; then
-      HYO_ROOT="$HYO_ROOT" bash "$TICKET_SH" create \
-        --agent "$agent" \
-        --title "Self-improve: Claude Code unavailable — $agent cycle skipped" \
-        --priority "P1" --type "improvement" \
-        --created-by "agent-self-improve" 2>/dev/null || true
-    fi
-    return 0
+  # ── Circuit breaker: read pre-flight CLAUDE_AUTH_OK flag (set once at module level)
+  # Research + Python fallback always run. Only implement stage gates on auth.
+  # We do NOT re-call check_claude_health() per agent — the Telegram alert already fired.
+  local claude_auth_ok="${CLAUDE_AUTH_OK:-false}"
+  if [[ "$claude_auth_ok" != "true" ]]; then
+    log "  AUTH UNAVAILABLE: $agent implement stage disabled — research + Python fallback active"
   fi
 
   # Load state
@@ -924,6 +941,15 @@ else:
       local files_hint=""
       if [[ -f "$research_file" ]]; then
         files_hint=$(grep "^FILES_TO_CHANGE:" "$research_file" | sed 's/FILES_TO_CHANGE: //')
+      fi
+
+      # Gate: implement stage requires valid Claude Code auth (pre-checked at module level)
+      if [[ "${claude_auth_ok:-false}" != "true" ]]; then
+        log "  GATE BLOCK: implement stage skipped — Claude Code auth unavailable (pre-checked)"
+        log "  → Run: claude auth login on the Mini to re-enable implement stage"
+        log "  → Python fallback research remains active; state held at implement"
+        save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"implement\",\"cycles\":$cycles,\"failure_count\":$failure_count,\"improvements\":[],\"last_run\":\"$NOW_MT\",\"blocked_reason\":\"claude_auth_unavailable\"}"
+        return 0
       fi
 
       # Delegate to Claude Code
@@ -1245,10 +1271,37 @@ PYEOF
 # ─── Entrypoint ───────────────────────────────────────────────────────────────
 TARGET="${1:-all}"
 
+# Pre-flight: verify Claude Code auth once at the module level.
+# Sets CLAUDE_AUTH_OK=true/false — implement stage reads this flag per-agent.
+# If auth is down → Telegram alert fires once here, not once per agent.
+log_section "AUTH PRE-CHECK"
+if check_claude_health; then
+  CLAUDE_AUTH_OK=true
+  log "✓ Claude Code auth verified — implement stage active"
+else
+  CLAUDE_AUTH_OK=false
+  log "✗ Claude Code auth unavailable — all agents run research+Python fallback only"
+fi
+
 if [[ "$TARGET" == "all" ]]; then
-  # fault-fix #9: run each agent's cycle in background so they don't block each other
-  # flock inside save_state prevents concurrent state corruption
-  for agent in nel sam aether ra dex kai; do
+  # Kai runs FIRST, synchronously. Its research findings (systemic patterns, cross-agent
+  # insights) are written before any other agent runs. This is the orchestrator model:
+  # Kai diagnoses → agents act on informed context.
+  log_section "KAI (orchestrator — runs first)"
+  run_self_improve "kai" >> "$LOG" 2>&1
+
+  # Propagate Kai's findings: if Kai's research file exists, extract systemic insights
+  # for injection into other agents' context.
+  KAI_RESEARCH=$(ls -t "$HYO_ROOT/agents/kai/research/improvements/"*-"$TODAY".md 2>/dev/null | head -1 || true)
+  if [[ -f "$KAI_RESEARCH" ]]; then
+    KAI_SYSTEMIC=$(grep -A5 "SYSTEMIC_PATTERN:\|CROSS_AGENT:" "$KAI_RESEARCH" 2>/dev/null | head -20 || true)
+    log "✓ Kai research complete — systemic context available for agents"
+    [[ -n "$KAI_SYSTEMIC" ]] && log "  Systemic patterns found: $(echo "$KAI_SYSTEMIC" | wc -l) lines"
+  fi
+
+  # All other agents run in parallel (Kai is done, no state race)
+  log_section "AGENTS (parallel)"
+  for agent in nel sam aether ra dex; do
     ( run_self_improve "$agent" ) >> "$LOG" 2>&1 &
   done
   wait  # collect all backgrounds before summary
