@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-28T05:10:48-0600",
+  "generated": "2026-04-28T06:54:14-0600",
   "date": "2026-04-28",
   "version": "v6-action-engine",
   "self_improvement_flywheel": {
@@ -7,7 +7,7 @@
     "in_progress": [
       "nel: W2 \u2014 Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk (research) \u2192 Researched W2 \u2014 built research brief, advancing to implement",
       "ra: W1 \u2014 Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
-      "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
+      "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
       "aether: W1 \u2014 Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
       "dex: W1 \u2014 Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
       "kai: W1 \u2014 Session Continuity Drift (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement"
@@ -23,11 +23,12 @@
       "kai": 50
     },
     "doctor_issues": [
-      "nel SICQ critically low: 20/100",
-      "sam SICQ critically low: 40/100",
-      "aether SICQ critically low: 40/100",
-      "ra SICQ critically low: 40/100",
-      "dex SICQ critically low: 40/100",
+      "sam: state.json corrupt (CORRUPT:missing=failure_count)",
+      "ra: state.json corrupt (CORRUPT:missing=failure_count)",
+      "dex: state.json corrupt (CORRUPT:missing=failure_count)",
+      "sam SICQ critically low: 20/100",
+      "ra SICQ critically low: 20/100",
+      "dex SICQ critically low: 20/100",
       "Protocol/JSON: Unregistered types in feed: agent-weekly"
     ]
   },
@@ -36,12 +37,12 @@
     "execution_layer": {
       "alive": true,
       "stall_hours": 0,
-      "queue_depth": 0,
-      "last_worker_ts": "2026-04-28T11:10",
+      "queue_depth": 2,
+      "last_worker_ts": "2026-04-28T12:54",
       "detail": " | healthcheck: 6 issue(s)"
     },
     "simulation_warning": null,
-    "stale_aric_warning": "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 161h ago), ra (2026-04-21, 165h ago), sam (2026-04-22, 150h ago), aether (2026-04-21, 165h ago), dex (2026-04-22, 149h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
+    "stale_aric_warning": "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 163h ago), ra (2026-04-21, 167h ago), sam (2026-04-22, 151h ago), aether (2026-04-21, 167h ago), dex (2026-04-22, 151h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
     "research_theater_warning": null,
     "growth_trajectory": "expanding",
     "trajectory_confidence": "3/6 agents with shipped work",
@@ -77,7 +78,7 @@
       "has_aric_data": true,
       "aric_stale": true,
       "aric_stale_date": "2026-04-21",
-      "aric_stale_hours": 161.0,
+      "aric_stale_hours": 162.7,
       "aric_cycle_date": "2026-04-21",
       "shipped_since_last": "Shipped: Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec)",
       "highest_priority_issue": "Static Checks Never Adapt \u2014 Sentinel Runs Same 9 Checks Until Failure Is Deafening",
@@ -114,7 +115,7 @@
       "has_aric_data": true,
       "aric_stale": true,
       "aric_stale_date": "2026-04-21",
-      "aric_stale_hours": 165.4,
+      "aric_stale_hours": 167.1,
       "aric_cycle_date": "2026-04-16",
       "shipped_since_last": "Shipped: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API (commit b484e1c)",
       "highest_priority_issue": "W1: Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box",
@@ -151,7 +152,7 @@
       "has_aric_data": true,
       "aric_stale": true,
       "aric_stale_date": "2026-04-22",
-      "aric_stale_hours": 149.7,
+      "aric_stale_hours": 151.4,
       "aric_cycle_date": "2026-04-21",
       "shipped_since_last": "Nothing shipped.",
       "highest_priority_issue": "No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
@@ -162,13 +163,13 @@
       "self_improve": {
         "weakness_id": "W1",
         "weakness_title": "No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
-        "stage_completed": "implement",
-        "outcome": "Implemented fix for W1 \u2014 awaiting verification",
-        "fix_approach": "Add explicit success check after each phase: output must be non-empty",
-        "confidence": "MEDIUM",
+        "stage_completed": "research",
+        "outcome": "Researched W1 \u2014 built research brief, advancing to implement",
+        "fix_approach": "Build performance instrumentation into the deploy pipeline:",
+        "confidence": "HIGH",
         "improvements_resolved": [],
         "total_cycles": 1,
-        "report_date": "2026-04-27"
+        "report_date": "2026-04-28"
       }
     },
     "aether": {
@@ -188,7 +189,7 @@
       "has_aric_data": true,
       "aric_stale": true,
       "aric_stale_date": "2026-04-21",
-      "aric_stale_hours": 165.0,
+      "aric_stale_hours": 166.7,
       "aric_cycle_date": "2026-04-16",
       "shipped_since_last": "Shipped: aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags (commit 049488e)",
       "highest_priority_issue": "W3",
@@ -225,7 +226,7 @@
       "has_aric_data": true,
       "aric_stale": true,
       "aric_stale_date": "2026-04-22",
-      "aric_stale_hours": 148.9,
+      "aric_stale_hours": 150.6,
       "aric_cycle_date": "2026-04-22",
       "shipped_since_last": "Nothing shipped.",
       "highest_priority_issue": "Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them",
