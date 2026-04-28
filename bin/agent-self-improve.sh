@@ -228,11 +228,20 @@ research_weakness() {
   local research_file="$research_dir/${weakness_id}-${TODAY}.md"
   mkdir -p "$research_dir"
 
-  # Skip if researched today
+  # Skip if researched today — but only if the research is valid (not auth-failure garbage)
   if [[ -f "$research_file" ]]; then
-    log "  Research exists for $weakness_id ($agent): $research_file"
-    cat "$research_file"
-    return 0
+    local file_size
+    file_size=$(wc -c < "$research_file" 2>/dev/null || echo 0)
+    local has_auth_error
+    has_auth_error=$(grep -c "Not logged in\|Please run /login\|Authentication required\|API key" "$research_file" 2>/dev/null || echo 0)
+    if [[ "$file_size" -gt 300 && "$has_auth_error" -eq 0 ]]; then
+      log "  Research exists for $weakness_id ($agent): $research_file"
+      cat "$research_file"
+      return 0
+    else
+      log "  Research file invalid (auth failure or too small: ${file_size}B, auth_errors=${has_auth_error}) — re-running"
+      rm -f "$research_file"
+    fi
   fi
 
   log "  Researching $weakness_id ($agent): $weakness_title"
