@@ -1,13 +1,13 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-28T00:45:03.806117-06:00",
+  "updatedAt": "2026-04-28T05:30:40.567562-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-28T00:45:03.806119-06:00",
+    "lastUpdated": "2026-04-28T05:30:40.567564-06:00",
     "staleAfterHours": 24,
     "creditScrapedAt": "2026-04-22T22:05:14.990668-06:00",
-    "creditScrapeAgeH": 122.7,
+    "creditScrapeAgeH": 127.4,
     "creditScrapeStale": true,
     "note": "ant-data.json updates nightly 23:45 MT. Credits use scraped baseline + continuous api-usage.jsonl adjustment. Run 'kai ant-scrape' weekly or when credits change."
   },
@@ -15,7 +15,7 @@
     "how_to_refresh": "kai ant-scrape (browser automation via Cowork session)",
     "recommended_frequency": "weekly or after any credit purchase",
     "last_scraped": "2026-04-22T22:05:14.990668-06:00",
-    "scrape_age_hours": 122.7,
+    "scrape_age_hours": 127.4,
     "action_needed": true
   },
   "alerts": [],
@@ -25,14 +25,14 @@
       "currency": "USD"
     },
     "openai": {
-      "total": 2.1587,
+      "total": 2.2343,
       "currency": "USD"
     },
-    "total": 2.3985,
-    "today": 0.0581
+    "total": 2.4742,
+    "today": 0.1337
   },
   "burn": {
-    "daily": 0.1311,
+    "daily": 0.1419,
     "dailyBudget": 50,
     "pctOfBudget": 0.3,
     "trend": "stable",
@@ -41,10 +41,10 @@
   "byProcess": [
     {
       "process": "aether",
-      "runs": 59,
-      "totalCost": 2.398238,
-      "avgPerRun": 0.040648,
-      "lastRun": "2026-04-28T00:01:11-0600"
+      "runs": 60,
+      "totalCost": 2.473908,
+      "avgPerRun": 0.041232,
+      "lastRun": "2026-04-28T02:11:34-0600"
     },
     {
       "process": "podcast-tts",
@@ -55,14 +55,14 @@
     }
   ],
   "income": {
-    "total_monthly": -0.01,
+    "total_monthly": -0.95,
     "streams": [
       {
         "name": "AetherBot Trading",
         "source": "aether-metrics.json",
-        "weekly_pnl": -0.01,
-        "pnl_pct": -0.01,
-        "balance": 118.71,
+        "weekly_pnl": -0.95,
+        "pnl_pct": -0.8,
+        "balance": 117.77,
         "week_start": "2026-04-27",
         "note": "Current week P&L from autonomous trading"
       }
@@ -91,15 +91,15 @@
       },
       {
         "name": "OpenAI API",
-        "actual": 2.1587,
+        "actual": 2.2343,
         "category": "API"
       }
     ],
     "infrastructure": [],
     "other": [],
     "total_fixed": 220.0,
-    "total_api": 2.3985,
-    "total": 222.3985
+    "total_api": 2.4742,
+    "total": 222.4742
   },
   "credits": {
     "anthropic": {
@@ -112,22 +112,22 @@
       "depletion_date": null,
       "days_until_depleted": null,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (scraped 123h ago, adjusted by api-usage.jsonl)",
+      "source": "console.anthropic.com (scraped 127h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22. Run 'kai ant-scrape' to reset baseline."
     },
     "openai": {
-      "remaining": 17.7222,
+      "remaining": 17.6465,
       "total": 20.0,
-      "used_since_scrape": 0.9178,
-      "used_all_time": 2.1587,
-      "used_mtd": 2.1587,
-      "burn_per_day": 0.1311,
-      "depletion_date": "2026-09-10",
-      "days_until_depleted": 135,
+      "used_since_scrape": 0.9935,
+      "used_all_time": 2.2343,
+      "used_mtd": 2.2343,
+      "burn_per_day": 0.1419,
+      "depletion_date": "2026-08-30",
+      "days_until_depleted": 124,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (scraped 123h ago, adjusted by api-usage.jsonl)",
+      "source": "platform.openai.com (scraped 127h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22."
@@ -136,8 +136,8 @@
   "models": [
     {
       "name": "gpt-4o",
-      "calls": 55,
-      "cost": 2.1584
+      "calls": 56,
+      "cost": 2.234
     },
     {
       "name": "claude-sonnet-4-6",
@@ -153,7 +153,7 @@
   "agents": [
     {
       "name": "aether",
-      "cost": 2.3982
+      "cost": 2.4739
     },
     {
       "name": "sam/podcast",
@@ -326,8 +326,8 @@
     {
       "date": "2026-04-28",
       "anthropic": 0.0,
-      "openai": 0.0581,
-      "total": 0.0581
+      "openai": 0.1337,
+      "total": 0.1337
     }
   ]
 }
