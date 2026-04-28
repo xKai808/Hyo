@@ -1,0 +1,376 @@
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T12:09:10Z] hyo-newsletter: starting pipeline
+[2026-04-28T12:09:10Z] gather.py ...
+
+Run took 26.0s
+Source summary:
+  hn_front_page                    50  ok in 2.1s
+  arxiv_cs_AI                      50  ok in 1.3s
+  arxiv_cs_LG                      50  ok in 1.7s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity               18  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 3.1s
+  reddit_macro                      5  ok in 1.4s
+  reddit_artificial                16  ok in 1.0s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 8.0s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T12:09:10Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 352 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T12:09:10Z] synthesize.py ...
+[info] loaded 352 unique records across 5 topics
+[info] context size: 31,945 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaW9LzwttKiTkrQaAG1UR"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T12:09:10Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T12:09:10Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T12:24:12Z] hyo-newsletter: starting pipeline
+[2026-04-28T12:24:12Z] gather.py ...
+
+Run took 24.7s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 1.2s
+  arxiv_cs_LG                      50  ok in 3.4s
+  arxiv_cs_CL                      50  ok in 2.2s
+  reddit_singularity               18  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.2s
+  reddit_macro                      5  ok in 1.0s
+  reddit_artificial                16  ok in 1.0s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 2.3s
+  coingecko_top                    25  ok in 1.0s
+  yahoo_indices                     0  ok in 5.8s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T12:24:12Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 352 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T12:24:12Z] synthesize.py ...
+[info] loaded 352 unique records across 5 topics
+[info] context size: 31,986 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWAVMQnwMCtiqh4MMbm8"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T12:24:12Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T12:24:12Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T12:39:13Z] hyo-newsletter: starting pipeline
+[2026-04-28T12:39:13Z] gather.py ...
+
+Run took 25.8s
+Source summary:
+  hn_front_page                    50  ok in 1.5s
+  arxiv_cs_AI                      50  ok in 1.7s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity               19  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.2s
+  reddit_macro                      5  ok in 2.1s
+  reddit_artificial                17  ok in 2.0s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.7s
+  yahoo_indices                     0  ok in 8.8s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 354 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 354 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T12:39:13Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 354 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T12:39:13Z] synthesize.py ...
+[info] loaded 353 unique records across 5 topics
+[info] context size: 31,866 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWBdmumvH9BxvVQNt89f"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T12:39:13Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T12:39:13Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T12:54:47Z] hyo-newsletter: starting pipeline
+[2026-04-28T12:54:47Z] gather.py ...
+
+Run took 25.6s
+Source summary:
+  hn_front_page                    50  ok in 1.6s
+  arxiv_cs_AI                      50  ok in 1.1s
+  arxiv_cs_LG                      50  ok in 1.9s
+  arxiv_cs_CL                      50  ok in 3.0s
+  reddit_singularity               19  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      5  ok in 1.1s
+  reddit_artificial                17  ok in 1.1s
+  github_trending_daily            13  ok in 2.2s
+  product_hunt                     50  ok in 1.3s
+  coingecko_top                    25  ok in 1.7s
+  yahoo_indices                     0  ok in 6.9s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 354 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 354 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T12:54:47Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 354 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T12:54:47Z] synthesize.py ...
+[info] loaded 353 unique records across 5 topics
+[info] context size: 31,902 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWCpgVGaoTAhLU4N1b7g"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T12:54:47Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T12:54:47Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T13:09:15Z] hyo-newsletter: starting pipeline
+[2026-04-28T13:09:15Z] gather.py ...
+
+Run took 25.3s
+Source summary:
+  hn_front_page                    50  ok in 1.3s
+  arxiv_cs_AI                      50  ok in 2.7s
+  arxiv_cs_LG                      50  ok in 1.9s
+  arxiv_cs_CL                      50  ok in 1.6s
+  reddit_singularity               19  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      5  ok in 1.0s
+  reddit_artificial                17  ok in 2.6s
+  github_trending_daily            13  ok in 2.3s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.7s
+  yahoo_indices                     0  ok in 6.7s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 354 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 354 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T13:09:15Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 354 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T13:09:15Z] synthesize.py ...
+[info] loaded 353 unique records across 5 topics
+[info] context size: 31,899 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWDvaHzDkdVqtKohatmN"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T13:09:15Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T13:09:15Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T13:24:16Z] hyo-newsletter: starting pipeline
+[2026-04-28T13:24:16Z] gather.py ...
+
+Run took 26.2s
+Source summary:
+  hn_front_page                    50  ok in 2.1s
+  arxiv_cs_AI                      50  ok in 1.1s
+  arxiv_cs_LG                      50  ok in 1.1s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               18  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      5  ok in 2.1s
+  reddit_artificial                19  ok in 2.4s
+  github_trending_daily            13  ok in 2.9s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 8.0s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 355 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 355 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T13:24:16Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 355 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T13:24:16Z] synthesize.py ...
+[info] loaded 354 unique records across 5 topics
+[info] context size: 31,923 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWF55VVr3TFTBus3vTjd"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T13:24:16Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T13:24:16Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T13:39:17Z] hyo-newsletter: starting pipeline
+[2026-04-28T13:39:17Z] gather.py ...
+
+Run took 23.7s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.0s
+  arxiv_cs_LG                      50  ok in 1.1s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               19  ok in 1.5s
+  reddit_LocalLLaMA                25  ok in 2.4s
+  reddit_macro                      5  ok in 1.3s
+  reddit_artificial                19  ok in 1.1s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 8.1s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 356 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 356 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T13:39:17Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 356 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T13:39:17Z] synthesize.py ...
+[info] loaded 355 unique records across 5 topics
+[info] context size: 32,095 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWGDLUEe2TTGZgCdQ7QR"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T13:39:17Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T13:39:17Z] render.py failed — the .md may be missing if synth fell back to bundle
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-28T13:54:18Z] hyo-newsletter: starting pipeline
+[2026-04-28T13:54:18Z] gather.py ...
+
+Run took 24.7s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.1s
+  arxiv_cs_LG                      50  ok in 1.1s
+  arxiv_cs_CL                      50  ok in 2.2s
+  reddit_singularity               19  ok in 1.6s
+  reddit_LocalLLaMA                25  ok in 2.2s
+  reddit_macro                      5  ok in 1.0s
+  reddit_artificial                19  ok in 1.1s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 1.2s
+  yahoo_indices                     0  ok in 8.2s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 356 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-28.jsonl
+[ok] appended 356 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-04-28T13:54:18Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-28: 356 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-28T13:54:18Z] synthesize.py ...
+[info] loaded 355 unique records across 5 topics
+[info] context size: 32,086 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaWHMwL4u6uh1gBjGPsLo"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.input.md
+[2026-04-28T13:54:18Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-28
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md
+[2026-04-28T13:54:18Z] render.py failed — the .md may be missing if synth fell back to bundle

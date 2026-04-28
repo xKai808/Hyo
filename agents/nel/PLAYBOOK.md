@@ -193,6 +193,10 @@ Format: `date | decision | reasoning | outcome`
 
 - **2026-04-28:** Researched 8/8 sources. See `research/findings-2026-04-28.md` for details.
 
+- **2026-04-28:** Researched 8/8 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 8/8 sources. See `research/findings-2026-04-28.md` for details.
+
 - **2026-04-27:** Researched 8/8 sources. See `research/findings-2026-04-27.md` for details.
 
 - **2026-04-27:** Researched 8/8 sources. See `research/findings-2026-04-27.md` for details.

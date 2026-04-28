@@ -1,15 +1,20 @@
 {
-  "ts": "2026-04-27T16:54:05-0600",
-  "date": "2026-04-27",
+  "ts": "2026-04-28T05:24:07-0600",
+  "date": "2026-04-28",
   "issues_found": [
-    "nel SICQ critically low: 20/100",
-    "sam SICQ critically low: 40/100",
-    "aether SICQ critically low: 40/100",
-    "ra SICQ critically low: 40/100",
-    "dex SICQ critically low: 40/100",
+    "sam: state.json corrupt (CORRUPT:missing=failure_count)",
+    "ra: state.json corrupt (CORRUPT:missing=failure_count)",
+    "dex: state.json corrupt (CORRUPT:missing=failure_count)",
+    "sam SICQ critically low: 20/100",
+    "ra SICQ critically low: 20/100",
+    "dex SICQ critically low: 20/100",
     "Protocol/JSON: Unregistered types in feed: agent-weekly"
   ],
-  "fixes_applied": [],
+  "fixes_applied": [
+    "sam: state.json reset to W1/research",
+    "ra: state.json reset to W1/research",
+    "dex: state.json reset to W1/research"
+  ],
   "escalations": [],
   "status": "issues_detected"
 }

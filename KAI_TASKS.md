@@ -575,3 +575,24 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/inspiring-jolly-brown/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:46fe7ed6:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/inspiring-jolly-brown/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1f61a462:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/jolly-fervent-brahmagupta/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:d0adac0f] _(filed 2026-04-28)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/jolly-fervent-brahmagupta/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1cee6d7e] _(filed 2026-04-28)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/jolly-fervent-brahmagupta/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:d0adac0f:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/jolly-fervent-brahmagupta/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1cee6d7e:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/zealous-quirky-heisenberg/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:d54333a0] _(filed 2026-04-28)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/zealous-quirky-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:7be99c0a] _(filed 2026-04-28)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/zealous-quirky-heisenberg/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:d54333a0:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/zealous-quirky-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:7be99c0a:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/stoic-bold-fermi/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:73aabfe5] _(filed 2026-04-28)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/stoic-bold-fermi/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:7db6e83c] _(filed 2026-04-28)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/stoic-bold-fermi/mnt/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:73aabfe5:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/stoic-bold-fermi/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:7db6e83c:escalated]
