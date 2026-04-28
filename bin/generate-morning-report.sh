@@ -1296,6 +1296,18 @@ with open(feed_path, "w") as f:
 print(f"Morning report added to feed.json for {today}")
 FEED_PYEOF
   log "Feed entry created"
+
+  # FIX (2026-04-28): Mirror feed.json to agents/sam/website/data/feed.json.
+  # The dual-path pre-commit gate blocks commits unless BOTH paths are updated.
+  # Previously the script only wrote to website/data/feed.json, leaving the sam mirror
+  # stale. That caused the gate to abort every morning-report commit silently.
+  SAM_FEED_JSON_MIRROR="$ROOT/agents/sam/website/data/feed.json"
+  if [[ -d "$(dirname "$SAM_FEED_JSON_MIRROR")" ]]; then
+    if [[ ! "$FEED_JSON" -ef "$SAM_FEED_JSON_MIRROR" ]] 2>/dev/null; then
+      cp "$FEED_JSON" "$SAM_FEED_JSON_MIRROR" 2>/dev/null || true
+    fi
+    log "feed.json mirror synced: $SAM_FEED_JSON_MIRROR"
+  fi
 else
   log "WARN: feed.json or morning-report.json missing — feed entry not created"
 fi
@@ -1321,14 +1333,21 @@ else
 
   # GATE (Bug 1 prevention): Before committing, verify BOTH feed.json paths are staged.
   # This is a yes/no gate — not just a log message. Commit is blocked until both are staged.
-  _WEBSITE_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "website/data/feed\.json" || echo 0)
-  _SAM_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "agents/sam/website/data/feed\.json" || echo 0)
+  # FIX (2026-04-28): Anchor the regex to the full path so the website-pattern doesn't
+  # match agents/sam/website/data/feed.json as a substring. Use `|| true` (not `|| echo 0`)
+  # so we don't end up with `0\n0` in the variable when grep finds no matches.
+  _WEBSITE_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -cE "^website/data/feed\.json$" || true)
+  _SAM_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -cE "^agents/sam/website/data/feed\.json$" || true)
+  _WEBSITE_STAGED=${_WEBSITE_STAGED:-0}
+  _SAM_STAGED=${_SAM_STAGED:-0}
   if [[ "$_WEBSITE_STAGED" -eq 0 ]] || [[ "$_SAM_STAGED" -eq 0 ]]; then
     # Gate failed — attempt one recovery: force-add the missing path
     log "DUAL-PATH GATE: feed.json missing from staged files (website=$_WEBSITE_STAGED sam=$_SAM_STAGED). Attempting recovery..."
     git add "$FEED_JSON" "$SAM_FEED_JSON" 2>/dev/null || true
-    _WEBSITE_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "website/data/feed\.json" || echo 0)
-    _SAM_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -c "agents/sam/website/data/feed\.json" || echo 0)
+    _WEBSITE_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -cE "^website/data/feed\.json$" || true)
+    _SAM_STAGED=$(git diff --cached --name-only 2>/dev/null | grep -cE "^agents/sam/website/data/feed\.json$" || true)
+    _WEBSITE_STAGED=${_WEBSITE_STAGED:-0}
+    _SAM_STAGED=${_SAM_STAGED:-0}
     if [[ "$_WEBSITE_STAGED" -eq 0 ]] || [[ "$_SAM_STAGED" -eq 0 ]]; then
       log "DUAL-PATH GATE FAILED after recovery attempt. Aborting commit. Opening P0 ticket."
       bash "$ROOT/bin/ticket.sh" create \

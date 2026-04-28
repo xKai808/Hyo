@@ -1,20 +1,19 @@
 {
-  "generated": "2026-04-27T08:00:02-0600",
-  "date": "2026-04-27",
+  "generated": "2026-04-28T05:10:48-0600",
+  "date": "2026-04-28",
   "version": "v6-action-engine",
   "self_improvement_flywheel": {
     "resolved_today": [],
     "in_progress": [
-      "ra: W1 \u2014 Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box (research) \u2192 Researched W1 \u2014 advancing to implement next cycle",
-      "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (research) \u2192 Researched W1 \u2014 advancing to implement next cycle",
-      "aether: W1 \u2014 Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring (research) \u2192 Researched W1 \u2014 advancing to implement next cycle",
-      "dex: W1 \u2014 Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them (research) \u2192 Researched W1 \u2014 advancing to implement next cycle",
-      "kai: W1 \u2014 Session Continuity Drift (research) \u2192 Researched W1 \u2014 advancing to implement next cycle"
+      "nel: W2 \u2014 Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk (research) \u2192 Researched W2 \u2014 built research brief, advancing to implement",
+      "ra: W1 \u2014 Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
+      "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
+      "aether: W1 \u2014 Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+      "dex: W1 \u2014 Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
+      "kai: W1 \u2014 Session Continuity Drift (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement"
     ],
-    "no_report": [
-      "nel"
-    ],
-    "agents_with_data": 5,
+    "no_report": [],
+    "agents_with_data": 6,
     "total_agents": 6,
     "sicq_scores": {
       "nel": 20,
@@ -38,18 +37,19 @@
       "alive": true,
       "stall_hours": 0,
       "queue_depth": 0,
-      "last_worker_ts": "2026-04-27T13:53",
-      "detail": " | healthcheck: 5 issue(s)"
+      "last_worker_ts": "2026-04-28T11:10",
+      "detail": " | healthcheck: 6 issue(s)"
     },
     "simulation_warning": null,
+    "stale_aric_warning": "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 161h ago), ra (2026-04-21, 165h ago), sam (2026-04-22, 150h ago), aether (2026-04-21, 165h ago), dex (2026-04-22, 149h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
     "research_theater_warning": null,
     "growth_trajectory": "expanding",
     "trajectory_confidence": "3/6 agents with shipped work",
     "biggest_risk": "kai: no active novel work",
     "biggest_win": "nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec)",
     "hyo_attention": null,
-    "api_spend_today": "$0.15 (5 calls) \u2014 openai=$0.15",
-    "api_calls_today": 5,
+    "api_spend_today": "$0.13 (4 calls) \u2014 openai=$0.13",
+    "api_calls_today": 4,
     "synthesis_ran": true,
     "agents_shipped": 3,
     "agents_building": 2,
@@ -61,13 +61,13 @@
   },
   "agents": {
     "nel": {
-      "novel_work": "Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec)",
-      "weakness_identified": "Static Checks Never Adapt \u2014 Sentinel Runs Same 9 Checks Until Failure Is Deafening",
+      "novel_work": "[DATA FROM 2026-04-21] Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec)",
+      "weakness_identified": "[DATA FROM 2026-04-21] Static Checks Never Adapt \u2014 Sentinel Runs Same 9 Checks Until Failure Is Deafening",
       "research_conducted": "(no ARIC data yet)",
       "research_findings": "(research not completed)",
       "research_count": 0,
       "improvement_status": "shipped",
-      "improvement_description": "Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
+      "improvement_description": "[DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
       "improvement_commit": "23dbbec",
       "metric_before": "N/A",
       "metric_after": "N/A",
@@ -75,23 +75,36 @@
       "external_opportunity_type": "none",
       "external_opportunity_desc": "none",
       "has_aric_data": true,
+      "aric_stale": true,
+      "aric_stale_date": "2026-04-21",
+      "aric_stale_hours": 161.0,
       "aric_cycle_date": "2026-04-21",
       "shipped_since_last": "Shipped: Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec)",
       "highest_priority_issue": "Static Checks Never Adapt \u2014 Sentinel Runs Same 9 Checks Until Failure Is Deafening",
       "next_action": "Measure metric movement from shipped improvement.",
       "action_type": "instrumentation",
       "priority_evidence": "No ARIC data \u2014 evidence not available.",
-      "improvement_status_detail": "I1: Adaptive Sentinel \u2014 When a Check Fails N (Phase 1 shipped) | I2: Dependency Audit Pipeline \u2014 Parse Depend (planned) | I3: Local Intelligence Cache + Fallback Mode (unknown)",
-      "self_improve": null
+      "improvement_status_detail": "I1: Adaptive Sentinel \u2014 When a Check Fails N (Phase 1 shipped) | I2: Dependency Audit Pipeline \u2014 Parse Depend (unknown)",
+      "self_improve": {
+        "weakness_id": "W2",
+        "weakness_title": "Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk",
+        "stage_completed": "research",
+        "outcome": "Researched W2 \u2014 built research brief, advancing to implement",
+        "fix_approach": "Build a new phase in cipher.sh (Phase 7: Supply Chain Audit) that:",
+        "confidence": "HIGH",
+        "improvements_resolved": [],
+        "total_cycles": 3,
+        "report_date": "2026-04-28"
+      }
     },
     "ra": {
-      "novel_work": "Shipped Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API (commit b484e1c)",
-      "weakness_identified": "W1: Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box",
+      "novel_work": "[DATA FROM 2026-04-21] Shipped Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API (commit b484e1c)",
+      "weakness_identified": "[DATA FROM 2026-04-21] W1: Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box",
       "research_conducted": "https://www.mailchimp.com/features/reports-and-analytics/; https://www.convertkit.com/help/why-analytics-matter/",
       "research_findings": "Industry-standard newsletter platforms track: open_rate (pixel tracking via 1x1 transparent GIF), click_rate (URL rewrites with tracking parameters), bounce_rate, unsubscribe_rate, spam_complaints. Real-time webhooks enable event-driven feedback: message.opened, message.clicked, message.bounced. Delivery confirmation via SMTP bounce handling. Engagement metrics aggregated per campaign, enabling A/B testing and trend analysis.; Creator-focused platforms emphasize: (1) reader_segmentation by engagement level, (2) content_type_affinity analysis (which topics/types drive clicks), (3) reader_journey tracking (opened email 1 \u2192 clicked link \u2192 returned for email 2 = high-value subscriber), (4) growth metrics (subscriber gain/churn), (5) revenue attribution (newsletter readers \u2192 conversions). Feedback loops enable: pause or double-down on content types with low engagement, re-segment readers by behavior, test subject lines/send times.",
       "research_count": 5,
       "improvement_status": "shipped",
-      "improvement_description": "Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
+      "improvement_description": "[DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
       "improvement_commit": "b484e1c",
       "metric_before": "Newsletter engagement: 0% visibility (zero opens/clicks data)",
       "metric_after": "Newsletter engagement: tracking active \u2014 open events fire on render, click events fire on link visit. Engagement logged to agents/ra/ledger/engagement.jsonl.",
@@ -99,33 +112,36 @@
       "external_opportunity_type": "horizontal",
       "external_opportunity_desc": "Newsletter analytics can be extended to: (1) subscriber growth forecasting (if engagement decline is steady, predict churn rate), (2) content trend analysis (are topics from yesterday trending again today? Could Ra write follow-up?), (3) reader-feedback-to-content feedback loop (if readers click 'politics' links heavily, expand politics coverage next week), (4) AI-powered subject-line optimization (test 10 subject-line variants, let ML model predict which will maximize open_rate). This creates positive feedback: Ra publishes \u2192 readers engage \u2192 Ra learns preferences \u2192 Ra publishes more of what works \u2192 higher engagement \u2192 Hyo gets better daily intelligence.",
       "has_aric_data": true,
+      "aric_stale": true,
+      "aric_stale_date": "2026-04-21",
+      "aric_stale_hours": 165.4,
       "aric_cycle_date": "2026-04-16",
       "shipped_since_last": "Shipped: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API (commit b484e1c)",
       "highest_priority_issue": "W1: Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box",
       "next_action": "Phase 2: SMTP DSN bounce parsing \u2014 wire send_email.py Return-Path to bounce handler, log hard/soft bounces to agents/ra/ledger/bounces.jsonl",
       "action_type": "research",
       "priority_evidence": "https://www.mailchimp.com/features/reports-and-analytics/: Industry-standard newsletter platforms track: open_rate (pix; https://www.convertkit.com/help/why-analytics-matter/: Creator-focused platforms emphasize: (1) reader_segmentation",
-      "improvement_status_detail": "I1: Source Health Monitoring \u2014 Before Each G (Phase 1 shipped) | I2: Content Quality Scoring \u2014 After Synthesi (planned) | I3: Topic Coverage Mapping + Systematic Gap  (unknown)",
+      "improvement_status_detail": "I1: Source Health Monitoring \u2014 Before Each G (Phase 1 shipped) | I2: Content Quality Scoring \u2014 After Synthesi (unknown)",
       "self_improve": {
         "weakness_id": "W1",
         "weakness_title": "Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box",
-        "stage_completed": "research",
-        "outcome": "Researched W1 \u2014 advancing to implement next cycle",
-        "fix_approach": "",
-        "confidence": "",
+        "stage_completed": "implement",
+        "outcome": "Implemented fix for W1 \u2014 awaiting verification",
+        "fix_approach": "Add explicit success check after each phase: output must be non-empty",
+        "confidence": "MEDIUM",
         "improvements_resolved": [],
-        "total_cycles": 0,
+        "total_cycles": 1,
         "report_date": "2026-04-27"
       }
     },
     "sam": {
-      "novel_work": "Building: Build performance baseline + regression detection (researched)",
-      "weakness_identified": "No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
+      "novel_work": "[DATA FROM 2026-04-22] Building: Build performance baseline + regression detection (researched)",
+      "weakness_identified": "[DATA FROM 2026-04-22] No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
       "research_conducted": "(no ARIC data yet)",
       "research_findings": "(research not completed)",
       "research_count": 0,
       "improvement_status": "researched",
-      "improvement_description": "Build performance baseline + regression detection",
+      "improvement_description": "[DATA FROM 2026-04-22] Build performance baseline + regression detection",
       "improvement_commit": null,
       "metric_before": "N/A",
       "metric_after": "N/A",
@@ -133,33 +149,36 @@
       "external_opportunity_type": "none",
       "external_opportunity_desc": "none",
       "has_aric_data": true,
+      "aric_stale": true,
+      "aric_stale_date": "2026-04-22",
+      "aric_stale_hours": 149.7,
       "aric_cycle_date": "2026-04-21",
       "shipped_since_last": "Nothing shipped.",
       "highest_priority_issue": "No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
       "next_action": "Execute improvement: bash bin/agent-execute-improvement.sh sam I1",
       "action_type": "build",
       "priority_evidence": "No ARIC data \u2014 evidence not available.",
-      "improvement_status_detail": "I1: Performance Baseline + Regression Detect (planned) | I2: Persistent Storage Migration \u2014 Implement (planned) | I3: Structured Error Logging \u2014 Add Try/Catch (unknown)",
+      "improvement_status_detail": "I1: Performance Baseline + Regression Detect (planned) | I2: Persistent Storage Migration \u2014 Implement (unknown)",
       "self_improve": {
         "weakness_id": "W1",
         "weakness_title": "No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected",
-        "stage_completed": "research",
-        "outcome": "Researched W1 \u2014 advancing to implement next cycle",
-        "fix_approach": "",
-        "confidence": "",
+        "stage_completed": "implement",
+        "outcome": "Implemented fix for W1 \u2014 awaiting verification",
+        "fix_approach": "Add explicit success check after each phase: output must be non-empty",
+        "confidence": "MEDIUM",
         "improvements_resolved": [],
-        "total_cycles": 0,
+        "total_cycles": 1,
         "report_date": "2026-04-27"
       }
     },
     "aether": {
-      "novel_work": "Shipped aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags (commit 049488e)",
-      "weakness_identified": "W3",
+      "novel_work": "[DATA FROM 2026-04-21] Shipped aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags (commit 049488e)",
+      "weakness_identified": "[DATA FROM 2026-04-21] W3",
       "research_conducted": "Aether GROWTH.md (internal); Session-errors.jsonl (Kai's mistake ledger, from GROWTH.md)",
       "research_findings": "Phantom position issue documented with evidence: Aether claims $103.67 (session 2026-04-14 ending balance) but Kalshi confirmed $105.80 (different snapshot time), raw logs show $107.36 (final state). Up to $25.96/day discrepancy between claimed and real P&L. Root cause: Aether's metrics phase reads from AetherBot's own position logs, NOT from Kalshi portfolio endpoint. When bot and Kalshi diverge (missed fills, cancellations, partial fills), Aether doesn't detect the delta.; Line 89: 'Tuesday April 14 ending balance disputed: Kai reported $103.67 (snapshot ~19:57 MT), GPT found $105.80 (snapshot ~20:58 MT), raw log shows $107.36 (final at 21:29 MT). All three are intermediate snapshots at different times.' This demonstrates snapshot timing issues, but also reveals that the 'real' balance is in the raw log at final settlement. Problem: no automated tool reconciles intermediate snapshots against final Kalshi state.",
       "research_count": 5,
       "improvement_status": "shipped",
-      "improvement_description": "aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags",
+      "improvement_description": "[DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags",
       "improvement_commit": "049488e",
       "metric_before": "Analysis quality: 0% automated checking \u2014 sub-par analyses publish silently",
       "metric_after": "Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks.",
@@ -167,33 +186,36 @@
       "external_opportunity_type": "horizontal",
       "external_opportunity_desc": "Once Aether builds reconciliation infrastructure (reconcile.sh, dual P&L), same pattern applies to other agents (Ra's newsletter pipeline reconciles against mailing list; Nel's security reconciles scan results against baseline; Sam's deployments reconcile deployed code against git commits). Build reusable reconciliation framework for all agents. Would reduce phantom issues system-wide.",
       "has_aric_data": true,
+      "aric_stale": true,
+      "aric_stale_date": "2026-04-21",
+      "aric_stale_hours": 165.0,
       "aric_cycle_date": "2026-04-16",
       "shipped_since_last": "Shipped: aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags (commit 049488e)",
       "highest_priority_issue": "W3",
       "next_action": "W3: Cross-session strategy aggregator \u2014 read all Analysis_*.txt files, produce per-strategy edge + win-rate trends, surface declining strategies automatically",
       "action_type": "research",
       "priority_evidence": "Aether GROWTH.md (internal): Phantom position issue documented with evidence: Aether clai; Session-errors.jsonl (Kai's mistake ledger, from GROWTH.md): Line 89: 'Tuesday April 14 ending balance disputed: Kai repo",
-      "improvement_status_detail": "I1: Macro Data Pipeline \u2014 Structured Fed/CPI (planned) | I2: Analysis Quality Scorecard \u2014 Auto-Score  (planned) | I3: Automated Cross-Session Aggregator \u2014 Wee (unknown)",
+      "improvement_status_detail": "I1: Macro Data Pipeline \u2014 Structured Fed/CPI (planned) | I2: Analysis Quality Scorecard \u2014 Auto-Score  (unknown)",
       "self_improve": {
         "weakness_id": "W1",
         "weakness_title": "Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring",
         "stage_completed": "research",
-        "outcome": "Researched W1 \u2014 advancing to implement next cycle",
-        "fix_approach": "",
-        "confidence": "",
+        "outcome": "Researched W1 \u2014 built research brief, advancing to implement",
+        "fix_approach": "Build a daily macro intelligence phase in Aether's research cycle:",
+        "confidence": "HIGH",
         "improvements_resolved": [],
-        "total_cycles": 0,
-        "report_date": "2026-04-27"
+        "total_cycles": 9,
+        "report_date": "2026-04-28"
       }
     },
     "dex": {
-      "novel_work": "Building: Build root cause clustering \u2014 group 120 issues into actionable categories (researched)",
-      "weakness_identified": "Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them",
+      "novel_work": "[DATA FROM 2026-04-22] Building: Build root cause clustering \u2014 group 120 issues into actionable categories (researched)",
+      "weakness_identified": "[DATA FROM 2026-04-22] Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them",
       "research_conducted": "(no ARIC data yet)",
       "research_findings": "(research not completed)",
       "research_count": 0,
       "improvement_status": "researched",
-      "improvement_description": "Build root cause clustering \u2014 group 120 issues into actionable categories",
+      "improvement_description": "[DATA FROM 2026-04-22] Build root cause clustering \u2014 group 120 issues into actionable categories",
       "improvement_commit": null,
       "metric_before": "N/A",
       "metric_after": "N/A",
@@ -201,6 +223,9 @@
       "external_opportunity_type": "none",
       "external_opportunity_desc": "none",
       "has_aric_data": true,
+      "aric_stale": true,
+      "aric_stale_date": "2026-04-22",
+      "aric_stale_hours": 148.9,
       "aric_cycle_date": "2026-04-22",
       "shipped_since_last": "Nothing shipped.",
       "highest_priority_issue": "Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them",
@@ -211,12 +236,12 @@
       "self_improve": {
         "weakness_id": "W1",
         "weakness_title": "Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them",
-        "stage_completed": "research",
-        "outcome": "Researched W1 \u2014 advancing to implement next cycle",
-        "fix_approach": "",
-        "confidence": "",
+        "stage_completed": "implement",
+        "outcome": "Implemented fix for W1 \u2014 awaiting verification",
+        "fix_approach": "Add explicit success check after each phase: output must be non-empty",
+        "confidence": "MEDIUM",
         "improvements_resolved": [],
-        "total_cycles": 0,
+        "total_cycles": 1,
         "report_date": "2026-04-27"
       }
     },
@@ -235,6 +260,9 @@
       "external_opportunity_type": "none",
       "external_opportunity_desc": "none",
       "has_aric_data": false,
+      "aric_stale": false,
+      "aric_stale_date": null,
+      "aric_stale_hours": 0,
       "aric_cycle_date": null,
       "shipped_since_last": "Nothing shipped.",
       "highest_priority_issue": "Session Continuity Drift",
@@ -246,69 +274,13 @@
         "weakness_id": "W1",
         "weakness_title": "Session Continuity Drift",
         "stage_completed": "research",
-        "outcome": "Researched W1 \u2014 advancing to implement next cycle",
+        "outcome": "Researched W1 \u2014 built research brief, advancing to implement",
         "fix_approach": "",
         "confidence": "",
         "improvements_resolved": [],
-        "total_cycles": 0,
-        "report_date": "2026-04-27"
+        "total_cycles": 2,
+        "report_date": "2026-04-28"
       }
     }
-  },
-  "self_improve_3_cycles": {
-    "section": "self_improvement_3_cycles",
-    "ts": "2026-04-27T22:04:31-0600",
-    "title": "Agent Self-Improvement: 3-Cycle Closed Loop Complete",
-    "headline": "Self-improve pipeline now has a verified closed loop \u2014 all 11 active weaknesses across 4 agents pass every gate, even in degraded mode (no Claude Code auth).",
-    "cycles": [
-      {
-        "id": "C1",
-        "commit": "77a5ab2",
-        "description": "11 gaps closed: resolved-weakness override protection, git push P1 gate, empty-brief\u2192research (not verify), GROWTH.md RESOLVED in verify, VERIFICATION gate, Python heuristic WARNING gate, prior_knowledge forwarding, report stage accuracy, Q4 false-fire fix, Q7 daily-assess check",
-        "p0_gaps": 4,
-        "p1_gaps": 7
-      },
-      {
-        "id": "C2",
-        "commit": "23bd9d2",
-        "description": "Critical ordering bug fixed: parse_weaknesses moved before all override/gate logic \u2014 urgent_status and da_q4_status checks were querying empty string (resolved-weakness protection never fired). Added active_count=0 early exit. Fixed da_quality scope (local in main loop).",
-        "p0_gaps": 1,
-        "p1_gaps": 2
-      },
-      {
-        "id": "C3",
-        "commit": "8c544fa",
-        "description": "Python fallback now searches Improvement Plan for Addresses Wx \u2192 Approach when weakness body has no Fix approach (all 4 agents' existing weaknesses now pass gate in degraded mode). Added Fix approach inline to all 11 active weakness sections. Research file version preservation on retry (archive old version). Q7 day-0 deployment grace. Verify-fail + uncommitted changes logged to daily-issues.jsonl.",
-        "p0_gaps": 1,
-        "p1_gaps": 3
-      }
-    ],
-    "simulation_result": {
-      "nel": {
-        "active": 2,
-        "all_pass_gate": true
-      },
-      "ra": {
-        "active": 3,
-        "all_pass_gate": true
-      },
-      "sam": {
-        "active": 3,
-        "all_pass_gate": true
-      },
-      "aether": {
-        "active": 3,
-        "all_pass_gate": true
-      }
-    },
-    "daily_output_verified": {
-      "nel": "scanner running + nel-daily report written",
-      "ra": "newsletter pipeline ran (220KB log)",
-      "sam": "self-review at 05:30 + main runner at 22:30",
-      "aether": "analysis + HQ push at 21:58"
-    },
-    "total_gaps_fixed": 15,
-    "pipeline_status": "CLOSED_LOOP_VERIFIED"
-  },
-  "last_updated": "2026-04-27T22:04:31-0600"
+  }
 }
