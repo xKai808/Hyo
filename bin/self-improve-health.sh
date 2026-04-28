@@ -254,7 +254,7 @@ for agent in $AGENTS; do
     # Auth block: tolerated for up to MAX_AUTH_BLOCK_DAYS (3 days). After that, fire Q3 regardless.
     # Rationale: auth expiry requires physical renewal. 3 days is enough grace. Silence beyond that
     # hides a real problem (nobody noticed auth expired, or auth renewal itself is broken).
-    MAX_AUTH_BLOCK_HOURS=24
+    MAX_AUTH_BLOCK_HOURS=6
     if [[ "$blocked_reason" == "claude_auth_unavailable" && "$current_stage" == "implement" ]]; then
       # Compute hours blocked from last_run field in state file
       # 24h hard limit: auth expiry is not a silent failure. After 24h Kai must know.
@@ -280,9 +280,9 @@ try:
 except: print(0)
 " 2>/dev/null || echo 0)
       if [[ "$last_run_hours" -ge "$MAX_AUTH_BLOCK_HOURS" ]]; then
-        log "  Q3 FAIL: auth_unavailable block exceeded ${MAX_AUTH_BLOCK_HOURS}h limit — ${last_run_hours}h at $current_weakness/implement"
+        log "  Q3 FAIL: auth_unavailable block exceeded ${MAX_AUTH_BLOCK_HOURS}h limit — ${last_run_hours}h at $current_weakness/implement (SLA breach)"
         open_issue "q3-auth-timeout-${agent}-$TODAY" "$agent" "Q3" \
-          "Claude auth expired ${last_run_hours}h ago (>${MAX_AUTH_BLOCK_HOURS}h limit). Implement blocked — claude auth login required NOW. weakness=$current_weakness" "P0"
+          "Claude auth expired ${last_run_hours}h ago. SLA=${MAX_AUTH_BLOCK_HOURS}h — breached. Implement blocked — claude auth login required NOW. weakness=$current_weakness" "P0"
         FAIL_COUNT=$((FAIL_COUNT+1))
       else
         log "  Q3 OK: held at $current_weakness/implement due to claude_auth_unavailable (${last_run_hours}h/${MAX_AUTH_BLOCK_HOURS}h — within grace)"
