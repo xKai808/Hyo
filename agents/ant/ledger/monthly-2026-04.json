@@ -1,13 +1,23 @@
 {
   "month": "2026-04",
-  "generated_at": "2026-04-27T05:30:22.476150-06:00",
+  "generated_at": "2026-04-28T00:45:03.807078-06:00",
   "status": "open",
   "income": {
-    "trading_pnl_wtd": 0.0,
-    "trading_balance": 118.72,
+    "trading_pnl_wtd": -0.01,
+    "trading_balance": 118.71,
     "week_start": "2026-04-27",
-    "streams": [],
-    "total_income_mtd": 0.0
+    "streams": [
+      {
+        "name": "AetherBot Trading",
+        "source": "aether-metrics.json",
+        "weekly_pnl": -0.01,
+        "pnl_pct": -0.01,
+        "balance": 118.71,
+        "week_start": "2026-04-27",
+        "note": "Current week P&L from autonomous trading"
+      }
+    ],
+    "total_income_mtd": -0.01
   },
   "expenses": {
     "subscriptions": [
@@ -25,12 +35,12 @@
       }
     ],
     "api_anthropic_mtd": 0.2399,
-    "api_openai_mtd": 2.1006,
+    "api_openai_mtd": 2.1587,
     "total_fixed": 220.0,
-    "total_api_mtd": 2.3404,
-    "total_expenses": 222.3404
+    "total_api_mtd": 2.3985,
+    "total_expenses": 222.3985
   },
-  "net_position": -222.3404,
+  "net_position": -222.4085,
   "api_credits": {
     "anthropic": {
       "remaining": 18.91,
@@ -42,22 +52,22 @@
       "depletion_date": null,
       "days_until_depleted": null,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (scraped 103h ago, adjusted by api-usage.jsonl)",
+      "source": "console.anthropic.com (scraped 123h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22. Run 'kai ant-scrape' to reset baseline."
     },
     "openai": {
-      "remaining": 17.7803,
+      "remaining": 17.7222,
       "total": 20.0,
-      "used_since_scrape": 0.8597,
-      "used_all_time": 2.1006,
-      "used_mtd": 2.1006,
-      "burn_per_day": 0.1487,
-      "depletion_date": "2026-08-24",
-      "days_until_depleted": 120,
+      "used_since_scrape": 0.9178,
+      "used_all_time": 2.1587,
+      "used_mtd": 2.1587,
+      "burn_per_day": 0.1311,
+      "depletion_date": "2026-09-10",
+      "days_until_depleted": 135,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (scraped 103h ago, adjusted by api-usage.jsonl)",
+      "source": "platform.openai.com (scraped 123h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22."
