@@ -21,3 +21,9 @@ Useful in aviation maintenance and safety checks.
 
 ## Related
 
+## Update 2026-04-27
+**Brief:** [2026-04-27](../../../newsletters/2026-04-27.md)
+- **What:** An intelligent fault diagnosis framework for aviation using multi-fidelity digital twins.
+- **Why:** Addresses challenges of scarce real fault data and diverse fault types in aviation.
+- **When:** Useful for improving safety and maintenance in aviation and other industries with complex systems.
+- **Source:** https://arxiv.org/abs/2604.22777

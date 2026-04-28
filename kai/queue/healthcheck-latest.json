@@ -1,9 +1,24 @@
 {
-  "ts": "2026-04-28T04:57:34Z",
+  "ts": "2026-04-28T08:43:06Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 0,
+  "issues": 7,
+  "warnings": 2,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "2 unaddressed P0/P1 flags in last 2h"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "sam has no output today"
+    },
     {
       "severity": "P1",
       "area": "dead-loop",
@@ -28,38 +43,43 @@
       "severity": "P1",
       "area": "dead-loop",
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
+    },
+    {
+      "severity": "P1",
+      "area": "ticket-sla",
+      "detail": "14 tickets have breached SLA"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 7 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1777352021-1479",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && vercel --prod --yes 2>&1 | tail -20",
-      "exit_code": 0
-    },
-    {
-      "id": "b86bd520-0765-4abc-b219-0b0670c8b90c",
+      "id": "b37f307b-592d-456b-a09c-04820df03583",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "81d958fc-5d69-42e0-af07-baa1d41e7e97",
+      "id": "5487ee88-fe56-48d0-9fb3-84bea0a3dd3d",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1777352012-1455",
+      "id": "fdbb11ce-14fe-459f-b2e4-6b043b0b0165",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo/agents/sam/website && vercel --prod --yes 2>&1 | tai",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1777351998-1430",
+      "id": "recheck-flag-kai-001",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo/website && vercel --prod --yes 2>&1 | tail -20",
+      "command": "bash /sessions/loving-optimistic-pascal/mnt/Hyo/kai/queue/healthcheck.sh",
+      "exit_code": 0
+    },
+    {
+      "id": "event-dex-flag-kai-001",
+      "status": "ok",
+      "command": "bash /sessions/loving-optimistic-pascal/mnt/Hyo/agents/dex/dex.sh",
       "exit_code": 0
     }
   ],

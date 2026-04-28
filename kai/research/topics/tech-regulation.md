@@ -7,6 +7,6 @@
 ### 2026-04-27
 **Brief:** [2026-04-27](../../../newsletters/2026-04-27.md)
 
-**Signal:** China blocks Meta's acquisition of Manus
+**Signal:** China's block on Meta's acquisition of Manus underscores the geopolitical influence on tech deals.
 
-**Take:** Regulatory barriers impacting tech acquisitions
+**Take:** Regulatory actions by China continue to shape the landscape of international tech acquisitions.

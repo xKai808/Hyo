@@ -9,11 +9,10 @@
 ### 2026-04-27
 **Brief:** [2026-04-27](../../../newsletters/2026-04-27.md)
 
-**Take:** Blocked Meta's acquisition of AI startup Manus
+**Take:** China's regulatory actions continue to impact global tech acquisitions, as seen with the Meta-Manus case.
 
-**Data:** China's regulatory action against Meta's acquisition
+**Data:** China blocked Meta's acquisition of AI startup Manus.
 
-**Hinge:** Future regulatory actions impacting tech acquisitions
+**Hinge:** Track China's future regulatory decisions affecting international tech companies.
 
-**Confidence:** medium
-
+**Confidence:** medium-high

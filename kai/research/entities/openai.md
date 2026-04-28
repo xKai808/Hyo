@@ -9,10 +9,10 @@
 ### 2026-04-27
 **Brief:** [2026-04-27](../../../newsletters/2026-04-27.md)
 
-**Take:** Ended exclusive revenue-sharing deal with Microsoft
+**Take:** Partnership with Microsoft shifts, indicating potential new directions for AI collaborations.
 
-**Data:** OpenAI and Microsoft have mutually ended their exclusive and revenue-sharing deal.
+**Data:** OpenAI and Microsoft have ended their exclusive and revenue-sharing deal.
 
-**Hinge:** OpenAI's next strategic partnerships
+**Hinge:** Watch for OpenAI's next moves in the AI landscape.
 
 **Confidence:** high

@@ -7,6 +7,6 @@
 ### 2026-04-27
 **Brief:** [2026-04-27](../../../newsletters/2026-04-27.md)
 
-**Signal:** Microsoft and OpenAI end exclusive deal
+**Signal:** Major shifts in AI partnerships and acquisitions
 
-**Take:** Shifts in AI development landscape
+**Take:** The end of Microsoft and OpenAI's partnership and China's block on Meta's acquisition signal a reconfiguration in tech alliances.

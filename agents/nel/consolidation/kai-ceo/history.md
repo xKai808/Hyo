@@ -195,3 +195,12 @@
 **Open tasks across all projects:** 82
 **Completed tasks across all projects:** 29
 **Session continuity files current:** KAI_BRIEF.md + KAI_TASKS.md ✓
+
+## 2026-04-28 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=1 in kai/
+/Users/kai/Documents/Projects/Hyo/kai/queue/completed/cmd-1777339979-242.json:6:  "stdout": "=== AETHERBOT_KEY env var ===\nSet: NO, Value: NOT_SET\n=== Key file ===\n-----BEGIN RSA PRIVATE KEY-----\n=== zshrc/env ===\n=== v255 timestamp format (ms vs seconds) ===\n186:# Session windows in MTN (all log timestamps are MTN):\n453:def create_signature(timestamp_ms: str, method: str, path: str) -> str:\n455:    message = f\"{timestamp_ms}{method.upper()}{path_without_query}\".encode(\"utf-8\")\n464:    timestamp_ms = str(int(dt.datetime.now(dt.timezone.utc).timestamp() * 1000))\n466:    sig = create_signature(timestamp_ms, method, full_path)\n470:        \"KALSHI-ACCESS-TIMESTAMP\": timestamp_ms,\n505:        _last_ob_poll_ts = time.time()  # v254: record poll timestamp for exit timing delta\n2252:    _exit_submit_ts = time.time()  # v254: pre-submission timestamp\n2392:    Return the Unix timestamp of the most recently COMPLETED candle boundary.\n2393:    E.g. for 3m (180s) at 07:43:45 UTC \u2192 returns timestamp of 07:42:00 close.\n",
+**Open tasks across all projects:** 82
+**Completed tasks across all projects:** 29
+**Session continuity files current:** KAI_BRIEF.md + KAI_TASKS.md ✓

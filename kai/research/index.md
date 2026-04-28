@@ -1,6 +1,6 @@
 # Ra Research Archive — Index
 
-*Auto-generated 2026-04-28T04:54:25Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
+*Auto-generated 2026-04-28T05:54:31Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
 
 ## Briefs (12)
 
@@ -34,7 +34,7 @@
 | [Microsoft](entities/microsoft.md) | 2026-04-27 | 1 |
 | [OpenAI](entities/openai.md) | 2026-04-27 | 1 |
 
-## Topics (14)
+## Topics (15)
 
 | Name | Last seen | Briefs |
 | --- | --- | --- |
@@ -45,6 +45,7 @@
 | [AI Strategy](topics/ai-strategy.md) | 2026-04-27 | 1 |
 | [Cryptocurrency Market Trends](topics/crypto-market-trends.md) | 2026-04-27 | 1 |
 | [Crypto Volatility](topics/crypto-volatility.md) | 2026-04-27 | 1 |
+| [International Tech Regulation](topics/international-tech-regulation.md) | 2026-04-27 | 1 |
 | [Tech & AI Partnerships](topics/tech-ai-partnerships.md) | 2026-04-27 | 1 |
 | [Tech & AI](topics/tech-ai.md) | 2026-04-27 | 1 |
 | [Tech Billing Models](topics/tech-billing.md) | 2026-04-27 | 1 |

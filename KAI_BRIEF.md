@@ -1,5 +1,13 @@
 # KAI_BRIEF.md
 
+> **[HEALTHCHECK 2026-04-28T08:04Z] ISSUES — 1 P1 (aether dashboard sync), 3 P2; 4-of-5 prior dead-loops cleared organically.**
+> - **P1 (dead-loop, recurring):** Aether dashboard out-of-sync. 92 P2 "dashboard data mismatch" flags + 2 P2 "untriggered files" flags in last 200 log entries (~every minute). Local file ts vs API ts diverge ~10min and re-flag continuously. Auto-remediation dispatched at 07:58Z by sibling healthcheck did NOT clear the loop. Same `bottleneck_stuck` finding carried from 07:58Z. Publish step or HQ renderer mismatch — needs interactive fix (per 04-27 12:04Z brief, likely Claude Code auth expiry blocking the publish path). Guidance-only dispatch is provably ineffective (5+ cycles).
+> - **POSITIVE:** 4 of 5 dead-loops from 07:58Z healthcheck (nel/sam/ra/dex `assessment_stuck`) did NOT re-flag in the 6 minutes between cycles — auto-remediation appears to have unstuck them this round. Ticket-SLA P1 also cleared (was 10 breached, now 0 breached / 0 open P0/P1).
+> - **P2 (recurring):** sam=0 logs for 2026-04-28 (most-recent log self-review-2026-04-27.md from yesterday 11:30 MT). Multi-day pattern, see 04-27 12:04Z brief.
+> - **P2 (recurring):** aether self-review reports 2 untriggered files — same finding as prior session.
+> - **Healthy:** queue idle (0 pending / 0 running, completed_lifetime=3071, failed_lifetime=31); all 6 ACTIVE.md fresh (0h); 0 NEW P0/P1 FLAG entries in `log.jsonl` last 2h (only the recurring P2 dashboard mismatch); log.jsonl writing every ~30s (active).
+> - **TOP ITEM (P1):** aether dashboard publish/render. 5+ cycles of guidance dispatch have not broken it. Read `agents/aether/PROTOCOL_DAILY_ANALYSIS.md` v2.5, verify the publish step actually reaches HQ, check Claude Code auth state for aether (per 04-27 brief), and either fix the publish step or fix the HQ renderer.
+
 > **[HEALTHCHECK 2026-04-28T04:04Z] ISSUES — 5 P1 dead-loops STILL persisting; new P1 newsletter-date FALSE POSITIVE wasting auto-remediation slots.**
 > - **P1 (dead-loop, 3rd consecutive 2h cycle):** Same 5 agents (nel, sam, ra, aether, dex) carried from 02:05Z + 22:05Z briefs. Sibling at 03:57Z dispatched 5th GUIDANCE cascade since 16:03Z — provably not breaking the loop. Constitutional fix (bin/dead-loop-detector.py HARD_STOP wiring, KI-031-001) requires interactive Kai session.
 > - **NEW P1 (newsletter-date BUG):** 4 P1 flags + 6 kai-001 DELEGATE entries fired this cycle with title "No newsletter produced for 2026-04-28 — past 06:00 MT deadline." FALSE POSITIVE — current MT is 2026-04-27T22:03 (deadline 04-28 06:00 MT is ~8h in the future), AND newsletter-2026-04-27.html shipped at 21:54 MT (commit 967875f, queue job b76a6414). Auto-remediation logic is computing date in UTC (2026-04-28) without TZ conversion. Wastes P1 slots every healthcheck until corrected. Likely in bin/auto-remediate.sh or wherever the newsletter staleness check fires. Quick interactive fix: convert `date +%F` -> `TZ=America/Denver date +%F` at the check site.
@@ -401,6 +409,8 @@
 Pending: S31-closed-loop-infrastructure.json commit task in queue (Mini will execute).
 
 ## ## Current state (as of 2026-04-27T12:04Z / 06:04 MT 2026-04-27 — automated 2h healthcheck)
+
+- **2026-04-28 06:03Z healthcheck**: 5 P1 dead-loops detected at 05:57Z (nel/sam/ra/aether/dex `assessment_stuck`); auto-remediation dispatched and dex JSONL integrity validation running at 06:00Z. Verify resolution next session.
 
 **[HEALTHCHECK 2026-04-27T12:04Z]** Status=ISSUES. **1 P0 (REGRESSION), 1 P0 (carried), 3 P1, 2 P2, 1 P3, 1 RESOLVED.**
 

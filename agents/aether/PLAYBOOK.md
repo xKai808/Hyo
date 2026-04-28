@@ -503,6 +503,272 @@ Every 15 minutes launchd fires aether.sh:
 
 ## Research Log
 
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-28:** Researched 7/7 sources. See `research/findings-2026-04-28.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
+- **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
+
 - **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.
 
 - **2026-04-27:** Researched 7/7 sources. See `research/findings-2026-04-27.md` for details.

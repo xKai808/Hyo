@@ -1,6 +1,6 @@
 # Ra Research Archive — Trends
 
-*Auto-generated 2026-04-28T04:54:25Z · reference date 2026-04-27. Counts are briefs-mentioning-entity over the given window.*
+*Auto-generated 2026-04-28T05:54:31Z · reference date 2026-04-27. Counts are briefs-mentioning-entity over the given window.*
 
 **Legend:**
 - **rising** — 7-day pace exceeds 30-day pace by ≥25%
@@ -38,6 +38,7 @@
 | [AI Strategy](topics/ai-strategy.md) | new | 1 | 1 | 1 | 2026-04-27 |
 | [Cryptocurrency Market Trends](topics/crypto-market-trends.md) | new | 1 | 1 | 1 | 2026-04-27 |
 | [Crypto Volatility](topics/crypto-volatility.md) | new | 1 | 1 | 1 | 2026-04-27 |
+| [International Tech Regulation](topics/international-tech-regulation.md) | new | 1 | 1 | 1 | 2026-04-27 |
 | [Tech & AI Partnerships](topics/tech-ai-partnerships.md) | new | 1 | 1 | 1 | 2026-04-27 |
 | [Tech & AI](topics/tech-ai.md) | new | 1 | 1 | 1 | 2026-04-27 |
 | [Tech Billing Models](topics/tech-billing.md) | new | 1 | 1 | 1 | 2026-04-27 |
