@@ -254,5 +254,61 @@
         "report_date": "2026-04-27"
       }
     }
-  }
+  },
+  "self_improve_3_cycles": {
+    "section": "self_improvement_3_cycles",
+    "ts": "2026-04-27T22:04:31-0600",
+    "title": "Agent Self-Improvement: 3-Cycle Closed Loop Complete",
+    "headline": "Self-improve pipeline now has a verified closed loop \u2014 all 11 active weaknesses across 4 agents pass every gate, even in degraded mode (no Claude Code auth).",
+    "cycles": [
+      {
+        "id": "C1",
+        "commit": "77a5ab2",
+        "description": "11 gaps closed: resolved-weakness override protection, git push P1 gate, empty-brief\u2192research (not verify), GROWTH.md RESOLVED in verify, VERIFICATION gate, Python heuristic WARNING gate, prior_knowledge forwarding, report stage accuracy, Q4 false-fire fix, Q7 daily-assess check",
+        "p0_gaps": 4,
+        "p1_gaps": 7
+      },
+      {
+        "id": "C2",
+        "commit": "23bd9d2",
+        "description": "Critical ordering bug fixed: parse_weaknesses moved before all override/gate logic \u2014 urgent_status and da_q4_status checks were querying empty string (resolved-weakness protection never fired). Added active_count=0 early exit. Fixed da_quality scope (local in main loop).",
+        "p0_gaps": 1,
+        "p1_gaps": 2
+      },
+      {
+        "id": "C3",
+        "commit": "8c544fa",
+        "description": "Python fallback now searches Improvement Plan for Addresses Wx \u2192 Approach when weakness body has no Fix approach (all 4 agents' existing weaknesses now pass gate in degraded mode). Added Fix approach inline to all 11 active weakness sections. Research file version preservation on retry (archive old version). Q7 day-0 deployment grace. Verify-fail + uncommitted changes logged to daily-issues.jsonl.",
+        "p0_gaps": 1,
+        "p1_gaps": 3
+      }
+    ],
+    "simulation_result": {
+      "nel": {
+        "active": 2,
+        "all_pass_gate": true
+      },
+      "ra": {
+        "active": 3,
+        "all_pass_gate": true
+      },
+      "sam": {
+        "active": 3,
+        "all_pass_gate": true
+      },
+      "aether": {
+        "active": 3,
+        "all_pass_gate": true
+      }
+    },
+    "daily_output_verified": {
+      "nel": "scanner running + nel-daily report written",
+      "ra": "newsletter pipeline ran (220KB log)",
+      "sam": "self-review at 05:30 + main runner at 22:30",
+      "aether": "analysis + HQ push at 21:58"
+    },
+    "total_gaps_fixed": 15,
+    "pipeline_status": "CLOSED_LOOP_VERIFIED"
+  },
+  "last_updated": "2026-04-27T22:04:31-0600"
 }
