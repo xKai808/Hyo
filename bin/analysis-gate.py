@@ -257,6 +257,53 @@ if not trade_data_pattern:
 else:
     ok(6, "trade breakdown present")
 
+# ── Gate 7 (QC13): Arithmetic reconciliation — trade P&L must match balance delta ──
+# Extracts Q1.4 NET balance delta and sum of CONFIRMED trade P&L.
+# A phantom gap >$5 (hard limit) blocks publish — it means the analysis reports
+# numbers that don't add up, which undermines all downstream conclusions.
+# Tolerance: $5 to allow for unsettled trades and rounding.
+RECONCILE_TOLERANCE = 5.00
+
+# Extract Q1.4 NET balance delta  (e.g. "NET (Q1.2 − Q1.1): -$4.16")
+net_match = re.search(
+    r'NET\s*\([^)]*\)\s*:\s*([+-]?\$?[\d,]+\.?\d*)',
+    text, re.IGNORECASE
+)
+# Extract confirmed trade P&L from trade table rows (e.g. "+$1.04 (CONFIRMED" or "-$5.53 (CONFIRMED")
+confirmed_pnl_matches = re.findall(
+    r'([+-]\$[\d,]+\.?\d*)\s*\(CONFIRMED',
+    text, re.IGNORECASE
+)
+
+if not net_match:
+    warn("QC13: No Q1.4 NET balance delta line found — cannot reconcile arithmetic. "
+         "Add 'NET (Q1.2 − Q1.1): $X.XX' to the analysis header. (warn only — format may vary)")
+    ok(7, "QC13 skipped — NET delta not parseable (format check needed)")
+elif not confirmed_pnl_matches:
+    warn("QC13: No CONFIRMED trade P&L entries found — cannot reconcile. "
+         "Add '(CONFIRMED...)' tags to each trade result row.")
+    ok(7, "QC13 skipped — no CONFIRMED trade P&L entries")
+else:
+    def parse_dollar(s):
+        return float(s.replace('$', '').replace(',', ''))
+
+    net_delta = parse_dollar(net_match.group(1))
+    trade_sum = sum(parse_dollar(p) for p in confirmed_pnl_matches)
+    gap = abs(net_delta - trade_sum)
+
+    if gap > RECONCILE_TOLERANCE:
+        fail(7, f"QC13 ARITHMETIC MISMATCH: balance delta={net_delta:+.2f}, "
+               f"confirmed trade P&L sum={trade_sum:+.2f}, gap=${gap:.2f} "
+               f"(tolerance=${RECONCILE_TOLERANCE:.2f}). "
+               f"Either confirmed trades are missing or the balance delta is wrong. "
+               f"Resolve phantom gap before publishing.")
+    elif gap > 1.00:
+        warn(f"QC13: gap=${gap:.2f} (delta={net_delta:+.2f}, trades={trade_sum:+.2f}) — "
+             f"within tolerance but non-trivial. Check for unsettled trades.")
+        ok(7, f"QC13 reconciliation OK (gap=${gap:.2f}, within ${RECONCILE_TOLERANCE:.2f} tolerance)")
+    else:
+        ok(7, f"QC13 reconciliation clean (delta={net_delta:+.2f}, trades={trade_sum:+.2f}, gap=${gap:.2f})")
+
 # ── Final verdict ─────────────────────────────────────────────────────────────
 print()
 if failures:
@@ -270,8 +317,9 @@ if failures:
     print("Do NOT bypass this gate — it exists because manual checks failed.")
     sys.exit(1)
 else:
+    gate_count = 7
     print(f"{'=' * 70}")
-    print(f"ALL 6 GATES PASSED — {date} cleared for publishing")
+    print(f"ALL {gate_count} GATES PASSED — {date} cleared for publishing")
     print(f"{'=' * 70}")
     print()
     sys.exit(0)
