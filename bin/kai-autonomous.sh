@@ -595,6 +595,14 @@ check_and_dispatch 4 30 "agent-self-improve-all" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
   "self_improve_run"
 
+# CADENCE COMPRESSION v2.0 — self-improve sweep 2x/day (04:30 + 16:30)
+# Research finding: event-triggered improvement (signal bus) handles urgent gaps;
+# scheduled sweeps catch anything that slipped. 2x/day means max 8h gap before sweep.
+# Weekly→daily: cross-agent-review now runs Mon-Sat (not Saturday only).
+check_and_dispatch 16 30 "agent-self-improve-midday" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
+  "self_improve_midday_run"
+
 # Flywheel doctor + SICQ — morning run (05:30)
 # Moved from 09:00: SICQ must be fresh BEFORE morning report at 07:00.
 # Was previously written at 09:00 (after report) — morning report always showed yesterday's SICQ.
@@ -635,9 +643,18 @@ check_and_dispatch 6 15 "memory-snapshot" \
   "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/kai/memory/agent_memory/memory_engine.py observe 'Daily metric snapshot: SICQ+OMP computed' --type metric_snapshot >> $HYO_ROOT/kai/ledger/memory-snapshot.log 2>&1 || true" \
   "memory_snapshot_run"
 
-# Saturday only: weekly report (06:00) + cross-agent adversarial review (06:45)
-# Weekly report at 06:00 — before OMP at 06:00 (both run, different state_keys)
-# Cross-agent review at 06:45 — after OMP, before morning report
+# CADENCE COMPRESSION v2.0: Weekly → Daily
+# Cross-agent adversarial review: was Saturday-only → now runs Mon-Sat (06:45)
+# Primary antidote to echo chamber dynamics in the self-improvement flywheel.
+# Running daily means feedback reaches agents within 24h instead of 7 days.
+# State key changes daily (cross_agent_review_YYYYMMDD) so it runs once per day.
+if [[ $DOW -ne 7 ]]; then  # every day except Sunday
+  check_and_dispatch 6 45 "cross-agent-review" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/cross-agent-review.sh >> $HYO_ROOT/kai/ledger/cross-agent-review.log 2>&1" \
+    "cross_agent_review_$(TZ=America/Denver date +%Y%m%d)"
+fi
+
+# Saturday only: full weekly report + maintenance + Aether weekly summary
 if [[ $DOW -eq 6 ]]; then
   check_and_dispatch 6 0 "weekly-report" \
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/weekly-report.sh >> $HYO_ROOT/kai/ledger/weekly-report.log 2>&1" \
@@ -645,18 +662,19 @@ if [[ $DOW -eq 6 ]]; then
   check_and_dispatch 2 0 "weekly-maintenance" \
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/weekly-maintenance.sh >> $HYO_ROOT/kai/ledger/weekly-maintenance.log 2>&1" \
     "weekly_maintenance_run"
-
-  # Cross-agent adversarial peer review (Saturday 06:45)
-  # Nel reviews Sam, Sam reviews Nel, Ra reviews Aether, Dex reviews all
-  # Primary antidote to echo chamber dynamics in the self-improvement flywheel
-  check_and_dispatch 6 45 "cross-agent-review" \
-    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/cross-agent-review.sh >> $HYO_ROOT/kai/ledger/cross-agent-review.log 2>&1" \
-    "cross_agent_review_run"
-
-  # Aether weekly summary (Saturday 06:00) — before morning report
   check_and_dispatch 6 0 "aether-weekly-summary" \
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aether-weekly-summary.sh >> $HYO_ROOT/agents/aether/logs/weekly-summary.log 2>&1" \
     "aether_weekly_summary_run"
+fi
+
+# CADENCE COMPRESSION v2.0: Monthly double-loop review
+# Runs first Monday of each month at 07:15 (after morning report).
+# double-loop-review.sh checks internally if it's first Monday — safe to call every Monday.
+# This is the only scheduled event that requires a Hyo+Kai conversation to complete.
+if [[ $DOW -eq 1 ]]; then
+  check_and_dispatch 7 15 "double-loop-review" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/double-loop-review.sh >> $HYO_ROOT/kai/ledger/double-loop.log 2>&1" \
+    "double_loop_review_$(TZ=America/Denver date +%Y-%m)"
 fi
 
 # Morning report (07:00) — now has ALL fresh data:
@@ -719,20 +737,29 @@ if [[ "$DOW" -eq 6 ]]; then
     "chaos_inject_weekly"
 fi
 
-# Flywheel doctor midday check (09:30) — catch daytime drift, write SICQ update
+# CADENCE COMPRESSION v2.0 — flywheel-doctor every 4 hours (was 3x/day)
+# 05:30 (morning, already above) + 09:30 + 13:30 + 17:30 + 21:30
+# Tighter feedback loop: issues surfaced within 4h instead of waiting for next check.
 check_and_dispatch 9 30 "flywheel-doctor-midday" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
   "flywheel_doctor_midday_run"
+
+check_and_dispatch 13 30 "flywheel-doctor-afternoon" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
+  "flywheel_doctor_afternoon_run"
 
 # Root-cause enforcer (15:00)
 check_and_dispatch 15 0 "root-cause-enforcer" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/root-cause-enforcer.sh >> $HYO_ROOT/kai/ledger/root-cause-enforcer.log 2>&1" \
   "root_cause_run"
 
-# Flywheel doctor evening check (17:00) — third check for P0 issues before agents run at 22:00
-check_and_dispatch 17 0 "flywheel-doctor-evening" \
+check_and_dispatch 17 30 "flywheel-doctor-evening" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
   "flywheel_doctor_evening_run"
+
+check_and_dispatch 21 30 "flywheel-doctor-night" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/flywheel-doctor.sh >> $HYO_ROOT/kai/ledger/flywheel-doctor.log 2>&1" \
+  "flywheel_doctor_night_run"
 
 # Daily maintenance (01:30 MT) — trim inbox, dedup tickets, rotate fast-growing logs
 # WHY DAILY: inbox grows ~100 msgs/day, tickets get race-condition duplicates intra-day
