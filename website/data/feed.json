@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-29T07:12:12-0600",
+  "lastUpdated": "2026-04-29T08:00:06-06:00",
   "today": "2026-04-29",
   "agents": {
     "kai": {
@@ -274,49 +274,25 @@
   },
   "reports": [
     {
-      "id": "agent-reflection-ra-2026-04-29-071212",
-      "type": "agent-reflection",
-      "title": "Ra \u2014 Content Pipeline Report",
-      "author": "Ra",
-      "authorIcon": "\ud83d\udcf0",
-      "authorColor": "#b49af0",
-      "timestamp": "2026-04-29T07:12:12-0600",
-      "date": "2026-04-29",
-      "sections": {
-        "introspection": "Good day \u2014 the newsletter went out on schedule. The gather-synthesize-render pipeline ran clean, and I'm happy with the output quality. There was 1 warning during the run, but nothing that blocked delivery.",
-        "research": "Didn't get to external research this cycle. I've been thinking about source diversification though \u2014 my list is heavy on tech and crypto, and if Aurora Public is going to serve a broader audience, I need lifestyle, culture, and general news feeds too.",
-        "changes": "Newsletter delivered. Ran the full pipeline from gather through send. Each cycle I'm refining the synthesis prompts to produce tighter, more opinionated briefs \u2014 the goal is editorial voice, not just aggregation.",
-        "followUps": [
-          "Diversify source list beyond tech/crypto for Aurora Public",
-          "Experiment with editorial voice vs neutral aggregation",
-          "Research launchd migration to unblock gather phase"
-        ],
-        "forKai": "Pipeline is healthy and producing. I'm focused on improving the editorial quality and broadening the source list for Aurora Public.",
-        "bluf": "[Shipped]: Editorial Feedback Loop Phase 1 (I1)\n[Watching]: Pipeline is healthy and producing.\n[Next]: Diversify source list beyond tech/crypto for Aurora Public",
-        "five_questions": "Q1 (What shipped?): Shipped: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link (?).\nQ2 (Highest-priority open issue?): Pipeline is healthy and producing.\nQ3 (Next concrete action?): Diversify source list beyond tech/crypto for Aurora Public\nQ4 (Action type): execute\nQ5 (Evidence for priority): Based on recurring pattern in session-errors.jsonl and known-issues.jsonl.",
-        "improvement_status": "SHIPPED: ? \u2014 Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link \u2014 commit b484e1c [ARIC 13d stale]"
-      }
-    },
-    {
-      "id": "morning-report-kai-2026-04-29-071128",
+      "id": "morning-report-kai-2026-04-29-080006",
       "type": "morning-report",
       "title": "Morning Report \u2014 2026-04-29",
       "author": "Kai",
       "authorIcon": "\ud83d\udc54",
       "authorColor": "#d4a853",
-      "timestamp": "2026-04-29T07:11:28-06:00",
+      "timestamp": "2026-04-29T08:00:06-06:00",
       "date": "2026-04-29",
       "sections": {
-        "summary": "The execution layer is down \u2014 the queue has been stalled for 4.2h, so no delegated commands ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings. \u26a0\ufe0f Synthesis did not run. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 187h ago), ra (2026-04-21, 191h ago), sam (2026-04-22, 176h ago), aether (2026-04-21, 191h ago), dex (2026-04-22, 175h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
+        "summary": "The execution layer is down \u2014 the queue has been stalled for 5.0h, so no delegated commands ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings. \u26a0\ufe0f Synthesis did not run. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 188h ago), ra (2026-04-21, 192h ago), sam (2026-04-22, 176h ago), aether (2026-04-21, 192h ago), dex (2026-04-22, 176h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
         "wentWell": [
           "Nel: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
           "Ra: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
           "Aether: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags"
         ],
         "needsAttention": [
-          "Execution layer down \u2014 queue worker stalled 4.2h. All agent delegations are sim-ack only. No real work has executed. Fix: restart queue worker on Mini (5 min).  | 2 task(s) stuck in running/ for 4.2h | healthcheck: 6 issue(s)",
+          "Execution layer down \u2014 queue worker stalled 5.0h. All agent delegations are sim-ack only. No real work has executed. Fix: restart queue worker on Mini (5 min).  | 1 task(s) stuck in running/ for 5.0h | healthcheck: 6 issue(s)",
           "\u26a0\ufe0f SIMULATION: 5 agent(s) show ARIC data but $0 API spend confirms synthesis phase did not execute. Research output = raw source snippets, not synthesized findings. Agents ran in sandbox context without LLM synthesis path.",
-          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 187h ago), ra (2026-04-21, 191h ago), sam (2026-04-22, 176h ago), aether (2026-04-21, 191h ago), dex (2026-04-22, 175h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
+          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 188h ago), ra (2026-04-21, 192h ago), sam (2026-04-22, 176h ago), aether (2026-04-21, 192h ago), dex (2026-04-22, 176h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
         ],
         "agentHighlights": {
           "nel": "Shipped a real improvement: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag. Commit: 23dbbec.",
@@ -402,6 +378,30 @@
             "status": "warn"
           }
         }
+      }
+    },
+    {
+      "id": "agent-reflection-ra-2026-04-29-071212",
+      "type": "agent-reflection",
+      "title": "Ra \u2014 Content Pipeline Report",
+      "author": "Ra",
+      "authorIcon": "\ud83d\udcf0",
+      "authorColor": "#b49af0",
+      "timestamp": "2026-04-29T07:12:12-0600",
+      "date": "2026-04-29",
+      "sections": {
+        "introspection": "Good day \u2014 the newsletter went out on schedule. The gather-synthesize-render pipeline ran clean, and I'm happy with the output quality. There was 1 warning during the run, but nothing that blocked delivery.",
+        "research": "Didn't get to external research this cycle. I've been thinking about source diversification though \u2014 my list is heavy on tech and crypto, and if Aurora Public is going to serve a broader audience, I need lifestyle, culture, and general news feeds too.",
+        "changes": "Newsletter delivered. Ran the full pipeline from gather through send. Each cycle I'm refining the synthesis prompts to produce tighter, more opinionated briefs \u2014 the goal is editorial voice, not just aggregation.",
+        "followUps": [
+          "Diversify source list beyond tech/crypto for Aurora Public",
+          "Experiment with editorial voice vs neutral aggregation",
+          "Research launchd migration to unblock gather phase"
+        ],
+        "forKai": "Pipeline is healthy and producing. I'm focused on improving the editorial quality and broadening the source list for Aurora Public.",
+        "bluf": "[Shipped]: Editorial Feedback Loop Phase 1 (I1)\n[Watching]: Pipeline is healthy and producing.\n[Next]: Diversify source list beyond tech/crypto for Aurora Public",
+        "five_questions": "Q1 (What shipped?): Shipped: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link (?).\nQ2 (Highest-priority open issue?): Pipeline is healthy and producing.\nQ3 (Next concrete action?): Diversify source list beyond tech/crypto for Aurora Public\nQ4 (Action type): execute\nQ5 (Evidence for priority): Based on recurring pattern in session-errors.jsonl and known-issues.jsonl.",
+        "improvement_status": "SHIPPED: ? \u2014 Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link \u2014 commit b484e1c [ARIC 13d stale]"
       }
     },
     {
