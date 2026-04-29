@@ -815,6 +815,15 @@ every claimed implementation must have a verification step that reads the actual
   → Best available: browser scrape + daily diff via ant-fetch-balance.py (one-time Keychain auth needed)
 
 
+**TELEGRAM TWO-BOT ARCHITECTURE (wired 2026-04-28, verified live):**
+- **@xAetherBot** — `AETHERBOT_TELEGRAM_TOKEN` — one-way alert sender only. Trade signals, analysis pipeline progress, pipeline failures. Never polls getUpdates.
+- **@Kai_11_bot** — `TELEGRAM_BOT_TOKEN` — conversation interface only. Runs via `kai_telegram.py`. Handles /status, /balance, /analysis, /stop, /resume, free-text Claude conversations.
+- TELEGRAM_CHAT_ID = 5098923226 (shared, same Hyo DM for both bots)
+- Credential locations: `~/security/hyo.env` AND `~/Documents/Projects/Kai/.env` (both files have all three vars)
+- All alert senders updated to read AETHERBOT_TELEGRAM_TOKEN first (9 files, commit 024ffb8)
+- Live test confirmed 2026-04-28: HTTP 200, message received by Hyo in @xAetherBot
+- NEVER route alerts through TELEGRAM_BOT_TOKEN — that is @Kai_11_bot (conversations only)
+
 ---
 ## Memory Engine Sync — 2026-04-26 (nightly consolidation)
 
