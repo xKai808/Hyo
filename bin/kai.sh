@@ -848,6 +848,27 @@ cmd_push() {
 
   hdr "Pushing to HQ: $agent"
 
+  # ── Pre-publish dedup gate (#81) ─────────────────────────────────────────
+  # Extract type, date, title from data_json for duplicate check.
+  # Skips if dedup script missing or --force was passed in data.
+  local _dedup_force=""
+  echo "$data_json" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('force_dedup',''))" 2>/dev/null | grep -q "true" && _dedup_force="--force"
+  local _dedup_script="$HYO_ROOT/bin/pre-publish-dedup.py"
+  if [[ -f "$_dedup_script" ]]; then
+    local _dtype _ddate _dtitle
+    _dtype=$(echo "$data_json"  | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('type','unknown'))" 2>/dev/null || echo "unknown")
+    _ddate=$(echo "$data_json"  | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('date',d.get('ts',''))[:10])" 2>/dev/null || echo "")
+    _dtitle=$(echo "$data_json" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('title',''))" 2>/dev/null || echo "")
+    if [[ -n "$_dtype" && "$_dtype" != "unknown" && -n "$_ddate" ]]; then
+      if ! python3 "$_dedup_script" \
+            --agent "$agent" --type "$_dtype" --date "$_ddate" --title "${_dtitle:-$event}" \
+            $_dedup_force --quiet; then
+        die "DEDUP GATE: publish blocked — duplicate entry detected. Use --data '{\"force_dedup\":true,...}' to bypass."
+      fi
+    fi
+  fi
+  # ── End dedup gate ────────────────────────────────────────────────────────
+
   local payload
   # Build JSON without printf to avoid brace doubling
   payload="{\"agent\":\"$agent\",\"event\":\"$event\",\"data\":$data_json}"

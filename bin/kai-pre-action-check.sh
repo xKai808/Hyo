@@ -137,6 +137,19 @@ kai_pre_action_check() {
     skip_verify_count=$(grep -c '"category":"skip-verification"' "$SESSION_ERRORS" 2>/dev/null || echo 0)
     gate_log "  ? CHECK [P5] Pattern history: $assumption_count assumption errors, $skip_verify_count skip-verification errors in ledger"
     gate_log "    → These are ACTIVE patterns. Before acting, ask: does this fix address the root cause or the symptom?"
+    # Stale error loop gate (#51): if same category logged >20 times without structural fix,
+    # require explicit evidence that THIS action includes a structural prevention gate.
+    local P5_STATUS="PASS"
+    if [[ "$assumption_count" -gt 25 ]]; then
+      gate_log "  ✗ CHECK [P5] STALE LOOP: assumption errors = $assumption_count (>25). Add a structural gate before proceeding."
+      P5_STATUS="FAIL"
+    fi
+    if [[ "$skip_verify_count" -gt 25 ]]; then
+      gate_log "  ✗ CHECK [P5] STALE LOOP: skip-verification errors = $skip_verify_count (>25). Add verification step before proceeding."
+      P5_STATUS="FAIL"
+    fi
+    gate_check "P5" "Error patterns below stale-loop threshold?" \
+      "assumption=$assumption_count, skip-verify=$skip_verify_count" "$P5_STATUS"
   fi
 
   # ── Pattern 6: Work done = committed (not pushed) ─────────────────────────────

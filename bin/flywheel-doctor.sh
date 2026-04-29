@@ -690,6 +690,86 @@ for feed_path in paths:
 SCORE_PYEOF
 }
 
+# ─── Check 10b: OMP score threshold enforcement (#80) ────────────────────────
+# When any agent OMP < 70 → P1 ticket. Below 50 → P0 + Hyo inbox.
+# This is the structural gate: low OMP blocks "healthy" status in the report.
+OMP_WARN_THRESHOLD=70
+OMP_CRITICAL_THRESHOLD=50
+
+check_omp_scores() {
+  log_sec "CHECK 10b: OMP score threshold enforcement"
+  local omp_path="$HYO_ROOT/kai/ledger/omp-summary.json"
+
+  if [[ ! -f "$omp_path" ]]; then
+    log "  WARN: omp-summary.json not found — skipping OMP threshold check"
+    return
+  fi
+
+  python3 - "$omp_path" "$OMP_WARN_THRESHOLD" "$OMP_CRITICAL_THRESHOLD" << 'PYEOF'
+import json, sys
+
+omp_path, warn_t, crit_t = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+try:
+    data = json.load(open(omp_path))
+    agents = data.get('agents', {})
+except Exception as e:
+    print(f"ERROR reading omp-summary.json: {e}")
+    sys.exit(0)
+
+for agent, d in agents.items():
+    score = int(d.get('overall', 0))
+    if score < crit_t:
+        print(f"CRITICAL:{agent}:{score}")
+    elif score < warn_t:
+        print(f"WARN:{agent}:{score}")
+    else:
+        print(f"OK:{agent}:{score}")
+PYEOF
+
+  local omp_output
+  omp_output=$(python3 - "$omp_path" "$OMP_WARN_THRESHOLD" "$OMP_CRITICAL_THRESHOLD" << 'PYEOF'
+import json, sys
+omp_path, warn_t, crit_t = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+try:
+    data = json.load(open(omp_path))
+    agents = data.get('agents', {})
+except Exception as e:
+    sys.exit(0)
+for agent, d in agents.items():
+    score = int(d.get('overall', 0))
+    if score < crit_t:
+        print(f"CRITICAL:{agent}:{score}")
+    elif score < warn_t:
+        print(f"WARN:{agent}:{score}")
+PYEOF
+  )
+
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    local level agent score
+    level=$(echo "$line" | cut -d: -f1)
+    agent=$(echo "$line" | cut -d: -f2)
+    score=$(echo "$line" | cut -d: -f3)
+
+    if [[ "$level" == "CRITICAL" ]]; then
+      ISSUES_FOUND+=("$agent OMP critically low: $score/100 (min $OMP_CRITICAL_THRESHOLD)")
+      ESCALATIONS+=("$agent OMP=$score — below critical threshold ($OMP_CRITICAL_THRESHOLD). Output quality severely degraded.")
+      open_ticket "$agent" "Doctor: OMP critically low for $agent ($score/100, min $OMP_WARN_THRESHOLD) — output quality degraded" "P0"
+      notify_hyo "OMP Critical: $agent ($score/100)" \
+        "$agent OMP score is $score — below critical threshold ($OMP_CRITICAL_THRESHOLD). Output quality is severely degraded. Review $agent runner and improvement cycle immediately."
+      log "  CRITICAL: $agent OMP=$score — P0 ticket opened, Hyo notified"
+    elif [[ "$level" == "WARN" ]]; then
+      ISSUES_FOUND+=("$agent OMP below minimum: $score/100 (min $OMP_WARN_THRESHOLD)")
+      open_ticket "$agent" "Doctor: OMP below minimum for $agent ($score/100, min $OMP_WARN_THRESHOLD) — improve output quality" "P1"
+      log "  WARN: $agent OMP=$score — P1 ticket opened"
+    fi
+  done <<< "$omp_output"
+
+  if [[ -z "$omp_output" ]]; then
+    log "  ✓ All agent OMP scores above thresholds"
+  fi
+}
+
 # ─── Check 11: Protocol/JSON alignment for all HQ published products ──────────
 check_protocol_json_alignment() {
   log_sec "CHECK 11: Protocol/JSON alignment (schema registry)"
@@ -872,17 +952,27 @@ issues = $(printf '%s\n' "${ISSUES_FOUND[@]+"${ISSUES_FOUND[@]}"}" | python3 -c 
 fixes  = $(printf '%s\n' "${FIXES_APPLIED[@]+"${FIXES_APPLIED[@]}"}" | python3 -c "import sys,json; lines=[l.strip() for l in sys.stdin if l.strip()]; print(json.dumps(lines))" 2>/dev/null || echo "[]")
 escs   = $(printf '%s\n' "${ESCALATIONS[@]+"${ESCALATIONS[@]}"}" | python3 -c "import sys,json; lines=[l.strip() for l in sys.stdin if l.strip()]; print(json.dumps(lines))" 2>/dev/null || echo "[]")
 
+score_issues = [i for i in issues if 'SICQ' in i or 'OMP' in i]
+if score_issues:
+    status = "score_degraded"   # hard block: report cannot claim "healthy"
+elif issues:
+    status = "issues_detected"
+else:
+    status = "clean"
+
 report = {
     "ts": "$NOW_MT",
     "date": "$TODAY",
     "issues_found": issues,
     "fixes_applied": fixes,
     "escalations": escs,
-    "status": "issues_detected" if issues else "clean"
+    "status": status,
+    "score_gate": "FAILED" if score_issues else "PASSED",
+    "score_issues": score_issues
 }
 with open("$REPORT", "w") as f:
     json.dump(report, f, indent=2)
-print("Doctor report written")
+print(f"Doctor report written — status: {status}")
 REPORT_PYEOF
 
   # Dispatch report to Kai
@@ -911,6 +1001,7 @@ check_knowledge_stagnation
 check_flywheel_running
 check_weakness_ages
 check_sicq_scores
+check_omp_scores
 check_resolution_stagnation
 check_protocol_json_alignment
 generate_report_and_escalate
