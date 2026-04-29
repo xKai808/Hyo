@@ -17,7 +17,7 @@ from openai import OpenAI
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 OPENAI_API_KEY    = os.environ.get("OPENAI_API_KEY")
-TELEGRAM_TOKEN    = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_TOKEN    = os.environ.get("AETHERBOT_TELEGRAM_TOKEN")   # @xAetherbot — alerts only
 TELEGRAM_CHAT_ID  = os.environ.get("TELEGRAM_CHAT_ID")
 
 LOG_DIR           = os.path.expanduser("~/Documents/Projects/AetherBot/Logs")

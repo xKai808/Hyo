@@ -17,14 +17,21 @@ sleep 2
 echo "  Done."
 
 # 2. Ensure .env has Telegram credentials
+# Architecture: TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations via kai_telegram.py)
+#               AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (trade alerts via AetherBot + kai_analysis.py)
 ENV_FILE="$HOME/Documents/Projects/Kai/.env"
 if ! grep -q "TELEGRAM_BOT_TOKEN=" "$ENV_FILE" 2>/dev/null; then
     echo "TELEGRAM_BOT_TOKEN=8764945876:AAEpWflnfYqmCtN-2oFvSC3QU_DTP8_9OQY" >> "$ENV_FILE"
-    echo "  Added TELEGRAM_BOT_TOKEN to .env"
+    echo "  Added TELEGRAM_BOT_TOKEN (@Kai_11_bot) to .env"
 fi
 if ! grep -q "TELEGRAM_CHAT_ID=" "$ENV_FILE" 2>/dev/null; then
     echo "TELEGRAM_CHAT_ID=5098923226" >> "$ENV_FILE"
     echo "  Added TELEGRAM_CHAT_ID to .env"
+fi
+if ! grep -q "AETHERBOT_TELEGRAM_TOKEN=" "$ENV_FILE" 2>/dev/null; then
+    echo "  WARNING: AETHERBOT_TELEGRAM_TOKEN not set in .env"
+    echo "  AetherBot alerts will NOT send until you add: AETHERBOT_TELEGRAM_TOKEN=<xAetherbot token>"
+    echo "  Get the token from @BotFather for @xAetherbot, then: echo 'AETHERBOT_TELEGRAM_TOKEN=TOKEN' >> $ENV_FILE"
 fi
 echo "[2/5] Env vars confirmed."
 

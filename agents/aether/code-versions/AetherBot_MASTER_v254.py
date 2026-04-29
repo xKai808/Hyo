@@ -16,10 +16,12 @@ PRIVATE_KEY_PATH = os.path.expanduser("~/Documents/Projects/AetherBot/AethelBot.
 BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
 SERIES_TICKER = "KXBTC15M"
 
-# v254: AetherBot sends one-way Telegram alerts (entries, exits, settlements).
-# Kai bot owns the getUpdates polling — AetherBot never polls, only sends.
+# v254: AetherBot sends one-way Telegram alerts (entries, exits, settlements) via @xAetherbot.
+# Kai bot (@Kai_11_bot) owns the getUpdates polling and conversations — AetherBot never polls.
 # Control is file-based: Kai writes .stop_flag / .pause_flag, AetherBot reads them.
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+# Separation: AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only)
+#             TELEGRAM_BOT_TOKEN       = @Kai_11_bot (conversations, set in kai_telegram.py)
+TELEGRAM_BOT_TOKEN = os.environ.get("AETHERBOT_TELEGRAM_TOKEN")   # @xAetherbot — alerts only
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 _CONTROL_DIR = os.path.expanduser("~/Documents/Projects/AetherBot")

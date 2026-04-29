@@ -43,7 +43,8 @@ else
 fi
 
 # Belt-and-suspenders: explicitly export known keys
-export OPENAI_API_KEY ANTHROPIC_API_KEY TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID
+# AETHERBOT_TELEGRAM_TOKEN = @xAetherbot token (alerts). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+export OPENAI_API_KEY ANTHROPIC_API_KEY TELEGRAM_BOT_TOKEN AETHERBOT_TELEGRAM_TOKEN TELEGRAM_CHAT_ID
 
 # Check required keys
 if [[ -z "$OPENAI_API_KEY" ]] && [[ -z "$ANTHROPIC_API_KEY" ]]; then
