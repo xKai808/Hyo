@@ -375,6 +375,43 @@ except Exception:
     log "  Daily-assess: no assessment file for today — Phase 3 running without 4AM grounding"
   fi
 
+  # ── IMPROVEMENT v2.0: Forward AAR — read what last cycle said to focus on ──────
+  # Each successful cycle writes a forward AAR note. This cycle reads it and
+  # injects it as a research anchor. This creates a learning chain across cycles
+  # rather than each ARIC cycle starting cold from GROWTH.md alone.
+  local forward_aar_context=""
+  local _aar_dir="$HYO_ROOT/agents/$agent/ledger"
+  local _aar_file="$_aar_dir/forward-aar-${TODAY}.json"
+  # Check today's AAR, then yesterday's
+  for _aar_candidate in "$_aar_file" "$_aar_dir/forward-aar-$(TZ=America/Denver date -v-1d +%Y-%m-%d 2>/dev/null || date -d 'yesterday' +%Y-%m-%d 2>/dev/null || echo prev).json"; do
+    if [[ -f "$_aar_candidate" ]]; then
+      forward_aar_context=$(python3 -c "
+import json
+from pathlib import Path
+try:
+    entries = json.loads(Path('$_aar_candidate').read_text())
+    if not isinstance(entries, list): entries = [entries]
+    # Filter for this weakness or general entries
+    relevant = [e for e in entries if e.get('next_cycle_goal') and
+                (e.get('agent') == '$agent' or e.get('weakness_id') == '$weakness_id')]
+    if relevant:
+        last = relevant[-1]
+        g = last.get('next_cycle_goal', {})
+        parts = []
+        if g.get('direction'): parts.append(f\"Direction: {g['direction']}\")
+        if g.get('question'): parts.append(f\"Key question: {g['question']}\")
+        if g.get('success_measure'): parts.append(f\"Success measure: {g['success_measure']}\")
+        print('\n'.join(parts))
+except Exception as e:
+    pass
+" 2>/dev/null || echo "")
+      if [[ -n "$forward_aar_context" ]]; then
+        log "  Forward AAR loaded from $( basename "$_aar_candidate"): ${#forward_aar_context} chars"
+        break
+      fi
+    fi
+  done
+
   # ── Goal deadline urgency: check if this weakness has an overdue goal ─────────
   local goal_urgency=""
   local growth_file_path="$HYO_ROOT/agents/$agent/GROWTH.md"
@@ -414,6 +451,9 @@ ${goal_urgency:+Goal status: $goal_urgency}
 
 GROWTH.md fix approach (canonical — implement exactly this):
 $(grep -A 20 "### ${weakness_id}:" "$HYO_ROOT/agents/$agent/GROWTH.md" 2>/dev/null | grep -A 10 "Fix approach\|fix_approach" | head -15 || echo "(not found — derive from evidence)")
+
+Forward AAR from previous cycle (what the last cycle said to focus on — use as research direction):
+${forward_aar_context:-"(no forward AAR — this is the first cycle for this weakness)"}
 
 Daily assessment (4AM evidence-based analysis — use as research anchor):
 Hypothesis: ${da_hypothesis:-"(not available — daily-assess may not have run yet)"}
@@ -1304,6 +1344,40 @@ else:
         # and save back to "research" so we try building a better brief next cycle.
         log "  GATE: implement skipped — saving back to research stage (failure $((failure_count+1))/$MAX_RETRIES)"
         save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"research\",\"cycles\":$((cycles+1)),\"failure_count\":$((failure_count+1)),\"improvements\":[],\"last_run\":\"$NOW_MT\",\"skip_reason\":\"brief_empty\"}"
+
+        # ── IMPROVEMENT v2.0: Emit event signal on brief_empty ───────────────
+        # Structural fix for OK Plateau: schedule-only improvement → arrested development.
+        # When research produces empty output, emit a signal immediately so kai-autonomous
+        # can trigger a targeted improvement cycle without waiting for the next 04:30 run.
+        # This converts a silent failure into an actionable event (antifragility pattern).
+        local _sig_sh="$HYO_ROOT/bin/kai-signal.sh"
+        if [[ -f "$_sig_sh" ]]; then
+          HYO_ROOT="$HYO_ROOT" bash "$_sig_sh" emit "$agent" "research_failure" \
+            "brief_empty for $current_weakness after $((failure_count+1)) attempts. Stage: implement. CLAUDE_AUTH_REASON: ${CLAUDE_AUTH_REASON:-unknown}" \
+            "agent-self-improve:implement" 2>/dev/null || true
+          log "  → Signal emitted: research_failure (failure $((failure_count+1))/$MAX_RETRIES)"
+        fi
+
+        # ── Python fallback brief: attempt a data-only implementation brief ──
+        # Rather than silently failing, try to produce a minimal implementable brief
+        # from existing research files without Claude Code. This unblocks cycles
+        # even when the LLM is unavailable.
+        local _fallback_brief=""
+        local _research_file_retry="$HYO_ROOT/agents/$agent/research/improvements/${current_weakness}-${TODAY}.md"
+        if [[ ! -f "$_research_file_retry" ]]; then
+          # Try yesterday's research as fallback anchor
+          local _yesterday
+          _yesterday=$(TZ=America/Denver date -v-1d +%Y-%m-%d 2>/dev/null || date -d "yesterday" +%Y-%m-%d 2>/dev/null || echo "")
+          if [[ -n "$_yesterday" ]]; then
+            local _yesterday_file="$HYO_ROOT/agents/$agent/research/improvements/${current_weakness}-${_yesterday}.md"
+            if [[ -f "$_yesterday_file" ]]; then
+              log "  FALLBACK: using yesterday's research as brief anchor ($current_weakness)"
+              cp "$_yesterday_file" "$_research_file_retry" 2>/dev/null || true
+              log "  → Copied yesterday's research — implement stage may proceed next cycle"
+            fi
+          fi
+        fi
+
         report_to_kai "$agent"
         return 0
       fi
@@ -1392,6 +1466,62 @@ PYEOF
 
         log "  Next weakness: $next_wid"
         save_state "$agent" "{\"current_weakness\":\"$next_wid\",\"stage\":\"research\",\"cycles\":$((cycles+1)),\"failure_count\":0,\"improvements\":[\"$current_weakness\"],\"last_run\":\"$NOW_MT\"}"
+
+        # ── IMPROVEMENT v2.0: Write forward AAR for next cycle ───────────────
+        # After a successful fix, write a structured "next cycle goal" that the
+        # NEXT research phase reads as its anchor. This creates a compounding
+        # learning chain — each cycle tells the next what to focus on, preventing
+        # cold starts from GROWTH.md alone. (Double-loop learning in practice.)
+        local _aar_fwd_dir="$HYO_ROOT/agents/$agent/ledger"
+        local _aar_fwd_file="$_aar_fwd_dir/forward-aar-${TODAY}.json"
+        mkdir -p "$_aar_fwd_dir"
+        python3 - << PYEOF 2>/dev/null || true
+import json
+from pathlib import Path
+
+p = Path("$_aar_fwd_file")
+existing = []
+if p.exists():
+    try:
+        existing = json.loads(p.read_text())
+        if not isinstance(existing, list): existing = [existing]
+    except: pass
+
+# Read research file to extract what was learned
+research_path = Path("$HYO_ROOT/agents/$agent/research/improvements/${current_weakness}-${TODAY}.md")
+learned = ""
+if research_path.exists():
+    content = research_path.read_text()
+    # Extract ROOT_CAUSE and VERIFICATION lines as the lesson
+    for line in content.splitlines():
+        if line.startswith(("ROOT_CAUSE:", "VERIFICATION:", "CONFIDENCE:")):
+            learned += line + "\n"
+
+aar = {
+    "ts": "$NOW_MT",
+    "agent": "$agent",
+    "weakness_resolved": "$current_weakness",
+    "weakness_title": "$weakness_title",
+    "cycles_taken": $((cycles + 1)),
+    "next_weakness": "$next_wid",
+    "lessons_from_fix": learned.strip() or "see research file",
+    "next_cycle_goal": {
+        "direction": f"Research $next_wid immediately — previous cycle resolved $current_weakness after $((cycles + 1)) cycle(s)",
+        "question": f"What is the evidence-based root cause of $next_wid? What does the agent's own data say?",
+        "success_measure": f"$next_wid fix is verifiable via a specific command or log check — not just 'it should work'",
+        "priority": "P2",
+        "bypass_rotation": False,
+        "previous_resolution": {
+            "weakness": "$current_weakness",
+            "lessons": learned.strip()
+        }
+    }
+}
+existing.append(aar)
+p.write_text(json.dumps(existing, indent=2))
+print(f"[self-improve] Forward AAR written for next cycle: next_weakness=$next_wid")
+PYEOF
+        log "  ✓ Forward AAR written for $next_wid (next cycle will read it)"
 
         # P0 gate: commit AND push. Never swallow push failure with || true.
         # SE-010-015: 8 commits sat latent for 18h because push was || true.

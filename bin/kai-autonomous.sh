@@ -536,6 +536,50 @@ check_and_dispatch() {
 #   Morning report (07:00) MUST precede completeness check (07:15)
 # ════════════════════════════════════════════════════════════════════════════
 
+# ─── Nightly agent cycle (22:00-23:00) — Mon-Sat; no Sunday ─────────────────
+# These are PROACTIVE scheduled dispatches. The Phase 2 stale-check still handles
+# self-healing if an agent misses its window, but this ensures clean trigger each night.
+if [[ $DOW -ne 0 ]]; then
+  # Nel report (22:00)
+  check_and_dispatch 22 0 "nel-nightly" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/nel/nel.sh >> $HYO_ROOT/agents/nel/logs/nel-${TODAY}.md 2>&1" \
+    "nel_nightly_run"
+
+  # Sam report (22:30)
+  check_and_dispatch 22 30 "sam-nightly" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/sam/sam.sh >> $HYO_ROOT/agents/sam/logs/sam-${TODAY}.md 2>&1" \
+    "sam_nightly_run"
+
+  # Aether daily report (22:45)
+  check_and_dispatch 22 45 "aether-nightly" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/aether/aether.sh >> $HYO_ROOT/agents/aether/logs/aether-${TODAY}.log 2>&1" \
+    "aether_nightly_run"
+fi
+
+# Aether full analysis + GPT crosscheck (23:00) — Mon-Fri only
+if [[ $DOW -ge 1 && $DOW -le 5 ]]; then
+  check_and_dispatch 23 0 "aether-analysis-nightly" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/aether/run_analysis.sh >> $HYO_ROOT/agents/aether/logs/analysis-${TODAY}.log 2>&1" \
+    "aether_analysis_run"
+fi
+
+# Ra newsletter pipeline (03:00) — Mon-Sat; no Sunday
+if [[ $DOW -ne 0 ]]; then
+  check_and_dispatch 3 0 "ra-newsletter" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/ra/ra.sh >> $HYO_ROOT/agents/ra/logs/ra-${TODAY}.md 2>&1" \
+    "ra_newsletter_run"
+fi
+
+# Nightly consolidation (01:00-01:15)
+check_and_dispatch 1 0 "nightly-consolidation" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/nel/consolidation/consolidate.sh >> $HYO_ROOT/kai/ledger/consolidation.log 2>&1" \
+  "consolidation_run"
+check_and_dispatch 1 15 "nightly-consolidation-full" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/nel/consolidation/nightly_consolidation.sh >> $HYO_ROOT/kai/ledger/nightly-consolidation.log 2>&1" \
+  "nightly_consolidation_run"
+
+# ─── End nightly cycle ────────────────────────────────────────────────────────
+
 # Daily assessment for all agents (04:00) — runs 30min BEFORE self-improve
 # Answers 8 mandatory evidence-based questions per agent from live data.
 # Self-improve Phase 3 reads this output instead of doing inline weak-id at trigger time.
@@ -647,6 +691,33 @@ check_and_dispatch 9 0 "queue-hygiene" \
 check_and_dispatch 9 0 "protocol-staleness" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/protocol-staleness-check.sh >> $HYO_ROOT/kai/ledger/protocol-staleness.log 2>&1" \
   "protocol_staleness_run"
+
+# ── IMPROVEMENT v2.0: Event-triggered improvement signal poll ─────────────────
+# kai-signal.sh poll runs every cycle (not gated by time) so improvement triggers
+# fire immediately when events happen, not only on the 04:30 ARIC schedule.
+# This is the structural fix for the OK Plateau pattern identified in research.
+# Only runs if the signal directory has pending signals (fast no-op otherwise).
+if [[ -f "$HYO_ROOT/bin/kai-signal.sh" ]]; then
+  local _sig_pending
+  _sig_pending=$(ls "$HYO_ROOT/kai/signals/pending/"*.json 2>/dev/null | wc -l | tr -d ' ')
+  if [[ "${_sig_pending:-0}" -gt 0 ]]; then
+    log "Signal bus: $_sig_pending pending signals — polling"
+    HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/kai-signal.sh" poll \
+      >> "$HYO_ROOT/kai/ledger/signals.log" 2>&1 || true
+    log "✓ Signal bus polled"
+  fi
+fi
+
+# ── IMPROVEMENT v2.0: Chaos injection (Saturday only, 05:00 MT) ──────────────
+# Weekly antifragility test: deliberately removes one dependency per agent to
+# discover SPOFs before production finds them. Results logged + signal emitted
+# for any SPOF discovered. Sunday is exempt (rest day). Safe: 5-min window max,
+# always restores, skips if P0 tickets are open.
+if [[ "$DOW" -eq 6 ]]; then
+  check_and_dispatch 5 0 "chaos-inject" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/chaos-inject.sh >> $HYO_ROOT/kai/ledger/chaos-inject.log 2>&1" \
+    "chaos_inject_weekly"
+fi
 
 # Flywheel doctor midday check (09:30) — catch daytime drift, write SICQ update
 check_and_dispatch 9 30 "flywheel-doctor-midday" \
