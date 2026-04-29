@@ -2,10 +2,11 @@
 
 *Last updated 2026-04-28. Rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
 
-## Briefs (1)
+## Briefs (2)
 
 | Name | Agent | Date |
 | --- | --- | --- |
+| [Skepticism on Self-Improving Agent Systems: What the Critics Say](briefs/kai-skepticism-2026-04-28.md) | Kai | 2026-04-28 |
 | [Self-Evolving Agent Systems: Signals, Chaos, and Double-Loop Review](briefs/kai-self-improve-2026-04-28.md) | Kai | 2026-04-28 |
 
 ## Entities (5)
