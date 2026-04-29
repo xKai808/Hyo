@@ -1956,17 +1956,36 @@ function renderAetherAnalysis(s, report) {
 function renderResearchDrop(s, report) {
   let html = '';
   if (s.topic) {
-    html += sec('Topic', `<p>${s.topic}</p>`);
+    html += sec('Topic', `<div style="line-height:1.7;">${mdToHtml(s.topic)}</div>`);
   }
   if (s.finding) {
-    html += sec('Key Findings', `<p>${s.finding}</p>`);
+    html += sec('Key Findings', `<div style="line-height:1.7;">${mdToHtml(s.finding)}</div>`);
   }
-  if (s.implications) {
-    html += sec('Implications', `<p>${s.implications}</p>`);
+  // handle both singular and plural
+  const impl = s.implications || s.implication;
+  if (impl) {
+    html += sec('Implications', `<div style="line-height:1.7;">${mdToHtml(impl)}</div>`);
+  }
+  if (s.confidence) {
+    const confColor = s.confidence === 'HIGH' ? 'var(--success)' : s.confidence === 'MEDIUM' ? 'var(--warning)' : 'var(--text-muted)';
+    html += `<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,0.05);margin:4px 0 8px;">
+      <span style="font-size:11px;color:var(--text-muted);">CONFIDENCE</span>
+      <span style="font-size:12px;font-weight:600;color:${confColor};">${s.confidence}</span>
+    </div>`;
   }
   if (s.nextSteps) {
     const steps = Array.isArray(s.nextSteps) ? s.nextSteps : [s.nextSteps];
     html += sec('Next Steps', `<ul>${steps.map(n => `<li>${n}</li>`).join('')}</ul>`);
+  }
+  if (s.sources) {
+    const srcList = s.sources.trim().split(/\s+/).filter(u => u.startsWith('http'));
+    if (srcList.length) {
+      const srcHtml = srcList.map((u, i) => {
+        const domain = (() => { try { return new URL(u).hostname.replace('www.',''); } catch(e) { return u.slice(0,40); } })();
+        return `<a href="${u}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;color:var(--text-muted);font-size:12px;text-decoration:none;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.04);margin:2px;">${i+1}. ${domain}</a>`;
+      }).join('');
+      html += sec('Sources', `<div style="display:flex;flex-wrap:wrap;gap:4px;">${srcHtml}</div>`);
+    }
   }
   const readLink = s.readLink || '';
   if (readLink) {
