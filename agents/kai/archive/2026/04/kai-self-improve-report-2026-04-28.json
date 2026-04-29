@@ -1,0 +1,23 @@
+[
+  {
+    "id": "self-improve-report-kai-2026-04-28-213447",
+    "type": "self-improve-report",
+    "title": "Kai Self-Improvement \u2014 W1: Self-Evolving Agent Systems: Signals, Chaos, and Double-Loop Review (2026-04-28)",
+    "author": "Kai",
+    "published_at": "2026-04-28T21:34:47-0600",
+    "sections": {
+      "weakness": "W1 \u2014 Self-improvement cycles were scheduled (clock-driven), not event-triggered \u2014 producing OK Plateau stagnation",
+      "outcome": "resolved",
+      "introspection": "Researched 20+ peer-reviewed sources across deliberate practice theory, double-loop organizational learning, machine self-modification safety, and production reliability engineering. Found three structural gaps in how the system improves: (1) scheduled improvement produces OK Plateau behavior \u2014 cycles that run on a clock stabilize at 'good enough' because there is no external pressure; (2) systems that never deliberately fail develop hidden single points of failure that production load exposes; (3) single-loop improvement cannot question its own assumptions \u2014 it can only optimize within its current frame, never ask if the frame is wrong.",
+      "research": "Ericsson et al. (1993) Psychological Review on deliberate practice \u2014 scheduled improvement \u2192 OK Plateau. Argyris & Sch\u00f6n (1977) on double-loop vs single-loop organizational learning. Netflix Chaos Engineering (Simian Army, 2011\u2013present) on deliberate failure injection. Ouyang et al. (2022) InstructGPT/RLHF for comparison of feedback mechanisms. Anthropic Constitutional AI (2022). Schmidhuber (2003) + Kirsch et al. (2024) Darwin G\u00f6del Machine \u2014 rejected for current stage (needs formal verification infra). 14 additional academic + industry sources. Full citation list: docs/research/briefs/kai-self-improve-2026-04-28.md",
+      "changes": "Three scripts shipped in commit 940dd0f + 510f7f2 \u2192 379d89f: (1) bin/kai-signal.sh \u2014 8 signal types mapped to urgency levels; signals fire on structural failures (empty research, API exhaustion, publish failure, verification failure, quality degradation); kai-autonomous.sh polls every 5 min and processes pending signals between scheduled sweeps. (2) bin/chaos-inject.sh \u2014 runs every Saturday 05:00 MT; removes one dependency per agent for \u22645 minutes; measures detected/fallback/alert; opens P1 ticket + emits chaos_discovery signal per SPOF found. (3) bin/double-loop-review.sh \u2014 runs every Monday 07:15 MT; pulls live system state; generates 6 questions that cannot be answered by automation; writes structured brief to kai/reviews/double-loop-YYYY-Www.md and surfaces as P1 in Hyo inbox.",
+      "followUps": [
+        "Verify chaos-inject.sh runs Saturday 05:00 MT and produces SPOF report",
+        "Verify double-loop-review.sh Monday brief reaches Hyo inbox with 6 answerable questions",
+        "Research Darwin G\u00f6del Machine as future capability when system complexity justifies formal verification infra",
+        "Evaluate RLHF feasibility if Hyo can provide preference labels at scale"
+      ],
+      "improvement_status": "W1 resolved \u2014 event-triggered signal bus (kai-signal.sh), deliberate chaos injection (chaos-inject.sh), and weekly double-loop review (double-loop-review.sh) are all shipped and wired into kai-autonomous.sh. Forward AAR written \u2014 next cycle reads it before starting research to compound instead of reset."
+    }
+  }
+]
