@@ -2,7 +2,7 @@
 # Updated automatically by ant-update.sh
 
 **Agent:** Ant (Accountant)
-**Last run:** 2026-04-28T19:15:44-0600
+**Last run:** 2026-04-29T00:45:05-0600
 **Status:** PASS
 **Protocol version:** 1.2
 
@@ -15,9 +15,9 @@
 
 ## Net position (this month)
 
-- Income: $11.94
+- Income: $13.05
 - Expenses: $222.47
-- **Net: $-210.53**
+- **Net: $-209.42**
 
 ## Open tickets
 
@@ -29,6 +29,6 @@
 
 ## Next scheduled run
 
-2026-04-29
-2026-04-29T23:45:00-0600 (via com.hyo.ant-daily launchd)
+2026-04-30
+2026-04-30T23:45:00-0600 (via com.hyo.ant-daily launchd)
 
