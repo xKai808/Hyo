@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-28T08:15:22-0600",
+  "lastUpdated": "2026-04-28T19:17:49-06:00",
   "today": "2026-04-28",
   "agents": {
     "kai": {
@@ -274,6 +274,135 @@
   },
   "reports": [
     {
+      "id": "morning-report-kai-2026-04-28-191749",
+      "type": "morning-report",
+      "title": "Morning Report \u2014 2026-04-28",
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-28T19:17:49-06:00",
+      "date": "2026-04-28",
+      "sections": {
+        "summary": "System is healthy \u2014 the queue is active and all agents ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: 5 agent(s) have stale ARIC data \u2014 content below is from a prior date, not today. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 175h ago), ra (2026-04-21, 180h ago), sam (2026-04-22, 164h ago), aether (2026-04-21, 179h ago), dex (2026-04-22, 163h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
+        "wentWell": [
+          "Nel: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
+          "Ra: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
+          "Aether: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags"
+        ],
+        "needsAttention": [
+          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 175h ago), ra (2026-04-21, 180h ago), sam (2026-04-22, 164h ago), aether (2026-04-21, 179h ago), dex (2026-04-22, 163h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
+        ],
+        "agentHighlights": {
+          "nel": "Shipped a real improvement: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag. Commit: 23dbbec.",
+          "ra": "Shipped a real improvement: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API. Commit: b484e1c. Before: Newsletter engagement: 0% visibility (zero opens/clicks data) \u2192 after: Newsletter engagement: tracking active \u2014 open events fire on render, click events fire on link visit. Engagement logged to agents/ra/ledger/engagement.jsonl..",
+          "sam": "Active work: [DATA FROM 2026-04-22] Building: Build performance baseline + regression detection (researched).",
+          "aether": "Shipped a real improvement: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags. Commit: 049488e. Before: Analysis quality: 0% automated checking \u2014 sub-par analyses publish silently \u2192 after: Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks..",
+          "dex": "Active work: [DATA FROM 2026-04-22] Building: Build root cause clustering \u2014 group 120 issues into actionable categories (researched).",
+          "kai": "No active improvement work this cycle. Research cycle didn't complete."
+        },
+        "selfImprovementFlywheel": {
+          "summary": "6/6 agents reported \u2014 cycles in progress, resolving overnight.",
+          "detail": [
+            "nel: W2 \u2014 Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk (research) \u2192 Researched W2 \u2014 built research brief, advancing to implement",
+            "ra: W1 \u2014 Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "aether: W1 \u2014 Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "dex: W1 \u2014 Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
+            "kai: W1 \u2014 Session Continuity Drift (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement"
+          ],
+          "resolved_today": []
+        },
+        "sicqScores": {
+          "nel": {
+            "score": 20,
+            "label": "Critical",
+            "min": 60,
+            "status": "critical"
+          },
+          "sam": {
+            "score": 45,
+            "label": "Low",
+            "min": 60,
+            "status": "warn"
+          },
+          "ra": {
+            "score": 55,
+            "label": "Low",
+            "min": 60,
+            "status": "warn"
+          },
+          "aether": {
+            "score": 60,
+            "label": "Fair",
+            "min": 60,
+            "status": "ok"
+          },
+          "kai": {
+            "score": 50,
+            "label": "Low",
+            "min": 60,
+            "status": "warn"
+          }
+        },
+        "ompScores": {
+          "nel": {
+            "score": 54,
+            "label": "Needs Improvement",
+            "min": 70,
+            "status": "warn"
+          },
+          "sam": {
+            "score": 62,
+            "label": "Adequate",
+            "min": 70,
+            "status": "warn"
+          },
+          "ra": {
+            "score": 69,
+            "label": "Adequate",
+            "min": 70,
+            "status": "warn"
+          },
+          "aether": {
+            "score": 71,
+            "label": "Good",
+            "min": 70,
+            "status": "ok"
+          },
+          "kai": {
+            "score": 60,
+            "label": "Adequate",
+            "min": 70,
+            "status": "warn"
+          }
+        }
+      }
+    },
+    {
+      "id": "agent-reflection-ra-2026-04-28-145915",
+      "type": "agent-reflection",
+      "title": "Ra \u2014 Content Pipeline Report",
+      "author": "Ra",
+      "authorIcon": "\ud83d\udcf0",
+      "authorColor": "#b49af0",
+      "timestamp": "2026-04-28T14:59:15-0600",
+      "date": "2026-04-28",
+      "sections": {
+        "introspection": "Good day \u2014 the newsletter went out on schedule. The gather-synthesize-render pipeline ran clean, and I'm happy with the output quality. There was 1 warning during the run, but nothing that blocked delivery.",
+        "research": "Didn't get to external research this cycle. I've been thinking about source diversification though \u2014 my list is heavy on tech and crypto, and if Aurora Public is going to serve a broader audience, I need lifestyle, culture, and general news feeds too.",
+        "changes": "Newsletter delivered. Ran the full pipeline from gather through send. Each cycle I'm refining the synthesis prompts to produce tighter, more opinionated briefs \u2014 the goal is editorial voice, not just aggregation.",
+        "followUps": [
+          "Diversify source list beyond tech/crypto for Aurora Public",
+          "Experiment with editorial voice vs neutral aggregation",
+          "Research launchd migration to unblock gather phase"
+        ],
+        "forKai": "Pipeline is healthy and producing. I'm focused on improving the editorial quality and broadening the source list for Aurora Public.",
+        "bluf": "[Shipped]: Editorial Feedback Loop Phase 1 (I1)\n[Watching]: Pipeline is healthy and producing.\n[Next]: Diversify source list beyond tech/crypto for Aurora Public",
+        "five_questions": "Q1 (What shipped?): Shipped: Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link (?).\nQ2 (Highest-priority open issue?): Pipeline is healthy and producing.\nQ3 (Next concrete action?): Diversify source list beyond tech/crypto for Aurora Public\nQ4 (Action type): execute\nQ5 (Evidence for priority): Based on recurring pattern in session-errors.jsonl and known-issues.jsonl.",
+        "improvement_status": "SHIPPED: ? \u2014 Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link \u2014 commit b484e1c [ARIC 12d stale]"
+      }
+    },
+    {
       "id": "agent-reflection-nel-2026-04-28-141522",
       "type": "agent-reflection",
       "title": "Nel \u2014 Research & Reflection",
@@ -294,47 +423,6 @@
           "Cross-reference 2 CVEs (CVE-1999-0095, CVE-2026-5760) against our dependencies (open 7 days \u2014 need to close this)"
         ],
         "forKai": "I found a confirmed blindspot in today's research \u2014 active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
-      }
-    },
-    {
-      "id": "morning-report-kai-2026-04-28-080002",
-      "type": "morning-report",
-      "title": "Morning Report \u2014 2026-04-28",
-      "author": "Kai",
-      "authorIcon": "\ud83d\udc54",
-      "authorColor": "#d4a853",
-      "timestamp": "2026-04-28T08:00:02-06:00",
-      "date": "2026-04-28",
-      "sections": {
-        "summary": "System is healthy \u2014 the queue is active and all agents ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: 5 agent(s) have stale ARIC data \u2014 content below is from a prior date, not today. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 164h ago), ra (2026-04-21, 168h ago), sam (2026-04-22, 152h ago), aether (2026-04-21, 168h ago), dex (2026-04-22, 152h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
-        "wentWell": [
-          "Nel: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
-          "Ra: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
-          "Aether: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags"
-        ],
-        "needsAttention": [
-          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 164h ago), ra (2026-04-21, 168h ago), sam (2026-04-22, 152h ago), aether (2026-04-21, 168h ago), dex (2026-04-22, 152h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
-        ],
-        "agentHighlights": {
-          "nel": "Shipped a real improvement: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag. Commit: 23dbbec.",
-          "ra": "Shipped a real improvement: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API. Commit: b484e1c. Before: Newsletter engagement: 0% visibility (zero opens/clicks data) \u2192 after: Newsletter engagement: tracking active \u2014 open events fire on render, click events fire on link visit. Engagement logged to agents/ra/ledger/engagement.jsonl..",
-          "sam": "Active work: [DATA FROM 2026-04-22] Building: Build performance baseline + regression detection (researched).",
-          "aether": "Shipped a real improvement: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags. Commit: 049488e. Before: Analysis quality: 0% automated checking \u2014 sub-par analyses publish silently \u2192 after: Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks..",
-          "dex": "Active work: [DATA FROM 2026-04-22] Building: Build root cause clustering \u2014 group 120 issues into actionable categories (researched).",
-          "kai": "No active improvement work this cycle. Research cycle didn't complete."
-        },
-        "selfImprovementFlywheel": {
-          "summary": "6/6 agents reported \u2014 cycles in progress, resolving overnight.",
-          "detail": [
-            "nel: W2 \u2014 Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk (research) \u2192 Researched W2 \u2014 built research brief, advancing to implement",
-            "ra: W1 \u2014 Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
-            "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
-            "aether: W1 \u2014 Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
-            "dex: W1 \u2014 Detection Without Remediation \u2014 Dex Finds Issues But Only Flags Them, Never Fixes Them (implement) \u2192 Implemented fix for W1 \u2014 awaiting verification",
-            "kai: W1 \u2014 Session Continuity Drift (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement"
-          ],
-          "resolved_today": []
-        }
       }
     },
     {
@@ -4124,7 +4212,8 @@
         "agent-reflection-nel-2026-04-28-020044",
         "agent-reflection-sam-2026-04-28-053039",
         "agent-reflection-sam-2026-04-28-053044",
-        "agent-reflection-nel-2026-04-28-141522"
+        "agent-reflection-nel-2026-04-28-141522",
+        "agent-reflection-ra-2026-04-28-145915"
       ],
       "2026-04-15": [
         {
