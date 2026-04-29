@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-29T05:12:13-06:00",
+  "lastUpdated": "2026-04-29T06:56:27-06:00",
   "today": "2026-04-29",
   "agents": {
     "kai": {
@@ -274,25 +274,25 @@
   },
   "reports": [
     {
-      "id": "morning-report-kai-2026-04-29-051213",
+      "id": "morning-report-kai-2026-04-29-065627",
       "type": "morning-report",
       "title": "Morning Report \u2014 2026-04-29",
       "author": "Kai",
       "authorIcon": "\ud83d\udc54",
       "authorColor": "#d4a853",
-      "timestamp": "2026-04-29T05:12:13-06:00",
+      "timestamp": "2026-04-29T06:56:27-06:00",
       "date": "2026-04-29",
       "sections": {
-        "summary": "The execution layer is down \u2014 the queue has been stalled for 2.2h, so no delegated commands ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings. \u26a0\ufe0f Synthesis did not run. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 185h ago), ra (2026-04-21, 189h ago), sam (2026-04-22, 174h ago), aether (2026-04-21, 189h ago), dex (2026-04-22, 173h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
+        "summary": "The execution layer is down \u2014 the queue has been stalled for 3.9h, so no delegated commands ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings. \u26a0\ufe0f Synthesis did not run. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 187h ago), ra (2026-04-21, 191h ago), sam (2026-04-22, 175h ago), aether (2026-04-21, 191h ago), dex (2026-04-22, 175h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
         "wentWell": [
           "Nel: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
           "Ra: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
           "Aether: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags"
         ],
         "needsAttention": [
-          "Execution layer down \u2014 queue worker stalled 2.2h. All agent delegations are sim-ack only. No real work has executed. Fix: restart queue worker on Mini (5 min).  | 2 task(s) stuck in running/ for 2.2h | healthcheck: 6 issue(s)",
+          "Execution layer down \u2014 queue worker stalled 3.9h. All agent delegations are sim-ack only. No real work has executed. Fix: restart queue worker on Mini (5 min).  | 2 task(s) stuck in running/ for 3.9h | healthcheck: 6 issue(s)",
           "\u26a0\ufe0f SIMULATION: 5 agent(s) show ARIC data but $0 API spend confirms synthesis phase did not execute. Research output = raw source snippets, not synthesized findings. Agents ran in sandbox context without LLM synthesis path.",
-          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 185h ago), ra (2026-04-21, 189h ago), sam (2026-04-22, 174h ago), aether (2026-04-21, 189h ago), dex (2026-04-22, 173h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
+          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 187h ago), ra (2026-04-21, 191h ago), sam (2026-04-22, 175h ago), aether (2026-04-21, 191h ago), dex (2026-04-22, 175h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
         ],
         "agentHighlights": {
           "nel": "Shipped a real improvement: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag. Commit: 23dbbec.",
