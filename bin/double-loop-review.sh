@@ -387,6 +387,137 @@ log "Review document written: $REVIEW_FILE"
 if [[ "$PREVIEW" == false ]]; then
   echo "{\"ts\":\"$(NOW_MT)\",\"from\":\"double-loop-review\",\"priority\":\"P1\",\"subject\":\"Weekly double-loop review ready — ${WEEK}\",\"body\":\"6 questions requiring your judgment (~15 min). Review at: kai/reviews/double-loop-${WEEK}.md\\n\\nQ1: Are agents working on right problems?\\nQ2: What architecture assumptions are stale?\\nQ3: Which agents have hit capability ceiling?\\nQ4: What capability gap needs filling?\\nQ5: Are we measuring the right things?\\nQ6: What should we stop doing?\",\"review_file\":\"kai/reviews/double-loop-${WEEK}.md\",\"status\":\"unread\"}" >> "$INBOX"
   log "✓ Hyo inbox entry written"
+
+  # ─── Change 3: ARIC Human Evaluation Sample (skepticism research finding) ────
+  # SycEval (arXiv:2502.08177) measured 58% sycophancy rate in LLM self-assessments.
+  # Agents write their own ARIC introspection reports — same model generates behavior
+  # and the evaluation of that behavior. This samples 3 random reports weekly for
+  # Hyo to evaluate: "Does this accurately describe what this agent actually did?"
+  # At 58% sycophancy baseline, ~2 of the 3 will be optimistic. Human judgment
+  # closes what automated evaluation cannot.
+  log ""
+  log "─── ARIC Human Evaluation Sample (sycophancy gate) ───"
+
+  ARIC_SAMPLE=$(python3 - << 'PYEOF' 2>/dev/null
+import json, os, random
+from pathlib import Path
+
+hyo = os.environ.get("HYO_ROOT", ".")
+feed_path = Path(hyo) / "agents/sam/website/data/feed.json"
+if not feed_path.exists():
+    feed_path = Path(hyo) / "website/data/feed.json"
+
+if not feed_path.exists():
+    print("FEED_NOT_FOUND")
+else:
+    try:
+        entries = json.loads(feed_path.read_text())
+        if isinstance(entries, list):
+            feed = entries
+        elif isinstance(entries, dict) and "entries" in entries:
+            feed = entries["entries"]
+        else:
+            feed = []
+
+        # Find ARIC introspection reports (agent-reflection type with introspection field)
+        aric_entries = [
+            e for e in feed
+            if e.get("type") in ("agent-reflection", "self-improve-report")
+            and e.get("sections", {}).get("introspection")
+            and e.get("agent")
+        ]
+
+        if len(aric_entries) < 1:
+            print("NO_ARIC_ENTRIES")
+        else:
+            sample = random.sample(aric_entries, min(3, len(aric_entries)))
+            for i, e in enumerate(sample, 1):
+                agent = e.get("agent", "unknown")
+                ts = e.get("timestamp", e.get("ts", "unknown"))
+                intro = e.get("sections", {}).get("introspection", "")[:400]
+                print(f"SAMPLE_START_{i}")
+                print(f"AGENT:{agent}")
+                print(f"TS:{ts}")
+                print(f"INTRO:{intro}")
+                print(f"SAMPLE_END_{i}")
+    except Exception as ex:
+        print(f"PARSE_ERROR:{ex}")
+PYEOF
+)
+
+  if [[ "$ARIC_SAMPLE" == "FEED_NOT_FOUND" || "$ARIC_SAMPLE" == "NO_ARIC_ENTRIES" || -z "$ARIC_SAMPLE" ]]; then
+    log "WARN: No ARIC introspection entries found for sycophancy sample — skipping"
+  else
+    log "  Appending ARIC evaluation sample to review document..."
+
+    # Parse and append to review file
+    WEEK_VAR="$WEEK" python3 - << PYEOF2 2>/dev/null
+import os, re
+from pathlib import Path
+
+hyo = os.environ.get("HYO_ROOT", ".")
+week = os.environ.get("WEEK_VAR", "")
+reviews_dir = Path(hyo) / "kai/reviews"
+review_file = reviews_dir / f"double-loop-{week}.md"
+sample_raw = """${ARIC_SAMPLE}"""
+
+# Parse samples
+samples = []
+for i in range(1, 4):
+    start_tag = f"SAMPLE_START_{i}"
+    end_tag = f"SAMPLE_END_{i}"
+    if start_tag in sample_raw and end_tag in sample_raw:
+        block = sample_raw.split(start_tag)[1].split(end_tag)[0].strip()
+        agent = ""
+        ts = ""
+        intro = ""
+        for line in block.splitlines():
+            if line.startswith("AGENT:"):
+                agent = line[6:].strip()
+            elif line.startswith("TS:"):
+                ts = line[3:].strip()
+            elif line.startswith("INTRO:"):
+                intro = line[6:].strip()
+        if agent:
+            samples.append({"agent": agent, "ts": ts, "intro": intro})
+
+if not samples:
+    print("NO_SAMPLES_PARSED")
+else:
+    section = "\n\n---\n\n## ARIC Human Evaluation Sample\n"
+    section += "**Why this section exists:** SycEval (arXiv:2502.08177) found 58% sycophancy rate in LLM self-assessments.\n"
+    section += "At that rate, ~2 of the 3 reports below are optimistic relative to actual performance.\n"
+    section += "For each report: read the introspection, then check the box that matches your judgment.\n\n"
+
+    for i, s in enumerate(samples, 1):
+        section += f"### Sample {i} — {s['agent']} ({s['ts'][:10] if s['ts'] else 'unknown date'})\n\n"
+        section += f"**Introspection (first 400 chars):**\n> {s['intro']}\n\n"
+        section += "**Does this accurately describe what this agent actually did this cycle?**\n"
+        section += "- [ ] YES — description matches actual behavior\n"
+        section += "- [ ] NO — description is more positive than actual behavior\n"
+        section += "- [ ] UNSURE — not enough context to judge\n"
+        section += "\n**Notes (optional):** _______________\n\n"
+
+    section += "---\n"
+    section += "_ARIC sample added by double-loop-review.sh — sycophancy gate per skepticism research Change 3_\n"
+
+    content = review_file.read_text()
+    # Insert before the final _Generated by_ line
+    if "_Generated by bin/double-loop-review.sh" in content:
+        content = content.replace(
+            "_Generated by bin/double-loop-review.sh",
+            section.lstrip("\n") + "\n_Generated by bin/double-loop-review.sh"
+        )
+    else:
+        content += section
+    review_file.write_text(content)
+    print(f"WRITTEN:{len(samples)} samples appended to {review_file.name}")
+PYEOF2
+
+    log "  ✓ ARIC evaluation sample appended to review document"
+  fi
+
+  log "─── End ARIC sycophancy gate ───"
 fi
 
 log ""

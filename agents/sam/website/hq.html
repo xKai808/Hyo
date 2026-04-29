@@ -2096,19 +2096,56 @@ function renderAgentWeekly(s, report) {
 function renderAgentReflection(s) {
   let html = '';
   if (s.introspection) {
-    html += sec('Introspection', `<p>${s.introspection}</p>`);
+    html += sec('Introspection', `<div style="line-height:1.7;">${mdToHtml(s.introspection)}</div>`);
   }
-  if (s.research) {
-    html += sec('Research & Exploration', `<p>${s.research}</p>`);
+  // findings array: each element renders as a distinct numbered card
+  if (Array.isArray(s.findings) && s.findings.length) {
+    let findingsHtml = '';
+    s.findings.forEach((f, i) => {
+      const label = f.label || `Finding ${i + 1}`;
+      const body = f.body || f;
+      const applied = f.applied || '';
+      findingsHtml += `<div style="margin-bottom:14px;padding:12px 14px;background:rgba(255,255,255,0.04);border-radius:8px;border-left:3px solid var(--accent);">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">${label}</div>
+        <div style="font-size:14px;line-height:1.6;color:var(--text-primary);">${mdToHtml(String(body))}</div>
+        ${applied ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(255,255,255,0.03);border-radius:6px;font-size:13px;color:var(--text-secondary);"><strong style="color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:0.04em;">Applied to our system</strong><br>${mdToHtml(String(applied))}</div>` : ''}
+      </div>`;
+    });
+    html += sec('Research Findings', findingsHtml);
+  } else if (s.research) {
+    // fallback: parse "Finding N:" prefixes into visual blocks, otherwise mdToHtml
+    const raw = s.research;
+    const hasFindingHeaders = /Finding \d+[:—]/.test(raw);
+    if (hasFindingHeaders) {
+      const blocks = raw.split(/(?=Finding \d+[:—])/).filter(Boolean);
+      let findingsHtml = '';
+      blocks.forEach(block => {
+        const headerMatch = block.match(/^(Finding \d+[:—][^\n]*)\n?([\s\S]*)/);
+        if (headerMatch) {
+          findingsHtml += `<div style="margin-bottom:14px;padding:12px 14px;background:rgba(255,255,255,0.04);border-radius:8px;border-left:3px solid var(--accent);">
+            <div style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">${headerMatch[1]}</div>
+            <div style="font-size:14px;line-height:1.6;">${mdToHtml(headerMatch[2].trim())}</div>
+          </div>`;
+        } else {
+          findingsHtml += `<div style="font-size:14px;line-height:1.7;margin-bottom:10px;">${mdToHtml(block.trim())}</div>`;
+        }
+      });
+      html += sec('Research & Findings', findingsHtml);
+    } else {
+      html += sec('Research & Exploration', `<div style="line-height:1.7;">${mdToHtml(s.research)}</div>`);
+    }
   }
   if (s.changes) {
-    html += sec('What I Changed', `<p>${s.changes}</p>`);
+    html += sec('What Changed', `<div style="line-height:1.7;">${mdToHtml(s.changes)}</div>`);
+  }
+  if (s.improvement_status) {
+    html += sec('Improvement Status', `<div style="line-height:1.7;color:var(--text-secondary);">${mdToHtml(s.improvement_status)}</div>`);
   }
   if (s.followUps?.length) {
-    html += sec('Following Up On', `<ul>${s.followUps.map(f => `<li>${f}</li>`).join('')}</ul>`);
+    html += sec('Follow-Ups', `<ul style="padding-left:18px;">${s.followUps.map(f => `<li style="margin-bottom:6px;line-height:1.5;">${f}</li>`).join('')}</ul>`);
   }
   if (s.forKai) {
-    html += sec('For Kai', `<p style="font-style:italic;color:var(--text-tertiary);">${s.forKai}</p>`);
+    html += sec('For Kai', `<div style="font-style:italic;color:var(--text-tertiary);line-height:1.6;">${mdToHtml(s.forKai)}</div>`);
   }
   return html;
 }

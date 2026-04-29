@@ -1426,6 +1426,27 @@ else:
       verify_improvement "$agent" "$current_weakness"
       local verify_exit=$?
 
+      # ── Content gate (skepticism research Change 1 — closes pipeline-gaming) ──
+      # Gate question: does the improvement actually handle the case it was built for?
+      # Not just "does the file exist?" — but "does it pass the specific test written at research time?"
+      # Exit 0 = pass, Exit 1 = BLOCK, Exit 2 = no test case (warn, continue)
+      local content_gate_exit=0
+      if [[ -f "$HYO_ROOT/bin/verify-improvement-content-gate.sh" ]]; then
+        HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/verify-improvement-content-gate.sh" "$agent" "$current_weakness" 2>/dev/null
+        content_gate_exit=$?
+        if [[ $content_gate_exit -eq 1 ]]; then
+          log "  ✗ CONTENT GATE BLOCKED — improvement does not pass specific test case"
+          log "  Resetting to implement stage — must fix the actual behavior, not just produce files"
+          save_state "$agent" "{\"current_weakness\":\"$current_weakness\",\"stage\":\"implement\",\"cycles\":$cycles,\"failure_count\":$((failure_count+1)),\"improvements\":[],\"last_run\":\"$NOW_MT\"}"
+          HYO_ROOT="$HYO_ROOT" bash "$HYO_ROOT/bin/kai-signal.sh" emit "verification_failure" "$agent" "Content gate blocked: $current_weakness test case failed — pipeline gaming detected" 2>/dev/null || true
+          return 1
+        elif [[ $content_gate_exit -eq 2 ]]; then
+          log "  WARN: No test case file for $current_weakness — content gate skipped; write TEST-${current_weakness}-DATE.json at research time next cycle"
+        else
+          log "  ✓ Content gate passed — improvement verified against specific test case"
+        fi
+      fi
+
       if [[ $verify_exit -eq 0 ]]; then
         log "  ✓ Verification passed"
 

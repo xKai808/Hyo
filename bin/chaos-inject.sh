@@ -419,6 +419,56 @@ for line in sys.stdin:
   fi
 
   log "Full results: $RESULTS"
+
+  # ── Unknown frontier log (skepticism research Change 2 — closes false confidence) ──
+  # Skepticism finding: chaos engineering tests only the hypotheses you form beforehand.
+  # Passing chaos tests ≠ resilient. It means handled the failure modes we knew to inject.
+  # This section logs what was NOT tested so the confidence interval is honest.
+  log ""
+  log "── UNTESTED FAILURE MODES (unknown frontier) ──"
+  log "  These failure modes were NOT injected this cycle."
+  log "  Passing the above tests does NOT mean the system handles these:"
+  local untested_frontier=(
+    "API key expiry mid-run (not at startup — during an active Claude Code session)"
+    "Network partition between sandbox and Mini while queue worker is mid-command"
+    "Corrupt or truncated research file (partial write, not absence)"
+    "Queue worker crash during git commit (file in running/ but never moved to completed/)"
+    "Two agents triggering kai-signal.sh simultaneously (race condition on signals queue)"
+    "Vercel deploy hook timeout (push succeeds but deploy silently fails)"
+    "GROWTH.md write collision (two agents writing GROWTH.md simultaneously)"
+    "feed.json partial write (crash mid-JSON — produces invalid JSON, breaks HQ)"
+    "Self-improve cycle that produces correct files but wrong content (pipeline gaming)"
+    "Double-loop review that surfaces correct questions but Hyo has no inbox access"
+  )
+  for item in "${untested_frontier[@]}"; do
+    log "  ☐ $item"
+  done
+
+  # Write unknown frontier to machine-readable file for tracking
+  local frontier_file="$ROOT/agents/kai/ledger/chaos-untested-frontier-$(TODAY).json"
+  python3 - << PYEOF 2>/dev/null || true
+import json
+from pathlib import Path
+frontier = $(python3 -c "import json; print(json.dumps($(echo "${untested_frontier[@]}" | python3 -c "import sys; items=sys.stdin.read().split('\n'); print(repr([i.strip() for i in items if i.strip()]))"))" 2>/dev/null || echo '[]')
+Path('$frontier_file').write_text(json.dumps({
+    'date': '$(TODAY)',
+    'note': 'Failure modes NOT tested by chaos-inject.sh. Treat passing chaos tests as incomplete resilience proof until these are addressed.',
+    'untested': [
+        'API key expiry mid-run during active Claude Code session',
+        'Network partition between sandbox and Mini while queue worker is mid-command',
+        'Corrupt or truncated research file (partial write not absence)',
+        'Queue worker crash during git commit',
+        'Two agents triggering kai-signal.sh simultaneously',
+        'Vercel deploy hook timeout after successful push',
+        'GROWTH.md write collision between two agents',
+        'feed.json partial write producing invalid JSON',
+        'Self-improve cycle producing correct files but wrong content (pipeline gaming)',
+        'Double-loop review with no Hyo inbox access'
+    ]
+}, indent=2))
+print(f'Unknown frontier written: $frontier_file')
+PYEOF
+  log "Unknown frontier file: $frontier_file"
 }
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
