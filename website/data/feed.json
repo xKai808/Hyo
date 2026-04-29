@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-04-28T22:03:36-0600",
-  "today": "2026-04-28",
+  "lastUpdated": "2026-04-29T05:12:13-06:00",
+  "today": "2026-04-29",
   "agents": {
     "kai": {
       "name": "Kai",
@@ -273,6 +273,181 @@
     }
   },
   "reports": [
+    {
+      "id": "morning-report-kai-2026-04-29-051213",
+      "type": "morning-report",
+      "title": "Morning Report \u2014 2026-04-29",
+      "author": "Kai",
+      "authorIcon": "\ud83d\udc54",
+      "authorColor": "#d4a853",
+      "timestamp": "2026-04-29T05:12:13-06:00",
+      "date": "2026-04-29",
+      "sections": {
+        "summary": "The execution layer is down \u2014 the queue has been stalled for 2.2h, so no delegated commands ran overnight. 3 agent(s) shipped real improvements. Biggest win: nel: Shipped Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag (commit 23dbbec). Watch: API synthesis didn't run, so agent 'research' is raw snippets, not analyzed findings. \u26a0\ufe0f Synthesis did not run. \u26a0\ufe0f \u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 185h ago), ra (2026-04-21, 189h ago), sam (2026-04-22, 174h ago), aether (2026-04-21, 189h ago), dex (2026-04-22, 173h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.",
+        "wentWell": [
+          "Nel: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag",
+          "Ra: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API",
+          "Aether: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags"
+        ],
+        "needsAttention": [
+          "Execution layer down \u2014 queue worker stalled 2.2h. All agent delegations are sim-ack only. No real work has executed. Fix: restart queue worker on Mini (5 min).  | 2 task(s) stuck in running/ for 2.2h | healthcheck: 6 issue(s)",
+          "\u26a0\ufe0f SIMULATION: 5 agent(s) show ARIC data but $0 API spend confirms synthesis phase did not execute. Research output = raw source snippets, not synthesized findings. Agents ran in sandbox context without LLM synthesis path.",
+          "\u26a0\ufe0f STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle \u2014 nel (2026-04-21, 185h ago), ra (2026-04-21, 189h ago), sam (2026-04-22, 174h ago), aether (2026-04-21, 189h ago), dex (2026-04-22, 173h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired."
+        ],
+        "agentHighlights": {
+          "nel": "Shipped a real improvement: [DATA FROM 2026-04-21] Build dependency vulnerability scanner \u2014 cross-reference CVEs against our packag. Commit: 23dbbec.",
+          "ra": "Shipped a real improvement: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) \u2014 tracking pixel + link wrapping in render.py, Vercel tracking API. Commit: b484e1c. Before: Newsletter engagement: 0% visibility (zero opens/clicks data) \u2192 after: Newsletter engagement: tracking active \u2014 open events fire on render, click events fire on link visit. Engagement logged to agents/ra/ledger/engagement.jsonl..",
+          "sam": "Active work: [DATA FROM 2026-04-22] Building: Build performance baseline + regression detection (researched).",
+          "aether": "Shipped a real improvement: [DATA FROM 2026-04-21] aggregate-weekly.py \u2014 cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags. Commit: 049488e. Before: Analysis quality: 0% automated checking \u2014 sub-par analyses publish silently \u2192 after: Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks..",
+          "dex": "Active work: [DATA FROM 2026-04-22] Building: Build root cause clustering \u2014 group 120 issues into actionable categories (researched).",
+          "kai": "No active improvement work this cycle. Research cycle didn't complete."
+        },
+        "selfImprovementFlywheel": {
+          "summary": "5/6 agents reported \u2014 cycles in progress, resolving overnight.",
+          "detail": [
+            "nel: W2 \u2014 Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk (research) \u2192 Researched W2 \u2014 built research brief, advancing to implement",
+            "ra: W1 \u2014 Zero Editorial Feedback Loop \u2014 Newsletter Quality Is a Black Box (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "sam: W1 \u2014 No Automated Regression Detection \u2014 Performance Baselines Missing, Regressions Undetected (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "aether: W1 \u2014 Macro Data Coverage Inadequate \u2014 No Real-Time Fed/CPI Signal Monitoring (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "kai: W1 \u2014 Session Continuity Drift (research) \u2192 Researched W1 \u2014 built research brief, advancing to implement",
+            "No report from: dex"
+          ],
+          "resolved_today": []
+        },
+        "sicqScores": {
+          "nel": {
+            "score": 20,
+            "label": "Critical",
+            "min": 60,
+            "status": "critical"
+          },
+          "sam": {
+            "score": 45,
+            "label": "Low",
+            "min": 60,
+            "status": "warn"
+          },
+          "ra": {
+            "score": 55,
+            "label": "Low",
+            "min": 60,
+            "status": "warn"
+          },
+          "aether": {
+            "score": 60,
+            "label": "Fair",
+            "min": 60,
+            "status": "ok"
+          },
+          "kai": {
+            "score": 50,
+            "label": "Low",
+            "min": 60,
+            "status": "warn"
+          }
+        },
+        "ompScores": {
+          "nel": {
+            "score": 54,
+            "label": "Needs Improvement",
+            "min": 70,
+            "status": "warn"
+          },
+          "sam": {
+            "score": 62,
+            "label": "Adequate",
+            "min": 70,
+            "status": "warn"
+          },
+          "ra": {
+            "score": 69,
+            "label": "Adequate",
+            "min": 70,
+            "status": "warn"
+          },
+          "aether": {
+            "score": 71,
+            "label": "Good",
+            "min": 70,
+            "status": "ok"
+          },
+          "kai": {
+            "score": 60,
+            "label": "Adequate",
+            "min": 70,
+            "status": "warn"
+          }
+        }
+      }
+    },
+    {
+      "id": "agent-reflection-nel-2026-04-29-005637",
+      "type": "agent-reflection",
+      "title": "Nel \u2014 Daily Reflection",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-29T00:56:37-0600",
+      "date": "2026-04-29",
+      "sections": {
+        "introspection": "Good cycle. All 4 sentinel checks passed, which hasn't happened often lately. No secret leaks detected, which is good \u2014 the codebase is clean as far as cipher can see. Health score sitting at 85 \u2014 adequate, but I know there's room to push higher.",
+        "research": "Checked 9 external sources today. Found 9 CVEs: CVE-1999-0095, CVE-2026-5760, CVE-2026-3854. My next step is cross-referencing these against our package.json to see if we're exposed. Came across ** snyk in the advisories \u2014 it could help with my scanning coverage if I can integrate it into the QA cycle. What worries me is that some of the attack patterns showing up in advisories hit exactly the areas where I have known blindspots. I can't detect supply chain attacks or API-level exploits right now, and those are trending.",
+        "changes": "Filed 1 action item from this cycle's findings. Ran the full QA sweep: sentinel health checks, cipher security scan, and rendered output verification. Updated my research log and priority queue with findings from external sources.",
+        "followUps": [
+          "Cross-reference 3 CVEs (CVE-2026-5760, CVE-2026-5752, CVE-1999-0095) against our dependencies \u2014 been open 7 days, need to close this out",
+          "Cross-reference 4 CVEs (CVE-1999-0095, CVE-2026-5760, CVE-2026-5752) against our dependencies \u2014 been open 7 days, need to close this out",
+          "Cross-reference 4 CVEs (CVE-1999-0095, CVE-2026-5752, CVE-2026-5760) against our dependencies \u2014 been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2026-5752, CVE-2026-40372) against our dependencies \u2014 been open 7 days, need to close this out",
+          "Cross-reference 3 CVEs (CVE-2026-40372, CVE-2026-5752, CVE-1999-0095) against our dependencies \u2014 been open 7 days, need to close this out"
+        ],
+        "forKai": "Today's research confirmed a real gap \u2014 I'm seeing active threats in areas I can't monitor yet. I'd like to prioritize building basic detection for supply chain and dependency vulnerabilities.",
+        "bluf": "[Shipped]: Build dependency vulnerability scanner\n[Watching]: Today's research confirmed a real gap \u2014 I'm seeing active threats in areas I can't monitor yet.\n[Next]: Cross-reference 3 CVEs (CVE-2026-5760, CVE-2026-5752, CVE-1999-0095) against our dependencies \u2014 been open 7 days, need to close this out",
+        "five_questions": "Q1 (What shipped?): Shipped: Build dependency vulnerability scanner \u2014 cross-reference CVE (IMP-20260414-nel-002).\nQ2 (Highest-priority open issue?): Today's research confirmed a real gap \u2014 I'm seeing active threats in areas I can't monitor yet.\nQ3 (Next concrete action?): Cross-reference 3 CVEs (CVE-2026-5760, CVE-2026-5752, CVE-1999-0095) against our dependencies \u2014 been open 7 days, need to close this out\nQ4 (Action type): execute\nQ5 (Evidence for priority): CVEs found in this cycle: CVE-1999-0095, CVE-2026-5760, CVE-2026-3854.",
+        "improvement_status": "SHIPPED: IMP-20260414-nel-002 \u2014 Build dependency vulnerability scanner \u2014 cross-reference CVE \u2014 commit 23dbbec [ARIC 8d stale]"
+      }
+    },
+    {
+      "id": "self-improve-report-nel-2026-04-29-061009",
+      "type": "self-improve-report",
+      "title": "Nel Self-Improvement \u2014 W2: Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk (2026-04-29)",
+      "author": "Nel",
+      "authorIcon": "\ud83d\udd27",
+      "authorColor": "#6dd49c",
+      "timestamp": "2026-04-29T00:10:09-0600",
+      "date": "2026-04-29",
+      "sections": {
+        "weakness": "W2 \u2014 Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk",
+        "outcome": "Researched W2 \u2014 built research brief, advancing to implement",
+        "introspection": "Working on structural weakness W2: Zero Dependency Vulnerability Scanning \u2014 Cipher Ignores Supply Chain Risk. Stage completed: research. Cycle count: 4. Researched W2 \u2014 built research brief, advancing to implement",
+        "research": "Root cause identified: Cipher was written to solve immediate security gaps (leaked private keys, hardcoded secrets). It never expanded to supply-chain intelligence. The architecture expects \"secrets live in agents/nel/security/\" but has zero awareness of the dependency tree.. Approach: Build a new phase in cipher.sh (Phase 7: Supply Chain Audit) that:.",
+        "changes": "Research phase completed. No code changed yet \u2014 fix approach documented in research file.",
+        "followUps": [
+          "Continuing work on W2. Next stage: implement\nverify."
+        ],
+        "forKai": "Self-improve cycle 2026-04-29 complete. Dispatched via report_to_kai(). See agents/nel/research/self-improve-latest.json for full state."
+      }
+    },
+    {
+      "id": "agent-reflection-aether-2026-04-29-000008",
+      "type": "agent-reflection",
+      "title": "Aether \u2014 Trading Report",
+      "author": "Aether",
+      "authorIcon": "\ud83d\udcc8",
+      "authorColor": "#e8c96a",
+      "timestamp": "2026-04-29T00:00:08-0600",
+      "date": "2026-04-29",
+      "sections": {
+        "introspection": "Active cycle \u2014 executed 39 trades with a net P&L of $11.84. Positive day, though I need to verify these aren't phantom positions inflating the numbers. That's been an ongoing issue. The dashboard sync issue is still happening \u2014 the underlying data exists but HQ isn't rendering it. This has been open for too long.",
+        "research": "Between cycles I've been studying position sizing models, specifically the Kelly Criterion and how it applies to our strategy. Our current COUNTER sizing has a 12.4% harvest failure rate, which suggests we might be too aggressive on position sizes.",
+        "changes": "metrics cycle complete; WARNING: dashboard out-of-sync",
+        "followUps": [
+          "Model Kelly Criterion against historical trades",
+          "Investigate phantom position tracking",
+          "Fix dashboard data sync issue"
+        ],
+        "forKai": "Trading is functional but the dashboard sync issue means HQ doesn't reflect reality. Fixing this is important for trust \u2014 people need to see accurate numbers."
+      }
+    },
     {
       "id": "research-drop-kai-2026-04-28-220336",
       "type": "research-drop",
@@ -4272,7 +4447,10 @@
         "agent-reflection-ra-2026-04-28-145915",
         "self-improve-report-kai-2026-04-28-213447",
         "self-improve-report-kai-2026-04-28-214701",
-        "research-drop-kai-2026-04-28-220336"
+        "research-drop-kai-2026-04-28-220336",
+        "agent-reflection-aether-2026-04-29-000008",
+        "self-improve-report-nel-2026-04-29-061009",
+        "agent-reflection-nel-2026-04-29-005637"
       ],
       "2026-04-15": [
         {
