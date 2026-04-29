@@ -204,7 +204,8 @@ if story_count == 0:
     # and flag as gather-failed so Hyo sees an honest status
     print(f"[feed] CONTENT GATE: 0 entities, no prior entry — publishing empty-gather notice")
     # Alert Telegram
-    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    # AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+    token = os.environ.get("AETHERBOT_TELEGRAM_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat  = os.environ.get("TELEGRAM_CHAT_ID", "")
     if token and chat:
         import urllib.request, urllib.parse

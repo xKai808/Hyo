@@ -17,7 +17,8 @@ BASE_URL = "https://api.elections.kalshi.com/trade-api/v2"
 SERIES_TICKER = "KXBTC15M"
 
 # TELEGRAM ALERTS
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+# AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+TELEGRAM_BOT_TOKEN = os.environ.get("AETHERBOT_TELEGRAM_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 def send_telegram_alert(message: str):

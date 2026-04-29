@@ -36,13 +36,15 @@ ANT_FILE2     = os.environ.get("ANT_OUT_FILE2",
 # ── Telegram ──────────────────────────────────────────────────────────────────
 
 def _load_telegram_creds() -> tuple[str, str]:
-    token   = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    # AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+    token   = os.environ.get("AETHERBOT_TELEGRAM_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
     if token and chat_id:
         return token, chat_id
     for env_path in [
         os.path.join(SECRETS_DIR, "env"),
         os.path.expanduser("~/Documents/Projects/Kai/.env"),
+        os.path.expanduser("~/security/hyo.env"),
     ]:
         if not os.path.exists(env_path):
             continue
@@ -54,7 +56,9 @@ def _load_telegram_creds() -> tuple[str, str]:
                         continue
                     k, v = line.split("=", 1)
                     k = k.strip(); v = v.strip()
-                    if k == "TELEGRAM_BOT_TOKEN" and not token:
+                    if k == "AETHERBOT_TELEGRAM_TOKEN" and not token:
+                        token = v
+                    elif k == "TELEGRAM_BOT_TOKEN" and not token:
                         token = v
                     elif k == "TELEGRAM_CHAT_ID" and not chat_id:
                         chat_id = v

@@ -651,17 +651,35 @@ import sys, os, json, urllib.request
 root = sys.argv[1]
 message = sys.argv[2]
 
-# Load creds
-token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+# AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+token = os.environ.get("AETHERBOT_TELEGRAM_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN", "")
 chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
 
-# @xaetherbot — credentials in ~/Documents/Projects/Kai/.env (AETHER_OPERATIONS.md §14)
-        kai_env = os.path.expanduser("~/Documents/Projects/Kai/.env")
-
-if not token and os.path.isfile(token_path):
-    token = open(token_path).read().strip()
-if not chat_id and os.path.isfile(chat_path):
-    chat_id = open(chat_path).read().strip()
+# Load from env files if not in environment
+if not token or not chat_id:
+    for env_path in [
+        os.path.expanduser("~/Documents/Projects/Kai/.env"),
+        os.path.expanduser("~/security/hyo.env"),
+    ]:
+        if not os.path.isfile(env_path):
+            continue
+        try:
+            for line in open(env_path):
+                line = line.strip()
+                if "=" not in line or line.startswith("#"):
+                    continue
+                k, v = line.split("=", 1)
+                k = k.strip(); v = v.strip()
+                if k == "AETHERBOT_TELEGRAM_TOKEN" and not token:
+                    token = v
+                elif k == "TELEGRAM_BOT_TOKEN" and not token:
+                    token = v
+                elif k == "TELEGRAM_CHAT_ID" and not chat_id:
+                    chat_id = v
+        except Exception:
+            pass
+        if token and chat_id:
+            break
 
 if not token or not chat_id:
     print("TELEGRAM: no creds — skipping", flush=True)

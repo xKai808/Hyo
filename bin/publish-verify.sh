@@ -91,7 +91,10 @@ else
   # Credentials live in ~/Documents/Projects/Kai/.env (not nel/security/ — those files don't exist).
   ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
   KAI_ENV="$HOME/Documents/Projects/Kai/.env"
-  TOKEN=$(grep '^TELEGRAM_BOT_TOKEN=' "$KAI_ENV" 2>/dev/null | cut -d= -f2 | tr -d '"'"'" || echo "${TELEGRAM_BOT_TOKEN:-}")
+  # AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+  TOKEN=$(grep '^AETHERBOT_TELEGRAM_TOKEN=' "$KAI_ENV" 2>/dev/null | cut -d= -f2 | tr -d '"'"'" || true)
+  TOKEN=${TOKEN:-$(grep '^AETHERBOT_TELEGRAM_TOKEN=' "$HOME/security/hyo.env" 2>/dev/null | cut -d= -f2 | tr -d '"'"'" || true)}
+  TOKEN=${TOKEN:-$(grep '^TELEGRAM_BOT_TOKEN=' "$KAI_ENV" 2>/dev/null | cut -d= -f2 | tr -d '"'"'" || echo "${TELEGRAM_BOT_TOKEN:-}")}
   CHAT=$(grep '^TELEGRAM_CHAT_ID=' "$KAI_ENV" 2>/dev/null | head -1 | cut -d= -f2 | tr -d '"'"'" | tr -d '[:space:]' || echo "${TELEGRAM_CHAT_ID:-}")
   if [[ -n "$TOKEN" && -n "$CHAT" ]]; then
     MSG="🚨 PUBLISH VERIFY FAIL | $URL | result=$RESULT | http=$HTTP_CODE | ${ELAPSED}s waited"

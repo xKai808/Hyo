@@ -112,20 +112,28 @@ def alert_hyo_inbox(agent, message, severity="P1"):
 
 def send_telegram(message):
     """Best-effort Telegram alert."""
-    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    # AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+    token = os.environ.get("AETHERBOT_TELEGRAM_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not (token and chat):
         # Try loading from env file
         # @xaetherbot channel — credentials in ~/Documents/Projects/Kai/.env (AETHER_OPERATIONS.md §14)
-        kai_env = os.path.expanduser("~/Documents/Projects/Kai/.env")
-        try:
-            for line in open(kai_env):
-                if line.startswith("TELEGRAM_BOT_TOKEN=") and not token:
-                    token = line.split("=",1)[1].strip().strip('"').strip("'")
-                elif line.startswith("TELEGRAM_CHAT_ID=") and not chat:
-                    chat = line.split("=",1)[1].strip().strip('"').strip("'")
-        except Exception:
-            return
+        for kai_env in [
+            os.path.expanduser("~/Documents/Projects/Kai/.env"),
+            os.path.expanduser("~/security/hyo.env"),
+        ]:
+            try:
+                for line in open(kai_env):
+                    if line.startswith("AETHERBOT_TELEGRAM_TOKEN=") and not token:
+                        token = line.split("=",1)[1].strip().strip('"').strip("'")
+                    elif line.startswith("TELEGRAM_BOT_TOKEN=") and not token:
+                        token = line.split("=",1)[1].strip().strip('"').strip("'")
+                    elif line.startswith("TELEGRAM_CHAT_ID=") and not chat:
+                        chat = line.split("=",1)[1].strip().strip('"').strip("'")
+            except Exception:
+                pass
+            if token and chat:
+                break
         if not (token and chat):
             return
     try:

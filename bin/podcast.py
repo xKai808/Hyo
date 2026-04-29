@@ -81,47 +81,37 @@ def log(msg: str):
 
 
 def _load_telegram_creds() -> tuple[str, str]:
-    """Load TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID from secrets env file or environment."""
-    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    """Load AETHERBOT_TELEGRAM_TOKEN and TELEGRAM_CHAT_ID from env. Alerts go via @xAetherbot."""
+    # AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts only). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+    token = os.environ.get("AETHERBOT_TELEGRAM_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
     if token and chat_id:
         return token, chat_id
-    # Try secrets env file
-    env_file = os.path.join(SECRETS_DIR, "env")
-    if os.path.exists(env_file):
+    for env_path in [
+        os.path.join(SECRETS_DIR, "env"),
+        os.path.expanduser("~/Documents/Projects/Kai/.env"),
+        os.path.expanduser("~/security/hyo.env"),
+    ]:
+        if not os.path.exists(env_path):
+            continue
         try:
-            with open(env_file) as f:
+            with open(env_path) as f:
                 for line in f:
                     line = line.strip()
                     if "=" not in line or line.startswith("#"):
                         continue
                     k, v = line.split("=", 1)
-                    k = k.strip()
-                    v = v.strip()
-                    if k == "TELEGRAM_BOT_TOKEN" and not token:
+                    k = k.strip(); v = v.strip()
+                    if k == "AETHERBOT_TELEGRAM_TOKEN" and not token:
+                        token = v
+                    elif k == "TELEGRAM_BOT_TOKEN" and not token:
                         token = v
                     elif k == "TELEGRAM_CHAT_ID" and not chat_id:
                         chat_id = v
         except Exception:
             pass
-    # Fallback: try Kai project .env
-    if not token or not chat_id:
-        kai_env = os.path.expanduser("~/Documents/Projects/Kai/.env")
-        if os.path.exists(kai_env):
-            try:
-                with open(kai_env) as f:
-                    for line in f:
-                        line = line.strip()
-                        if "=" not in line or line.startswith("#"):
-                            continue
-                        k, v = line.split("=", 1)
-                        k = k.strip(); v = v.strip()
-                        if k == "TELEGRAM_BOT_TOKEN" and not token:
-                            token = v
-                        elif k == "TELEGRAM_CHAT_ID" and not chat_id:
-                            chat_id = v
-            except Exception:
-                pass
+        if token and chat_id:
+            break
     return token, chat_id
 
 

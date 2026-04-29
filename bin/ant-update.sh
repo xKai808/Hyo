@@ -599,7 +599,9 @@ except Exception as e:
     try:
         for line in open(env_file):
             k, _, v = line.strip().partition('=')
-            if k.strip() == 'TELEGRAM_BOT_TOKEN': token = v.strip()
+            # AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (alerts). TELEGRAM_BOT_TOKEN = @Kai_11_bot (conversations).
+            if k.strip() == 'AETHERBOT_TELEGRAM_TOKEN': token = v.strip()
+            elif k.strip() == 'TELEGRAM_BOT_TOKEN' and not token: token = v.strip()
             if k.strip() == 'TELEGRAM_CHAT_ID': chat_id = v.strip()
     except: pass
     if token and chat_id:
