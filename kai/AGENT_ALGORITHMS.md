@@ -72,7 +72,10 @@ These protocols are mandatory reference material. Reading "PLAYBOOK only" is not
 | `kai/protocols/VERIFICATION_PROTOCOL.md` | Post-action verification | After every action | All agents + Kai |
 | `kai/protocols/RESOLUTION_ALGORITHM.md` | Issue resolution | On every error/issue | All agents + Kai |
 | `kai/protocols/AGENT_RESEARCH_CYCLE.md` | ARIC daily cycle | Daily (all runners) | All agents |
-| `bin/agent-self-improve.sh` | Autonomous self-improvement flywheel | Every runner cycle + 08:00 MT daily | All agents |
+| `bin/agent-self-improve.sh` | Autonomous self-improvement flywheel | Every runner cycle + 04:30 MT + 16:30 MT daily (2x) | All agents |
+| `bin/kai-signal.sh` | Event-triggered improvement signal bus | Every autonomous cycle (poll) + emitted on failure events | All agents + Kai |
+| `bin/chaos-inject.sh` | Deliberate failure injection (antifragility) | Saturday 05:00 MT weekly | Kai (tests all agents) |
+| `bin/double-loop-review.sh` | Weekly strategic goal-level review | Every Monday 07:15 MT | Kai + Hyo (conversation) |
 | `bin/claude-code-delegate.sh` | Delegate coding tasks to Claude Code | Called by agent-self-improve.sh + Sam cmd_fix/cmd_evolve | All agents |
 | `kai/protocols/REASONING_FRAMEWORK.md` | Question framework | Monthly review | All agents + Kai |
 | `kai/protocols/PROTOCOL_TICKET_LIFECYCLE.md` | Ticket opening→resolution→close | On every discrepancy | All agents + Kai |
@@ -750,7 +753,7 @@ To install on Mini: GitHub MCP (P0), Reddit MCP (P1), YouTube MCP (P1), X/Twitte
 
 **The compounding flywheel. This is the structural difference between agents that detect the same problem forever and agents that fix their own problems and get better.**
 
-Every agent runs `bin/agent-self-improve.sh <agent>` at the START of every runner cycle AND via `kai-autonomous.sh` at 08:00 MT daily.
+Every agent runs `bin/agent-self-improve.sh <agent>` at the START of every runner cycle AND via `kai-autonomous.sh` at 04:30 MT + 16:30 MT daily (2x/day). Event-triggered improvement fires immediately via `bin/kai-signal.sh` when any agent emits a failure signal — no waiting for the next scheduled sweep. Forward AAR chain: each successful verify cycle writes `agents/<name>/ledger/forward-aar-DATE.json` that the next research phase reads as its anchor, so cycles compound instead of cold-starting from GROWTH.md alone.
 
 ```
 THE FLYWHEEL (per agent, every cycle):
@@ -2182,7 +2185,7 @@ RULE: "The code is correct" is never a valid response to a visual bug report.
 Process compliance measurement. 5 binary checks × 20 pts = 100 max.
 Checks: research file written, structured fields present, cycles advanced, files changed, KNOWLEDGE updated.
 For Kai: custom 5-check executive compliance (HC, RDC, QGC, DMW, ERR).
-Computed by: `bin/flywheel-doctor.sh` at 05:30, 09:30, 17:00 MT daily.
+Computed by: `bin/flywheel-doctor.sh` at 05:30, 09:30, 13:30, 17:30, 21:30 MT daily (5x/day, every ~4 hours).
 Output: `kai/ledger/sicq-latest.json`. Threshold: ≥60 warn, ≥80 healthy.
 Protocol: `kai/protocols/PROTOCOL_KAI_METRICS.md`.
 

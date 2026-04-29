@@ -1,5 +1,15 @@
 # KAI_BRIEF.md
 
+> **[SESSION 2026-04-28 CONTINUED — Cowork — SHIPPED]** Self-improve v2.0 complete. All research recommendations implemented. All protocols updated.
+> - `bin/kai-signal.sh` (NEW) — event-triggered improvement signal bus. 8 signal types (research_failure, api_exhausted, publish_failure, verification_failure, stale_detection, quality_degradation, chaos_discovery, knowledge_gap). Polled every autonomous cycle. P0 signals write to Hyo inbox immediately.
+> - `bin/chaos-inject.sh` (NEW) — weekly antifragility testing (Saturday 05:00 MT). Removes one dep per agent for ≤5 min, measures recovery/fallback/alert. Emits chaos_discovery signal per SPOF. Safety: no Sunday, no P0s open, trap-based restore.
+> - `bin/double-loop-review.sh` (NEW) — weekly goal-level review (every Monday 07:15 MT). 6 questions only Hyo+Kai can answer. Pulls live state, error patterns, improvement history, chaos findings. Writes to `kai/reviews/double-loop-YYYY-Www.md` + Hyo inbox P1.
+> - `bin/agent-self-improve.sh` (MODIFIED) — forward AAR chain (successful cycles write `agents/<name>/ledger/forward-aar-DATE.json`; next research phase reads it as anchor); brief_empty now emits research_failure signal + falls back to yesterday's research file.
+> - `bin/kai-autonomous.sh` (MODIFIED) — signal poll every cycle; chaos-inject Saturday 05:00; double-loop Monday 07:15; flywheel-doctor 5x/day (05:30/09:30/13:30/17:30/21:30); self-improve 2x/day (04:30+16:30); cross-agent-review daily Mon-Sat (was Saturday-only).
+> - Research report published to HQ feed (research-drop, 2026-04-28, HTTP 200 confirmed).
+> - CLAUDE.md, AGENT_ALGORITHMS.md updated with new cadences and new files.
+> Commits: 940dd0f (v2.0 initial), 510f7f2 (cadences+double-loop), 379d89f (weekly not monthly), + protocol updates.
+
 > **[SESSION 2026-04-28 — Cowork — SHIPPED]**
 > Completed all pending tasks from the task queue. Commits queued to Mini:
 > - `bin/analysis-gate.py` — Gate 7 QC13 arithmetic reconciliation (balance delta vs confirmed trade P&L, $5 tolerance)

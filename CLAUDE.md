@@ -156,7 +156,11 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
   - `03:00 MT` — Ra newsletter pipeline → publishes `newsletter-ra-DATE` + `ra-daily-DATE` to HQ feed
   - `05:00 MT` — Morning report → publishes `morning-report-DATE` to HQ feed
   - `07:00 MT` — Completeness check (`bin/report-completeness-check.sh`) — verifies ALL required entries exist; opens P1 ticket and auto-remediates anything missing; no exceptions
-  - **Saturday only**: `06:00 MT` — Weekly report (`bin/weekly-report.sh`) for ALL agents (nel/ra/sam/aether/kai): weaknesses, improvements shipped, total tickets, resolved, pending; all pending tickets triggered to ACTIVE with 1hr SLA; followed by `bin/archive-to-research.sh` moving the week's reports to `research-archive.json` organized by agent then month
+  - **Saturday only**: `02:00 MT` — Weekly maintenance (`bin/weekly-maintenance.sh`); `05:00 MT` — Chaos injection (`bin/chaos-inject.sh`) — deliberate failure test per agent, discovers SPOFs before production does; `06:00 MT` — Weekly report (`bin/weekly-report.sh`) for ALL agents + Aether weekly summary; all pending tickets triggered to ACTIVE with 1hr SLA
+  - **Monday–Saturday**: `04:30 MT` + `16:30 MT` — Self-improve flywheel (`bin/agent-self-improve.sh all`) — 2x daily sweeps (event-triggered improvement fires immediately via `bin/kai-signal.sh` signal bus)
+  - **Monday–Saturday**: `06:45 MT` — Cross-agent adversarial review (`bin/cross-agent-review.sh`) — daily (was Saturday-only; cadence compressed for tighter feedback)
+  - **Every Monday**: `07:15 MT` — Double-loop review (`bin/double-loop-review.sh`) — weekly Hyo+Kai strategic conversation: are agents working on the right problems, which assumptions are stale, what capability gaps exist (~15 min, 6 questions, written brief to inbox at `kai/reviews/double-loop-YYYY-Www.md`)
+  - **Flywheel-doctor**: 5x/day at 05:30, 09:30, 13:30, 17:30, 21:30 MT (every ~4 hours); signal bus (`bin/kai-signal.sh`) fires event-triggered improvement cycles between sweeps
   - **No reports on Sunday**
   - Each agent's daily report is a real account of what was executed, what shipped (with verification), what's in progress, ticket counts. No theater. No sim-ack. If nothing shipped, say so honestly.
   - Kai's daily report is distinct from the morning report: it covers decisions made during the session, work delegated, system changes, what Kai is tracking.
