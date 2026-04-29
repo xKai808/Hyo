@@ -1065,13 +1065,14 @@ fi
 FEED_JSON="$ROOT/website/data/feed.json"
 if [[ -f "$FEED_JSON" ]] && [[ -f "$JSON_OUTPUT" ]]; then
   log "Adding morning report to feed.json..."
-  python3 - "$FEED_JSON" "$JSON_OUTPUT" "$TODAY" <<'FEED_PYEOF'
-import json, sys
+  python3 - "$FEED_JSON" "$JSON_OUTPUT" "$TODAY" "$ROOT" <<'FEED_PYEOF'
+import json, sys, os
 from datetime import datetime
 
 feed_path = sys.argv[1]
 mr_path = sys.argv[2]
 today = sys.argv[3]
+root = os.path.expanduser(sys.argv[4]) if len(sys.argv) > 4 else os.path.expanduser("~/Documents/Projects/Hyo")
 
 with open(feed_path) as f:
     feed = json.load(f)
