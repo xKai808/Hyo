@@ -1,6 +1,12 @@
 # Ra Research Archive — Index
 
-*Auto-generated 2026-04-12T01:22:11Z. Do not edit by hand — rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
+*Last updated 2026-04-28. Rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
+
+## Briefs (1)
+
+| Name | Agent | Date |
+| --- | --- | --- |
+| [Self-Evolving Agent Systems: Signals, Chaos, and Double-Loop Review](briefs/kai-self-improve-2026-04-28.md) | Kai | 2026-04-28 |
 
 ## Entities (5)
 
