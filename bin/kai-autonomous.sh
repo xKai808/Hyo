@@ -606,11 +606,13 @@ if [[ $DOW -eq 6 ]]; then
   # Nel reviews Sam, Sam reviews Nel, Ra reviews Aether, Dex reviews all
   # Primary antidote to echo chamber dynamics in the self-improvement flywheel
   check_and_dispatch 6 45 "cross-agent-review" \
-  check_and_dispatch 6 0 "aether-weekly-summary" \
-    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aether-weekly-summary.sh >> $HYO_ROOT/agents/aether/logs/weekly-summary.log 2>&1" \
-    "aether_weekly_summary_run"  # Saturday only — see Saturday block above
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/cross-agent-review.sh >> $HYO_ROOT/kai/ledger/cross-agent-review.log 2>&1" \
     "cross_agent_review_run"
+
+  # Aether weekly summary (Saturday 06:00) — before morning report
+  check_and_dispatch 6 0 "aether-weekly-summary" \
+    "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aether-weekly-summary.sh >> $HYO_ROOT/agents/aether/logs/weekly-summary.log 2>&1" \
+    "aether_weekly_summary_run"
 fi
 
 # Morning report (07:00) — now has ALL fresh data:
@@ -639,6 +641,12 @@ check_and_dispatch 6 45 "session-prep" \
 check_and_dispatch 9 0 "queue-hygiene" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/queue-hygiene.sh >> $HYO_ROOT/kai/ledger/queue-hygiene.log 2>&1" \
   "queue_hygiene_run"
+
+# Protocol staleness check (09:00) — flags .md protocols >30/60/90 days without review
+# Files: kai/protocols/*.md, agents/*/PLAYBOOK.md, PRIORITIES.md, GROWTH.md, PROTOCOL_*.md
+check_and_dispatch 9 0 "protocol-staleness" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/protocol-staleness-check.sh >> $HYO_ROOT/kai/ledger/protocol-staleness.log 2>&1" \
+  "protocol_staleness_run"
 
 # Flywheel doctor midday check (09:30) — catch daytime drift, write SICQ update
 check_and_dispatch 9 30 "flywheel-doctor-midday" \
