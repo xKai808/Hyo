@@ -667,14 +667,16 @@ if [[ $DOW -eq 6 ]]; then
     "aether_weekly_summary_run"
 fi
 
-# CADENCE COMPRESSION v2.0: Monthly double-loop review
-# Runs first Monday of each month at 07:15 (after morning report).
-# double-loop-review.sh checks internally if it's first Monday — safe to call every Monday.
-# This is the only scheduled event that requires a Hyo+Kai conversation to complete.
+# WEEKLY double-loop review — every Monday 07:15 MT
+# Cadence rationale: monthly wastes 30 days of compounding in the wrong direction.
+# A week is the right interval — enough time for agents to have run meaningful cycles,
+# not so long that the system drifts without direction correction.
+# double-loop-review.sh uses the week's date as state_key so it runs once per week.
+# This is the only event requiring a Hyo+Kai conversation — 6 questions, ~15 min.
 if [[ $DOW -eq 1 ]]; then
   check_and_dispatch 7 15 "double-loop-review" \
     "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/double-loop-review.sh >> $HYO_ROOT/kai/ledger/double-loop.log 2>&1" \
-    "double_loop_review_$(TZ=America/Denver date +%Y-%m)"
+    "double_loop_review_$(TZ=America/Denver date +%Y-%W)"
 fi
 
 # Morning report (07:00) — now has ALL fresh data:
