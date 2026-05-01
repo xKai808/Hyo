@@ -330,7 +330,7 @@ def upsert(path):
     # Insert near the front so it shows up on HQ
     reports.insert(0, new_entry)
     data["lastUpdated"] = now_mt
-    data["today"] = date
+    data["today"] = now_mt[:10]  # always current system date, not analysis date (structural fix — S31c)
     # Also record in history if the structure exists
     hist = data.get("history")
     if isinstance(hist, dict):
