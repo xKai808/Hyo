@@ -270,7 +270,7 @@ REPORTS_FOUND=0
 # Check feed.json for today's required report types
 FEED_FILE="$HYO_ROOT/agents/sam/website/data/feed.json"
 if [[ -f "$FEED_FILE" ]]; then
-  for rtype in "morning-report" "nel-daily" "ra-daily" "sam-daily" "aether-daily"; do
+  for rtype in "morning-report" "nel-daily" "ra-daily" "sam-daily" "aether-daily" "kai-daily"; do
     found=$(python3 -c "
 import json
 try:
@@ -563,6 +563,13 @@ if [[ $DOW -ge 1 && $DOW -le 5 ]]; then
     "aether_analysis_run"
 fi
 
+# Kai daily self-improvement cycle (23:30) — every day including Kai
+# Kai was the only agent without a scheduled daily runner. Fixed.
+# Runs: external research → finds something → makes a concrete change → publishes report.
+check_and_dispatch 23 30 "kai-daily-improve" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/kai/kai-daily.sh >> $HYO_ROOT/kai/ledger/kai-daily.log 2>&1" \
+  "kai_daily_run"
+
 # Ra newsletter pipeline (03:00) — Mon-Sat; no Sunday
 if [[ $DOW -ne 0 ]]; then
   check_and_dispatch 3 0 "ra-newsletter" \
@@ -605,13 +612,11 @@ check_and_dispatch 4 45 "findings-to-aric-bridge" \
   "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/bin/findings-to-aric.py >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
   "findings_aric_bridge_run"
 
-# CADENCE COMPRESSION v2.0 — self-improve sweep 2x/day (04:30 + 16:30)
-# Research finding: event-triggered improvement (signal bus) handles urgent gaps;
-# scheduled sweeps catch anything that slipped. 2x/day means max 8h gap before sweep.
-# Weekly→daily: cross-agent-review now runs Mon-Sat (not Saturday only).
-check_and_dispatch 16 30 "agent-self-improve-midday" \
-  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
-  "self_improve_midday_run"
+# Self-improve runs ONCE daily at 04:30. That is the schedule.
+# Hyo directive (2026-04-30): "Not twice a day. Not every other day. Once. Daily."
+# The 16:30 midday sweep is removed. q24 dedup markers prevent double-runs.
+# Event-triggered improvements (kai-signal.sh) still fire on P0 signals.
+# REMOVED: check_and_dispatch 16 30 "agent-self-improve-midday"
 
 # Flywheel doctor + SICQ — morning run (05:30)
 # Moved from 09:00: SICQ must be fresh BEFORE morning report at 07:00.

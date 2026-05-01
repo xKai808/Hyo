@@ -898,12 +898,10 @@ if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
 
   if [[ -f "$NEL_REPORT_PUBLISH_MARKER" ]]; then
     log_info "Reflection: skipping HQ publish (already published today)"
-  elif [[ "$NIGHTLY_WINDOW" -eq 0 && "$FORCE_REFLECT" != "1" ]]; then
-    log_info "Reflection: skipping HQ publish (q24/nightly gate — current hour $REFLECT_HOUR MT; set NEL_FORCE_REFLECT=1 to override)"
   else
     bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — Daily Reflection" "$REFLECTION_SECTIONS" 2>/dev/null || true
     touch "$NEL_REPORT_PUBLISH_MARKER"
-    log_pass "Reflection published to HQ feed (nightly q24 window)"
+    log_pass "Reflection published to HQ feed"
   fi
 
   # Report to Kai — closed-loop upward communication (always fires for metrics)

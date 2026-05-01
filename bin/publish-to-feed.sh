@@ -306,3 +306,21 @@ print(f"Archived to {archive_file}")
 ARCHEOF
 
 echo "Feed entry published: $REPORT_ID"
+
+# ── COMMIT + PUSH: every publish must reach Vercel, not just local disk ──
+# Without this, HQ never updates. Reports go to /dev/null.
+cd "$ROOT" && git add \
+  "website/data/feed.json" \
+  "agents/sam/website/data/feed.json" \
+  "agents/${AUTHOR_LC_ARCHIVE}/archive/" \
+  2>/dev/null || true
+
+git diff --cached --quiet 2>/dev/null || \
+  git commit -m "publish: ${TYPE} by ${AUTHOR} — ${TITLE:0:60}" \
+    --author="Kai (CEO, hyo.world) <kai@hyo.world>" \
+    2>/dev/null || true
+
+git push origin main 2>/dev/null && echo "Feed pushed to remote" || \
+  echo "WARN: push failed — queuing retry" && \
+  echo "{\"id\":\"feed-push-retry-$(date +%s)\",\"command\":\"cd ~/Documents/Projects/Hyo && git push origin main\",\"ts\":\"$(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)\",\"timeout\":60,\"agent\":\"kai\"}" \
+  > "$ROOT/kai/queue/pending/feed-push-retry-$(date +%s).json"

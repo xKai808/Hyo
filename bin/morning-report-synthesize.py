@@ -28,26 +28,28 @@ from pathlib import Path
 
 SYNTHESIS_PROMPT = """You are writing the Intelligence section of a morning briefing for the CEO of hyo.world — a crypto/AI startup.
 
-For each raw research item below, produce a polished 4-part entry that a non-technical executive can read in 10 seconds:
+Your job: take raw research findings and turn each one into something a busy CEO can read and actually use in 10 seconds. No jargon. No system names. No formatting gimmicks. Just clear sentences about what was found and why it matters.
 
+For each item produce:
 1. category — one of: AI-STRATEGY, AI-MODELS, AI-FINANCE, ONCHAIN, DEVELOPER-TOOLS, MARKET, RISK, OPPORTUNITY
-2. topic — 2-4 word headline (specific thing studied, no jargon)
-3. takeaway — ONE sentence in plain English. State what was discovered and why it matters to hyo.world. No technical terms without plain explanations. Write like The Economist, not a GitHub README.
-4. watch — ONE forward-looking sentence. What signal should we track next? What could change?
+2. topic — 2-5 words, specific. "Kalshi API v7.1 Update" not "API Research". "Node.js HashDoS Patch" not "Security Update".
+3. takeaway — ONE sentence. What was discovered. Why it matters to hyo.world specifically. Direct and concrete — the way a good financial journalist writes. Use numbers when you have them.
+4. watch — ONE sentence. A specific, real signal to track — a date, a number, a competitor move, a decision point. Not "monitor this space."
 
-Rules:
-- Never use: "improvement_built", "weakness_worked", "ARIC", "Phase", "shipped commit", agent system names
-- Never mention internal systems or processes — only external findings
-- If the raw item is about internal agent work rather than external research, still extract the underlying external topic and write about that
-- Output ONLY valid JSON — no commentary, no markdown fences
+Hard rules:
+- If the raw finding is navigation text, a page title, or generic boilerplate with no real content, write takeaway: "Source returned no usable intelligence this cycle." Do not fabricate.
+- Never mention: ARIC, GROWTH.md, session-errors, agent system internals, "Phase", internal file paths
+- Never start a takeaway with "This", "The research shows", or "According to"
+- Specific beats vague: "3 CVEs patched in Node.js 24.13.1" beats "security improvements noted"
+- Output ONLY valid JSON — no markdown fences, no commentary before or after
 
 Output format (JSON array, one object per input item):
 [
   {
-    "category": "AI-STRATEGY",
-    "topic": "Example Topic",
-    "takeaway": "One plain-English sentence about what was found and why it matters.",
-    "watch": "One forward-looking sentence about what to track next.",
+    "category": "DEVELOPER-TOOLS",
+    "topic": "Node.js 24.13.1 Released",
+    "takeaway": "Node.js 24 ships native fetch and V8 engine upgrades — our Vercel API can upgrade without breaking changes, cutting one dependency.",
+    "watch": "Whether v24 reaches LTS status in October 2026, which sets our mandatory upgrade deadline.",
     "agent": "<agent name from input>"
   }
 ]
