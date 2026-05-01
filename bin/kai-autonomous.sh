@@ -595,6 +595,16 @@ check_and_dispatch 4 30 "agent-self-improve-all" \
   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/agent-self-improve.sh all >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
   "self_improve_run"
 
+# findings-to-aric bridge (04:45) — runs AFTER agent-research.sh, BEFORE morning report
+# agent-research.sh fetches real external sources (Kalshi, arXiv, Reddit, HN) and writes
+# findings-DATE.md per agent. This bridge converts those into aric-latest.json
+# research_conducted[] so generate-morning-report.sh sees fresh external intelligence.
+# Without this, aric-latest.json stays stale (weeks old) and the morning report has
+# nothing to show for Hyo — the research was running but invisible.
+check_and_dispatch 4 45 "findings-to-aric-bridge" \
+  "HYO_ROOT=$HYO_ROOT python3 $HYO_ROOT/bin/findings-to-aric.py >> $HYO_ROOT/kai/ledger/self-improve.log 2>&1" \
+  "findings_aric_bridge_run"
+
 # CADENCE COMPRESSION v2.0 — self-improve sweep 2x/day (04:30 + 16:30)
 # Research finding: event-triggered improvement (signal bus) handles urgent gaps;
 # scheduled sweeps catch anything that slipped. 2x/day means max 8h gap before sweep.
