@@ -1,6 +1,6 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-01T04:41:26Z
+Last updated: 2026-05-01T05:11:30Z
 
 ## In Progress
 
@@ -9,11 +9,11 @@ Last updated: 2026-05-01T04:41:26Z
   - Status: DELEGATED
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-01T04:41:25Z
+  - Delegated: 2026-05-01T05:11:29Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-01T04:41:25Z
+  - Delegated: 2026-05-01T05:11:30Z
   - Status: DELEGATED
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
@@ -21,7 +21,7 @@ Last updated: 2026-05-01T04:41:26Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-01T04:41:26Z
+  - Delegated: 2026-05-01T05:11:30Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-01 — past 06:00 MT deadline
@@ -88,4 +88,7 @@ Last updated: 2026-05-01T04:41:26Z
 
 - **flag-kai-003** [P2] Daily audit 2026-04-30: TZ bug — kai/queue/daily-audit.sh and downstream nel sentinels use 'date +%Y-%m-%d' (UTC), causing false P1 'no newsletter for 2026-05-01' to fire at 18:24 MT on 2026-04-30 (06h before MT day even starts). Force TZ=America/Denver in daily-audit.sh, nel newsletter sentinel, and any consumer that compares to MT schedule.
   - Created: 2026-05-01T00:25:57Z
+
+- **flag-dex-001** [P2] agent research stale: aurora (no brief exists)
+  - Created: 2026-05-01T05:04:07Z
 
