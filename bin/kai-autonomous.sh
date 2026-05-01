@@ -831,6 +831,7 @@ if [[ $HOUR -ge 23 && $MINUTE -ge 45 && "$LAST_HEALTH_REPORT" != "$TODAY" ]]; th
   python3 -c "
 import json
 s = {
+  'direction': 'Health: $STATUS ($HEALTH_SCORE/100). Focus: resolve $P0_OPEN P0s, restore agent cadence, maintain newsletter pipeline.',
   'summary': 'System health: $STATUS ($HEALTH_SCORE/100). Agents: $AGENT_HEALTH/6. Newsletter: $([ $NEWSLETTER_FRESH -eq 1 ] && echo published || echo missing). P0 open: $P0_OPEN. Recurring patterns: $PATTERN_COUNT.',
   'health_score': $HEALTH_SCORE,
   'status': '$STATUS',
