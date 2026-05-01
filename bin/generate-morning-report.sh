@@ -1092,6 +1092,11 @@ went_well = []
 needs_attention = []
 highlights = {}
 
+# v5 intelligence-first sections (PROTOCOL_MORNING_REPORT.md v2.0 — 2026-04-30)
+intelligence_items = []   # [{topic, why, finding, source, result, agent}]
+shipped_items = []        # [{what, why, before, after, commit, agent}]
+outlook_parts = []        # forward-looking strings joined into outlook paragraph
+
 exec_layer_status = exec_summary.get("execution_layer", {})
 simulation_warning = exec_summary.get("simulation_warning")
 
@@ -1155,6 +1160,60 @@ for name, data in agents.items():
             f"— research is theater until Phase 6 executes"
         )
 
+    # ── v5: BUILD INTELLIGENCE ITEMS (per PROTOCOL_MORNING_REPORT.md v2.0) ──
+    # Each item: what was researched externally, why, finding, source, result
+    aric_raw = None
+    try:
+        aric_path = os.path.join(root, "agents", name, "research", "aric-latest.json")
+        if os.path.exists(aric_path):
+            with open(aric_path) as _f:
+                aric_raw = json.load(_f)
+    except Exception:
+        pass
+
+    if aric_raw and aric_raw.get("research_conducted"):
+        for rsrc in aric_raw.get("research_conducted", [])[:3]:  # top 3 per agent
+            finding = rsrc.get("finding", "")
+            source = rsrc.get("source", "")
+            if not finding or len(finding) < 10:
+                continue
+            # Why: trace to weakness worked
+            why = aric_raw.get("weakness_worked", w) or w or "Gap identified in prior cycle"
+            # Result: did it lead to shipped work?
+            if imp_status == "shipped" and data.get("improvement_description"):
+                result = f"Shipped: {data['improvement_description']}" + (f" (commit {data.get('improvement_commit','')})" if data.get("improvement_commit") else "")
+            elif aric_raw.get("next_target"):
+                result = f"Queued for follow-up: {aric_raw['next_target']}"
+            else:
+                result = "No implementation yet — research phase complete, build phase next"
+            intelligence_items.append({
+                "topic": rsrc.get("source", name.capitalize() + " research")[:80],
+                "why": why[:150],
+                "finding": finding[:250],
+                "source": source[:200],
+                "result": result[:200],
+                "agent": name.capitalize()
+            })
+
+    # ── v5: BUILD SHIPPED ITEMS ──
+    if imp_status == "shipped" and data.get("improvement_description"):
+        shipped_items.append({
+            "what": data.get("improvement_description", "improvement")[:200],
+            "why": w[:150] if w and w not in ("Unknown", "?") else "Structural weakness identified in ARIC cycle",
+            "before": str(data.get("metric_before", ""))[:100] or "Not measured",
+            "after": str(data.get("metric_after", ""))[:100] or "Not measured",
+            "commit": data.get("improvement_commit", "")[:12],
+            "agent": name.capitalize()
+        })
+
+    # ── v5: BUILD OUTLOOK CONTRIBUTIONS ──
+    if aric_raw and aric_raw.get("external_opportunity"):
+        opp = aric_raw["external_opportunity"]
+        opp_desc = opp.get("description", "")
+        opp_type = opp.get("type", "")
+        if opp_desc:
+            outlook_parts.append(f"{name.capitalize()} identified a {opp_type} opportunity: {opp_desc}.")
+
 if not went_well:
     went_well = ["No improvements shipped today — execution blocked or cycle incomplete"]
 
@@ -1200,11 +1259,56 @@ elif biggest_risk and "no blocker" not in biggest_risk.lower():
 else:
     q3 = "Nothing urgent to flag."
 
-summary_text = f"{q1} {q2} {q3}"
+# ── v5 SUMMARY: intelligence-first, per PROTOCOL_MORNING_REPORT.md v2.0 ──
+# CONTENT GATE: must lead with research/intelligence, NOT system health.
+# System health is relegated to systemFootnote only.
+if intelligence_items:
+    top = intelligence_items[0]
+    summary_text = f"Overnight intelligence: {top['agent']} investigated {top['topic']} — {top['finding'][:150]}."
+    if shipped_items:
+        summary_text += f" {len(shipped_items)} improvement(s) shipped as a result."
+    if outlook_parts:
+        summary_text += f" Forward: {outlook_parts[0]}"
+else:
+    # No research data — honest about it, still not leading with system health
+    summary_text = "No external research completed overnight — agents did not complete ARIC synthesis cycles."
+    if shipped_items:
+        summary_text += f" {len(shipped_items)} improvement(s) shipped independently."
+    if stale_aric_warning_feed:
+        summary_text += f" Note: {len([a for a in agents.values() if a.get('aric_stale')])} agents have stale research data (>24h)."
+
+# ── v5 OUTLOOK ──
+if outlook_parts:
+    outlook_text = " ".join(outlook_parts)
+else:
+    # Build from next_target fields in aric-latest.json
+    next_targets = []
+    for _aname, _adata in agents.items():
+        _aric_path2 = os.path.join(root, "agents", _aname, "research", "aric-latest.json")
+        try:
+            if os.path.exists(_aric_path2):
+                with open(_aric_path2) as _f2:
+                    _aric2 = json.load(_f2)
+                if _aric2.get("next_target"):
+                    next_targets.append(f"{_aname.capitalize()}: {_aric2['next_target']}")
+        except Exception:
+            pass
+    if next_targets:
+        outlook_text = "Next investigations queued — " + "; ".join(next_targets[:3]) + "."
+    else:
+        outlook_text = "No forward-looking data available — ARIC synthesis cycles need to complete to surface opportunities."
+
+# ── v5 SYSTEM FOOTNOTE (≤3 lines, non-lead) ──
+_exec_layer_for_fn = exec_layer_status if exec_layer_status else {}
+if _exec_layer_for_fn.get("alive", True):
+    system_footnote = f"System: healthy | Queue: up | Agents active: {len(agents_list)}"
+else:
+    system_footnote = f"System: degraded | Queue stalled {_exec_layer_for_fn.get('stall_hours','?')}h | {_exec_layer_for_fn.get('detail','')[:80]}"
 if simulation_warning:
-    summary_text += " ⚠️ Synthesis did not run."
+    system_footnote += " | ⚠️ API synthesis did not run"
 if stale_aric_warning_feed:
-    summary_text += f" ⚠️ {stale_aric_warning_feed}"
+    stale_count = len([a for a in agents.values() if a.get("aric_stale")])
+    system_footnote += f" | {stale_count} agent(s) have stale ARIC data (>24h)"
 
 # ── Self-improvement flywheel section for feed entry ──
 si_flywheel = mr.get("self_improvement_flywheel", {})
@@ -1255,8 +1359,14 @@ try:
 except Exception:
     pass
 
+# ── v5 SECTIONS: intelligence-first format (PROTOCOL_MORNING_REPORT.md v2.0) ──
 _sections = {
-    "summary": summary_text,
+    "summary": summary_text,                    # research-led executive brief (CONTENT GATE: must not lead with system health)
+    "intelligence": intelligence_items,          # [{topic, why, finding, source, result, agent}]
+    "shipped": shipped_items,                    # [{what, why, before, after, commit, agent}]
+    "outlook": outlook_text,                     # forward-looking paragraph
+    "systemFootnote": system_footnote,           # ≤3 lines — NOT the lead
+    # Legacy keys kept for backward compat with old reports
     "wentWell": went_well,
     "needsAttention": needs_attention,
     "agentHighlights": highlights,

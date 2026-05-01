@@ -1698,60 +1698,108 @@ function renderScoreBar(score, maxScore) {
 }
 
 function renderMorningReport(s) {
+  // v5 renderer — intelligence-first (PROTOCOL_MORNING_REPORT.md v2.0, 2026-04-30)
+  // New keys: intelligence[], shipped[], outlook, systemFootnote
+  // Legacy keys kept for backward compat: wentWell, needsAttention, agentHighlights
   let html = '';
+
+  // ── SUMMARY (research-led brief, not system health) ──
   if (s.summary) {
-    html += sec('Executive Summary', `<p>${s.summary}</p>`);
+    html += `<p style="color:var(--text-primary);font-size:0.97em;line-height:1.6;margin:0 0 16px;">${s.summary}</p>`;
   }
-  if (s.wentWell?.length) {
-    html += sec('What Went Well', `<ul>${s.wentWell.map(w => `<li class="good">${w}</li>`).join('')}</ul>`);
-  }
-  if (s.needsAttention?.length) {
-    html += sec('Needs Attention', `<ul>${s.needsAttention.map(w => `<li class="warn">${w}</li>`).join('')}</ul>`);
-  }
-  // Agent scores — SICQ + OMP displayed as score cards
-  if (s.sicqScores || s.ompScores) {
-    const agents = Object.keys(s.sicqScores || s.ompScores || {});
-    let scoreHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:6px 0;">`;
-    for (const agent of agents) {
-      const agentData = FEED_DATA?.agents?.[agent];
-      const icon = agentData?.icon || '🤖';
-      const name = agentData?.name || agent.charAt(0).toUpperCase() + agent.slice(1);
-      const sicq = s.sicqScores?.[agent];
-      const omp = s.ompScores?.[agent];
-      scoreHtml += `<div style="background:var(--bg-tertiary,var(--bg-secondary));border-radius:8px;padding:10px 12px;border:1px solid rgba(255,255,255,0.06);">
-        <div style="font-size:0.78em;font-weight:600;color:var(--text-muted);margin-bottom:6px;">${icon} ${name}</div>`;
-      if (sicq) {
-        const sicqColor = sicq.score >= 70 ? 'var(--accent)' : sicq.score >= 50 ? '#e8c96a' : '#f55066';
-        scoreHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
-          <span style="font-size:0.72em;color:var(--text-muted);">SICQ</span>
-          <span style="font-size:0.82em;font-weight:700;color:${sicqColor};">${sicq.score}</span>
-        </div>${renderScoreBar(sicq.score, 100)}`;
-      }
-      if (omp) {
-        const ompColor = omp.score >= 70 ? 'var(--accent)' : omp.score >= 50 ? '#e8c96a' : '#f55066';
-        scoreHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;margin-top:6px;">
-          <span style="font-size:0.72em;color:var(--text-muted);">OMP</span>
-          <span style="font-size:0.82em;font-weight:700;color:${ompColor};">${omp.score}</span>
-        </div>${renderScoreBar(omp.score, 100)}`;
-      }
-      scoreHtml += `</div>`;
-    }
-    scoreHtml += `</div><div style="font-size:0.72em;color:var(--text-muted);margin-top:6px;">SICQ = system quality (0–100) · OMP = outcome profile (0–100) · updated daily by flywheel</div>`;
-    html += sec('Agent Scores', scoreHtml);
-  }
-  if (s.agentHighlights) {
-    let ah = '';
-    for (const [agent, text] of Object.entries(s.agentHighlights)) {
-      const agentData = FEED_DATA?.agents?.[agent];
-      const icon = agentData?.icon || '🤖';
-      const name = agentData?.name || agent;
-      const color = agentData?.color || 'var(--text-muted)';
-      ah += `<div class="agent-highlight" style="border-left-color: ${color};">
-        <div class="ah-name">${icon} ${name}</div>
-        <div class="ah-text">${text}</div>
+
+  // ── INTELLIGENCE: what was researched, why, finding, result ──
+  if (s.intelligence?.length) {
+    let intelHtml = '';
+    for (const item of s.intelligence) {
+      intelHtml += `<div style="border-left:3px solid var(--accent,#d4a853);padding:10px 14px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:0 6px 6px 0;">
+        <div style="font-size:0.78em;font-weight:700;color:var(--accent,#d4a853);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;">${escHtml(item.agent || '')} · ${escHtml(item.topic || '')}</div>
+        <div style="font-size:0.88em;color:var(--text-primary);line-height:1.5;margin-bottom:4px;"><strong>Finding:</strong> ${escHtml(item.finding || '')}</div>
+        ${item.why ? `<div style="font-size:0.82em;color:var(--text-secondary);margin-bottom:3px;"><strong>Why investigated:</strong> ${escHtml(item.why)}</div>` : ''}
+        ${item.result ? `<div style="font-size:0.82em;color:var(--text-muted);"><strong>Result:</strong> ${escHtml(item.result)}</div>` : ''}
+        ${item.source ? `<div style="font-size:0.75em;color:var(--text-muted);margin-top:3px;font-style:italic;">Source: ${escHtml(item.source)}</div>` : ''}
       </div>`;
     }
-    html += sec('Agent Highlights', ah);
+    html += sec('Intelligence', intelHtml);
+  }
+
+  // ── SHIPPED: what was built overnight ──
+  if (s.shipped?.length) {
+    let builtHtml = '';
+    for (const item of s.shipped) {
+      builtHtml += `<div style="border-left:3px solid var(--success,#6dd49c);padding:10px 14px;margin-bottom:10px;background:rgba(109,212,156,0.05);border-radius:0 6px 6px 0;">
+        <div style="font-size:0.78em;font-weight:700;color:var(--success,#6dd49c);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px;">${escHtml(item.agent || '')} · Shipped</div>
+        <div style="font-size:0.88em;color:var(--text-primary);line-height:1.5;margin-bottom:4px;">${escHtml(item.what || '')}</div>
+        ${(item.before && item.before !== 'Not measured') ? `<div style="font-size:0.82em;color:var(--text-secondary);">Before → After: ${escHtml(item.before)} → ${escHtml(item.after)}</div>` : ''}
+        ${item.commit ? `<div style="font-size:0.75em;color:var(--text-muted);font-family:var(--font-mono);margin-top:3px;">commit ${escHtml(item.commit)}</div>` : ''}
+      </div>`;
+    }
+    html += sec('What We Built', builtHtml);
+  }
+
+  // ── OUTLOOK: forward-looking ──
+  if (s.outlook) {
+    html += sec('Forward Outlook', `<p style="color:var(--text-secondary);font-size:0.9em;line-height:1.6;">${escHtml(s.outlook)}</p>`);
+  }
+
+  // ── SYSTEM FOOTNOTE (≤3 lines — not the lead) ──
+  if (s.systemFootnote) {
+    html += `<div style="font-size:0.75em;color:var(--text-muted);font-family:var(--font-mono);padding:8px 12px;background:rgba(255,255,255,0.02);border-radius:4px;margin-top:12px;">${escHtml(s.systemFootnote)}</div>`;
+  }
+
+  // ── LEGACY FALLBACK (old reports without intelligence/shipped keys) ──
+  if (!s.intelligence?.length && !s.shipped?.length) {
+    if (s.wentWell?.length) {
+      html += sec('What Went Well', `<ul>${s.wentWell.map(w => `<li class="good">${w}</li>`).join('')}</ul>`);
+    }
+    if (s.needsAttention?.length) {
+      html += sec('Needs Attention', `<ul>${s.needsAttention.map(w => `<li class="warn">${w}</li>`).join('')}</ul>`);
+    }
+    // Agent scores — SICQ + OMP displayed as score cards (legacy)
+    if (s.sicqScores || s.ompScores) {
+      const agents = Object.keys(s.sicqScores || s.ompScores || {});
+      let scoreHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:6px 0;">`;
+      for (const agent of agents) {
+        const agentData = FEED_DATA?.agents?.[agent];
+        const icon = agentData?.icon || '🤖';
+        const name = agentData?.name || agent.charAt(0).toUpperCase() + agent.slice(1);
+        const sicq = s.sicqScores?.[agent];
+        const omp = s.ompScores?.[agent];
+        scoreHtml += `<div style="background:var(--bg-tertiary,var(--bg-secondary));border-radius:8px;padding:10px 12px;border:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:0.78em;font-weight:600;color:var(--text-muted);margin-bottom:6px;">${icon} ${name}</div>`;
+        if (sicq) {
+          const sicqColor = sicq.score >= 70 ? 'var(--accent)' : sicq.score >= 50 ? '#e8c96a' : '#f55066';
+          scoreHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+            <span style="font-size:0.72em;color:var(--text-muted);">SICQ</span>
+            <span style="font-size:0.82em;font-weight:700;color:${sicqColor};">${sicq.score}</span>
+          </div>${renderScoreBar(sicq.score, 100)}`;
+        }
+        if (omp) {
+          const ompColor = omp.score >= 70 ? 'var(--accent)' : omp.score >= 50 ? '#e8c96a' : '#f55066';
+          scoreHtml += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;margin-top:6px;">
+            <span style="font-size:0.72em;color:var(--text-muted);">OMP</span>
+            <span style="font-size:0.82em;font-weight:700;color:${ompColor};">${omp.score}</span>
+          </div>${renderScoreBar(omp.score, 100)}`;
+        }
+        scoreHtml += `</div>`;
+      }
+      scoreHtml += `</div><div style="font-size:0.72em;color:var(--text-muted);margin-top:6px;">SICQ = system quality (0–100) · OMP = outcome profile (0–100) · updated daily by flywheel</div>`;
+      html += sec('Agent Scores', scoreHtml);
+    }
+    if (s.agentHighlights) {
+      let ah = '';
+      for (const [agent, text] of Object.entries(s.agentHighlights)) {
+        const agentData = FEED_DATA?.agents?.[agent];
+        const icon = agentData?.icon || '🤖';
+        const name = agentData?.name || agent;
+        const color = agentData?.color || 'var(--text-muted)';
+        ah += `<div class="agent-highlight" style="border-left-color: ${color};">
+          <div class="ah-name">${icon} ${name}</div>
+          <div class="ah-text">${text}</div>
+        </div>`;
+      }
+      html += sec('Agent Highlights', ah);
+    }
   }
   return html;
 }
