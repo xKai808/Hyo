@@ -598,7 +598,7 @@ check_sicq_scores() {
     local score
     # Kai uses role-specific SICQ; all other agents use generic flywheel SICQ
     if [[ "$agent" == "kai" ]]; then
-      score=$(compute_kai_sicq)
+      score=$(compute_kai_sicq | tail -1)  # tail -1: log() uses tee→stdout; final echo is the score
       log "  SICQ kai (exec-compliance): $score/100"
     else
       score=$(compute_sicq "$agent")
