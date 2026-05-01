@@ -1,102 +1,87 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-29T02:59:09Z
+Last updated: 2026-05-01T00:40:37Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-04-29T02:59:09Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-01T00:40:36Z
   - Status: DELEGATED
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-04-29T02:59:09Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-01T00:40:36Z
   - Status: DELEGATED
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-29T02:48:48Z
+  - Delegated: 2026-05-01T00:40:36Z
+  - Status: DELEGATED
+
+- **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
+  - Delegated: 2026-05-01T00:40:36Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-04-29T02:48:49Z
+  - Delegated: 2026-05-01T00:40:36Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-28 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-04-29T02:48:49Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-002) — scan entire codebase for similar patterns: Daily audit 2026-04-30: 6 [AUTOMATE] items in KAI_TASKS.md untouched since 2026-04-12 (18 days, threshold 7d) — lines 243,244,245,246,269,272. Prioritize next session.
+  - Delegated: 2026-05-01T00:25:51Z
   - Status: DELEGATED
 
-- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-04-29T02:48:49Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-002): Daily audit 2026-04-30: 6 [AUTOMATE] items in KAI_TASKS.md untouched since 2026-04-12 (18 days, threshold 7d) — lines 243,244,245,246,269,272. Prioritize next session.
+  - Delegated: 2026-05-01T00:25:51Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-04-28 — past 06:00 MT deadline
-  - Delegated: 2026-04-28T22:11:07Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-01 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
+  - Delegated: 2026-05-01T00:20:25Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-04-28 — past 06:00 MT deadline
-  - Delegated: 2026-04-28T22:11:07Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-30: 6 [AUTOMATE] items in KAI_TASKS.md untouched since 2026-04-12 (18 days, threshold 7d) — lines 243,244,245,246,269,272. Prioritize next session. (flagged by kai)
+  - Delegated: 2026-05-01T00:40:37Z
   - Status: DELEGATED
 
-- **dex-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-28: 3 P0 SLA breaches (Ra/Nel/Sam daily reports missing for 2026-04-26 — 26.9h overdue) + 58 unread Hyo inbox messages + 6 stale [AUTOMATE] items >16d old. daily-audit.sh did NOT detect P0 SLA breaches — gap between audit and ticket-sla-enforcer. (flagged by kai, cascade flag-kai-001)
-  - Delegated: 2026-04-28T08:08:21Z
-  - Status: DELEGATED
-
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-04-28 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-04-28T22:11:07Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-04-30: 6 [AUTOMATE] items in KAI_TASKS.md untouched since 2026-04-12 (18 days, threshold 7d) — lines 243,244,245,246,269,272. Prioritize next session. (flagged by kai, cascade flag-kai-002)
+  - Delegated: 2026-05-01T00:25:51Z
   - Status: DELEGATED
 
 ## Queued
 
-- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-28T00:59:17-06:00 != API ts 2026-04-28T00:55:15-06:00
-  - Created: 2026-04-28T06:59:18Z
+- **flag-aether-001** [P2] dashboard data mismatch: local ts 2026-04-29T01:05:35-06:00 != API ts 2026-04-29T00:57:03-06:00
+  - Created: 2026-04-29T07:05:36Z
 
 - **flag-nel-001** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-28T08:00:17Z
+  - Created: 2026-04-29T08:00:19Z
 
-- **flag-kai-001** [P2] Daily audit 2026-04-28: 3 P0 SLA breaches (Ra/Nel/Sam daily reports missing for 2026-04-26 — 26.9h overdue) + 58 unread Hyo inbox messages + 6 stale [AUTOMATE] items >16d old. daily-audit.sh did NOT detect P0 SLA breaches — gap between audit and ticket-sla-enforcer.
-  - Created: 2026-04-28T08:08:21Z
-
-- **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-28T10:10:44Z
-
-- **flag-nel-003** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-28T10:10:50Z
-
-- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-04-28T11:30:34Z
-
-- **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-28T14:10:36Z
-
-- **flag-nel-005** [P2] Found 27 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-28T14:10:42Z
-
-- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-28T14:11:47Z
-
-- **flag-nel-007** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-28T14:13:42Z
-
-- **flag-nel-008** [P2] Found 27 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-28T14:13:48Z
-
-- **flag-nel-009** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-04-28T14:14:42Z
-
-- **flag-nel-010** [P2] Found 27 broken documentation links — fix or cleanup needed
-  - Created: 2026-04-28T14:14:49Z
-
-- **flag-nel-011** [P2] Found 9 code optimization opportunities — rolling improvement
-  - Created: 2026-04-28T14:14:49Z
-
-- **flag-nel-012** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-04-28T14:14:58Z
-
-- **flag-nel-013** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-04-28T14:15:17Z
-
-- **nel-003** [P3] Nel run complete: score=65, actions=2, sentinel=2/4
-  - Created: 2026-04-28T14:15:22Z
+- **flag-kai-001** [P2] Daily audit (2026-04-29): daily-audit.sh HYO_ROOT bug — 6th recurrence; supplement at kai/ledger/daily-audit-2026-04-29-supplement.md §1 has one-line fix. Real state RED: 16 P0 tickets, system health 25/100, newsletter pipeline failed overnight, 5/7 reports missing today.
+  - Created: 2026-04-29T08:09:14Z
 
 - **flag-ra-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-04-28T20:59:10Z
+  - Created: 2026-04-29T13:12:06Z
+
+- **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-04-29T14:10:37Z
+
+- **flag-nel-003** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-29T14:10:45Z
+
+- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-04-29T15:55:39Z
+
+- **flag-nel-004** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-04-29T18:10:14Z
+
+- **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-01T00:20:25Z
+
+- **flag-nel-006** [P2] No newsletter produced for 2026-05-01 — past 06:00 MT deadline
+  - Created: 2026-05-01T00:20:25Z
+
+- **flag-nel-007** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-01T00:20:35Z
+
+- **flag-kai-002** [P2] Daily audit 2026-04-30: 6 [AUTOMATE] items in KAI_TASKS.md untouched since 2026-04-12 (18 days, threshold 7d) — lines 243,244,245,246,269,272. Prioritize next session.
+  - Created: 2026-05-01T00:25:51Z
+
+- **flag-kai-003** [P2] Daily audit 2026-04-30: TZ bug — kai/queue/daily-audit.sh and downstream nel sentinels use 'date +%Y-%m-%d' (UTC), causing false P1 'no newsletter for 2026-05-01' to fire at 18:24 MT on 2026-04-30 (06h before MT day even starts). Force TZ=America/Denver in daily-audit.sh, nel newsletter sentinel, and any consumer that compares to MT schedule.
+  - Created: 2026-05-01T00:25:57Z
 

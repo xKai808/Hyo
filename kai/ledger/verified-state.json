@@ -1,6 +1,6 @@
 {
-  "verified_at": "2026-04-28T20:55:20-0600",
-  "today": "2026-04-28",
+  "verified_at": "2026-04-30T18:40:46-0600",
+  "today": "2026-04-30",
   "computed_by": "kai-session-prep.sh",
   "note": "All values computed from source files. Kai must use this, not assumptions.",
   "credits": {
@@ -16,7 +16,7 @@
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "spend_since_scrape": 0.9935
     },
-    "today_spend": 0.1338,
+    "today_spend": 0,
     "source": "scraped-credits.json + api-usage.jsonl"
   },
   "sicq": {
@@ -59,9 +59,8 @@
   },
   "report_freshness": {
     "published_today": [
-      "agent-reflection",
       "morning-report",
-      "self-improve-report"
+      "newsletter"
     ],
     "missing_today": [
       "aether-daily",
@@ -78,15 +77,42 @@
     "source": "agents/*/ledger/ACTIVE.md"
   },
   "open_tickets": {
-    "error": "Expecting value: line 1 column 1 (char 0)"
+    "p0": [
+      {
+        "id": "TASK-20260429-ra-001",
+        "title": "Doctor: OMP below minimum for ra (69/100, min 70) \u2014 improve output quality"
+      },
+      {
+        "id": "TASK-20260429-aether-001",
+        "title": "Self-improve health: Q7 FAIL \u2014 aether"
+      }
+    ],
+    "p1_count": 14,
+    "p1_sample": [
+      {
+        "id": "REPORT-CHECK-202604270707-kai",
+        "title": "Missing report: Morning report 2026-04-27"
+      },
+      {
+        "id": "REPORT-CHECK-202604270707-ra",
+        "title": "Missing report: Newsletter HTML missing for 2026-04-27"
+      },
+      {
+        "id": "REPORT-CHECK-202604270800-kai",
+        "title": "Missing report: Morning report 2026-04-27"
+      },
+      {
+        "id": "REPORT-CHECK-202604280724-kai",
+        "title": "Missing report: Morning report 2026-04-28"
+      },
+      {
+        "id": "REPORT-CHECK-202604280725-ra",
+        "title": "Missing report: Newsletter 2026-04-28"
+      }
+    ],
+    "source": "kai/tickets/tickets.jsonl"
   },
   "aether_balance": {
-    "opening": null,
-    "closing": null,
-    "balance_delta": null,
-    "trade_pnl_sum": null,
-    "reconciliation_gap": null,
-    "reconciled": false,
-    "source": "agents/aether/analysis/Analysis_2026-04-28.txt"
+    "status": "no_analysis_today"
   }
 }

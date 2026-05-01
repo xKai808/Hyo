@@ -658,3 +658,145 @@ To https://github.com/xKai808/Hyo.git
    87e2f24..7a2197e  main -> main
 [check 08:00:52] === Completeness check done. Failures: 2 ===
 [check 08:00:52] AUTONOMOUS ACTION NEEDED: 2 item(s) require resolution — check daily-issues.jsonl
+[check 08:00:05] === Completeness check 2026-04-29 (dow=3) ===
+[check 08:00:05] FAIL: morning-report 2026-04-29 (morning-report-2026-04-29)
+[check 08:00:05] Remediating: kai morning-report
+[morning-report-v4] 08:00:06 Generating morning report v4 (growth-driven) for 2026-04-29
+✓ JSON report written: /Users/kai/Documents/Projects/Hyo/website/data/morning-report.json
+
+================================================================================
+MORNING REPORT — 2026-04-29
+================================================================================
+
+The execution layer is down — queue worker has been stalled for 5.0h, which means no delegated commands have run.
+Biggest win: nel: Shipped Build dependency vulnerability scanner — cross-reference CVEs against our packag (commit 23dbbec).
+Watch: kai: no active novel work.
+
+⚠️ STALE ARIC DATA: 5 agent(s) have not completed a fresh ARIC cycle — nel (2026-04-21, 188h ago), ra (2026-04-21, 192h ago), sam (2026-04-22, 176h ago), aether (2026-04-21, 192h ago), dex (2026-04-22, 176h ago). Their sections below show data from a prior date, not today. Root cause: ARIC cycle runner not executing or Claude Code auth expired.
+
+⚠️  Execution layer down — queue worker stalled 5.0h. All agent delegations are sim-ack only. No real work has executed. Fix: restart queue worker on Mini (5 min).  | 1 task(s) stuck in running/ for 5.0h | healthcheck: 6 issue(s)
+
+⚠️ Nel (security & QA): ARIC data is 188h old (last cycle: 2026-04-21) — the details below are from that date, not today. Self-improvement cycle may be broken. Nel (security & QA) shipped a real improvement overnight: [DATA FROM 2026-04-21] Build dependency vulnerability scanner — cross-reference CVEs against our packag.
+
+⚠️ Ra (newsletter): ARIC data is 192h old (last cycle: 2026-04-21) — the details below are from that date, not today. Self-improvement cycle may be broken. Ra (newsletter) shipped a real improvement overnight: [DATA FROM 2026-04-21] Editorial Feedback Loop Phase 1 (I1) — tracking pixel + link wrapping in render.py, Vercel tracking API. Before: Newsletter engagement: 0% visibility (zero opens/clicks data). After: Newsletter engagement: tracking active — open events fire on render, click events fire on link visit. Engagement logged to agents/ra/ledger/engagement.jsonl. — a measurable change.
+
+⚠️ Sam (engineering): ARIC data is 176h old (last cycle: 2026-04-22) — the details below are from that date, not today. Self-improvement cycle may be broken. Sam (engineering) is working on a structural weakness: [DATA FROM 2026-04-22] No Automated Regression Detection — Performance Baselines Missing, Regressions Undetected. No code has changed yet — the research is done, execution is next.
+
+⚠️ Aether (trading bot): ARIC data is 192h old (last cycle: 2026-04-21) — the details below are from that date, not today. Self-improvement cycle may be broken. Aether (trading bot) shipped a real improvement overnight: [DATA FROM 2026-04-21] aggregate-weekly.py — cross-session strategy aggregator: per-strategy edge, window P&L trends, concentration risk, health flags. Before: Analysis quality: 0% automated checking — sub-par analyses publish silently. After: Analysis quality: 12-point gate runs before every HQ publish. GPT cross-check (QC05) and recommendation (QC09) are hard blocks. — a measurable change.
+
+⚠️ Dex (pattern detection): ARIC data is 176h old (last cycle: 2026-04-22) — the details below are from that date, not today. Self-improvement cycle may be broken. Dex (pattern detection) is working on a structural weakness: [DATA FROM 2026-04-22] Detection Without Remediation — Dex Finds Issues But Only Flags Them, Never Fixes Them. No code has changed yet — the research is done, execution is next.
+
+Kai (CEO orchestrator) has no active improvement work this cycle. Known weakness not yet worked: Session Continuity Drift. Research cycle did not complete — no data to work from.
+
+────────────────────────────────────────────────────────────────────────────────
+🔧 SELF-IMPROVEMENT CYCLE (reported by each agent to Kai)
+────────────────────────────────────────────────────────────────────────────────
+
+Nel: Researched W2 — Zero Dependency Vulnerability Scanning — Cipher Ignores Supply Chain Risk (confidence: HIGH). Approach: Build a new phase in cipher.sh (Phase 7: Supply Chain Audit) that:.
+Ra: Researched W1 — Zero Editorial Feedback Loop — Newsletter Quality Is a Black Box (confidence: HIGH). Approach: Add Phase 4.5 (post-synthesis quality check) to newsletter pipeline:.
+Sam: Researched W1 — No Automated Regression Detection — Performance Baselines Missing, Regressions Undetected (confidence: HIGH). Approach: Build performance instrumentation into the deploy pipeline:.
+Aether: Researched W1 — Macro Data Coverage Inadequate — No Real-Time Fed/CPI Signal Monitoring (confidence: HIGH). Approach: Build a daily macro intelligence phase in Aether's research cycle:.
+Dex: No self-improvement report yet — cycle has not run today.
+Kai (orchestrator): Researched W1 — Session Continuity Drift (confidence: HIGH). Approach: Build `bin/kai-hydration-check.sh` that reads timestamps of all 12 hydration files and compares agai.
+
+📊 SICQ Process Compliance ():
+  ✓ Aether: 60/100
+  ⚠ Kai: 50/100
+  ✗ Nel: 20/100
+  ⚠ Ra: 55/100
+  ⚠ Sam: 45/100
+  System average: 46/100 (needs attention)
+
+🎯 OMP Outcome Quality ():
+  — Aether ?: no data yet
+  — Kai ?: no data yet
+  — Nel ?: no data yet
+  — Ra ?: no data yet
+  — Sam ?: no data yet
+
+Kai Research: Researched W1 — Session Continuity Drift (confidence: HIGH).
+  Fix approach: Build `bin/kai-hydration-check.sh` that reads timestamps of all 12 hydration files and compares against session start. If any file was not read since .
+  Published research drop to HQ — see Research tab for full findings.
+
+Kai synthesis: 4/5 agents reported. All cycles in progress — no weaknesses fully resolved yet today. Expected completions: next overnight cycle.
+
+================================================================================
+[morning-report-v4] 08:00:06 Mirror synced: /Users/kai/Documents/Projects/Hyo/agents/sam/website/data/morning-report.json
+[morning-report-v4] 08:00:06 Adding morning report to feed.json...
+Morning report added to feed.json for 2026-04-29
+[morning-report-v4] 08:00:06 Feed entry created
+[morning-report-v4] 08:00:06 feed.json mirror synced: /Users/kai/Documents/Projects/Hyo/agents/sam/website/data/feed.json
+[morning-report-v4] 08:00:06 DUAL-PATH GATE: PASSED (website=1 sam=1) — committing
+[main 30464a5] morning-report: 2026-04-29 (v4 — growth-driven ARIC consumption)
+ 4 files changed, 86 insertions(+), 86 deletions(-)
+To https://github.com/xKai808/Hyo.git
+   99f68bd..30464a5  main -> main
+[morning-report-v4] 08:00:08 Pushed to origin
+[morning-report-v4] 08:00:08 Verifying live deployment (waiting 30s for Vercel build)...
+[morning-report-v4] 08:00:38 LIVE VERIFICATION: PASSED — morning report visible at hyo.world/data/feed.json
+[morning-report-v4] 08:00:38 Done — v4 morning report generated
+[check 08:00:38] FAIL: newsletter 2026-04-29 (newsletter-ra-2026-04-29)
+[check 08:00:38] Remediating: ra newsletter
+[env] loaded /Users/kai/security/hyo.env
+[2026-04-29T14:00:38Z] hyo-newsletter: starting pipeline
+[2026-04-29T14:00:38Z] ra_context.py ...
+[ra_context] 2026-04-29: 359 records, 10 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-04-29T14:00:38Z] synthesize.py ...
+[info] loaded 358 unique records across 5 topics
+[info] context size: 31,712 chars
+[error] claude_code call failed: claude-code exited 1: 
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: HTTP 400 Bad Request: {"type":"error","error":{"type":"invalid_request_error","message":"You have reached your specified API usage limits. You will regain access on 2026-05-01 at 00:00 UTC."},"request_id":"req_011CaYBd6KHg6TRnRRjYXtYz"}
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-29.input.md
+[2026-04-29T14:00:38Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-29
+[error] markdown not found: /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-29.md
+[2026-04-29T14:00:38Z] render.py failed — the .md may be missing if synth fell back to bundle
+[check 08:00:50] FAIL: newsletter — REMEDIATION FAILED
+[check 08:00:50] FAIL: daily nel (nel-daily-2026-04-29)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:50] Remediating: nel daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:50] FAIL: daily ra (ra-daily-2026-04-29)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:50] Remediating: ra daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:50] FAIL: daily sam (sam-daily-2026-04-29)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:50] Remediating: sam daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:50] FAIL: daily aether (aether-daily-2026-04-29)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:50] Remediating: aether daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:50] FAIL: daily kai (kai-daily-2026-04-29)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 200: ${agent^} daily $TODAY: bad substitution
+[check 08:00:50] Remediating: kai daily
+/Users/kai/Documents/Projects/Hyo/bin/daily-agent-report.sh: line 43: nel: unbound variable
+[check 08:00:50] FAIL: aether-analysis 2026-04-28 (aether-analysis-2026-04-28)
+[check 08:00:50] Remediating: aether aether-analysis
+[analysis] 08:00:50 Loaded environment from /Users/kai/security/hyo.env
+[analysis] 08:00:50 Latest log: /Users/kai/Documents/Projects/AetherBot/Logs/AetherBot_2026-04-29.txt (    1547 lines)
+[analysis] 08:00:50 Starting daily analysis for 2026-04-29
+Traceback (most recent call last):
+  File "/Users/kai/Documents/Projects/Hyo/agents/aether/analysis/kai_analysis.py", line 12, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+[analysis] 08:00:50 Analysis failed with exit code 1
+[check 08:00:50] FAIL: aether-analysis — REMEDIATION FAILED — check Mini API keys
+[check 08:00:50] FAIL: self-improve-health: 12 unresolved failures (auto_fixed=0)
+[main 786d47a] chore: completeness check 2026-04-29 — failures=3
+ 1 file changed, 73 insertions(+), 67 deletions(-)
+To https://github.com/xKai808/Hyo.git
+   30464a5..786d47a  main -> main
+[check 08:00:53] === Completeness check done. Failures: 3 ===
+[check 08:00:53] AUTONOMOUS ACTION NEEDED: 3 item(s) require resolution — check daily-issues.jsonl
