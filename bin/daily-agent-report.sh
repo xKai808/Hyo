@@ -39,14 +39,16 @@ sys.exit(0 if any(r.get('id') == '$ENTRY_ID' for r in d.get('reports',[])) else 
   exit 0
 fi
 
-# Agent metadata
-declare -A AGENT_ICON=( [nel]="🔒" [ra]="📰" [sam]="⚙️" [aether]="📈" [kai]="👔" [dex]="🧬" )
-declare -A AGENT_COLOR=( [nel]="#7ec4e0" [ra]="#b49af0" [sam]="#6dd49c" [aether]="#e8c96a" [kai]="#d4a853" [dex]="#e07060" )
-declare -A AGENT_TITLE=( [nel]="Nel" [ra]="Ra" [sam]="Sam" [aether]="Aether" [kai]="Kai" [dex]="Dex" )
-
-ICON="${AGENT_ICON[$AGENT]:-📄}"
-COLOR="${AGENT_COLOR[$AGENT]:-var(--accent)}"
-DISPLAY="${AGENT_TITLE[$AGENT]:-$AGENT}"
+# Agent metadata — bash 3.2-compatible case statements (no declare -A)
+case "$AGENT" in
+  nel)    ICON="🔒"; COLOR="#7ec4e0"; DISPLAY="Nel" ;;
+  ra)     ICON="📰"; COLOR="#b49af0"; DISPLAY="Ra" ;;
+  sam)    ICON="⚙️";  COLOR="#6dd49c"; DISPLAY="Sam" ;;
+  aether) ICON="📈"; COLOR="#e8c96a"; DISPLAY="Aether" ;;
+  kai)    ICON="👔"; COLOR="#d4a853"; DISPLAY="Kai" ;;
+  dex)    ICON="🧬"; COLOR="#e07060"; DISPLAY="Dex" ;;
+  *)      ICON="📄"; COLOR="var(--accent)"; DISPLAY="$AGENT" ;;
+esac
 
 # Collect data from agent files
 AGENT_DIR="$ROOT/agents/$AGENT"

@@ -46,7 +46,7 @@ generate_id() {
   local agent="${1:-kai}"
   local seq=0
   if [[ -s "$TICKET_LEDGER" ]]; then
-    seq=$(grep -c "\"owner\":\"$agent\"" "$TICKET_LEDGER" 2>/dev/null) || seq=0
+    seq=$(grep -c "\"owner\": \"$agent\"" "$TICKET_LEDGER" 2>/dev/null) || seq=0
   fi
   seq=$((seq + 1))
   printf "TASK-%s-%s-%03d" "$TODAY" "$agent" "$seq"

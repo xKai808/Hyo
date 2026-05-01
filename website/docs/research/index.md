@@ -1,12 +1,17 @@
 # Ra Research Archive — Index
 
-*Last updated 2026-04-28. Rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
+*Last updated 2026-04-30. Rerun `kai ra index` or `ra_archive.py --rebuild-index` to refresh.*
 
-## Briefs (2)
+## Briefs (7)
 
 | Name | Agent | Date |
 | --- | --- | --- |
-| [Skepticism on Self-Improving Agent Systems: What the Critics Say](briefs/kai-skepticism-2026-04-28.md) | Kai | 2026-04-28 |
+| [Aether Research Findings — 2026-04-29](briefs/aether-2026-04-29.md) | Aether | 2026-04-29 |
+| [Dex Research Findings — 2026-04-29](briefs/dex-2026-04-29.md) | Dex | 2026-04-29 |
+| [Kai Research Findings — 2026-04-29](briefs/kai-2026-04-29.md) | Kai | 2026-04-29 |
+| [Nel Research Findings — 2026-04-29](briefs/nel-2026-04-29.md) | Nel | 2026-04-29 |
+| [Ra Research Findings — 2026-04-29](briefs/ra-2026-04-29.md) | Ra | 2026-04-29 |
+| [Sam Research Findings — 2026-04-29](briefs/sam-2026-04-29.md) | Sam | 2026-04-29 |
 | [Self-Evolving Agent Systems: Signals, Chaos, and Double-Loop Review](briefs/kai-self-improve-2026-04-28.md) | Kai | 2026-04-28 |
 
 ## Entities (5)
