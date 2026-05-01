@@ -1,6 +1,6 @@
 # PROTOCOL_MORNING_REPORT.md — Morning Report Protocol
 #
-# VERSION: v2.0
+# VERSION: v2.1
 # Author: Kai | Updated: 2026-04-30 | Authority: Constitutional — mandatory
 # Trigger: com.hyo.morning-report launchd plist at 05:00 MT daily
 #
@@ -132,6 +132,25 @@ Written for a CEO, not a system administrator. Every sentence passes: **"Would a
 
 If ARIC data is missing: note it in system footnote only. Do NOT populate intelligence from GROWTH.md guesses.
 
+### SYNTHESIS PHASE (mandatory — v2.1)
+
+Raw ARIC findings are technical agent output. They are NOT suitable for Hyo directly.
+
+After collecting intelligence_items, `generate-morning-report.sh` calls `bin/morning-report-synthesize.py` which:
+1. Passes all raw items to Claude in a single call
+2. Gets back Aurora-style prose: category tag, bold topic, one plain-English takeaway, one Watch signal
+3. Writes synthesized output into `intelligence[]` — same schema, new fields: `category`, `topic`, `takeaway`, `watch`
+
+If synthesis fails (Claude bin missing, timeout, API error): fallback to raw items — report still publishes.
+If no intelligence_items at all: summary states "No external research completed overnight" — no fabrication.
+
+**Output quality standard**: Each intelligence item must read like The Economist, not a GitHub README.
+Example good item:
+- CATEGORY: AI-MODELS
+- TOPIC: Mistral 128B Pricing
+- TAKEAWAY: Mistral's 128B model undercuts GPT-4o by 40% at mid-tier, accelerating pricing pressure on Anthropic incumbents.
+- WATCH: Whether enterprise adoption signals move faster than benchmark comparisons.
+
 ---
 
 ## PART 5 — SCHEMA (feed.json sections for morning-report type)
@@ -201,3 +220,4 @@ Failure on any check → open P1 ticket immediately.
 | v1.0 | 2026-04-19 | Initial protocol |
 | v1.1 | 2026-04-21 | HYO_FEEDBACK gate, writing standard, BLUF format |
 | v2.0 | 2026-04-30 | Full redesign per Hyo directive. Intelligence brief, not system dashboard. CONTENT GATE added. System health relegated to footnote. New sections: intelligence[], shipped[], outlook, systemFootnote. |
+| v2.1 | 2026-04-30 | Synthesis phase added. Raw ARIC findings rewritten by Claude into Aurora-style prose (category, topic, takeaway, Watch). bin/morning-report-synthesize.py. HQ renderer updated to display synthesized format. |

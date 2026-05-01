@@ -87,7 +87,7 @@ log "Generating morning report v4 (growth-driven) for $TODAY"
 # ══════════════════════════════════════════════════════════════════════════════
 
 python3 - "$JSON_OUTPUT" "$TODAY" "$NOW_MT" "$ROOT" <<'PYEOF'
-import json, sys, os, re, glob
+import json, sys, os, re, glob, subprocess
 from pathlib import Path
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -1359,10 +1359,35 @@ try:
 except Exception:
     pass
 
+# ── v6 SYNTHESIS PASS (PROTOCOL_MORNING_REPORT.md v2.1) ──
+# Run intelligence_items through morning-report-synthesize.py to produce
+# Aurora-style prose: category tag, plain-English topic, one takeaway, one Watch signal.
+# Falls back to raw items if synthesis fails (Claude bin missing, timeout, etc).
+_synthesized_intelligence = intelligence_items  # default: raw fallback
+if intelligence_items:
+    try:
+        _synth_script = os.path.join(root, "bin", "morning-report-synthesize.py")
+        _synth_proc = subprocess.run(
+            [sys.executable, _synth_script],
+            input=json.dumps(intelligence_items),
+            capture_output=True, text=True, timeout=180, check=False,
+        )
+        if _synth_proc.returncode == 0 and _synth_proc.stdout.strip():
+            _synth_result = json.loads(_synth_proc.stdout.strip())
+            if isinstance(_synth_result, list) and len(_synth_result) > 0:
+                _synthesized_intelligence = _synth_result
+                print(f"✓ Intelligence synthesis: {len(_synth_result)} items rewritten")
+            else:
+                print("WARN: synthesis returned empty list — using raw items")
+        else:
+            print(f"WARN: synthesis failed (exit {_synth_proc.returncode}) — using raw items: {_synth_proc.stderr.strip()[:200]}")
+    except Exception as _synth_err:
+        print(f"WARN: synthesis exception — using raw items: {_synth_err}")
+
 # ── v5 SECTIONS: intelligence-first format (PROTOCOL_MORNING_REPORT.md v2.0) ──
 _sections = {
     "summary": summary_text,                    # research-led executive brief (CONTENT GATE: must not lead with system health)
-    "intelligence": intelligence_items,          # [{topic, why, finding, source, result, agent}]
+    "intelligence": _synthesized_intelligence,  # synthesized [{category, topic, takeaway, watch, agent}] or raw fallback
     "shipped": shipped_items,                    # [{what, why, before, after, commit, agent}]
     "outlook": outlook_text,                     # forward-looking paragraph
     "systemFootnote": system_footnote,           # ≤3 lines — NOT the lead
