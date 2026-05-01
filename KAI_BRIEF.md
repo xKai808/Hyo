@@ -1,5 +1,12 @@
 # KAI_BRIEF.md
 
+> **[SESSION S31c-COWORK CONTINUED 2026-04-30 18:13–19:15 MT — AUTONOMOUS] Bugs fixed + pushed:**
+> 1. **aether-publish-analysis.sh** — `today` field used analysis date arg ($1), not system date. Any backdated publish stomped feed's today back. Fixed: `data['today'] = now_mt[:10]`. (commit f66ca0e)
+> 2. **flywheel-doctor.sh compute_kai_sicq()** — function used `log()` via `tee`→stdout, so `score=$(compute_kai_sicq)` captured all log lines, not just score. Integer comparison failed. sicq-latest.json hadn't updated since Apr 22. Fixed: `| tail -1`. (commit 033ba09)
+> 3. **SICQ scores refreshed** — first fresh compute since Apr 22. Nel:40 Sam:20 Aether:60 Ra:40 Dex:20 Kai:40. All below OMP 70 except Aether. Root cause: Claude Code auth expired → ARIC synthesis blocked.
+> 4. **Visual verification complete** — HQ confirmed Thursday Apr 30, 2 reports (Morning Report + Aurora Daily Brief). Both rendered correctly.
+> 5. **Hyo inbox P1** — Claude Code auth renewal required for ARIC synthesis to resume. Cannot queue. Needs `claude auth login` in Terminal → browser auth flow (~2 min).
+
 > **[SENTINEL 2026-05-01T00:13Z (2026-04-30 18:13 MT) — scheduled run, autonomous] Run #249: 6 passed, 3 failed. 0 new, 3 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-05-01.md` (filename rolled to UTC date; MT date is 2026-04-30).**
 > - **P0 ESCALATED (day 4, was day 3):** `aurora-ran-today` — `newsletters/2026-05-01.md` missing/empty. 4 consecutive runs with no rendered newsletter. Same root cause as 5+ days of healthcheck stream: paid LLM quotas exhausted. Anthropic regains today (2026-05-01) per prior briefs — verify access has actually returned and re-trigger `kai exec "bash agents/ra/pipeline/newsletter.sh"` to backfill 04-28, 04-29, 04-30. Already tracked in KAI_TASKS line 112 (SENT-2026-04-29) — no new ticket filed; counter advanced from day 3 → day 4.
 > - **P1 ELEVATED (day 4, was day 3):** `scheduled-tasks-fired` — no `aurora-*.log` in `agents/nel/logs/`. Aurora runner retired/consolidated per SENT-002 (session 27, 2026-04-21); sentinel check still references the old proxy. Action carried — decide revive-the-runner vs retire-the-check. Tracked in KAI_TASKS line 112.
