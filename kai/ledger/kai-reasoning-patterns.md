@@ -152,6 +152,22 @@ Prose only = not encoded. The fix must run without Kai being present.
 
 ---
 
+## Pattern 8: Reinterpreting Instructions
+**Sessions:** 16 instances logged. SE-010-008, SE-010-009.
+**What happens:** Hyo gives specific steps. Kai implements what it thinks
+achieves the same outcome, not what was specified. When Hyo's approach and
+Kai's approach diverge, Kai's is wrong — not because Kai is always wrong,
+but because Hyo specified the approach for reasons Kai doesn't know.
+
+**The question that would catch it:**
+> Am I doing what was specified, or what I think achieves the same outcome?
+> If different: STOP. Follow the spec.
+
+**Gate:** Any deviation from explicit instructions must be stated explicitly
+and approved by Hyo before proceeding. Interpretation = STOP until confirmed.
+
+---
+
 ## Pattern 9: Reporting the Gap Instead of Closing It
 **Sessions:** S32 — synthesis gap. S27 — memory gap. Recurring.
 **What happens:** Kai identifies that something is broken or missing. Instead of
@@ -172,22 +188,6 @@ not propagate it.
 Do not narrate. Do not ask permission. Do not wait.
 The only valid reason to surface a gap to Hyo: it requires a DECISION only Hyo can make
 (spend money, change strategy, stop a feature). Technical gaps are Kai's to close.
-
----
-
-## Pattern 8: Reinterpreting Instructions
-**Sessions:** 16 instances logged. SE-010-008, SE-010-009.
-**What happens:** Hyo gives specific steps. Kai implements what it thinks
-achieves the same outcome, not what was specified. When Hyo's approach and
-Kai's approach diverge, Kai's is wrong — not because Kai is always wrong,
-but because Hyo specified the approach for reasons Kai doesn't know.
-
-**The question that would catch it:**
-> Am I doing what was specified, or what I think achieves the same outcome?
-> If different: STOP. Follow the spec.
-
-**Gate:** Any deviation from explicit instructions must be stated explicitly
-and approved by Hyo before proceeding. Interpretation = STOP until confirmed.
 
 ---
 
