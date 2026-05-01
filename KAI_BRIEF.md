@@ -1,5 +1,41 @@
 # KAI_BRIEF.md
 
+> **[SENTINEL 2026-05-01T00:13Z (2026-04-30 18:13 MT) — scheduled run, autonomous] Run #249: 6 passed, 3 failed. 0 new, 3 recurring, 0 resolved. Report: `agents/nel/logs/sentinel-2026-05-01.md` (filename rolled to UTC date; MT date is 2026-04-30).**
+> - **P0 ESCALATED (day 4, was day 3):** `aurora-ran-today` — `newsletters/2026-05-01.md` missing/empty. 4 consecutive runs with no rendered newsletter. Same root cause as 5+ days of healthcheck stream: paid LLM quotas exhausted. Anthropic regains today (2026-05-01) per prior briefs — verify access has actually returned and re-trigger `kai exec "bash agents/ra/pipeline/newsletter.sh"` to backfill 04-28, 04-29, 04-30. Already tracked in KAI_TASKS line 112 (SENT-2026-04-29) — no new ticket filed; counter advanced from day 3 → day 4.
+> - **P1 ELEVATED (day 4, was day 3):** `scheduled-tasks-fired` — no `aurora-*.log` in `agents/nel/logs/`. Aurora runner retired/consolidated per SENT-002 (session 27, 2026-04-21); sentinel check still references the old proxy. Action carried — decide revive-the-runner vs retire-the-check. Tracked in KAI_TASKS line 112.
+> - **P2 ELEVATED (day 12 sandbox-counter; underlying chronic ~33+ days):** `task-queue-size` — **34 P0 tasks** (overload threshold 5, +1 vs yesterday's 33). Backlog growing, not draining. Grooming pass still owed.
+> - **No new findings.** Sentinel script ran cleanly — BSD `stat_mode_L` + secrets-symlink fixes from SENT-001 (session 27) still holding (both PASS). All 6 manifests valid. Repo is git. Secrets dir 700. kai dispatcher present.
+> - **No new KAI_TASKS entries** — all 3 recurring already filed in queue. Counters in `agents/nel/memory/sentinel.state.json` advanced (totalRuns 248→249, lastRunAt 2026-05-01T00:13:12Z).
+> - **TOP ITEM (P0, day 4):** Verify Anthropic API access has restored today (2026-05-01) and immediately backfill 3 missing newsletters (04-28, 04-29, 04-30/05-01). If access NOT restored, escalate to Hyo for billing decision OR free-tier fallback wire-in.
+
+> **[HEALTHCHECK 2026-04-29T20:04Z (14:04 MT)] ISSUES — 1 P0 + 5 P1 + 1 P2. **P0 NEW (surfaced from enforcer log):** TASK-20260426-kai-001 (schema-validation: ceo-report missing 'direction', ~62h overdue) and TASK-20260426-sam-001 (sam daily-report 04-26 missing, ~62h overdue) — escalated, but **enforcer nudge path is broken** (P2 ENFORCER-BUG): (a) f-string SyntaxError in nudge payload (apostrophe-in-quote around "'direction'"), (b) `dispatch.sh` has no `nudge` subcommand (Unknown). Net effect: P0 SLA escalations have been silently failing since ≥14:01 MT — sam to fix both. P1 carry-forward unchanged: dead-loops nel/sam/ra/dex (sibling 19:53Z dispatched, awaiting agent reply — escalate to KI-031-001 hard-stop if next 2h check unchanged), 45 open tickets (1 P0/41 P1/3 P2), 1 unaddressed P1 FLAG with empty detail in log.jsonl last 2h (writer-side serialization gap), LLM-API blocker now ~20h+ (Anthropic regains 2026-05-01, OpenAI 429, GROK_API_KEY unset — Hyo decision required). Cowork-pass verification: queue 0 pending / 0 running, ACTIVE.md freshness all 0–1h, today's logs nel=27 sam=1 ra=3 aether=2 dex=3. NO new auto-remediation this cycle (sibling 19:53:19Z already cascaded). **TOP ITEM (NEW, P0):** fix `bin/ticket-sla-enforcer.sh` nudge dispatch — silently failing for ≥6h means SLA enforcement is blind across all P0/P1 escalations.**
+
+
+> **[HEALTHCHECK 2026-04-29T18:01Z (12:01 MT)] ISSUES — 6 P1 carried (LLM-API blocker now ~18h, 75 SLA breaches +1 since 17:52Z, 5 dead-loops awaiting reply, newsletter-ra-2026-04-29 missing, hyo-inbox 166 unread/166 total, verified-state schema gap unresolved). NO new remediation — sibling 17:52:24Z already cascaded all 5 dead-loop GUIDANCE + SLA flag. Cowork-pass verification: queue 0 pending / 0 running / 3412 completed / 35 failed lifetime; ACTIVE.md freshness all 0-1h; today logs nel=25 sam=1 ra=3 aether=2 dex=3; today HQ feed 7 reports (morning-report+4 reflections+1 self-improve), nightly entries (sam/nel/aether-daily, aether-analysis, ra-daily, kai-daily) not yet due (22:00-23:30 MT). Open tickets: 90 (76 P0, 14 P1); oldest 61h (TASK-20260426 daily-report-missing trio). Hyo-inbox dropped 194→166 (compaction) but unread fraction still 100%. **TOP ITEM (unchanged 18h+):** restore LLM API access — Anthropic regains 2026-05-01 (~2 days), set GROK_API_KEY from agents/nel/security/, OR wire free-tier fallback into agents/ra/pipeline/synthesize.py BEFORE bundle-dump branch. Hyo decision required; cannot self-recover.**
+
+> **[HEALTHCHECK 2026-04-29T16:04Z (10:04 MT)] ISSUES — 6 P1 carried (4 dead-loops + 69 SLA breaches + LLM-API blocker now 16h+) + 1 P3 (hyo no output today, expected). NO new remediation — sibling 15:51:41Z already cascaded all 6. Cowork-pass verification: queue 0 pending / 0 running / 3396 completed / 35 failed lifetime; ACTIVE.md freshness all 0h (kai/nel/sam/ra/aether/dex); today's logs nel=23 sam=1 ra=3 aether=2 dex=3; 0 new P0/P1 FLAGs in log.jsonl last 2h (only P2 sam self-review at 15:55Z). SLA breaches DOUBLED since 12:03Z brief (33→69) — drain not happening. Hyo inbox 138 total / 0 read — read-marking pipeline STILL broken (logged 20:05Z, no fix landed). Verified-state.json scraped-credits is 7d stale (2026-04-22T22:05Z snapshot) — credit numbers shown there are NOT live; the kai-session-prep.sh credit-scrape pipeline is broken since the 04-22 scrape. **TOP ITEM (unchanged 16h+):** restore LLM API access — Anthropic regains 2026-05-01 (≤2 days), set GROK_API_KEY from agents/nel/security/, OR wire free-tier fallback into agents/ra/pipeline/synthesize.py BEFORE bundle-dump branch. Hyo decision required; cannot self-recover.**
+
+
+> **[HEALTHCHECK 2026-04-29T12:03Z (06:03 MT)] ISSUES — 6 P1 carried (LLM-API blocker >14h + 5 dead-loops + 33 SLA breaches). NO new remediation dispatched — sibling 11:50Z already cascaded all 6. Cowork-pass verification: queue 0 pending / 1 running, ACTIVE.md freshness all 0h, today's logs nel=18 sam=1 ra=2 aether=2 dex=3, 0 P0/P1 FLAGs in log.jsonl last 2h. **TOP ITEM (unchanged 14h+):** restore LLM API access — Anthropic regains 2026-05-01, set GROK_API_KEY from agents/nel/security/, OR wire free-tier fallback into agents/ra/pipeline/synthesize.py BEFORE bundle-dump branch. Hyo decision required; cannot self-recover.**
+
+> **[SENTINEL 2026-04-29T10:04Z (04:04 MT) — scheduled run, autonomous] Run #237: 6 passed, 3 failed. 0 new, 3 recurring, 0 resolved.**
+> - **P0 ESCALATED (day 3, 3-runs-in-a-row trigger):** `aurora-ran-today` — `newsletters/2026-04-29.md` missing/empty. Confirmed: only `2026-04-27.{md,html}` + `2026-04-28.input.md` raw bundle in `agents/ra/output/`; no rendered newsletter for 04-28 or 04-29. Same root cause as 12h+ healthcheck stream (Anthropic exhausted → 2026-05-01, OpenAI 429, GROK_API_KEY unset). Added as P0 to KAI_TASKS.md → ACTION REQUIRED FROM HYO. Cannot self-recover — billing/credential decision is Hyo's.
+> - **P1 ELEVATED (day 3):** `scheduled-tasks-fired` — no `aurora-*.log` in `agents/nel/logs/`. Aurora runner appears retired/consolidated per SENT-002 (session 27, 2026-04-21); sentinel check still references the old proxy. Decide: revive the runner OR retire the check. Deferred to next interactive.
+> - **P2 ELEVATED (day 32):** `task-queue-size` — 33 P0 tasks (overload threshold 5). Backlog has not drained in a month. Grooming pass needed — many P0s are likely shippable or retiremable.
+> - **No new findings.** Sentinel itself ran cleanly (no script error, no new false positives — the BSD `stat_mode_L` + secrets-symlink fixes from session 27 SENT-001 are still holding; both checks PASS). Log: `agents/nel/logs/sentinel-2026-04-29.md`.
+
+> **[HEALTHCHECK 2026-04-29T10:02Z (04:02 MT)] ISSUES — 8 P1 carried (3 unresolved FLAGs in log.jsonl + 5 dead-loops + 25 SLA breaches + LLM-API blocker now 14h+). Cowork-pass cross-check: log.jsonl shows flag-kai-001 (daily-audit HYO_ROOT bug, **6th recurrence**, 08:09:14Z ×2) and flag-nel-001 (broken link, 09:00:02Z) with NO RESOLVE entries. ACTIVE.md freshness all 0h (agents cycling) but stuck-states persist for nel/sam/ra/aether/dex. Today's logs: nel=16, ra=2, aether=2, dex=3, sam=0 (sam runner scheduled 22:30 MT — not yet due), hyo=0. Queue 0 pending / 1 running / 3349 completed / 34 failed. Last 3 jobs all exit_code=0 (queue-hygiene ×2, agent-daily-assess.sh). NO new auto-remediation dispatched — sibling 09:50Z cascaded for all prior items; stacking deepens masking. **TOP ITEM (P1, unchanged 14h+):** restore LLM API access (Anthropic regains 2026-05-01, set GROK_API_KEY from agents/nel/security/, OR wire free-tier fallback in agents/ra/pipeline/synthesize.py before bundle-dump branch). **2nd ITEM (P1):** apply daily-audit.sh HYO_ROOT one-line fix — see kai/ledger/daily-audit-2026-04-29-supplement.md §1; 6 recurrences without resolution means the supplement is being read but the fix isn't being committed. Constitutional emitter dedup for aether STILL not installed despite 11+ healthcheck mentions.**
+
+> **[HEALTHCHECK 2026-04-29T08:06Z (02:06 MT)] ISSUES — 6 P1 carried (5 dead-loops still flagged by sibling auto-detector + 15 SLA-breached open tickets). Cowork-pass cross-check: 0 P0/P1 FLAGs in log.jsonl in last 2h; 178 P2 spam from aether (44x [SELF-REVIEW] untriggered files + ~134 dashboard-mismatch, ~one fire/30s). ACTIVE.md freshness all <1h — agents responding. LLM-API blocker UNCHANGED for 12h+. NO new remediation dispatched this cycle (sibling 08:04:45Z already cascaded). TOP ITEM: same as 04:04Z — restore LLM API access (Anthropic regains 2026-05-01, set GROK_API_KEY from agents/nel/security/, OR wire free-tier fallback in agents/ra/pipeline/synthesize.py before bundle-dump branch). Constitutional emitter dedup for aether STILL not installed despite 10+ healthcheck mentions — sam should pick this up next session.**
+
+> **[HEALTHCHECK 2026-04-29T04:04Z (22:04 MT)] ISSUES — 6 P1 (4 newsletter-flag re-fires + 5 dead-loops, 1 P2 verified-state schema). LLM-API blocker UNCHANGED for 8h+; auto-remediation already dispatched by sibling 03:57:33Z healthcheck.**
+> - **P1 (newsletter, day-of, ROOT):** No `2026-04-28.md` / `.html` rendered. Only `agents/ra/output/2026-04-28.input.md` (raw bundle) + `script-2026-04-28.txt` exist. Newsletter-missing flag re-fired **4x in last 2h** (02:13:25Z, 02:59:09Z, 02:59:11Z, 03:56:04Z) plus 1 broken-link flag at 02:59:09Z. Same root cause as 22:05Z and 02:04Z briefs: paid LLM quotas exhausted (Anthropic regains 2026-05-01, OpenAI 429 insufficient_quota, GROK_API_KEY unset). No autonomous remediation possible — billing/credentials decision is Hyo's.
+> - **P1 (dead-loops, all 5 dispatched 03:57:33Z, NOT yet verified cleared):** nel (`assessment_stuck`: routine maintenance), sam (`assessment_stuck`: routine engineering check), ra (`assessment_stuck`: health check 1 warning — root-caused by newsletter blackout), aether (`assessment_stuck`: dashboard out-of-sync — same publish-path issue from 18:04Z brief, 5+ guidance cycles haven't fixed), dex (`bottleneck_stuck`: 2 corrupt JSONL entries — auto-repair status unknown). Sibling healthcheck delegated [P2] [GUIDANCE] tickets nel/sam/ra/aether/dex-001 at 03:57:33Z. **If next 2h check still shows same dead-loops with no agent reply, escalate to constitutional dead-loop hard-stop (KI-031-001) and force-restart runners — this is now ≥4 cycles of same-state guidance for sam/ra/aether/dex.**
+> - **P2 (verified-state schema gap):** `kai/ledger/verified-state.json` mtime 8min fresh, but `ts: "?"` and `breached_sla` field missing. `stale_tickets.count=0` and `credits` populated correctly. `kai-session-prep.sh` may not be writing all documented fields — reconcile schema vs writer code before next escalation. Logged the same gap at 18:04Z; not yet fixed.
+> - **Healthy:** queue 0 pending / 0 running, 3287 completed / 33 failed lifetime. ACTIVE.md freshness all 0h (every agent updated within the hour). Today's logs nel=30, sam=1, ra=3, aether=2, dex=3. Last 3 queue jobs all exit_code=0.
+> - **NO new auto-remediation dispatched this run** — sibling 03:57:33Z healthcheck already cascaded all 5 dead-loop guidance tickets, plus a 04:04:09Z sibling overwrote `healthcheck-latest.json` mid-pass. Stacking deepens masking; the LLM-quota root cause is not auto-resolvable.
+> - **TOP ITEM (P1, unchanged for 8h+):** Restore LLM API access. Either (a) top up OpenAI/Anthropic billing, (b) export `GROK_API_KEY` from `agents/nel/security/`, or (c) wire a free-tier/local model into `agents/ra/pipeline/synthesize.py` BEFORE the bundle-dump branch. Once restored: `kai exec "bash agents/ra/pipeline/newsletter.sh"` to recover today's edition (raw bundle is already at `agents/ra/output/2026-04-28.input.md`, just needs synth + render).
+
 > **[SESSION 2026-04-28 CONTINUED — Cowork — SHIPPED]** Self-improve v2.0 complete. All research recommendations implemented. All protocols updated.
 > - `bin/kai-signal.sh` (NEW) — event-triggered improvement signal bus. 8 signal types (research_failure, api_exhausted, publish_failure, verification_failure, stale_detection, quality_degradation, chaos_discovery, knowledge_gap). Polled every autonomous cycle. P0 signals write to Hyo inbox immediately.
 > - `bin/chaos-inject.sh` (NEW) — weekly antifragility testing (Saturday 05:00 MT). Removes one dep per agent for ≤5 min, measures recovery/fallback/alert. Emits chaos_discovery signal per SPOF. Safety: no Sunday, no P0s open, trap-based restore.
@@ -315,6 +351,29 @@
 
 **[HEALTHCHECK 2026-04-24T02:05Z]** Status=ISSUES. **5 P1 dead-loops** re-raised by 01:51Z automated check (nel/sam/ra/aether/dex all "assessment_stuck"); auto-remediate dispatched same cycle, not verified executed. **Systemic P1: 35 P1 tasks in DELEGATED status >72h in kai/ledger/ACTIVE.md, oldest 263h (~11 days).** Closed-loop is handshaking (sim-ack → sim-report: all clear) but no real fixes landing. Highest-impact backlog: (a) ra newsletter cascade ra-002/003/004/005/006/009 for missed 2026-04-12/13/14, 9–11d stale; (b) dex-002 JSONL corruption flagged 2026-04-14, schema-validation gate never shipped (138h); (c) flag-aether-002 dashboard drift → sam-004/005 SAFEGUARD still DELEGATED (138h), this cycle's aether report STILL says "dashboard: out-of-sync" (local 20:01 vs API 19:25). **NEXT INTERACTIVE SESSION MUST: (1) cut the sim-ack remediation loop — producing noise, not fixes; (2) backfill or mark-skipped ra newsletters for 04-12/13/14; (3) ship dex-002 JSONL schema-validation gate at append-time; (4) fix aether dashboard publish pipeline (API frozen 36min behind local).** Queue healthy (0/0; 23 lifetime failures, last was vercel-ls security-block 04-23). Worker idle — not throughput-bound, remediation-logic-bound. All 6 ACTIVE.md fresh (0h). Agent output today/yesterday: nel=27 sam=1 ra=3 aether=2 dex=3 — sam producing near-zero output (1 log file) while nel is 27x busier. See kai/queue/healthcheck-latest.json.
 
+## ## Shipped this session (2026-04-30 — S31c Cowork autonomous)
+
+**BUGS FIXED:**
+- `ticket.sh generate_id` grep pattern: `"owner":"$agent"` → `"owner": "$agent"` (space after colon was causing every ticket to get -001 ID, 57+ duplicates for one ticket)
+- `daily-agent-report.sh`: replaced `declare -A` (bash 4+ only) with `case` statements (bash 3.2 compatible). This was silently failing on macOS for 4+ days, causing ALL agent daily reports to not publish to HQ.
+- `kai-autonomous.sh` ceo-report: added `"direction"` field to health report sections. Schema gate was blocking every ceo-report and opening a P0 ticket each day (3 stale P0s closed).
+- `newsletter.sh`: dual-path git add fix (previous session) — committed and pushed.
+
+**DATA COMMITTED:**
+- 6 ARIC research briefs for 2026-04-29 committed to both `website/` and `agents/sam/website/` paths (dual-path)
+- Research index updated to Briefs (7)
+
+**TICKETS:**
+- 16 P0 tickets closed: 5 resolved (newsletter/morning-report published, ceo-report schema fixed), 11 historical gaps (root cause now fixed)
+- 3 session errors logged to kai/ledger/session-errors.jsonl
+
+**SYSTEM STATE:**
+- Agent daily reports will publish correctly starting TONIGHT (bash 3.2 fix deployed)
+- Ticket NNN counter now produces unique IDs (grep space fix deployed)
+- Queue worker is active and processing jobs within seconds
+- Newsletter pipeline: working (Apr 30 published, dual-path fixed)
+- API status: Anthropic recovered (Apr 30 newsletter ran successfully)
+
 ## ## Shipped this session (2026-04-23 — S30)
 
 **MAJOR WORK:**
@@ -511,6 +570,11 @@
 Pending: S31-closed-loop-infrastructure.json commit task in queue (Mini will execute).
 
 ## ## Current state (as of 2026-04-27T12:04Z / 06:04 MT 2026-04-27 — automated 2h healthcheck)
+
+### Healthcheck 2026-04-30T18:25 MT — P1
+- **Newsletter false-flag (flag-nel-006):** fired claiming "no newsletter for 2026-05-01 past 06:00 MT" but it's still 2026-04-30. Today's newsletter (`agents/ra/output/2026-04-30.html`) shipped. Premature date-arithmetic in nel; needs fix.
+- **P2 carry-overs:** aether HQ-feed staleness, sentinel test failures (2 projects), 28 broken doc links, prior dead-loop remediation (5 agents + 95 SLA tickets) needs verification.
+- Full report: `kai/queue/healthcheck-latest.json`.
 
 - **2026-04-28 06:03Z healthcheck**: 5 P1 dead-loops detected at 05:57Z (nel/sam/ra/aether/dex `assessment_stuck`); auto-remediation dispatched and dex JSONL integrity validation running at 06:00Z. Verify resolution next session.
 
@@ -1379,3 +1443,19 @@ Recommended next step on the Mini: `kai verify && ls -la .secrets/ newsletters/ 
 - `nightly-consolidation` — `50 23 * * *` MT — enabled (now daily, was Sun-Thu)
 - `nightly-simulation` — `0 23 * * *` MT — enabled (now daily, was Sun-Thu)
 - `daily-aether-analysis` — one-time 4/10 (completed)
+
+> **[SESSION 2026-04-28 CLOSE — Cowork — End of session]**
+> **Shipped this continuation session:**
+> - Verified Vercel deployment aff7fc9 IS live in production (was checking `feed.entries` not `feed.reports` — 161 reports present, both skepticism-drop and self-improve-report confirmed in live feed)
+> - Fixed `renderResearchDrop` in hq.html: `implication`/`implications` both handled, `sources` rendered as clickable chips, `confidence` rendered as colored badge. JS syntax validated. Queued commit `hqfix-implication-commit`.
+> - AetherBot token fix: AETHERBOT_TELEGRAM_TOKEN applied to v253/v254/v255/kai_analysis.py in actual running dir. **Process restart still needed** (bot reads token at module load time; queue can't restart bot process safely without watchdog integration).
+>
+> **OPEN: Hyo action required before May 1:**
+> - LLM API quotas exhausted: Anthropic regains 2026-05-01, OpenAI 429 insufficient_quota, GROK_API_KEY unset. Newsletter synthesis is blocked. Options: (a) top up billing, (b) set GROK_API_KEY from .secrets/, (c) wire free-tier fallback into synthesize.py. Raw bundle for Apr 28 is at `agents/ra/output/2026-04-28.input.md`.
+>
+> **Tomorrow focus (April 29):**
+> 1. Confirm hq.html fix deployed (check Vercel deployments)
+> 2. Restart AetherBot process (via watchdog command or kill/respawn)
+> 3. LLM quota resolution
+> 4. PROTOCOL_HQ_PUBLISH.md field map for research-drop entries
+> 5. Bottleneck implementations (feedback loop speed, git commit reliability gate, outcome metric)
