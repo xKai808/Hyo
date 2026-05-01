@@ -60,16 +60,31 @@ open_ticket() {
   local agent="$1" title="$2" priority="$3"
   if [[ -f "$TICKET_SH" ]]; then
     local ticket_ledger="$HYO_ROOT/kai/tickets/tickets.jsonl"
-    # Check for open ticket with matching title opened today
+    # Check for open ticket with matching title opened today.
+    # Ledger format: {"title": "...", "status": "OPEN", "created_at": "2026-04-30T..."}
+    # Note spaces after colons — grep must match actual serialized format.
     if [[ -s "$ticket_ledger" ]]; then
       local today_date
       today_date=$(TZ="America/Denver" date +%Y-%m-%d)
+      # Escape double-quotes in title for grep, match ledger format "title": "VALUE"
+      local safe_title="${title//\"/\\\"}"
       local existing
-      existing=$(grep "\"title\":\"${title//\"/\\\"}\"" "$ticket_ledger" 2>/dev/null | \
-        grep "\"status\":\"OPEN\"\|\"status\":\"ACTIVE\"\|\"status\":\"BLOCKED\"" | \
-        grep "$today_date" | tail -1)
+      existing=$(python3 -c "
+import sys, json
+ledger, title, today = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(ledger) as f:
+    for line in f:
+        try:
+            t = json.loads(line)
+            if (t.get('title') == title and
+                t.get('status') in ('OPEN','ACTIVE','BLOCKED') and
+                t.get('created_at','').startswith(today)):
+                print(t['id'])
+                break
+        except: pass
+" "$ticket_ledger" "$title" "$today_date" 2>/dev/null || true)
       if [[ -n "$existing" ]]; then
-        log "  DEDUP: ticket already open today for '$agent': ${title:0:60}... — skipping"
+        log "  DEDUP: open ticket $existing already exists today for '$agent': ${title:0:60} — skipping"
         return 0
       fi
     fi
