@@ -1,5 +1,28 @@
 # KAI_BRIEF.md
 
+> **[HEALTHCHECK 2026-05-01T02:05Z (2026-04-30 20:05 MT) — autonomous 2h sweep] ISSUES — 4 issues + 2 warnings.**
+> - **RESOLVED since prior 01:55Z check:** newsletter-2026-04-30 produced ✓ (auto-remediation queue job fb717dd9 OK at 01:56:56Z; html/md/input.md present in `agents/ra/output/`). Historical SLA-breached count 37→0 (the Apr 26-29 daily-report P0 trio CLOSED 2026-04-30 18:32 MT after bash 3.2 `declare -A` fix; 59 open tickets, 0 currently SLA-breached).
+> - **P1 audit-stale (RECURRING — auto-remediate ineffective):** 6 [AUTOMATE] items in KAI_TASKS.md untouched 18 days (lines 243-272). Self-dispatched to kai-001 4x in last 30min without human/Kai picking them up. Pattern is masking, not resolving — needs interactive grooming pass next session.
+> - **P1 dead-loops (3 agents, guidance dispatched 01:55Z, awaiting reply):** sam (assessment_stuck: routine engineering check), ra (assessment_stuck: health check 1 warning), dex (bottleneck_stuck: 2 corrupt JSONL entries). 30 historical [GUIDANCE] dispatches in log — same agents repeatedly stuck. If next 2h sweep shows no agent reply, escalate to KI-031-001 hard-stop.
+> - **P3 agent-output:** sam=0 logs, dex=0 logs for 2026-04-30/05-01 today/yesterday window. Nel=5, ra=1, aether=2 — within nominal cadence.
+> - **Healthy:** queue 0 pending / 0 running; ACTIVE.md freshness all 0h (every agent updated within the hour); last 3 queue jobs all exit_code=0 (findings-to-aric-commit, newsletter-remediation, queue-hygiene).
+> - **NO new auto-remediation dispatched this cycle** — prior 01:55Z sibling already cascaded; further self-dispatches deepen masking without resolving.
+> - **TOP ITEM (P1):** Manually groom the 6 stale [AUTOMATE] items in KAI_TASKS.md lines 243-272 — auto-remediate has now re-flagged the same lines 4+ times in 30min without movement.
+
+> **[SESSION S32b-COWORK CONTINUATION 2026-05-01 ~02:15–02:40 MT — pipeline verification + dedup fix] Shipped:**
+> 1. **Commit c52210f landed** — all 5 files from the improvement loop (publish-to-feed.sh commit+push, kai-autonomous.sh once-daily self-improve + Kai at 23:30, morning-report-synthesize.py no-Aurora prompt, nel.sh nightly gate removed, agents/kai/kai-daily.sh new Kai daily runner). Verified exit_code=0, pushed to GitHub.
+> 2. **flywheel-doctor.sh dedup gate** — `open_ticket()` now checks for existing open ticket with same title before creating. Was flooding session-handoff with 40+ duplicate SICQ/OMP tickets per day (doctor runs 4-5x/day, each opening new sequential ID bypassing old ID-based dedup). Prevention: title+status+date search before create.
+> 3. **Sam publish verified** — no time gate in sam.sh. Publishes directly. Nel nightly gate confirmed removed (NIGHTLY_WINDOW computed but unused in actual gate).
+> **Pipeline verified for tomorrow**: agent-research.sh (04:30) → findings-to-aric.py bridge (04:45) → aric-external-filter.py → morning-report-synthesize.py → morning report publish+commit+push (07:00). All 5 steps wired.
+
+> **[SESSION S32-COWORK 2026-04-30/05-01 19:15–20:50 MT — Hyo directive: intelligence-first morning report] Shipped:**
+> 1. **PROTOCOL_MORNING_REPORT.md v2.0** — complete rewrite. Intelligence brief, not system dashboard. CONTENT GATE: 5 yes/no gates block publish if system health leads or research lacks why/result. (commit 249ebdd)
+> 2. **generate-morning-report.sh v5** — builds `intelligence[]`, `shipped[]`, `outlook`, `systemFootnote` sections from ARIC data. Summary leads with top research finding, never with "System is healthy". System health relegated to ≤3-line footnote. (commit 914f0bb)
+> 3. **hq.html + agents/sam/website/hq.html v5 renderer** — `renderMorningReport()` rewritten. Amber-bordered intelligence cards (topic/finding/why/result/source). Green-bordered shipped cards (before→after/commit). Forward outlook paragraph. Monospace system footnote. Legacy wentWell/needsAttention fallback preserved for old reports. JS validated: `node --check` PASS. (commit 914f0bb)
+> 4. **Aurora 404 fix** — newsletter-2026-04-30.html committed to git (was generated but never pushed). Vercel deployed. (commit 10bf0f3, prior session S31c)
+> **Session error logged**: SE-S32 — queue job using `git show stash@{0}:path > path` pattern emptied hq.html to 0 bytes when stash didn't exist. Prevention gate added to session-errors.jsonl.
+> **Tomorrow's verification**: morning-report at 05:00 MT should show intelligence-first content if tonight's ARIC cycles complete with real synthesis (Claude Code auth renewed).
+
 > **[SESSION S31c-COWORK CONTINUED 2026-04-30 18:13–19:15 MT — AUTONOMOUS] Bugs fixed + pushed:**
 > 1. **aether-publish-analysis.sh** — `today` field used analysis date arg ($1), not system date. Any backdated publish stomped feed's today back. Fixed: `data['today'] = now_mt[:10]`. (commit f66ca0e)
 > 2. **flywheel-doctor.sh compute_kai_sicq()** — function used `log()` via `tee`→stdout, so `score=$(compute_kai_sicq)` captured all log lines, not just score. Integer comparison failed. sicq-latest.json hadn't updated since Apr 22. Fixed: `| tail -1`. (commit 033ba09)

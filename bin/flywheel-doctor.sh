@@ -53,9 +53,26 @@ FIXES_APPLIED=()
 ESCALATIONS=()
 
 # ─── Ticket helper ────────────────────────────────────────────────────────────
+# DEDUP GATE: check if an open ticket with this exact title already exists today
+# before creating. Doctor runs 4-5x/day — without this, same SICQ/OMP issue
+# opens a new ticket every cycle (SE-S32: 40+ duplicate tickets in one day).
 open_ticket() {
   local agent="$1" title="$2" priority="$3"
   if [[ -f "$TICKET_SH" ]]; then
+    local ticket_ledger="$HYO_ROOT/kai/tickets/tickets.jsonl"
+    # Check for open ticket with matching title opened today
+    if [[ -s "$ticket_ledger" ]]; then
+      local today_date
+      today_date=$(TZ="America/Denver" date +%Y-%m-%d)
+      local existing
+      existing=$(grep "\"title\":\"${title//\"/\\\"}\"" "$ticket_ledger" 2>/dev/null | \
+        grep "\"status\":\"OPEN\"\|\"status\":\"ACTIVE\"\|\"status\":\"BLOCKED\"" | \
+        grep "$today_date" | tail -1)
+      if [[ -n "$existing" ]]; then
+        log "  DEDUP: ticket already open today for '$agent': ${title:0:60}... — skipping"
+        return 0
+      fi
+    fi
     HYO_ROOT="$HYO_ROOT" bash "$TICKET_SH" create \
       --agent "$agent" --title "$title" --priority "$priority" \
       --type "improvement" --created-by "flywheel-doctor" 2>/dev/null || true
