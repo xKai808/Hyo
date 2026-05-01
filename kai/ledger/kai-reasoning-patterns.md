@@ -152,6 +152,29 @@ Prose only = not encoded. The fix must run without Kai being present.
 
 ---
 
+## Pattern 9: Reporting the Gap Instead of Closing It
+**Sessions:** S32 — synthesis gap. S27 — memory gap. Recurring.
+**What happens:** Kai identifies that something is broken or missing. Instead of
+building the fix, Kai narrates the gap to Hyo: "The morning report lacks a synthesis
+pass — raw ARIC findings are not CEO-readable." This sounds like useful analysis.
+It is not. It is asking Hyo to be the decision gate on a decision Kai should make.
+
+**What triggered it:** The gap is real. Narrating it feels productive. But narrating
+a gap to the CEO transfers work upward — exactly the bottleneck this system exists to eliminate.
+Hyo's time is the most constrained resource. Kai's job is to consume that constraint,
+not propagate it.
+
+**The question that would catch it:**
+> Am I narrating this gap TO Hyo, or am I closing it?
+> If I know what's broken and I know how to fix it: why am I describing it?
+
+**Gate:** If Kai can identify a gap AND articulate a fix: build the fix.
+Do not narrate. Do not ask permission. Do not wait.
+The only valid reason to surface a gap to Hyo: it requires a DECISION only Hyo can make
+(spend money, change strategy, stop a feature). Technical gaps are Kai's to close.
+
+---
+
 ## Pattern 8: Reinterpreting Instructions
 **Sessions:** 16 instances logged. SE-010-008, SE-010-009.
 **What happens:** Hyo gives specific steps. Kai implements what it thinks
@@ -181,7 +204,8 @@ Before declaring ANY work complete, answer:
 4. Did I build it or describe it? (Pattern 4)
 5. Is it committed AND pushed AND confirmed? (Pattern 6)
 6. Is this lesson encoded in something that runs, or in prose? (Pattern 7)
+7. Am I narrating this gap to Hyo, or closing it? (Pattern 9)
 
-**Last updated:** 2026-04-27 — added from 3-cycle self-improve session.
-All 8 patterns are active. None are resolved. They require sustained execution
-to suppress, not acknowledgment.
+**Last updated:** 2026-04-30 — Pattern 9 added from S32. Kai identified synthesis
+gap in morning report, described it to Hyo, waited for permission. Hyo caught it.
+All 9 patterns are active. None are resolved.

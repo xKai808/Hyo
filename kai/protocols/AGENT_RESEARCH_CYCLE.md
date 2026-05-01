@@ -136,7 +136,7 @@ This is where agents actually learn. No shortcuts. Real sources.
 
 RESEARCH SOURCES (ordered by priority):
   1. GitHub (repos, issues, discussions) — via github MCP or gh CLI
-  2. WebSearch — broad web research
+  2. WebSearch — broad web search
   3. Reddit (r/devops, r/sysadmin, r/programming, r/machinelearning) — via reddit MCP
   4. YouTube (conference talks, tutorials) — via youtube MCP
   5. X/Twitter (practitioner discourse) — via x MCP
@@ -145,6 +145,23 @@ RESEARCH SOURCES (ordered by priority):
 
   If a source is unavailable: log it as a BLOCKER, not a workaround.
   The goal is to BUILD ACCESS, not accept limitation.
+
+EXTERNAL SOURCE GATE (mandatory — runs before writing research_conducted[]):
+  Before writing any item to research_conducted[], answer:
+  □ Does this source have an http:// or https:// URL?
+  □ Is this source something outside the Hyo codebase (not GROWTH.md,
+    session-errors.jsonl, ACTIVE.md, PLAYBOOK.md, aether.sh, or any local file)?
+  □ Does the finding cite something we learned from the external world —
+    not something we already knew from our own logs?
+
+  If any answer is NO: do not write that item to research_conducted[].
+  Write it to research_analysis{} instead as internal context.
+  research_conducted[] is for external intelligence ONLY.
+  Internal self-assessment goes in research_analysis{}.
+
+  RATIONALE: The morning report distills research_conducted[] for Hyo.
+  Internal bookkeeping dressed as research produces a CEO brief that reads
+  like a dev log. Hyo has already said this is unacceptable. Don't repeat it.
 ```
 
 ### PHASE 5: DECIDE (What exactly will we build?)

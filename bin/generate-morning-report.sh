@@ -1359,17 +1359,44 @@ try:
 except Exception:
     pass
 
+# ── v6.1 EXTERNAL SOURCE FILTER (PROTOCOL_MORNING_REPORT.md v2.1) ──
+# Agents sometimes populate research_conducted[] with internal sources:
+# GROWTH.md, session-errors.jsonl, aether.sh, file:// URLs.
+# These are internal bookkeeping, not external intelligence.
+# Filter them out before synthesis — "No external research" is honest.
+# Internal-source items are better than synthesized navel-gazing.
+_filter_script = os.path.join(root, "bin", "aric-external-filter.py")
+_external_intelligence = intelligence_items  # default: unfiltered
+if intelligence_items and os.path.exists(_filter_script):
+    try:
+        _filter_proc = subprocess.run(
+            [sys.executable, _filter_script],
+            input=json.dumps(intelligence_items),
+            capture_output=True, text=True, timeout=30, check=False,
+        )
+        if _filter_proc.returncode == 0 and _filter_proc.stdout.strip():
+            _filter_result = json.loads(_filter_proc.stdout.strip())
+            if isinstance(_filter_result, list):
+                _external_intelligence = _filter_result
+                removed = len(intelligence_items) - len(_filter_result)
+                if removed > 0:
+                    print(f"⚑ External filter: removed {removed} internal-source items, {len(_filter_result)} remain")
+                    if _filter_proc.stderr:
+                        print(_filter_proc.stderr.strip())
+    except Exception as _filter_err:
+        print(f"WARN: external filter error — using unfiltered items: {_filter_err}")
+
 # ── v6 SYNTHESIS PASS (PROTOCOL_MORNING_REPORT.md v2.1) ──
 # Run intelligence_items through morning-report-synthesize.py to produce
 # Aurora-style prose: category tag, plain-English topic, one takeaway, one Watch signal.
 # Falls back to raw items if synthesis fails (Claude bin missing, timeout, etc).
-_synthesized_intelligence = intelligence_items  # default: raw fallback
-if intelligence_items:
+_synthesized_intelligence = _external_intelligence  # default: filtered-raw fallback
+if _external_intelligence:
     try:
         _synth_script = os.path.join(root, "bin", "morning-report-synthesize.py")
         _synth_proc = subprocess.run(
             [sys.executable, _synth_script],
-            input=json.dumps(intelligence_items),
+            input=json.dumps(_external_intelligence),
             capture_output=True, text=True, timeout=180, check=False,
         )
         if _synth_proc.returncode == 0 and _synth_proc.stdout.strip():

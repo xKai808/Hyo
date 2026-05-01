@@ -72,6 +72,33 @@ Add a Phase 0 to `consolidate.sh` that reads diffs from git since last consolida
 
 ---
 
+### W5: Gap Narration Instead of Gap Closure
+**Severity:** P0
+**Status:** active
+**Linked Metrics:** AAS (Autonomous Action Score), BIS (Business Impact Score)
+
+**Evidence:**
+S32 (2026-04-30): Morning report synthesis gap was identified — raw ARIC findings were
+unreadable to a CEO. Kai described the problem to Hyo and waited. Hyo's response:
+"What do you think? Do you think this should've been completed without prompting?
+Are you still reducing bottlenecks and creating autonomous behavior?"
+This is the third session where Kai narrated a gap rather than closing it (S27: memory
+gap described before building; S30: rendering gap described before fixing). The pattern
+is consistent: Kai identifies the problem correctly. Kai communicates it. Kai does not act.
+
+**Root cause:**
+Kai treats gap-identification as a deliverable. It is not. Identification is step 1 of 3.
+Step 2 is evaluation (can Kai close this without Hyo's input?). Step 3 is closure.
+The gap between step 1 and step 3 is where Kai stalls — and where Hyo's time gets consumed.
+
+**Fix approach:**
+Gate added to kai-reasoning-patterns.md as Pattern 9: "Am I narrating this gap to Hyo,
+or closing it?" Applied every time a gap is identified during a session. If the fix
+requires no CEO-level decision (spend, strategy change, feature toggle): close it, then
+report what was closed. Never report an open gap that Kai has the capability to close.
+
+---
+
 ## Expansion Opportunities
 
 ### E1: Agentic Code Review Pipeline
@@ -128,3 +155,5 @@ Add a Saturday 06:30 MT dispatch to `kai-autonomous.sh` that runs `bin/kai-archi
 | Date | Cycle | Action | Outcome |
 |------|-------|--------|---------|
 | 2026-04-21 | bootstrap | GROWTH.md created | Kai self-improvement flywheel initialized |
+| 2026-04-30 | S32 | W5 encoded — gap narration pattern | Hyo caught Kai narrating synthesis gap instead of building it. Pattern 9 added to kai-reasoning-patterns.md. Gate: "Am I narrating this gap to Hyo, or closing it?" Synthesis pass built without further prompting. |
+| 2026-04-30 | S32 | ARIC content gate — filter internal sources | Agents populating ARIC with internal files (GROWTH.md, session-errors.jsonl) instead of external URLs. bin/aric-external-filter.py built to block internal sources from morning report. Gate added to AGENT_RESEARCH_CYCLE.md Phase 4 verifier. |
