@@ -1,34 +1,66 @@
 {
   "session_id": "auto-2026-04-30",
-  "ended_at": "2026-04-30T19:10:49-0600",
+  "ended_at": "2026-04-30T19:40:52-0600",
   "written_by": "kai-session-prep.sh (automated \u2014 no prompting required)",
   "top_priority": "> Session 27 ended 2026-04-21 ~21:30 MT. Hyo is done for the night.",
   "shipped_this_session": [
-    "brief: S31c autonomous session \u2014 aether/flywheel fixes, SICQ refresh, visual verify",
-    "log: session errors + Hyo inbox \u2014 Claude Code auth P1, aether-publish-analysis fix",
-    "fix: compute_kai_sicq capture bug \u2014 tail -1 to extract score from log-polluted stdout",
-    "fix: aether-publish-analysis today field uses system date not analysis date",
-    "fix: feed today field 2026-04-30 (was stuck on 2026-04-29)"
+    "feat: morning report v5 intelligence-first redesign",
+    "feat: morning report v5 intelligence-first redesign",
+    "fix: commit newsletter HTML for 2026-04-30 \u2014 was missing from git, causing /daily/newsletter-2026-04-30 404 on Vercel",
+    "enforcer: escalated=4 archived=0 @ 19:12",
+    "brief: S31c autonomous session \u2014 aether/flywheel fixes, SICQ refresh, visual verify"
   ],
   "open_p0s": [
     "TASK-20260429-ra-001: Doctor: OMP below minimum for ra (69/100, min 70) \u2014 improve output quality",
     "TASK-20260429-aether-001: Self-improve health: Q7 FAIL \u2014 aether",
-    "TASK-20260430-ra-006: Newsletter missing for 2026-04-30 (after 06:00 MT)"
+    "TASK-20260430-ra-006: Newsletter missing for 2026-04-30 (after 06:00 MT)",
+    "TASK-20260430-kai-007: Outcome check: 2 agent output(s) missing for 2026-04-30",
+    "TASK-20260430-aether-005: Doctor: reset corrupt self-improve state for aether",
+    "TASK-20260430-nel-005: Doctor: SICQ critically low for nel (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-sam-005: Doctor: SICQ critically low for sam (20/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-ra-007: Doctor: SICQ critically low for ra (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-dex-004: Doctor: SICQ critically low for dex (20/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-nel-006: Doctor: OMP below minimum for nel (54/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-sam-006: Doctor: OMP below minimum for sam (62/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-ra-008: Doctor: OMP below minimum for ra (69/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-kai-008: Doctor: OMP below minimum for kai (60/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-kai-009: Protocol/JSON alignment: Unregistered types in feed: agent-daily,agent-goals,age",
+    "TASK-20260430-aether-006: Doctor: reset corrupt self-improve state for aether",
+    "TASK-20260430-nel-007: Doctor: SICQ critically low for nel (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-sam-007: Doctor: SICQ critically low for sam (20/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-ra-009: Doctor: SICQ critically low for ra (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-dex-005: Doctor: SICQ critically low for dex (20/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-nel-008: Doctor: OMP below minimum for nel (54/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-sam-008: Doctor: OMP below minimum for sam (62/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-ra-010: Doctor: OMP below minimum for ra (69/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-kai-010: Doctor: OMP below minimum for kai (60/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-kai-011: Protocol/JSON alignment: Unregistered types in feed: agent-daily,agent-goals,age",
+    "TASK-20260430-kai-012: Outcome check: 2 agent output(s) missing for 2026-04-30",
+    "TASK-20260430-nel-009: Doctor: SICQ critically low for nel (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-sam-009: Doctor: SICQ critically low for sam (20/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-ra-011: Doctor: SICQ critically low for ra (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-dex-006: Doctor: SICQ critically low for dex (20/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-kai-013: Doctor: SICQ critically low for kai (40/100) \u2014 self-improve cycle degraded",
+    "TASK-20260430-nel-010: Doctor: OMP below minimum for nel (54/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-sam-010: Doctor: OMP below minimum for sam (62/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-ra-012: Doctor: OMP below minimum for ra (69/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-kai-014: Doctor: OMP below minimum for kai (60/100, min 70) \u2014 improve output quality",
+    "TASK-20260430-kai-015: Protocol/JSON alignment: Unregistered types in feed: agent-daily,agent-goals,age"
   ],
   "hyo_actions_pending": [
-    "SENT-2026-04-29 ESCALATION: LLM-API quota blocker \u2192 Aurora newsletter day 3 missing.",
     "RESEND_API_KEY needed for Aurora retention email.",
     "Stripe webhook endpoint registration.",
     "S18-013: Remote connection (bore.pub) broken.",
-    "API key decision."
+    "API key decision.",
+    "HYO-REQUIRED-001: Provide real OpenAI API key"
   ],
   "commits_queued": [],
   "commits_to_verify": [
     "Run: git log --oneline -8"
   ],
   "memory_freshness": {
-    "kai_brief": "2026-04-30T19:00:07",
-    "kai_tasks": "2026-04-30T19:00:22",
+    "kai_brief": "2026-04-30T19:35:42",
+    "kai_tasks": "2026-04-30T19:21:52",
     "knowledge": "2026-04-28T19:10:50",
     "tacit": "2026-04-27T20:44:42"
   },
