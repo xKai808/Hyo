@@ -173,11 +173,21 @@ def merge_into_aric(agent: str, new_items: list[dict], date: str) -> bool:
         except Exception:
             existing = {}
 
-    # Merge: keep existing fields, update research section
+    # Merge: keep existing fields, update research section.
+    # IMPORTANT: do NOT overwrite research_conducted[] wholesale — this destroys
+    # any items written by the ARIC Claude Code cycle (which uses a different source).
+    # Instead, merge by de-duping on topic+source: existing Claude Code items are kept,
+    # findings-to-aric items are added or updated.
+    existing_items = existing.get("research_conducted", [])
+    existing_keys = {(i.get("topic", ""), i.get("source", "")) for i in existing_items}
+    # Keep Claude Code items not covered by today's findings run
+    merged = [i for i in existing_items if (i.get("topic", ""), i.get("source", "")) not in {(n.get("topic",""), n.get("source","")) for n in new_items}]
+    merged.extend(new_items)
+
     existing["agent"] = agent
     existing["cycle_date"] = date
     existing["aric_phase"] = existing.get("aric_phase", "Daily Research Cycle")
-    existing["research_conducted"] = new_items
+    existing["research_conducted"] = merged
     existing["research_source"] = "findings-to-aric.py (agent-research.sh findings bridge)"
     existing["_updated"] = datetime.now(MT).isoformat()
 

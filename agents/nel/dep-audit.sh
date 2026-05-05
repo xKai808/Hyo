@@ -55,25 +55,48 @@ RESULTS=()
 echo "=== Nel Dependency Audit — $TODAY ===" >&2
 echo "" >&2
 
-# ── 1. npm audit ────────────────────────────────────────────────────────────
-NPM_TARGET="$ROOT/agents/sam/website"
-NPM_PKG="$NPM_TARGET/package.json"
-NPM_LOCK="$NPM_TARGET/package-lock.json"
+# ── npm audit function ──────────────────────────────────────────────────────
+# audit_npm_target <directory> <label>
+# Runs npm audit on the given directory, updates PASS/FAIL/WARN/RESULTS.
+audit_npm_target() {
+  local target_dir="$1"
+  local label="$2"
+  local pkg="$target_dir/package.json"
+  local lock="$target_dir/package-lock.json"
 
-if [[ -f "$NPM_PKG" ]]; then
-  echo "  [npm] Auditing $NPM_PKG..." >&2
-
-  if [[ ! -f "$NPM_LOCK" ]]; then
-    echo "  ⚠ npm: no package-lock.json — running npm install first" >&2
-    (cd "$NPM_TARGET" && npm install --package-lock-only --silent 2>/dev/null) || true
+  if [[ ! -f "$pkg" ]]; then
+    echo "  - npm [$label]: no package.json found" >&2
+    RESULTS+=("{\"source\":\"npm\",\"target\":\"$label\",\"status\":\"skipped\",\"note\":\"no package.json\"}")
+    return
   fi
 
-  if [[ -f "$NPM_LOCK" ]]; then
-    AUDIT_JSON=$(cd "$NPM_TARGET" && npm audit --json 2>/dev/null || true)
+  echo "  [npm] Auditing $pkg..." >&2
 
-    if [[ -n "$AUDIT_JSON" ]]; then
-      # Parse vulnerability counts
-      VULN_SUMMARY=$(echo "$AUDIT_JSON" | python3 -c "
+  if [[ ! -f "$lock" ]]; then
+    echo "  ⚠ npm [$label]: no package-lock.json — running npm install first" >&2
+    (cd "$target_dir" && npm install --package-lock-only --silent 2>/dev/null) || true
+  fi
+
+  if [[ ! -f "$lock" ]]; then
+    echo "  ⚠ npm [$label]: could not generate lock file — skipping audit" >&2
+    WARN=$((WARN + 1))
+    RESULTS+=("{\"source\":\"npm\",\"target\":\"$label\",\"status\":\"skipped\",\"note\":\"no lock file\"}")
+    return
+  fi
+
+  local AUDIT_JSON
+  AUDIT_JSON=$(cd "$target_dir" && npm audit --json 2>/dev/null || true)
+
+  if [[ -z "$AUDIT_JSON" ]]; then
+    echo "  ⚠ npm [$label] audit returned no output — offline or registry unreachable" >&2
+    WARN=$((WARN + 1))
+    RESULTS+=("{\"source\":\"npm\",\"target\":\"$label\",\"status\":\"unavailable\",\"note\":\"npm audit returned no output\"}")
+    return
+  fi
+
+  # Parse vulnerability counts
+  local VULN_SUMMARY
+  VULN_SUMMARY=$(echo "$AUDIT_JSON" | python3 -c "
 import json,sys
 try:
     d = json.load(sys.stdin)
@@ -84,7 +107,6 @@ try:
     moderate = v.get('moderate', 0)
     low = v.get('low', 0)
     total = v.get('total', 0)
-    # Extract CVE details
     vulns = []
     for pkg_name, adv in d.get('vulnerabilities', {}).items():
         sev = adv.get('severity','unknown')
@@ -96,46 +118,38 @@ except Exception as e:
     print(json.dumps({'error': str(e), 'critical':0,'high':0,'moderate':0,'low':0,'total':0,'total_deps':0,'details':[]}))
 " 2>/dev/null)
 
-      CRIT=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('critical',0))")
-      HIGH=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('high',0))")
-      MOD=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('moderate',0))")
-      LOW=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('low',0))")
-      TOTAL=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('total',0))")
-      TOTAL_DEPS=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('total_deps',0))")
+  local CRIT HIGH MOD LOW TOTAL TOTAL_DEPS NPM_STATUS
+  CRIT=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('critical',0))")
+  HIGH=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('high',0))")
+  MOD=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('moderate',0))")
+  LOW=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('low',0))")
+  TOTAL=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('total',0))")
+  TOTAL_DEPS=$(echo "$VULN_SUMMARY" | python3 -c "import json,sys; print(json.load(sys.stdin).get('total_deps',0))")
 
-      NPM_STATUS="clean"
-      if [[ "$CRIT" -gt 0 ]]; then
-        NPM_STATUS="critical"
-        FAIL=$((FAIL + CRIT))
-        echo "  ✗ npm: CRITICAL $CRIT CVE(s) — immediate action required" >&2
-      elif [[ "$HIGH" -gt 0 ]]; then
-        NPM_STATUS="high"
-        FAIL=$((FAIL + HIGH))
-        echo "  ✗ npm: HIGH $HIGH CVE(s) — action required" >&2
-      elif [[ "$MOD" -gt 0 ]]; then
-        NPM_STATUS="moderate"
-        WARN=$((WARN + MOD))
-        echo "  ⚠ npm: MODERATE $MOD issue(s) — review recommended" >&2
-      else
-        PASS=$((PASS + 1))
-        echo "  ✓ npm: clean ($TOTAL_DEPS deps, 0 vulnerabilities)" >&2
-      fi
-
-      RESULTS+=("{\"source\":\"npm\",\"target\":\"agents/sam/website\",\"status\":\"$NPM_STATUS\",\"total_deps\":$TOTAL_DEPS,\"critical\":$CRIT,\"high\":$HIGH,\"moderate\":$MOD,\"low\":$LOW,\"total_vulns\":$TOTAL}")
-    else
-      echo "  ⚠ npm audit returned no output — offline or registry unreachable" >&2
-      WARN=$((WARN + 1))
-      RESULTS+=("{\"source\":\"npm\",\"target\":\"agents/sam/website\",\"status\":\"unavailable\",\"note\":\"npm audit returned no output\"}")
-    fi
+  NPM_STATUS="clean"
+  if [[ "$CRIT" -gt 0 ]]; then
+    NPM_STATUS="critical"
+    FAIL=$((FAIL + CRIT))
+    echo "  ✗ npm [$label]: CRITICAL $CRIT CVE(s) — immediate action required" >&2
+  elif [[ "$HIGH" -gt 0 ]]; then
+    NPM_STATUS="high"
+    FAIL=$((FAIL + HIGH))
+    echo "  ✗ npm [$label]: HIGH $HIGH CVE(s) — action required" >&2
+  elif [[ "$MOD" -gt 0 ]]; then
+    NPM_STATUS="moderate"
+    WARN=$((WARN + MOD))
+    echo "  ⚠ npm [$label]: MODERATE $MOD issue(s) — review recommended" >&2
   else
-    echo "  ⚠ npm: could not generate lock file — skipping audit" >&2
-    WARN=$((WARN + 1))
-    RESULTS+=("{\"source\":\"npm\",\"target\":\"agents/sam/website\",\"status\":\"skipped\",\"note\":\"no lock file\"}")
+    PASS=$((PASS + 1))
+    echo "  ✓ npm [$label]: clean ($TOTAL_DEPS deps, 0 vulnerabilities)" >&2
   fi
-else
-  echo "  - npm: no package.json found at $NPM_PKG" >&2
-  RESULTS+=("{\"source\":\"npm\",\"status\":\"skipped\",\"note\":\"no package.json\"}")
-fi
+
+  RESULTS+=("{\"source\":\"npm\",\"target\":\"$label\",\"status\":\"$NPM_STATUS\",\"total_deps\":$TOTAL_DEPS,\"critical\":$CRIT,\"high\":$HIGH,\"moderate\":$MOD,\"low\":$LOW,\"total_vulns\":$TOTAL}")
+}
+
+# ── 1. npm audit ────────────────────────────────────────────────────────────
+audit_npm_target "$ROOT/agents/sam/website" "agents/sam/website"
+audit_npm_target "$ROOT/agents/sam/mcp-server" "agents/sam/mcp-server"
 
 # ── 2. Python pip-audit ─────────────────────────────────────────────────────
 echo "" >&2
@@ -188,8 +202,9 @@ fi
 echo "" >&2
 echo "  [staleness] Checking npm package ages..." >&2
 
-if [[ -f "$NPM_PKG" ]]; then
-  STALE_PKGS=$(cd "$NPM_TARGET" && python3 -c "
+STALE_TARGET="$ROOT/agents/sam/website"
+if [[ -f "$STALE_TARGET/package.json" ]]; then
+  STALE_PKGS=$(cd "$STALE_TARGET" && python3 -c "
 import json, subprocess, sys
 from datetime import datetime, timezone
 
@@ -255,8 +270,10 @@ echo "=== Dep Audit: $PASS passed, $WARN warnings, $FAIL failures — $OVERALL =
 RESULTS_JSON=$(printf '%s,' "${RESULTS[@]}")
 RESULTS_JSON="[${RESULTS_JSON%,}]"
 
-ENTRY=$(python3 -c "
-import json
+DRY_RUN_PY=$( [ "$DRY_RUN" == "true" ] && echo "True" || echo "False" )
+ENTRY=$(echo "$RESULTS_JSON" | python3 -c "
+import json, sys
+results = json.load(sys.stdin)
 entry = {
     'ts': '$NOW_ISO',
     'date': '$TODAY',
@@ -264,8 +281,8 @@ entry = {
     'pass': $PASS,
     'warn': $WARN,
     'fail': $FAIL,
-    'dry_run': $([ '$DRY_RUN' == 'true' ] && echo 'true' || echo 'false'),
-    'results': $RESULTS_JSON
+    'dry_run': $DRY_RUN_PY,
+    'results': results
 }
 print(json.dumps(entry))
 " 2>/dev/null || echo "{}")

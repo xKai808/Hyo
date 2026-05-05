@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# bin/generate-morning-report.sh — v4 Growth-Driven Morning Report Generator
+# bin/generate-morning-report.sh — v6-action-engine Intelligence-First Morning Report Generator
 #
 # REWRITTEN FOR ARIC PHASE 7 CONSUMPTION
 # ════════════════════════════════════════════════════════════════════════════════
@@ -1329,7 +1329,12 @@ flywheel_detail = si_in_prog if si_in_prog else ["No in-progress reports."]
 if si_no_rpt:
     flywheel_detail.append(f"No report from: {', '.join(si_no_rpt)}")
 
-now_ts = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-06:00")
+import subprocess as _sp
+_tz_offset = _sp.run(["bash","-c","TZ=America/Denver date +%z"],capture_output=True,text=True).stdout.strip() or "-0600"
+_tz_str = _tz_offset[:3]+":"+_tz_offset[3:]
+from datetime import timezone as _tz, timedelta as _td
+_mt_offset = _td(hours=int(_tz_offset[:3]),minutes=int(_tz_offset[3:]))
+now_ts = datetime.now(_tz.utc).astimezone(_tz(_mt_offset)).strftime("%Y-%m-%dT%H:%M:%S")+_tz_str
 
 # Build sicqScores dict for HQ feed — read directly from file (separate process from PYEOF)
 _sicq_for_feed = {}
@@ -1388,8 +1393,8 @@ if intelligence_items and os.path.exists(_filter_script):
 
 # ── v6 SYNTHESIS PASS (PROTOCOL_MORNING_REPORT.md v2.1) ──
 # Run intelligence_items through morning-report-synthesize.py to produce
-# Aurora-style prose: category tag, plain-English topic, one takeaway, one Watch signal.
-# Falls back to raw items if synthesis fails (Claude bin missing, timeout, etc).
+# CEO-readable prose: category tag, specific topic, one takeaway, one Watch signal.
+# No system names, no Aurora framing. Falls back to raw items if synthesis fails.
 _synthesized_intelligence = _external_intelligence  # default: filtered-raw fallback
 if _external_intelligence:
     try:
@@ -1411,10 +1416,92 @@ if _external_intelligence:
     except Exception as _synth_err:
         print(f"WARN: synthesis exception — using raw items: {_synth_err}")
 
-# ── v5 SECTIONS: intelligence-first format (PROTOCOL_MORNING_REPORT.md v2.0) ──
+# ── DECISIONS REQUIRED (S32b research finding — 2026-04-30) ──────────────────
+# Surfaces time-bound items where the window closes within 48h.
+# Sources: active P0/P1 tickets (all P0, P1 with due_date within 48h),
+#          credit budget threshold.
+# Format:  [{what, deadline, source, priority}]
+# Omitted from sections if empty — never padded with non-decisions.
+_decisions_required = []
+try:
+    import time as _time
+    _tickets_path = os.path.join(root, "kai", "tickets", "tickets.jsonl")
+    _now_ts = _time.time()
+    _48h = 48 * 3600
+    if os.path.exists(_tickets_path):
+        with open(_tickets_path) as _tf:
+            for _line in _tf:
+                _line = _line.strip()
+                if not _line:
+                    continue
+                try:
+                    _t = json.loads(_line)
+                except Exception:
+                    continue
+                if _t.get("status") not in ("ACTIVE", "OPEN"):
+                    continue
+                _pri = _t.get("priority", "")
+                _due = _t.get("due_date") or _t.get("deadline") or ""
+                _title = _t.get("title", _t.get("description", ""))[:120]
+                _tid = _t.get("id", "")
+                # P0: always include regardless of due_date
+                if _pri == "P0":
+                    _decisions_required.append({
+                        "what": _title,
+                        "deadline": _due or "open",
+                        "source": f"ticket {_tid}",
+                        "priority": "P0",
+                    })
+                # P1: only if due_date within 48h
+                elif _pri == "P1" and _due:
+                    try:
+                        from datetime import datetime as _dt
+                        _due_dt = _dt.fromisoformat(_due.replace("Z", "+00:00"))
+                        _due_ts = _due_dt.timestamp()
+                        if 0 < (_due_ts - _now_ts) < _48h:
+                            _decisions_required.append({
+                                "what": _title,
+                                "deadline": _due,
+                                "source": f"ticket {_tid}",
+                                "priority": "P1",
+                            })
+                    except Exception:
+                        pass
+    # Cap at 5 P0s to avoid overload (show most recent by ID sort)
+    _p0s = [d for d in _decisions_required if d["priority"] == "P0"]
+    _p1s = [d for d in _decisions_required if d["priority"] == "P1"]
+    _decisions_required = sorted(_p0s, key=lambda x: x["source"])[:5] + _p1s[:3]
+except Exception as _de:
+    print(f"WARN: decisions-required collection failed: {_de}")
+
+# ── WATCH LIST (S32b research finding — 2026-04-30) ────────────────────────
+# Persistent 3-5 item tracker for signals Hyo is monitoring.
+# Source: kai/watch-list.json — manually curated, carries forward each day.
+# Omitted if empty or file missing. Never auto-generated — only what Hyo sets.
+_watch_list = []
+try:
+    _wl_path = os.path.join(root, "kai", "watch-list.json")
+    if os.path.exists(_wl_path):
+        _wl_data = json.load(open(_wl_path))
+        if isinstance(_wl_data, list):
+            # Filter expired items (expires field, ISO date)
+            _today_str = today
+            _active_watches = []
+            for _w in _wl_data:
+                _exp = _w.get("expires")
+                if _exp and _exp < _today_str:
+                    continue  # expired — skip
+                _active_watches.append(_w)
+            _watch_list = _active_watches[:6]  # hard cap at 6
+except Exception as _we:
+    print(f"WARN: watch-list collection failed: {_we}")
+
+# ── v6 SECTIONS: intelligence-first format (PROTOCOL_MORNING_REPORT.md v2.0) ──
 _sections = {
     "summary": summary_text,                    # research-led executive brief (CONTENT GATE: must not lead with system health)
+    "decisionsRequired": _decisions_required,   # [{what, deadline, source, priority}] — omit if empty
     "intelligence": _synthesized_intelligence,  # synthesized [{category, topic, takeaway, watch, agent}] or raw fallback
+    "watchList": _watch_list,                   # [{topic, signal, added, expires}] from kai/watch-list.json
     "shipped": shipped_items,                    # [{what, why, before, after, commit, agent}]
     "outlook": outlook_text,                     # forward-looking paragraph
     "systemFootnote": system_footnote,           # ≤3 lines — NOT the lead

@@ -402,7 +402,7 @@ for script in gather.py synthesize.py render.py; do
 done
 
 # OUTPUT: Does today's newsletter exist (if it should)?
-HOUR=$(date +%H)
+HOUR=$(TZ=America/Denver date +%H)
 if [[ $HOUR -gt 6 ]]; then
   if [[ ! -f "$NEWSLETTERS_OUT/${TODAY}.md" ]] && [[ ! -f "$NEWSLETTERS_OUT/${TODAY}.html" ]]; then
     warn "Self-review: no newsletter output for today (after 06:00)"

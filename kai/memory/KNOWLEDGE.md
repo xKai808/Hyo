@@ -833,3 +833,128 @@ every claimed implementation must have a verification step that reads the actual
 ## Memory Engine Sync — 2026-04-27 (nightly consolidation)
 
 - [TECHNICAL] instruction_2026-04-18: **[HYO_INSTRUCTION]** Kai is the orchestrator, Hyo is the CEO and decision authority (conf=0.98)
+
+---
+
+## S32 / S32b ARCHITECTURE (2026-04-30)
+
+**Last updated:** 2026-04-30
+
+### Morning report synthesis pipeline (S32 — new, all three files built)
+
+**Problem:** Morning report consumed raw ARIC research_conducted[] items directly — JSON blobs, internal file citations, and navigation text were being rendered as CEO-readable intelligence. Not readable.
+
+**Fix (three-script chain, wired in generate-morning-report.sh):**
+
+1. **`bin/aric-external-filter.py`** — filters research_conducted[] to external (http/https) sources only.
+   - Blocks: file:// URLs, GROWTH.md, session-errors.jsonl, ACTIVE.md, PLAYBOOK.md, KNOWLEDGE.md, KAI_BRIEF.md, AGENT_ALGORITHMS.md, kai/ledger/*, kai/protocols/*, agents/*/GROWTH, agents/*/ACTIVE
+   - Passes: any http/https URL (including Wikipedia, though flagged as generic)
+   - If ALL items filtered → outputs [] → morning report shows "No external research completed overnight" (honest statement beats synthesized navel-gazing)
+
+2. **`bin/morning-report-synthesize.py`** — synthesizes filtered items via Claude CLI (`claude -p --output-format text`).
+   - Output format per item: {category, topic, takeaway, watch, agent}
+   - Categories: AI-STRATEGY, AI-MODELS, AI-FINANCE, ONCHAIN, DEVELOPER-TOOLS, MARKET, RISK, OPPORTUNITY
+   - Hard rules: no ARIC/GROWTH/session-errors mentions, no "The research shows" openers, specific beats vague
+   - Falls back (exit 1) if Claude binary not found or returns non-JSON — caller uses raw items as fallback
+
+3. **`bin/findings-to-aric.py`** — bridges agent-research.sh findings-DATE.md into aric-latest.json research_conducted[].
+   - Runs at 04:45 MT (after agent-research.sh at 04:30 MT, before morning report at 07:00 MT)
+   - **MERGE behavior (fixed S32b):** no longer overwrites research_conducted[] wholesale. Merges by topic+source key — ARIC Claude Code items are preserved, findings-to-aric items are added or updated.
+   - Falls back to yesterday's findings if today's not found
+   - Skips sources with <80 chars content or file:// URLs
+
+**Pipeline sequence in kai-autonomous.sh:**
+```
+04:30 MT → agent-research.sh (all agents)
+04:45 MT → findings-to-aric.py (bridges findings into aric-latest.json)
+05:00 MT → generate-morning-report.sh
+  └─ reads aric-latest.json research_conducted[]
+  └─ pipes through aric-external-filter.py
+  └─ pipes through morning-report-synthesize.py
+  └─ publishes morning-report + commit + push
+```
+
+### kai-daily.sh (S32b — new)
+
+**Location:** `agents/kai/kai-daily.sh`
+**Schedule:** 23:30 MT via kai-autonomous.sh
+**Purpose:** Kai's own daily improvement runner. Every other agent runs nightly; Kai was exempt. No longer.
+
+**What it does (4 steps):**
+1. Runs external research (agent-research.sh kai)
+2. Parses findings for actionable signals: new frameworks → GROWTH.md note; arXiv papers → paper-queue.jsonl; dead sources (<100 chars) → research-sources.json flagged
+3. Writes improvement log: agents/kai/research/improvement-log-DATE.json (chain: researched X → found Y → changed Z)
+4. Publishes to HQ feed as type "kai-daily" (schema: kai/schemas/kai_daily.schema.json)
+
+**Schema:** `kai/schemas/kai_daily.schema.json` — mandatory fields: summary, improvement. Required: summary, research, improvement, chain.
+
+### Doctor dedup gate (S32b — bug fixed, SHA e1bb70f)
+
+**Problem:** flywheel-doctor.sh `open_ticket()` was generating sequential IDs (TASK-20260430-nel-005, nel-006, etc.) on each run, bypassing the ID-based dedup in ticket.sh. Doctor runs 4-5x/day → 40+ duplicate SICQ/OMP tickets per day.
+
+**Fix:** Python json.loads() dedup gate in `open_ticket()`. Before creating a ticket, parses tickets.jsonl line-by-line and checks for existing open ticket with same title+status+today's date. If found: returns existing ID, does not create duplicate. Tested against real data before commit.
+
+**Lesson (Pattern 2 instance):** First fix used grep with compact JSON format ("title":"...") but tickets.jsonl uses spaced format ("title": "..."). Gate was silently inert — never matched. Fix: always read the actual ledger before writing grep patterns against it.
+
+### Nel nightly window gate removed (S32b)
+
+Nel reflection was gated to publish only during 00:00–02:59 MT (nightly window). Nel runs at 22:00 MT — outside that window. Reflection never published autonomously.
+
+**Fix:** Gate removed. Nel now publishes every cycle, deduplicated by NEL_REPORT_PUBLISH_MARKER (one per calendar day). The comment at lines 876-887 describing the old gate has been updated to describe actual behavior.
+
+### Role identity clarification
+
+CLAUDE.md says "CEO MODE IS ON" — legacy shorthand for autonomous operation. KNOWLEDGE.md (this file) says "Kai is the orchestrator, not the CEO" — Hyo's explicit April 16 directive. KNOWLEDGE.md is authoritative. In documents, footers, and self-descriptions: orchestrator, not CEO.
+
+### Pattern 9 added to kai-reasoning-patterns.md (S32)
+
+"Reporting the Gap Instead of Closing It" — Kai identifies a gap and narrates it to Hyo instead of building the fix. Gate: "Am I narrating this gap TO Hyo, or am I closing it?" Only surface to Hyo if the fix requires a CEO-level decision (spend, strategy, feature toggle). Technical gaps are Kai's to close.
+
+---
+
+## MORNING REPORT CONTENT — RESEARCH FINDINGS (S32b, 2026-04-30)
+
+Full research document: `agents/ra/research/morning-report-content-research-2026-04-30.md` (65+ sources)
+
+### Key findings from CIA/PDB, Grove, HBR/McKinsey, Axios, crypto institutional research:
+
+**The brief that works is short and judgment-driven, not comprehensive:**
+- CIA President's Daily Brief = 1 page. 17 intelligence agencies. One page.
+- Grove (*High Output Management*): identify 5 daily indicators. Leading, not lagging.
+- HBR: 40% of executives feel highly burdened by information. Decision quality degrades with volume.
+- Optimal item count: 5-7 intelligence items maximum. More = cognitive budget waste.
+
+**The current synthesis format is structurally correct (BLUF/PDB standard):**
+- category + specific topic + one takeaway sentence + one watch signal = exactly the PDB/BLUF format
+- "Source returned no usable intelligence this cycle" gate = correct per PDB writing standard
+- Delivery at 05:00 MT = correct (before peak cognitive window)
+
+**Three structural gaps identified vs. best practice:**
+
+1. **No DECISIONS REQUIRED section** — every high-rated briefing system (PDB, Axios, CEO briefing services) surfaces time-bound decisions first. Items where the window closes within 24-48 hours. Currently absent from morning report.
+
+2. **No persistent WATCH LIST** — items Hyo is tracking that don't trigger every day. Protocol votes, competitor hiring, model release timelines. Rolling 3-5 items, manually curated or pulled from KAI_TASKS horizon items.
+
+3. **RETRACTED (Hyo correction, 2026-04-30):** Crypto market data (price direction, stablecoin delta, DeFi TVL) does NOT belong in the morning report. hyo.world is a builder, not a trader. That data is a click away on DefiLlama/CoinGecko — it's a dashboard lookup, not intelligence requiring synthesis. The correct filter: does this item require judgment to be useful, or is it a data lookup? Crypto price signals fail the test. Crypto-domain items that DO belong: major protocol exploits on chains hyo.world uses, governance votes with closing deadlines that change fee structure or competitive rules, regulatory reclassification of NFTs/AI agents, competitors building into the same registry/identity space. Same relevance standard as everything else.
+
+**Crypto/AI signals specific to hyo.world's domain:**
+- AI agent identity / KYA (Know Your Agent) — a16z 2026 thesis = potential registry opportunity
+- Anthropic/OpenAI pricing changes = direct API cost impact
+- MCP ecosystem adoption = ecosystem tailwind for hyo.world's Claude Agent SDK foundation
+- Ethereum governance proposals with 10-day vote windows (affects NFT/registry landscape)
+- Competitor hiring posts (3-6 month ahead signal vs. press release which is 3-6 month lag)
+
+**What NOT to include:**
+- Operational theater ("agent ran successfully" = log, not intelligence)
+- Compound sentences in takeaways (one sentence, one finding, one implication)
+- More than 7 intelligence items (trim by relevance to hyo.world)
+- Lagging indicators (what happened vs. what's about to happen)
+- Items with no hyo.world-specific angle
+
+**Implementation priority:**
+- P0: Add DECISIONS REQUIRED section (source: open P0/P1 tickets with deadlines, credit budget thresholds, governance vote deadlines)
+- P1: Add 3 crypto leading indicators (ETH/BTC direction, stablecoin delta, DeFi TVL mover) — DefiLlama/CoinGecko APIs, computable in 3 sentences
+- P1: Add persistent WATCH LIST (3-5 rolling items)
+- P2: Cap intelligence items at 7, add relevance-ranking to synthesis step
+- P2: Expand ARIC sources to include hiring posts, GitHub commit frequency, governance forums
+

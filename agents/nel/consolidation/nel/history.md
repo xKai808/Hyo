@@ -168,3 +168,8 @@ Cipher:
 
 **Sentinel:** passed=4 failed=0
 **Cipher:** leaks=0 in agents/nel/nel.sh
+
+## 2026-05-01 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in agents/nel/nel.sh

@@ -295,6 +295,7 @@ except:
         ra-daily)       [[ $HOUR -ge 23 ]] && open_ticket_if_missing "ra" "Ra daily report missing for $TODAY" "P1" ;;
         sam-daily)      [[ $HOUR -ge 23 ]] && open_ticket_if_missing "sam" "Sam daily report missing for $TODAY" "P1" ;;
         aether-daily)   [[ $HOUR -ge 23 ]] && open_ticket_if_missing "aether" "Aether daily report missing for $TODAY" "P1" ;;
+        kai-daily)      [[ $HOUR -eq 0 ]] && open_ticket_if_missing "kai" "Kai daily report missing for $TODAY" "P1" ;;
       esac
     fi
   done

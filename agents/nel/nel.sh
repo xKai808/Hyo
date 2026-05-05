@@ -873,19 +873,11 @@ PYEOF
 
 NEL_REPORT_PUBLISH_MARKER="/tmp/nel-report-published-$(TZ=America/Denver date +%Y%m%d)"
 
-# SE-011-005: Reflection is SEPARATE from research and runs q24 in the nightly
-# window only. Hyo directive (2026-04-15): "Nel's research and reflection are
-# too frequent. They should be separate." Research (Phase 11.7) runs daily
-# with its own dedupe marker. Reflection publish is gated here.
-#
-# Gate: publish iff
-#   (a) it's the nightly consolidation window (00:00–02:59 MT), OR
-#   (b) called explicitly with NEL_FORCE_REFLECT=1
-# AND no prior publish today.
-REFLECT_HOUR=$(TZ=America/Denver date +%H)
-NIGHTLY_WINDOW=0
-if [[ "$REFLECT_HOUR" =~ ^0[0-2]$ ]]; then NIGHTLY_WINDOW=1; fi
-FORCE_REFLECT="${NEL_FORCE_REFLECT:-0}"
+# SE-011-005 → S32b (2026-04-30): Nightly window gate removed per Kai audit.
+# Nel reflection now publishes every cycle (deduplicated by NEL_REPORT_PUBLISH_MARKER).
+# The nightly-window-only gate (00:00–02:59 MT) was removed because nel.sh runs at
+# 22:00 MT — outside that window — meaning reflection never published autonomously.
+# Gate: one publish per calendar day (NEL_REPORT_PUBLISH_MARKER). Override: NEL_FORCE_REFLECT=1.
 
 if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
   # PROTOCOL_AGENT_REPORT.md v1.0: augment sections with BLUF + 5-question block + improvement status

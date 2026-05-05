@@ -3,8 +3,8 @@
 morning-report-synthesize.py — Synthesis pass for morning report intelligence items.
 
 Takes raw intelligence_items (from ARIC JSON) and rewrites them into
-Aurora-style prose that a CEO can read: category tag, bold topic, one takeaway
-sentence, one Watch signal.
+CEO-readable prose: category tag, specific topic, one takeaway sentence,
+one Watch signal. No system names, no jargon, no Aurora framing.
 
 Called by generate-morning-report.sh after collecting intelligence_items.
 
@@ -80,7 +80,7 @@ def _find_claude_bin() -> str | None:
 
 
 def synthesize(items: list[dict]) -> list[dict]:
-    """Call Claude CLI to synthesize raw items into Aurora-style prose."""
+    """Call Claude CLI to synthesize raw items into CEO-readable prose."""
     if not items:
         return []
 

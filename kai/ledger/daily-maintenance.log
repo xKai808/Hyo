@@ -359,3 +359,64 @@ Issues found: 42
 [2026-04-29T01:25:55-0600] Memory integrity check complete
 [2026-04-29T01:25:55-0600] === Daily maintenance complete ===
 [2026-04-29T01:25:55-0600] === Daily maintenance complete ===
+[2026-05-01T01:26:53-0600] === Daily Maintenance — 2026-05-01 ===
+[2026-05-01T01:26:53-0600] === Daily Maintenance — 2026-05-01 ===
+  inbox: 882 → 50 messages
+  tickets: 351 unique (deduped, notes capped at 20)
+Migration complete: 338 imported, 13 skipped (already exist), 0 errors
+Database size: 92.0 KB (94,208 bytes)
+JSONL was:     322.1 KB
+Size reduction: 71%
+[2026-05-01T01:26:53-0600] tickets.db synced
+[2026-05-01T01:26:53-0600] tickets.db synced
+  rotated agents/aether/ledger/log.jsonl: 5648 → 100 entries
+  rotated agents/nel/ledger/log.jsonl: 230 → 100 entries
+  rotated agents/ra/ledger/log.jsonl: 229 → 100 entries
+  rotated agents/sam/ledger/log.jsonl: 231 → 100 entries
+  rotated agents/dex/ledger/log.jsonl: 209 → 100 entries
+  rotated kai/ledger/log.jsonl: 1084 → 100 entries
+  rotated kai/ledger/known-issues.jsonl: 109 → 100 entries
+  rotated kai/ledger/session-errors.jsonl: 108 → 100 entries
+  hyo-inbox.jsonl: 13.7KB
+  tickets.jsonl: 322.1KB ⚠ OVER 50KB
+  tickets.db: 532.0KB ⚠ OVER 50KB
+  aether/log.jsonl: 25.6KB
+  kai/log.jsonl: 30.5KB
+  known-issues.jsonl: 33.1KB
+  TOTAL: 957.0KB (~244,998 tokens, ~$0.7350/session)
+[2026-05-01T01:26:56-0600] === Memory Integrity Check — 2026-05-01 ===
+Issues found: 47
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:59: factual claim without source tag: Every observation → "What does this actually mean?" AND "What specifically shoul
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:74: factual claim without source tag: ISSUE 2 (P1): BDI=0 stop hold fires when seconds_left <= 120 → position expires.
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:89: factual claim without source tag: Starting balance (3/28): $101.38
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:91: factual claim without source tag: Daily target: $100+/day net
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:111: factual claim without source tag: Test for every new tool: "If Anthropic raises prices by 10x tomorrow, can we mov
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:174: factual claim without source tag: 3. Send to Claude → GPT → Claude (full loop, no shortcuts)
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:462: factual claim without source tag: Hyo escalation triggers: multiple P0 in same run | SICQ avg < 40 for 3 days | lo
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:480: factual claim without source tag: Kai SICQ replaces generic flywheel SICQ with 5 executive protocol compliance che
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:485: factual claim without source tag: W1→KRI+HC, W2→DQI+RDC, W3→OSS+BIS, W4→KRI+DMW. All weaknesses linked to metrics 
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:592: factual claim without source tag: Reads Chrome cookies → decrypts with Keychain key → calls /api/organizations/{or
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:593: factual claim without source tag: and other billing endpoints → returns balance data
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:595: factual claim without source tag: Working endpoints found: /api/organizations/{org_id}/invoices/overdue → {"overdu
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:596: factual claim without source tag: /api/organizations/{org_id}/subscription → "Method Not Allowed" (exists, needs P
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:597: factual claim without source tag: /api/organizations/{org_id}/usage → "Missing permissions" (exists, needs enterpr
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:601: factual claim without source tag: Click "Allow Always" in dialog → headless access works from then on.
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:609: factual claim without source tag: 1. flock missing on macOS → state.json never saved atomically → aether cycles re
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:610: factual claim without source tag: 2. mktemp collision in /tmp → HQ feed publish silently skipped → Hyo never sees 
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:611: factual claim without source tag: 3. Empty research gate → fix_approach="" still advances to implement → garbage-i
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:616: factual claim without source tag: 3. Cascade failure: Ra W1 shipped (disables broken sources) but W2/W3 not shippe
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:664: factual claim without source tag: WHITEBOARD → FACTORY MODEL:
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:665: factual claim without source tag: KAI_TASKS (whiteboard) → Kai decomposes + success criteria → dispatch to agent →
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:666: factual claim without source tag: eval gate (outcome check) → HQ publish → feedback into memory → next session pic
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:672: factual claim without source tag: 2. Reflexion (verbal RL): arXiv:2303.11366 — +8% improvement, 91% HumanEval
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:674: factual claim without source tag: 3. Prompt caching: 90% cost reduction. Cache CLAUDE.md+KAI_BRIEF+KNOWLEDGE.md+TA
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:731: factual claim without source tag: Fix: prompt caching (90% reduction), selective injection via verified-state.json
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:758: factual claim without source tag: 3. Context window saturation is paramount — $7/session → must stay <$0.27/sessio
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:792: factual claim without source tag: Script: bin/daily-maintenance.sh → deduplicates tickets.jsonl, trims inbox to 50
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:808: factual claim without source tag: Gate question added: "Does the code file exist and does it run? YES → done. NO →
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:815: factual claim without source tag: → Best available: browser scrape + daily diff via ant-fetch-balance.py (one-time
+  [UNTAGGED-CLAIM] KNOWLEDGE.md:868: factual claim without source tag: 04:30 MT → agent-research.sh (all agents)
+  ... and 17 more (see full log)
+[2026-05-01T01:26:56-0600] Memory integrity check complete
+[2026-05-01T01:26:53-0600] === Daily maintenance complete ===
+[2026-05-01T01:26:53-0600] === Daily maintenance complete ===

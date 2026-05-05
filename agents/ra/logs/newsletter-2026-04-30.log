@@ -1,0 +1,1225 @@
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T00:10:43Z] hyo-newsletter: starting pipeline
+[2026-05-01T00:10:43Z] gather.py ...
+
+Run took 41.5s
+Source summary:
+  hn_front_page                     0  fail:RuntimeError:GET failed: https://hn.algolia.com/api/v1/search_by_date?tags=front_page&hitsPerPage=50 :: <urlopen error [Errno 8] node
+  arxiv_cs_AI                      50  ok in 7.5s
+  arxiv_cs_LG                      50  ok in 3.3s
+  arxiv_cs_CL                      50  ok in 3.6s
+  reddit_singularity               13  ok in 1.5s
+  reddit_LocalLLaMA                25  ok in 1.5s
+  reddit_macro                      0  ok in 1.0s
+  reddit_artificial                25  ok in 1.4s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 1.9s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 11.1s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 301 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 301 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T00:10:43Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 301 records, 9 entity hits, 0 topic hits, 2 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T00:10:43Z] synthesize.py ...
+[info] loaded 285 unique records across 4 topics
+[info] context size: 28,146 chars
+[ok] synthesized in 171.9s via claude_code/claude-code-cli
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.md
+[2026-05-01T00:10:43Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T00:10:43Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-30: archived 4 entities, 3 topics, 2 lab items
+[2026-05-01T00:10:43Z] publishing to HQ feed...
+[2026-05-01T00:10:43Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-30.html
+[feed] published newsletter-ra-2026-04-30 (9 stories, readLink=yes)
+[DUAL-PATH GATE] Commit blocked. Mirror the files above, then retry.
+Everything up-to-date
+[2026-05-01T00:10:43Z] pushed to Vercel
+[2026-05-01T00:10:43Z] verifying live URL: https://hyo.world/daily/newsletter-2026-04-30
+[2026-04-30T18:14:18-0600] publish-verify: checking https://hyo.world/daily/newsletter-2026-04-30 (min 500B, max wait 90s)
+[2026-04-30T18:14:18-0600] publish-verify: 404 (10s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (20s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (30s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (40s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (50s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (60s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (70s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (80s elapsed) — retrying...
+[2026-04-30T18:14:18-0600] publish-verify: 404 (90s elapsed) — retrying...
+[2026-04-30T18:15:53-0600] publish-verify: FAIL — https://hyo.world/daily/newsletter-2026-04-30 result=404 http=404 bytes=0
+[2026-05-01T00:10:43Z] WARNING: live URL verification failed — Hyo may see 404
+[2026-05-01T00:10:43Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T00:25:46Z] hyo-newsletter: starting pipeline
+[2026-05-01T00:25:46Z] gather.py ...
+
+Run took 21.7s
+Source summary:
+  hn_front_page                    50  ok in 1.5s
+  arxiv_cs_AI                      50  ok in 1.7s
+  arxiv_cs_LG                      50  ok in 1.4s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               13  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 2.2s
+  product_hunt                     50  ok in 1.1s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 351 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 351 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T00:25:46Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 351 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T00:25:46Z] synthesize.py ...
+[info] loaded 335 unique records across 4 topics
+[info] context size: 30,923 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T00:25:46Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T00:25:46Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T00:25:46Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T00:40:48Z] hyo-newsletter: starting pipeline
+[2026-05-01T00:40:48Z] gather.py ...
+
+Run took 21.5s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity               13  ok in 1.2s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 1.0s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.8s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 351 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 351 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T00:40:48Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 351 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T00:40:48Z] synthesize.py ...
+[info] loaded 335 unique records across 4 topics
+[info] context size: 30,859 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T00:40:48Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T00:40:48Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T00:40:48Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T00:55:49Z] hyo-newsletter: starting pipeline
+[2026-05-01T00:55:49Z] gather.py ...
+
+Run took 21.6s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                      50  ok in 1.5s
+  arxiv_cs_LG                      50  ok in 1.6s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity               14  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 1.2s
+  reddit_artificial                25  ok in 1.6s
+  github_trending_daily            13  ok in 1.9s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T00:55:49Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 352 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T00:55:49Z] synthesize.py ...
+[info] loaded 336 unique records across 4 topics
+[info] context size: 30,740 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T00:55:49Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T00:55:49Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T00:55:49Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T01:10:51Z] hyo-newsletter: starting pipeline
+[2026-05-01T01:10:51Z] gather.py ...
+
+Run took 74.5s
+Source summary:
+  hn_front_page                    50  ok in 5.8s
+  arxiv_cs_AI                      50  ok in 12.9s
+  arxiv_cs_LG                      50  ok in 6.9s
+  arxiv_cs_CL                      50  ok in 6.2s
+  reddit_singularity               14  ok in 6.8s
+  reddit_LocalLLaMA                25  ok in 7.2s
+  reddit_macro                      0  ok in 7.3s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 1.7s
+  coingecko_top                    25  ok in 2.1s
+  yahoo_indices                     0  ok in 13.6s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T01:10:51Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 352 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T01:10:51Z] synthesize.py ...
+[info] loaded 336 unique records across 4 topics
+[info] context size: 30,735 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T01:10:51Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T01:10:51Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T01:10:51Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T01:25:52Z] hyo-newsletter: starting pipeline
+[2026-05-01T01:25:52Z] gather.py ...
+
+Run took 20.8s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.8s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity               14  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.8s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T01:25:52Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 352 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T01:25:52Z] synthesize.py ...
+[info] loaded 336 unique records across 4 topics
+[info] context size: 30,736 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T01:25:52Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T01:25:52Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T01:25:52Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T01:40:54Z] hyo-newsletter: starting pipeline
+[2026-05-01T01:40:54Z] gather.py ...
+
+Run took 22.6s
+Source summary:
+  hn_front_page                    50  ok in 1.4s
+  arxiv_cs_AI                      50  ok in 2.3s
+  arxiv_cs_LG                      50  ok in 1.5s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               14  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.8s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 1.0s
+  coingecko_top                    25  ok in 1.1s
+  yahoo_indices                     0  ok in 6.6s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T01:40:54Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 352 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T01:40:54Z] synthesize.py ...
+[info] loaded 336 unique records across 4 topics
+[info] context size: 30,739 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T01:40:54Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T01:40:54Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T01:40:54Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T01:55:56Z] hyo-newsletter: starting pipeline
+[2026-05-01T01:55:56Z] gather.py ...
+
+Run took 22.8s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 2.2s
+  arxiv_cs_LG                      50  ok in 1.4s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity               14  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.8s
+  reddit_macro                      0  ok in 1.0s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 2.2s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.5s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 352 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 352 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T01:55:56Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 352 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T01:55:56Z] synthesize.py ...
+[info] loaded 336 unique records across 4 topics
+[info] context size: 30,737 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T01:55:56Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T01:55:56Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T01:55:56Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T02:10:57Z] hyo-newsletter: starting pipeline
+[2026-05-01T02:10:57Z] gather.py ...
+
+Run took 22.0s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 1.5s
+  arxiv_cs_LG                      50  ok in 1.5s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity               10  ok in 1.3s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 1.1s
+  yahoo_indices                     0  ok in 6.6s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T02:10:57Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T02:10:57Z] synthesize.py ...
+[info] loaded 332 unique records across 4 topics
+[info] context size: 30,740 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T02:10:57Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T00:14:17.404243+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'dream-prover', 'name': '"DreamProver — Wake-Sleep Theorem Proving"', 'aliases': '[AI consciousness denial, LLM consciousness, consciousness benchmark]', 'category': 'ai-safety', 'take': '"The mid-tier model market is now genuinely competitive; pricing pressure is the real story"', 'data': '"4,595 conversations, 115 LLMs, 25+ providers; turn-one denial is dominant trained pattern"', 'hinge': '"Whether this gets picked up by regulatory frameworks or stays in academic debate"', 'confidence': 'low', 'topics': '', 'signal': '"Mistral Medium 3.5 enters the 128B tier alongside GPT-4o and Claude Sonnet"', 'lab_items': '', 'what': '"Agent that proves theorems in a \'wake\' phase, then abstracts reusable sub-proofs into a growing library during a \'sleep\' phase — making each future proof cheaper"', 'why': '"Shifts formal reasoning from one-off generation to cumulative knowledge; the library compounds across sessions instead of resetting each time"', 'when': '"Formal verification of smart contracts, math-heavy reasoning pipelines, any domain where correctness guarantees matter more than speed of iteration"', 'paper_url': '"https://arxiv.org/abs/2604.26311"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T02:10:57Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T02:10:57Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T02:25:59Z] hyo-newsletter: starting pipeline
+[2026-05-01T02:25:59Z] gather.py ...
+
+Run took 29.5s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.6s
+  arxiv_cs_LG                      50  ok in 1.6s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity                9  ok in 1.0s
+  reddit_LocalLLaMA                25  ok in 5.9s
+  reddit_macro                      0  ok in 1.2s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 3.6s
+  product_hunt                     50  ok in 1.9s
+  coingecko_top                    25  ok in 1.0s
+  yahoo_indices                     0  ok in 6.9s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T02:25:59Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 13 entity hits, 0 topic hits, 4 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T02:25:59Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,763 chars
+[ok] synthesized in 179.1s via claude_code/claude-code-cli
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.md
+[2026-05-01T02:25:59Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T02:25:59Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-30: archived 4 entities, 3 topics, 2 lab items
+[2026-05-01T02:25:59Z] publishing to HQ feed...
+[2026-05-01T02:25:59Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-30.html
+[feed] published newsletter-ra-2026-04-30 (5 stories, readLink=yes)
+ 3 files changed, 316 insertions(+), 145 deletions(-)
+   e1bb70f..68695b6  main -> main
+[2026-05-01T02:25:59Z] pushed to Vercel
+[2026-05-01T02:25:59Z] verifying live URL: https://hyo.world/daily/newsletter-2026-04-30
+[2026-04-30T20:29:31-0600] publish-verify: checking https://hyo.world/daily/newsletter-2026-04-30 (min 500B, max wait 90s)
+[2026-04-30T20:29:31-0600] publish-verify: PASS — https://hyo.world/daily/newsletter-2026-04-30 returned HTTP 200,    15981B
+[2026-05-01T02:25:59Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T02:41:01Z] hyo-newsletter: starting pipeline
+[2026-05-01T02:41:01Z] gather.py ...
+
+Run took 23.7s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 1.7s
+  arxiv_cs_LG                      50  ok in 1.8s
+  arxiv_cs_CL                      50  ok in 1.6s
+  reddit_singularity                9  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.8s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 2.4s
+  product_hunt                     50  ok in 1.0s
+  coingecko_top                    25  ok in 1.0s
+  yahoo_indices                     0  ok in 7.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T02:41:01Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 17 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T02:41:01Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,737 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T02:41:01Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T02:41:01Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T02:41:01Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T02:56:03Z] hyo-newsletter: starting pipeline
+[2026-05-01T02:56:03Z] gather.py ...
+
+Run took 22.5s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 2.5s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity                9  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 1.0s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 1.0s
+  yahoo_indices                     0  ok in 6.8s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T02:56:03Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 17 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T02:56:03Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,740 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T02:56:03Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T02:56:03Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T02:56:03Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T03:11:04Z] hyo-newsletter: starting pipeline
+[2026-05-01T03:11:04Z] gather.py ...
+
+Run took 22.8s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.6s
+  arxiv_cs_CL                      50  ok in 1.7s
+  reddit_singularity                9  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.6s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 1.2s
+  coingecko_top                    25  ok in 1.0s
+  yahoo_indices                     0  ok in 6.9s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T03:11:04Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 17 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T03:11:04Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,739 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T03:11:04Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T03:11:04Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T03:11:04Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T03:26:06Z] hyo-newsletter: starting pipeline
+[2026-05-01T03:26:06Z] gather.py ...
+
+Run took 20.4s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 1.5s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity                9  ok in 1.0s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 1.9s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.3s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T03:26:06Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 17 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T03:26:06Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,738 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T03:26:06Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T03:26:06Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T03:26:06Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T03:41:08Z] hyo-newsletter: starting pipeline
+[2026-05-01T03:41:08Z] gather.py ...
+
+Run took 22.4s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.6s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity                9  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 1.2s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 7.0s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T03:41:08Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 17 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T03:41:08Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,840 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T03:41:08Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T03:41:08Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T03:41:08Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T03:56:10Z] hyo-newsletter: starting pipeline
+[2026-05-01T03:56:10Z] gather.py ...
+
+Run took 20.3s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                      50  ok in 1.5s
+  arxiv_cs_LG                      50  ok in 1.4s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity                9  ok in 0.9s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.8s
+  reddit_artificial                25  ok in 1.0s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.2s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T03:56:10Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 17 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T03:56:10Z] synthesize.py ...
+[info] loaded 331 unique records across 4 topics
+[info] context size: 30,844 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T03:56:10Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T03:56:10Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T03:56:10Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T04:11:12Z] hyo-newsletter: starting pipeline
+[2026-05-01T04:11:12Z] gather.py ...
+
+Run took 21.3s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.6s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity                9  ok in 1.0s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            13  ok in 2.1s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 1.1s
+  yahoo_indices                     0  ok in 6.5s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T04:11:12Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 15 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T04:11:12Z] synthesize.py ...
+[info] loaded 347 unique records across 4 topics
+[info] context size: 30,747 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T04:11:12Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T04:11:12Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T04:11:12Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T04:26:21Z] hyo-newsletter: starting pipeline
+[2026-05-01T04:26:21Z] gather.py ...
+
+Run took 20.1s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.5s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity                9  ok in 0.9s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.1s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 347 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 347 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T04:26:21Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 347 records, 15 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T04:26:21Z] synthesize.py ...
+[info] loaded 347 unique records across 4 topics
+[info] context size: 30,663 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T04:26:21Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T04:26:21Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T04:26:21Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T04:41:16Z] hyo-newsletter: starting pipeline
+[2026-05-01T04:41:16Z] gather.py ...
+
+Run took 20.7s
+Source summary:
+  hn_front_page                    50  ok in 1.3s
+  arxiv_cs_AI                      50  ok in 1.3s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               10  ok in 1.0s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 1.9s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T04:41:16Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 15 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T04:41:16Z] synthesize.py ...
+[info] loaded 348 unique records across 4 topics
+[info] context size: 30,736 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T04:41:16Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T04:41:16Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T04:41:16Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T04:56:19Z] hyo-newsletter: starting pipeline
+[2026-05-01T04:56:19Z] gather.py ...
+
+Run took 20.3s
+Source summary:
+  hn_front_page                    50  ok in 1.2s
+  arxiv_cs_AI                      50  ok in 1.5s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity               10  ok in 0.9s
+  reddit_LocalLLaMA                25  ok in 1.4s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.0s
+  github_trending_daily            13  ok in 1.9s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.2s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T04:56:19Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 15 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T04:56:19Z] synthesize.py ...
+[info] loaded 348 unique records across 4 topics
+[info] context size: 30,654 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T04:56:19Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 2 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T02:29:28.619770+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'onchain-agent-controls', 'name': '"Operating-Layer Controls for Onchain LLM Agents"', 'aliases': '[BTC, crypto, digital asset, ETH, Ethereum]', 'category': 'crypto', 'take': '"AI training infrastructure is critical business infrastructure now — attackers are catching up"', 'data': '"BTC +0.59% @ $76,589; ETH +0.07% @ $2,264; most top-20 within 1-2% of yesterday"', 'hinge': '"FOMC outcome; any macro clarity on trade policy"', 'confidence': 'medium', 'topics': '', 'signal': '"Malware found in PyTorch Lightning dependency"', 'lab_items': '', 'what': '"Reliability framework for LLM agents managing real capital — structured controls, natural-language strategies, validated action gates — studied over 21 days of live deployment"', 'why': '"7.5M agent invocations trading real ETH; first serious empirical study of LLM agents under real financial pressure, not simulation"', 'when': '"Building any agent with real-world consequences — payments, trading, infrastructure changes, resource allocation — any system where a bad call costs money"', 'paper_url': '"https://arxiv.org/abs/2604.26091"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T04:56:19Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T04:56:19Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T05:11:21Z] hyo-newsletter: starting pipeline
+[2026-05-01T05:11:21Z] gather.py ...
+
+Run took 21.2s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                      50  ok in 1.6s
+  arxiv_cs_LG                      50  ok in 1.2s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity               10  ok in 1.0s
+  reddit_LocalLLaMA                25  ok in 1.8s
+  reddit_macro                      0  ok in 0.8s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.6s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T05:11:21Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 15 entity hits, 0 topic hits, 6 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T05:11:21Z] synthesize.py ...
+[info] loaded 348 unique records across 4 topics
+[info] context size: 30,650 chars
+[ok] synthesized in 174.0s via claude_code/claude-code-cli
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.md
+[2026-05-01T05:11:21Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T05:14:37.229348+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'inference-time-agent-feedback', 'name': '"Reinforced Agent: Inference-Time Feedback"', 'aliases': '[Belgium, Doel, Tihange, Belgian nuclear]', 'category': 'energy', 'take': '"Quiet day; nothing dramatic to act on"', 'data': '"HN: 778 pts, 753 comments; DPA International"', 'hinge': '"Other EU countries watching; broader energy policy review"', 'confidence': 'high', 'topics': '', 'signal': '"Broad modest gains; privacy coins outperforming on no obvious catalyst"', 'lab_items': '', 'what': '"A specialized evaluator that runs inside the agent execution loop and flags bad tool calls in real time, before they cascade — not post-hoc"', 'why': '"Moves correction from expensive (restart) to cheap (mid-run adjustment); the closer evaluation is to execution, the cheaper recovery becomes"', 'when': '"Tool-calling pipelines where a single bad call silently corrupts downstream steps; debugging automation workflows"', 'paper_url': '"https://arxiv.org/abs/2604.27233"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T05:11:21Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-30: archived 5 entities, 4 topics, 3 lab items
+[2026-05-01T05:11:21Z] publishing to HQ feed...
+[2026-05-01T05:11:21Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-30.html
+[feed] published newsletter-ra-2026-04-30 (12 stories, readLink=yes)
+ 3 files changed, 207 insertions(+), 81 deletions(-)
+   0cdf8d8..36dcf94  main -> main
+[2026-05-01T05:11:21Z] pushed to Vercel
+[2026-05-01T05:11:21Z] verifying live URL: https://hyo.world/daily/newsletter-2026-04-30
+[2026-04-30T23:14:39-0600] publish-verify: checking https://hyo.world/daily/newsletter-2026-04-30 (min 500B, max wait 90s)
+[2026-04-30T23:14:40-0600] publish-verify: PASS — https://hyo.world/daily/newsletter-2026-04-30 returned HTTP 200,    15981B
+[2026-05-01T05:11:21Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T05:26:25Z] hyo-newsletter: starting pipeline
+[2026-05-01T05:26:25Z] gather.py ...
+
+Run took 20.6s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.3s
+  arxiv_cs_CL                      50  ok in 1.3s
+  reddit_singularity               10  ok in 1.0s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.8s
+  reddit_artificial                25  ok in 1.3s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.8s
+  coingecko_top                    25  ok in 0.9s
+  yahoo_indices                     0  ok in 6.4s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T05:26:25Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 16 entity hits, 0 topic hits, 9 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T05:26:25Z] synthesize.py ...
+[info] loaded 348 unique records across 4 topics
+[info] context size: 30,654 chars
+[ok] synthesized in 174.0s via claude_code/claude-code-cli
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.md
+[2026-05-01T05:26:25Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T05:29:40.314678+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'step-level-computer-use', 'name': '"Step-Level Optimization for Computer-Use Agents"', 'aliases': '[BTC, bitcoin, crypto market]', 'category': 'crypto', 'take': '"More agents does not mean more independent thinking — diversity of architecture matters more than headcount"', 'data': '"BTC +2.22% @ $77,061; ETH +2.08% @ $2,282; SOL +2.05% @ $84"', 'hinge': '"Macro data; Fed posture into May"', 'confidence': 'low', 'topics': '', 'signal': '"Two papers this week challenge the design intuitions behind multi-agent AI pipelines"', 'lab_items': '', 'what': '"A routing framework for GUI automation agents that sends trivial steps to lightweight models and reserves the large model for hard decisions"', 'why': '"Current computer-use agents invoke a large model at every click, including obvious ones — this cuts cost substantially without meaningful accuracy loss"', 'when': '"Browser automation, desktop robotic process automation, form-filling, workflow testing at scale"', 'paper_url': '"https://arxiv.org/abs/2604.27151"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T05:26:25Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-30: archived 5 entities, 3 topics, 3 lab items
+[2026-05-01T05:26:25Z] publishing to HQ feed...
+[2026-05-01T05:26:25Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-30.html
+[feed] published newsletter-ra-2026-04-30 (6 stories, readLink=yes)
+ 3 files changed, 80 insertions(+), 81 deletions(-)
+   2a583bb..84248a2  main -> main
+[2026-05-01T05:26:25Z] pushed to Vercel
+[2026-05-01T05:26:25Z] verifying live URL: https://hyo.world/daily/newsletter-2026-04-30
+[2026-04-30T23:29:42-0600] publish-verify: checking https://hyo.world/daily/newsletter-2026-04-30 (min 500B, max wait 90s)
+[2026-04-30T23:29:43-0600] publish-verify: PASS — https://hyo.world/daily/newsletter-2026-04-30 returned HTTP 200,    15981B
+[2026-05-01T05:26:25Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T05:41:29Z] hyo-newsletter: starting pipeline
+[2026-05-01T05:41:29Z] gather.py ...
+
+Run took 20.7s
+Source summary:
+  hn_front_page                    50  ok in 1.1s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.4s
+  arxiv_cs_CL                      50  ok in 1.4s
+  reddit_singularity               10  ok in 1.1s
+  reddit_LocalLLaMA                25  ok in 1.3s
+  reddit_macro                      0  ok in 0.9s
+  reddit_artificial                25  ok in 1.1s
+  github_trending_daily            13  ok in 1.9s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.3s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T05:41:29Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 17 entity hits, 1 topic hits, 11 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T05:41:29Z] synthesize.py ...
+[info] loaded 348 unique records across 4 topics
+[info] context size: 30,653 chars
+[error] claude_code call failed: claude-code timeout after 180s
+[error] xai call failed: GROK_API_KEY not set
+[error] openai call failed: HTTP 429 Too Many Requests: {
+    "error": {
+        "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+        "type": "insufficient_quota",
+        "param": null,
+        "code": "insufficient_quota"
+    }
+}
+
+[error] anthropic call failed: Remote end closed connection without response
+[ok] wrote fallback bundle → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.input.md
+[2026-05-01T05:41:29Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 0 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T05:29:40.314678+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'step-level-computer-use', 'name': '"Step-Level Optimization for Computer-Use Agents"', 'aliases': '[BTC, bitcoin, crypto market]', 'category': 'crypto', 'take': '"More agents does not mean more independent thinking — diversity of architecture matters more than headcount"', 'data': '"BTC +2.22% @ $77,061; ETH +2.08% @ $2,282; SOL +2.05% @ $84"', 'hinge': '"Macro data; Fed posture into May"', 'confidence': 'low', 'topics': '', 'signal': '"Two papers this week challenge the design intuitions behind multi-agent AI pipelines"', 'lab_items': '', 'what': '"A routing framework for GUI automation agents that sends trivial steps to lightweight models and reserves the large model for hard decisions"', 'why': '"Current computer-use agents invoke a large model at every click, including obvious ones — this cuts cost substantially without meaningful accuracy loss"', 'when': '"Browser automation, desktop robotic process automation, form-filling, workflow testing at scale"', 'paper_url': '"https://arxiv.org/abs/2604.27151"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T05:41:29Z] skipping feed publish (no md or bundle mode)
+[2026-05-01T05:41:29Z] hyo-newsletter: done
+[env] loaded /Users/kai/security/hyo.env
+[2026-05-01T05:56:31Z] hyo-newsletter: starting pipeline
+[2026-05-01T05:56:31Z] gather.py ...
+
+Run took 20.4s
+Source summary:
+  hn_front_page                    50  ok in 1.0s
+  arxiv_cs_AI                      50  ok in 1.4s
+  arxiv_cs_LG                      50  ok in 1.4s
+  arxiv_cs_CL                      50  ok in 1.2s
+  reddit_singularity               10  ok in 0.9s
+  reddit_LocalLLaMA                25  ok in 1.2s
+  reddit_macro                      0  ok in 1.0s
+  reddit_artificial                25  ok in 1.2s
+  github_trending_daily            13  ok in 2.0s
+  product_hunt                     50  ok in 0.9s
+  coingecko_top                    25  ok in 0.8s
+  yahoo_indices                     0  ok in 6.1s
+  fred_dff                          0  ok in 0.0s
+  fred_unrate                       0  ok in 0.0s
+  fred_cpiaucsl                     0  ok in 0.0s
+[ok] wrote 348 records → /Users/kai/Documents/Projects/Kai/intelligence/2026-04-30.jsonl
+[ok] appended 348 records → /Users/kai/Documents/Projects/Kai/intelligence/all.jsonl
+[2026-05-01T05:56:31Z] ra_context.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_context.py:292: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_context] 2026-04-30: 348 records, 17 entity hits, 1 topic hits, 11 lab notes on file → /Users/kai/Documents/Projects/Hyo/kai/research/.context.md
+[2026-05-01T05:56:31Z] synthesize.py ...
+[info] loaded 348 unique records across 4 topics
+[info] context size: 30,759 chars
+[ok] synthesized in 161.4s via claude_code/claude-code-cli
+[ok] wrote /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.md
+[2026-05-01T05:56:31Z] render.py ...
+[info] tracking enabled: nid=newsletter-2026-04-30
+[info] tracking: 4 links wrapped, pixel injected
+[info] frontmatter: {'generated': '2026-05-01T05:59:33.859284+00:00', 'date': '2026-04-30', 'kind': 'ra-daily', 'edition': 'v2', 'voice': 'kai.hyo', 'entities': '', '- slug': 'consensus-paradox-swarms', 'name': '"The Consensus Paradox in Agent Swarms"', 'aliases': '[BTC, bitcoin, crypto]', 'category': 'crypto', 'take': '"Architectural homogeneity in agent systems produces groupthink at machine speed"', 'data': '"BTC +2.03% @ $77,118; ETH +1.83% @ $2,283; ZEC +4.6% on anomalous volume"', 'hinge': '"Fed policy clarity; macro risk-on/off sentiment"', 'confidence': 'medium', 'topics': '', 'signal': '"36-experiment study on consensus paradox in agent swarms"', 'lab_items': '', 'what': '"Multi-agent AI systems that share the same architecture tend to prioritize internal agreement over external accuracy"', 'why': '"36-experiment study across 12,804 trajectories shows homogeneous swarms converge confidently on wrong answers — groupthink at machine speed, with role fidelity failure as a key mechanism"', 'when': '"Critical design constraint for any multi-agent review, adversarial checking, or verification pipeline — architectural diversity is required for genuine independence"', 'filed': '"kai/research/2026-04-30-consensus-paradox.md"'}
+[ok] rendered → /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-30.html
+[2026-05-01T05:56:31Z] ra_archive.py ...
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:416: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+/Users/kai/Documents/Projects/Hyo/agents/ra/ra_archive.py:488: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now = dt.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+[ra_archive] 2026-04-30: archived 5 entities, 4 topics, 2 lab items
+[2026-05-01T05:56:31Z] publishing to HQ feed...
+[2026-05-01T05:56:31Z] copied HTML → /Users/kai/Documents/Projects/Hyo/agents/sam/website/daily/newsletter-2026-04-30.html
+[feed] published newsletter-ra-2026-04-30 (6 stories, readLink=yes)
+ 3 files changed, 2614 insertions(+), 2607 deletions(-)
+   16ebd2d..e164841  main -> main
+[2026-05-01T05:56:31Z] pushed to Vercel
+[2026-05-01T05:56:31Z] verifying live URL: https://hyo.world/daily/newsletter-2026-04-30
+[2026-04-30T23:59:36-0600] publish-verify: checking https://hyo.world/daily/newsletter-2026-04-30 (min 500B, max wait 90s)
+[2026-04-30T23:59:37-0600] publish-verify: PASS — https://hyo.world/daily/newsletter-2026-04-30 returned HTTP 200,    15981B
+[2026-05-01T05:56:31Z] hyo-newsletter: done

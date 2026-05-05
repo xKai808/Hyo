@@ -612,3 +612,13 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/bold-nice-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:eae0b639:escalated]
 
 - [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-04-28.md [sentinel:aurora-ran-today:8373b64d] _(filed 2026-04-28)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/bold-keen-goodall/mnt/Hyo/newsletters/2026-05-01.md [sentinel:aurora-ran-today:00c63453] _(filed 2026-05-01)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/bold-keen-goodall/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:15d3203d] _(filed 2026-05-01)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/bold-keen-goodall/mnt/Hyo/newsletters/2026-05-01.md [sentinel:aurora-ran-today:00c63453:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/sweet-awesome-ptolemy/mnt/Hyo/newsletters/2026-05-01.md [sentinel:aurora-ran-today:5e9f735f] _(filed 2026-05-01)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/sweet-awesome-ptolemy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5a79262e] _(filed 2026-05-01)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/sweet-awesome-ptolemy/mnt/Hyo/newsletters/2026-05-01.md [sentinel:aurora-ran-today:5e9f735f:escalated]

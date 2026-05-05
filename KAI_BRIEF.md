@@ -1,5 +1,24 @@
 # KAI_BRIEF.md
 
+> **[HEALTHCHECK 2026-05-01T06:05Z (2026-05-01 00:05 MT) — autonomous 2h sweep] ISSUES — 2 issues + 1 warning.**
+> - **P0 (CARRIED, UNREAD, requires Terminal):** AetherBot DEAD since 2026-04-30T18:11:49 MT (~5h 53min). Unread P0 in `kai/ledger/hyo-inbox.jsonl` from `aetherbot-monitor`. No trades possible. **Fix (next interactive session, in Terminal — not queueable through exec.sh because the process must persist after worker exits):** `cd ~/Documents/Projects/AetherBot && nohup /opt/homebrew/bin/python3 aetherbot_logger.py >> /dev/null 2>&1 &`. After restart, mark inbox message read.
+> - **P1 NEW queue-running-orphan reaper missing (WORSENING — was 3, now 6):** 6 orphan files in `kai/queue/running/`. Worker IS alive (worker.log: clean EXEC->DONE->IDLE for cmd-1777615070, 992de259, 5f5726ad in last 20min). The orphans were placed directly into `running/` (likely by auto-remediation scripts) bypassing the worker's pending->running->completed handoff, so worker.sh never reaps them. queue-hygiene.sh ran 2x in last hour and is NOT catching this case. Oldest orphan 157min: `97a4131a` flywheel-doctor.sh (21:26 MT). Others: `8e1d9178` aether.sh (142min), `8834f69b` nel.sh (127min), `996b3911` aether.sh (82min), `a7a09f05` kai-daily.sh (37min), `feed-push-retry-1777614995` git push (7min). **Fix (next interactive session):** extend `bin/queue-hygiene.sh` (or add a reaper) — for any file in `running/` >30min old whose ID is not in the worker's most recent EXEC log line and not in `pending/`, move to `failed/` with reason `orphaned-no-exec` and log it. Without this, the previous brief's note (3 orphans at 04:05Z) becomes 6 in 2h, and the dir keeps growing.
+> - **P2 agent-output-window:** Today (2026-05-01) shows 0 logs for sam/ra/aether/dex — but MT clock is only 00:05, calendar just rolled. Yesterday (2026-04-30) was nominal: nel=2 sam=1 ra=1 aether=3 dex=3. Trend-tracking note only, not a real issue.
+> - **Healthy:** queue worker alive (last DONE 5min ago, exit_code=0, 3s); ACTIVE.md freshness all <3h across all 6 agents; no new P0/P1 FLAG in `kai/ledger/log.jsonl` last 2h; yesterday's MT newsletter (2026-04-30) produced + committed (commit 16ebd2d pushed); 0 pending.
+> - **NO actions taken** — both real issues need interactive remediation (P0 = Terminal-resident process, P1 = script edit).
+> - **TOP ITEM (P0):** AetherBot restart. Trading agent has been offline ~6h. Until restarted, all aether/AetherBot session-trading reports are vacuous.
+
+> **[HEALTHCHECK 2026-05-01T04:05Z (2026-04-30 22:05 MT) — autonomous 2h sweep] ISSUES — 4 issues + 3 warnings.**
+> - **P1 NEW root cause identified — false-positive newsletter flags:** nel fired flag-nel-003 (02:10Z) and flag-nel-006 (02:11Z) "No newsletter produced for 2026-05-01 — past 06:00 MT deadline" + 6 cascade DELEGATEs. But MT date is still 2026-04-30 (22:05 MT now); the 2026-04-30 newsletter IS present (html 16891B at 04:00Z, md+input.md present in `agents/ra/output/`). nel's check uses UTC `date +%F`, not `TZ=America/Denver date +%F`. This is producing spurious P1 cascades nightly between ~00:00–06:00 UTC. **Action for next interactive session:** patch nel newsletter-presence check to use MT date.
+> - **P1 dead-loops (RECURRING — unchanged from 02:05Z):** sam (assessment_stuck), ra (assessment_stuck), dex (bottleneck_stuck on 2 corrupt JSONL entries). 30+ [GUIDANCE] dispatches in log_history with zero agent reply. Next sweep: if still unchanged, escalate to KI-031-001 hard-stop.
+> - **P1 ticket-sla:** 59 tickets breached SLA (carried). Drain not happening between automated sweeps.
+> - **P1 audit-stale (RECURRING):** 6 [AUTOMATE] items in KAI_TASKS.md lines 243-272 untouched 18 days. Auto-remediate self-dispatched 4x in 30min without movement — masking, not resolving.
+> - **P2 NEW queue-running buildup:** 3 items in `kai/queue/running/`: nel.sh (21:56 MT), aether.sh (21:41 MT — 22min in running), flywheel-doctor.sh (21:26 MT — 37min in running). aether normally completes in 60s. Worker post-exec move-out may be lagging.
+> - **P3 agent-output:** sam=0, dex=0 logs today; nel=2, ra=1, aether=2 (nominal).
+> - **Healthy:** queue 0 pending; ACTIVE.md freshness all <1h; last 3 completed queue jobs all exit_code=0; today's MT newsletter (2026-04-30) was produced and rendered.
+> - **NO new auto-remediation dispatched** — prior 02:10/02:11Z siblings already cascaded the (false-positive) newsletter flag.
+> - **TOP ITEM (P1, NEW root cause):** Patch nel newsletter-presence check to use `TZ=America/Denver date +%F` instead of UTC. Until fixed, every night between 00:00–06:00 UTC will spuriously cascade 3 DELEGATEs and an [AUTO-REMEDIATE] for a newsletter that already exists.
+
 > **[HEALTHCHECK 2026-05-01T02:05Z (2026-04-30 20:05 MT) — autonomous 2h sweep] ISSUES — 4 issues + 2 warnings.**
 > - **RESOLVED since prior 01:55Z check:** newsletter-2026-04-30 produced ✓ (auto-remediation queue job fb717dd9 OK at 01:56:56Z; html/md/input.md present in `agents/ra/output/`). Historical SLA-breached count 37→0 (the Apr 26-29 daily-report P0 trio CLOSED 2026-04-30 18:32 MT after bash 3.2 `declare -A` fix; 59 open tickets, 0 currently SLA-breached).
 > - **P1 audit-stale (RECURRING — auto-remediate ineffective):** 6 [AUTOMATE] items in KAI_TASKS.md untouched 18 days (lines 243-272). Self-dispatched to kai-001 4x in last 30min without human/Kai picking them up. Pattern is masking, not resolving — needs interactive grooming pass next session.
@@ -9,11 +28,20 @@
 > - **NO new auto-remediation dispatched this cycle** — prior 01:55Z sibling already cascaded; further self-dispatches deepen masking without resolving.
 > - **TOP ITEM (P1):** Manually groom the 6 stale [AUTOMATE] items in KAI_TASKS.md lines 243-272 — auto-remediate has now re-flagged the same lines 4+ times in 30min without movement.
 
-> **[SESSION S32b-COWORK CONTINUATION 2026-05-01 ~02:15–02:40 MT — pipeline verification + dedup fix] Shipped:**
-> 1. **Commit c52210f landed** — all 5 files from the improvement loop (publish-to-feed.sh commit+push, kai-autonomous.sh once-daily self-improve + Kai at 23:30, morning-report-synthesize.py no-Aurora prompt, nel.sh nightly gate removed, agents/kai/kai-daily.sh new Kai daily runner). Verified exit_code=0, pushed to GitHub.
-> 2. **flywheel-doctor.sh dedup gate** — `open_ticket()` now checks for existing open ticket with same title before creating. Was flooding session-handoff with 40+ duplicate SICQ/OMP tickets per day (doctor runs 4-5x/day, each opening new sequential ID bypassing old ID-based dedup). Prevention: title+status+date search before create.
-> 3. **Sam publish verified** — no time gate in sam.sh. Publishes directly. Nel nightly gate confirmed removed (NIGHTLY_WINDOW computed but unused in actual gate).
-> **Pipeline verified for tomorrow**: agent-research.sh (04:30) → findings-to-aric.py bridge (04:45) → aric-external-filter.py → morning-report-synthesize.py → morning report publish+commit+push (07:00). All 5 steps wired.
+> **[SESSION S32b-FULL-AUDIT 2026-04-30 ~20:30–21:15 MT — full file audit, 11 loopholes found + 8 closed] Shipped:**
+> 1. **Commit c52210f verified landed** — all 5 files from prior improvement loop confirmed on GitHub.
+> 2. **flywheel-doctor.sh dedup gate (SHA e1bb70f)** — Python json.loads() title+status+date dedup. Prev: grep with compact JSON format never matched spaced format. 40+ daily duplicate tickets → 0.
+> 3. **8 loopholes closed — queue job s32b-loophole-fixes queued:**
+>    - P0: `kai/schemas/kai_daily.schema.json` created — was blocking kai-daily.sh HQ publish every night
+>    - P1: `findings-to-aric.py` overwrite→merge fix — was destroying ARIC Claude Code items at 04:45 MT
+>    - P1: `nel.sh` dead NIGHTLY_WINDOW code removed — comment described gate that no longer existed
+>    - P2: `kai-autonomous.sh` kai-daily case added to ticket-open block — missing report opened no ticket
+>    - P2: `generate-morning-report.sh` dynamic TZ offset + Aurora comment removed (2 fixes)
+>    - P3: `kai-reasoning-patterns.md` pattern ordering fixed (8 after 9 → sequential 1-9)
+>    - Doc: `morning-report-synthesize.py` docstring Aurora reference removed
+>    - Doc: `kai/memory/KNOWLEDGE.md` updated with full S32/S32b architecture, role identity
+> 4. **4 session errors logged** to session-errors.jsonl (SE-S32b-001 through SE-S32b-004)
+> **Pipeline verified**: agent-research.sh (04:30) → findings-to-aric.py (04:45) → aric-external-filter.py → morning-report-synthesize.py → morning report publish+commit+push (07:00). All 5 steps wired and confirmed in kai-autonomous.sh.
 
 > **[SESSION S32-COWORK 2026-04-30/05-01 19:15–20:50 MT — Hyo directive: intelligence-first morning report] Shipped:**
 > 1. **PROTOCOL_MORNING_REPORT.md v2.0** — complete rewrite. Intelligence brief, not system dashboard. CONTENT GATE: 5 yes/no gates block publish if system health leads or research lacks why/result. (commit 249ebdd)

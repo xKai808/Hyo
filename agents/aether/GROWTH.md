@@ -107,23 +107,31 @@ Build a daily macro intelligence phase in Aether's research cycle:
 - What are the reliable CPI release date sources?
 - What DXY threshold constitutes a "material move" for BTC correlation purposes?
 
-**Research status:** initial scoping
+**Research status:** complete — Fed calendar, BLS CPI schedule, BEA PCE schedule sourced; Yahoo Finance DXY API verified
 
-**Research findings:** (to be populated by Aether's ARIC research phase)
+**Research findings:**
+- FOMC 2026 dates hardcoded from federalreserve.gov (8 meetings, 4 with SEP/dot plot)
+- CPI 2026 dates hardcoded from bls.gov/schedule (12 releases)
+- PCE 2026 dates hardcoded from bea.gov/news/schedule (12 releases)
+- DXY fetched live from Yahoo Finance (DX-Y.NYB) — free, no API key, reliable
+- Macro regime classification: risk-on (DXY falling), risk-off (DXY rising), event-driven (macro event within 3d)
 
 **Implementation:**
-1. Create macro data research phase in Aether's daily ARIC cycle
-2. Source: Fed website (free), BLS.gov for CPI schedule (free), Yahoo Finance API for DXY
-3. Write findings to agents/aether/research/macro-YYYY-MM-DD.md
-4. Integrate into external_factors.macro section of daily analysis output
-5. Add FOMC/CPI countdown to Kalshi posture recommendation section
+1. ✅ Created `agents/aether/macro-intel.py` (v1.0) — daily macro intelligence gatherer
+2. ✅ Source: Fed website (free), BLS.gov for CPI schedule (free), BEA.gov for PCE (free), Yahoo Finance API for DXY (free)
+3. ✅ Write findings to `agents/aether/research/macro-YYYY-MM-DD.md` (human-readable)
+4. ✅ Write machine-readable to `agents/aether/ledger/macro-latest.json`
+5. ✅ Integrated as MACRO INTELLIGENCE phase in `aether.sh` (runs before DOMAIN RESEARCH)
+6. ✅ Macro regime classification + posture implication included
+7. ✅ FOMC/CPI/PCE countdown with impact rating (HIGH/MEDIUM-HIGH)
+8. ✅ Idempotent: skips if report <6h old, --check flag for external callers
 
 **Success metric:**
-- Every daily analysis includes structured macro context (DXY trend, upcoming events within 7d)
-- FOMC/CPI within 3 days → automatically surfaced as external risk with posture implication
-- Hyo can see: "Macro regime: risk-off (DXY +0.4%). FOMC in 2 days. Elevated volatility expected."
+- ✅ Every daily analysis includes structured macro context (DXY trend, upcoming events within 14d)
+- ✅ FOMC/CPI/PCE within 3 days → automatically surfaced as external risk with posture implication
+- ✅ Hyo can see: "Macro regime: event-driven. PCE today. FOMC in 6 days. REDUCE_EXPOSURE recommended."
 
-**Status:** planned
+**Status:** complete (verified 2026-04-30 — macro-intel.py v1.0 running, output confirmed: PCE/FOMC/CPI detection + DXY trend + regime classification)
 
 **Ticket:** IMP-aether-001-ext
 

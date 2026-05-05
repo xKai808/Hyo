@@ -1220,6 +1220,31 @@ with open('$METRICS', 'w') as f: json.dump(d, f, indent=2); f.write('\n')
     #   e.g., "What market condition would invalidate my strategy?"
   fi
 
+  # ─── MACRO INTELLIGENCE (W1 fix — daily Fed/CPI/DXY signal monitoring) ──────
+  # Addresses GROWTH.md W1: Macro Data Coverage Inadequate.
+  # Runs macro-intel.py which gathers FOMC calendar, CPI/PCE dates, DXY trend.
+  # Output: research/macro-YYYY-MM-DD.md + ledger/macro-latest.json
+  # Idempotent: skips if already generated within 6 hours.
+  local MACRO_INTEL="$ROOT/agents/aether/macro-intel.py"
+  if [[ -f "$MACRO_INTEL" ]]; then
+    log "Macro intelligence: checking daily macro data..."
+    local macro_result
+    if macro_result=$(HYO_ROOT="$ROOT" python3 "$MACRO_INTEL" 2>&1); then
+      log "Macro intelligence: $macro_result"
+      # Inject macro context into external_factors if macro-latest.json exists
+      local macro_json="$ROOT/agents/aether/ledger/macro-latest.json"
+      if [[ -f "$macro_json" ]]; then
+        local macro_summary
+        macro_summary=$(python3 -c "import json; d=json.load(open('$macro_json')); print(d.get('summary',''))" 2>/dev/null || echo "")
+        if [[ -n "$macro_summary" ]]; then
+          log "Macro context: $macro_summary"
+        fi
+      fi
+    else
+      log "WARN: Macro intelligence failed — $macro_result"
+    fi
+  fi
+
   # ─── DOMAIN RESEARCH (External Research — agent-research.sh) ────────────────
   # Aether researches trading algorithms, position sizing, market analysis tools.
   # PUBLISH GATE: Only publish to HQ feed ONCE per day, not every 15-min cycle.

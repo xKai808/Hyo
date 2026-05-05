@@ -1,7 +1,7 @@
 # Daily Bottleneck Audit — 2026-05-01
 
-**Generated:** 2026-05-01T00:24:36Z
-**Issues:** 0 | **Warnings:** 2
+**Generated:** 2026-05-01T08:06:18Z
+**Issues:** 0 | **Warnings:** 1
 
 ## Agent Health
 
@@ -10,19 +10,18 @@
 | nel    | OK |
 | sam    | OK |
 | ra     | OK |
-| aether | WARN |
+| aether | OK |
 | dex    | WARN |
 
 ## Queue
 
 - Pending: 0
-- Failed: 36
-- Completed: 3461
+- Failed: 38
+- Completed: 3587
 
 ## Bottlenecks Found
 
 
-- aether: no runner output for today (2026-05-01)
 - dex: no runner output for today (2026-05-01)
 
 ## Actions Taken
