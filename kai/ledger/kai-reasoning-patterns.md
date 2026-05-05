@@ -191,6 +191,41 @@ The only valid reason to surface a gap to Hyo: it requires a DECISION only Hyo c
 
 ---
 
+## Pattern 10: Partial Evidence, Full Conclusion
+**Sessions:** S32b (this session). AetherBot alert routing question.
+**What happens:** Kai reads ONE or TWO files related to a system, finds something
+that looks like an answer, and states a conclusion. The file that definitively
+settles the question — the architecture comment, the docstring, the design doc —
+is not read. The conclusion may even be correct, but it is reached by luck, not by
+thoroughness. When Hyo asks "did you read all necessary files?" the answer is NO.
+
+**What triggered it:** Speed. The first file that contains a plausible answer feels
+sufficient. Reading additional files feels redundant when the answer looks clear.
+But systems have multiple layers: running state (env vars), code logic (fallbacks),
+AND architecture intent (docstrings, design comments). All three must be read.
+Reading one or two and concluding is inference, not verification.
+
+**What this looks like in practice:**
+- Hyo asks where AetherBot alerts go.
+- Kai checks token fingerprints of running processes → looks like Kai's bot.
+- Kai states the conclusion.
+- The architecture comment in `kai_telegram.py` line 8-9 — which settles it
+  definitively — is not read until Hyo asks "did you read all necessary files?"
+
+**The question that would catch it:**
+> Before I state this conclusion: have I read ALL files that define the intended
+> behavior of this system — not just the files that seemed relevant first?
+> Is there a docstring, design comment, architecture note, or protocol file
+> I have not yet read that could change or confirm this answer?
+
+**Gate:** Before stating any conclusion about system behavior:
+1. List the files that define: (a) current state, (b) code logic, (c) intended design.
+2. Confirm all three layers have been read THIS session.
+3. If any layer is unread → read it first.
+A conclusion from partial evidence is an inference. State it as inference, or read the rest.
+
+---
+
 ## Using This File
 
 At session start: read every pattern. For the first significant action of the
@@ -205,7 +240,10 @@ Before declaring ANY work complete, answer:
 5. Is it committed AND pushed AND confirmed? (Pattern 6)
 6. Is this lesson encoded in something that runs, or in prose? (Pattern 7)
 7. Am I narrating this gap to Hyo, or closing it? (Pattern 9)
+8. Have I read ALL files that define this system — current state, code logic, AND
+   intended design — before stating a conclusion? (Pattern 10)
 
-**Last updated:** 2026-04-30 — Pattern 9 added from S32. Kai identified synthesis
-gap in morning report, described it to Hyo, waited for permission. Hyo caught it.
-All 9 patterns are active. None are resolved.
+**Last updated:** 2026-05-04 — Pattern 10 added from S32b. Kai concluded on
+AetherBot alert routing from token fingerprint comparison without reading the
+architecture comment in kai_telegram.py that settles it definitively. Hyo caught it.
+All 10 patterns are active. None are resolved.

@@ -76,7 +76,19 @@
    and erodes trust. This gate exists because Kai escalated 3 items to
    Hyo that all worked fine via queue. Zero of them needed Hyo.
 
-8. AM I FIXING THE ROOT CAUSE OR ADDING A WORKAROUND? (SE-011-016)
+8. HAVE I READ ALL FILES THAT DEFINE THIS SYSTEM? (Pattern 10 — S32b)
+   Before stating any conclusion about how a system works or where data goes:
+     (a) What are the files that define CURRENT STATE? (running process env, logs)
+     (b) What are the files that define CODE LOGIC? (scripts, fallback paths)
+     (c) What are the files that define INTENDED DESIGN? (docstrings, architecture
+         comments, design docs, protocol files)
+   Have I read all three layers THIS session?
+     YES → proceed.
+     NO  → read the unread layer first. A conclusion from partial evidence is
+            an inference. Label it as inference, or read the rest.
+   The fastest answer is not the best answer. Thoroughness is.
+
+9. AM I FIXING THE ROOT CAUSE OR ADDING A WORKAROUND? (SE-011-016)
    If a tool/system is broken, the fix is making it work — not bypassing it.
    Workarounds accumulate. Each one adds cost, complexity, and another
    thing that can break. Ask:
