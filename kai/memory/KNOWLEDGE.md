@@ -823,6 +823,10 @@ every claimed implementation must have a verification step that reads the actual
 - All alert senders updated to read AETHERBOT_TELEGRAM_TOKEN first (9 files, commit 024ffb8)
 - Live test confirmed 2026-04-28: HTTP 200, message received by Hyo in @xAetherBot
 - NEVER route alerts through TELEGRAM_BOT_TOKEN — that is @Kai_11_bot (conversations only)
+- **S33 ROOT CAUSE + FIX (2026-05-04):** `aetherbot_logger.py` REQUIRED_KEYS was missing AETHERBOT_TELEGRAM_TOKEN. bot.py fell back to TELEGRAM_BOT_TOKEN (Kai bot) for all alerts. Fix: added AETHERBOT_TELEGRAM_TOKEN to REQUIRED_KEYS in `load_aetherbot_env()`. Verified via `ps eww` on bot.py PID that process env resolves to ...vDEnuX6Y. aetherbot_logger.py is NOT in Hyo git repo — changes tracked manually here.
+- **com.kai.bot.plist unloaded (2026-05-04):** Was running old kai_bot.py with KeepAlive=true, causing 409 polling conflict with kai_telegram.py. Unloaded. Do not reload — kai_telegram.py is the sole Kai bot poller.
+- **send_telegram_alert silently swallows exceptions.** Absence of error does NOT prove delivery. Verification = call the API directly, check HTTP 200 + ok:true in response body. Reasoning from env vars is not proof.
+- **Verification method for bot token routing:** simulate bot.py line 22 using actual process env from `ps eww -p <PID>` — not file reads, not assumptions. Pattern: `resolved = env.get("AETHERBOT_TELEGRAM_TOKEN") or env.get("TELEGRAM_BOT_TOKEN")`.
 
 ---
 ## Memory Engine Sync — 2026-04-26 (nightly consolidation)

@@ -92,3 +92,12 @@
 - Hyo wants a daily report only if something could not be auto-fixed and is serious enough. Trivial auto-fixed issues are never surfaced.
 - Kai, not Hyo, decides what is serious enough to include in the morning report.
 - No Telegram alerts from autonomous systems. Kai analyzes, acts, logs — does not interrupt Hyo.
+
+## ADDITIONS FROM SESSION 33 — 2026-05-04
+
+**Verification standard (hard rule from Hyo — "Are you sure? Did you verify?"):**
+- Sending a test message directly ≠ verifying the system works end-to-end. These are different things. Always state which one you did.
+- Verifying a Telegram alert channel = call the API with the actual resolved token, check HTTP 200 + ok:true in the response body. Not: reading env files and reasoning that the token "should" be correct.
+- Verifying a token is routing correctly = simulate the running process's resolution logic using the actual process environment (`ps eww -p <PID>`), not inference from source code.
+- Hyo's question "Are you sure? Did you verify?" is not rhetorical. It means: show the proof that came from the system itself, not from reasoning about the system.
+- Before declaring any integration fixed: (a) state what you tested, (b) show the output from the test, (c) distinguish between "channel works" and "system will use it correctly."
