@@ -1,5 +1,5 @@
 {
-  "verified_at": "2026-05-05T05:51:11-0600",
+  "verified_at": "2026-05-05T06:21:18-0600",
   "today": "2026-05-05",
   "computed_by": "kai-session-prep.sh",
   "note": "All values computed from source files. Kai must use this, not assumptions.",
@@ -67,7 +67,8 @@
     "published_today": [
       "agent-daily",
       "agent-goals",
-      "agent-reflection"
+      "agent-reflection",
+      "newsletter"
     ],
     "missing_today": [
       "aether-daily",
@@ -85,47 +86,47 @@
       {
         "agent": "nel",
         "ticket": "flag-nel-002",
-        "age_h": 101.7
+        "age_h": 102.2
       },
       {
         "agent": "nel",
         "ticket": "flag-nel-003",
-        "age_h": 101.7
+        "age_h": 102.2
       },
       {
         "agent": "nel",
         "ticket": "flag-nel-001",
-        "age_h": 101.7
+        "age_h": 102.2
       },
       {
         "agent": "sam",
         "ticket": "sam-004",
-        "age_h": 99.7
+        "age_h": 100.2
       },
       {
         "agent": "sam",
         "ticket": "sam-005",
-        "age_h": 99.7
+        "age_h": 100.2
       },
       {
         "agent": "sam",
         "ticket": "flag-sam-001",
-        "age_h": 102.4
+        "age_h": 102.9
       },
       {
         "agent": "ra",
         "ticket": "flag-ra-001",
-        "age_h": 102.4
+        "age_h": 102.9
       },
       {
         "agent": "aether",
         "ticket": "flag-aether-001",
-        "age_h": 153.0
+        "age_h": 153.5
       },
       {
         "agent": "dex",
         "ticket": "flag-dex-001",
-        "age_h": 102.8
+        "age_h": 103.3
       }
     ],
     "source": "agents/*/ledger/ACTIVE.md"
@@ -227,10 +228,7 @@
       {
         "id": "TASK-20260505-kai-011",
         "title": "Outcome check: 2 agent output(s) missing for 2026-05-05"
-      }
-    ],
-    "p1_count": 30,
-    "p1_sample": [
+      },
       {
         "id": "TASK-20260505-kai-012",
         "title": "Outcome check: 1 agent output(s) missing for 2026-05-05"
@@ -250,6 +248,61 @@
       {
         "id": "TASK-20260505-ra-002",
         "title": "Doctor: SICQ critically low for ra (40/100) \u2014 self-improve cycle degraded"
+      },
+      {
+        "id": "TASK-20260505-dex-002",
+        "title": "Doctor: SICQ critically low for dex (20/100) \u2014 self-improve cycle degraded"
+      },
+      {
+        "id": "TASK-20260505-kai-014",
+        "title": "Doctor: SICQ critically low for kai (40/100) \u2014 self-improve cycle degraded"
+      },
+      {
+        "id": "TASK-20260505-nel-006",
+        "title": "Doctor: OMP below minimum for nel (54/100, min 70) \u2014 improve output quality"
+      },
+      {
+        "id": "TASK-20260505-sam-007",
+        "title": "Doctor: OMP below minimum for sam (62/100, min 70) \u2014 improve output quality"
+      },
+      {
+        "id": "TASK-20260505-ra-003",
+        "title": "Doctor: OMP below minimum for ra (69/100, min 70) \u2014 improve output quality"
+      },
+      {
+        "id": "TASK-20260505-kai-015",
+        "title": "Doctor: OMP below minimum for kai (60/100, min 70) \u2014 improve output quality"
+      },
+      {
+        "id": "TASK-20260505-kai-016",
+        "title": "Protocol/JSON alignment: Unregistered types in feed: agent-daily,agent-goals,age"
+      },
+      {
+        "id": "TASK-20260505-ra-008",
+        "title": "Newsletter missing for 2026-05-05 (after 06:00 MT)"
+      }
+    ],
+    "p1_count": 20,
+    "p1_sample": [
+      {
+        "id": "TASK-20260505-kai-017",
+        "title": "Outcome check: 1 agent output(s) missing for 2026-05-05"
+      },
+      {
+        "id": "TASK-20260505-nel-007",
+        "title": "Self-improve health: Q2 FAIL \u2014 nel"
+      },
+      {
+        "id": "TASK-20260505-nel-009",
+        "title": "Self-improve health: Q7 FAIL \u2014 nel"
+      },
+      {
+        "id": "TASK-20260505-sam-008",
+        "title": "Self-improve health: Q4 FAIL \u2014 sam"
+      },
+      {
+        "id": "TASK-20260505-sam-009",
+        "title": "Self-improve health: Q7 FAIL \u2014 sam"
       }
     ],
     "source": "kai/tickets/tickets.jsonl"
