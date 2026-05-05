@@ -166,9 +166,17 @@
 **Newsletters shipped:** 19
 **Research archive entries:** 25
 
+
 ## 2026-05-01 — nightly consolidation
 
 **Sentinel:** passed=4 failed=0
 **Cipher:** leaks=0 in agents/ra/pipeline/
 **Newsletters shipped:** 23
+**Research archive entries:** 48
+
+## 2026-05-05 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in agents/ra/pipeline/
+**Newsletters shipped:** 25
 **Research archive entries:** 48

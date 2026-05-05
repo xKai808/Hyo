@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-05-01T06:15:00Z",
+  "updatedAt": "2026-05-05T06:12:44Z",
   "morningReport": {
     "date": "2026-04-28",
     "generatedAt": "2026-04-28T08:15:30-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync @ 00:11 MT 2026-05-01 (hq-ops-sync, cowork, scheduled-task). Sentinel #236: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d2 (escalated), P1 scheduled-tasks-fired d2, P2 task-queue-size d31 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, dep-audit 3p/0w/0f, HQ push 200 OK. Nel FULL run: score 85/100, broken links 29 (+2), untested 43 (+1), audit 7 issues. ARIC research complete. Growth phase idle. flag-nel-008 P1 newsletter-gap STILL OPEN (3+ cycles). Authoritative state on Mini; sandbox sees mounted snapshot.",
+    "summary": "Ops sync @ 2026-05-05T06:12:44Z (hq-ops-sync, cowork, scheduled-task). Sentinel #242: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d3 (escalated), P1 scheduled-tasks-fired d3, P2 task-queue-size d37 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, HQ push 200 OK. Nel FULL run: broken links 28 (-1), untested 43 (FLAT), sentinel issues in 2 projects. ARIC research complete. Growth phase idle. Authoritative state on Mini; sandbox sees mounted snapshot.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,20 +14,48 @@
       "dex": "active"
     },
     "topIssues": [
-      "Sentinel #236: 6p/3f FLAT \u2014 3 recurring elevated streaks",
-      "P0 aurora-ran-today day 2 ESCALATED \u2014 newsletter 2026-05-01 missing in sandbox path",
-      "P1 scheduled-tasks-fired day 2 \u2014 no aurora logs in sandbox",
-      "P2 task-queue-size day 31 ELEVATED \u2014 33 P0 tasks FLAT vs threshold 5",
-      "Cipher: clean (0 findings, 0 autofixes, dep-audit 3p/0w/0f, HQ push 200 OK)",
-      "Nel: FULL run, score 85/100, broken links 29 (+2), untested 43 (+1), audit 7 issues",
-      "flag-nel-008 P1 newsletter-gap STILL OPEN (3+ cycles, auto-cascade not landing in sandbox)"
+      "Sentinel #242: 6p/3f FLAT \u2014 3 recurring elevated streaks",
+      "P0 aurora-ran-today day 3 ESCALATED \u2014 newsletter 2026-05-05 missing in sandbox path",
+      "P1 scheduled-tasks-fired day 3 \u2014 no aurora logs in sandbox",
+      "P2 task-queue-size day 37 ELEVATED \u2014 33 P0 tasks FLAT vs threshold 5",
+      "Cipher: clean (0 findings, 0 autofixes, HQ push 200 OK)",
+      "Nel: FULL run \u2014 broken links 28 (-1), untested 43 (FLAT), 2 projects with sentinel findings",
+      "Self-delegated flags: flag-nel-004 P2 (sentinel issues), flag-nel-005 P2 (broken links)"
     ],
     "lastOpsSync": {
-      "ts": "2026-05-01T06:15:00Z",
-      "note": "Ops sync @ 00:11 MT 2026-05-01 (hq-ops-sync, cowork, scheduled-task). Sentinel #236: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d2 (escalated), P1 scheduled-tasks-fired d2, P2 task-queue-size d31 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, dep-audit 3p/0w/0f, HQ push 200 OK. Nel FULL run: score 85/100, broken links 29 (+2), untested 43 (+1), audit 7 issues. ARIC research complete. Growth phase idle. flag-nel-008 P1 newsletter-gap STILL OPEN (3+ cycles). Authoritative state on Mini; sandbox sees mounted snapshot."
+      "ts": "2026-05-05T06:12:44Z",
+      "note": "Ops sync @ 2026-05-05T06:12:44Z (hq-ops-sync, cowork, scheduled-task). Sentinel #242: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d3 (escalated), P1 scheduled-tasks-fired d3, P2 task-queue-size d37 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, HQ push 200 OK. Nel FULL run: broken links 28 (-1), untested 43 (FLAT), sentinel issues in 2 projects. ARIC research complete. Growth phase idle. Authoritative state on Mini; sandbox sees mounted snapshot."
     }
   },
   "events": [
+    {
+      "ts": "2026-05-05T06:12:44Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 2026-05-05T06:12:44Z, scheduled-task)",
+      "detail": "Ops sync @ 2026-05-05T06:12:44Z (hq-ops-sync, cowork, scheduled-task). Sentinel #242: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d3 (escalated), P1 scheduled-tasks-fired d3, P2 task-queue-size d37 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, HQ push 200 OK. Nel FULL run: broken links 28 (-1), untested 43 (FLAT), sentinel issues in 2 projects. ARIC research complete. Growth phase idle. Authoritative state on Mini; sandbox sees mounted snapshot.",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-05-05T06:12:44Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #242",
+      "msg": "QA sweep run #242 \u2014 6 passed, 3 failed (FLAT). 0 new, 3 recurring elevated, 0 resolved. P0 aurora-ran-today day 3 ESCALATED (newsletter 2026-05-05 missing in sandbox path). P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox). P2 task-queue-size day 37 ELEVATED (33 P0 tasks FLAT vs threshold 5). Sandbox path artifacts; authoritative state on Mini.",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-05-05T06:12:44Z",
+      "agent": "cipher",
+      "event": "Scan \u2014 0 findings, 0 autofixes",
+      "msg": "Security scan clean \u2014 0 findings, 0 autofixes, 0 leaks. .secrets/ target 700, founder.token 600. HQ push 200 OK. gitleaks unavailable in sandbox; authoritative scan on Mini.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-05-05T06:12:44Z",
+      "agent": "nel",
+      "event": "Full sweep complete",
+      "msg": "Nel weekly run complete. Cross-project sentinel synthesis: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f. Cipher synthesis: no active leaks. Stale files: clean. Broken links: 28 (-1 vs prior). Untested scripts: 43 (FLAT). Self-delegated: flag-nel-004 P2 (sentinel test failures in 2 projects), flag-nel-005 P2 (28 broken links). ARIC research complete. Growth phase idle (no open IMP tickets).",
+      "type": "nel"
+    },
     {
       "ts": "2026-05-01T06:15:00Z",
       "agent": "kai",
@@ -517,9 +545,9 @@
     "subscribers": []
   },
   "sentinel": {
-    "ts": "2026-05-01T06:15:00Z",
-    "event": "QA sweep run #236",
-    "summary": "QA sweep run #236 \u2014 6 passed, 3 failed (FLAT). 0 new, 3 recurring elevated, 0 resolved-this-cycle. P0 aurora-ran-today day 2 ESCALATED (newsletter 2026-05-01 missing in sandbox; failing 2 runs in a row). P1 scheduled-tasks-fired day 2 (no aurora logs in sandbox). P2 task-queue-size day 31 ELEVATED (33 P0 tasks FLAT vs threshold 5, 31-run streak). Sandbox path artifacts; authoritative state on Mini.",
+    "ts": "2026-05-05T06:12:44Z",
+    "event": "QA sweep run #242",
+    "summary": "QA sweep run #242 \u2014 6 passed, 3 failed (FLAT). 0 new, 3 recurring elevated, 0 resolved. P0 aurora-ran-today day 3 ESCALATED (newsletter 2026-05-05 missing in sandbox path). P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox). P2 task-queue-size day 37 ELEVATED (33 P0 tasks FLAT vs threshold 5). Sandbox path artifacts; authoritative state on Mini.",
     "passed": 6,
     "failed": 3,
     "newIssues": 0,
@@ -527,9 +555,9 @@
     "resolved": 0
   },
   "cipher": {
-    "ts": "2026-05-01T06:15:00Z",
+    "ts": "2026-05-05T06:12:44Z",
     "event": "Scan \u2014 0 findings, 0 autofixes",
-    "summary": "Security scan clean \u2014 0 findings, 0 autofixes, 0 leaks. dep-audit: 3 passed, 0 warnings, 0 failures. .secrets/ 755 (symlink cosmetic \u2014 target 700), founder.token 600. HQ push 200 OK. gitleaks unavailable in sandbox; authoritative scan on Mini.",
+    "summary": "Security scan clean \u2014 0 findings, 0 autofixes, 0 leaks. .secrets/ target 700, founder.token 600. HQ push 200 OK. gitleaks unavailable in sandbox; authoritative scan on Mini.",
     "findings": 0,
     "autofixes": 0,
     "leaks": 0
@@ -544,11 +572,11 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-05-01T06:56:51Z",
+    "lastRun": "2026-05-05T06:50:23Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
-    "brokenLinks": 29,
+    "brokenLinks": 28,
     "untested": 43,
     "inefficient": 9,
     "sentinel": {
@@ -560,8 +588,8 @@
     }
   },
   "ops_sync": {
-    "ts": "2026-05-01T06:15:00Z",
-    "event": "hq-ops-sync cycle complete (cowork, 00:11 MT 2026-05-01, scheduled-task)",
-    "summary": "Ops sync @ 00:11 MT 2026-05-01 (hq-ops-sync, cowork, scheduled-task). Sentinel #236: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d2 (escalated), P1 scheduled-tasks-fired d2, P2 task-queue-size d31 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, dep-audit 3p/0w/0f, HQ push 200 OK. Nel FULL run: score 85/100, broken links 29 (+2), untested 43 (+1), audit 7 issues. ARIC research complete. Growth phase idle. flag-nel-008 P1 newsletter-gap STILL OPEN (3+ cycles). Authoritative state on Mini; sandbox sees mounted snapshot."
+    "ts": "2026-05-05T06:12:44Z",
+    "event": "hq-ops-sync cycle complete (cowork, scheduled-task)",
+    "summary": "Ops sync @ 2026-05-05T06:12:44Z (hq-ops-sync, cowork, scheduled-task). Sentinel #242: 6p/3f FLAT. Recurring elevated: P0 aurora-ran-today d3 (escalated), P1 scheduled-tasks-fired d3, P2 task-queue-size d37 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, HQ push 200 OK. Nel FULL run: broken links 28 (-1), untested 43 (FLAT), sentinel issues in 2 projects. ARIC research complete. Growth phase idle. Authoritative state on Mini; sandbox sees mounted snapshot."
   }
 }

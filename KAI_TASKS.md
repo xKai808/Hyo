@@ -622,3 +622,18 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/sweet-awesome-ptolemy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5a79262e] _(filed 2026-05-01)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/sweet-awesome-ptolemy/mnt/Hyo/newsletters/2026-05-01.md [sentinel:aurora-ran-today:5e9f735f:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/charming-practical-brown/mnt/Hyo/newsletters/2026-05-05.md [sentinel:aurora-ran-today:cafe6017] _(filed 2026-05-05)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/charming-practical-brown/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f0469b6d] _(filed 2026-05-05)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/charming-practical-brown/mnt/Hyo/newsletters/2026-05-05.md [sentinel:aurora-ran-today:cafe6017:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/affectionate-great-bell/mnt/Hyo/newsletters/2026-05-05.md [sentinel:aurora-ran-today:7600a7f3] _(filed 2026-05-05)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/affectionate-great-bell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0dc093c2] _(filed 2026-05-05)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/ecstatic-trusting-mayer/mnt/Hyo/newsletters/2026-05-05.md [sentinel:aurora-ran-today:a10673e8] _(filed 2026-05-05)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/ecstatic-trusting-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f149dd9e] _(filed 2026-05-05)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/ecstatic-trusting-mayer/mnt/Hyo/newsletters/2026-05-05.md [sentinel:aurora-ran-today:a10673e8:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/ecstatic-trusting-mayer/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f149dd9e:escalated]

@@ -819,7 +819,7 @@ every claimed implementation must have a verification step that reads the actual
 - **@xAetherBot** — `AETHERBOT_TELEGRAM_TOKEN` — one-way alert sender only. Trade signals, analysis pipeline progress, pipeline failures. Never polls getUpdates.
 - **@Kai_11_bot** — `TELEGRAM_BOT_TOKEN` — conversation interface only. Runs via `kai_telegram.py`. Handles /status, /balance, /analysis, /stop, /resume, free-text Claude conversations.
 - TELEGRAM_CHAT_ID = 5098923226 (shared, same Hyo DM for both bots)
-- Credential locations: `~/security/hyo.env` AND `~/Documents/Projects/Kai/.env` (both files have all three vars)
+- Credential locations: `~/Documents/Projects/Kai/.env` ONLY — has all three: TELEGRAM_BOT_TOKEN, AETHERBOT_TELEGRAM_TOKEN, TELEGRAM_CHAT_ID. The security env (`agents/nel/security/env`) has AETHERBOT_KEY (Kalshi) only — no Telegram tokens. This was verified 2026-05-04 S33. Previous claim "both files have all three vars" was wrong.
 - All alert senders updated to read AETHERBOT_TELEGRAM_TOKEN first (9 files, commit 024ffb8)
 - Live test confirmed 2026-04-28: HTTP 200, message received by Hyo in @xAetherBot
 - NEVER route alerts through TELEGRAM_BOT_TOKEN — that is @Kai_11_bot (conversations only)

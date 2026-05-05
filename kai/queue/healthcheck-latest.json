@@ -1,13 +1,18 @@
 {
-  "ts": "2026-05-01T06:56:44Z",
+  "ts": "2026-05-05T06:41:00Z",
   "status": "ISSUES",
-  "issues": 4,
-  "warnings": 4,
+  "issues": 6,
+  "warnings": 5,
   "findings": [
     {
       "severity": "P1",
       "area": "flags",
       "detail": "1 unaddressed P0/P1 flags in last 2h"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "aether has no output today"
     },
     {
       "severity": "P3",
@@ -32,6 +37,11 @@
     {
       "severity": "P1",
       "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
       "detail": "sam stuck in dead-loop (assessment_stuck): routine engineering check"
     },
     {
@@ -42,37 +52,42 @@
     {
       "severity": "P1",
       "area": "dead-loop",
+      "detail": "aether stuck in dead-loop (bottleneck_stuck): dashboard out-of-sync \u2014 data exists but HQ doesn't render "
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "bee44653-6f6d-4dc2-9e78-a9b8e5faea5a",
+      "id": "f0f7fef5-aa52-44a1-bbff-0a43737ba048",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1777617045-87379",
+      "id": "3b769a2a-c1e3-4850-94df-f0d0ad1fdc41",
+      "status": "ok",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "exit_code": 0
+    },
+    {
+      "id": "cmd-1777961935-69781",
       "status": "ok",
       "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
       "exit_code": 0
     },
     {
-      "id": "55052353-c34e-490a-a32a-bcf7f91330f9",
+      "id": "feed-push-retry-1777961103",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
       "exit_code": 0
     },
     {
-      "id": "812338fc-670e-4451-9ff5-60ba7ee34407",
-      "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
-      "exit_code": 0
-    },
-    {
-      "id": "5f1ceec5-fef9-46ba-9df8-f37f67ecb15e",
+      "id": "c34b164d-8410-477d-973d-10d43f16c1ee",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0

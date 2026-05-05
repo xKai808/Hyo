@@ -1,13 +1,13 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-04-30T23:45:00.472623-06:00",
+  "updatedAt": "2026-05-04T23:45:04.572603-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-04-30T23:45:00.472627-06:00",
+    "lastUpdated": "2026-05-04T23:45:04.572607-06:00",
     "staleAfterHours": 24,
     "creditScrapedAt": "2026-04-22T22:05:14.990668-06:00",
-    "creditScrapeAgeH": 193.7,
+    "creditScrapeAgeH": 289.7,
     "creditScrapeStale": true,
     "note": "ant-data.json updates nightly 23:45 MT. Credits use scraped baseline + continuous api-usage.jsonl adjustment. Run 'kai ant-scrape' weekly or when credits change."
   },
@@ -15,7 +15,7 @@
     "how_to_refresh": "kai ant-scrape (browser automation via Cowork session)",
     "recommended_frequency": "weekly or after any credit purchase",
     "last_scraped": "2026-04-22T22:05:14.990668-06:00",
-    "scrape_age_hours": 193.7,
+    "scrape_age_hours": 289.7,
     "action_needed": true
   },
   "alerts": [],
@@ -32,10 +32,10 @@
     "today": 0
   },
   "burn": {
-    "daily": 0.1601,
+    "daily": 0.1337,
     "dailyBudget": 50,
     "pctOfBudget": 0.3,
-    "trend": "stable",
+    "trend": "insufficient_data",
     "alertThreshold": 0.75
   },
   "byProcess": [
@@ -55,14 +55,14 @@
     }
   ],
   "income": {
-    "total_monthly": 1.75,
+    "total_monthly": 2.33,
     "streams": [
       {
         "name": "AetherBot Trading",
         "source": "aether-metrics.json",
-        "weekly_pnl": 1.75,
-        "pnl_pct": 1.47,
-        "balance": 120.47,
+        "weekly_pnl": 2.33,
+        "pnl_pct": 1.96,
+        "balance": 121.05,
         "week_start": "2026-04-27",
         "note": "Current week P&L from autonomous trading"
       }
@@ -107,12 +107,12 @@
       "total": 40.0,
       "used_since_scrape": 0.0,
       "used_all_time": 0.2399,
-      "used_mtd": 0.2399,
+      "used_mtd": 0.0,
       "burn_per_day": 0.0,
       "depletion_date": null,
       "days_until_depleted": null,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (scraped 194h ago, adjusted by api-usage.jsonl)",
+      "source": "console.anthropic.com (scraped 290h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22. Run 'kai ant-scrape' to reset baseline."
@@ -122,12 +122,12 @@
       "total": 20.0,
       "used_since_scrape": 0.9935,
       "used_all_time": 2.2343,
-      "used_mtd": 2.2343,
-      "burn_per_day": 0.1144,
-      "depletion_date": "2026-10-01",
-      "days_until_depleted": 154,
+      "used_mtd": 0.0,
+      "burn_per_day": 0.0191,
+      "depletion_date": "2028-11-12",
+      "days_until_depleted": 924,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (scraped 194h ago, adjusted by api-usage.jsonl)",
+      "source": "platform.openai.com (scraped 290h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22."
@@ -162,181 +162,25 @@
   ],
   "history": [
     {
-      "date": "2026-04-01",
+      "date": "2026-05-01",
       "anthropic": 0.0,
       "openai": 0.0,
       "total": 0.0
     },
     {
-      "date": "2026-04-02",
+      "date": "2026-05-02",
       "anthropic": 0.0,
       "openai": 0.0,
       "total": 0.0
     },
     {
-      "date": "2026-04-03",
+      "date": "2026-05-03",
       "anthropic": 0.0,
       "openai": 0.0,
       "total": 0.0
     },
     {
-      "date": "2026-04-04",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-05",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-06",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-07",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-08",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-09",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-10",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-11",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-12",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-13",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-14",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-15",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-16",
-      "anthropic": 0.1213,
-      "openai": 0.628,
-      "total": 0.7493
-    },
-    {
-      "date": "2026-04-17",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-18",
-      "anthropic": 0.1185,
-      "openai": 0.2575,
-      "total": 0.376
-    },
-    {
-      "date": "2026-04-19",
-      "anthropic": 0.0,
-      "openai": 0.0887,
-      "total": 0.0887
-    },
-    {
-      "date": "2026-04-20",
-      "anthropic": 0.0,
-      "openai": 0.0857,
-      "total": 0.0857
-    },
-    {
-      "date": "2026-04-21",
-      "anthropic": 0.0,
-      "openai": 0.181,
-      "total": 0.181
-    },
-    {
-      "date": "2026-04-22",
-      "anthropic": 0.0,
-      "openai": 0.085,
-      "total": 0.085
-    },
-    {
-      "date": "2026-04-23",
-      "anthropic": 0.0,
-      "openai": 0.108,
-      "total": 0.108
-    },
-    {
-      "date": "2026-04-24",
-      "anthropic": 0.0,
-      "openai": 0.2216,
-      "total": 0.2216
-    },
-    {
-      "date": "2026-04-25",
-      "anthropic": 0.0,
-      "openai": 0.1469,
-      "total": 0.1469
-    },
-    {
-      "date": "2026-04-26",
-      "anthropic": 0.0,
-      "openai": 0.1505,
-      "total": 0.1505
-    },
-    {
-      "date": "2026-04-27",
-      "anthropic": 0.0,
-      "openai": 0.1478,
-      "total": 0.1478
-    },
-    {
-      "date": "2026-04-28",
-      "anthropic": 0.0,
-      "openai": 0.1337,
-      "total": 0.1337
-    },
-    {
-      "date": "2026-04-29",
-      "anthropic": 0.0,
-      "openai": 0.0,
-      "total": 0.0
-    },
-    {
-      "date": "2026-04-30",
+      "date": "2026-05-04",
       "anthropic": 0.0,
       "openai": 0.0,
       "total": 0.0
