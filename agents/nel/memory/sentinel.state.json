@@ -2,41 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-06T06:10:15Z",
-  "totalRuns": 246,
+  "lastRunAt": "2026-05-06T10:09:51Z",
+  "totalRuns": 250,
   "runHistory": [
-    {
-      "ts": "2026-04-28T10:04:53Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-04-28T10:04:58Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T10:05:13Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T10:10:09Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
     {
       "ts": "2026-04-28T10:10:12Z",
       "passed": 6,
@@ -244,6 +212,38 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T10:04:31Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-06T10:04:41Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T10:04:58Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T10:09:51Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -262,8 +262,8 @@
       "check_id": "task-queue-size",
       "detail": "33 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-27T18:09:54Z",
-      "lastSeen": "2026-05-06T06:10:15Z",
-      "daysFailing": 41,
+      "lastSeen": "2026-05-06T10:09:51Z",
+      "daysFailing": 45,
       "status": "open"
     },
     "aurora-ran-today:8373b64d": {
@@ -383,7 +383,8 @@
       "firstSeen": "2026-05-06T06:09:41Z",
       "lastSeen": "2026-05-06T06:10:15Z",
       "daysFailing": 4,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T10:04:31Z"
     },
     "scheduled-tasks-fired:a25b7c1d": {
       "severity": "P1",
@@ -392,6 +393,45 @@
       "firstSeen": "2026-05-06T06:09:41Z",
       "lastSeen": "2026-05-06T06:10:15Z",
       "daysFailing": 4,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T10:04:31Z"
+    },
+    "aurora-ran-today:e58285a6": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/dreamy-dazzling-goldberg/mnt/Hyo/newsletters/2026-05-06.md",
+      "firstSeen": "2026-05-06T10:04:31Z",
+      "lastSeen": "2026-05-06T10:04:58Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T10:09:51Z"
+    },
+    "scheduled-tasks-fired:c7f369fb": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/dreamy-dazzling-goldberg/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-06T10:04:31Z",
+      "lastSeen": "2026-05-06T10:04:58Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T10:09:51Z"
+    },
+    "aurora-ran-today:82b3ed14": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/sweet-elegant-hamilton/mnt/Hyo/newsletters/2026-05-06.md",
+      "firstSeen": "2026-05-06T10:09:51Z",
+      "lastSeen": "2026-05-06T10:09:51Z",
+      "daysFailing": 1,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:7b1b4af7": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/sweet-elegant-hamilton/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-06T10:09:51Z",
+      "lastSeen": "2026-05-06T10:09:51Z",
+      "daysFailing": 1,
       "status": "open"
     }
   },

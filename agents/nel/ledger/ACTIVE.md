@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-06T07:45:03Z
+Last updated: 2026-05-06T13:45:26Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-06T07:45:03Z
+  - Delegated: 2026-05-06T13:45:26Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit: 5 critical issues found
-  - Delegated: 2026-05-05T01:04:12Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
+  - Delegated: 2026-05-06T08:06:20Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit 2026-05-04: All 5 agents (nel/sam/ra/aether/dex) evolution.jsonl unwritten 93-95h — agent loop silent since 2026-05-01 Sat. Aether stalled 4d (last guidance ticket 2026-05-01). Newsletter pipeline still broken (ra-002 unresolved 4d). Sam/Ra/Dex stuck in [GUIDANCE] same-assessment loop. Root cause likely launchd not firing daily runners — verify plists and runner exit status. Escalate from flag-kai-002/003/001 (all 4d open).
-  - Delegated: 2026-05-05T01:05:07Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit 2026-05-06: Systemic dead-loop persists — (1) Newsletter pipeline broken 2 days running (ra-002/003 May 5 still DELEGATED, ra-002/003 May 6 just flagged — same root cause, AUTO-REMEDIATE not actually remediating); (2) All 5 agents stuck in [GUIDANCE] same-assessment loop fired daily but never resolved; (3) Sam evolution.jsonl write step broken (last entry 2026-04-28, 8 days silent — runner runs but skips memory step); (4) verified-state.json empty (agents:[], generated_at:null) — kai-session-prep.sh failing; (5) Dex no runner output today; (6) hyo-inbox 3527 unread (SLA breach alerts accumulating). 4 stuck AUTO-REMEDIATE >24h: aether-002 (5d), sam-005 (5d), ra-002 (1d), ra-003 (1d). Pattern: cascade dispatcher fires, agents ack DELEGATED, work never completes — flag accretion without resolution. Need: investigate WHY DELEGATED never transitions, fix verified-state.json generator, fix sam.sh memory write step.
+  - Delegated: 2026-05-06T08:07:59Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-05 — past 06:00 MT deadline
