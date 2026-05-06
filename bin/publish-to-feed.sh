@@ -24,7 +24,7 @@ ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 FEED="$ROOT/website/data/feed.json"
 FEED_GIT="$ROOT/agents/sam/website/data/feed.json"
 TODAY=$(TZ="America/Denver" date +%Y-%m-%d)
-NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
+NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z | sed 's/\([+-][0-9][0-9]\)\([0-9][0-9]\)$/\1:\2/')
 MONTH_KEY=$(echo "$TODAY" | cut -c1-7)
 
 TYPE="${1:?Usage: publish-to-feed.sh <type> <author> <title> <sections-json-file>}"
@@ -134,7 +134,7 @@ except: print('')
   # This ensures "published" cannot mean "not visually verified."
   VERIFY_FLAG="$ROOT/kai/ledger/verify-pending.jsonl"
   VERIFY_ID="research-drop-$(TZ=America/Denver date +%Y%m%d%H%M%S)"
-  echo "{\"id\":\"$VERIFY_ID\",\"type\":\"research-drop\",\"title\":\"$TITLE\",\"readLink\":\"$READ_LINK\",\"ts\":\"$(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)\",\"status\":\"PENDING_VISUAL_VERIFY\"}" >> "$VERIFY_FLAG"
+  echo "{\"id\":\"$VERIFY_ID\",\"type\":\"research-drop\",\"title\":\"$TITLE\",\"readLink\":\"$READ_LINK\",\"ts\":\"$(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z | sed 's/\([+-][0-9][0-9]\)\([0-9][0-9]\)$/\1:\2/')\",\"status\":\"PENDING_VISUAL_VERIFY\"}" >> "$VERIFY_FLAG"
   echo "[publish] GATE R3: Visual verification pending. ID: $VERIFY_ID"
   echo "  → After publish, open hyo.world/hq Research tab, click the entry, click readLink."
   echo "  → Confirm HTTP 200, then run: kai verify-publish $VERIFY_ID"
