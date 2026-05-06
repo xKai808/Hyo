@@ -141,6 +141,12 @@ Then immediately run: `dispatch health` and `dispatch status` to verify closed-l
 
 **CONTINUATION SESSION RULE:** When a session is continued from a previous conversation (context compaction), the continuation summary provides task context but does NOT replace hydration. The system state may have changed between sessions (daemons ran, queue processed, external changes). Hydration catches drift. Skip it → work on stale assumptions → Hyo catches it → trust erodes. This was logged as a P1 pattern on 2026-04-13 (session 8). Never again.
 
+**HYDRATION = SESSION-START ONLY (Marina Wyss Ch. 3 — Context Engineering, 2026-05-05):**
+Hydration reads happen ONCE at session start. Do NOT re-read KAI_BRIEF, KNOWLEDGE, TACIT, or session-handoff mid-session. Re-reading causes context bloat and burns tokens on stale content. The distinction:
+- READ CONTEXT once at session start (all hydration files above)
+- READ STATE hourly via healthcheck → reads `kai/ledger/verified-state.json` ONLY (pre-computed, 15-minute refresh cadence from kai-session-prep.sh). This is not hydration — it is a state snapshot check.
+Hourly healthchecks that re-read all memory files are a context engineering failure. Do not do it.
+
 **EXECUTION MODE:** All commands run through `HYO_ROOT=<mount> bash kai/queue/exec.sh "command"`. Never output terminal commands for Hyo to copy/paste. If the queue is down, fix the queue — don't fall back to copy/paste.
 
 ## Operating rules
