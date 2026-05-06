@@ -2070,7 +2070,9 @@ function renderResearchDrop(s, report) {
     html += sec('Next Steps', `<ul>${steps.map(n => `<li>${n}</li>`).join('')}</ul>`);
   }
   if (s.sources) {
-    const srcList = s.sources.trim().split(/\s+/).filter(u => u.startsWith('http'));
+    // sources may be a string (space-separated URLs) or an array — normalize defensively
+    const _srcRaw = Array.isArray(s.sources) ? s.sources.join(' ') : (typeof s.sources === 'string' ? s.sources : '');
+    const srcList = _srcRaw.trim().split(/\s+/).filter(u => u.startsWith('http'));
     if (srcList.length) {
       const srcHtml = srcList.map((u, i) => {
         const domain = (() => { try { return new URL(u).hostname.replace('www.',''); } catch(e) { return u.slice(0,40); } })();
