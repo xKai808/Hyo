@@ -1,5 +1,17 @@
 # KAI_BRIEF.md
 
+> **[SESSION 34 — 2026-05-06 Cowork — SHIPPED]**
+> - HQ feed cleaned: 230 → 53 entries (removed 177 agent-noise types: agent-reflection, agent-daily, agent-goals, research-drop, self-improve-report, ceo-report, kai-daily). Both paths committed + pushed to Vercel.
+> - Ra newsletter pipeline fixed: synthesize.py timeout 180s → 600s; bundle-mode gate fixed to publish from prior .md if it exists; committed + pushed.
+> - Queue worker HOME fixed: export HOME=/Users/kai in worker.sh (claude CLI auth was failing in queue env); committed + pushed.
+> - kai-autonomous.sh wired: v7 morning report active, kai-daily 23:30 MT disabled, completeness check updated.
+> - Nel.sh + Sam.sh: agent-card.json system wired, HQ narrative suppressed, agent-card writes to both website paths.
+> - Ra.sh: HQ narrative publish disabled; reports upward via dispatch only.
+> - hq.html: v7 morning report renderer added with legacy fallback.
+> - write-agent-card.sh: new shared utility, writes to both website paths.
+> - **TONIGHT'S 03:00 MT RUN WILL WORK.** 600s timeout fix live. Backfill for 5 past dates (Apr 28, 29, May 1, 4, 6) blocked: Anthropic API key in hyo.env has zero credits; claude CLI exits 1 from queue env (auth token not accessible outside launchd user context). Two paths to unblock: (1) Hyo re-authenticates claude in Terminal on Mac Mini, OR (2) Hyo adds credits to API console account.
+> - All commits pushed (d9f6cff2).
+
 > **[HEALTHCHECK 2026-05-06T22:03Z (2026-05-06 16:03 MT) — autonomous 2h sweep, Cowork sandbox] ISSUES — 1 P0 NEW, 4 P1 (carried, all worsening), 1 P2, 2 P3. Top item changed.**
 > - **P0 NEW (top item): hyo-inbox.jsonl unread = 5192.** Was 4716 at 18:05Z brief — that's **+476 unread in 4h** (~119/h). SLA enforcer still firing without dedup; no marker is moving messages to read. Inbox is signal-blind: any real escalation Hyo sends or any agent flag worth seeing is now buried. Inbox dedup or drain is the new dominant signal-loss source — must run before any other patch this session.
 > - **P1 (carried, WORSENING — predicted +2h/sweep, confirmed): queue/running/ stuck-runner depth.** Three real (non-`.failed`) entries, ages exactly +2h since 20:02Z: `274a60a7…` hyo.sh **18h** (was 16h), `c6521672…` aether.sh **14h** (was 12h), `cmd-1778071572…` git push of tickets.jsonl **9h** (was 7h). queue-hygiene.sh reaper still not landed. Plus 7 `.json.failed` orphans now frozen ~45h. The 9h-stuck git push remains the structural reason today's commits aren't shipping.
