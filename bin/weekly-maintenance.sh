@@ -158,6 +158,60 @@ fi
 HYO_ROOT="$ROOT" python3 "$ROOT/bin/context-optimizer.py" --rotate-logs >> "$LOG" 2>&1
 log "JSONL logs rotated"
 
+# ── 4.5. Trim bloated ledger files ───────────────────────────────────────────
+# guidance.jsonl and hyo-inbox.jsonl grow unbounded. Archive entries >30d old.
+python3 - "$ROOT" << 'PYEOF'
+import json, os, sys
+from datetime import datetime, timezone, timedelta
+
+root = sys.argv[1]
+today = datetime.now(timezone.utc)
+cutoff = today - timedelta(days=30)
+
+ledger_files = {
+    'guidance.jsonl': os.path.join(root, 'kai/ledger/guidance.jsonl'),
+    'hyo-inbox.jsonl': os.path.join(root, 'kai/ledger/hyo-inbox.jsonl'),
+}
+
+for name, path in ledger_files.items():
+    if not os.path.exists(path):
+        continue
+
+    with open(path) as f:
+        lines = [l.strip() for l in f if l.strip()]
+
+    keep, archive = [], []
+    for line in lines:
+        try:
+            entry = json.loads(line)
+            # Try common timestamp fields
+            ts_str = entry.get('timestamp') or entry.get('created_at') or entry.get('date') or ''
+            if ts_str:
+                ts = datetime.fromisoformat(ts_str.replace('Z', '+00:00'))
+                if ts < cutoff:
+                    archive.append(line)
+                    continue
+        except Exception:
+            pass
+        keep.append(line)
+
+    if archive:
+        year_month = today.strftime('%Y/%m')
+        arch_dir = os.path.join(root, f'kai/ledger/archive/{year_month}')
+        os.makedirs(arch_dir, exist_ok=True)
+        arch_path = os.path.join(arch_dir, f'{name.replace(".jsonl", "")}-pre-{today.strftime("%Y-%m-%d")}.jsonl')
+        with open(arch_path, 'a') as f:
+            f.write('\n'.join(archive) + '\n')
+        with open(path, 'w') as f:
+            f.write('\n'.join(keep) + '\n')
+        old_kb = sum(len(l)+1 for l in lines) / 1024
+        new_kb = sum(len(l)+1 for l in keep) / 1024
+        print(f"  {name}: {old_kb:.0f}KB → {new_kb:.0f}KB (archived {len(archive)} entries >30d)")
+    else:
+        print(f"  {name}: no entries older than 30d to archive ({len(lines)} entries kept)")
+PYEOF
+log "Ledger files trimmed (guidance.jsonl, hyo-inbox.jsonl — entries >30d archived)"
+
 # ── 5. Report final state ─────────────────────────────────────────────────────
 python3 - "$ROOT" << 'PYEOF'
 import os
