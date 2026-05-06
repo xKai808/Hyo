@@ -181,6 +181,51 @@ while IFS= read -r file_path; do
   fi
 done <<< "$FILES_TO_CHANGE"
 
+# ── CONTEXT ENGINEERING: load agent's protocol, state, and history ──
+# Marina Wyss (AI Agents Course, 6:45): "Context engineering is when you decide what information
+# the agent has. It's not the model alone, it's how you engineer the context around it."
+# Without this, every call starts cold — no protocol awareness, no history, no failure modes.
+
+PLAYBOOK_CONTENT=""
+PLAYBOOK_PATH="$HYO_ROOT/agents/$AGENT/PLAYBOOK.md"
+if [[ -f "$PLAYBOOK_PATH" ]]; then
+  PLAYBOOK_CONTENT=$(head -100 "$PLAYBOOK_PATH" 2>/dev/null || echo "")
+  log "WHY: Loading PLAYBOOK.md — agent needs its own protocol to avoid re-inventing constraints (${#PLAYBOOK_CONTENT} chars)"
+else
+  log "WHY: No PLAYBOOK.md found at $PLAYBOOK_PATH — agent will operate without protocol context"
+fi
+
+ACTIVE_CONTENT=""
+ACTIVE_PATH="$HYO_ROOT/agents/$AGENT/ledger/ACTIVE.md"
+if [[ -f "$ACTIVE_PATH" ]]; then
+  ACTIVE_CONTENT=$(head -60 "$ACTIVE_PATH" 2>/dev/null || echo "")
+  log "WHY: Loading ACTIVE.md — agent needs current state to avoid duplicating in-progress work (${#ACTIVE_CONTENT} chars)"
+else
+  log "WHY: No ACTIVE.md found at $ACTIVE_PATH — agent has no current state context"
+fi
+
+EVOLUTION_CONTENT=""
+EVOLUTION_PATH="$HYO_ROOT/agents/$AGENT/evolution.jsonl"
+if [[ -f "$EVOLUTION_PATH" ]]; then
+  # Last 3 entries — what was recently attempted, what worked, what failed
+  EVOLUTION_CONTENT=$(tail -3 "$EVOLUTION_PATH" 2>/dev/null | python3 -c "
+import sys, json
+entries = []
+for line in sys.stdin:
+    line = line.strip()
+    if not line: continue
+    try:
+        e = json.loads(line)
+        entries.append(f\"[{e.get('date','?')}] {e.get('improvement_id','?')}: {e.get('description','?')} — outcome: {e.get('outcome','?')}\")
+    except: pass
+print('\n'.join(entries))
+" 2>/dev/null || echo "")
+  log "WHY: Loading last 3 evolution.jsonl entries — agent must not retry approaches that already failed (${#EVOLUTION_CONTENT} chars)"
+else
+  log "WHY: No evolution.jsonl found at $EVOLUTION_PATH — no improvement history available"
+fi
+
+# ── Build the system prompt with full context engineering ──
 # Build the system prompt for Claude
 SYSTEM_PROMPT="You are an autonomous software agent making a specific improvement to the Hyo system.
 
@@ -189,6 +234,15 @@ IMPROVEMENT: $DESCRIPTION
 WEAKNESS BEING FIXED: $WEAKNESS
 IMPROVEMENT THESIS: $THESIS
 RESEARCH FINDINGS: $RESEARCH_SUMMARY
+
+=== YOUR PROTOCOL (PLAYBOOK.md — your own rules and constraints) ===
+${PLAYBOOK_CONTENT:-No PLAYBOOK.md found — proceed with general Hyo conventions}
+
+=== YOUR CURRENT STATE (ACTIVE.md — what is already in progress) ===
+${ACTIVE_CONTENT:-No ACTIVE.md found — no current state available}
+
+=== RECENT IMPROVEMENT HISTORY (last 3 cycles — do NOT repeat failed approaches) ===
+${EVOLUTION_CONTENT:-No evolution history available}
 
 Your task:
 1. Analyze the improvement thesis and research findings
@@ -207,9 +261,12 @@ FILE TO GENERATE:"
 
 # Get the first file to change
 FIRST_FILE=$(echo "$FILES_TO_CHANGE" | head -1)
+FILE_COUNT=$(echo "$FILES_TO_CHANGE" | grep -c '.' || echo "1")
+log "WHY: Targeting $FIRST_FILE first (of $FILE_COUNT files) — one file per API call for auditable, checkable steps per Marina Wyss task decomposition principle"
 log "Generating implementation for: $FIRST_FILE"
 
 # Call Claude API
+log "WHY: Using claude-sonnet-4-6 for implementation — sonnet balances code quality vs cost; opus reserved for architecture decisions per KNOWLEDGE.md model strings"
 log "Calling Claude API (claude-sonnet-4-6)..."
 CLAUDE_RESPONSE=$(python3 - <<PYEOF
 import json, urllib.request, urllib.error, sys, os
@@ -345,11 +402,13 @@ VERIFY_SCRIPT="$HYO_ROOT/agents/$AGENT/verify.sh"
 VERIFY_PASSED=false
 
 if [[ -f "$VERIFY_SCRIPT" && -x "$VERIFY_SCRIPT" ]]; then
+  log "WHY: Running verify.sh before commit — gate prevents shipping broken improvements; content-gate check per kai-skepticism-2026-04-28 finding on pipeline specification gaming"
   log "Running verify.sh..."
   if HYO_ROOT="$HYO_ROOT" bash "$VERIFY_SCRIPT" 2>&1 | tail -5; then
     VERIFY_PASSED=true
     log "verify.sh PASSED"
   else
+    log "WHY: verify.sh FAILED — committing anyway because partial improvement > no improvement, but marking status as unverified for human review"
     log "verify.sh FAILED — improvement written but not yet verified"
     # Don't exit — commit anyway, log the failure
     # The improvement is still better than nothing if verify.sh fails on unrelated checks

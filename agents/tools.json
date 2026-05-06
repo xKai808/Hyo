@@ -1,0 +1,145 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "created": "2026-05-05",
+    "purpose": "Typed interface registry for all agent-callable tools. Agents load this before deciding what to call. Marina Wyss AI Agents Course (15:51): 'Every tool has two parts: the interface for the agent — a tool name, a plain English description of when to use it, and a typed input schema — and the implementation code. The agent only sees the interface.'",
+    "usage": "Read this file at the start of any improvement execution. Select tool by name. Use input_schema to validate args before calling. Check output_format to parse the result correctly. Check error_codes before assuming success."
+  },
+  "tools": {
+    "dispatch": {
+      "description": "Send structured messages between agents and Kai. Use for: reporting completed work, flagging blockers, requesting cross-agent review, escalating failures.",
+      "when_to_use": "After completing any significant work unit. After any failure that requires coordination. Before ending an agent cycle.",
+      "binary": "bin/dispatch.sh",
+      "input_schema": {
+        "subcommand": {"type": "string", "enum": ["report", "flag", "status", "health", "memory", "safeguard", "simulate"], "required": true},
+        "agent": {"type": "string", "description": "Agent name (nel, ra, sam, aether, dex)", "required": "for report and flag"},
+        "message": {"type": "string", "description": "Human-readable message", "required": "for report and flag"},
+        "priority": {"type": "string", "enum": ["P0", "P1", "P2"], "required": "for flag only"}
+      },
+      "output_format": "Text confirmation line. Exit code 0 = success, non-zero = failure.",
+      "error_codes": {
+        "1": "dispatch.sh not found or not executable",
+        "2": "Missing required argument",
+        "non-zero": "Network or filesystem failure"
+      },
+      "example": "bash bin/dispatch.sh report nel 'Completed dependency audit — 3 SPOFs found'"
+    },
+    "kai_push": {
+      "description": "Publish an event to the HQ feed visible at hyo.world. Use when an agent completes a research file, ships an improvement, or produces output Hyo should see.",
+      "when_to_use": "After completing any output artifact (research file, report, improvement). NOT for internal state changes.",
+      "binary": "bin/kai.sh",
+      "input_schema": {
+        "subcommand": {"type": "string", "const": "push", "required": true},
+        "agent": {"type": "string", "description": "Agent name", "required": true},
+        "message": {"type": "string", "description": "Event description — what was produced and why it matters", "required": true}
+      },
+      "output_format": "Lines: '==> Pushing to HQ: <agent>', 'http <code>', '✓ pushed to HQ' or error. Note: '(HYO_HQ_PASSWORD not set — skipping verification)' means push succeeded but readback could not be confirmed.",
+      "error_codes": {
+        "curl_failure": "Network unreachable — check internet connection",
+        "http_non_200": "HQ API rejected push — check payload format",
+        "no_founder_token": "agents/nel/security/founder.token missing"
+      },
+      "example": "HYO_ROOT=~/Documents/Projects/Hyo bash bin/kai.sh push nel 'Dependency audit complete — 3 critical SPOFs identified'"
+    },
+    "ticket": {
+      "description": "Create a structured improvement ticket in kai/tickets/. Use to track work that spans multiple cycles or requires Kai review.",
+      "when_to_use": "When an improvement requires >1 cycle. When a failure needs tracking. When a weakness is identified that requires a systemic fix.",
+      "binary": "bin/ticket.sh",
+      "input_schema": {
+        "title": {"type": "string", "required": true},
+        "type": {"type": "string", "enum": ["improvement", "bug", "blocker", "research"], "required": true},
+        "agent": {"type": "string", "required": true},
+        "weakness": {"type": "string", "enum": ["W1", "W2", "W3"], "description": "Which GROWTH.md weakness this addresses"},
+        "priority": {"type": "string", "enum": ["P0", "P1", "P2"], "default": "P2"}
+      },
+      "output_format": "Ticket ID (e.g. T-2026-0042). JSONL entry appended to kai/tickets/tickets.jsonl.",
+      "error_codes": {
+        "1": "Missing required field (title or type)",
+        "non-zero": "Filesystem write failure"
+      },
+      "example": "bash bin/ticket.sh --title 'Add retry logic to ra pipeline' --type improvement --agent ra --weakness W2"
+    },
+    "agent_execute_improvement": {
+      "description": "Execute a researched improvement by calling Claude API with the aric-latest.json thesis and generating real code. Run only after ARIC Phases 1-5 are complete.",
+      "when_to_use": "When aric-latest.json has a populated improvement_built.thesis and files_to_change. NOT before research is complete.",
+      "binary": "bin/agent-execute-improvement.sh",
+      "input_schema": {
+        "agent": {"type": "string", "required": true},
+        "improvement_id": {"type": "string", "description": "e.g. I1, I2, I3", "required": true}
+      },
+      "output_format": "Multiline log with [execute-improvement][<agent>/<id>] prefix. Final block shows EXECUTION ENGINE COMPLETE with status, commit hash, verify result.",
+      "error_codes": {
+        "1": "Gate failure — check which GATE number failed in stderr",
+        "Claude API error": "API key missing or quota exceeded",
+        "verify_failed": "Code written and committed but verify.sh failed — requires manual review"
+      },
+      "side_effects": ["Writes file to disk", "Creates git commit", "Pushes to origin main", "Updates aric-latest.json"],
+      "example": "HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-execute-improvement.sh nel I2"
+    },
+    "agent_research": {
+      "description": "Run ARIC research phases for an agent — web search, source synthesis, weakness identification. Populates aric-latest.json.",
+      "when_to_use": "At the start of each agent improvement cycle. Before calling agent_execute_improvement.",
+      "binary": "bin/agent-research.sh",
+      "input_schema": {
+        "agent": {"type": "string", "required": true}
+      },
+      "output_format": "Research file written to agents/<agent>/research/. aric-latest.json updated with research_conducted field.",
+      "error_codes": {
+        "1": "Agent directory not found",
+        "non-zero": "Research phase failed — check for API quota or network issues"
+      },
+      "example": "HYO_ROOT=~/Documents/Projects/Hyo bash bin/agent-research.sh nel"
+    },
+    "kai_exec": {
+      "description": "Run a command on the Mini (local machine) via the queue. Use for any operation requiring local file access, git, launchctl, or system tools.",
+      "when_to_use": "When a command must run on the Mini rather than in a sandbox. For git push, launchctl, brew, or file operations on the actual Hyo project.",
+      "binary": "bin/kai.sh",
+      "input_schema": {
+        "subcommand": {"type": "string", "const": "exec", "required": true},
+        "command": {"type": "string", "description": "Shell command to run on the Mini", "required": true}
+      },
+      "output_format": "stdout/stderr of the command as run on the Mini. May include queue worker prefix.",
+      "error_codes": {
+        "queue_down": "Queue worker not running — check kai-autonomous.sh status",
+        "non-zero": "Command failed on Mini"
+      },
+      "example": "kai exec \"cd ~/Documents/Projects/Hyo && git push origin main\""
+    },
+    "chaos_inject": {
+      "description": "Deliberately remove one agent dependency for ≤5 minutes to test resilience. Discovers SPOFs before production does.",
+      "when_to_use": "Scheduled Saturday 05:00 MT. Can be run manually to test specific dependency.",
+      "binary": "bin/chaos-inject.sh",
+      "input_schema": {
+        "agent": {"type": "string", "description": "Specific agent to test, or 'all'", "required": false}
+      },
+      "output_format": "PASS/FAIL per dependency tested. SPOF = fallback expected but not used, or silent failure. Opens P1 ticket per SPOF found.",
+      "error_codes": {
+        "SPOF_found": "Real fragility — fix before next chaos run",
+        "timeout": "Dependency not restored in 5 min — check agent state"
+      }
+    },
+    "verify_improvement_content_gate": {
+      "description": "Run content-gate check on a completed improvement — verifies the change addresses the specific test case, not just existence of files.",
+      "when_to_use": "After agent_execute_improvement completes. Before marking a ticket as resolved.",
+      "binary": "bin/verify-improvement-content-gate.sh",
+      "input_schema": {
+        "agent": {"type": "string", "required": true},
+        "improvement_id": {"type": "string", "required": true}
+      },
+      "output_format": "PASS or FAIL with specific reason. FAIL means the improvement passed file-existence gates but did not solve the actual problem.",
+      "error_codes": {
+        "FAIL": "Pipeline specification gaming detected — improvement is superficial"
+      }
+    },
+    "cross_agent_review": {
+      "description": "Run adversarial cross-review between agents (Nel↔Sam) to catch self-serving self-assessments. Addresses sycophancy at 58% baseline.",
+      "when_to_use": "Daily (Mon-Sat) at 06:45 MT. Run manually after any agent produces a self-assessment that seems overly positive.",
+      "binary": "bin/cross-agent-review.sh",
+      "input_schema": {},
+      "output_format": "Review report written to agents/<name>/logs/cross-review-YYYY-MM-DD.md per agent pair.",
+      "error_codes": {
+        "non-zero": "Review failed — check API key and network"
+      }
+    }
+  }
+}
