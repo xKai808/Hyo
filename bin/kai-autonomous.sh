@@ -1,44 +1,4 @@
 #!/usr/bin/env bash
-# ═══════════════════════════════════════════════════════════════════════════
-# kai-autonomous.sh — Master orchestrator daemon
-# Version: 1.0 — 2026-04-21
-#
-# Runs every 15 minutes via launchd (com.hyo.kai-autonomous.plist).
-# Single point of truth for "is the system healthy and are all agents running?"
-#
-# Responsibilities:
-#   1. Track what ran vs what should have run (freshness checks)
-#   2. Self-heal stale agents (retry, re-queue)
-#   3. Compute system health score (0-100)
-#   4. Enforce report completeness
-#   5. Coordinate sequencing (some agents depend on others)
-#   6. Drain and maintain the command queue
-#   7. Publish daily health report to HQ
-#   8. Never let Hyo wake up to a broken system
-#
-# Log: kai/ledger/kai-autonomous.log
-# State: kai/ledger/kai-autonomous-state.json
-# ═══════════════════════════════════════════════════════════════════════════
-set -uo pipefail
-
-HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-LOG="$HYO_ROOT/kai/ledger/kai-autonomous.log"
-STATE="$HYO_ROOT/kai/ledger/kai-autonomous-state.json"
-INBOX="$HYO_ROOT/kai/ledger/hyo-inbox.jsonl"
-TICKET_SH="$HYO_ROOT/bin/ticket.sh"
-PUBLISH_SH="$HYO_ROOT/bin/publish-to-feed.sh"
-
-mkdir -p "$(dirname "$LOG")"
-
-NOW_MT=$(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)
-NOW_EPOCH=$(date +%s)
-TODAY=$(TZ=America/Denver date +%Y-%m-%d)
-HOUR=$(TZ=America/Denver date +%H)
-MINUTE=$(TZ=America/Denver date +%M)
-DOW=$(TZ=America/Denver date +%u)  # 1=Monday, 7=Sunday
-
-log() { echo "[$NOW_MT] $*" | tee -a "$LOG"; }
-log_section() { echo "" >> "$LOG"; echo "══ $* ══" | tee -a "$LOG"; }
 
 # ─── State management ─────────────────────────────────────────────────────────
 read_state() {
@@ -149,6 +109,21 @@ print(json.dumps({'ts': '$NOW_MT', 'from': 'kai-autonomous', 'priority': 'URGENT
 " >> "$INBOX"
   log "  → Paged Hyo: $msg"
 }
+
+
+# ─── DISK SPACE GATE (SE-S33-001) ──────────────────────────────────────────
+# Root cause: ra.sh dead-looped Apr-29, wrote 138GB, filled disk, killed AetherBot.
+# If disk < 10GB free: purge oversized agent logs, alert Hyo inbox, exit.
+_disk_kb=$(df / | awk 'NR==2{print $4}')
+_disk_gb=$(python3 -c "print(round(int('$_disk_kb')/1048576,1))" 2>/dev/null || echo "?")
+if [ "${_disk_kb:-999999999}" -lt 10485760 ]; then
+    log "DISK CRITICAL: ${_disk_gb}GB free — suspending agent dispatch, purging oversized logs"
+    find "$HYO_ROOT/agents" \( -name "*.md" -o -name "*.log" \) -size +50M -exec sh -c 'echo "[DISK PURGE] $1"; tail -c 1048576 "$1" > "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
+    printf '{"ts":"%s","from":"kai-autonomous","priority":"P0","status":"unread","subject":"DISK CRITICAL %sGB free — agents suspended","body":"Disk below 10GB. Agent dispatch suspended. AetherBot may be dead. Run: du -sh ~/Documents/Projects/Hyo/agents/*/logs/ to find large files."}\n' "$NOW_MT" "$_disk_gb" >> "$INBOX"
+    exit 1
+fi
+log "Disk: ${_disk_gb}GB free — OK"
+# ───────────────────────────────────────────────────────────────────────────
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PHASE 0: HYDRATION CHECK (Kai W1 fix — runs first, every cycle)
