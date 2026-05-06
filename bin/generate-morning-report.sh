@@ -75,7 +75,7 @@ set -uo pipefail
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 JSON_OUTPUT="$ROOT/website/data/morning-report.json"
 TODAY=$(TZ="America/Denver" date +%Y-%m-%d)
-NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
+NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z | sed 's/\([+-][0-9][0-9]\)\([0-9][0-9]\)$/\1:\2/')
 LOG_TAG="[morning-report-v4]"
 
 log() { echo "$LOG_TAG $(TZ='America/Denver' date +%H:%M:%S) $*"; }

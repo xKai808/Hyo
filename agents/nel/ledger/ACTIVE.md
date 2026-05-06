@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-06T13:45:26Z
+Last updated: 2026-05-06T19:45:49Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-06T13:45:26Z
+  - Delegated: 2026-05-06T19:45:49Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -17,12 +17,16 @@ Last updated: 2026-05-06T13:45:26Z
   - Delegated: 2026-05-06T08:07:59Z
   - Status: DELEGATED
 
-- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-05 — past 06:00 MT deadline
-  - Delegated: 2026-05-05T02:03:37Z
+- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
+  - Delegated: 2026-05-06T18:10:26Z
   - Status: DELEGATED
 
-- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-05 — past 06:00 MT deadline
-  - Delegated: 2026-05-05T02:07:42Z
+- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
+  - Delegated: 2026-05-06T18:11:39Z
+  - Status: DELEGATED
+
+- **nel-006** [P1] SAFEGUARD: Cross-reference issue (flag-nel-015) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
+  - Delegated: 2026-05-06T18:13:22Z
   - Status: DELEGATED
 
 ## Queued
@@ -65,4 +69,13 @@ Last updated: 2026-05-06T13:45:26Z
 
 - **flag-nel-003** [P2] No newsletter produced for 2026-04-28 — past 06:00 MT deadline
   - Created: 2026-04-28T18:10:26Z
+
+- **flag-nel-014** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-06T18:13:22Z
+
+- **flag-nel-015** [P2] No newsletter produced for 2026-05-06 — past 06:00 MT deadline
+  - Created: 2026-05-06T18:13:22Z
+
+- **flag-nel-016** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-06T18:13:30Z
 

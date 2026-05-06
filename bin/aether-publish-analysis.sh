@@ -49,7 +49,7 @@ else
   echo "[gate] WARN: analysis-gate.py not found at $GATE_SCRIPT — skipping gate" >&2
 fi
 
-NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z)
+NOW_MT=$(TZ="America/Denver" date +%Y-%m-%dT%H:%M:%S%z | sed 's/\([+-][0-9][0-9]\)\([0-9][0-9]\)$/\1:\2/')
 MONTH_KEY=$(echo "$DATE" | cut -c1-7)
 
 # Generate entry via Python (reliable JSON handling + text extraction)
@@ -509,8 +509,9 @@ analysis_path, date, *metric_paths = sys.argv[1:]
 with open(analysis_path) as f:
     text = f.read()
 
-now_cmd = __import__('subprocess').check_output(
-    ["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"], text=True).strip()
+now_cmd = __import__('re').sub(r'([+-]\d{2})(\d{2})$', r'\1:\2',
+    __import__('subprocess').check_output(
+    ["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"], text=True).strip())
 
 # Detect resolved/in-progress mentions by issue ID or keyword
 def infer_status(issue_id, title, text):

@@ -22,8 +22,10 @@ import json, os, sys, subprocess
 week, feed_path, archive_git, archive_live = sys.argv[1:5]
 
 def get_mt():
-    return subprocess.check_output(
+    import re
+    raw = subprocess.check_output(
         ["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],text=True).strip()
+    return re.sub(r'([+-]\d{2})(\d{2})$', r'\1:\2', raw)
 
 # Load feed
 with open(feed_path) as f:

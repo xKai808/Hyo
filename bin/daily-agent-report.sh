@@ -84,9 +84,12 @@ def read_file(path, max_chars=4000):
         return ""
 
 def get_mt():
-    return subprocess.check_output(
+    import re
+    raw = subprocess.check_output(
         ["bash","-c","TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z"],
         text=True).strip()
+    # Fix macOS %z: -0600 → -06:00 (JavaScript-compatible ISO 8601)
+    return re.sub(r'([+-]\d{2})(\d{2})$', r'\1:\2', raw)
 
 active = read_file(active_path)
 growth = read_file(growth_path)

@@ -2,57 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-06T10:09:51Z",
-  "totalRuns": 250,
+  "lastRunAt": "2026-05-06T18:10:02Z",
+  "totalRuns": 256,
   "runHistory": [
-    {
-      "ts": "2026-04-28T10:10:12Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T10:10:16Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T14:10:03Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-04-28T14:10:08Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T14:10:13Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T18:10:05Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
     {
       "ts": "2026-04-28T18:10:08Z",
       "passed": 6,
@@ -244,6 +196,54 @@
       "newIssues": 2,
       "recurringIssues": 1,
       "resolved": 2
+    },
+    {
+      "ts": "2026-05-06T14:09:40Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-06T14:09:44Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T14:09:53Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T18:09:51Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-06T18:09:56Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T18:10:02Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -262,8 +262,8 @@
       "check_id": "task-queue-size",
       "detail": "33 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-27T18:09:54Z",
-      "lastSeen": "2026-05-06T10:09:51Z",
-      "daysFailing": 45,
+      "lastSeen": "2026-05-06T18:10:02Z",
+      "daysFailing": 51,
       "status": "open"
     },
     "aurora-ran-today:8373b64d": {
@@ -423,7 +423,8 @@
       "firstSeen": "2026-05-06T10:09:51Z",
       "lastSeen": "2026-05-06T10:09:51Z",
       "daysFailing": 1,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T14:09:40Z"
     },
     "scheduled-tasks-fired:7b1b4af7": {
       "severity": "P1",
@@ -432,6 +433,45 @@
       "firstSeen": "2026-05-06T10:09:51Z",
       "lastSeen": "2026-05-06T10:09:51Z",
       "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T14:09:40Z"
+    },
+    "aurora-ran-today:bfc6d1d2": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/great-nice-bohr/mnt/Hyo/newsletters/2026-05-06.md",
+      "firstSeen": "2026-05-06T14:09:40Z",
+      "lastSeen": "2026-05-06T14:09:53Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T18:09:51Z"
+    },
+    "scheduled-tasks-fired:b1d2cf43": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/great-nice-bohr/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-06T14:09:40Z",
+      "lastSeen": "2026-05-06T14:09:53Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T18:09:51Z"
+    },
+    "aurora-ran-today:cbd989ba": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/adoring-fervent-meitner/mnt/Hyo/newsletters/2026-05-06.md",
+      "firstSeen": "2026-05-06T18:09:51Z",
+      "lastSeen": "2026-05-06T18:10:02Z",
+      "daysFailing": 3,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:43ee4568": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/adoring-fervent-meitner/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-06T18:09:51Z",
+      "lastSeen": "2026-05-06T18:10:02Z",
+      "daysFailing": 3,
       "status": "open"
     }
   },
