@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-06T07:45:03Z
+Last updated: 2026-05-06T08:01:49Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-06T07:45:03Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-06T08:00:37Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-06T07:30:33Z
+  - Delegated: 2026-05-06T08:00:37Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-06T07:45:03Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-06T08:00:37Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-06T07:30:33Z
+  - Delegated: 2026-05-06T08:00:37Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-06T07:30:33Z
+  - Delegated: 2026-05-06T08:00:37Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-06 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-05-06T03:45:05Z
+- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
+  - Delegated: 2026-05-06T08:00:37Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
