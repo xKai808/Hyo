@@ -256,11 +256,46 @@ After upgrading: update this table's "Current version" column and commit.
 
 ---
 
-## MORNING REPORT FORMAT SPECIFICATION (v6 — 2026-04-21)
+## MORNING REPORT FORMAT SPECIFICATION (v7 — 2026-05-06)
 
-**Protocol:** `kai/protocols/PROTOCOL_MORNING_REPORT.md` — read before any morning report work.
-**Generator:** `bin/generate-morning-report.sh` (v6-action-engine)
+**REWRITE 2026-05-06:** Hyo feedback confirmed old report was operational noise, not CEO intelligence.
+**Core principle:** "Are the agents getting better?" — answered with metric deltas, not narrative.
+**Protocol:** `kai/protocols/PROTOCOL_MORNING_REPORT.md` v3.0 — read before any morning report work.
+**Generator:** `bin/generate-morning-report-v7.sh` (ACTIVE at 07:00 MT via kai-autonomous.sh)
+**Old generator:** `bin/generate-morning-report.sh` v6 — DEPRECATED, do not modify or use.
 **Output:** `agents/sam/website/data/morning-report.json` (canonical) + `website/data/morning-report.json` (mirror)
+
+### 5-Section CEO Briefing (v7 format)
+Feed entry sections: `pulse`, `improved[]`, `building[]`, `aetherSignal`, `yourAttention[]`
+
+- **pulse** (string): "Healthy" | "Degraded" | "Down" — one word, queue/worker health
+- **improved[]**: metric deltas only — `{agent, metric, before, after, what, commit}`
+- **building[]**: active next targets — `{agent, metric, target, how}`
+- **aetherSignal** (string): financial intelligence summary (Mon-Fri only, null otherwise)
+- **yourAttention[]**: P0 tickets with needs_hyo=True flag ONLY — zero items most days
+
+### What does NOT go in the morning report
+- SICQ/OMP scores, simulation warnings, stale ARIC notices
+- Failed operational checks (reports to Kai, not Hyo)
+- Research progress narratives
+- Per-agent operational summaries
+
+### Agent-card.json system (feeds morning report WHAT IMPROVED)
+Each agent writes `agents/{name}/data/agent-card.json` at end of nightly cycle.
+Script: `bin/write-agent-card.sh` — shared utility, call with --agent --metric --after --what.
+Schema: `{agent, date, metric_name, metric_before, metric_after, what_changed, commit, next_target{metric, target, how}}`
+GVU metrics (one per agent, cannot be gamed):
+- Nel: health_score (IMPROVEMENT_SCORE from sentinel+cipher+audit)
+- Sam: deploy_reliability (tests_passed / total * 100)
+- Aether: signal_accuracy (TBD — wire when Aether runs on Mini)
+- Ra: newsletter_delivery_rate (TBD — wire when Ra runs on Mini)
+- Kai: improvements_shipped_week (count of agent-card deltas with metric_after > metric_before)
+
+### Disabled cadences (2026-05-06)
+- kai-daily HQ publish at 23:30 MT — DISABLED (duplicated morning report)
+- Ra content report HQ publish — DISABLED (operational noise; Ra → Kai via dispatch only)
+- Nel/Sam daily HQ narrative publish — DISABLED (agent-card.json replaces narrative)
+- Completeness check no longer expects: kai-daily, ra-daily (removed from required list)
 
 ### Required JSON fields per agent (enforced as of v6)
 - `shipped_since_last` — what shipped since last report with proof (commit hash)

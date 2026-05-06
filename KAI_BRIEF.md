@@ -1,5 +1,29 @@
 # KAI_BRIEF.md
 
+> **[HEALTHCHECK 2026-05-06T22:03Z (2026-05-06 16:03 MT) — autonomous 2h sweep, Cowork sandbox] ISSUES — 1 P0 NEW, 4 P1 (carried, all worsening), 1 P2, 2 P3. Top item changed.**
+> - **P0 NEW (top item): hyo-inbox.jsonl unread = 5192.** Was 4716 at 18:05Z brief — that's **+476 unread in 4h** (~119/h). SLA enforcer still firing without dedup; no marker is moving messages to read. Inbox is signal-blind: any real escalation Hyo sends or any agent flag worth seeing is now buried. Inbox dedup or drain is the new dominant signal-loss source — must run before any other patch this session.
+> - **P1 (carried, WORSENING — predicted +2h/sweep, confirmed): queue/running/ stuck-runner depth.** Three real (non-`.failed`) entries, ages exactly +2h since 20:02Z: `274a60a7…` hyo.sh **18h** (was 16h), `c6521672…` aether.sh **14h** (was 12h), `cmd-1778071572…` git push of tickets.jsonl **9h** (was 7h). queue-hygiene.sh reaper still not landed. Plus 7 `.json.failed` orphans now frozen ~45h. The 9h-stuck git push remains the structural reason today's commits aren't shipping.
+> - **P1 (carried, IMPROVING but persisting): AUTO-REMEDIATE loop.** 24 DELEGATE / 0 RESOLVE in 20:02Z–22:02Z window. Down from 71 last sweep — but still 0 resolutions and same 2 distinct titles only ("No newsletter produced for 2026-05-06", "1 broken links detected"). Pattern persists; remediator dispatches but never marks source flag resolved.
+> - **P1 (carried — ra render still broken):** `agents/ra/output/2026-05-06.input.md` (44KB, 13:04 MT) + `script-2026-05-06.txt` (12:05 MT). No `.md` or `.html` final render for today. Today's 06:00 MT deadline missed by 16h. Same root file state as 20:02Z brief — no progress in 2h.
+> - **P1 (carried — ticket.sh `--create` syntax bug LIVE):** Last 3 calls in `kai/queue/completed/` (cmd-1778104963/4902/4760, 15:58–16:01 MT) all use broken syntax `bash bin/ticket.sh --create --id AET-… --title …`. Exit 0, output = Usage banner only. Aether's escalations (data-gate-blocked, dashboard drift) still being silently swallowed. Patch site unchanged: `agents/aether/aether.sh` must call positional `ticket.sh create --agent aether --title <text> --priority P1`.
+> - **P2: flag noise.** 56 P2 FLAG entries in last 30min — same firehose pattern. Aether dashboard mismatch + sentinel sandbox-path duplicates dominate.
+> - **P3 (carried): dex no output today.** 0 today-named files in `agents/dex/logs/`; modified-last-24h=6 from older runs.
+> - **P3: dead-loop GUIDANCE tickets DELEGATED but not RESOLVED.** sam-001, ra-001, aether-001, dex tickets all show "Status: DELEGATED — sim-report: all clear" across last 4 sweeps. Tickets exist; no agent has transitioned them to IN_PROGRESS / RESOLVED.
+> - **Healthy:** all 6 ACTIVE.md fresh (0–2h); `pending=0` (worker is processing — 1070 completed in last 24h, 0 failed); nel=27 today logs, sam=1, ra=2, aether=2, dex=0.
+> - **No actions taken this run** — read-only. Auto-remediate loop is still self-amplifying so dispatch-style fixes are off the table. Next interactive session top-3, in order: (1) drain or dedup `hyo-inbox.jsonl` (now 5192 unread, growing 119/h), (2) fix the AUTO-REMEDIATE → RESOLVE pairing AND reap the 3 stuck `running/` entries (manual `mv kai/queue/running/* kai/queue/failed/` + restart worker), (3) land the `agents/aether/aether.sh` `ticket.sh create` patch. Healthcheck JSON written to `kai/queue/healthcheck-latest.json`.
+
+> **[HEALTHCHECK 2026-05-06T20:02Z (2026-05-06 14:02 MT) — autonomous 2h sweep, Cowork sandbox] ISSUES — 4 P1, 4 P2/P3. Top item changed.**
+> - **P1 NEW (top item): auto-remediate loop is firing without resolving.** In the 2h window 18:02Z–20:02Z the log shows **71 `[AUTO-REMEDIATE]` DELEGATE entries and 0 RESOLVE entries**. Only 2 distinct root causes are being re-flagged every minute: "No newsletter produced for 2026-05-06" (×4) and "1 broken links detected" (×1). The remediator dispatches but never marks the source flag resolved → next sweep sees the same flag → re-dispatches. This is now the dominant signal-loss source; before any other patch, AUTO-REMEDIATE must either (a) write a RESOLVE on dispatch, or (b) check for an open AUTO-REMEDIATE for the same title before flagging again.
+> - **P1 (carried, WORSENING — ages still climbing linearly): queue/running/ stuck-runner depth.** Three real (non-`.failed`) entries: `274a60a7…` hyo.sh **16h** (was 14h at 18:05Z), `c6521672…` aether.sh **12h** (was 10h), `cmd-1778071572…` git push of `tickets.jsonl + ledger` **7h** (was 5h). All gain ~2h/sweep with no reaper landed. The 7h-stuck `git push` is exactly the structural reason today's commits aren't shipping.
+> - **P1 (carried — ra render still broken):** `agents/ra/output/2026-05-06.input.md` (45KB, 13:04 MT) and `script-2026-05-06.txt` (12:05 MT) exist, but no `.md` or `.html` final render for today (yesterday's `.html` only landed 01:06 next-day). Newsletter pipeline stops after gather/script.
+> - **P1 (carried): aether dashboard ~6h out-of-sync.** Local cycle ts 14:01 MT vs API ts 07:45 MT; 242× P2 mismatch flags in last 2h. Aether reports cycle complete with `dashboard: out-of-sync` every minute. HQ feed serving stale Aether data.
+> - **P1 (carried): 4 agents in dead-loop** — sam (assessment_stuck: routine engineering check), ra (assessment_stuck: health check w/ 1 warning), aether (bottleneck_stuck: dashboard out-of-sync), dex (bottleneck_stuck: 2 corrupt JSONL entries). Same [GUIDANCE] re-dispatch pattern; zero forward progress.
+> - **P2 (carried, AS PREDICTED): `bin/ticket.sh --create` syntax bug confirmed live.** Last 5 recent_queue_results all `cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-YYYYMMDDHHMM` — exit 0, stdout = Usage banner only. AET-202605061350/52/54/57/59 tickets were never created. Aether's escalations (including the dashboard drift) are still being silently swallowed. Patch site unchanged: `agents/aether/aether.sh` must call positional `ticket.sh create --agent aether --title '<text>' --priority P1`.
+> - **P3 (carried): dex no output today.** 0 today-named logs (`agents/dex/logs/`); modified-last-24h=6 from older runs.
+> - **P3 (carried): 8 agent runners still missing `source agent-gates.sh`.** hyo.sh, kai-daily.sh, nel/{dep-audit, dependency-audit, sentinel-adapt, verify}.sh, ra/verify.sh, sam/verify.sh. Persisting from 05-05 self-review.
+> - **Healthy:** all 6 ACTIVE.md fresh (0h); `pending=0` (worker is processing, not stalled); nel=25 today logs, sam=1, ra=2, aether=2, hyo=2.
+> - **No actions taken this run** — the existing AUTO-REMEDIATE loop is itself the new top P1; piling on more dispatches would amplify it. Next interactive session top-3 in order: (1) fix the AUTO-REMEDIATE → RESOLVE pairing, (2) reap the 3 stuck running/ entries (manual `mv .../running/* .../failed/` + restart worker), (3) land the `agents/aether/aether.sh` ticket.sh-create patch. Healthcheck JSON written to `kai/queue/healthcheck-latest.json`.
+
 > **[HEALTHCHECK 2026-05-06T18:05Z (2026-05-06 12:05 MT) — autonomous 2h sweep, Cowork sandbox] ISSUES — 3 P0 NEW-CLASSIFIED, 4 P1 (carried), 1 P3.**
 > - **P0 NEW-CLASSIFIED: Hyo inbox alert flood.** `kai/ledger/hyo-inbox.jsonl` has **4716 unread P0 SLA BREACH messages across 1326 distinct task IDs**. Top offenders each repeated 38x: TASK-20260505-nel-001/002/003 and TASK-20260505-sam-001/002. SLA enforcer is firing without dedup and nothing is marking messages read. Inbox is now signal-blind. Same root-cause family as the cascade-spam noted at 12:00Z (kai-001 33x).
 > - **P0 NEW-CLASSIFIED: verified-state.json now ~17h stale (re-classifying from prior P1/P2).** verified_at=2026-05-05T18:59:41-0600, today=2026-05-05 (off by one day), `agents` key still missing. CLAUDE.md hard-rule: >2h stale = run `kai-session-prep.sh` before proceeding. Per CLAUDE.md this is structural, not advisory. system_healthy=false in current snapshot (all 6 SICQ scores below minimum). Re-promoting to P0 because it's the foundation every other state read sits on.
@@ -714,6 +738,37 @@
 3. **Podcast GPT from-scratch rewrite (SE-031-003)** — `GPT_EXPAND_PROMPT` reframed from "expand this draft" → "write this broadcast from scratch using this outline." Section minimums raised. Sparse-data mandatory expansion rule added (must use domain knowledge even when source data is thin). Retry pass added if pass 1 < 1,200 words. Context raised from 3,000 → 8,000 chars. max_tokens raised 3,000 → 4,000. **Verified: 1,831 words produced on 2026-04-27 run** (was 529 words without GPT, previously 1,025-1,129 words with old prompt).
 
 **AetherBot status: still blocked.** 44 x 401 auth failures today, 0 trades. Detector now wired. Hyo must regenerate Kalshi API key to resume trading.
+
+## ## Shipped today (Session 34 — 2026-05-06 Cowork)
+
+**Reporting system redesigned per Hyo's 7-point feedback. Agent-card system implemented.**
+
+1. **Morning report v7** — New generator `bin/generate-morning-report-v7.sh` wired into production (kai-autonomous.sh 07:00 MT). 5-section CEO briefing: PULSE / WHAT IMPROVED / WHAT'S BEING BUILT / AETHER SIGNAL / YOUR ATTENTION. ~250 lines vs. 1653 lines (v6).
+
+2. **PROTOCOL_MORNING_REPORT.md v3.0** — Completely rewritten. Core principle: "Are the agents getting better?" answered with metric deltas, not narrative. Explicit table of what does NOT go in the report.
+
+3. **Kai daily report (23:30 MT) disabled** — Duplicated morning report. Commented out in kai-autonomous.sh.
+
+4. **Ra content report to HQ disabled** — Ra's operational narrative routes to Kai via dispatch only. Narrative HQ publish suppressed in agents/ra/ra.sh.
+
+5. **Agent-card.json system** — `bin/write-agent-card.sh` created. Nel and Sam wired to write structured metric deltas at end of nightly cycle instead of HQ narrative publish.
+   - Nel: `health_score` (IMPROVEMENT_SCORE from sentinel+cipher+audit)
+   - Sam: `deploy_reliability` (tests_passed / total * 100)
+
+6. **HQ v7 renderer** — `renderMorningReport()` in hq.html rewritten. Detects v7 format (pulse/improved/building keys) and renders CEO briefing with metric delta cards. Legacy v5 kept as fallback.
+
+7. **Completeness check updated** — Removed kai-daily and ra-daily from required report types list.
+
+8. **PROTOCOL_HYO_RESEARCH_PDF.pdf** — Created as actual Hyo Research styled PDF (6 chapters, navy/gold). Wired into CLAUDE.md as active task-type trigger. Queued to Mini for commit.
+
+9. **HQ Kai + Research tabs verified working** — Visual confirmation + console verification done. TypeError on s.sources.trim() fixed. Only benign startViewTransition errors remain.
+
+All changes queued to Mini. Queue will commit + push.
+
+**Open items:**
+- Aether and Ra agent-card.json wiring (waiting for Mini launchd scheduling)
+- `hq.html` agent card panel: pull from agent-card.json to show live goals/current metric
+- Test v7 morning report with real data on next 07:00 MT run
 
 ## ## Shipped today (Session 33 — 2026-05-04 Cowork)
 
