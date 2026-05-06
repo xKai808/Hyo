@@ -116,6 +116,14 @@ MD_FILE="$HYO_ROOT/agents/ra/output/${TODAY_DATE}.md"
 FEED_GIT="$HYO_ROOT/agents/sam/website/data/feed.json"
 FEED_LIVE="$HYO_ROOT/website/data/feed.json"
 
+# If synthesize fell to bundle mode (rc=2) but a .md from a prior successful
+# run already exists for today, use it — render.py will have refreshed the HTML.
+# This prevents missing feed entries on nights when all LLM backends fail.
+if [[ $SYNTH_RC -eq 2 && -f "$MD_FILE" ]]; then
+  echo "[$STAMP] synthesize bundle mode but prior .md exists — proceeding with feed publish"
+  SYNTH_RC=0  # treat as success for the publish gate
+fi
+
 if [[ -f "$MD_FILE" && $SYNTH_RC -ne 2 ]]; then
   echo "[$STAMP] publishing to HQ feed..."
 

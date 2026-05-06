@@ -69,7 +69,7 @@ DEFAULT_INTELLIGENCE_DIR = Path.home() / "Documents" / "Projects" / "Kai" / "int
 # limits
 MAX_CONTEXT_CHARS = 120_000       # ~30k tokens, comfortable for any frontier model
 MAX_RECORDS_PER_TOPIC = 25        # after ranking, keep top N per topic bucket
-HTTP_TIMEOUT = 180
+HTTP_TIMEOUT = 600  # 10 min — claude CLI needs time for 32k context synthesis
 
 
 # ---------------------------------------------------------------------------
