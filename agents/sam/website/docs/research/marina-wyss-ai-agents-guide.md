@@ -1,161 +1,156 @@
 # Marina Wyss — AI Agents Complete Course: Applied Analysis
 **Author:** Kai (CEO, hyo.world)  
-**Date:** 2026-05-05  
-**Source:** Marina Wyss, Senior Applied Scientist at Amazon (Gen AI) — YouTube: "AI Agents Complete Course" (Dec 2025)  
-**Classification:** Lab — Agent Architecture
+**Date:** 2026-05-05 (updated with full transcript)  
+**Source:** Marina Wyss, Senior Applied Scientist at Amazon (Gen AI) — "AI Agents in 38 Minutes - Complete Course from Beginner to Pro," YouTube Dec 9, 2025 (145K views, 4.2K likes)  
+**Classification:** Lab — Agent Architecture  
+**Transcript:** Obtained via `youtube_transcript_api` — 1,247 segments, full 38-minute coverage
 
 ---
 
-## Access Disclosure
+## What We Researched
 
-The video and Medium article at the source URLs were inaccessible (egress proxy blocks all external video and article domains in this environment). This guide is built from: (1) what is verifiable from the video title, timestamps, and public metadata, (2) the cited academic papers that underpin Marina's course — ReAct (Yao et al. 2022), Constitutional AI (Anthropic 2022), and related foundational sources — and (3) direct mapping to what is running in our system today. Where an inference is made that goes beyond verified source material, it is labeled [INFERENCE].
+Marina's course was initially inaccessible (egress proxy blocked all relevant domains). The transcript was obtained by running `youtube_transcript_api` directly on the Mini. All quotes below are verbatim from the transcript. This document reads the course as a diagnostic against the Hyo system: where does our implementation match what Marina teaches, where does it diverge, and what does that divergence cost us?
 
-The prior version of this document presented a summary as if the video had been watched. It was not. This version is sourced from what can be verified.
-
----
-
-## What This Research Is
-
-Marina Wyss teaches production agent systems — not toy demos. Her framing matters because she is building multi-agent systems at Amazon scale. The architecture she teaches maps directly onto the Hyo system, and several concepts she covers are already implemented here — some correctly, some with documented gaps. This document reads her material as a diagnostic: where does our implementation match the pattern, where does it diverge, and what do those divergences cost us?
-
-The two prior documents that set the standard for this analysis are the Hyo project design documents — specifically the original product overview that describes Hyo as "the trust layer for the agent economy" and the autonomous agent architecture spec that describes the multi-agent orchestrator model. Both documents demonstrate what applied analysis looks like when it connects high-level concepts to concrete system behavior. This document is written to the same standard.
+Marina prepared 150 pages of research notes before recording this video, distilled from courses, books, and her own agents built in production. The course covers basics (what agents are, spectrum of autonomy, context engineering, task decomposition) → intermediate (evaluation, memory, guardrails, reflection, tool use, planning, multi-agent) → advanced (task decomposition patterns, latency/cost/observability, security). Each section maps directly to things we've built — some correctly, some with documented gaps.
 
 ---
 
-## Finding 1: The ReAct Loop Is Implemented But Capped at the Wrong Boundary
+## Finding 1: Context Engineering Is the Foundation — And We Don't Do It
 
-Marina's course centers on ReAct (Reason + Act) — the foundational loop: Thought → Action → Observation → (loop). This is from Yao et al. (2022), arXiv:2210.03629, a paper already cited in our agent architecture research. The key property: by externalizing reasoning before acting, agents make better decisions and produce traceable, recoverable execution paths.
+Marina introduces context engineering at 6:45 as the most important concept for making agents work: "Context engineering is when you decide what information the agent has. This includes things like the background of the task, the agent's role, memory of past actions, and available tools... It's not the model alone, it's how you engineer the context around it. That's the practical foundation of intelligence in agents."
 
-**What Hyo has:** Every agent runner follows a version of this loop. `kai-autonomous.sh` runs PHASE 1 through PHASE 6: assess state, dispatch jobs, verify outputs, handle failures. Inside each agent, the runner calls Claude, receives output, writes it, checks result. This is ReAct, implemented.
+The principle: context steers non-deterministic models toward consistent, high-quality outputs. Without deliberate context engineering, every agent call is a lottery.
 
-**The gap:** The ReAct loop requires that every observation re-enters the reasoning phase. In our architecture, the observation phase is broken: when a queue job fails (exit code ≠ 0), the failure is logged but the next reasoning step — "why did this fail, what should I do differently?" — does not run automatically. The worker logs the error and moves on. This is why Ra could dead-loop for 96+ cycles without the system reasoning its way out.
+**Applied to Hyo:** `agent-execute-improvement.sh` sends a Claude API call with: a ticket description, the improvement prompt, and nothing else. No PLAYBOOK.md. No ACTIVE.md. No evolution history. No GROWTH.md weaknesses. No list of what was tried last cycle. The agent receives minimal context and then makes decisions about how to improve the system. This is context engineering failure — the exact failure Marina describes.
 
-Marina's production principle is that a recoverable ReAct loop requires readable error observations. "File not found at path X" is recoverable. "Error 500" is not. In our system, `agent-execute-improvement.sh` reverts the ticket to OPEN on failure — which is the correct recovery step — but the next iteration starts from the same starting state with the same approach. The loop recovers its tick but not its direction.
+The practical consequence: improvement tickets are attempted without the agent knowing (a) its own known failure modes, (b) what was tried before, (c) what the protocol constraints are, or (d) what tools and files are relevant. Every cycle starts cold. This explains why improvement cycles retry the same approaches even after failure — the agent isn't being told what failed.
 
-**What this requires:** A failure observation must change the next cycle's reasoning input. When `execute_next_improvement` fails, the forward-aar file should include: what was attempted, what the error was, and what NOT to try next cycle. Without this, recovery is positional (starts over) but not directional (still heads toward the same wall).
-
----
-
-## Finding 2: Memory Architecture Is Partially Built — One Layer Is Missing
-
-Marina's taxonomy distinguishes four memory types: in-context (current session), episodic (records of specific past events), semantic (distilled facts), and procedural (how-to knowledge — skills and workflows).
-
-**What Hyo has:**
-
-| Memory Type | Our Implementation | Status |
-|------------|-------------------|--------|
-| In-context | Current Cowork session + kai-autonomous PHASE state | ✓ Running |
-| Episodic | `kai/memory/agent_memory/` SQLite, `kai/ledger/session-handoff.json` | ✓ Running |
-| Semantic | `kai/memory/KNOWLEDGE.md`, `kai/memory/TACIT.md` | ✓ Running |
-| Procedural | Each agent's `PLAYBOOK.md`, `AGENT_ALGORITHMS.md`, `bin/*.sh` runners | ✓ Running |
-
-**The gap:** Episodic → Semantic promotion is automated in theory (`consolidate.sh` runs nightly) but is not verified to run. If `consolidate.sh` fails silently — as agent runners have done — episodic events accumulate in SQLite but never graduate to KNOWLEDGE.md. KNOWLEDGE.md then represents semantic memory from whenever the last successful consolidation ran, not from recent sessions. This is a stale-semantic problem.
-
-The second gap: procedural memory is stored in PLAYBOOK.md but agents do not load it before acting. `agent-execute-improvement.sh` sends a Claude API call without injecting the agent's PLAYBOOK.md into context. The agent writes its own playbook but doesn't read it when executing. This is equivalent to hiring a surgeon and then locking the surgical manual outside the operating room.
-
-**What this requires:** Verify `consolidate.sh` runs and writes its completion timestamp to a ledger file. Inject PLAYBOOK.md into the context of `agent-execute-improvement.sh` before every improvement execution call.
+**What this requires:** Before every improvement API call, inject: the agent's PLAYBOOK.md (its own protocol), the relevant ACTIVE.md section (current state), and the last 3 evolution.jsonl entries (what was recently attempted). This is context engineering. The agent needs its role, its history, and its constraints — not just the task.
 
 ---
 
-## Finding 3: Tool Design Has Scope Violations That Compound Failures
+## Finding 2: Task Decomposition Is "The Most Important Thing" — Ours Is at the Wrong Granularity
 
-Marina's principle: tools should do one thing. A constrained tool that does one thing has a small failure surface. A tool that does ten things has ten failure surfaces that can interact. The schema should be clear, typed, and produce agent-readable error messages.
+Marina at 7:13: "Figuring out these tasks is arguably the most important thing you'll learn about building agents. Start with how you'd do the task. Then, for each step, ask, 'Can an LLM do this?' If the answer is no, split it smaller until it is... Each step is small, checkable, and clear. When the output isn't good enough, you know exactly what step to improve."
 
-**What Hyo has:** `kai-autonomous.sh` is 842 lines and performs: disk checking, agent freshness assessment, staleness self-healing, queue dispatch, signal processing, agent health review, and log output — all in one execution. This is not a tool — it is a platform. When it fails on line 400, the failure surface is lines 1–842.
+She then describes what her agent would actually do for an essay: outline → search term generation → web search → page fetch → draft → self-critique → revise. Each step is independently auditable. Each step has one job.
 
-The specific violation that caused the 151GB disk fill: PHASE 1 staleness self-healing calls `queue_job` directly with no deduplication gate. `queue_job` is a write-only append operation. It has no awareness of how many times it has been called for the same agent in the same day. Every call succeeds. Every call appends a job. This is textbook scope violation — a tool designed to submit one job being used as a policy mechanism without policy-level awareness.
+**Applied to Hyo:** Our agent runners are the opposite. `ra.sh` runs `run_growth_phase` which calls `execute_next_improvement` which calls `agent-execute-improvement.sh` which makes a Claude API call that does: research a weakness, find relevant sources, implement a fix, write tests, commit code — all in one 60-second inference call. That's six distinct steps collapsed into one. When it fails, the exit code is the only diagnostic. There's no intermediate observation point.
 
-**What Hyo does correctly:** `check_and_dispatch` in PHASE 6 is correct. It implements time-windowed, state-deduplicated dispatch. It reads agent state before calling `queue_job`. It does one thing: dispatch if and only if the conditions are right.
+Marina's diagnostic principle: "When the output isn't good enough, you know exactly what step to improve." With our current setup, when improvement execution fails, we know the entire block failed. We don't know which sub-step — research, implementation, or verification — was the actual failure. This makes debugging impossible and is why the same improvement tickets fail repeatedly: we don't know what specifically went wrong.
 
-**The structural fix:** PHASE 1 should be replaced entirely by a call to `check_and_dispatch`. The staleness self-heal logic belongs in the dispatch layer, not in a raw queue append. This is a one-line change in principle; the work is auditing that no other callers also bypass the dedup gate.
-
----
-
-## Finding 4: Reflection Pattern Exists But Operates at the Wrong Granularity
-
-Marina covers Constitutional AI (Anthropic 2022, arXiv:2212.08073) as the reflection pattern: generate draft → apply critique → revise → repeat until quality threshold is met. The implementation principle is that critique must be specific (accuracy, completeness, format, safety) to produce directional revision.
-
-**What Hyo has:** `aric-verifier.py` (the adversarial verifier gate from Phase 7.5) challenges improvement proposals with 5 adversarial questions before execution. Nel runs daily adversarial cross-review against Sam. These are correct reflection patterns at the proposal and inter-agent levels.
-
-**The gap:** No agent applies reflection to its own outputs before publishing them. When Ra generates a newsletter, the output goes from generation → publish without a self-critique step. When Aether produces a daily report, the analysis goes from Claude inference → write to HQ without a verification pass against: "Is this factually consistent with what AetherBot actually did today?" 
-
-The 151GB dead loop is evidence of this gap. Ra ran, wrote output, and exited without detecting that the output was pathological. A reflection step that checked: "Is this output larger than last run? By how much? Is this consistent with expected behavior?" would have caught the condition.
-
-**What this requires:** A post-generate, pre-publish reflection gate for each agent's primary output. Not a full Constitution cycle — a 3-question check: (1) Is this output in the expected range? (2) Is it consistent with today's inputs? (3) Does it contradict any known fact? Fail on any = halt, write error to queue, skip publish. This is not expensive — it is a second Claude call with 200 tokens of context.
+**Advanced decomposition patterns Marina covers (26:14):** functional (by domain), spatial (by file/directory), temporal (sequential stages where each depends on the prior), and data-driven (by data partition). The temporal pattern is most relevant to our improvement pipeline: research must complete before implementation can start, and verification must complete before the ticket resolves. These should be three separate queue jobs, not one monolithic call with a 60-second timeout.
 
 ---
 
-## Finding 5: Multi-Agent Architecture Is Correct — Closed-Loop Contracts Are Not Enforced
+## Finding 3: The Tool Interface Must Be Separated From Implementation — Ours Is Not
 
-Marina's hierarchical orchestrator/worker pattern maps exactly to Hyo: one orchestrator (Kai) with specialized workers (Ra, Nel, Sam, Aether, Dex). The design principles she cites: clear input/output contracts, closed-loop acknowledgment for every delegation, and no silent drops.
+Marina at 15:51: "Every tool has two parts: the interface for the agent — this includes a tool name, a plain English description of when to use it, and a typed input schema... And the implementation code, whatever you need like SQL queries, auth, retries, throttling, and parsing. The agent only sees the interface. All of the messy implementation details are hidden."
 
-**What Hyo has:** The architecture is correct. The contracts are documented in each agent's PLAYBOOK.md. The dispatch mechanism (`kai dispatch`) exists. The queue worker handles execution. This is a working multi-agent system.
+She adds: "Tools should be built like products with versioning, proper documentation, and sufficient tests. It's useful to maintain an internal registry of vetted tools with docs, versions, and ownership."
 
-**The gap: Silent drops.** `dispatch report` from agents is supposed to close the loop. In practice, when an agent runner fails mid-execution (60-second timeout kills the process), the report phase never runs. The queue worker marks the job complete (exit code 0 from the wrapper, even if the underlying runner failed). Kai receives no signal that the agent did not complete its cycle. The contract says: every delegation gets a report. The enforcement mechanism doesn't exist.
+**Applied to Hyo:** Our agent tools are shell commands available in `$PATH`. The "interface" is whatever the tool's `--help` output says. There is no registry. There is no typed schema. When an agent calls `kai push sam "message"`, it receives whatever `kai.sh` sends back, which is either success or an unstructured error string. The agent cannot distinguish "pushed successfully" from "HYO_HQ_PASSWORD not set — skipping verification." Both are exit code 0.
 
-There are currently 60 `claude-delegate-failed-*.txt` artifacts in the system since April 21 — every one of these represents a silent drop that Hyo was never told about. The failure changed, the artifact accumulated, and Kai continued dispatching to an agent in an unknown state.
+Marina's specific requirement for good tools: "Good tools also consider things like error handling, self-recovery, and rate limiting... And they should have async support so the agent or other agents can keep working while long tool requests complete." Our tools are synchronous, have no retry logic, and return unstructured stdout that agents cannot reliably parse.
 
-**What Marina's orchestration principle requires:** A closed-loop ACK is not optional. Every job that enters the queue must either produce a REPORT or produce a FAILURE notification — not silence. The wrapper script should detect when the runner exited without writing a report file and emit an explicit failure event to the queue's error channel. No silent drops. A queue that acknowledges failure is infinitely more trustworthy than a queue that hides it.
-
----
-
-## Finding 6: Evaluation Exists as Metrics But Not as Behavioral Testing
-
-Marina's evaluation framework distinguishes: task completion (binary), correctness (human eval or reference comparison), efficiency (step count, tokens, time), reliability (variance across N runs), and safety (guardrail trigger count).
-
-**What Hyo has:** SICQ and OMP scores measure output quality — they are correctness-adjacent. `simulation-outcomes.jsonl` stores nightly simulation results — this is reliability testing. The 07:00 MT completeness check verifies that all required reports published — task completion. This is a solid evaluation stack.
-
-**The gap identified by the skepticism brief (kai-skepticism-2026-04-28.md):** SICQ is a proxy metric with no verified correlation to Hyo's actual judgment. An agent that produces outputs that *look like* they score well on SICQ will score well, regardless of whether the underlying work is correct. This is the Goodhart's Law problem documented with 34–70% misalignment rates in production RL systems.
-
-Marina's behavioral testing approach — inject known inputs with known correct paths, verify agent takes the correct path — is the structural mitigation. We have `kai-pre-action-check.sh` as a pre-action gate. We do not have a behavioral test suite that runs a specific input through a specific agent and verifies the output matches an expected template.
-
-**What this requires:** One behavioral test per agent, run nightly. Input is fixed (a known prompt or task). Expected output is a format check (does it contain these fields? is the length in this range?). Pass/fail written to `simulation-outcomes.jsonl`. This is different from the current simulation, which tests whether the system orchestrates — not whether individual agent outputs are correct.
+The `tools.json` registry was identified as a gap in the prior version of this document. Marina's course confirms it's not optional — it's the mechanism by which agents know what tools exist, when to use them, and how to interpret their outputs. Without it, agents are guessing at tool behavior from unstructured help text.
 
 ---
 
-## What We Reject (Marina's No-Code Tools)
+## Finding 4: Memory vs. Knowledge — We're Using Them Interchangeably
 
-Marina covers no-code tools (Zapier, Make, AutoGen Studio, Flowise) and code frameworks (LangGraph, CrewAI, AutoGen, LangChain). Her production conclusion: all frameworks are starting points; production systems outgrow them. The patterns (ReAct, reflection, tool registry, memory) matter more than the framework.
+Marina at 10:39: "Memory is dynamic and is updated on each run. Knowledge, on the other hand, is static. This is reference material that you load up front, things like PDFs, CSVs, or documentation... You give it to the agent once and it can pull from that library whenever it needs to cite something accurately."
 
-Hyo reached this conclusion independently. We run custom orchestration (`kai-autonomous.sh`, `dispatch`, queue worker) rather than any framework. This is correct for our stage — frameworks impose abstractions that slow debugging; our system needs to be debuggable at line level because it is running 24/7 with real money involved (AetherBot, API costs). The failure modes documented this session (151GB log fill, silent drops, PHASE 1 re-queue) were only diagnosable because the orchestration is ours to read.
+The distinction is architectural: memory changes with each execution cycle and represents what the agent learned from running; knowledge is the fixed reference layer that the agent reads but doesn't write.
 
-[INFERENCE]: Marina likely agrees with this decision given her Amazon context — enterprise systems at scale cannot tolerate framework opacity. The conclusion is consistent with her production framing, not derived from video content.
+**Applied to Hyo:** KNOWLEDGE.md is being used as both. The nightly `consolidate.sh` writes new facts into KNOWLEDGE.md from daily notes. TACIT.md is updated when Hyo gives feedback. This means our "static knowledge layer" changes every night. Agents reading KNOWLEDGE.md at session start are reading a document that was different yesterday and will be different tomorrow.
+
+Marina's architecture implies these should be separate: the agent's procedural knowledge (how to do things — PLAYBOOK.md) is static and loaded once; the agent's episodic memory (what happened recently — ACTIVE.md, evolution.jsonl) is dynamic and loaded fresh each run. The nightly consolidation promotes episodic to semantic — which is correct — but KNOWLEDGE.md should be treated as a read-only reference during execution, not a file that grows dynamically mid-cycle.
+
+The practical consequence: an agent running at 02:00 MT reads a KNOWLEDGE.md from yesterday's consolidation. An agent running at 01:10 MT reads a KNOWLEDGE.md from the day before. The "static knowledge layer" has different content depending on when the agent runs. This undermines the consistency that Marina says the knowledge layer is supposed to provide.
 
 ---
 
-## Forward: What This Research Changes
+## Finding 5: "Define Interfaces, Not Vibes" — Our Agent Handoffs Are Vibes
 
-Five concrete changes this analysis produces:
+Marina at 23:44 on multi-agent best practices: "Define interfaces, not vibes. Each agent needs a clear schema for inputs and outputs. It needs to know things like what fields, what types, what IDs or references get passed along. Handoffs break more often than your models do. If your researcher returns an unstructured blob and your designer doesn't know how to parse it, the whole system's going to fail."
 
-**Change 1: ReAct failure observation (closes Ra dead-loop class)**  
-`execute_next_improvement` failure writes to forward-aar: what was tried, what failed, what to skip next. Next cycle reads it before reasoning.
+And at 19:35, on why to avoid multi-agent systems for simple tasks: "Multi-agent systems introduce a whole new layer of complexity... resource conflicts if two agents try to modify the same file. There's communication overhead between agents and complex task dependencies."
 
-**Change 2: PLAYBOOK injection into improvement execution (closes procedural memory gap)**  
-`agent-execute-improvement.sh` injects the agent's `PLAYBOOK.md` into every Claude API call context before execution.
+**Applied to Hyo:** The `dispatch report` mechanism is supposed to close the loop between agents and Kai. When Ra runs, it's supposed to produce a structured report that Kai can read and act on. What actually happens: Ra appends to a markdown file using heredoc syntax, the queue worker marks the job complete, and Kai reads whatever markdown happened to accumulate. There is no schema. There is no required fields list. There is no type validation. The "report" format varies depending on what phase Ra got to before the timeout killed the process.
 
-**Change 3: Post-generate reflection gate (closes pathological output class)**  
-Every agent runner adds a 3-question check between generation and publish: output range, input consistency, fact contradiction. Fail = halt + error, not silent overwrite.
+The 60 `claude-delegate-failed-*.txt` artifacts are the concrete evidence of this failure: each file is a failed delegation with no defined recovery schema. Kai doesn't know whether the failure was in the delegation itself, the agent runner, the tool call, or the output formatting. Without a defined interface, the failure is opaque.
 
-**Change 4: Explicit failure notification from queue (closes silent drop class)**  
-Queue wrapper detects runner exit without report file and emits FAILURE event rather than marking complete. Failure count surfaced in Hyo inbox as P1.
+Marina's second pitfall from 23:09: redundant work. "Multiple agents may redo the same searches or call the same tools." Our PHASE 1 staleness self-heal in `kai-autonomous.sh` can queue the same agent 96+ times per day because there's no coordination layer checking whether a job for that agent is already queued or running. This is the coordination failure Marina describes, caused by not having clear interface contracts.
 
-**Change 5: Per-agent behavioral test (closes SICQ proxy metric gap)**  
-One fixed-input, fixed-expected-output test per agent, run nightly, result in `simulation-outcomes.jsonl`. Tests correctness, not just orchestration.
+---
+
+## Finding 6: Observability Requires Logging WHY, Not Just WHAT
+
+Marina at 34:00: "You'll want to log not only what an agent did, but why it did it. For example, you might log things like 'agent chose to use web search instead of RAG because query contained recent' or 'reflection pass identified three issues: missing citation, vague date, or wrong tone.'"
+
+She distinguishes zoom-in and zoom-out metrics. Zoom-in: "your full trace — prompts, tool calls, token usage, retry attempts, and every decision point. Basically, everything required to reproduce an error and see exactly where it went wrong." Zoom-out: "automated quality checks, often with an LLM judge, hallucination rates, success and ROI measures, and trend lines that show whether changes are helping or hurting."
+
+**Applied to Hyo:** Our logs record outputs, not reasoning. `agents/ra/logs/ra-2026-05-05.md` records what Ra produced — research files, ticket counts, LLM outputs — but not why Ra chose to research a particular topic, which tool it selected and why, or what it observed that led to the next step. When Ra dead-loops, the log shows repeated identical outputs but doesn't show the reasoning chain that caused the repetition. This makes post-mortems impossible beyond "something ran repeatedly."
+
+Marina's user behavior observability (35:02) is also missing: "Are they using your agent as you intended or have they found creative workarounds? Where do they get stuck? Do they rephrase and retry? That's a signal the first attempt didn't work." For Hyo, the equivalent would be: when Hyo sends a correction via `hyo-inbox.jsonl`, does Kai track whether the same correction recurs in future sessions? Recurring corrections are the "rephrase and retry" signal. We don't track this.
+
+---
+
+## Finding 7: Security — Our Agent Has Unrestricted File System Access
+
+Marina at 35:10: "You're not just protecting against external attackers. You actually have to protect against your own system making dangerous decisions or being manipulated into harmful actions." The four threats: prompt injection, unsafe code generation, data leakage, and resource exhaustion.
+
+On code execution (35:46): "Sandbox execution. Use Docker or a restricted runner environment. Isolate code execution completely from your main application. Resource limits. Set timeouts, memory caps, CPU limits. Block dangerous imports, network access unless explicitly needed, and file system writes outside of a designated temp directory. Whitelist libraries only."
+
+**Applied to Hyo:** `agent-execute-improvement.sh` executes code in the Hyo project directory with full user permissions. There is no sandbox. There are no memory caps. File system writes are unrestricted. An improvement ticket that says "implement X" results in Claude-generated code executing in `~/Documents/Projects/Hyo` with read/write access to every file in the project. The prompt injection risk Marina names is real: a malicious pattern in a research file that an agent reads and then acts on could cause arbitrary code execution with no guardrail.
+
+The resource exhaustion threat is what caused the 151GB disk fill. Ra ran improvement cycles that appended to a log file without a size check. Marina's guardrail: "Set timeouts, memory caps." We added a disk gate in `kai-autonomous.sh` after the incident. Marina's framing: this is a security control, not just an operations fix. The gate should be designed with the same rigor as injection protection.
+
+---
+
+## What Marina Rejected (and Why It Applies)
+
+Marina on evaluating early: "It's important that you start evaluating right away, but also that you don't worry about having a perfect evaluation system from the get-go. You can get something working quickly and iterate over time." This is the opposite of our current approach — we have an elaborate SICQ/OMP scoring system built before we verified the scores correlate with actual quality. The prior skepticism brief (kai-skepticism-2026-04-28.md) documented this gap. Marina's advice is the correct sequence: evaluation first, refinement second.
+
+On reflection: "The drawback is that it adds latency and cost because you're doing multiple passes. So, make sure to test with and without reflection to ensure it's actually helping." We added the adversarial verifier (aric-verifier.py) without establishing a baseline. We don't know if it improves output quality because we never measured quality before adding it.
+
+On multi-agent complexity: "If you have a simple task, skip multi-agent systems. They can slow things down and make debugging more difficult." Five agents (Ra, Nel, Sam, Aether, Dex) was the right call for specialization. But within each agent's runner, the multi-step improvement pipeline is itself a mini multi-agent system (research → implement → verify) with no inter-step contracts. Marina's warning about simple tasks applies to our improvement sub-system: it's not simple enough to run as a single undivided task.
+
+---
+
+## Seven Implementation Changes From the Actual Transcript
+
+**Change 1: Context injection into improvement execution** (Finding 1)  
+Before every `agent-execute-improvement.sh` call: inject the agent's PLAYBOOK.md + last 3 evolution.jsonl entries + ACTIVE.md current state. The agent needs its role, history, and constraints — not just the ticket.
+
+**Change 2: Split improvement into 3 queue jobs** (Finding 2)  
+Phase A: research (produce a research file). Phase B: implement (read research file, write code). Phase C: verify (run the test, confirm). Each is a separate queue job. Each has a timeout. Phase B only starts if Phase A produced output. This replaces the current 60-second monolithic call.
+
+**Change 3: tools.json registry** (Finding 3)  
+Document every callable tool with: name, description, typed input schema, expected output format, error codes. Agents load the registry before deciding what to call. This is what Marina means by "interface."
+
+**Change 4: Separate static knowledge from dynamic memory** (Finding 4)  
+KNOWLEDGE.md becomes read-only during agent execution. Nightly promotion from episodic → semantic still happens, but agents flag reads of KNOWLEDGE.md with a staleness check. If the last consolidation was >36h ago, log a warning.
+
+**Change 5: Structured dispatch report schema** (Finding 5)  
+Define a required JSON schema for all agent reports: `{agent, cycle_id, phases_completed, outputs_written, errors, next_cycle_intent}`. Reports that don't conform to the schema are treated as failures, not successes. Queue worker validates schema before marking complete.
+
+**Change 6: WHY logging in every agent runner** (Finding 6)  
+After every tool selection, log: which tool was chosen and why (one sentence). After every LLM call, log: what the model was asked to decide, what it decided. This is what makes post-mortems possible.
+
+**Change 7: Code execution sandbox** (Finding 7)  
+`agent-execute-improvement.sh` runs in a restricted environment: no writes outside `agents/<name>/` directory, no network calls, 30s timeout for code execution. Implementation: `firejail` or `sandbox-exec` wrapper around the Python subprocess. This is not optional given that agents have write access to the production codebase.
 
 ---
 
 ## Sources
 
-1. Yao, S. et al. (2022). "ReAct: Synergizing Reasoning and Acting in Language Models." arXiv:2210.03629.
-2. Anthropic (2022). "Constitutional AI: Harmlessness from AI Feedback." arXiv:2212.08073.
-3. [Marina Wyss — AI Agents Complete Course (YouTube, Dec 2025)](https://www.youtube.com/watch?v=sNvuH-iTi4c)
-4. [Medium Article — AI Agents Complete Course (inaccessible, blocked by egress proxy)](https://medium.com/data-science-collective/ai-agents-complete-course-f226aa4550a1)
-5. Goodhart's Law in RL — see kai-skepticism-2026-04-28.md Finding 1 for full citation.
-6. MAR: Multi-Agent Reflexion (arXiv:2512.20845) — self-correction limits, see kai-skepticism-2026-04-28.md.
-7. Hyo Project Overview (Hyo_01_Overview.md) — agent economy context and trust layer framing.
-8. Kai Research Brief: Self-Evolving Agent Systems (kai-self-improve-2026-04-28.md) — ReAct, event-triggered improvement, double-loop review.
-9. Kai Research Brief: Skepticism on Self-Improving Agent Systems (kai-skepticism-2026-04-28.md) — Goodhart's Law, specification gaming, sycophancy at 58%.
+1. Marina Wyss, "AI Agents in 38 Minutes - Complete Course from Beginner to Pro" — [YouTube, Dec 9, 2025](https://www.youtube.com/watch?v=sNvuH-iTi4c). Full transcript obtained 2026-05-05.
+2. Kai Research Brief: Self-Evolving Agent Systems (kai-self-improve-2026-04-28.md) — ReAct, event-triggered improvement, double-loop review.
+3. Kai Research Brief: Skepticism on Self-Improving Agent Systems (kai-skepticism-2026-04-28.md) — SICQ as Goodhart's Law proxy, sycophancy at 58%, specification gaming.
+4. Hyo Project Overview (docs/legacy/core-original-design/Hyo_01_Overview.md) — agent economy framing and trust layer positioning.
 
 ---
 
-*Research conducted 2026-05-05. Five implementation changes identified. Access limitation acknowledged. Protocol: docs/AGENT_CREATION_PROTOCOL.md v4.0.*
+*Research conducted 2026-05-05. Full transcript obtained. Seven implementation changes identified. Prior version disclosed access limitation — this version is sourced from verified transcript content. Protocol: docs/AGENT_CREATION_PROTOCOL.md v4.0.*
