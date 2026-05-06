@@ -96,18 +96,37 @@ except: print('')
     exit 1
   fi
 
-  # GATE R2: The HTML file for readLink must exist before publishing the feed entry
+  # GATE R2: The HTML file for readLink must exist in BOTH paths before publishing.
+  # DUAL-PATH RULE (SE-010-011): Vercel serves from website/ NOT agents/sam/website/.
+  # File must exist at website/docs/research/<slug>.html — that is the path Vercel reads.
+  # agents/sam/website/ is git-tracked separately and must also have the file for consistency.
   if [[ -n "$READ_LINK" ]]; then
-    # readLink format: /docs/research/<slug> → file: agents/sam/website/docs/research/<slug>.html
     SLUG=$(basename "$READ_LINK")
-    HTML_PATH="$ROOT/agents/sam/website/docs/research/${SLUG}.html"
-    if [[ ! -f "$HTML_PATH" ]]; then
-      echo "ERROR: RESEARCH-DROP GATE R2 BLOCKED — HTML file does not exist: $HTML_PATH" >&2
+    HTML_PRIMARY="$ROOT/agents/sam/website/docs/research/${SLUG}.html"
+    HTML_VERCEL="$ROOT/website/docs/research/${SLUG}.html"
+
+    # Check primary path (agents/sam/website/)
+    if [[ ! -f "$HTML_PRIMARY" ]]; then
+      echo "ERROR: RESEARCH-DROP GATE R2 BLOCKED — HTML file missing at primary path: $HTML_PRIMARY" >&2
       echo "  Create the HTML document BEFORE writing the feed entry." >&2
-      echo "  readLink: $READ_LINK → expected file: $HTML_PATH" >&2
       exit 1
     fi
-    echo "[publish] GATE R2 PASSED: HTML file exists at $HTML_PATH"
+
+    # Auto-sync to Vercel-served path (website/) — this is what Vercel actually serves
+    if [[ ! -f "$HTML_VERCEL" ]]; then
+      echo "[publish] GATE R2: Syncing HTML to Vercel-served path: $HTML_VERCEL"
+      mkdir -p "$(dirname "$HTML_VERCEL")"
+      cp "$HTML_PRIMARY" "$HTML_VERCEL"
+      echo "[publish] GATE R2: Synced. Vercel will now serve: $HTML_VERCEL"
+    else
+      # Verify they match — drift between the two paths is a P1 error
+      if ! diff -q "$HTML_PRIMARY" "$HTML_VERCEL" > /dev/null 2>&1; then
+        echo "WARN: GATE R2: HTML content differs between primary and Vercel paths — resyncing" >&2
+        cp "$HTML_PRIMARY" "$HTML_VERCEL"
+        echo "[publish] GATE R2: Resynced primary → Vercel path."
+      fi
+    fi
+    echo "[publish] GATE R2 PASSED: HTML exists at both paths. Vercel path: $HTML_VERCEL"
   fi
 
   # GATE R3: Write a VERIFY_PENDING flag — healthcheck sees this as unresolved
