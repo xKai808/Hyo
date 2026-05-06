@@ -716,13 +716,10 @@ if [[ -f "$RA_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
       || say "BLUF augmentation failed — publishing without BLUF"
   fi
 
-  if [[ -f "$RA_REPORT_PUBLISH_MARKER" ]]; then
-    say "Self-authored report: skipping HQ publish (already published today)"
-  else
-    bash "$PUBLISH_SCRIPT" "agent-reflection" "ra" "Ra — Content Pipeline Report" "$RA_REFLECTION" 2>/dev/null || true
-    touch "$RA_REPORT_PUBLISH_MARKER"
-    ok "Self-authored report published to HQ feed"
-  fi
+  # HQ publish disabled 2026-05-06: Ra content report not for Hyo audience.
+  # Ra reports upward to Kai via dispatch (below). HQ only shows morning report sections.
+  # touch "$RA_REPORT_PUBLISH_MARKER"
+  say "Self-authored report: saved locally, not publishing to HQ (Kai-only audience)"
 
   # Report to Kai — closed-loop upward communication (always fires for metrics)
   DISPATCH_BIN="$ROOT/bin/dispatch.sh"
@@ -776,10 +773,12 @@ if [[ -x "$DISPATCH" ]]; then
 fi
 
 
-# ── Daily report to HQ feed (runs at end of every cycle, weekdays only) ──────
-HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
-  bash "$HYO_ROOT/bin/daily-agent-report.sh" "ra" || true
-fi
+# ── Daily report to HQ feed — DISABLED 2026-05-06 ────────────────────────────
+# Ra's operational content report is not for Hyo's audience.
+# Ra's nightly reflection feeds agent-card.json → morning report WHAT IMPROVED section instead.
+# HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+# if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
+#   bash "$HYO_ROOT/bin/daily-agent-report.sh" "ra" || true
+# fi
 
 exit $EXIT_CODE
