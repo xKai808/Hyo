@@ -74,6 +74,54 @@ else:
   fi
 fi
 
+# ── RESEARCH-DROP HARD GATES (v1.2 — added 2026-05-05 after session 34 failures) ──
+# These gates run BEFORE any write. They cannot be bypassed by forgetting to read a protocol.
+# Root cause: Kai published research-drop entries that were (a) invisible in Research tab
+# because they went into entries[] not reports[], (b) linked to .md files that Vercel 404s.
+# The fix is CODE, not prose — these gates block the publish if conditions aren't met.
+if [[ "$TYPE" == "research-drop" ]]; then
+
+  # GATE R1: readLink must NOT end in .md — Vercel only serves .html files
+  READ_LINK=$(python3 -c "
+import json, sys
+try:
+    s = json.load(open('$SECTIONS_FILE'))
+    print(s.get('readLink', ''))
+except: print('')
+" 2>/dev/null || echo "")
+  if [[ "$READ_LINK" == *.md ]]; then
+    echo "ERROR: RESEARCH-DROP GATE R1 BLOCKED — readLink ends in .md: '$READ_LINK'" >&2
+    echo "  Vercel cannot serve .md files. Use /docs/research/<slug> (no extension)." >&2
+    echo "  Create agents/sam/website/docs/research/<slug>.html first." >&2
+    exit 1
+  fi
+
+  # GATE R2: The HTML file for readLink must exist before publishing the feed entry
+  if [[ -n "$READ_LINK" ]]; then
+    # readLink format: /docs/research/<slug> → file: agents/sam/website/docs/research/<slug>.html
+    SLUG=$(basename "$READ_LINK")
+    HTML_PATH="$ROOT/agents/sam/website/docs/research/${SLUG}.html"
+    if [[ ! -f "$HTML_PATH" ]]; then
+      echo "ERROR: RESEARCH-DROP GATE R2 BLOCKED — HTML file does not exist: $HTML_PATH" >&2
+      echo "  Create the HTML document BEFORE writing the feed entry." >&2
+      echo "  readLink: $READ_LINK → expected file: $HTML_PATH" >&2
+      exit 1
+    fi
+    echo "[publish] GATE R2 PASSED: HTML file exists at $HTML_PATH"
+  fi
+
+  # GATE R3: Write a VERIFY_PENDING flag — healthcheck sees this as unresolved
+  # until visual verification is confirmed (GATE 12 in protocol).
+  # This ensures "published" cannot mean "not visually verified."
+  VERIFY_FLAG="$ROOT/kai/ledger/verify-pending.jsonl"
+  VERIFY_ID="research-drop-$(TZ=America/Denver date +%Y%m%d%H%M%S)"
+  echo "{\"id\":\"$VERIFY_ID\",\"type\":\"research-drop\",\"title\":\"$TITLE\",\"readLink\":\"$READ_LINK\",\"ts\":\"$(TZ=America/Denver date +%Y-%m-%dT%H:%M:%S%z)\",\"status\":\"PENDING_VISUAL_VERIFY\"}" >> "$VERIFY_FLAG"
+  echo "[publish] GATE R3: Visual verification pending. ID: $VERIFY_ID"
+  echo "  → After publish, open hyo.world/hq Research tab, click the entry, click readLink."
+  echo "  → Confirm HTTP 200, then run: kai verify-publish $VERIFY_ID"
+
+fi
+
 # ─── THEATER DETECTION GATE ──────────────────────────────────────────────────
 # Research-drop publishes must include sources. Blocks theater ("did research"
 # without citations). Gate 3 from PROTOCOL_HQ_PUBLISH.md.
