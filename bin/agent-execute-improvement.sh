@@ -265,9 +265,19 @@ FILE_COUNT=$(echo "$FILES_TO_CHANGE" | grep -c '.' || echo "1")
 log "WHY: Targeting $FIRST_FILE first (of $FILE_COUNT files) — one file per API call for auditable, checkable steps per Marina Wyss task decomposition principle"
 log "Generating implementation for: $FIRST_FILE"
 
+# Model tiering: Haiku for small context (< 2000 chars total), Sonnet for complex
+# Small context = simple improvement on a short file; Haiku is sufficient and cheaper
+CONTEXT_CHARS=$(( ${#SYSTEM_PROMPT} + ${#FILE_CONTENTS} + ${#THESIS} ))
+if [[ $CONTEXT_CHARS -lt 2000 ]]; then
+  SELECTED_MODEL="claude-haiku-4-5-20251001"
+  log "WHY: Using claude-haiku-4-5-20251001 — context ${CONTEXT_CHARS} chars < 2000; Haiku sufficient for simple improvements per Marina model tiering"
+else
+  SELECTED_MODEL="claude-sonnet-4-6"
+  log "WHY: Using claude-sonnet-4-6 — context ${CONTEXT_CHARS} chars >= 2000; complex improvement requires Sonnet reasoning"
+fi
+
 # Call Claude API
-log "WHY: Using claude-sonnet-4-6 for implementation — sonnet balances code quality vs cost; opus reserved for architecture decisions per KNOWLEDGE.md model strings"
-log "Calling Claude API (claude-sonnet-4-6)..."
+log "Calling Claude API ($SELECTED_MODEL)..."
 CLAUDE_RESPONSE=$(python3 - <<PYEOF
 import json, urllib.request, urllib.error, sys, os
 
@@ -303,7 +313,7 @@ $(case "$AGENT" in
 esac)"""
 
 payload = {
-    "model": "claude-sonnet-4-6",
+    "model": "$SELECTED_MODEL",
     "max_tokens": 4096,
     "system": system_prompt,
     "messages": [
@@ -324,24 +334,61 @@ req = urllib.request.Request(
     method="POST"
 )
 
+import datetime, os as _os
+
+def _write_prompt_log(status, input_tokens=0, output_tokens=0, response_chars=0):
+    log_dir = _os.path.join("$HYO_ROOT", "agents", "$AGENT", "research")
+    _os.makedirs(log_dir, exist_ok=True)
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    entry = {
+        "ts": "$TIMESTAMP",
+        "agent": "$AGENT",
+        "improvement_id": "$IMPROVEMENT_ID",
+        "model": "$SELECTED_MODEL",
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "prompt_chars": len(user_message),
+        "response_chars": response_chars,
+        "status": status
+    }
+    with open(_os.path.join(log_dir, f"prompt-log-{today}.jsonl"), "a") as pf:
+        pf.write(json.dumps(entry) + "\n")
+
 try:
     with urllib.request.urlopen(req, timeout=60) as resp:
         data = json.loads(resp.read())
         content = data.get("content", [])
+        usage = data.get("usage", {})
+        input_tokens = usage.get("input_tokens", 0)
+        output_tokens = usage.get("output_tokens", 0)
         if content and content[0].get("type") == "text":
-            print(content[0]["text"])
+            text = content[0]["text"]
+            _write_prompt_log("success", input_tokens, output_tokens, len(text))
+            print(text)
         else:
+            _write_prompt_log("error_no_content", input_tokens, output_tokens)
             print("ERROR: No text content in Claude response", file=sys.stderr)
             sys.exit(1)
 except urllib.error.HTTPError as e:
     body = e.read().decode()
+    _write_prompt_log(f"error_http_{e.code}")
     print(f"ERROR: Claude API HTTP {e.code}: {body}", file=sys.stderr)
     sys.exit(1)
 except Exception as e:
+    _write_prompt_log(f"error_{type(e).__name__}")
     print(f"ERROR: Claude API call failed: {e}", file=sys.stderr)
     sys.exit(1)
 PYEOF
 )
+
+# Surface token usage from prompt log (written by Python block above)
+PROMPT_LOG_TODAY="$HYO_ROOT/agents/$AGENT/research/prompt-log-$(TZ='America/Denver' date +%Y-%m-%d).jsonl"
+if [[ -f "$PROMPT_LOG_TODAY" ]]; then
+  LAST_LOG=$(tail -1 "$PROMPT_LOG_TODAY" 2>/dev/null || echo '{}')
+  IN_TOK=$(python3 -c "import json,sys; d=json.loads(sys.stdin.read()); print(d.get('input_tokens',0))" <<< "$LAST_LOG" 2>/dev/null || echo "?")
+  OUT_TOK=$(python3 -c "import json,sys; d=json.loads(sys.stdin.read()); print(d.get('output_tokens',0))" <<< "$LAST_LOG" 2>/dev/null || echo "?")
+  log "Token usage: input=$IN_TOK output=$OUT_TOK model=$SELECTED_MODEL"
+fi
 
 if [[ $? -ne 0 ]]; then
   err "GATE 4 FAILED: Claude API call failed"
@@ -397,21 +444,87 @@ case "$FIRST_FILE" in
   *.sh | *.py) chmod +x "$FULL_FILE_PATH" && log "Made executable" ;;
 esac
 
-# ── GATE 6: Run verify.sh if it exists ──
+# ── GATE 5.5: Path + import whitelist ──
+# (a) File path must resolve inside HYO_ROOT — blocks path traversal
+# (b) Generated code must not contain dangerous call patterns — blocks unsafe execution
+SAFE_TO_COMMIT=true
+WHITELIST_VIOLATIONS=""
+
+REAL_HYO_ROOT=$(realpath "$HYO_ROOT" 2>/dev/null || echo "$HYO_ROOT")
+REAL_FILE_PATH=$(realpath "$FULL_FILE_PATH" 2>/dev/null || echo "$FULL_FILE_PATH")
+if [[ "$REAL_FILE_PATH" != "$REAL_HYO_ROOT"/* ]]; then
+  log "WHY: GATE 5.5 BLOCKED — $REAL_FILE_PATH outside HYO_ROOT — path traversal"
+  SAFE_TO_COMMIT=false
+  WHITELIST_VIOLATIONS="path_traversal"
+fi
+
+if [[ "$SAFE_TO_COMMIT" == "true" ]]; then
+  # Patterns that indicate unsafe generated code — block, not warn
+  DANGEROUS_PATTERNS=(
+    'os\.system\s*\('
+    'subprocess\.Popen\s*\('
+    'subprocess\.call\s*\('
+    'subprocess\.run.*shell\s*=\s*True'
+    '\beval\s*\('
+    '\bexec\s*\('
+    'socket\.socket\s*\('
+    '__import__\s*\('
+    'importlib\.import_module'
+  )
+  for pattern in "${DANGEROUS_PATTERNS[@]}"; do
+    if grep -qE "$pattern" "$FULL_FILE_PATH" 2>/dev/null; then
+      log "WHY: GATE 5.5 BLOCKED — dangerous pattern '$pattern' in generated code"
+      SAFE_TO_COMMIT=false
+      WHITELIST_VIOLATIONS="${WHITELIST_VIOLATIONS:+$WHITELIST_VIOLATIONS, }$pattern"
+      break  # One violation is enough to block
+    fi
+  done
+fi
+
+if [[ "$SAFE_TO_COMMIT" == "false" ]]; then
+  err "GATE 5.5 FAILED: $WHITELIST_VIOLATIONS"
+  if [[ -n "$BACKUP_PATH" && -f "$BACKUP_PATH" ]]; then
+    cp "$BACKUP_PATH" "$FULL_FILE_PATH"
+    log "Restored backup from $BACKUP_PATH"
+  else
+    rm -f "$FULL_FILE_PATH"
+    log "Removed generated file (no backup to restore)"
+  fi
+  DISPATCH="$HYO_ROOT/bin/dispatch.sh"
+  if [[ -x "$DISPATCH" ]]; then
+    bash "$DISPATCH" flag "$AGENT" P1 "execute-improvement: $IMPROVEMENT_ID blocked by whitelist — $WHITELIST_VIOLATIONS" 2>/dev/null || true
+  fi
+  python3 -c "
+import json
+with open('$ARIC_JSON') as f: d = json.load(f)
+d.setdefault('improvement_built', {})['execution_error'] = 'GATE 5.5 whitelist: $WHITELIST_VIOLATIONS'
+d['improvement_built']['status'] = 'researched'
+with open('$ARIC_JSON', 'w') as f: json.dump(d, f, indent=2)
+" 2>/dev/null
+  exit 1
+fi
+
+log "GATE 5.5 PASSED: path safe, no dangerous patterns in generated code"
+
+# ── GATE 6: Run verify.sh if it exists (timeout 60s) ──
 VERIFY_SCRIPT="$HYO_ROOT/agents/$AGENT/verify.sh"
 VERIFY_PASSED=false
 
 if [[ -f "$VERIFY_SCRIPT" && -x "$VERIFY_SCRIPT" ]]; then
-  log "WHY: Running verify.sh before commit — gate prevents shipping broken improvements; content-gate check per kai-skepticism-2026-04-28 finding on pipeline specification gaming"
-  log "Running verify.sh..."
-  if HYO_ROOT="$HYO_ROOT" bash "$VERIFY_SCRIPT" 2>&1 | tail -5; then
+  log "WHY: Running verify.sh (timeout 60s) before commit — gate prevents shipping broken improvements; timeout blocks runaway verify scripts"
+  VERIFY_OUT=""
+  VERIFY_EXIT=0
+  VERIFY_OUT=$(timeout 60 HYO_ROOT="$HYO_ROOT" bash "$VERIFY_SCRIPT" 2>&1) || VERIFY_EXIT=$?
+  echo "$VERIFY_OUT" | tail -5
+  if [[ $VERIFY_EXIT -eq 0 ]]; then
     VERIFY_PASSED=true
     log "verify.sh PASSED"
+  elif [[ $VERIFY_EXIT -eq 124 ]]; then
+    log "WHY: verify.sh TIMEOUT (60s) — committing anyway, marked unverified; runaway verify prevented"
+    log "verify.sh TIMEOUT — improvement written but not verified"
   else
-    log "WHY: verify.sh FAILED — committing anyway because partial improvement > no improvement, but marking status as unverified for human review"
+    log "WHY: verify.sh FAILED (exit $VERIFY_EXIT) — committing anyway; partial improvement > no improvement, marked unverified"
     log "verify.sh FAILED — improvement written but not yet verified"
-    # Don't exit — commit anyway, log the failure
-    # The improvement is still better than nothing if verify.sh fails on unrelated checks
   fi
 else
   log "No verify.sh found — skipping verification gate"

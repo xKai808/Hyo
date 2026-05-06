@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-05-05T06:50:20.155044+00:00",
-  "total_entries": 205,
-  "total_clusters": 129,
-  "singleton_clusters": 122,
-  "multi_entry_clusters": 7,
+  "generated_at": "2026-05-06T07:00:03.216780+00:00",
+  "total_entries": 197,
+  "total_clusters": 128,
+  "singleton_clusters": 120,
+  "multi_entry_clusters": 8,
   "agent_breakdown": {
     "ra": 64,
-    "unknown": 46,
-    "sam": 26,
+    "unknown": 44,
     "aether": 23,
+    "sam": 19,
     "kai": 16,
-    "dex": 13,
+    "dex": 14,
     "nel": 13,
     "ant": 4
   },
   "status_breakdown": {
-    "resolved_fp": 17,
-    "active": 90,
+    "resolved_fp": 8,
+    "active": 93,
     "open": 6,
-    "mitigated": 4,
+    "mitigated": 2,
     "logged": 12,
     "unknown": 61,
     "resolved": 11,
@@ -27,18 +27,18 @@
   },
   "top_clusters": [
     {
-      "size": 38,
-      "score": 48.0,
+      "size": 36,
+      "score": 45.15,
       "label": "1 broken links detected",
       "dominant_agent": "unknown",
       "agent_breakdown": {
-        "unknown": 38
+        "unknown": 36
       },
       "status_breakdown": {
-        "active": 38
+        "active": 36
       },
-      "first_seen": "2026-04-20T14:39:13+00:00",
-      "last_seen": "2026-05-01T06:11:19+00:00",
+      "first_seen": "2026-04-21T08:40:26+00:00",
+      "last_seen": "2026-05-05T06:55:41+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -51,18 +51,18 @@
       ]
     },
     {
-      "size": 24,
-      "score": 32.97,
+      "size": 27,
+      "score": 36.88,
       "label": "No newsletter produced for 2026-04-24 \u2014 past 06:00 MT deadline",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 24
+        "ra": 27
       },
       "status_breakdown": {
-        "active": 24
+        "active": 27
       },
       "first_seen": "2026-04-24T02:09:45+00:00",
-      "last_seen": "2026-05-05T05:30:30+00:00",
+      "last_seen": "2026-05-06T02:11:24+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -75,41 +75,39 @@
       ]
     },
     {
-      "size": 6,
-      "score": 6.95,
+      "size": 3,
+      "score": 3.42,
       "label": "/api/hq?action=data returned HTTP 401",
       "dominant_agent": "sam",
       "agent_breakdown": {
-        "sam": 6
+        "sam": 3
       },
       "status_breakdown": {
-        "resolved_fp": 6
+        "resolved_fp": 3
       },
-      "first_seen": "2026-04-20T08:38:50+00:00",
+      "first_seen": "2026-04-21T02:40:02+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
       "member_descriptions": [
-        "/api/hq?action=data returned HTTP 401",
-        "/api/hq?action=data returned HTTP 401",
         "/api/hq?action=data returned HTTP 401",
         "/api/hq?action=data returned HTTP 401",
         "/api/hq?action=data returned HTTP 401"
       ]
     },
     {
-      "size": 6,
-      "score": 6.95,
+      "size": 3,
+      "score": 3.42,
       "label": "Aether metrics JSON exists but hq.html has NO rendering code",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 6
+        "ra": 3
       },
       "status_breakdown": {
-        "resolved_fp": 6
+        "resolved_fp": 3
       },
-      "first_seen": "2026-04-20T08:38:50+00:00",
+      "first_seen": "2026-04-21T02:40:02+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
@@ -117,58 +115,33 @@
       "member_descriptions": [
         "Aether metrics JSON exists but hq.html has NO rendering code",
         "Aether metrics JSON exists but hq.html has NO rendering code",
-        "Aether metrics JSON exists but hq.html has NO rendering code",
-        "Aether metrics JSON exists but hq.html has NO rendering code",
         "Aether metrics JSON exists but hq.html has NO rendering code"
       ]
     },
     {
-      "size": 5,
-      "score": 5.8,
-      "label": "/api/usage returned HTTP 404",
-      "dominant_agent": "sam",
+      "size": 2,
+      "score": 2.97,
+      "label": "Daily audit: 5 critical issues found",
+      "dominant_agent": "dex",
       "agent_breakdown": {
-        "sam": 5
+        "dex": 2
       },
       "status_breakdown": {
-        "resolved_fp": 5
+        "active": 2
       },
-      "first_seen": "2026-04-20T14:39:14+00:00",
-      "last_seen": "2026-04-21T14:40:50+00:00",
+      "first_seen": "2026-05-05T01:04:12+00:00",
+      "last_seen": "2026-05-06T01:07:20+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
       "member_descriptions": [
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404"
+        "Daily audit: 5 critical issues found",
+        "Daily audit: 1 critical issues found"
       ]
     },
     {
       "size": 1,
-      "score": 2.85,
-      "label": "kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema gate (exit 1) for an",
-      "dominant_agent": "kai",
-      "agent_breakdown": {
-        "kai": 1
-      },
-      "status_breakdown": {
-        "unknown": 1
-      },
-      "first_seen": "2026-05-01T06:56:48.107607+00:00",
-      "last_seen": "2026-05-01T06:56:48.107607+00:00",
-      "sources": [
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema "
-      ]
-    },
-    {
-      "size": 1,
-      "score": 2.8,
+      "score": 2.75,
       "label": "daily-agent-report.sh used 'declare -A' associative arrays. macOS ships with bash 3.2 which does not",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -188,7 +161,27 @@
     },
     {
       "size": 1,
-      "score": 2.7,
+      "score": 2.75,
+      "label": "kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema gate (exit 1) for an",
+      "dominant_agent": "kai",
+      "agent_breakdown": {
+        "kai": 1
+      },
+      "status_breakdown": {
+        "unknown": 1
+      },
+      "first_seen": "2026-05-01T06:56:48.107607+00:00",
+      "last_seen": "2026-05-01T06:56:48.107607+00:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema "
+      ]
+    },
+    {
+      "size": 1,
+      "score": 2.65,
       "label": "AetherBot 401 auth failures were invisible \u2014 aether.sh reported 0 trades as standby mode instead of ",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -208,7 +201,7 @@
     },
     {
       "size": 2,
-      "score": 2.55,
+      "score": 2.5,
       "label": "Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl \u2014 chronic system health RED (25",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -229,7 +222,7 @@
     },
     {
       "size": 1,
-      "score": 2.5,
+      "score": 2.45,
       "label": "Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, exceeded GitHub 100MB",
       "dominant_agent": "nel",
       "agent_breakdown": {
@@ -249,7 +242,7 @@
     },
     {
       "size": 1,
-      "score": 2.45,
+      "score": 2.4,
       "label": "Anthropic API key on Mini hit usage quota (until 2026-05-01). kai_analysis.py had no fallback \u2014 fail",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -269,7 +262,7 @@
     },
     {
       "size": 1,
-      "score": 2.4,
+      "score": 2.35,
       "label": "generate-morning-report.sh staged website/data/feed.json but not agents/sam/website/data/feed.json. ",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -289,7 +282,7 @@
     },
     {
       "size": 1,
-      "score": 2.4,
+      "score": 2.35,
       "label": "Answered 12 Hyo questions without reading source files first. Made two wrong claims: (1) no follow-u",
       "dominant_agent": "unknown",
       "agent_breakdown": {
@@ -309,7 +302,7 @@
     },
     {
       "size": 1,
-      "score": 2.4,
+      "score": 2.35,
       "label": "Injected score card JS into hq.html via Python string replace. Used escaped dollar (backslash-dollar",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -329,7 +322,28 @@
     },
     {
       "size": 2,
-      "score": 2.33,
+      "score": 2.3,
+      "label": "/api/usage returned HTTP 404",
+      "dominant_agent": "sam",
+      "agent_breakdown": {
+        "sam": 2
+      },
+      "status_breakdown": {
+        "resolved_fp": 2
+      },
+      "first_seen": "2026-04-21T08:40:26+00:00",
+      "last_seen": "2026-04-21T14:40:50+00:00",
+      "sources": [
+        "kai/ledger/known-issues.jsonl"
+      ],
+      "member_descriptions": [
+        "/api/usage returned HTTP 404",
+        "/api/usage returned HTTP 404"
+      ]
+    },
+    {
+      "size": 2,
+      "score": 2.27,
       "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -350,7 +364,7 @@
     },
     {
       "size": 1,
-      "score": 2.15,
+      "score": 2.1,
       "label": "Dual-path drift: all session 14 website changes committed to agents/sam/website/ only. Vercel deploy",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -370,7 +384,7 @@
     },
     {
       "size": 1,
-      "score": 2.15,
+      "score": 2.1,
       "label": "Service worker sw.js cached stale hq.html under hq-v1 forever. When Ant section was added (c1d8c85),",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -390,7 +404,7 @@
     },
     {
       "size": 1,
-      "score": 2.15,
+      "score": 2.1,
       "label": "Clean URL /hq not in network-first branch \u2014 service worker isDataOrPage check used endsWith(.html) b",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -410,7 +424,7 @@
     },
     {
       "size": 1,
-      "score": 2.15,
+      "score": 2.1,
       "label": "Claimed ant was deployed and working based on: (a) code was in hq.html, (b) Vercel MCP showed READY ",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -427,84 +441,52 @@
       "member_descriptions": [
         "Claimed ant was deployed and working based on: (a) code was in hq.html, (b) Verc"
       ]
-    },
-    {
-      "size": 1,
-      "score": 2.1,
-      "label": "Aether metrics 15-min refresh (extract_aether_metrics_from_logs) only updated balance. Did NOT updat",
-      "dominant_agent": "aether",
-      "agent_breakdown": {
-        "aether": 1
-      },
-      "status_breakdown": {
-        "resolved": 1
-      },
-      "first_seen": "2026-04-16T19:05:00-06:00",
-      "last_seen": "2026-04-16T19:05:00-06:00",
-      "sources": [
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "Aether metrics 15-min refresh (extract_aether_metrics_from_logs) only updated ba"
-      ]
     }
   ],
   "temporal_patterns": [
     {
       "tokens": [
-        "data",
         "http",
         "action",
         "returned",
+        "data",
         "api/hq"
       ],
-      "occurrences": 6,
+      "occurrences": 3,
       "avg_interval_hours": 6.0,
       "consistency_pct": 100.0,
-      "first_seen": "2026-04-20T08:38:50+00:00",
+      "first_seen": "2026-04-21T02:40:02+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00"
     },
     {
       "tokens": [
-        "html",
-        "exists",
-        "json",
+        "aether",
         "code",
-        "aether"
+        "json",
+        "exists",
+        "html"
       ],
-      "occurrences": 6,
+      "occurrences": 3,
       "avg_interval_hours": 6.0,
       "consistency_pct": 100.0,
-      "first_seen": "2026-04-20T08:38:50+00:00",
+      "first_seen": "2026-04-21T02:40:02+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00"
-    },
-    {
-      "tokens": [
-        "api/usage",
-        "returned",
-        "http"
-      ],
-      "occurrences": 5,
-      "avg_interval_hours": 6.0,
-      "consistency_pct": 100.0,
-      "first_seen": "2026-04-20T14:39:14+00:00",
-      "last_seen": "2026-04-21T14:40:50+00:00"
     }
   ],
   "dedup_candidates": [
     {
-      "size": 38,
-      "score": 48.0,
+      "size": 36,
+      "score": 45.15,
       "label": "1 broken links detected",
       "dominant_agent": "unknown",
       "agent_breakdown": {
-        "unknown": 38
+        "unknown": 36
       },
       "status_breakdown": {
-        "active": 38
+        "active": 36
       },
-      "first_seen": "2026-04-20T14:39:13+00:00",
-      "last_seen": "2026-05-01T06:11:19+00:00",
+      "first_seen": "2026-04-21T08:40:26+00:00",
+      "last_seen": "2026-05-05T06:55:41+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -517,18 +499,18 @@
       ]
     },
     {
-      "size": 24,
-      "score": 32.97,
+      "size": 27,
+      "score": 36.88,
       "label": "No newsletter produced for 2026-04-24 \u2014 past 06:00 MT deadline",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 24
+        "ra": 27
       },
       "status_breakdown": {
-        "active": 24
+        "active": 27
       },
       "first_seen": "2026-04-24T02:09:45+00:00",
-      "last_seen": "2026-05-05T05:30:30+00:00",
+      "last_seen": "2026-05-06T02:11:24+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -541,41 +523,39 @@
       ]
     },
     {
-      "size": 6,
-      "score": 6.95,
+      "size": 3,
+      "score": 3.42,
       "label": "/api/hq?action=data returned HTTP 401",
       "dominant_agent": "sam",
       "agent_breakdown": {
-        "sam": 6
+        "sam": 3
       },
       "status_breakdown": {
-        "resolved_fp": 6
+        "resolved_fp": 3
       },
-      "first_seen": "2026-04-20T08:38:50+00:00",
+      "first_seen": "2026-04-21T02:40:02+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
       "member_descriptions": [
-        "/api/hq?action=data returned HTTP 401",
-        "/api/hq?action=data returned HTTP 401",
         "/api/hq?action=data returned HTTP 401",
         "/api/hq?action=data returned HTTP 401",
         "/api/hq?action=data returned HTTP 401"
       ]
     },
     {
-      "size": 6,
-      "score": 6.95,
+      "size": 3,
+      "score": 3.42,
       "label": "Aether metrics JSON exists but hq.html has NO rendering code",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 6
+        "ra": 3
       },
       "status_breakdown": {
-        "resolved_fp": 6
+        "resolved_fp": 3
       },
-      "first_seen": "2026-04-20T08:38:50+00:00",
+      "first_seen": "2026-04-21T02:40:02+00:00",
       "last_seen": "2026-04-21T14:40:51+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
@@ -583,38 +563,33 @@
       "member_descriptions": [
         "Aether metrics JSON exists but hq.html has NO rendering code",
         "Aether metrics JSON exists but hq.html has NO rendering code",
-        "Aether metrics JSON exists but hq.html has NO rendering code",
-        "Aether metrics JSON exists but hq.html has NO rendering code",
         "Aether metrics JSON exists but hq.html has NO rendering code"
       ]
     },
     {
-      "size": 5,
-      "score": 5.8,
-      "label": "/api/usage returned HTTP 404",
-      "dominant_agent": "sam",
+      "size": 2,
+      "score": 2.97,
+      "label": "Daily audit: 5 critical issues found",
+      "dominant_agent": "dex",
       "agent_breakdown": {
-        "sam": 5
+        "dex": 2
       },
       "status_breakdown": {
-        "resolved_fp": 5
+        "active": 2
       },
-      "first_seen": "2026-04-20T14:39:14+00:00",
-      "last_seen": "2026-04-21T14:40:50+00:00",
+      "first_seen": "2026-05-05T01:04:12+00:00",
+      "last_seen": "2026-05-06T01:07:20+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
       "member_descriptions": [
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404",
-        "/api/usage returned HTTP 404"
+        "Daily audit: 5 critical issues found",
+        "Daily audit: 1 critical issues found"
       ]
     },
     {
       "size": 2,
-      "score": 2.55,
+      "score": 2.5,
       "label": "Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl \u2014 chronic system health RED (25",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -635,7 +610,28 @@
     },
     {
       "size": 2,
-      "score": 2.33,
+      "score": 2.3,
+      "label": "/api/usage returned HTTP 404",
+      "dominant_agent": "sam",
+      "agent_breakdown": {
+        "sam": 2
+      },
+      "status_breakdown": {
+        "resolved_fp": 2
+      },
+      "first_seen": "2026-04-21T08:40:26+00:00",
+      "last_seen": "2026-04-21T14:40:50+00:00",
+      "sources": [
+        "kai/ledger/known-issues.jsonl"
+      ],
+      "member_descriptions": [
+        "/api/usage returned HTTP 404",
+        "/api/usage returned HTTP 404"
+      ]
+    },
+    {
+      "size": 2,
+      "score": 2.27,
       "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -656,9 +652,9 @@
     }
   ],
   "signal_summary": {
-    "noise_reduction": "205 entries \u2192 129 clusters (37.1% dedup rate)",
+    "noise_reduction": "197 entries \u2192 128 clusters (35.0% dedup rate)",
     "top_agent": "ra",
-    "largest_cluster_size": 38,
-    "recurring_patterns": 3
+    "largest_cluster_size": 36,
+    "recurring_patterns": 2
   }
 }

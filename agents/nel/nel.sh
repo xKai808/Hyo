@@ -936,6 +936,11 @@ if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
   # Report to Kai — closed-loop upward communication (always fires for metrics)
   DISPATCH_BIN="$ROOT/bin/dispatch.sh"
   if [[ -x "$DISPATCH_BIN" ]]; then
+    export DISPATCH_SR_AGENT="nel"
+    export DISPATCH_SR_CYCLE_ID="${TODAY}-cycle-1"
+    export DISPATCH_SR_PHASES_COMPLETED="sentinel,cipher,stale-files,broken-links,test-coverage,patterns,audit,reflection"
+    export DISPATCH_SR_OUTPUTS_WRITTEN="agents/nel/logs/nel-${TODAY}.md"
+    export DISPATCH_SR_NEXT_CYCLE_INTENT="improve weakest finding: sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f cipher_leaks=${CIPHER_LEAKS} score=${IMPROVEMENT_SCORE}"
     bash "$DISPATCH_BIN" report nel "research+reflection cycle: score=${IMPROVEMENT_SCORE}, sentinel=${SENTINEL_PASS}p/${SENTINEL_FAIL}f, cipher_leaks=${CIPHER_LEAKS}, reflection_published=$([[ -f $NEL_REPORT_PUBLISH_MARKER ]] && echo yes || echo no)" 2>/dev/null || true
   fi
 else

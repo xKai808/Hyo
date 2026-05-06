@@ -868,6 +868,11 @@ PYEOF
     # Report to Kai — closed-loop upward communication
     DISPATCH_BIN="$ROOT/bin/dispatch.sh"
     if [[ -x "$DISPATCH_BIN" ]]; then
+      export DISPATCH_SR_AGENT="sam"
+      export DISPATCH_SR_CYCLE_ID="${TODAY:-$(date +%Y-%m-%d)}-reflection"
+      export DISPATCH_SR_PHASES_COMPLETED="tests,api-health,deploy,reflection"
+      export DISPATCH_SR_OUTPUTS_WRITTEN="agents/sam/ledger/ACTIVE.md,hq-feed-reflection"
+      export DISPATCH_SR_NEXT_CYCLE_INTENT="resolve test failures if any; tests=${tests_passed}p/${tests_failed}f deploy=${deploy_status}"
       bash "$DISPATCH_BIN" report sam "research+reflection published: tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}" 2>/dev/null || true
     fi
   fi
@@ -899,6 +904,11 @@ ACTIVEEOF
   # Dispatch report to Kai
   local dispatch_bin="$ROOT/bin/dispatch.sh"
   if [[ -x "$dispatch_bin" ]]; then
+    export DISPATCH_SR_AGENT="sam"
+    export DISPATCH_SR_CYCLE_ID="${TODAY:-$(date +%Y-%m-%d)}-cycle-1"
+    export DISPATCH_SR_PHASES_COMPLETED="growth,tests,api-health,deploy,performance,memory"
+    export DISPATCH_SR_OUTPUTS_WRITTEN="agents/sam/ledger/ACTIVE.md"
+    export DISPATCH_SR_NEXT_CYCLE_INTENT="address failures if any; tests=${tests_passed}p/${tests_failed}f api=${api_health} deploy=${deploy_status}"
     bash "$dispatch_bin" report sam "cycle complete: tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}" 2>/dev/null || true
   fi
 }

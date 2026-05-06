@@ -1527,6 +1527,11 @@ PYEOF
     # Report to Kai — closed-loop upward communication (always, for metrics tracking)
     DISPATCH_BIN="$ROOT/bin/dispatch.sh"
     if [[ -x "$DISPATCH_BIN" ]]; then
+      export DISPATCH_SR_AGENT="aether"
+      export DISPATCH_SR_CYCLE_ID="${today:-$(date +%Y-%m-%d)}-cycle-1"
+      export DISPATCH_SR_PHASES_COMPLETED="analysis,gpt-review,reflection,dashboard"
+      export DISPATCH_SR_OUTPUTS_WRITTEN="agents/aether/logs/aether-${today:-$(date +%Y-%m-%d)}.md,hq-feed-reflection"
+      export DISPATCH_SR_NEXT_CYCLE_INTENT="monitor PNL trend; current=${trade_count} trades pnl=\$${pnl_total} dashboard=${dashboard_status}"
       bash "$DISPATCH_BIN" report aether "cycle complete: ${trade_count} trades, PNL=\$${pnl_total}, dashboard: ${dashboard_status}" 2>/dev/null || true
     fi
   fi
@@ -1575,6 +1580,11 @@ ACTIVEEOF
     else
       dashboard_status="out-of-sync"
     fi
+    export DISPATCH_SR_AGENT="aether"
+    export DISPATCH_SR_CYCLE_ID="$(date +%Y-%m-%d)-cycle-1"
+    export DISPATCH_SR_PHASES_COMPLETED="analysis,reflection,memory"
+    export DISPATCH_SR_OUTPUTS_WRITTEN="agents/aether/ledger/ACTIVE.md"
+    export DISPATCH_SR_NEXT_CYCLE_INTENT="monitor PNL trend; trades=${trade_count} pnl=\$${pnl_total} dashboard=${dashboard_status}"
     bash "$dispatch_bin" report aether "cycle complete: ${trade_count} trades, PNL=\$${pnl_total}, dashboard: ${dashboard_status}" 2>> "$LOG" || true
   fi
 

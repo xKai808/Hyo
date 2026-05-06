@@ -727,6 +727,11 @@ if [[ -f "$RA_REFLECTION" && -x "$PUBLISH_SCRIPT" ]]; then
   # Report to Kai — closed-loop upward communication (always fires for metrics)
   DISPATCH_BIN="$ROOT/bin/dispatch.sh"
   if [[ -x "$DISPATCH_BIN" ]]; then
+    export DISPATCH_SR_AGENT="ra"
+    export DISPATCH_SR_CYCLE_ID="${TODAY}-cycle-1"
+    export DISPATCH_SR_PHASES_COMPLETED="gather,synthesize,render,newsletter,reflection"
+    export DISPATCH_SR_OUTPUTS_WRITTEN="agents/ra/output/newsletter-${TODAY}.html,hq-feed-reflection"
+    export DISPATCH_SR_NEXT_CYCLE_INTENT="expand source coverage; current=${SOURCE_COUNT:-0} sources, newsletter=${nl_produced:+produced}${nl_produced:-blocked}"
     bash "$DISPATCH_BIN" report ra "research+reflection published: newsletter=${nl_produced:+produced}${nl_produced:-blocked}, sources=${SOURCE_COUNT:-?}" 2>/dev/null || true
   fi
 fi
