@@ -1021,3 +1021,21 @@ Gates 9-12 (added 2026-05-05):
 ### HYDRATION — SESSION-START ONLY (Marina Wyss Ch. 3 applied)
 Hydration reads (KAI_BRIEF, KNOWLEDGE, TACIT, verified-state, session-handoff) happen ONCE at session start. Hourly re-reads waste tokens and cause context bloat — Marina Wyss context engineering principle. The HOURLY healthcheck should read verified-state.json (pre-computed state cache) only — not re-read all memory files. The distinction: read STATE hourly, read CONTEXT once at start.
 
+
+### HYO RESEARCH PDF PROTOCOL (2026-05-06)
+When creating any research PDF for Hyo, read `kai/protocols/PROTOCOL_HYO_RESEARCH_PDF.md` first.
+Design system: Navy #1a1f3a + Gold #c9a027 + White background. Cover: navy panel, "HYO RESEARCH" gold label, white title, gold rule, subtitle. Chapter pages: navy block with CHAPTER N label + gold rule. Footer: "Hyo Research | [Title]" left, "Page N" right. Base script: `/sessions/gifted-happy-cori/build_marina_pdf.py` (generated the approved marina-wyss-complete-course-guide.pdf). ReportLab + SimpleDocTemplate + canvas callbacks for footer/top-rule.
+
+### ORGANIZATION MAP (2026-05-06)
+`ORGANIZATION_MAP.md` at project root is the canonical file location guide. Owned by Dex.
+Covers: where every file type belongs, anti-patterns, archive system, classification legend.
+Update it whenever files are moved or restructured. Dex runs weekly organization audits.
+Key locations: protocols in `kai/protocols/`, agent protocols in `agents/<name>/PROTOCOL_*.md`, research docs in `agents/sam/website/docs/research/`.
+
+### ARCHIVE SYSTEM (2026-05-06)
+`bin/log-rotation.sh` — called by weekly-maintenance.sh every Saturday:
+- Text logs > 5MB → compress tail, keep last 500 lines
+- Queue completed jobs > 7d → monthly tar.gz in `kai/queue/archive/`
+- claude-delegate-failed-*.txt → consolidated monthly archive in `kai/ledger/archive/`
+- Aether analysis files > 30d → `agents/aether/archive/`
+- Agent logs > 60d → `agents/<name>/archive/`

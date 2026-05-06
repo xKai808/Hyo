@@ -214,11 +214,16 @@ Hourly healthchecks that re-read all memory files are a context engineering fail
 
 ## Project layout
 
+**For the complete canonical file location guide, see `ORGANIZATION_MAP.md` at project root.**
+This map defines where every file type belongs, anti-patterns to avoid, and the archive system.
+Dex owns it. Update it whenever files are moved or restructured.
+
 ```
 Hyo/
 ├── CLAUDE.md                    ← this file
 ├── KAI_BRIEF.md                 ← session-continuity memory
 ├── KAI_TASKS.md                 ← CEO task queue
+├── ORGANIZATION_MAP.md          ← canonical file location guide (owned by Dex)
 ├── bin/
 │   ├── kai.sh                   ← dispatcher (alias: kai)
 │   ├── agent-growth.sh          ← shared growth execution (sourced by all runners)
