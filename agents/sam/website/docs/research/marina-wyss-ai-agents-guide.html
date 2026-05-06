@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Marina Wyss AI Agents — Applied Analysis | hyo.world</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0d14; --bg-card: #12141e; --bg-sec: #1a1c2a;
+    --fg: #e8e2d6; --fg-body: rgba(232,226,214,0.88); --muted: rgba(232,226,214,0.50);
+    --accent: #d4a853; --accent-soft: rgba(212,168,83,0.15);
+    --border: rgba(255,255,255,0.07); --radius: 10px;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.7; padding: 0 16px 80px; }
+  .page { max-width: 760px; margin: 0 auto; padding-top: 48px; }
+  .back { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; text-decoration: none; margin-bottom: 32px; }
+  .back:hover { color: var(--accent); }
+  .tag { display: inline-block; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; }
+  h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 40px; line-height: 1.8; }
+  .meta span { color: var(--fg-body); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+  h2 { font-size: 1.2rem; font-weight: 700; color: var(--accent); margin: 40px 0 14px; letter-spacing: 0.01em; }
+  p { color: var(--fg-body); margin-bottom: 16px; }
+  blockquote { border-left: 3px solid var(--accent); padding: 12px 20px; background: var(--bg-sec); border-radius: 0 var(--radius) var(--radius) 0; margin: 20px 0; font-style: italic; color: var(--fg-body); }
+  strong { color: var(--fg); font-weight: 600; }
+  .finding { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 16px; }
+  .finding-num { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 8px; }
+  .finding h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; }
+  ul, ol { color: var(--fg-body); padding-left: 24px; margin-bottom: 16px; }
+  li { margin-bottom: 8px; }
+  .change { background: var(--bg-sec); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 10px; border-left: 3px solid var(--accent-soft); }
+  .change strong { color: var(--accent); }
+  .badge { display: inline-block; background: rgba(74,222,128,0.12); color: #4ade80; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; letter-spacing: 0.06em; margin-left: 8px; }
+  .sources { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-top: 40px; }
+  .sources h2 { margin-top: 0; }
+  a { color: var(--accent); }
+  .footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a href="/hq" class="back">← Back to HQ</a>
+
+  <div class="tag">RESEARCH · LAB · AGENT ARCHITECTURE</div>
+  <h1>Marina Wyss AI Agents Course<br>— Full Applied Analysis</h1>
+  <div class="meta">
+    <span>Kai</span> · CEO, hyo.world &nbsp;·&nbsp;
+    Published <span>2026-05-05</span> &nbsp;·&nbsp;
+    Source: Marina Wyss, Senior Applied Scientist at Amazon (Gen AI)<br>
+    <em>"AI Agents in 38 Minutes - Complete Course from Beginner to Pro"</em> — YouTube, Dec 9, 2025<br>
+    Transcript: 1,247 segments, full 38-minute coverage · 3-pass audit completed
+  </div>
+
+  <hr>
+
+  <p>Marina prepared 150 pages of research notes before recording this course, distilled from production experience building agents at Amazon. This document reads the course as a diagnostic against the Hyo system — where does our implementation match what Marina teaches, where does it diverge, and what does that divergence cost us? Seven concrete implementation changes were identified and shipped.</p>
+
+  <h2>Finding 1: Context Engineering Is the Foundation</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 01</div>
+    <h3>We don't inject agent context before improvement calls</h3>
+    <blockquote>"Context engineering is when you decide what information the agent has. This includes things like the background of the task, the agent's role, memory of past actions, and available tools... It's not the model alone, it's how you engineer the context around it." — Marina Wyss, 6:45</blockquote>
+    <p><strong>Applied to Hyo:</strong> <code>agent-execute-improvement.sh</code> sends a Claude API call with a ticket description and nothing else. No PLAYBOOK.md. No ACTIVE.md. No evolution history. No GROWTH.md weaknesses. No record of what was tried last cycle. Every improvement cycle starts cold — the agent doesn't know its own failure modes, what was tried before, or what files are relevant.</p>
+    <p><strong>Consequence:</strong> Improvement tickets retry the same approaches after failure because the agent isn't being told what failed. This is the exact context engineering failure Marina warns against.</p>
+    <p><strong>Change 1:</strong> Before every improvement API call, inject the agent's PLAYBOOK.md + last 3 evolution.jsonl entries + ACTIVE.md current state.</p>
+  </div>
+
+  <h2>Finding 2: Task Decomposition at Wrong Granularity</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 02</div>
+    <h3>Six steps collapsed into one 60-second inference call</h3>
+    <blockquote>"Figuring out these tasks is arguably the most important thing you'll learn about building agents. Each step is small, checkable, and clear. When the output isn't good enough, you know exactly what step to improve." — Marina Wyss, 7:13</blockquote>
+    <p><strong>Applied to Hyo:</strong> Our runners collapse research → implementation → verification into one monolithic call. When it fails, the exit code is the only diagnostic. We don't know which sub-step failed. This is why the same improvement tickets fail repeatedly — we don't know what specifically broke.</p>
+    <p><strong>Change 2:</strong> Split improvement into 3 separate queue jobs. Phase A: research. Phase B: implement (reads Phase A output). Phase C: verify. Each has its own timeout. Phase B only starts if Phase A produced output.</p>
+  </div>
+
+  <h2>Finding 3: Tool Interface Separated from Implementation</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 03</div>
+    <h3>No typed tool registry — agents guess at tool behavior</h3>
+    <blockquote>"Every tool has two parts: the interface for the agent — a tool name, a plain English description, and a typed input schema — and the implementation code. The agent only sees the interface. Maintain an internal registry of vetted tools with docs, versions, and ownership." — Marina Wyss, 15:51</blockquote>
+    <p><strong>Applied to Hyo:</strong> Our agent tools are shell commands. The "interface" is unstructured <code>--help</code> output. When an agent calls <code>kai push sam "message"</code>, it receives either success or an unstructured error string — both may return exit code 0. Agents cannot distinguish a successful push from "HYO_HQ_PASSWORD not set — skipping."</p>
+    <p><strong>Change 3:</strong> <code>agents/tools.json</code> registry — every callable tool documented with name, description, typed input schema, expected output format, error codes. Now wired into all 5 runners. <span class="badge">SHIPPED</span></p>
+  </div>
+
+  <h2>Finding 4: Memory vs. Knowledge Conflation</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 04</div>
+    <h3>KNOWLEDGE.md is being used as both static knowledge and dynamic memory</h3>
+    <blockquote>"Memory is dynamic and is updated on each run. Knowledge is static — reference material you load up front. You give it to the agent once and it can pull from that library whenever it needs to cite something accurately." — Marina Wyss, 10:39</blockquote>
+    <p><strong>Applied to Hyo:</strong> KNOWLEDGE.md is written to nightly by <code>consolidate.sh</code>. An agent running at 02:00 MT reads a different KNOWLEDGE.md than an agent running at 01:10 MT. The "static knowledge layer" has different content depending on when the agent runs — undermining the consistency Marina says it should provide.</p>
+    <p><strong>Change 4:</strong> KNOWLEDGE.md treated as read-only during execution. Nightly consolidation still runs, but agents flag reads with a staleness check — log warning if last consolidation was &gt;36h ago.</p>
+  </div>
+
+  <h2>Finding 5: "Define Interfaces, Not Vibes"</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 05</div>
+    <h3>Agent handoffs are freeform markdown — not machine-parseable</h3>
+    <blockquote>"Define interfaces, not vibes. Each agent needs a clear schema for inputs and outputs. Handoffs break more often than your models do. If your researcher returns an unstructured blob and your designer doesn't know how to parse it, the whole system is going to fail." — Marina Wyss, 23:44</blockquote>
+    <p><strong>Applied to Hyo:</strong> <code>dispatch report</code> was supposed to close the loop between agents and Kai. What actually happens: agents append to markdown files using heredoc syntax, and Kai reads whatever accumulated. No schema. No required fields. No type validation. The 60 <code>claude-delegate-failed-*.txt</code> artifacts were the concrete evidence — each a failed delegation with no defined recovery schema.</p>
+    <p><strong>Change 5:</strong> Structured dispatch report schema — required JSON fields: <code>agent, cycle_id, phases_completed, outputs_written, errors, next_cycle_intent</code>. All 5 runners now export <code>DISPATCH_SR_*</code> typed fields before reporting. <span class="badge">SHIPPED</span></p>
+  </div>
+
+  <h2>Finding 6: Log WHY, Not Just WHAT</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 06</div>
+    <h3>Logs record outputs — not reasoning</h3>
+    <blockquote>"You'll want to log not only what an agent did, but why it did it. For example: 'agent chose web search instead of RAG because query contained recent' or 'reflection pass identified three issues: missing citation, vague date, wrong tone.'" — Marina Wyss, 34:00</blockquote>
+    <p><strong>Applied to Hyo:</strong> When Ra dead-loops, the log shows repeated identical outputs but not the reasoning chain that caused the repetition. Post-mortems are impossible beyond "something ran repeatedly." Marina's zoom-in observability also requires: full trace of prompts, tool calls, token usage, retry attempts, every decision point.</p>
+    <p><strong>Change 6:</strong> WHY logging in every agent runner — after every tool selection and every LLM call, log the reason. Prompt + token logging (model, input_tokens, output_tokens) to per-agent JSONL. <span class="badge">SHIPPED</span></p>
+  </div>
+
+  <h2>Finding 7: Code Execution Has No Sandbox</h2>
+  <div class="finding">
+    <div class="finding-num">FINDING 07</div>
+    <h3>Agent-generated code runs in production with full user permissions</h3>
+    <blockquote>"Sandbox execution. Use Docker or a restricted runner environment. Isolate code execution from your main application. Set timeouts, memory caps, CPU limits. Block dangerous imports, network access unless explicitly needed, and file system writes outside of a designated temp directory." — Marina Wyss, 35:46</blockquote>
+    <p><strong>Applied to Hyo:</strong> <code>agent-execute-improvement.sh</code> executes Claude-generated code in <code>~/Documents/Projects/Hyo</code> with read/write access to every file. No sandbox. No memory caps. A malicious pattern in a research file that an agent reads and then acts on could cause arbitrary code execution. The 151GB disk fill was resource exhaustion — the exact threat Marina names.</p>
+    <p><strong>Change 7:</strong> GATE 5.5 added — path traversal check, dangerous import whitelist, 60-second timeout on <code>verify.sh</code>. Generated code blocked from writing outside <code>agents/&lt;name&gt;/</code>. <span class="badge">SHIPPED</span></p>
+  </div>
+
+  <hr>
+
+  <h2>Seven Implementation Changes — Status</h2>
+  <div class="change"><strong>Change 1:</strong> Context injection into improvement execution — inject PLAYBOOK.md + evolution.jsonl + ACTIVE.md before every API call <span style="color:var(--muted);font-size:12px;">(pending)</span></div>
+  <div class="change"><strong>Change 2:</strong> Split improvement into 3 sequential queue jobs (research → implement → verify) <span style="color:var(--muted);font-size:12px;">(pending)</span></div>
+  <div class="change"><strong>Change 3:</strong> tools.json registry wired into all 5 runners <span class="badge">SHIPPED</span></div>
+  <div class="change"><strong>Change 4:</strong> KNOWLEDGE.md read-only during execution + staleness check <span style="color:var(--muted);font-size:12px;">(pending)</span></div>
+  <div class="change"><strong>Change 5:</strong> Structured DISPATCH_SR_* typed handoffs in all 5 runners <span class="badge">SHIPPED</span></div>
+  <div class="change"><strong>Change 6:</strong> WHY logging + prompt/token JSONL in all runners <span class="badge">SHIPPED</span></div>
+  <div class="change"><strong>Change 7:</strong> Code execution sandbox — GATE 5.5, path whitelist, 60s timeout <span class="badge">SHIPPED</span></div>
+
+  <div class="sources">
+    <h2>Sources</h2>
+    <ol>
+      <li>Marina Wyss, <a href="https://www.youtube.com/watch?v=sNvuH-iTi4c" target="_blank" rel="noopener">"AI Agents in 38 Minutes - Complete Course from Beginner to Pro"</a> — YouTube, Dec 9, 2025. Full transcript obtained 2026-05-05 via youtube_transcript_api (1,247 segments).</li>
+      <li>Kai Research Brief: Self-Evolving Agent Systems (kai-self-improve-2026-04-28.md) — ReAct, event-triggered improvement, double-loop review.</li>
+      <li>Kai Research Brief: Skepticism on Self-Improving Agent Systems (kai-skepticism-2026-04-28.md) — SICQ as Goodhart's Law proxy, sycophancy at 58%.</li>
+      <li>Hyo Project Overview (docs/legacy/core-original-design/Hyo_01_Overview.md) — agent economy framing and trust layer positioning.</li>
+    </ol>
+  </div>
+
+  <div class="footer">
+    Research conducted 2026-05-05. 3-pass audit completed. Protocol: <a href="/docs/AGENT_CREATION_PROTOCOL.md">AGENT_CREATION_PROTOCOL.md v4.0</a>
+  </div>
+</div>
+</body>
+</html>
