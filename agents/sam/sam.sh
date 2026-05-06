@@ -862,8 +862,29 @@ PYEOF
         && ok "Sam reflection: BLUF + 5Q augmented" \
         || warn "BLUF augmentation failed — publishing without BLUF"
     fi
-    bash "$PUBLISH_SCRIPT" "agent-reflection" "sam" "Sam — Engineering Report" "$REFLECTION_SECTIONS" 2>/dev/null || true
-    ok "Self-authored report published to HQ feed"
+    # HQ narrative publish disabled 2026-05-06: Sam reports to Kai only.
+    # Write structured metric delta for morning report WHAT IMPROVED section.
+    WRITE_CARD="$ROOT/bin/write-agent-card.sh"
+    if [[ -x "$WRITE_CARD" ]]; then
+      DEPLOY_SCORE=$(python3 -c "
+tp=int('${tests_passed:-0}')
+tf=int('${tests_failed:-0}')
+total=tp+tf
+if total==0: print(100)
+else: print(round(tp/total*100))
+" 2>/dev/null || echo "0")
+      WHAT="Tests: ${tests_passed:-0}p/${tests_failed:-0}f, API: ${api_health:-unknown}, deploy: ${deploy_status:-unknown}"
+      HYO_ROOT="$ROOT" bash "$WRITE_CARD" \
+        --agent sam \
+        --metric deploy_reliability \
+        --after "${DEPLOY_SCORE:-0}" \
+        --what "$WHAT" \
+        --next-metric deploy_reliability \
+        --next-target "$(python3 -c "print(min(100, int('${DEPLOY_SCORE:-0}') + 3))" 2>/dev/null || echo 100)" \
+        --next-how "Resolve any test failures; expand API health checks" \
+        2>/dev/null && ok "Sam agent-card.json written (deploy_reliability=${DEPLOY_SCORE:-0})" \
+        || warn "write-agent-card.sh failed"
+    fi
 
     # Report to Kai — closed-loop upward communication
     DISPATCH_BIN="$ROOT/bin/dispatch.sh"
@@ -871,9 +892,9 @@ PYEOF
       export DISPATCH_SR_AGENT="sam"
       export DISPATCH_SR_CYCLE_ID="${TODAY:-$(date +%Y-%m-%d)}-reflection"
       export DISPATCH_SR_PHASES_COMPLETED="tests,api-health,deploy,reflection"
-      export DISPATCH_SR_OUTPUTS_WRITTEN="agents/sam/ledger/ACTIVE.md,hq-feed-reflection"
+      export DISPATCH_SR_OUTPUTS_WRITTEN="agents/sam/ledger/ACTIVE.md,agent-card.json"
       export DISPATCH_SR_NEXT_CYCLE_INTENT="resolve test failures if any; tests=${tests_passed}p/${tests_failed}f deploy=${deploy_status}"
-      bash "$DISPATCH_BIN" report sam "research+reflection published: tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}" 2>/dev/null || true
+      bash "$DISPATCH_BIN" report sam "cycle: tests=${tests_passed}p/${tests_failed}f, api=${api_health}, deploy=${deploy_status}" 2>/dev/null || true
     fi
   fi
 
@@ -994,9 +1015,11 @@ case "$sub" in
   *)               err "unknown subcommand: $sub"; cmd_help; exit 1 ;;
 esac
 
-# ── Daily report to HQ feed (runs at end of every cycle, weekdays only) ──────
-HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
-  bash "$HYO_ROOT/bin/daily-agent-report.sh" "sam" || true
-fi
+# ── Daily HQ report DISABLED 2026-05-06 ──────────────────────────────────────
+# Sam writes agent-card.json for morning report WHAT IMPROVED section.
+# Narrative goes to Kai via dispatch only.
+# HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+# if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
+#   bash "$HYO_ROOT/bin/daily-agent-report.sh" "sam" || true
+# fi
 

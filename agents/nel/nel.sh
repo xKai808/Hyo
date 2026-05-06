@@ -925,12 +925,28 @@ if [[ -f "$REFLECTION_SECTIONS" && -x "$PUBLISH_SCRIPT" ]]; then
       || log_warn "BLUF augmentation failed — publishing without BLUF"
   fi
 
-  if [[ -f "$NEL_REPORT_PUBLISH_MARKER" ]]; then
-    log_info "Reflection: skipping HQ publish (already published today)"
-  else
-    bash "$PUBLISH_SCRIPT" "agent-reflection" "nel" "Nel — Daily Reflection" "$REFLECTION_SECTIONS" 2>/dev/null || true
-    touch "$NEL_REPORT_PUBLISH_MARKER"
-    log_pass "Reflection published to HQ feed"
+  # HQ narrative publish disabled 2026-05-06: agent reflections route to Kai only.
+  # Nel writes a structured metric delta (agent-card.json) that feeds the morning
+  # report WHAT IMPROVED section. Hyo sees the delta, not the narrative.
+  WRITE_CARD="$ROOT/bin/write-agent-card.sh"
+  if [[ -x "$WRITE_CARD" ]]; then
+    # Determine what improved this cycle for the "what_changed" field
+    WHAT_CHANGED="health_score computed from sentinel+cipher+audit results"
+    if [[ ${CIPHER_LEAKS:-0} -eq 0 && ${SENTINEL_FAIL:-0} -eq 0 ]]; then
+      WHAT_CHANGED="Clean cycle: zero leaks, zero sentinel failures"
+    elif [[ ${SENTINEL_FAIL:-0} -gt 0 ]]; then
+      WHAT_CHANGED="Sentinel: ${SENTINEL_PASS:-0}p/${SENTINEL_FAIL:-0}f — investigating failure patterns"
+    fi
+    HYO_ROOT="$ROOT" bash "$WRITE_CARD" \
+      --agent nel \
+      --metric health_score \
+      --after "${IMPROVEMENT_SCORE:-0}" \
+      --what "$WHAT_CHANGED" \
+      --next-metric health_score \
+      --next-target "$((${IMPROVEMENT_SCORE:-0} + 5))" \
+      --next-how "Reduce top failure category by 1 check per cycle" \
+      2>/dev/null && log_pass "Nel agent-card.json written (health_score=${IMPROVEMENT_SCORE:-0})" \
+      || log_warn "write-agent-card.sh failed — morning report may show stale Nel card"
   fi
 
   # Report to Kai — closed-loop upward communication (always fires for metrics)
@@ -1197,11 +1213,13 @@ elif [[ $IMPROVEMENT_SCORE -lt 90 ]]; then
 else
   log_pass "System health excellent. All systems nominal."
 
-# ── Daily report to HQ feed (runs at end of every cycle, weekdays only) ──────
-HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
-if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
-  bash "$HYO_ROOT/bin/daily-agent-report.sh" "nel" || true
-fi
+# ── Daily HQ report DISABLED 2026-05-06 ──────────────────────────────────────
+# Nel's operational narrative does not go to Hyo. It goes to Kai via dispatch.
+# agent-card.json (written above) provides the structured delta for morning report.
+# HYO_ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
+# if [[ -x "$HYO_ROOT/bin/daily-agent-report.sh" ]]; then
+#   bash "$HYO_ROOT/bin/daily-agent-report.sh" "nel" || true
+# fi
 
   exit 0
 fi
