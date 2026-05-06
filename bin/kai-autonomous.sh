@@ -65,6 +65,33 @@ log_freshness_hours() {
   echo $(( (NOW_EPOCH - mtime) / 3600 ))
 }
 
+# ─── Phase completion check ───────────────────────────────────────────────────
+# Returns number of completed phase headers in today's log.
+# A log file may EXIST but contain only a growth-phase header — the agent
+# started but crashed before domain work. File-exists check misses this.
+# Marina Wyss 2.7: "Freshness check should validate phase completion, not file existence."
+# Usage: phase_count=$(log_phase_count "nel"); [[ $phase_count -lt 3 ]] && treat as partial
+log_phase_count() {
+  local agent="$1"
+  local log_file="$HYO_ROOT/agents/$agent/logs/${agent}-${TODAY}.md"
+  [[ -f "$log_file" ]] || { echo 0; return; }
+  # Count lines that look like phase headers: "## Phase N" or "## Phase N:"
+  grep -c '^## Phase ' "$log_file" 2>/dev/null || echo 0
+}
+
+# Minimum phases required to consider a log "complete" (not partial-run)
+# aether has fewer phases (metrics update cycle), others should hit at least 3
+min_phases_for_agent() {
+  local agent="$1"
+  case "$agent" in
+    aether) echo 1 ;;   # aether cycles are short — just needs metrics phase
+    nel)    echo 4 ;;   # nel has 10 phases, 4 minimum for a valid run
+    dex)    echo 3 ;;   # dex has phases 1-4, needs at least 3
+    ra|sam) echo 2 ;;   # ra/sam have fewer explicit phase headers
+    *)      echo 2 ;;
+  esac
+}
+
 # ─── Queue a command to the Mini ──────────────────────────────────────────────
 queue_job() {
   local cmd="$1"
@@ -162,47 +189,52 @@ log_section "PHASE 1: AGENT FRESHNESS"
 HEALTH_SCORE=0
 AGENT_HEALTH=0
 
+# Re-queue a stale or partial agent run (shared by time-stale + phase-incomplete paths)
+requeue_agent() {
+  local agent="$1" freshness="$2"
+  case "$agent" in
+    nel)    queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/nel/nel.sh >> $HYO_ROOT/agents/nel/logs/nel-${TODAY}.md 2>&1"
+            open_ticket_if_missing "nel" "Nel stale/partial: ${freshness}h" "P1" ;;
+    ra)     queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/ra/ra.sh >> $HYO_ROOT/agents/ra/logs/ra-${TODAY}.md 2>&1"
+            open_ticket_if_missing "ra" "Ra stale/partial: ${freshness}h" "P1" ;;
+    sam)    queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/sam/sam.sh test >> $HYO_ROOT/agents/sam/logs/sam-${TODAY}.md 2>&1"
+            open_ticket_if_missing "sam" "Sam stale/partial: ${freshness}h" "P1" ;;
+    aether) queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/aether/aether.sh >> $HYO_ROOT/agents/aether/logs/aether-${TODAY}.log 2>&1"
+            queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aetherbot-monitor.sh"
+            open_ticket_if_missing "aether" "Aether stale/partial: ${freshness}h" "P0" ;;
+    dex)    queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/dex/dex.sh >> $HYO_ROOT/agents/dex/logs/dex-${TODAY}.md 2>&1"
+            open_ticket_if_missing "dex" "Dex stale/partial: ${freshness}h" "P2" ;;
+    hyo)    queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/hyo/hyo.sh >> $HYO_ROOT/agents/hyo/logs/hyo-${TODAY}.md 2>&1"
+            open_ticket_if_missing "hyo" "Hyo agent stale/partial: ${freshness}h" "P3" ;;
+  esac
+  [[ $freshness -gt 48 ]] && page_hyo "$agent stale ${freshness}h — self-healing may be failing"
+}
+
 for agent in nel ra sam aether dex hyo; do
   freshness=$(agent_freshness_hours "$agent")
   threshold=26
   [[ "$agent" == "aether" ]] && threshold=1  # Aether every 15 min
 
-  if [[ $freshness -le $threshold ]]; then
-    log "✓ $agent — ${freshness}h ago (within ${threshold}h threshold)"
+  # Phase completion check (Marina Wyss Pass 2 fix):
+  # A log file that exists but has < MIN_PHASES phase headers = partial run.
+  # Treat as stale even if ACTIVE.md mtime is recent.
+  phase_count=$(log_phase_count "$agent")
+  min_phases=$(min_phases_for_agent "$agent")
+  phase_ok=true
+  if [[ "$phase_count" -lt "$min_phases" ]]; then
+    phase_ok=false
+    log "⚠ $agent — log exists but only $phase_count/$min_phases phases complete (partial run)"
+  fi
+
+  if [[ $freshness -le $threshold ]] && [[ "$phase_ok" == "true" ]]; then
+    log "✓ $agent — ${freshness}h ago, $phase_count phases complete"
     AGENT_HEALTH=$((AGENT_HEALTH + 1))
+  elif [[ $freshness -le $threshold ]] && [[ "$phase_ok" == "false" ]]; then
+    log "✗ $agent — ran ${freshness}h ago but only $phase_count/$min_phases phases complete (partial run)"
+    requeue_agent "$agent" "$freshness"
   else
     log "✗ $agent — STALE ${freshness}h (threshold ${threshold}h)"
-    # Self-heal: queue a run
-    case "$agent" in
-      nel)
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/nel/nel.sh >> $HYO_ROOT/agents/nel/logs/nel-${TODAY}.md 2>&1"
-        open_ticket_if_missing "nel" "Nel stale: ${freshness}h since last run" "P1"
-        ;;
-      ra)
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/ra/ra.sh >> $HYO_ROOT/agents/ra/logs/ra-${TODAY}.md 2>&1"
-        open_ticket_if_missing "ra" "Ra stale: ${freshness}h since last run" "P1"
-        ;;
-      sam)
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/sam/sam.sh test >> $HYO_ROOT/agents/sam/logs/sam-${TODAY}.md 2>&1"
-        open_ticket_if_missing "sam" "Sam stale: ${freshness}h since last run" "P1"
-        ;;
-      aether)
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/aether/aether.sh >> $HYO_ROOT/agents/aether/logs/aether-${TODAY}.log 2>&1"
-        # SE-031-004: Run trade monitor every 15 min — checks actual BUY SNAPSHOTs in log window
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/aetherbot-monitor.sh"
-        open_ticket_if_missing "aether" "Aether stale: ${freshness}h since last metrics update" "P0"
-        ;;
-      dex)
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/dex/dex.sh >> $HYO_ROOT/agents/dex/logs/dex-${TODAY}.md 2>&1"
-        open_ticket_if_missing "dex" "Dex stale: ${freshness}h since last integrity scan" "P2"
-        ;;
-      hyo)
-        queue_job "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/hyo/hyo.sh >> $HYO_ROOT/agents/hyo/logs/hyo-${TODAY}.md 2>&1"
-        open_ticket_if_missing "hyo" "Hyo agent stale: ${freshness}h since last surface audit" "P3"
-        ;;
-    esac
-    # If stale for >48h → page Hyo
-    [[ $freshness -gt 48 ]] && page_hyo "$agent agent has been stale ${freshness}h — self-healing attempts may be failing. Check queue."
+    requeue_agent "$agent" "$freshness"
   fi
 done
 

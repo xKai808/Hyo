@@ -823,45 +823,43 @@ verify_improvement() {
 }
 
 # ─── Phase 6: Extract and persist knowledge ──────────────────────────────────
+# MARINA WYSS FIX (2026-05-05): Knowledge must be READ-ONLY during execution.
+# Marina: "If your knowledge base gets written to DURING a run, you have a bug."
+# Root cause: multiple agents call persist_knowledge() concurrently (nel 22:00,
+# sam 22:30, aether 22:45) — Python open().write() is NOT atomic for concurrent
+# writers, causing corrupt KNOWLEDGE.md.
+#
+# Fix: writes go to kai/memory/knowledge-queue.jsonl (append-only, atomic per
+# line), which consolidate.sh flushes into KNOWLEDGE.md at 01:00 MT when no
+# agents are running. Knowledge is never written mid-execution.
 persist_knowledge() {
   local agent="$1" weakness_id="$2" weakness_title="$3" summary="$4"
+  local KNOWLEDGE_QUEUE="$HYO_ROOT/kai/memory/knowledge-queue.jsonl"
 
-  log "  Persisting knowledge for $weakness_id → KNOWLEDGE.md + memory engine"
+  log "  Persisting knowledge for $weakness_id → knowledge-queue.jsonl (staged, not inline)"
+  log "  WHY: routing through queue — direct KNOWLEDGE.md writes cause race conditions when"
+  log "       multiple agents run concurrently. Queue is flushed at 01:00 MT by consolidate.sh."
 
-  # Write to KNOWLEDGE.md
-  local knowledge_entry
-  knowledge_entry=$(cat << ENTRY
-
-### [$TODAY] $agent fixed $weakness_id: $weakness_title
-**What worked:** $summary
-**Files changed:** see evolution.jsonl
-**Applicable to:** any agent with similar weakness
-ENTRY
-)
-
-  # Append to KNOWLEDGE.md under an "Agent Improvements" section
-  if grep -q "## Agent Improvements" "$KNOWLEDGE_MD" 2>/dev/null; then
-    # Append after section header
-    python3 - "$KNOWLEDGE_MD" "$knowledge_entry" << 'PYEOF'
-import sys
-path = sys.argv[1]
-entry = sys.argv[2]
-content = open(path).read()
-marker = '## Agent Improvements'
-if marker in content:
-    content = content.replace(marker, marker + '\n' + entry, 1)
-else:
-    content += '\n## Agent Improvements\n' + entry
-open(path, 'w').write(content)
-print("KNOWLEDGE.md updated")
-PYEOF
-  else
-    cat >> "$KNOWLEDGE_MD" << MDEOF
-
-## Agent Improvements
-$knowledge_entry
-MDEOF
-  fi
+  # Stage the knowledge entry (atomic line append — no concurrent write risk)
+  KQ_TS="$NOW_MT" KQ_AGENT="$agent" KQ_WID="$weakness_id" KQ_WTITLE="$weakness_title" \
+  KQ_SUMMARY="$summary" KQ_TODAY="$TODAY" KQ_QUEUE="$KNOWLEDGE_QUEUE" \
+  python3 << 'KQEOF'
+import json, os
+entry = {
+    'ts': os.environ['KQ_TS'],
+    'type': 'knowledge_entry',
+    'agent': os.environ['KQ_AGENT'],
+    'weakness_id': os.environ['KQ_WID'],
+    'weakness_title': os.environ['KQ_WTITLE'],
+    'summary': os.environ['KQ_SUMMARY'],
+    'date': os.environ['KQ_TODAY'],
+    'section': 'Agent Improvements',
+    'status': 'pending_flush',
+}
+with open(os.environ['KQ_QUEUE'], 'a') as f:
+    f.write(json.dumps(entry) + '\n')
+print(f"Staged: {entry['weakness_id']} → knowledge-queue.jsonl (will flush at 01:00 MT)")
+KQEOF
 
   # Write to memory engine
   if [[ -f "$MEMORY_ENGINE" ]]; then

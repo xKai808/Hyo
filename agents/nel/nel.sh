@@ -202,16 +202,21 @@ if [[ -n "$CIPHER_LATEST" && -f "$CIPHER_LATEST" ]]; then
   if grep -q "CRITICAL\|P0" "$CIPHER_LATEST" 2>/dev/null; then
     echo "- **P0 findings detected** — review immediately" >> "$REPORT"
     log_fail "Cipher P0 findings"
+    log_why "P0 flag: cipher log contains CRITICAL or P0 keyword — possible secret leak"
     bash "$ROOT/bin/dispatch.sh" flag nel P0 "Cipher: P0 security findings detected — review immediately" 2>/dev/null || true
   else
     echo "- **No verified leaks detected** ✓" >> "$REPORT"
     log_pass "Cipher: no active leaks"
+    log_why "no P0 flag — cipher scan clean in $CIPHER_LATEST"
   fi
 fi
 
 # Flag permission drifts if any
 if [[ "$CIPHER_LEAKS" -gt 0 ]]; then
+  log_why "flagging P2 for permission drifts — $CIPHER_LEAKS were auto-fixed so system is safe, but Kai should know it happened"
   bash "$ROOT/bin/dispatch.sh" flag nel P2 "Cipher: $CIPHER_LEAKS permission drifts auto-fixed" 2>/dev/null || true
+else
+  log_why "no cipher drift flag — CIPHER_LEAKS=0, all permissions correct"
 fi
 echo "" >> "$REPORT"
 
@@ -255,11 +260,13 @@ if [[ ${#STALE_FILES[@]} -gt 0 ]]; then
   fi
   echo "" >> "$REPORT"
   log_warn "Found ${#STALE_FILES[@]} stale files"
+  log_why "P3 (not P2): ${#STALE_FILES[@]} stale files — informational, may be intentional archives"
   bash "$ROOT/bin/dispatch.sh" flag nel P3 "Found ${#STALE_FILES[@]} stale files (60+ days) — review and archive" 2>/dev/null || true
 else
   echo "**No stale files detected.** All tracked files have recent updates or KEEP markers." >> "$REPORT"
   echo "" >> "$REPORT"
   log_pass "Stale file scan: clean"
+  log_why "no stale flag — all files modified within 60d or have KEEP markers"
 fi
 
 # ============================================================================
@@ -303,11 +310,13 @@ if [[ ${#BROKEN_LINKS[@]} -gt 0 ]]; then
   fi
   echo "" >> "$REPORT"
   log_warn "Found ${#BROKEN_LINKS[@]} broken links"
+  log_why "P2 flag: ${#BROKEN_LINKS[@]} broken doc links — P2 not P1 because broken links degrade but don't break the system"
   bash "$ROOT/bin/dispatch.sh" flag nel P2 "Found ${#BROKEN_LINKS[@]} broken documentation links — fix or cleanup needed" 2>/dev/null || true
 else
   echo "**No broken relative links detected.** ✓" >> "$REPORT"
   echo "" >> "$REPORT"
   log_pass "Broken link scan: clean"
+  log_why "no broken link flag — all relative markdown links resolve"
 fi
 
 # ============================================================================
@@ -352,9 +361,11 @@ if [[ ${#UNTESTED_STAGES[@]} -gt 0 ]]; then
   fi
   echo "" >> "$REPORT"
   log_warn "Found ${#UNTESTED_STAGES[@]} scripts without test coverage"
+  log_why "no dispatch flag for test gaps — P3 at most; filing in report is sufficient for rolling improvement"
 else
   echo "**All major scripts have test coverage or smoke-test mentions.** ✓" >> "$REPORT"
   echo "" >> "$REPORT"
+  log_why "no test coverage flag — all scanned scripts have test/smoke/validate mentions or test files"
 fi
 
 # ============================================================================
@@ -395,10 +406,12 @@ if [[ ${#INEFFICIENT_PATTERNS[@]} -gt 0 ]]; then
   fi
   echo "" >> "$REPORT"
   log_warn "Found ${#INEFFICIENT_PATTERNS[@]} inefficient patterns"
+  log_why "P3 flag: ${#INEFFICIENT_PATTERNS[@]} code smells — P3 not P2 because anti-patterns don't break functionality"
   bash "$ROOT/bin/dispatch.sh" flag nel P3 "Found ${#INEFFICIENT_PATTERNS[@]} code optimization opportunities — rolling improvement" 2>/dev/null || true
 else
   echo "**No major inefficiencies detected.** Code looks clean." >> "$REPORT"
   echo "" >> "$REPORT"
+  log_why "no inefficiency flag — no repeated file reads in loops or unnecessary subshells detected"
 fi
 
 # ============================================================================
@@ -415,12 +428,14 @@ if [[ $SENTINEL_FAIL -gt 0 ]]; then
   echo "- **[P0] Resolve sentinel findings** in $SENTINEL_FAIL project(s). Check consolidation history." >> "$REPORT"
   IMPROVEMENT_SCORE=$((IMPROVEMENT_SCORE - 20))
   ACTIONS_FILED=$((ACTIONS_FILED + 1))
+  log_why "score -20: SENTINEL_FAIL=$SENTINEL_FAIL — most impactful finding, affects system health"
 fi
 
 if [[ "$CIPHER_LEAKS" -gt 0 ]]; then
   echo "- **[P0] Review cipher permission drifts** — $CIPHER_LEAKS auto-fixes logged. Consider adding preventive check." >> "$REPORT"
   IMPROVEMENT_SCORE=$((IMPROVEMENT_SCORE - 15))
   ACTIONS_FILED=$((ACTIONS_FILED + 1))
+  log_why "score -15: CIPHER_LEAKS=$CIPHER_LEAKS — auto-fixed but signals systemic permission drift"
 fi
 
 if [[ ${#STALE_FILES[@]} -gt 0 ]]; then

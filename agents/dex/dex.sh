@@ -206,10 +206,11 @@ validate_jsonl "$DEX_LOG" "dex" || true
 
 if [[ $INTEGRITY_FAIL -gt 0 ]]; then
   log_activity "PHASE_1_INTEGRITY" "failed" "Found $INTEGRITY_FAIL corrupt JSONL files"
-  # Don't flag yet — Phase 1.5 will attempt auto-repair
+  log_why "no flag yet: $INTEGRITY_FAIL corrupt files — deferring to Phase 1.5 auto-repair before escalating"
 else
   log_activity "PHASE_1_INTEGRITY" "passed" "All JSONL files validated successfully"
   log_pass "Phase 1 complete: All JSONL files valid"
+  log_why "no flag: all $INTEGRITY_PASS JSONL files passed validation"
 fi
 
 # ============================================================================
@@ -294,10 +295,12 @@ if [[ $INTEGRITY_FAIL -gt 0 ]]; then
 
   if [[ $STILL_CORRUPT -gt 0 ]]; then
     log_activity "PHASE_1_5_REPAIR" "partial" "Fixed some, $STILL_CORRUPT entries remain unfixable"
+    log_why "P1 flag: $STILL_CORRUPT entries unfixable after auto-repair — manual review required"
     dispatch_flag "P1" "Dex Phase 1.5: Repaired corruption but $STILL_CORRUPT entries still unfixable (manual review needed)"
   else
     log_activity "PHASE_1_5_REPAIR" "success" "All fixable corruption repaired"
     log_pass "Phase 1.5 complete: All fixable corruption repaired"
+    log_why "no flag: $REPAIR_COUNT files processed, all fixable corruption resolved"
   fi
 else
   {
@@ -308,6 +311,7 @@ else
   } >> "$REPORT"
   log_activity "PHASE_1_5_REPAIR" "skipped" "No corruption found to repair"
   log_pass "Phase 1.5 skipped: No corruption to repair"
+  log_why "skip repair: INTEGRITY_FAIL=0, nothing to fix"
 fi
 
 # ============================================================================
@@ -375,10 +379,12 @@ check_stale_tasks "$SAM_LEDGER/ACTIVE.md" "sam" || true
 
 if [[ $STALE_COUNT -gt 0 ]]; then
   log_activity "PHASE_2_STALE" "found" "$STALE_COUNT tasks older than 72h"
+  log_why "P1 flag: $STALE_COUNT tasks >72h with no update — likely blocked or dropped"
   dispatch_flag "P1" "Dex Phase 2: Found $STALE_COUNT stale tasks (>72h without update)"
 else
   log_activity "PHASE_2_STALE" "passed" "No stale tasks detected"
   log_pass "Phase 2 complete: No stale tasks detected"
+  log_why "no stale flag — all tasks updated within 72h"
 fi
 
 # ============================================================================

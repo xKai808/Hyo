@@ -456,6 +456,23 @@ else
   run_project "$TARGET"
 fi
 
+# ── Phase: Flush knowledge-queue.jsonl into KNOWLEDGE.md ─────────────────────
+# MARINA WYSS FIX (2026-05-05): Agents write staged knowledge entries to
+# kai/memory/knowledge-queue.jsonl during their runs. We flush here at 01:00 MT
+# because this runs AFTER all agents (last agent finishes at 23:30 MT) and
+# BEFORE any agent starts again (next cycle at 05:00 MT). No concurrent writers.
+FLUSH_SH="$ROOT/bin/flush-knowledge-queue.sh"
+if [[ -f "$FLUSH_SH" ]]; then
+  log "Flushing knowledge-queue.jsonl → KNOWLEDGE.md..."
+  FLUSH_OUT=$(HYO_ROOT="$ROOT" bash "$FLUSH_SH" 2>&1 || true)
+  FLUSH_COUNT=$(echo "$FLUSH_OUT" | grep -oP 'FLUSH_COUNT:\K[0-9]+' | head -1 || echo "0")
+  log "Knowledge flush: $FLUSH_COUNT entries promoted to KNOWLEDGE.md"
+  log "Flush details: $(echo "$FLUSH_OUT" | tail -2 | tr '\n' ' ')"
+else
+  log "WARN: flush-knowledge-queue.sh not found — staged knowledge entries NOT flushed"
+  log "WHY: this means KNOWLEDGE.md will be stale until flush-knowledge-queue.sh is deployed"
+fi
+
 echo "" >> "$LOGFILE"
 echo "**Completed:** $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$LOGFILE"
 

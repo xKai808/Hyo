@@ -101,3 +101,11 @@
 - Verifying a token is routing correctly = simulate the running process's resolution logic using the actual process environment (`ps eww -p <PID>`), not inference from source code.
 - Hyo's question "Are you sure? Did you verify?" is not rhetorical. It means: show the proof that came from the system itself, not from reasoning about the system.
 - Before declaring any integration fixed: (a) state what you tested, (b) show the output from the test, (c) distinguish between "channel works" and "system will use it correctly."
+
+## ADDITIONS FROM SESSION 34 — 2026-05-05
+
+**Code and writing principles (hard rules from Hyo — stated mid-restructure session):**
+
+- **Simplify, don't generalize.** When something is complex, break it into parts. Do not add abstraction layers that obscure what's happening. "Simplify" = fewer moving pieces, not looser semantics.
+- **Precise and accurate lines.** Every line of code and every WHY log must say exactly what is true. If it can also be concise, that's better — but conciseness never overrides accuracy. "P2 flag: 3 broken links — degrade UX" is right. A 3-sentence explanation is not.
+- **These rules carry forward.** Even after context compaction, even in new sessions — read TACIT.md first. These are not per-session preferences. They are permanent operating norms from Hyo.

@@ -95,6 +95,7 @@ check_monday_reset() {
 
   if [[ "$already_reset" == "true" && "${1:-}" != "--reset" ]]; then
     log "Monday reset: already done for today ($today_date), skipping"
+    log_why "skip reset: currentWeek.start=$today_date matches today — idempotency guard, prevents double-reset"
     return 0
   fi
 
@@ -196,6 +197,7 @@ extract_aether_metrics_from_logs() {
 
   if [[ -z "$log_file" ]]; then
     log "WARN: No AetherBot log found for today. Using last metrics."
+    log_why "early return: no AetherBot log for today — not an error, bot may not have traded yet"
     return 0
   fi
 

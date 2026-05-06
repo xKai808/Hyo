@@ -249,10 +249,17 @@ cmd_delegate() {
   # Collect title words, stopping at flags
   local title_parts=()
   local context="" deadline=""
+  # Correlation ID: --parent-id links this task to its origin chain
+  # Usage: dispatch delegate nel P1 "fix thing" --parent-id nel-007
+  # WHY: Marina Wyss 23:44 — "If your researcher returns an unstructured blob
+  # and your designer doesn't know how to parse it, the whole system fails."
+  # A parent_task_id is the thread that connects delegate → ack → report → verify.
+  local parent_id="${DISPATCH_PARENT_TASK_ID:-}"  # env var bridge for runners
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --context) shift; context="${1:-}" ;;
-      --deadline) shift; deadline="${1:-}" ;;
+      --context)   shift; context="${1:-}" ;;
+      --deadline)  shift; deadline="${1:-}" ;;
+      --parent-id) shift; parent_id="${1:-}" ;;
       *) title_parts+=("$1") ;;
     esac
     shift 2>/dev/null || break
@@ -264,18 +271,25 @@ cmd_delegate() {
   # Use python3 for safe JSON generation (handles quotes/special chars)
   local json; json=$(python3 -c "
 import json, sys
-print(json.dumps({
+d = {
   'ts': sys.argv[1], 'action': 'DELEGATE', 'task_id': sys.argv[2],
   'from': 'kai', 'to': sys.argv[3], 'title': sys.argv[4],
   'priority': sys.argv[5], 'context': sys.argv[6], 'deadline': sys.argv[7]
-}))" "$NOW" "$tid" "$agent" "$title" "$priority" "$context" "$deadline")
+}
+if sys.argv[8]:
+    d['parent_task_id'] = sys.argv[8]
+print(json.dumps(d))" "$NOW" "$tid" "$agent" "$title" "$priority" "$context" "$deadline" "$parent_id")
 
   log_entry "$agent" "$json"
   log_entry "kai" "$json"
   rebuild_active "$agent"
   rebuild_active "kai"
 
-  echo "Delegated: $tid [$priority] $title → $agent"
+  if [[ -n "$parent_id" ]]; then
+    echo "Delegated: $tid [$priority] $title → $agent (chain: $parent_id)"
+  else
+    echo "Delegated: $tid [$priority] $title → $agent"
+  fi
 }
 
 cmd_ack() {
@@ -297,6 +311,9 @@ cmd_report() {
   local status="$2"
   local result="${3:-}"
   local agent="${task_id%%-*}"
+  # Correlation: inherit parent_task_id if set by caller (env var bridge)
+  # Allows: DISPATCH_PARENT_TASK_ID=nel-007 dispatch report nel-007-research completed "..."
+  local parent_id="${DISPATCH_PARENT_TASK_ID:-}"
 
   # ── TYPED REPORT GATE (Marina Wyss 23:44: "Define interfaces, not vibes") ──
   # If the caller set DISPATCH_STRUCTURED_REPORT env vars, validate+write typed schema
@@ -339,7 +356,10 @@ cmd_report() {
 
   local json; json=$(python3 -c "
 import json, sys
-print(json.dumps({'ts':sys.argv[1],'action':'REPORT','task_id':sys.argv[2],'from':sys.argv[3],'to':'kai','status':sys.argv[4],'result':sys.argv[5]}))" "$NOW" "$task_id" "$agent" "$status" "$result")
+d = {'ts':sys.argv[1],'action':'REPORT','task_id':sys.argv[2],'from':sys.argv[3],'to':'kai','status':sys.argv[4],'result':sys.argv[5]}
+if sys.argv[6]:
+    d['parent_task_id'] = sys.argv[6]
+print(json.dumps(d))" "$NOW" "$task_id" "$agent" "$status" "$result" "$parent_id")
   log_entry "$agent" "$json"
   log_entry "kai" "$json"
   rebuild_active "$agent"
@@ -463,6 +483,9 @@ cmd_flag() {
   local agent="$1"; shift
   local severity="$1"; shift  # P0, P1, P2, P3
   local title="$*"
+  # Correlation: parent_task_id links this flag to the task that discovered the issue
+  # Usage: DISPATCH_PARENT_TASK_ID=nel-007 dispatch flag nel P1 "issue found during nel-007"
+  local parent_id="${DISPATCH_PARENT_TASK_ID:-}"
 
   # ── Built-in schema validation (validates BEFORE doing anything else) ───────
   # WHY: schema at the implementation layer catches bad calls from ANY caller,
@@ -527,11 +550,14 @@ print('no')
 
   local json; json=$(python3 -c "
 import json, sys
-print(json.dumps({
+d = {
   'ts': sys.argv[1], 'action': 'FLAG', 'task_id': sys.argv[2],
   'from': sys.argv[3], 'to': 'kai', 'severity': sys.argv[4],
   'title': sys.argv[5], 'status': 'FLAGGED'
-}))" "$NOW" "$fid" "$agent" "$severity" "$title")
+}
+if sys.argv[6]:
+    d['parent_task_id'] = sys.argv[6]
+print(json.dumps(d))" "$NOW" "$fid" "$agent" "$severity" "$title" "$parent_id")
 
   log_entry "$agent" "$json"
   log_entry "kai" "$json"

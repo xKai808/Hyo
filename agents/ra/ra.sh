@@ -122,6 +122,7 @@ else
   err "gather.py missing at $GATHER_SCRIPT"
   REPORT+="✗ gather.py missing"$'\n'
   CRITICAL=$((CRITICAL+1))
+  log_why "CRITICAL: gather.py missing — newsletter pipeline cannot collect sources without it"
 fi
 
 if [[ -f "$SYNTHESIZE_PROMPT" ]]; then
@@ -132,6 +133,7 @@ else
   err "synthesize.md missing at $SYNTHESIZE_PROMPT"
   REPORT+="✗ synthesize.md missing"$'\n'
   CRITICAL=$((CRITICAL+1))
+  log_why "CRITICAL: synthesize.md missing — newsletter content cannot be generated without prompt"
 fi
 
 if [[ -d "$RESEARCH_DIR" ]] && [[ -f "$RESEARCH_DIR/index.md" ]]; then
@@ -142,6 +144,7 @@ else
   warn "research archive missing or incomplete"
   REPORT+="! research archive missing or incomplete"$'\n'
   WARNINGS=$((WARNINGS+1))
+  log_why "WARNING (not CRITICAL): research archive missing — pipeline can still run but context will be shallow"
 fi
 
 REPORT+=$'\n'
@@ -168,10 +171,12 @@ if [[ -d "$NEWSLETTERS_OUT" ]]; then
       TODAY_WORDS=$(wc -w < "$TODAY_MD" 2>/dev/null || echo "0")
       ok "today's newsletter exists ($TODAY_WORDS words)"
       REPORT+="  - Today's ($DATE): $TODAY_WORDS words"$'\n'
+      log_why "no newsletter gap flag — today's newsletter present ($TODAY_WORDS words)"
     else
       warn "no newsletter for today ($DATE)"
       REPORT+="! No newsletter for today ($DATE)"$'\n'
       WARNINGS=$((WARNINGS+1))
+      log_why "WARNING: today's newsletter missing — Ra pipeline may not have run yet or failed silently"
     fi
   fi
 else
@@ -339,14 +344,17 @@ if [[ $CRITICAL -eq 0 && $WARNINGS -eq 0 ]]; then
   STATUS="✓ HEALTHY"
   REPORT_STATUS="✓ All checks passed"
   EXIT_CODE=0
+  log_why "exit 0: CRITICAL=$CRITICAL WARNINGS=$WARNINGS — pipeline healthy"
 elif [[ $CRITICAL -eq 0 ]]; then
   STATUS="! WARNINGS"
   REPORT_STATUS="⚠ Operational but with warnings"
   EXIT_CODE=2
+  log_why "exit 2: CRITICAL=0 WARNINGS=$WARNINGS — pipeline operational but degraded"
 else
   STATUS="✗ CRITICAL"
   REPORT_STATUS="✗ Critical issues found"
   EXIT_CODE=1
+  log_why "exit 1: CRITICAL=$CRITICAL — pipeline blocked, newsletter cannot produce output"
 fi
 
 ok "$STATUS"

@@ -127,6 +127,7 @@ cmd_deploy() {
     ok "dual-path synced"
   else
     warn "sync-website.sh not found — skipping"
+    log_why "skip sync: sync-website.sh not found — dual-path drift possible (SE-010-011 risk)"
   fi
   echo ""
 
@@ -147,6 +148,7 @@ cmd_deploy() {
   local msg="Sam deployment: $timestamp"
   if git commit -m "$msg"; then
     ok "committed"
+    log_why "commit succeeded — changes staged and committed, proceeding to push"
   else
     warn "no changes to commit"
   fi
@@ -179,6 +181,7 @@ cmd_deploy() {
   if [[ $retry -ge 10 ]]; then
     err "Deployment verification timeout — check Vercel dashboard"
     log_activity "deploy" "timeout" "Git operations succeeded but Vercel deployment verification failed after 10 attempts."
+    log_why "returning 1: 10 API health checks failed — Vercel deploy may still be building or API is down"
     return 1
   fi
   echo ""
@@ -313,11 +316,14 @@ cmd_test() {
   if [[ -x "$DISPATCH" ]]; then
     if [[ $failed -eq 0 ]]; then
       bash "$DISPATCH" self-delegate sam P3 "Sam test run: $passed passed, 0 failed — all clear" 2>/dev/null || true
+      log_why "P3 self-delegate (not flag): all tests green — routine reporting, not an issue"
     else
       bash "$DISPATCH" flag sam P2 "Sam test run: $failed failure(s) out of $((passed+failed)) tests" 2>/dev/null || true
+      log_why "P2 flag: $failed test failures — API or static file missing, Kai should review"
       # Self-delegate fix tasks for each failure category
       if [[ $failed -gt 3 ]]; then
         bash "$DISPATCH" flag sam P1 "Sam: $failed test failures — needs immediate attention" 2>/dev/null || true
+        log_why "escalating to P1: $failed > 3 failures — systemic problem, not isolated"
       fi
     fi
   fi
