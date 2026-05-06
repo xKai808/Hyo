@@ -2,33 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-06T18:10:02Z",
-  "totalRuns": 256,
+  "lastRunAt": "2026-05-06T22:09:52Z",
+  "totalRuns": 259,
   "runHistory": [
-    {
-      "ts": "2026-04-28T18:10:08Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T18:10:12Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-04-28T22:10:04Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
     {
       "ts": "2026-04-28T22:10:11Z",
       "passed": 6,
@@ -244,6 +220,30 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T22:09:43Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-06T22:09:46Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-06T22:09:52Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -262,8 +262,8 @@
       "check_id": "task-queue-size",
       "detail": "33 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-04-27T18:09:54Z",
-      "lastSeen": "2026-05-06T18:10:02Z",
-      "daysFailing": 51,
+      "lastSeen": "2026-05-06T22:09:52Z",
+      "daysFailing": 54,
       "status": "open"
     },
     "aurora-ran-today:8373b64d": {
@@ -463,7 +463,8 @@
       "firstSeen": "2026-05-06T18:09:51Z",
       "lastSeen": "2026-05-06T18:10:02Z",
       "daysFailing": 3,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T22:09:43Z"
     },
     "scheduled-tasks-fired:43ee4568": {
       "severity": "P1",
@@ -471,6 +472,25 @@
       "detail": "no aurora logs in /sessions/adoring-fervent-meitner/mnt/Hyo/agents/nel/logs",
       "firstSeen": "2026-05-06T18:09:51Z",
       "lastSeen": "2026-05-06T18:10:02Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-06T22:09:43Z"
+    },
+    "aurora-ran-today:b9a5f5f1": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/loving-sharp-dijkstra/mnt/Hyo/newsletters/2026-05-06.md",
+      "firstSeen": "2026-05-06T22:09:43Z",
+      "lastSeen": "2026-05-06T22:09:52Z",
+      "daysFailing": 3,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:dc4b3fec": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/loving-sharp-dijkstra/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-06T22:09:43Z",
+      "lastSeen": "2026-05-06T22:09:52Z",
       "daysFailing": 3,
       "status": "open"
     }

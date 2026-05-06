@@ -1,223 +1,194 @@
-# PROTOCOL_MORNING_REPORT.md — Morning Report Protocol
+# PROTOCOL_MORNING_REPORT.md
+# Version: 3.0 | Owner: Kai | Revised: 2026-05-06
+# Reason for revision: Hyo feedback — reports were operational noise, not CEO intelligence.
 #
-# VERSION: v2.1
-# Author: Kai | Updated: 2026-04-30 | Authority: Constitutional — mandatory
-# Trigger: com.hyo.morning-report launchd plist at 05:00 MT daily
-#
-# HYO DIRECTIVE (2026-04-30, permanent): The morning report is an intelligence
-# brief — what was researched externally, why, what changed as a result, what
-# comes next. System health is a footnote. Will not be repeated.
+# AUDIENCE: Hyo. CEO. Not a sysadmin.
+# GOAL: Answer "is the system improving?" in under 60 seconds.
 
 ---
 
-## PART 0 — HYO_FEEDBACK META-ALGORITHM (CONSTITUTIONAL)
+## Core Principle
 
-```
-HYO_FEEDBACK_GATE:
-GATE 1: Did Hyo suggest a change to a product or output? → YES → GATE 2
-GATE 2: Is there a protocol governing that product? → YES → update it in the same session
-GATE 3: Does the update include a gate for the issue raised? → YES → done
+The morning report is NOT a system log. It is NOT a summary of what ran.
+It answers one question: **Are the agents getting better?**
 
-RULE: Hyo should never have to mention the same issue twice.
-```
+Everything else is Kai's problem to handle silently.
 
 ---
 
-## PART 0b — HYO DIRECTIVE (2026-04-30 — CONSTITUTIONAL, PERMANENT)
+## The 5-Section Structure (v3)
 
-Hyo's exact words: "I don't want [to know] if the systems are operating the way they're supposed to. That's basic fundamentals. I want to see what we've researched externally, why and what has been done as a result. I want forward thinking. Will not repeat this again."
+### Section 1: PULSE (1 line)
+System status: **Healthy / Degraded / Down**
 
-### THE CONTENT GATE (non-negotiable, runs before every morning report publish):
+- Healthy = queue active, no P0 tickets requiring Hyo
+- Degraded = something needs Hyo's awareness but system is running
+- Down = execution layer stalled, agents not running
 
-```
-GATE 1: Does the report lead with external research findings?
-  → NO → BLOCKED. Rewrite. System health is NOT the lead.
+If Healthy: just say "Healthy." Do NOT pad.
+If Degraded/Down: one sentence. What happened, what Kai is doing.
 
-GATE 2: Does each research item state WHY that topic was investigated?
-  → NO → BLOCKED. Research without a why is incomplete.
+### Section 2: WHAT IMPROVED
+*The only backward-looking section. The real story.*
 
-GATE 3: Does each research item state WHAT CHANGED as a result?
-  → NO → BLOCKED. Research without outcome is theater.
+Show only agents where a metric actually moved since last cycle.
 
-GATE 4: Does the report contain a forward-looking section?
-  → NO → BLOCKED. Must point to what comes next.
+Format:
+  Agent: [metric before] → [metric after]. What changed: [one sentence — WHY, not what ran].
 
-GATE 5: Does system health appear as the PRIMARY content?
-  → YES → BLOCKED. System health is a footnote — ≤3 lines, at the end.
+Example:
+  Nel: health score 65 → 71. Rebuilt check architecture to bypass Mini dependency.
+  Sam: deploy reliability 87% → 94%. Added pre-deploy test gate.
 
-All 5 gates must pass before publish. Every day.
-```
+If no agent improved overnight:
+  "No agents shipped an improvement overnight. All cycles are in research phase."
 
----
+What belongs here: shipped improvements with measurable before/after.
+What does NOT belong: research progress, check results, intent, what ran.
 
-## PART 1 — WHAT THE MORNING REPORT IS
+### Section 3: WHAT'S BEING BUILT
+*Forward-looking. Shows trajectory.*
 
-The morning report is Hyo's **intelligence brief**, not a system dashboard.
+One line per agent currently building something concrete:
+  Agent: [what] — [target metric]
 
-Hyo already knows the queue is running. What Hyo wants every morning:
+Example:
+  Dex: building cross-reference validator — will catch file moves that break references.
+  Aether: refining entry timing model — target: signal accuracy 67% → 75%.
 
-1. **What did we learn from the world?** External research, competitive intelligence, specific findings.
-2. **Why were those specific things investigated?** Each topic traces to a strategic gap or question.
-3. **What changed as a result?** Improvements built, decisions made, strategy adjusted.
-4. **Where does this point?** Forward outlook — opportunities, next investigations, implications.
+If an agent has no active build: omit them. Never pad with "X is maintaining."
 
-System health appears ONLY as a brief footer — 2-3 lines maximum.
+### Section 4: AETHER SIGNAL
+*Mon–Fri only. One paragraph.*
 
----
+The actual financial/market signal from Aether's analysis.
+What should Hyo be aware of today?
+If no analysis available: omit this section entirely.
 
-## PART 2 — MANDATORY REPORT STRUCTURE (v2.0)
+### Section 5: YOUR ATTENTION
+*Zero items on most days. Never fabricated.*
 
-Every morning report MUST follow this order. Deviation = blocked by CONTENT GATE.
+Only appears when Hyo's decision is actually required:
+  [What]: description
+  [Why Kai can't resolve]: reason
+  [Options]: A / B / C
 
-### Section 1: INTELLIGENCE — What We Learned
-For each piece of external research conducted overnight:
-- **Topic**: What was studied (specific — "OpenAI fine-tuning pricing" not "AI research")
-- **Why**: What gap or question prompted this (weakness ID, ticket, or strategic question)
-- **Finding**: Actual finding with specificity — numbers, names, conclusions
-- **Source**: URL or named source (sourceless findings are blocked)
-- **Result**: What changed — decision made, code written, queued for [date]
+Threshold: P0 tickets requiring Hyo's authorization, spending above threshold,
+           strategic direction choices only.
 
-If no research was done: "No external research completed overnight." Do NOT substitute operational notes.
-
-### Section 2: WHAT WE BUILT
-For each improvement shipped overnight:
-- **What**: Name and one-sentence description
-- **Why it matters**: What problem it solves
-- **Before → After**: Measurable delta (specific numbers or behaviors, not "improved")
-- **Commit**: SHA reference
-- **Agent**: Who built it
-
-If nothing shipped: "No improvements shipped overnight." Honest > optimistic.
-
-### Section 3: FORWARD OUTLOOK
-- Strategic implications of this week's research trajectory
-- Opportunities being tracked (with rationale)
-- Next investigations queued — why each matters
-- Any hypothesis confirmed or invalidated — what that changes
-
-### Section 4: SYSTEM FOOTNOTE (≤3 lines, not the story)
-```
-System: [healthy | degraded | P0 active: <one sentence>]
-Agents active: N | Queue: [up | down]
-```
+Never surface: failed checks, operational issues, internal system state.
+Kai handles all of that. If Kai can handle it: handle it, do not mention it.
 
 ---
 
-## PART 3 — WRITING STANDARD
+## What Does NOT Go In The Morning Report
 
-Written for a CEO, not a system administrator. Every sentence passes: **"Would a smart non-technical executive find this meaningful?"**
-
-**Banned phrases:**
-- "System is healthy" as a lead
-- "Agent ran successfully"
-- "[DATA FROM YYYY-MM-DD]" embedded in content — stale data belongs in system footnote only
-- "No active work this cycle" without explaining why and what's blocked
-- Any sentence that could apply to any day without modification
-
-**Required quality:**
-- Every finding is specific: numbers, names, dates, URLs
-- Every "why" traces to a real strategic question or weakness ID
-- Every result is verifiable: commit SHA, ticket ID, or explicit "queued for [date]"
+  SICQ / OMP scores         → Kai's internal monitoring
+  Failed check details      → Kai resolves these; never mentions to Hyo
+  "Nel ran 4 checks"        → Operational noise; nowhere
+  Research phase progress   → Research ≠ improvement; agent internal ledger
+  Simulation warnings       → Kai's problem; Kai's diagnostic log
+  Stale ARIC data warnings  → Kai's problem; Kai's diagnostic log
+  "Queue ran X jobs"        → Nobody cares; nowhere
+  Agent daily log summaries → Agent's HQ card
+  Ra pipeline progress      → Process, not output; nowhere
+  Kai daily CEO report      → ELIMINATED (duplicated morning report)
 
 ---
 
-## PART 4 — DATA SOURCES
+## Agent Ground-Truth Metrics (Marina Wyss GVU Pattern)
 
-| Section | Data Source | Verification |
-|---|---|---|
-| Intelligence | agents/<name>/research/aric-latest.json → research_conducted[] | Each finding must have source URL |
-| What We Built | agents/<name>/research/aric-latest.json → improvement_built{} | commit SHA must exist in git log |
-| Forward Outlook | agents/<name>/research/aric-latest.json → next_target, external_opportunity | Tickets must exist |
-| System Footnote | kai/ledger/verified-state.json | File must be <2h old |
+ONE metric per agent that cannot be gamed. WHAT IMPROVED tracks this.
 
-If ARIC data is missing: note it in system footnote only. Do NOT populate intelligence from GROWTH.md guesses.
+  Nel    | health_score (target ≥70)   | CVEs caught before production
+  Sam    | deploy_reliability (≥95%)   | Test coverage %
+  Aether | signal_accuracy             | Position P&L delta
+  Ra     | newsletter_delivery_rate    | Subscriber count
+  Dex    | org_audit_score             | Stale files count
+  Kai    | improvements_shipped_week   | Avg improvement cycle time
 
-### SYNTHESIS PHASE (mandatory — v2.1)
-
-Raw ARIC findings are technical agent output. They are NOT suitable for Hyo directly.
-
-After collecting intelligence_items, `generate-morning-report.sh` calls `bin/morning-report-synthesize.py` which:
-1. Passes all raw items to Claude in a single call
-2. Gets back Aurora-style prose: category tag, bold topic, one plain-English takeaway, one Watch signal
-3. Writes synthesized output into `intelligence[]` — same schema, new fields: `category`, `topic`, `takeaway`, `watch`
-
-If synthesis fails (Claude bin missing, timeout, API error): fallback to raw items — report still publishes.
-If no intelligence_items at all: summary states "No external research completed overnight" — no fabrication.
-
-**Output quality standard**: Each intelligence item must read like The Economist, not a GitHub README.
-Example good item:
-- CATEGORY: AI-MODELS
-- TOPIC: Mistral 128B Pricing
-- TAKEAWAY: Mistral's 128B model undercuts GPT-4o by 40% at mid-tier, accelerating pricing pressure on Anthropic incumbents.
-- WATCH: Whether enterprise adoption signals move faster than benchmark comparisons.
+If a metric cannot be measured, it cannot be improved.
+If it cannot be improved, it does not belong in the morning report.
 
 ---
 
-## PART 5 — SCHEMA (feed.json sections for morning-report type)
+## Agent Reflection Output Schema
 
-```json
-{
-  "summary": "One paragraph research-led executive brief",
-  "intelligence": [
-    {
-      "topic": "Specific external topic studied",
-      "why": "Gap or strategic question that drove investigation",
-      "finding": "Specific finding with source citation",
-      "source": "URL or named source",
-      "result": "What changed or what is queued",
-      "agent": "which agent"
+Reflection must produce a behavioral change, not a narrative.
+Required output written to agents/{name}/data/agent-card.json:
+
+  {
+    "agent": "nel",
+    "date": "2026-05-06",
+    "metric_name": "health_score",
+    "metric_before": 65,
+    "metric_after": 71,
+    "what_changed": "Rebuilt check architecture to bypass Mini dependency",
+    "commit": "abc123def",
+    "next_target": {
+      "metric": "health_score",
+      "target": 75,
+      "how": "Add supply chain CVE scan"
     }
-  ],
-  "shipped": [
-    {
-      "what": "Name of improvement",
-      "why": "Problem it solves",
-      "before": "State before",
-      "after": "State after",
-      "commit": "SHA",
-      "agent": "who built it"
-    }
-  ],
-  "outlook": "Forward-looking paragraph",
-  "systemFootnote": "System: healthy | Agents active: N | Queue: up"
-}
-```
+  }
 
-Required key: `summary`. All others: strongly recommended.
+If metric_before == metric_after: nothing shipped.
+Reflection happened internally but produces NO morning report entry.
+
+What IS reflection:
+  "My health score dropped because the Mini is unreachable for 3 of 4 checks.
+   I changed the runner to use cached state when Mini is unreachable.
+   Health score: 65 → 71."
+
+What is NOT reflection:
+  "I read 3 articles about CVEs." (research)
+  "I ran my checks and 2 failed." (status)
+  "I plan to work on my health score." (aspiration)
 
 ---
 
-## PART 6 — STALE DATA HANDLING
+## What Goes On HQ (v3)
 
-If agent ARIC data is >24h old:
-- Do NOT populate intelligence section with stale data
-- Do NOT use [DATA FROM DATE] markers in body text — that pattern is banned
-- DO include one line in system footnote: "N agents have stale ARIC data (>24h)"
-- DO note in outlook if staleness is strategically relevant
+  Morning report            | Hyo | generate-morning-report.sh (v7)
+  Aether analysis           | Hyo | Aether's daily run (Mon-Fri)
+  Agent cards (live)        | Hyo | Each agent's nightly reflection → agent-card.json
+  Research drops            | Hyo | Agents when they publish real research findings
+  Newsletter                | Hyo | Ra's output (the newsletter itself)
+  Decisions inbox           | Hyo | P0 items requiring Hyo's decision only
 
----
-
-## PART 7 — VERIFICATION GATE (post-publish)
-
-```
-□ Intelligence section leads (system health does NOT appear first)
-□ At least one intelligence item has a source URL
-□ System footnote is ≤3 lines
-□ No [DATA FROM DATE] patterns in body
-□ feed.json today field = current system date
-□ HQ renders the report in the feed
-□ No 404 on any linked content
-```
-
-Failure on any check → open P1 ticket immediately.
+  Kai daily report          | ELIMINATED | Duplicated morning report
+  Agent daily reports       | ELIMINATED | Operational → Kai's inbox only
+  Ra content report         | ELIMINATED | Process, not output
+  Agent reflections as Research entries | CHANGED | → agent-card.json updates
 
 ---
 
-## PART 8 — VERSION HISTORY
+## The Reflection Loop (Correct Design)
 
-| Version | Date | Change |
-|---|---|---|
-| v1.0 | 2026-04-19 | Initial protocol |
-| v1.1 | 2026-04-21 | HYO_FEEDBACK gate, writing standard, BLUF format |
-| v2.0 | 2026-04-30 | Full redesign per Hyo directive. Intelligence brief, not system dashboard. CONTENT GATE added. System health relegated to footnote. New sections: intelligence[], shipped[], outlook, systemFootnote. |
-| v2.1 | 2026-04-30 | Synthesis phase added. Raw ARIC findings rewritten by Claude into Aurora-style prose (category, topic, takeaway, Watch). bin/morning-report-synthesize.py. HQ renderer updated to display synthesized format. |
+Based on: Marina Wyss Chapter 7, Reflexion framework (Shinn et al., 2023)
+Principle: Reflection output = behavioral change stored in memory affecting NEXT cycle.
+
+Step-by-step:
+  1. Read own GVU metric from last cycle
+  2. Compare to target
+  3. If delta ≤ 0: identify root cause (WHY, not what failed)
+  4. Make ONE specific behavioral change (update PRIORITIES.md, modify runner, add gate)
+  5. Write change to agent-card.json → updates HQ card
+  6. Write before/after to episodic memory
+  7. If metric moved: return structured output → morning report WHAT IMPROVED section
+
+---
+
+## Anti-Patterns
+
+  Reporting failures to Hyo       | Hyo hired Kai to solve, not report | Kai resolves silently
+  "Agent is researching"          | Research = phase A, not output      | Report when improvement ships
+  SICQ scores in morning report   | Kai's internal metric               | Kai's internal monitoring only
+  Padding empty sections          | Makes every morning feel like nothing happened | Empty = absent
+  Listing what ran overnight      | Hyo needs what CHANGED, not what ran | Only list changes
+  Kai daily report                | Kai IS the orchestrator; morning report IS Kai's report | Eliminated
+
+---
+
+*Version 3.0 — 2026-05-06*
+*Principle: if Hyo can't act on it, it doesn't belong in the morning report.*

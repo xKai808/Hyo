@@ -1,8 +1,7 @@
-# ra Self-Review — 2026-05-06T07:46
+# ra Self-Review — 2026-05-06T13:46
 
 ## Gate 1: Trigger Validation
-- ✗ **2026-05-06-ra-results.json**: WHAT triggers this? Found 0 callers.
-  - Agent: investigate. Is this dead or newly created?
+- ✓ 7 files checked, all have triggers.
 
 ## Gate 2: Visibility Check
 Questions for ra to answer:
@@ -54,6 +53,6 @@ Questions for ra to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 12
-- Gate results: trigger=5/6, visibility=checked, resolutions=6, adoption=-6/5
+- Findings: 11
+- Gate results: trigger=7/7, visibility=checked, resolutions=6, adoption=-6/5
 

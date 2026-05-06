@@ -668,3 +668,10 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/adoring-fervent-meitner/mnt/Hyo/newsletters/2026-05-06.md [sentinel:aurora-ran-today:cbd989ba:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/adoring-fervent-meitner/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:43ee4568:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/loving-sharp-dijkstra/mnt/Hyo/newsletters/2026-05-06.md [sentinel:aurora-ran-today:b9a5f5f1] _(filed 2026-05-06)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/loving-sharp-dijkstra/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:dc4b3fec] _(filed 2026-05-06)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/loving-sharp-dijkstra/mnt/Hyo/newsletters/2026-05-06.md [sentinel:aurora-ran-today:b9a5f5f1:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/loving-sharp-dijkstra/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:dc4b3fec:escalated]

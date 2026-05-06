@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-06T19:45:49Z
+Last updated: 2026-05-06T23:02:33Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-06T19:45:49Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-06T23:02:33Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-010): No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Delegated: 2026-05-06T18:10:26Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-06 — past 06:00 MT deadline
+  - Delegated: 2026-05-06T22:10:39Z
   - Status: DELEGATED
 
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-013): No newsletter produced for 2026-05-06 — past 06:00 MT deadline

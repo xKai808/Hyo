@@ -1,5 +1,5 @@
 {
-  "ts": "2026-05-06T19:32:05Z",
+  "ts": "2026-05-06T23:02:32Z",
   "status": "ISSUES",
   "issues": 5,
   "warnings": 2,
@@ -7,12 +7,12 @@
     {
       "severity": "P1",
       "area": "flags",
-      "detail": "3 unaddressed P0/P1 flags in last 2h"
+      "detail": "1 unaddressed P0/P1 flags in last 2h"
     },
     {
       "severity": "P2",
       "area": "queue",
-      "detail": "1 commands pending \u2014 worker may be stalled"
+      "detail": "4 commands pending \u2014 worker may be stalled"
     },
     {
       "severity": "P3",
@@ -40,36 +40,36 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues; Kicked queue worker for 1 stalled commands",
+  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues; Kicked queue worker for 4 stalled commands",
   "recent_queue_results": [
     {
-      "id": "81c7623e-6b00-4863-88c7-87250a4ebc5e",
+      "id": "cmd-1778108468-1783",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "HOME=/Users/kai echo 'say hi' | /opt/homebrew/bin/claude -p --output-format text",
       "exit_code": 0
     },
     {
-      "id": "44e20d5e-0739-4564-b526-97ea7791da62",
+      "id": "cmd-1778108444-1758",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "cat /tmp/backfill-2026-04-28.log",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778095776-8709",
+      "id": "cmd-1778108421-1733",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605061328",
+      "command": "tail -5 /tmp/backfill-2026-04-28.log 2>/dev/null; echo '---APR29---'; tail -5 /t",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778095634-7487",
+      "id": "cmd-1778108367-97934",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605061326",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605061658",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778095490-6448",
+      "id": "cmd-1778108322-1698",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605061323",
+      "command": "cd ~/Documents/Projects/Hyo && git push origin main",
       "exit_code": 0
     }
   ],
