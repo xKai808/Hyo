@@ -1,5 +1,5 @@
 # PROTOCOL_HQ_PUBLISH.md
-# Version: 1.2
+# Version: 1.3
 # Author: Kai
 # Date: 2026-05-05
 # Status: AUTHORITATIVE — every HQ publish must pass these gates
@@ -12,6 +12,13 @@
 #   (3) author capitalization mismatch → orphan filter group instead of merging with Kai
 #   (4) no visual click-through verification → broken links declared "done" by Kai
 #   All four now have hard gates. See SECTION 8.
+# v1.3 (2026-05-05): Added GATE 13 — live HTTP curl verification via queue on Mini.
+#   ZERO 404 GUARANTEE: no publish is complete until curl confirms HTTP 200 on live URL.
+#   Hyo directive: "Update the protocol to ensure we do not have any issues with
+#   publishing to HQ on command or schedule, it is verified and there is no more
+#   404 errors when anything is expanded." This gate is the structural fix.
+#   GATE 13 runs BEFORE visual verification (GATE 12): HTTP 200 first, then visual.
+#   Pattern: sleep 30 after git push, then curl the live URL, fail on non-200.
 
 ---
 
@@ -101,6 +108,22 @@ GATE 12: Visual click-through verification — MANDATORY, non-skippable.
   → Confirm HTTP 200 (page loads, no 404, no blank page)
   → Take screenshot
   → Publication is NOT complete until this step passes. "It should work" is not verification.
+
+GATE 13 (research-drop): Live HTTP verification via curl — automated, in-pipeline.
+  → AFTER pushing to GitHub and Vercel deploys, verify via queue on Mini:
+  → CODE=$(kai exec "curl -s -o /dev/null -w '%{http_code}' https://www.hyo.world/docs/research/<slug>")
+  → If CODE != "200" → publish is NOT complete. Open P1 ticket. Do not proceed.
+  → This gate catches: dual-path gap (SE-010-011), Vercel deploy not yet live, wrong slug.
+  → This gate runs BEFORE GATE 12 (visual verification). HTTP 200 first, then visual.
+  → Required wait: 30s after git push before running Gate 13 (Vercel deploy time).
+  → Pattern:
+      sleep 30
+      HTTP_CODE=$(kai exec "curl -s -o /dev/null -w '%{http_code}' https://www.hyo.world/docs/research/<slug>")
+      if [[ "$HTTP_CODE" != "200" ]]; then
+        dispatch ticket --title "GATE 13 FAIL: 404 on /docs/research/<slug>" --priority P1
+        exit 1
+      fi
+      echo "[gate13] PASS: HTTP $HTTP_CODE — live URL confirmed"
 ```
 
 ---
