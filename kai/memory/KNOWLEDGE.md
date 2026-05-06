@@ -962,3 +962,62 @@ Full research document: `agents/ra/research/morning-report-content-research-2026
 - P2: Cap intelligence items at 7, add relevance-ranking to synthesis step
 - P2: Expand ARIC sources to include hiring posts, GitHub commit frequency, governance forums
 
+---
+
+## MARINA WYSS RESEARCH FILES — PATHS AND TRIGGERS (2026-05-05)
+
+Two Marina Wyss documents exist. They serve different jobs. Never confuse them.
+
+### 1. The Holy Bible — Applied Analysis
+**Path (both must be kept in sync):**
+- `agents/sam/website/docs/research/marina-wyss-ai-agents-guide.html` (git-tracked, agents path)
+- `website/docs/research/marina-wyss-ai-agents-guide.html` (git-tracked, Vercel-served path)
+- Markdown: `agents/sam/website/docs/research/marina-wyss-ai-agents-guide.md`
+- Live URL: `https://www.hyo.world/docs/research/marina-wyss-ai-agents-guide`
+- HQ feed ID: `marina-wyss-ai-agents-2026-05-05`
+
+**What it is:** Marina Wyss course content mapped to Hyo system failures and fixes. 14 findings, 3 passes of implementation, operational context. Every section shows what was broken in Hyo's system and what was shipped to fix it.
+
+**When to reference it:** Post-mortem and remediation. When something fails and you want to know if this class of problem was already analyzed. When reviewing what implementations have already been shipped from Marina's course.
+
+### 2. Complete Course Guide — Pure Reference
+**Path (both must be kept in sync):**
+- `agents/sam/website/docs/research/marina-wyss-complete-course-guide.html` (git-tracked, agents path)
+- `website/docs/research/marina-wyss-complete-course-guide.html` (git-tracked, Vercel-served path)
+- Markdown: `agents/sam/website/docs/research/marina-wyss-complete-course-guide.md`
+- Live URL: `https://www.hyo.world/docs/research/marina-wyss-complete-course-guide`
+- HQ feed ID: `research-drop-kai-2026-05-05-233516`
+
+**What it is:** 16-chapter step-by-step reference. Pure course content — what Marina teaches, verbatim, chapter by chapter. No Hyo framing. Covers: perceive/decide/act loop, autonomy spectrum, context engineering, task decomposition, tool use, memory/knowledge separation, reflection, guardrails, GVU evaluation pattern, planning, multi-agent systems, advanced decomposition, latency/cost, observability, security, agent economy.
+
+**When to reference it:** Pre-build and design review. Before designing any new agent, new capability, or new protocol, check the Quick Reference Card (10 questions at the bottom of this guide). It is wired into AGENT_CREATION_PROTOCOL.md as a mandatory pre-build gate.
+
+**Quick Reference Card 10 questions (memorize these):**
+1. Is there a perceive/decide/act loop? (Ch.1)
+2. What autonomy level is appropriate? (Ch.2)
+3. Is context injected: role + task + memory + tools + knowledge? (Ch.3)
+4. Is every step independently observable? (Ch.4)
+5. Is the tool interface separate from implementation? (Ch.5)
+6. Is memory (dynamic) separate from knowledge (static)? (Ch.6)
+7. Does the agent reflect after every action? (Ch.7)
+8. Are input validation and output filtering in place? (Ch.8)
+9. Is there one ground-truth metric that cannot be gamed (GVU)? (Ch.9)
+10. Does the agent plan before acting and replan on unexpected results? (Ch.10)
+
+### Why these two files are NOT redundant
+The course guide is universal — how to build agents correctly from first principles. The holy bible is Hyo-specific — what was broken and what was fixed in this exact system. They trigger in different moments and should both exist permanently.
+
+### DUAL-PATH RULE (SE-010-011) — enforced in GATE R2 of publish-to-feed.sh
+Any research HTML published to HQ must exist at BOTH paths: `agents/sam/website/docs/research/` AND `website/docs/research/`. Vercel serves from `website/`. The `agents/sam/website/` path is the primary. GATE R2 in `bin/publish-to-feed.sh` auto-syncs from primary to Vercel path on publish. If both don't exist and match, GATE R2 blocks with exit 1.
+
+### PROTOCOL_HQ_PUBLISH.md — current version (v1.2)
+Location: `kai/protocols/PROTOCOL_HQ_PUBLISH.md`
+Gates 9-12 (added 2026-05-05):
+- GATE 9: readLink must NOT end in .md (Vercel can't serve markdown)
+- GATE 10: Entry must be in reports[] not entries[] (renderResearch() reads reports[])
+- GATE 11: author must be "Kai" (capital K — lowercase creates orphan filter group)
+- GATE 12: Visual click-through verification mandatory after publish
+
+### HYDRATION — SESSION-START ONLY (Marina Wyss Ch. 3 applied)
+Hydration reads (KAI_BRIEF, KNOWLEDGE, TACIT, verified-state, session-handoff) happen ONCE at session start. Hourly re-reads waste tokens and cause context bloat — Marina Wyss context engineering principle. The HOURLY healthcheck should read verified-state.json (pre-computed state cache) only — not re-read all memory files. The distinction: read STATE hourly, read CONTEXT once at start.
+

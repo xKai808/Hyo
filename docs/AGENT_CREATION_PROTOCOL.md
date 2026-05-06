@@ -33,6 +33,32 @@ This protocol is designed to be **portable and licensable**. The hyo.world imple
 
 ---
 
+## PRE-BUILD GATE: Marina Wyss Quick Reference Card
+
+**MANDATORY. Run before writing any file. No exceptions.**
+
+Before designing any agent or capability, answer all 10 questions from the Marina Wyss Complete Course Guide. A "NO" on any question means you are not ready to build — fix the gap first.
+
+Full reference: `agents/sam/website/docs/research/marina-wyss-complete-course-guide.md`
+Live URL: `https://www.hyo.world/docs/research/marina-wyss-complete-course-guide`
+
+**10 Questions (all must be YES before building):**
+
+1. **Perceive/Decide/Act loop** — Is there a clear perceive → decide → act cycle? (Ch.1)
+2. **Autonomy level** — What level (1–5) is appropriate? Is this justified? (Ch.2)
+3. **Context injection** — Will context include: role + task + memory (last 3 actions) + tools + knowledge? (Ch.3)
+4. **Independent observability** — Is every step independently observable? If a step fails, can you identify exactly which one? (Ch.4)
+5. **Tool interface separation** — Is the tool interface (name, description, typed schema) defined separately from the implementation? (Ch.5)
+6. **Memory vs. knowledge** — Is dynamic memory (updated each run) separate from static knowledge (read-only during execution)? (Ch.6)
+7. **Reflection** — Does the agent reflect after every action? Is the reflection structured? (Ch.7)
+8. **Guardrails** — Are input validation, output filtering, and scope boundary enforcement in place? (Ch.8)
+9. **GVU metric** — Is there ONE ground-truth metric that cannot be gamed (Generator-Verifier-Updater pattern)? (Ch.9)
+10. **Planning before acting** — Does the agent plan before acting and replan on unexpected results? (Ch.10)
+
+If any answer is NO: do not build. Design the missing piece first.
+
+---
+
 ## 1. Pre-Creation: Define the Agent
 
 Before writing a single file, answer these questions. If you can't answer all of them, the agent isn't ready to be built.
