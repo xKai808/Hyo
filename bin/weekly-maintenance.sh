@@ -158,6 +158,12 @@ fi
 HYO_ROOT="$ROOT" python3 "$ROOT/bin/context-optimizer.py" --rotate-logs >> "$LOG" 2>&1
 log "JSONL logs rotated"
 
+# ── 4.3. Rotate text .log files (unbounded — primary disk threat) ─────────────
+# kai-autonomous.log, self-improve.log, claude-delegate.log can reach 10MB+
+# log-rotation.sh: >5MB → compress tail, keep last 500 lines; queue jobs >7d → tar.gz
+HYO_ROOT="$ROOT" bash "$ROOT/bin/log-rotation.sh" >> "$LOG" 2>&1
+log "Text log files rotated + queue jobs archived"
+
 # ── 4.5. Trim bloated ledger files ───────────────────────────────────────────
 # guidance.jsonl and hyo-inbox.jsonl grow unbounded. Archive entries >30d old.
 python3 - "$ROOT" << 'PYEOF'
