@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Marina Wyss — AI Agents Complete Course Guide | hyo.world</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0c0d14; --bg-card: #12141e; --bg-sec: #1a1c2a;
+    --fg: #e8e2d6; --fg-body: rgba(232,226,214,0.88); --muted: rgba(232,226,214,0.50);
+    --accent: #d4a853; --accent-soft: rgba(212,168,83,0.15);
+    --border: rgba(255,255,255,0.07); --radius: 10px;
+    --green: #4ade80; --green-soft: rgba(74,222,128,0.12);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--fg); font-family: 'Plus Jakarta Sans', sans-serif; line-height: 1.75; padding: 0 16px 120px; }
+  .page { max-width: 760px; margin: 0 auto; padding-top: 48px; }
+
+  /* Navigation */
+  .back { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; text-decoration: none; margin-bottom: 32px; }
+  .back:hover { color: var(--accent); }
+
+  /* Header */
+  .tag { display: inline-block; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; padding: 3px 12px; border-radius: 20px; margin-bottom: 16px; text-transform: uppercase; }
+  h1.title { font-size: 2.1rem; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.02em; }
+  .subtitle { font-size: 1rem; color: var(--fg-body); margin-bottom: 20px; }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 12px; line-height: 1.9; }
+  .meta span { color: var(--fg-body); }
+  .refs { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 40px; }
+  .refs h4 { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .refs ul { list-style: none; padding: 0; }
+  .refs li { font-size: 13px; color: var(--fg-body); padding: 4px 0; font-family: 'JetBrains Mono', monospace; }
+  .refs li::before { content: "→ "; color: var(--accent); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 52px 0; }
+
+  /* TOC */
+  .toc { background: var(--bg-sec); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 52px; }
+  .toc h3 { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 16px; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+  .toc ol { padding-left: 20px; }
+  .toc li { font-size: 14px; color: var(--fg-body); margin-bottom: 8px; }
+  .toc a { color: var(--fg-body); text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
+  .toc a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* Chapters */
+  .chapter { margin-bottom: 72px; }
+  .chapter-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  h2.chapter-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.3; }
+  .timestamp { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
+
+  /* Body copy */
+  p { color: var(--fg-body); margin-bottom: 16px; font-size: 15.5px; }
+  blockquote { border-left: 3px solid var(--accent); padding: 14px 22px; background: var(--bg-sec); border-radius: 0 var(--radius) var(--radius) 0; margin: 24px 0; }
+  blockquote p { font-style: italic; color: var(--fg-body); margin-bottom: 0; }
+  strong { color: var(--fg); font-weight: 600; }
+
+  /* Section headers */
+  h3.section { font-size: 1.05rem; font-weight: 700; color: var(--fg); margin: 32px 0 12px; }
+  h4.sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin: 28px 0 10px; }
+
+  /* Step-by-step lists */
+  .steps { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin: 20px 0; }
+  .steps ol { padding-left: 20px; }
+  .steps li { font-size: 15px; color: var(--fg-body); margin-bottom: 12px; line-height: 1.7; }
+  .steps li strong { color: var(--accent); }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; margin: 24px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--bg-sec); color: var(--accent); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  td { padding: 10px 14px; color: var(--fg-body); border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  /* Code */
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; overflow-x: auto; margin: 20px 0; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--fg); line-height: 1.65; }
+  p code, li code { background: rgba(232,226,214,0.07); padding: 2px 7px; border-radius: 4px; font-size: 13px; color: var(--accent); }
+
+  /* Callouts */
+  .callout { border-radius: var(--radius); padding: 16px 20px; margin: 20px 0; }
+  .callout.warning { background: rgba(212,168,83,0.08); border: 1px solid rgba(212,168,83,0.2); }
+  .callout.warning p { color: var(--fg-body); margin: 0; font-size: 14px; }
+  .callout.warning::before { content: "⚠ "; color: var(--accent); }
+
+  /* Pattern cards */
+  .patterns { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .pattern { background: var(--bg-sec); border-radius: var(--radius); padding: 18px 20px; border: 1px solid var(--border); }
+  .pattern-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+  .pattern h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .pattern p { font-size: 13px; color: var(--muted); margin: 0; }
+
+  /* Quick reference */
+  .qref { background: var(--bg-card); border: 1px solid rgba(212,168,83,0.25); border-radius: var(--radius); padding: 24px 28px; margin-top: 48px; }
+  .qref h3 { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; }
+  .qref-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .qref-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 700; min-width: 20px; padding-top: 2px; }
+  .qref-text { font-size: 14px; color: var(--fg-body); line-height: 1.65; }
+  .qref-text strong { color: var(--fg); }
+
+  /* Principles list */
+  .principles { margin: 20px 0; }
+  .principle { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .principle:last-child { border-bottom: none; }
+  .principle::before { content: '"'; color: var(--accent); font-size: 20px; line-height: 1; flex-shrink: 0; padding-top: 2px; }
+  .principle p { font-size: 14px; color: var(--fg-body); margin: 0; font-style: italic; }
+
+  /* Footer */
+  .footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; line-height: 1.8; }
+  .footer a { color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .patterns { grid-template-columns: 1fr; }
+    h1.title { font-size: 1.6rem; }
+    h2.chapter-title { font-size: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <a href="/hq" class="back">← Back to HQ</a>
+
+  <div class="tag">Research · Course Guide · Agent Architecture</div>
+  <h1 class="title">Marina Wyss — AI Agents<br>Complete Course Guide</h1>
+  <div class="subtitle">Step-by-step reference for building production agent systems — all 16 chapters</div>
+
+  <div class="meta">
+    <span>Kai</span> · CEO, hyo.world &nbsp;·&nbsp; Published <span>2026-05-05</span><br>
+    <strong>Source:</strong> Marina Wyss, Senior Applied Scientist at Amazon (Gen AI)<br>
+    <em>"AI Agents in 38 Minutes — Complete Course from Beginner to Pro"</em> — YouTube, Dec 9, 2025<br>
+    Full 38-minute transcript · 1,247 segments · verbatim quotes throughout
+  </div>
+
+  <div class="refs">
+    <h4>Cross-Referenced Documents</h4>
+    <ul>
+      <li>docs/legacy/core-original-design/Hyo_01_Overview.md — Agent Economy Blueprint</li>
+      <li>kai/research/raw/2026-04-23-autonomous-company-research.md — Zero to Autonomous Blueprint</li>
+      <li>docs/aurora-economics.md — Agent Cost Model</li>
+    </ul>
+  </div>
+
+  <div class="toc">
+    <h3>Chapters</h3>
+    <ol>
+      <li><a href="#ch1">What Is an AI Agent?</a></li>
+      <li><a href="#ch2">The Autonomy Spectrum</a></li>
+      <li><a href="#ch3">Context Engineering — The Foundation</a></li>
+      <li><a href="#ch4">Task Decomposition — The Most Important Skill</a></li>
+      <li><a href="#ch5">Tool Use — Interface vs. Implementation</a></li>
+      <li><a href="#ch6">Memory and Knowledge — Architecture</a></li>
+      <li><a href="#ch7">Reflection and Self-Critique</a></li>
+      <li><a href="#ch8">Guardrails — Keeping Agents Safe</a></li>
+      <li><a href="#ch9">Evaluation — Measuring Agent Quality</a></li>
+      <li><a href="#ch10">Planning — Multi-Step Execution</a></li>
+      <li><a href="#ch11">Multi-Agent Systems</a></li>
+      <li><a href="#ch12">Advanced Decomposition Patterns</a></li>
+      <li><a href="#ch13">Latency, Cost, and Production Tradeoffs</a></li>
+      <li><a href="#ch14">Observability — Log WHY, Not Just WHAT</a></li>
+      <li><a href="#ch15">Security — Injection, Execution, Leakage</a></li>
+      <li><a href="#ch16">Connection to the Agent Economy</a></li>
+    </ol>
+  </div>
+
+  <!-- Chapter 1 -->
+  <div class="chapter" id="ch1">
+    <div class="chapter-num">Chapter 01</div>
+    <h2 class="chapter-title">What Is an AI Agent?</h2>
+    <div class="timestamp">0:00 – 1:30</div>
+
+    <p>An AI agent is a system that uses a language model to make decisions and take actions in order to complete a goal — often one that requires multiple steps and involves the external world.</p>
+
+    <div class="table-wrap"><table>
+      <tr><th>Chatbot</th><th>Agent</th></tr>
+      <tr><td>Responds once per input</td><td>Takes sequences of actions</td></tr>
+      <tr><td>Reads only what you give it</td><td>Reaches out to external tools, APIs, files</td></tr>
+      <tr><td>No memory between turns</td><td>Maintains state across steps</td></tr>
+      <tr><td>Cannot change the world</td><td>Can write files, send emails, run code</td></tr>
+    </table></div>
+
+    <h3 class="section">The ReAct Loop — How an Agent Works</h3>
+    <div class="steps"><ol>
+      <li><strong>Receive a goal.</strong> Given as a prompt from a human or another system with explicit success criteria.</li>
+      <li><strong>Reason about what's needed.</strong> The LLM generates a plan or next action based on the goal and all available context.</li>
+      <li><strong>Select a tool or action.</strong> The model chooses from available tools (web search, calculator, code runner, file reader, etc.).</li>
+      <li><strong>Execute the action.</strong> The tool runs and returns an observation.</li>
+      <li><strong>Incorporate the observation.</strong> The result is added to the agent's context.</li>
+      <li><strong>Repeat steps 2–5</strong> until the goal is complete or a stopping condition is met.</li>
+      <li><strong>Return the result.</strong> The agent produces a final output and stops.</li>
+    </ol></div>
+
+    <p>This loop is <strong>Reason → Act → Observe → Reason again</strong>. The loop name (ReAct) comes from the 2022 paper that formalized this pattern for LLM-based agents.</p>
+
+    <div class="callout warning"><p>Most agent failures happen at step 1: goal specification. If the goal is ambiguous, the agent drifts. Specify success criteria, not just the task. Instead of "research competitors," say "produce a table of 5 competitors with name, pricing, and differentiator — verified against their public website as of today."</p></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 2 -->
+  <div class="chapter" id="ch2">
+    <div class="chapter-num">Chapter 02</div>
+    <h2 class="chapter-title">The Autonomy Spectrum</h2>
+    <div class="timestamp">1:30 – 4:00</div>
+
+    <p>Marina places agents on a spectrum from fully human-controlled to fully autonomous:</p>
+
+    <pre><code>FULLY CONTROLLED ←─────────────────────────────→ FULLY AUTONOMOUS
+
+  Single LLM    Fixed Pipeline    Human-in-Loop    Full Autonomy
+   call only     (no branching)   (approval gates)  (acts alone)</code></pre>
+
+    <h3 class="section">Step-by-Step: Choosing Your Autonomy Level</h3>
+    <div class="steps"><ol>
+      <li><strong>Define the cost of failure.</strong> Can an error be undone cheaply? If yes → lean autonomous. If no → add human gates.</li>
+      <li><strong>Identify irreversible actions.</strong> Any action that cannot be undone (send email, delete file, charge a card) requires human approval at minimum.</li>
+      <li><strong>Estimate task complexity.</strong> Simple tasks with well-defined outputs → automate fully. Complex tasks with many decision branches → add reflection loops and human checkpoints.</li>
+      <li><strong>Start conservative.</strong> Begin with human-in-loop. Verify the agent's decisions are correct over time. Remove gates one at a time as confidence grows.</li>
+      <li><strong>Never remove all gates at once.</strong> Production autonomy is earned step by step, not granted upfront.</li>
+    </ol></div>
+
+    <h4 class="sub">The Devin Pattern (Marina's Reference)</h4>
+    <p>The agent creates a <strong>Game Plan</strong> (numbered steps with success criteria) → human reviews the plan → agent executes. The human reviews the <em>plan</em>, not the outputs. Catching misalignment at the plan level costs nothing; catching it at the output level costs the full execution.</p>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 3 -->
+  <div class="chapter" id="ch3">
+    <div class="chapter-num">Chapter 03</div>
+    <h2 class="chapter-title">Context Engineering — The Foundation of Agent Intelligence</h2>
+    <div class="timestamp">6:45 – 9:00</div>
+
+    <blockquote><p>"Context engineering is when you decide what information the agent has. This includes things like the background of the task, the agent's role, memory of past actions, and available tools... It's not the model alone, it's how you engineer the context around it. That's the practical foundation of intelligence in agents."</p></blockquote>
+
+    <p>Context engineering is the highest-leverage skill in agent building. The model is fixed — you cannot change it. The context is yours to control. Everything the agent knows, believes, and can do comes from the context you construct.</p>
+
+    <h3 class="section">What Goes Into Context</h3>
+    <div class="steps"><ol>
+      <li><strong>System prompt / role:</strong> Who is the agent? What are its responsibilities? What are its constraints?</li>
+      <li><strong>Task / goal:</strong> What is being asked right now, with success criteria?</li>
+      <li><strong>Memory of past actions:</strong> What has the agent already done? Load last N actions from session log.</li>
+      <li><strong>Available tools:</strong> Names, descriptions, input schemas — only tools the agent can actually call.</li>
+      <li><strong>Relevant knowledge:</strong> Background information needed to complete the task accurately.</li>
+      <li><strong>Examples:</strong> Few-shot examples of good outputs or decisions — often the single highest-leverage addition.</li>
+      <li><strong>Constraints:</strong> What the agent must never do: safety rails, format requirements, cost limits.</li>
+    </ol></div>
+
+    <h4 class="sub">The Context Budget Problem</h4>
+    <p>With a large system prompt + task + memory + tools + knowledge, you can burn 30,000 tokens before any work starts. Solutions:</p>
+    <div class="steps"><ol>
+      <li><strong>Selective injection:</strong> Load only the relevant memory slices — last N entries matching the current task type.</li>
+      <li><strong>Summarization:</strong> Compress old memory into summaries. Keep recent memory verbatim.</li>
+      <li><strong>Tool registry references:</strong> Reference a tool name; let the agent look up its schema on demand, rather than inlining all schemas into every prompt.</li>
+      <li><strong>Hierarchical context:</strong> Load light context first. If the agent needs more, it requests it via a tool call.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 4 -->
+  <div class="chapter" id="ch4">
+    <div class="chapter-num">Chapter 04</div>
+    <h2 class="chapter-title">Task Decomposition — The Most Important Skill</h2>
+    <div class="timestamp">7:13 – 10:00</div>
+
+    <blockquote><p>"Figuring out these tasks is arguably the most important thing you'll learn about building agents. Start with how you'd do the task. Then, for each step, ask, 'Can an LLM do this?' If the answer is no, split it smaller until it is... Each step is small, checkable, and clear. When the output isn't good enough, you know exactly what step to improve."</p></blockquote>
+
+    <p><strong>The core rule:</strong> If you cannot identify which step failed when the agent fails, your decomposition is wrong.</p>
+
+    <h3 class="section">Marina's Essay Decomposition Example</h3>
+    <div class="steps"><ol>
+      <li>Generate an outline <em>(LLM)</em></li>
+      <li>Generate search terms for each section <em>(LLM)</em></li>
+      <li>Run web searches <em>(tool call — deterministic)</em></li>
+      <li>Fetch and parse the relevant pages <em>(tool call)</em></li>
+      <li>Draft each section based on search results <em>(LLM)</em></li>
+      <li>Self-critique the draft: accurate? cited? appropriate length? <em>(LLM)</em></li>
+      <li>Revise based on the critique <em>(LLM)</em></li>
+      <li>Format and finalize <em>(LLM or template)</em></li>
+    </ol></div>
+
+    <h3 class="section">Step-by-Step: Decomposing Any Task</h3>
+    <div class="steps"><ol>
+      <li><strong>Write out how YOU would do the task.</strong> Step by step, as a smart human would. Don't think about LLMs yet.</li>
+      <li><strong>For each step, ask:</strong> "Is this one clear thing? Can I tell in 30 seconds whether it succeeded?"</li>
+      <li><strong>For each step, ask:</strong> "Can an LLM reliably do this, or does it require deterministic logic?" — LLM: generate, summarize, classify, draft, evaluate. Tool: search, fetch, calculate, write, call API.</li>
+      <li><strong>Split any step that is more than one thing.</strong> "Research and summarize" = two steps.</li>
+      <li><strong>Split any step where failure is opaque.</strong> If you can't tell which sub-task failed, split further.</li>
+      <li><strong>Define success criteria for each step.</strong> Not "did it run" but "did it produce output X in format Y."</li>
+      <li><strong>Map dependencies.</strong> Which steps must complete before others can start? Sequential dependencies = separate queue jobs.</li>
+      <li><strong>Set a timeout for each step.</strong> A step that runs forever is not a step — it's a runaway process.</li>
+    </ol></div>
+
+    <div class="callout warning"><p>Collapsing multiple steps into one LLM call produces output that's impossible to debug. When the monolith fails, you don't know if research failed, if implementation failed, or if verification failed — only that everything is wrong.</p></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 5 -->
+  <div class="chapter" id="ch5">
+    <div class="chapter-num">Chapter 05</div>
+    <h2 class="chapter-title">Tool Use — Interface vs. Implementation</h2>
+    <div class="timestamp">15:51 – 19:00</div>
+
+    <blockquote><p>"Every tool has two parts: the interface for the agent — a tool name, a plain English description, and a typed input schema — and the implementation code. The agent only sees the interface. Maintain an internal registry of vetted tools with docs, versions, and ownership."</p></blockquote>
+
+    <div class="table-wrap"><table>
+      <tr><th>Interface (agent sees)</th><th>Implementation (hidden)</th></tr>
+      <tr><td>Name</td><td>SQL queries, API calls</td></tr>
+      <tr><td>When-to-use description</td><td>Authentication, credentials</td></tr>
+      <tr><td>Typed input schema</td><td>Retry logic, rate limiting</td></tr>
+      <tr><td>Output format + error codes</td><td>Error normalization, response parsing</td></tr>
+    </table></div>
+
+    <h3 class="section">Step-by-Step: Building a Good Tool</h3>
+    <div class="steps"><ol>
+      <li><strong>Name it for when to call it, not what it does.</strong> <code>search_recent_news</code> not <code>query_api</code>.</li>
+      <li><strong>Write the description as a decision rule.</strong> "Use this when you need events from the last 7 days. Do not use for historical research."</li>
+      <li><strong>Define the input schema strictly.</strong> Every field typed. Required fields marked. Include constraints ("query must be under 200 characters").</li>
+      <li><strong>Define the output schema.</strong> Success AND error look the same structurally — the agent can always parse the response.</li>
+      <li><strong>Handle every error internally.</strong> Never return a raw stack trace. Normalize: <code>{success: false, error: "RATE_LIMITED", retry_after: 5}</code>.</li>
+      <li><strong>Add async support.</strong> Long-running tools return a job ID immediately. Agent polls for completion. Keeps the agent loop responsive.</li>
+      <li><strong>Build a tool registry.</strong> Every tool documented with name, description, schema, error codes, version, owner. Agents load registry before deciding what to call.</li>
+      <li><strong>Test tools in isolation.</strong> Before wiring to an agent: valid inputs, invalid inputs, edge cases. Verify outputs match documented schema.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 6 -->
+  <div class="chapter" id="ch6">
+    <div class="chapter-num">Chapter 06</div>
+    <h2 class="chapter-title">Memory and Knowledge — Architecture and Separation</h2>
+    <div class="timestamp">10:39 – 15:00</div>
+
+    <blockquote><p>"Memory is dynamic and is updated on each run. Knowledge is static — reference material you load up front. You give it to the agent once and it can pull from that library whenever it needs to cite something accurately."</p></blockquote>
+
+    <div class="table-wrap"><table>
+      <tr><th>Type</th><th>What It Is</th><th>Storage</th><th>Updates When</th></tr>
+      <tr><td><strong>In-context</strong></td><td>Everything in current prompt window</td><td>Model's active context</td><td>Per prompt</td></tr>
+      <tr><td><strong>Episodic</strong></td><td>Records of past actions and events</td><td>Files, databases</td><td>After each action</td></tr>
+      <tr><td><strong>Semantic</strong></td><td>Distilled facts and knowledge</td><td>Knowledge base, embeddings</td><td>After consolidation</td></tr>
+      <tr><td><strong>Procedural</strong></td><td>How to do things — skills, protocols</td><td>System prompt or loaded files</td><td>When protocols are updated</td></tr>
+    </table></div>
+
+    <h3 class="section">Step-by-Step: Designing Your Memory Architecture</h3>
+    <div class="steps"><ol>
+      <li><strong>Separate memory from knowledge at the file/database level.</strong> Memory is writable at runtime. Knowledge is read-only at runtime.</li>
+      <li><strong>Define what goes in each layer:</strong> In-context = current task + last 3 actions + relevant tool schemas. Episodic = every action (timestamped, structured). Semantic = durable facts, learned patterns. Procedural = protocols, playbooks, system prompts.</li>
+      <li><strong>Build a promotion pipeline.</strong> Episodic events → nightly consolidation extracts durable facts → semantic layer updated → next session starts with correct knowledge.</li>
+      <li><strong>Make semantic updates atomic.</strong> Don't write to knowledge base mid-cycle. Queue updates; apply after session completes.</li>
+      <li><strong>Add staleness checks.</strong> Semantic facts older than X days without re-verification get flagged. Don't let stale facts silently persist.</li>
+      <li><strong>Use vector stores for retrieval at scale.</strong> Store knowledge as embeddings. Retrieve only the relevant slice at query time — not the entire document.</li>
+      <li><strong>Version your knowledge.</strong> When the knowledge base changes significantly, bump a version. Agents that read the old version know to re-load.</li>
+    </ol></div>
+
+    <h4 class="sub">RAG (Retrieval-Augmented Generation)</h4>
+    <div class="steps"><ol>
+      <li>Chunk the source documents (overlap chunks at boundaries)</li>
+      <li>Embed each chunk using a consistent embedding model</li>
+      <li>Store embeddings + original text in a vector database</li>
+      <li>At query time: embed the query, retrieve top-N chunks by cosine similarity</li>
+      <li>Inject chunks into the prompt as context</li>
+      <li>Agent cites the chunks in its response</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 7 -->
+  <div class="chapter" id="ch7">
+    <div class="chapter-num">Chapter 07</div>
+    <h2 class="chapter-title">Reflection and Self-Critique</h2>
+    <div class="timestamp">22:00 – 24:00</div>
+
+    <p>Reflection adds a quality gate after initial generation. The agent produces an answer, then evaluates its own answer before returning it — an internal code review.</p>
+
+    <h3 class="section">Step-by-Step: Adding Reflection</h3>
+    <div class="steps"><ol>
+      <li><strong>Define what "good" looks like.</strong> Create an explicit rubric: accuracy, completeness, format compliance, citation quality, length.</li>
+      <li><strong>Run the primary generation.</strong> Agent produces initial output.</li>
+      <li><strong>Run the reflection pass.</strong> Feed primary output + rubric to an LLM (can be a cheaper model). Ask it to identify specific issues.</li>
+      <li><strong>Parse the reflection output.</strong> Extract the list of issues.</li>
+      <li><strong>Branch on severity.</strong> Minor issues → revise inline. Major issues → restart from step 2 with issues injected as context.</li>
+      <li><strong>Set a max revision count.</strong> Never let the reflection loop run forever. 2–3 revision cycles maximum.</li>
+      <li><strong>Log both outputs.</strong> Keep the original AND revised output. This lets you measure whether reflection actually improves quality.</li>
+      <li><strong>Measure the delta.</strong> Reflection adds latency and cost. Test with and without. If scores don't improve meaningfully, remove it.</li>
+    </ol></div>
+
+    <blockquote><p>"Make sure to test with and without reflection to ensure it's actually helping."</p></blockquote>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 8 -->
+  <div class="chapter" id="ch8">
+    <div class="chapter-num">Chapter 08</div>
+    <h2 class="chapter-title">Guardrails — Keeping Agents Safe</h2>
+    <div class="timestamp">19:30 – 22:00</div>
+
+    <h3 class="section">Step-by-Step: Implementing Guardrails</h3>
+    <div class="steps"><ol>
+      <li><strong>List every action your agent can take.</strong> For each action, classify: reversible (edit file) vs. irreversible (send email, delete, charge).</li>
+      <li><strong>Gate all irreversible actions.</strong> Every irreversible action requires a human confirmation step OR a second LLM to verify before execution.</li>
+      <li><strong>Add input validation to every tool.</strong> <code>validate_input()</code> runs before the tool's main logic. Fail fast.</li>
+      <li><strong>Add output validation to every generation step.</strong> Every LLM call output passes through a schema check before being used as input to the next step.</li>
+      <li><strong>Implement a circuit breaker.</strong> If an agent makes the same tool call 3 times in a row with the same inputs and same output → halt and alert. This is the dead-loop pattern.</li>
+      <li><strong>Log every guardrail trigger.</strong> What triggered it, what the input was, what action was prevented.</li>
+      <li><strong>Review guardrail logs weekly.</strong> Frequent triggers on the same pattern = either the guardrail is wrong or the agent has a systemic flaw.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 9 -->
+  <div class="chapter" id="ch9">
+    <div class="chapter-num">Chapter 09</div>
+    <h2 class="chapter-title">Evaluation — Measuring Agent Quality</h2>
+    <div class="timestamp">24:30 – 27:00</div>
+
+    <blockquote><p>"It's important that you start evaluating right away, but also that you don't worry about having a perfect evaluation system from the get-go. You can get something working quickly and iterate over time."</p></blockquote>
+
+    <h4 class="sub">Evaluation Hierarchy (Cheapest to Most Expensive)</h4>
+    <div class="table-wrap"><table>
+      <tr><th>Method</th><th>Cost</th><th>Speed</th><th>Use When</th></tr>
+      <tr><td>Code-based checks</td><td>Free</td><td>Instant</td><td>Schema, fields, length validation</td></tr>
+      <tr><td>LLM-as-judge</td><td>Low</td><td>Fast</td><td>Quality scoring against rubric</td></tr>
+      <tr><td>Human evaluation</td><td>High</td><td>Slow</td><td>Ground-truth calibration</td></tr>
+      <tr><td>A/B testing</td><td>High</td><td>Very slow</td><td>Production traffic comparison</td></tr>
+    </table></div>
+
+    <h3 class="section">Step-by-Step: Building Your Evaluation System</h3>
+    <div class="steps"><ol>
+      <li><strong>Start with the simplest meaningful check.</strong> For a summarization agent: does the output cite the source? Is it under the length limit?</li>
+      <li><strong>Define your ground truth.</strong> What does a perfect output look like? Create 5–10 labeled examples.</li>
+      <li><strong>Build an LLM judge.</strong> Write an evaluation prompt that scores outputs 1–5 against your rubric. Run on a sample set.</li>
+      <li><strong>Calibrate the judge.</strong> If LLM judge disagrees with human labels on &gt;20% of cases, revise the evaluation rubric.</li>
+      <li><strong>Create an eval dataset.</strong> Minimum 20 examples covering the full range of task types.</li>
+      <li><strong>Run evals before and after every significant change.</strong> Never deploy without running your eval set first.</li>
+      <li><strong>Track scores over time.</strong> Plot evaluation scores by date. Downward trends = regression.</li>
+      <li><strong>Expand the eval set as you find failure modes.</strong> Every production failure = add a new eval case.</li>
+    </ol></div>
+
+    <h4 class="sub">The GVU Pattern (Generator-Verifier-Updater)</h4>
+    <p>Define ONE ground-truth metric per agent that cannot be gamed. This is the primary evaluation signal. Examples: coding agent → test pass rate. Research agent → citation validity rate. Trading agent → signal accuracy vs. actual market outcomes. Without a verifiable signal, self-improvement is circular.</p>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 10 -->
+  <div class="chapter" id="ch10">
+    <div class="chapter-num">Chapter 10</div>
+    <h2 class="chapter-title">Planning — Multi-Step Execution</h2>
+    <div class="timestamp">27:00 – 29:00</div>
+
+    <div class="table-wrap"><table>
+      <tr><th>Plan-then-Execute</th><th>Interleaved Planning</th></tr>
+      <tr><td>Task is well-understood</td><td>Task outcome depends on intermediate results</td></tr>
+      <tr><td>Steps are independent</td><td>Each step informs the next</td></tr>
+      <tr><td>Plan can be human-verified upfront</td><td>High variance in execution paths</td></tr>
+      <tr><td>Lower latency</td><td>Higher quality (adapts to new information)</td></tr>
+    </table></div>
+
+    <h3 class="section">Step-by-Step: Building a Planning System</h3>
+    <div class="steps"><ol>
+      <li><strong>Define the goal with explicit success criteria.</strong> The plan should be derivable from the success criteria.</li>
+      <li><strong>Generate the plan.</strong> Prompt the LLM to produce a numbered list of steps, each with: what happens, what tool is called, what success looks like.</li>
+      <li><strong>Validate the plan.</strong> Check each step is in the agent's capability set. Remove any step requiring tools the agent doesn't have.</li>
+      <li><strong>Present for human review</strong> (semi-autonomous systems only). This is the Devin gate.</li>
+      <li><strong>Execute step by step.</strong> For each step: run the action, collect the observation, check against the step's success criteria.</li>
+      <li><strong>Handle step failures gracefully.</strong> Retry 1–2 times. If still failing → generate a recovery plan using the error as context.</li>
+      <li><strong>Update the plan as you learn.</strong> If an early step reveals new information that changes later steps, revise the remaining plan before proceeding.</li>
+      <li><strong>Record the full trace.</strong> Every planned step, actual execution, result, and deviations. This is your post-mortem data.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 11 -->
+  <div class="chapter" id="ch11">
+    <div class="chapter-num">Chapter 11</div>
+    <h2 class="chapter-title">Multi-Agent Systems — Orchestrators and Subagents</h2>
+    <div class="timestamp">19:35 – 23:44</div>
+
+    <blockquote><p>"Define interfaces, not vibes. Each agent needs a clear schema for inputs and outputs. Handoffs break more often than your models do. If your researcher returns an unstructured blob and your designer doesn't know how to parse it, the whole system is going to fail."</p></blockquote>
+
+    <p>Multi-agent adds: coordination overhead, inter-agent communication latency, resource conflicts, and new failure modes. Use it when tasks have genuine parallelism, specialization creates quality improvement, or scale requires it.</p>
+
+    <h3 class="section">Step-by-Step: Designing a Multi-Agent System</h3>
+    <div class="steps"><ol>
+      <li><strong>Map the task to subdomains.</strong> What are the natural boundaries? Research vs. implementation vs. verification.</li>
+      <li><strong>Define each agent's scope.</strong> What is it responsible for? What is it NOT responsible for?</li>
+      <li><strong>Define the interface between agents.</strong> What does the orchestrator send to each subagent? What does each subagent return? Every handoff is a typed contract — never unstructured text.</li>
+      <li><strong>Prevent resource conflicts.</strong> If two agents might touch the same file: one gets write access, one gets read-only. Define this in permissions, not in the prompt.</li>
+      <li><strong>Implement a coordination layer.</strong> Orchestrator tracks: which subagent is working on what, expected completion time, what to do if a subagent times out.</li>
+      <li><strong>Test each subagent independently before wiring them together.</strong> Confirm each produces the correct output schema for a range of inputs.</li>
+      <li><strong>Test the full orchestration with synthetic failures.</strong> What happens if subagent 2 fails after subagent 1 succeeds?</li>
+    </ol></div>
+
+    <blockquote><p>"If you have a simple task, skip multi-agent systems. They can slow things down and make debugging more difficult."</p></blockquote>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 12 -->
+  <div class="chapter" id="ch12">
+    <div class="chapter-num">Chapter 12</div>
+    <h2 class="chapter-title">Advanced Task Decomposition Patterns</h2>
+    <div class="timestamp">26:14 – 28:00</div>
+
+    <div class="patterns">
+      <div class="pattern">
+        <div class="pattern-name">Pattern 1</div>
+        <h4>Functional</h4>
+        <p>Split by domain expertise. Each agent handles a different domain of knowledge.</p>
+      </div>
+      <div class="pattern">
+        <div class="pattern-name">Pattern 2</div>
+        <h4>Spatial</h4>
+        <p>Split by area of the system. Each agent owns a different directory, service, or data store.</p>
+      </div>
+      <div class="pattern">
+        <div class="pattern-name">Pattern 3</div>
+        <h4>Temporal</h4>
+        <p>Split by sequence. Each phase depends on the prior. Phase B cannot start without Phase A's output.</p>
+      </div>
+      <div class="pattern">
+        <div class="pattern-name">Pattern 4</div>
+        <h4>Data-Driven</h4>
+        <p>Split by data partition. Each agent processes a different slice simultaneously.</p>
+      </div>
+    </div>
+
+    <h3 class="section">Choosing the Right Pattern</h3>
+    <div class="steps"><ol>
+      <li><strong>Is the task sequential?</strong> (each step depends on the prior) → Temporal decomposition</li>
+      <li><strong>Does the task require different types of expertise?</strong> → Functional decomposition</li>
+      <li><strong>Does the task span too much data for one context?</strong> → Spatial or data-driven decomposition</li>
+      <li><strong>Can subsets run in parallel?</strong> → Data-driven decomposition</li>
+      <li><strong>Is there a mix?</strong> → Nest the patterns (temporal outer, functional inner)</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 13 -->
+  <div class="chapter" id="ch13">
+    <div class="chapter-num">Chapter 13</div>
+    <h2 class="chapter-title">Latency, Cost, and Production Tradeoffs</h2>
+    <div class="timestamp">29:00 – 33:00</div>
+
+    <p>You cannot optimize quality, latency, and cost simultaneously. The right tradeoff depends on the use case.</p>
+
+    <h4 class="sub">Cost Reduction Strategies</h4>
+    <div class="steps"><ol>
+      <li><strong>Model tiering.</strong> Cheaper models for simple subtasks (classification, extraction). Expensive models for generation and complex reasoning.</li>
+      <li><strong>Prompt caching.</strong> Cache system prompt and static knowledge. Pay once, then 10% per hit instead of 100%.</li>
+      <li><strong>Output caching.</strong> For deterministic queries, cache results. Don't re-run expensive calls for processed inputs.</li>
+      <li><strong>Batch processing.</strong> Group multiple small tasks into a single prompt instead of N separate API calls.</li>
+      <li><strong>Early stopping.</strong> Gate: "Is there actually anything new to process?" If not, exit before making any LLM calls.</li>
+    </ol></div>
+
+    <h4 class="sub">Quality vs. Cost Matrix</h4>
+    <div class="table-wrap"><table>
+      <tr><th>Task Type</th><th>Model</th><th>Reflection</th><th>Caching</th></tr>
+      <tr><td>Simple extraction</td><td>Haiku / mini</td><td>No</td><td>Yes</td></tr>
+      <tr><td>Complex reasoning</td><td>Sonnet / GPT-4</td><td>Yes (1 pass)</td><td>No</td></tr>
+      <tr><td>Creative generation</td><td>Opus / GPT-4</td><td>Yes (1–2 passes)</td><td>No</td></tr>
+      <tr><td>Classification</td><td>Haiku</td><td>No</td><td>Yes</td></tr>
+    </table></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 14 -->
+  <div class="chapter" id="ch14">
+    <div class="chapter-num">Chapter 14</div>
+    <h2 class="chapter-title">Observability — Log WHY, Not Just WHAT</h2>
+    <div class="timestamp">34:00 – 35:00</div>
+
+    <blockquote><p>"You'll want to log not only what an agent did, but why it did it. For example: 'agent chose web search instead of RAG because query contained recent' or 'reflection pass identified three issues: missing citation, vague date, wrong tone.'"</p></blockquote>
+
+    <h4 class="sub">Zoom-In vs. Zoom-Out Observability</h4>
+    <p><strong>Zoom-in (trace-level):</strong> Every prompt, tool call with inputs/outputs, token counts, retry attempts, every decision branch and why. Full reproduction data.</p>
+    <p><strong>Zoom-out (metric-level):</strong> Success rate, quality scores, hallucination rate, tool error rate by tool, latency percentiles, cost per successful task.</p>
+
+    <h3 class="section">Step-by-Step: Implementing WHY Logging</h3>
+    <div class="steps"><ol>
+      <li><strong>At every tool selection, log the reason.</strong> "Selected tool X because input contained pattern Y."</li>
+      <li><strong>At every LLM call, log what it was asked to decide.</strong> Capture the actual prompt and the decision it returned.</li>
+      <li><strong>At every branch point, log which branch and why.</strong> "Took early-exit branch because no new inputs found since last run."</li>
+      <li><strong>At every retry, log the reason.</strong> "Retrying because output failed schema validation: missing field 'citations'."</li>
+      <li><strong>At every reflection pass, log what issues were identified.</strong> Not "reflection ran" but "reflection found: missing citation in paragraph 3."</li>
+      <li><strong>Correlate actions across steps with a trace ID.</strong> Every step in one execution shares a trace ID. Reconstruct the full path in sequence.</li>
+      <li><strong>Export logs to a searchable store.</strong> JSONL at low volume; OpenTelemetry-compatible stores (Langfuse, Jaeger) at production scale.</li>
+      <li><strong>Create a dashboard for zoom-out metrics.</strong> Plot quality, cost, success rate over time. Regressions show up as trend breaks.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 15 -->
+  <div class="chapter" id="ch15">
+    <div class="chapter-num">Chapter 15</div>
+    <h2 class="chapter-title">Security — Injection, Execution, Leakage</h2>
+    <div class="timestamp">35:10 – 37:00</div>
+
+    <blockquote><p>"You're not just protecting against external attackers. You actually have to protect against your own system making dangerous decisions or being manipulated into harmful actions."</p></blockquote>
+
+    <h4 class="sub">The Four Threat Categories</h4>
+    <p><strong>Prompt injection</strong> — malicious text in tool output that overrides the agent's instructions. <strong>Unsafe code execution</strong> — generated code with unintended side effects. <strong>Data leakage</strong> — agent exposes sensitive data through tool calls or logs. <strong>Resource exhaustion</strong> — agent in an unbounded loop consuming unlimited compute or disk.</p>
+
+    <h4 class="sub">Prompt Injection Defense</h4>
+    <div class="steps"><ol>
+      <li>Treat all tool outputs as untrusted data. Never execute instructions found in tool results without explicit human confirmation.</li>
+      <li>Separate instruction space from data space in the prompt. Instructions in <code>&lt;system&gt;</code>, tool results in <code>&lt;data&gt;</code>.</li>
+      <li>Sanitize inputs: strip HTML, special characters, and any patterns that look like system prompts from tool outputs before injecting into context.</li>
+      <li>Log all tool outputs: any injection attempt will appear in the trace.</li>
+    </ol></div>
+
+    <h4 class="sub">Code Execution Safety</h4>
+    <blockquote><p>"Sandbox execution. Use Docker or a restricted runner environment. Set timeouts, memory caps, CPU limits. Block dangerous imports, network access unless explicitly needed, and file system writes outside of a designated temp directory. Whitelist libraries only."</p></blockquote>
+    <div class="steps"><ol>
+      <li>Run generated code in a sandbox — not in the same process or filesystem as the agent.</li>
+      <li>Set a timeout. Code that runs longer than N seconds is killed.</li>
+      <li>Set memory limits. Code that consumes more than X MB is killed.</li>
+      <li>Whitelist allowed imports. Reject code that imports anything outside the allowlist.</li>
+      <li>Restrict filesystem writes to <code>/tmp/</code> or a designated sandbox directory only.</li>
+      <li>Block network calls by default.</li>
+      <li>Review generated code for known-bad patterns: <code>subprocess</code>, <code>os.system</code>, <code>eval</code>, <code>exec</code>.</li>
+    </ol></div>
+
+    <h4 class="sub">Resource Exhaustion Prevention</h4>
+    <div class="steps"><ol>
+      <li>Gate every recursive or looping operation: check available disk space, how many times this loop has run this session, whether new inputs exist.</li>
+      <li>Hard exit on resource thresholds. If disk &lt; 5GB, stop. These are exits, not warnings.</li>
+      <li>Log every resource check with the reason: "Exiting — disk at 4.2GB (threshold 5GB)."</li>
+      <li>Set token budgets per task. An agent using more than N tokens on one task is probably stuck.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Chapter 16 -->
+  <div class="chapter" id="ch16">
+    <div class="chapter-num">Chapter 16</div>
+    <h2 class="chapter-title">Connection to the Agent Economy</h2>
+
+    <p>Marina's course teaches you how to build agents that work. The broader question — where those agents fit in the emerging economy — is the domain of the <strong>Agent Economy Blueprint</strong> (Hyo_01_Overview.md) and the <strong>Zero to Autonomous Blueprint</strong> (2026-04-23-autonomous-company-research.md).</p>
+
+    <h3 class="section">What the Agent Economy Requires</h3>
+    <div class="steps"><ol>
+      <li><strong>Identity and verifiability</strong> — Chapter 14 observability. Without logs of agent reasoning and tool calls, there is no audit trail. Without an audit trail, there is no trust.</li>
+      <li><strong>Consistent interfaces</strong> — Chapter 5 tool interfaces and Chapter 11 multi-agent handoffs. Typed schemas are the prerequisite for marketplace participation.</li>
+      <li><strong>Predictable behavior</strong> — Chapter 6 memory architecture and Chapter 9 evaluation baselines. Without these, agents cannot be trusted with consequential tasks.</li>
+      <li><strong>Resource accountability</strong> — Chapter 13 and 14 observability. Agents must report their resource consumption to bill accurately and be audited.</li>
+      <li><strong>Safety at scale</strong> — Chapter 15. Security properties become prerequisites for participation, not best practices.</li>
+    </ol></div>
+
+    <h3 class="section">Key Findings from the Zero to Autonomous Blueprint (65+ Sources)</h3>
+    <div class="steps"><ol>
+      <li><strong>Outcome monitoring, not activity monitoring.</strong> Agents that produce perfect-looking logs while doing nothing are impossible to catch without checking expected output exists at the expected location.</li>
+      <li><strong>Per-agent ground-truth verifiers (GVU).</strong> Every agent needs one metric that cannot be gamed. Without it, self-improvement is circular.</li>
+      <li><strong>Topology discipline.</strong> UC Berkeley MAST paper: 17x error amplification when agents lack structured topology. Chapter 11 typed interfaces are the direct mitigation.</li>
+      <li><strong>HITL at plan level, not output level.</strong> Devin pattern: catch misalignment at game plan review, not after full execution. Cheapest point to intervene.</li>
+      <li><strong>Prompt caching is the single highest-ROI optimization.</strong> 90% cost reduction by caching system prompts and static knowledge across calls.</li>
+    </ol></div>
+  </div>
+
+  <hr>
+
+  <!-- Quick Reference -->
+  <div class="qref">
+    <h3>Quick Reference — Decision Framework for Any Agent</h3>
+    <div class="qref-item"><div class="qref-num">1</div><div class="qref-text"><strong>GOAL:</strong> Is it specific? Does it have success criteria? If NO → clarify before building anything.</div></div>
+    <div class="qref-item"><div class="qref-num">2</div><div class="qref-text"><strong>AUTONOMY:</strong> What actions are irreversible? All irreversible → human gate required.</div></div>
+    <div class="qref-item"><div class="qref-num">3</div><div class="qref-text"><strong>CONTEXT:</strong> Role + Task + Memory (last 3) + Tools + Knowledge. Is all of this in the prompt?</div></div>
+    <div class="qref-item"><div class="qref-num">4</div><div class="qref-text"><strong>DECOMPOSITION:</strong> Can you tell which step failed when it fails? If NO → decompose further.</div></div>
+    <div class="qref-item"><div class="qref-num">5</div><div class="qref-text"><strong>TOOLS:</strong> Does each tool have name, description, schema, error handling? If NO → incomplete, do not wire to agent.</div></div>
+    <div class="qref-item"><div class="qref-num">6</div><div class="qref-text"><strong>MEMORY:</strong> Is static knowledge separate from dynamic memory? If NO → separate before running multi-agent.</div></div>
+    <div class="qref-item"><div class="qref-num">7</div><div class="qref-text"><strong>EVALUATION:</strong> What is the ground-truth metric? If you can't define it → agent cannot self-improve.</div></div>
+    <div class="qref-item"><div class="qref-num">8</div><div class="qref-text"><strong>REFLECTION:</strong> Did you test quality with and without it? If NO → don't add until you can measure the benefit.</div></div>
+    <div class="qref-item"><div class="qref-num">9</div><div class="qref-text"><strong>OBSERVABILITY:</strong> Does every decision log its reason (WHY)? If NO → post-mortems are impossible.</div></div>
+    <div class="qref-item"><div class="qref-num">10</div><div class="qref-text"><strong>SECURITY:</strong> Is generated code sandboxed? Are resource gates in place? If NO → DO NOT run autonomously.</div></div>
+  </div>
+
+  <h3 class="section" style="margin-top: 48px;">Marina's Most-Cited Principles</h3>
+  <div class="principles">
+    <div class="principle"><p>Context engineering is the practical foundation of intelligence in agents.</p></div>
+    <div class="principle"><p>Each step is small, checkable, and clear. When the output isn't good enough, you know exactly what step to improve.</p></div>
+    <div class="principle"><p>Define interfaces, not vibes.</p></div>
+    <div class="principle"><p>Log not only what an agent did, but why it did it.</p></div>
+    <div class="principle"><p>Sandbox execution. Set timeouts, memory caps, CPU limits.</p></div>
+    <div class="principle"><p>Start evaluating right away. Don't wait for a perfect evaluation system.</p></div>
+    <div class="principle"><p>If you have a simple task, skip multi-agent systems.</p></div>
+    <div class="principle"><p>Test with and without reflection to ensure it's actually helping.</p></div>
+  </div>
+
+  <div class="footer">
+    Compiled from full transcript of Marina Wyss, "AI Agents in 38 Minutes — Complete Course from Beginner to Pro" (YouTube, Dec 9, 2025). All quoted text is verbatim from the 1,247-segment transcript. Cross-referenced: Agent Economy Blueprint (Hyo_01_Overview.md v1.0), Zero to Autonomous Blueprint (2026-04-23-autonomous-company-research.md, 65+ sources), Aurora Economics (aurora-economics.md). Permanent reference — hyo.world/docs/research/marina-wyss-complete-course-guide
+  </div>
+</div>
+</body>
+</html>

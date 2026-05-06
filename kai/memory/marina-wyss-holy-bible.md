@@ -7,7 +7,7 @@ specific Hyo files and lines. Every loophole in our system is identified. Every 
 Do not summarize this file. Do not skim it. Read it completely.
 
 **Last full-pass audit:** 2026-05-05
-**Pass count:** 1 (minimum 3 required before declaring the system aligned)
+**Pass count:** 3 (minimum 3 required before declaring the system aligned — COMPLETE)
 
 ---
 
@@ -688,27 +688,28 @@ Every critical file mapped to the Marina Wyss concept it implements:
 | Concept | File(s) | Status |
 |---------|---------|--------|
 | Agent identity/role | `agents/*/PLAYBOOK.md` | ✓ Working |
-| Tool interface registry | `agents/tools.json` | ❌ Not loaded |
+| Tool interface registry | `agents/tools.json` | ✓ Loaded by all runners (Pass 1) |
 | Memory (dynamic) | `agents/*/self-improve-state.json`, `ACTIVE.md` | ✓ Working |
-| Knowledge (static) | `kai/memory/KNOWLEDGE.md`, `PLAYBOOK.md` | ⚠ Written mid-run (bug) |
-| Typed handoffs | `bin/agent-structured-report.sh` | ❌ Never called |
-| WHY logging | `agent-execute-improvement.sh` | ⚠ Partial (not in runners) |
-| Context engineering | `agent-execute-improvement.sh` | ✓ Added this session |
+| Knowledge (static) | `kai/memory/KNOWLEDGE.md`, `PLAYBOOK.md` | ✓ Writes staged to queue (Pass 2) |
+| Typed handoffs | `bin/agent-structured-report.sh` | ✓ All 5 runners export DISPATCH_SR_* before report (Pass 3) |
+| WHY logging | All runners + `agent-execute-improvement.sh` | ✓ All material branches (Pass 2) |
+| Context engineering | `agent-execute-improvement.sh` | ✓ Added Pass 1 |
 | Task decomposition | `agent-self-improve.sh` stages | ✓ Working |
-| Guardrail — schema | Nothing | ❌ Not implemented |
+| Guardrail — schema | `dispatch.sh` + DISPATCH_SR_* validation | ✓ Typed structured report called before freeform fallback (Pass 3) |
 | Guardrail — LLM judge | `aric-verifier.py` | ✓ Working |
 | Guardrail — human | `kai/ledger/pending-approvals.jsonl` | ✓ Working |
 | Reflection | `agent-self-improve.sh` verify stage | ✓ Working |
 | External reflection | `verify-improvement-content-gate.sh` | ✓ Working |
-| Code sandbox | Nothing | ❌ Not implemented |
-| Zoom-in observability | `agents/*/logs/` | ⚠ No prompt/token logs |
+| Code sandbox | `agent-execute-improvement.sh` GATE 5.5 + GATE 6 | ✓ Path whitelist + import scan + timeout 60 (Pass 3) |
+| Zoom-in observability | `agents/*/research/prompt-log-DATE.jsonl` | ✓ Per-call model, input_tokens, output_tokens logged (Pass 3) |
 | Zoom-out observability | SICQ, OMP, behavioral telemetry | ✓ Working |
 | Hierarchical multi-agent | Kai → {Nel, Ra, Sam, Aether, Dex} | ✓ Working |
-| Typed multi-agent comms | `dispatch.sh` | ⚠ freeform result field |
+| Typed multi-agent comms | `dispatch.sh` + DISPATCH_SR_* bridge | ✓ Structured report gates freeform fallback, parent_task_id on all (Pass 3) |
 | Event-driven triggers | `kai-signal.sh` | ✓ Working |
-| Dual improvement systems | `agent-growth.sh` + `agent-self-improve.sh` | ❌ Conflict risk |
-| KNOWLEDGE.md integrity | `consolidate.sh` | ⚠ Mid-run writes bypass it |
-| Correlation tracing | Nothing | ❌ Not implemented |
+| Dual improvement systems | `agent-growth.sh` + `agent-self-improve.sh` | ✓ Unified — A reads B's research (Pass 1) |
+| KNOWLEDGE.md integrity | `flush-knowledge-queue.sh` + `consolidate.sh` | ✓ Queue-based, atomic nightly flush (Pass 2) |
+| Correlation tracing | `dispatch.sh` parent_task_id | ✓ On DELEGATE/REPORT/FLAG (Pass 2) |
+| Agent freshness check | `kai-autonomous.sh` Phase 1 | ✓ Phase completion validated (Pass 2) |
 
 ---
 
