@@ -100,6 +100,8 @@ with open('$FAILED/$basename', 'w') as f:
   local stderr_file=$(mktemp)
 
   # Run in project root with timeout (macOS-compatible)
+  # Ensure HOME is always the Mac Mini user home so claude CLI can find ~/.claude credentials
+  export HOME=/Users/kai
   # Clear proxy vars — launchd inherits system proxy which blocks GitHub/npm/etc
   unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY all_proxy no_proxy NO_PROXY
   # Also override git's own proxy config for this execution
