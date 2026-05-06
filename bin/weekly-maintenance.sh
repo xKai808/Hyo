@@ -212,6 +212,12 @@ for name, path in ledger_files.items():
 PYEOF
 log "Ledger files trimmed (guidance.jsonl, hyo-inbox.jsonl — entries >30d archived)"
 
+# ── 4.6. Archive old research/raw + logs (>30 days) ──────────────────────────
+if [[ -f "$ROOT/bin/archive-old-files.sh" ]]; then
+  HYO_ROOT="$ROOT" bash "$ROOT/bin/archive-old-files.sh" --days 30 >> "$LOG" 2>&1
+  log "Old files archived (research/raw, logs, output >30d compressed to tar.gz)"
+fi
+
 # ── 5. Report final state ─────────────────────────────────────────────────────
 python3 - "$ROOT" << 'PYEOF'
 import os
