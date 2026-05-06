@@ -277,7 +277,7 @@ REPORTS_FOUND=0
 # Check feed.json for today's required report types
 FEED_FILE="$HYO_ROOT/agents/sam/website/data/feed.json"
 if [[ -f "$FEED_FILE" ]]; then
-  for rtype in "morning-report" "nel-daily" "ra-daily" "sam-daily" "aether-daily" "kai-daily"; do
+  for rtype in "morning-report" "nel-daily" "sam-daily" "aether-daily"; do
     found=$(python3 -c "
 import json
 try:
@@ -302,7 +302,6 @@ except:
         ra-daily)       [[ $HOUR -ge 23 ]] && open_ticket_if_missing "ra" "Ra daily report missing for $TODAY" "P1" ;;
         sam-daily)      [[ $HOUR -ge 23 ]] && open_ticket_if_missing "sam" "Sam daily report missing for $TODAY" "P1" ;;
         aether-daily)   [[ $HOUR -ge 23 ]] && open_ticket_if_missing "aether" "Aether daily report missing for $TODAY" "P1" ;;
-        kai-daily)      [[ $HOUR -eq 0 ]] && open_ticket_if_missing "kai" "Kai daily report missing for $TODAY" "P1" ;;
       esac
     fi
   done
@@ -571,12 +570,14 @@ if [[ $DOW -ge 1 && $DOW -le 5 ]]; then
     "aether_analysis_run"
 fi
 
-# Kai daily self-improvement cycle (23:30) — every day including Kai
-# Kai was the only agent without a scheduled daily runner. Fixed.
-# Runs: external research → finds something → makes a concrete change → publishes report.
-check_and_dispatch 23 30 "kai-daily-improve" \
-  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/kai/kai-daily.sh >> $HYO_ROOT/kai/ledger/kai-daily.log 2>&1" \
-  "kai_daily_run"
+# Kai daily self-improvement cycle (23:30) — DISABLED 2026-05-06
+# Rationale: duplicated morning report. Kai's improvements surface via agent-card.json
+# in the morning report's WHAT IMPROVED section. Publishing a separate kai-daily HQ entry
+# added noise for Hyo with no incremental value. Internal logging to kai-daily.log still runs
+# via session-close.sh — this just removes the HQ publish cadence.
+# check_and_dispatch 23 30 "kai-daily-improve" \
+#   "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/agents/kai/kai-daily.sh >> $HYO_ROOT/kai/ledger/kai-daily.log 2>&1" \
+#   "kai_daily_run"
 
 # Ra newsletter pipeline (03:00) — Mon-Sat; no Sunday
 if [[ $DOW -ne 0 ]]; then
@@ -709,7 +710,7 @@ fi
 #   ✓ SICQ fresh (doctor ran at 05:30)
 #   ✓ OMP fresh (ran at 06:00)
 check_and_dispatch 7 0 "morning-report" \
-  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/generate-morning-report.sh >> $HYO_ROOT/kai/ledger/morning-report.log 2>&1" \
+  "HYO_ROOT=$HYO_ROOT bash $HYO_ROOT/bin/generate-morning-report-v7.sh >> $HYO_ROOT/kai/ledger/morning-report.log 2>&1" \
   "morning_report_run"
 
 # Completeness check (07:15) — verifies all required HQ entries exist; auto-remediates gaps
