@@ -70,3 +70,15 @@ kai/memory/agent_memory/consolidation-err.log
 # Massive ticket-enforcer log (regenerable, was hitting GitHub 100MB limit)
 kai/ledger/ticket-enforcer.log
 kai/ledger/ticket-enforcer.log.*
+
+# Agent runner logs — can grow unbounded, never commit (SE-S33-001)
+# Root cause: ra.sh dead-loop wrote 138GB to ra-2026-04-29.md, committed,
+# bloated .git/objects to 1.2GB, required filter-repo + force-push to fix.
+agents/ra/logs/ra-*.md
+agents/ra/logs/ra-*.log
+agents/aether/logs/aether-*.log
+agents/aether/logs/analysis-*.log
+agents/nel/logs/nel-*.log
+agents/sam/logs/sam-*.log
+# kai-autonomous produces a massive log file
+kai/ledger/kai-autonomous.log
