@@ -62,9 +62,22 @@ check_aric_day() {
   fi
 }
 
-# ── files_to_change mapping ────────────────────────────────────────────────────
-# Every improvement ticket maps to a specific file to create/modify.
-# This is the bridge between "ticket identified" and "Claude writes code."
+# ── files_to_change: dynamic-first, hardcoded fallback ────────────────────────
+# Marina Wyss (AI Agents Course, 7:13): "Task decomposition is arguably the most
+# important thing. Each step must be small, checkable, and clear."
+#
+# DYNAMIC (primary): reads FILES_TO_CHANGE from agent-self-improve.sh research output.
+#   agent-self-improve.sh runs GROWTH.md fix approach through Claude Code to produce
+#   a structured research file at: agents/$agent/research/improvements/${weakness}-${TODAY}.md
+#   This file has: ROOT_CAUSE, FIX_APPROACH, FILES_TO_CHANGE, IMPLEMENTATION, VERIFICATION
+#
+# HARDCODED (fallback): used only if no research file exists for today's weakness.
+#   This preserves backward compatibility while System B (agent-self-improve.sh) builds
+#   up its research output. Once System B runs, System A reads its output.
+#
+# WHY this unifies the two parallel improvement systems: agent-growth.sh no longer
+# invents thesis and file targets independently — it reads System B's evidence-based
+# research. One source of truth for what to build.
 #
 # Rules:
 # - New files are preferred over modifying existing runners
@@ -74,6 +87,30 @@ check_aric_day() {
 get_files_to_change() {
   local agent="$1"
   local weakness="$2"
+
+  # Aether exception: never returns files (no code execution)
+  if [[ "$agent" == "aether" ]]; then
+    echo ""
+    return 0
+  fi
+
+  # ── Primary: read from System B (agent-self-improve.sh) research output ──────
+  local today
+  today=$(TZ="America/Denver" date +%Y-%m-%d)
+  local research_file="$HYO_ROOT/agents/$agent/research/improvements/${weakness}-${today}.md"
+
+  if [[ -f "$research_file" ]]; then
+    local dynamic_files
+    dynamic_files=$(grep "^FILES_TO_CHANGE:" "$research_file" 2>/dev/null | sed 's/FILES_TO_CHANGE: //' | head -1)
+    if [[ -n "$dynamic_files" ]]; then
+      growth_log "$agent" "WHY: files_to_change from System B research ($research_file) — dynamic, evidence-based"
+      echo "$dynamic_files"
+      return 0
+    fi
+  fi
+
+  # ── Fallback: hardcoded mapping (backward compat while System B ramps up) ────
+  growth_log "$agent" "WHY: files_to_change from hardcoded fallback — no System B research file for $weakness today ($research_file missing)"
   case "$agent-$weakness" in
     nel-W1) echo "agents/nel/adaptive-sentinel.sh" ;;
     nel-W2) echo "agents/nel/dependency-audit.sh" ;;
@@ -87,18 +124,49 @@ get_files_to_change() {
     dex-W1) echo "agents/dex/jsonl-repair.py" ;;
     dex-W2) echo "agents/dex/root-cause-cluster.py" ;;
     dex-W3) echo "agents/dex/constitution-drift.py" ;;
-    aether-*) echo "" ;;  # Aether: no code execution
     *) echo "" ;;
   esac
 }
 
-# ── improvement thesis mapping ─────────────────────────────────────────────────
-# Expanded thesis fed to Claude as the improvement specification.
-# This is what Claude API reads to understand what code to write.
+# ── improvement thesis: dynamic-first, hardcoded fallback ─────────────────────
+# Marina Wyss (AI Agents Course, 6:45): "It's not the model alone, it's how you
+# engineer the context around it."
+#
+# DYNAMIC (primary): reads FIX_APPROACH + IMPLEMENTATION from agent-self-improve.sh
+#   research output. The research was derived from GROWTH.md evidence, external sources,
+#   daily-assess hypothesis, and forward AAR — not invented from a static string.
+#
+# HARDCODED (fallback): original explicit specs. Used only when no research file exists.
+#   These are kept for backward compatibility and as seed specs for new weaknesses.
 #
 get_improvement_thesis() {
   local agent="$1"
   local weakness="$2"
+
+  # ── Primary: read from System B (agent-self-improve.sh) research output ──────
+  local today
+  today=$(TZ="America/Denver" date +%Y-%m-%d)
+  local research_file="$HYO_ROOT/agents/$agent/research/improvements/${weakness}-${today}.md"
+
+  if [[ -f "$research_file" ]]; then
+    local dynamic_fix dynamic_impl dynamic_verify
+    dynamic_fix=$(grep "^FIX_APPROACH:" "$research_file" 2>/dev/null | sed 's/FIX_APPROACH: //' | head -1)
+    dynamic_impl=$(grep -A 20 "^IMPLEMENTATION:" "$research_file" 2>/dev/null | head -15 | tr '\n' ' ')
+    dynamic_verify=$(grep "^VERIFICATION:" "$research_file" 2>/dev/null | sed 's/VERIFICATION: //' | head -1)
+    local dynamic_root
+    dynamic_root=$(grep "^ROOT_CAUSE:" "$research_file" 2>/dev/null | sed 's/ROOT_CAUSE: //' | head -1)
+
+    if [[ -n "$dynamic_fix" ]]; then
+      growth_log "$agent" "WHY: thesis from System B research ($research_file) — evidence-based, not hardcoded"
+      # Build rich thesis from research fields
+      local dynamic_thesis="Root cause: ${dynamic_root}. Fix approach: ${dynamic_fix}. Implementation: ${dynamic_impl}. Verification: ${dynamic_verify}."
+      echo "$dynamic_thesis"
+      return 0
+    fi
+  fi
+
+  # ── Fallback: hardcoded specs (backward compat) ───────────────────────────────
+  growth_log "$agent" "WHY: thesis from hardcoded fallback — no System B research for $weakness today. Run agent-self-improve.sh to produce evidence-based research."
   case "$agent-$weakness" in
     nel-W1) echo "Build adaptive-sentinel.sh: detect checks that have failed 5+ consecutive times in sentinel.state.json and auto-escalate them — double check frequency, add deeper diagnostic step, write P1 ticket. Input: agents/nel/memory/sentinel.state.json. Output: JSONL to agents/nel/ledger/adaptive-sentinel.jsonl with check_name, consecutive_failures, escalation_action, timestamp." ;;
     nel-W2) echo "Build dependency-audit.sh: read package.json + run npm audit (or parse npm audit --json), cross-reference against OSV/GitHub Advisory API, output JSONL with package, severity, CVE, current_version, safe_version, upgrade_command. Write to agents/nel/ledger/dependency-audit.jsonl." ;;
@@ -112,7 +180,7 @@ get_improvement_thesis() {
     dex-W1) echo "Build jsonl-repair.py: auto-repair known JSONL corruption types. Scan all *.jsonl files in the repo. Patterns to fix: (1) double-encoded JSON (stringified JSON inside JSON), (2) missing closing brace, (3) concatenated objects (}}{{). For each corrupt line, attempt repair, write repaired version to .repaired temp, validate, then replace original atomically. Log repairs to agents/dex/ledger/jsonl-repairs.jsonl." ;;
     dex-W2) echo "Build root-cause-cluster.py: read kai/ledger/known-issues.jsonl and kai/ledger/session-errors.jsonl. Group by (source_agent, category, description_prefix). For each cluster >2 entries, compute: first_seen, last_seen, occurrence_count, unique_sessions. Rank by occurrence_count. Output top 15 clusters to agents/dex/ledger/root-cause-clusters.jsonl with cluster_id, title, count, recommended_systemic_fix." ;;
     dex-W3) echo "Build constitution-drift.py: parse CLAUDE.md operating rules section as a list of named rules. For each agent, read their last 7 days of runner logs (agents/<name>/logs/). Check if log lines reference protocol steps (e.g., 'ARIC', 'healthcheck', 'dispatch', 'verify'). Flag any rule with 0 log references in 7 days as 'drift'. Output agents/dex/ledger/constitution-drift.jsonl." ;;
-    *) echo "Implement the improvement described in the ticket title." ;;
+    *) echo "Implement the improvement described in the ticket title and the agent's GROWTH.md fix approach." ;;
   esac
 }
 

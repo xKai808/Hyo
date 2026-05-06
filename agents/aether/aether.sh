@@ -31,10 +31,26 @@ SECRETS="$ROOT/agents/nel/security"
 
 mkdir -p "$LOGS" "$(dirname "$TRADES_LOG")"
 
+# ---- Tool Interface Registry (Marina Wyss 15:51: "The agent only sees the interface") ----
+# WHY: Load typed tool interfaces before any domain work so all tool calls are
+# schema-validated and agents know WHEN to use each tool, not just HOW to call it.
+AGENT_NAME="aether"
+export AGENT_NAME
+if [[ -f "$ROOT/bin/load-tool-registry.sh" ]]; then
+  source "$ROOT/bin/load-tool-registry.sh"
+fi
+
 LOG="$LOGS/aether-$(date +%Y-%m-%d).log"
 TS=$(TZ="America/Denver" date +"%Y-%m-%dT%H:%M:%S-06:00")
 
 log() { echo "[$TS] $*" | tee -a "$LOG"; }
+
+# WHY logging helper (Marina Wyss 34:00: "Log not just what — log WHY")
+log_why() {
+  local ts
+  ts=$(TZ=America/Denver date +%H:%M:%S 2>/dev/null || date +%H:%M:%S)
+  printf '[WHY][aether][%s] %s\n' "$ts" "$*" | tee -a "$LOG"
+}
 
 # ─── Growth Phase (self-improvement before main work) ─────────────────────────
 GROWTH_SH="$ROOT/bin/agent-growth.sh"

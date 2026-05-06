@@ -23,6 +23,15 @@ REPORT="$LOGS/nel-$TODAY.md"
 
 mkdir -p "$LOGS" "$MEMORY" "$WEBSITE_DOCS"
 
+# ---- Tool Interface Registry (Marina Wyss 15:51: "The agent only sees the interface") ----
+# WHY: Load typed tool interfaces before any domain work so all tool calls are
+# schema-validated and agents know WHEN to use each tool, not just HOW to call it.
+AGENT_NAME="nel"
+export AGENT_NAME
+if [[ -f "$ROOT/bin/load-tool-registry.sh" ]]; then
+  source "$ROOT/bin/load-tool-registry.sh"
+fi
+
 # ---- portable stat wrapper (macOS BSD vs Linux GNU) -------------------------
 if stat -c %a / >/dev/null 2>&1; then
   stat_mode() { stat -c %a "$1" 2>/dev/null; }
@@ -93,6 +102,14 @@ EOF
 
 log_info "nell.hyo weekly run start"
 
+# ---- WHY logging helper (Marina Wyss 34:00: "Log not just what — log WHY") ---
+# Usage: log_why "chose P1 over P2 because SENTINEL_FAIL=$SENTINEL_FAIL > threshold"
+log_why() {
+  local ts
+  ts=$(TZ=America/Denver date +%H:%M:%S 2>/dev/null || date +%H:%M:%S)
+  printf '[WHY][nel][%s] %s\n' "$ts" "$*" | tee -a "$REPORT"
+}
+
 # ============================================================================
 # PHASE 1: Sentinel Synthesis
 # ============================================================================
@@ -134,9 +151,11 @@ echo "" >> "$REPORT"
 
 if [[ $SENTINEL_FAIL -gt 0 ]]; then
   log_warn "Sentinel issues detected in $SENTINEL_FAIL projects"
+  log_why "dispatching P2 flag (not P1) because SENTINEL_FAIL=$SENTINEL_FAIL — threshold for P1 is 3+ projects, P2 for 1-2"
   bash "$ROOT/bin/dispatch.sh" flag nel P2 "Sentinel: $SENTINEL_FAIL project(s) with test failures" 2>/dev/null || true
 else
   log_pass "All projects passing sentinel checks"
+  log_why "skipping dispatch flag because SENTINEL_FAIL=0 — no action needed"
 fi
 
 # Newsletter freshness check
@@ -145,7 +164,10 @@ if [[ ! -f "$TODAY_NEWSLETTER" ]]; then
   CURRENT_HOUR=$(TZ="America/Denver" date +%H)
   if [[ "$CURRENT_HOUR" -ge 6 ]]; then
     log_warn "No newsletter for today ($TODAY) and it's past 06:00 MT"
+    log_why "dispatching P1 (not P2) because newsletter absence past 06:00 MT deadline is time-critical — Hyo reads at 07:00"
     bash "$ROOT/bin/dispatch.sh" flag nel P1 "No newsletter produced for $TODAY — past 06:00 MT deadline" 2>/dev/null || true
+  else
+    log_why "skipping newsletter flag — current hour $CURRENT_HOUR < 6, newsletter pipeline still has time to run"
   fi
 fi
 

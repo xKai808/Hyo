@@ -38,6 +38,44 @@ set -uo pipefail
 ROOT="${HYO_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
+# ── Built-in argument validation (Marina Wyss 23:44: "Define interfaces, not vibes") ──
+# Validates args AT ENTRY so any caller (runner, script, queue job) gets checked automatically.
+# Fail loud on schema violation — silent drops are worse than loud failures.
+VALID_AGENTS="kai nel ra sam aether dex"
+VALID_SEVERITIES="P0 P1 P2 P3"
+VALID_STATUSES="CREATED DELEGATED IN_PROGRESS TESTING VERIFIED DONE BLOCKED FAILED completed"
+
+_validate_agent() {
+  local agent="$1"
+  case "$agent" in
+    kai|nel|ra|sam|aether|dex) return 0 ;;
+    *)
+      echo "[dispatch] WHY: SCHEMA ERROR — agent '$agent' is not a valid agent (valid: $VALID_AGENTS)" >&2
+      return 1
+      ;;
+  esac
+}
+
+_validate_severity() {
+  local sev="$1"
+  case "$sev" in
+    P0|P1|P2|P3) return 0 ;;
+    *)
+      echo "[dispatch] WHY: SCHEMA ERROR — severity '$sev' is not valid (valid: $VALID_SEVERITIES)" >&2
+      return 1
+      ;;
+  esac
+}
+
+_validate_nonempty() {
+  local field="$1" value="$2"
+  if [[ -z "$value" ]]; then
+    echo "[dispatch] WHY: SCHEMA ERROR — field '$field' is required and cannot be empty" >&2
+    return 1
+  fi
+  return 0
+}
+
 # Agent ledger paths
 agent_ledger() {
   local agent="$1"
@@ -204,6 +242,10 @@ cmd_delegate() {
   local agent="$1"; shift
   local priority="$1"; shift
 
+  # Built-in schema validation
+  _validate_agent "$agent" || return 1
+  _validate_severity "$priority" || return 1
+
   # Collect title words, stopping at flags
   local title_parts=()
   local context="" deadline=""
@@ -255,6 +297,46 @@ cmd_report() {
   local status="$2"
   local result="${3:-}"
   local agent="${task_id%%-*}"
+
+  # ── TYPED REPORT GATE (Marina Wyss 23:44: "Define interfaces, not vibes") ──
+  # If the caller set DISPATCH_STRUCTURED_REPORT env vars, validate+write typed schema
+  # before the freeform log entry. This is the bridge between the old freeform API
+  # and the new typed cycle-reports.jsonl.
+  #
+  # Structured mode: caller exports these env vars before calling dispatch report:
+  #   DISPATCH_SR_AGENT, DISPATCH_SR_CYCLE_ID, DISPATCH_SR_PHASES_COMPLETED,
+  #   DISPATCH_SR_OUTPUTS_WRITTEN, DISPATCH_SR_NEXT_CYCLE_INTENT
+  # Optional: DISPATCH_SR_PHASES_FAILED, DISPATCH_SR_ERRORS
+  #
+  # If none of these are set, falls back to freeform (backward compatible).
+  local _structured_report_sh="$ROOT/bin/agent-structured-report.sh"
+  local _sr_agent="${DISPATCH_SR_AGENT:-}"
+  local _sr_cycle="${DISPATCH_SR_CYCLE_ID:-}"
+  local _sr_phases="${DISPATCH_SR_PHASES_COMPLETED:-}"
+  local _sr_outputs="${DISPATCH_SR_OUTPUTS_WRITTEN:-}"
+  local _sr_intent="${DISPATCH_SR_NEXT_CYCLE_INTENT:-}"
+
+  if [[ -n "$_sr_agent" && -n "$_sr_cycle" && -n "$_sr_phases" && -n "$_sr_intent" && -f "$_structured_report_sh" ]]; then
+    # WHY: validate typed schema first — if validation fails, report is rejected
+    # per Marina: "Missing required fields = handoff rejected, not silently ignored"
+    bash "$_structured_report_sh" \
+      --agent "$_sr_agent" \
+      --cycle-id "$_sr_cycle" \
+      --phases-completed "$_sr_phases" \
+      --phases-failed "${DISPATCH_SR_PHASES_FAILED:-}" \
+      --outputs-written "${_sr_outputs}" \
+      --errors "${DISPATCH_SR_ERRORS:-}" \
+      --next-cycle-intent "$_sr_intent" 2>/dev/null || {
+        echo "WARN: structured report validation failed for $task_id — proceeding with freeform fallback" >&2
+      }
+    # Append structured reference to the freeform result so Kai can find the typed record
+    result="[structured-report: cycle=$_sr_cycle] $result"
+    # Clear env vars so they don't propagate to nested calls
+    unset DISPATCH_SR_AGENT DISPATCH_SR_CYCLE_ID DISPATCH_SR_PHASES_COMPLETED
+    unset DISPATCH_SR_OUTPUTS_WRITTEN DISPATCH_SR_NEXT_CYCLE_INTENT
+    unset DISPATCH_SR_PHASES_FAILED DISPATCH_SR_ERRORS
+  fi
+
   local json; json=$(python3 -c "
 import json, sys
 print(json.dumps({'ts':sys.argv[1],'action':'REPORT','task_id':sys.argv[2],'from':sys.argv[3],'to':'kai','status':sys.argv[4],'result':sys.argv[5]}))" "$NOW" "$task_id" "$agent" "$status" "$result")
@@ -381,6 +463,13 @@ cmd_flag() {
   local agent="$1"; shift
   local severity="$1"; shift  # P0, P1, P2, P3
   local title="$*"
+
+  # ── Built-in schema validation (validates BEFORE doing anything else) ───────
+  # WHY: schema at the implementation layer catches bad calls from ANY caller,
+  # not just callers that remember to call validate_tool_call() first.
+  _validate_agent "$agent" || return 1
+  _validate_severity "$severity" || return 1
+  _validate_nonempty "title" "$title" || return 1
 
   # ── DEDUP GATE: skip if same flag was already dispatched within 24h ────────
   # Prevents cascade explosion: Dex's 225-pattern flag was creating 4 queue jobs

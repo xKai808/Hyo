@@ -31,6 +31,15 @@ API_BASE="${HYO_API_BASE:-https://www.hyo.world}"
 
 mkdir -p "$LOGS"
 
+# ---- Tool Interface Registry (Marina Wyss 15:51: "The agent only sees the interface") ----
+# WHY: Load typed tool interfaces before any domain work so all tool calls are
+# schema-validated and agents know WHEN to use each tool, not just HOW to call it.
+AGENT_NAME="sam"
+export AGENT_NAME
+if [[ -f "$ROOT/bin/load-tool-registry.sh" ]]; then
+  source "$ROOT/bin/load-tool-registry.sh"
+fi
+
 # ---- color helpers ----------------------------------------------------------
 if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
   BOLD=$(tput bold); DIM=$(tput dim); RED=$(tput setaf 1); GRN=$(tput setaf 2)
@@ -45,6 +54,13 @@ ok()   { printf '%s✓%s %s\n' "$GRN" "$RST" "$*"; }
 warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*"; }
 err()  { printf '%s✗%s %s\n' "$RED" "$RST" "$*" >&2; }
 die()  { err "$*"; exit 1; }
+
+# WHY logging helper (Marina Wyss 34:00: "Log not just what — log WHY")
+log_why() {
+  local ts
+  ts=$(TZ=America/Denver date +%H:%M:%S 2>/dev/null || date +%H:%M:%S)
+  printf '[WHY][sam][%s] %s\n' "$ts" "$*"
+}
 
 # ---- Growth Phase (self-improvement before main work) -----------------------
 GROWTH_SH="$ROOT/bin/agent-growth.sh"

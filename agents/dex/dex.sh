@@ -33,6 +33,15 @@ ACTIVITY_LOG="$DEX_LOGS/dex-activity-$TODAY.jsonl"
 
 mkdir -p "$DEX_LOGS" "$DEX_HOME/ledger"
 
+# ---- Tool Interface Registry (Marina Wyss 15:51: "The agent only sees the interface") ----
+# WHY: Load typed tool interfaces before any domain work so all tool calls are
+# schema-validated and agents know WHEN to use each tool, not just HOW to call it.
+AGENT_NAME="dex"
+export AGENT_NAME
+if [[ -f "$ROOT/bin/load-tool-registry.sh" ]]; then
+  source "$ROOT/bin/load-tool-registry.sh"
+fi
+
 # ---- Growth Phase (self-improvement before main work) -----------------------
 GROWTH_SH="$ROOT/bin/agent-growth.sh"
 if [[ -f "$GROWTH_SH" ]]; then
@@ -69,6 +78,13 @@ log_info() { printf '[%s] %s\n' "$NOW_ISO" "$*" >> "$REPORT"; }
 log_pass() { printf '%s✓%s %s\n' "$GRN" "$RST" "$*" | tee -a "$REPORT"; }
 log_warn() { printf '%s!%s %s\n' "$YLW" "$RST" "$*" | tee -a "$REPORT"; }
 log_fail() { printf '%s✗%s %s\n' "$RED" "$RST" "$*" | tee -a "$REPORT"; }
+
+# WHY logging helper (Marina Wyss 34:00: "Log not just what — log WHY")
+log_why() {
+  local ts
+  ts=$(TZ=America/Denver date +%H:%M:%S 2>/dev/null || date +%H:%M:%S)
+  printf '[WHY][dex][%s] %s\n' "$ts" "$*" | tee -a "$REPORT"
+}
 
 # ---- Activity logging to JSONL -----------------------------------------------
 log_activity() {
