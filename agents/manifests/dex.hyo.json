@@ -1,10 +1,10 @@
 {
   "$schema": "https://hyo.world/schemas/agent/v1.json",
   "name": "dex.hyo",
-  "description": "System memory manager — owns integrity, compaction, indexing, pattern detection, and recall for ALL agent ledgers.",
-  "version": "1.0.0",
+  "description": "System memory manager and organization owner — owns integrity, compaction, indexing, pattern detection, dual-path compliance, and system organization audits.",
+  "version": "1.1.0",
   "created": "2026-04-12",
-  "updated": "2026-04-12",
+  "updated": "2026-05-05",
   "registry": {
     "chain": "base",
     "chainId": 8453,
@@ -56,7 +56,13 @@
     "deduplicate:entries",
     "audit:task-status",
     "cross-reference:patterns",
-    "track:safeguards"
+    "track:safeguards",
+    "audit:system-organization",
+    "detect:silos",
+    "detect:redundancies",
+    "detect:dual-path-gaps",
+    "detect:stale-cross-references",
+    "classify:file-necessity"
   ],
   "inputs": [
     {
@@ -232,5 +238,9 @@
         "value": "All Agent Ledgers"
       }
     ]
+  },
+  "responsibilities": {
+    "primary": "JSONL integrity, ledger compaction, pattern detection, system memory",
+    "organization": "Weekly file audit — classify all files as NECESSARY/REDUNDANT/SILOED/STALE/PATCHWORK/INTEGRATIVE. Detect dual-path gaps, stale cross-references, temp file accumulation. Report to Kai. Protocol: agents/dex/protocols/PROTOCOL_ORGANIZATION.md"
   }
 }

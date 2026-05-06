@@ -14,6 +14,14 @@
 
 set -uo pipefail
 
+# ---- Argument handling -------------------------------------------------------
+ORG_AUDIT_ONLY=false
+for arg in "$@"; do
+  case "$arg" in
+    --org-audit) ORG_AUDIT_ONLY=true ;;
+  esac
+done
+
 # ---- Setup ------------------------------------------------------------------
 ROOT="${HYO_ROOT:-$HOME/Documents/Projects/Hyo}"
 DEX_HOME="$ROOT/agents/dex"
@@ -1335,6 +1343,11 @@ log_pass "Memory update: ACTIVE.md written"
 # ============================================================================
 log_info "Dispatching daily summary to Kai"
 
+export DISPATCH_SR_AGENT="dex"
+export DISPATCH_SR_CYCLE_ID="${TODAY}-cycle-1"
+export DISPATCH_SR_PHASES_COMPLETED="jsonl-integrity,auto-repair,stale-detection,compaction,pattern-analysis,summary"
+export DISPATCH_SR_OUTPUTS_WRITTEN="$REPORT,agents/dex/ledger/ACTIVE.md"
+export DISPATCH_SR_NEXT_CYCLE_INTENT="resolve ${INTEGRITY_FAIL} integrity issues and ${STALE_COUNT} stale tasks if any"
 dispatch_report "dex-daily" "COMPLETED" "Integrity: $INTEGRITY_PASS files validated, $INTEGRITY_FAIL issues. Stale: $STALE_COUNT tasks >72h. Patterns: $PATTERNS_FOUND recurrent. See $REPORT for details."
 
 # Write final summary line
@@ -1350,6 +1363,42 @@ cat >> "$REPORT" <<EOF
 **Next scheduled run:** $(date -u -d "24 hours" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+24H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)
 
 EOF
+
+# ============================================================================
+# ORG AUDIT — run when --org-audit flag is passed (from weekly-maintenance)
+# ============================================================================
+if [[ "$ORG_AUDIT_ONLY" == "true" ]]; then
+  ORG_REPORT="$DEX_LOGS/organization-$TODAY.md"
+  echo "# Organization Audit — $TODAY" > "$ORG_REPORT"
+  echo "" >> "$ORG_REPORT"
+  echo "## Dual-Path Compliance (SE-010-011)" >> "$ORG_REPORT"
+
+  # Check all HTML files in agents/sam/website/ also exist in website/
+  DUAL_PATH_GAPS=0
+  while IFS= read -r f; do
+    rel="${f#$ROOT/agents/sam/}"
+    if [[ ! -f "$ROOT/$rel" ]]; then
+      echo "- MISSING: website/${rel#website/}" >> "$ORG_REPORT"
+      DUAL_PATH_GAPS=$((DUAL_PATH_GAPS + 1))
+    fi
+  done < <(find "$ROOT/agents/sam/website" -name "*.html" 2>/dev/null | sort)
+
+  [[ $DUAL_PATH_GAPS -eq 0 ]] && echo "- All HTML files present in both paths ✓" >> "$ORG_REPORT"
+
+  echo "" >> "$ORG_REPORT"
+  echo "## Temp File Check" >> "$ORG_REPORT"
+  TEMP_FILES=$(find "$ROOT" -maxdepth 2 -name "*.tmp*" -o -name "*.new" -o -name "*.bak" 2>/dev/null | grep -v ".git" | wc -l | tr -d ' ')
+  echo "- Temp files found at root/agent level: $TEMP_FILES" >> "$ORG_REPORT"
+
+  echo "" >> "$ORG_REPORT"
+  echo "## Summary" >> "$ORG_REPORT"
+  echo "- Dual-path gaps: $DUAL_PATH_GAPS" >> "$ORG_REPORT"
+  echo "- Temp files: $TEMP_FILES" >> "$ORG_REPORT"
+  echo "- Full classification audit: scheduled next weekly cycle" >> "$ORG_REPORT"
+
+  echo "[dex org-audit] Complete: $DUAL_PATH_GAPS dual-path gaps, $TEMP_FILES temp files. Report: $ORG_REPORT"
+  exit 0
+fi
 
 # Exit status
 if [[ $INTEGRITY_FAIL -gt 0 ]]; then

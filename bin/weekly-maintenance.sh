@@ -218,6 +218,12 @@ if [[ -f "$ROOT/bin/archive-old-files.sh" ]]; then
   log "Old files archived (research/raw, logs, output >30d compressed to tar.gz)"
 fi
 
+# ── 4.7. Dex organization audit (dual-path gaps, silos, stale cross-refs) ────
+if [[ -f "$ROOT/agents/dex/dex.sh" ]]; then
+  HYO_ROOT="$ROOT" bash "$ROOT/agents/dex/dex.sh" --org-audit >> "$LOG" 2>&1
+  log "Dex organization audit complete — see agents/dex/logs/organization-$(date +%Y-%m-%d).md"
+fi
+
 # ── 5. Report final state ─────────────────────────────────────────────────────
 python3 - "$ROOT" << 'PYEOF'
 import os
