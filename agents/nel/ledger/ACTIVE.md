@@ -1,16 +1,16 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-07T07:46:30Z
+Last updated: 2026-05-07T13:46:51Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-07T07:46:30Z
+  - Delegated: 2026-05-07T13:46:51Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-07 — past 06:00 MT deadline
-  - Delegated: 2026-05-07T02:10:06Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit 2026-05-07: Systemic dead-loop UNCHANGED from 2026-05-06 — (1) verified-state.json frozen at 2026-05-05T18:59 (47h stale, kai-session-prep.sh not running); (2) Newsletter pipeline failed AGAIN today (ra-002 fired, AUTO-REMEDIATE not remediating — pattern persists); (3) Dex no runner output today (3rd consecutive day silent); (4) All 5 agents received identical [GUIDANCE] same-assessment ticket at 08:03:45Z (daily fire, never resolves); (5) hyo-inbox grew 3527 -> 6408 in 24h (+2881 SLA breach alerts, all unread); (6) 3 unshipped commits in kai/queue/failed (aurora-trial-5day, aurora-trial-push, payment-redesign — payment work latent since 2026-05-06); (7) PRIORITIES.md stale 15d for sam/ra/aether/dex; (8) Stuck AUTO-REMEDIATE >24h: aether-002 (6d), sam-005 (6d), ra-002 May 6 (1d), ra-003 May 6 (1d), ra-004 May 6 (1d). Yesterday's supplement (kai-authored) named all root causes; none have been addressed in 24h. Cascade dispatcher continues firing without any DELEGATED -> COMPLETED transition. NEEDS HYO awareness — automated remediation is structurally dead-looped.
+  - Delegated: 2026-05-07T08:08:03Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit 2026-05-06: Systemic dead-loop persists — (1) Newsletter pipeline broken 2 days running (ra-002/003 May 5 still DELEGATED, ra-002/003 May 6 just flagged — same root cause, AUTO-REMEDIATE not actually remediating); (2) All 5 agents stuck in [GUIDANCE] same-assessment loop fired daily but never resolved; (3) Sam evolution.jsonl write step broken (last entry 2026-04-28, 8 days silent — runner runs but skips memory step); (4) verified-state.json empty (agents:[], generated_at:null) — kai-session-prep.sh failing; (5) Dex no runner output today; (6) hyo-inbox 3527 unread (SLA breach alerts accumulating). 4 stuck AUTO-REMEDIATE >24h: aether-002 (5d), sam-005 (5d), ra-002 (1d), ra-003 (1d). Pattern: cascade dispatcher fires, agents ack DELEGATED, work never completes — flag accretion without resolution. Need: investigate WHY DELEGATED never transitions, fix verified-state.json generator, fix sam.sh memory write step.

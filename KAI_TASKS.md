@@ -123,6 +123,11 @@ Format: `{"timestamp":"...","decision":"...","rationale":"...","type":"orchestra
 - [ ] **[K]** **Fix ticket-enforcer.log 415MB** — `git filter-repo --path kai/ledger/ticket-enforcer.log --invert-paths` + install emitter throttling tied to aether-001 dedup fix.
 - [ ] **[K]** **Re-auth Aether Claude Code session** — "Not logged in" blocking ARIC research. Root cause of empty-research loop.
 
+## Scheduled sentinel run (2026-05-07 ~10:04 UTC, exciting-vigilant-maxwell sandbox) — Run #266
+
+- [ ] **[K]** **SENT-2026-05-07-001 (P0 → P1 reclassify candidate):** Sentinel run #266 re-flagged the chronic Aurora pair — `aurora-ran-today` (P0, missing `newsletters/2026-05-07.md`, hash `2af921d6`) and `scheduled-tasks-fired` (P1, no aurora-*.log in `agents/nel/logs/`, hash `1e58c2d8`). Both are sandbox-path-scoped re-flags of SENT-002's deferred decision (2026-04-21): Aurora is consolidated/dormant but two sentinel checks still scan for it. Decide one of (a) revive Aurora runner so the checks pass, or (b) retire `aurora-ran-today` + `scheduled-tasks-fired` and replace with a Ra-newsletter freshness proxy (`agents/ra/output/YYYY-MM-DD.html` mtime < 25h) which is the actual production newsletter path. Owner: Kai next interactive on Mini. Don't pile per-hash dupes into KAI_TASKS in the meantime — this single entry tracks the chronic; new hashes per sandbox session are noise until the underlying check is rewired.
+- [ ] **[K]** **SENT-2026-05-07-002 (P2):** `task-queue-size` day 61 escalated, **33 P0 tasks** vs threshold 5 (drifted up from 29 on 04-26/04-23). The "P0" count is inflated by stale sandbox-path-scoped sentinel entries from prior Cowork sessions (`[sentinel:...:escalated]` lines from Apr 17–18). Prune pass owed across 5+ briefs now. Action: dedupe sentinel-emitted P0s in this file by check-name-only (not by hash), close anything older than 14 days that has a matching newer entry.
+
 ## P1 — NEXT SESSION
 
 - [x] **[B]** **S17-006: Wire Aurora Stripe billing.** SUBSTANTIALLY DONE 2026-04-21. Keys set in Vercel. Checkout works (tested live). Webhook persistence wired (GitHub API). Remaining: Stripe dashboard webhook registration (see P0 Hyo action) + RESEND_API_KEY.
@@ -689,3 +694,14 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/compassionate-jolly-shannon/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:2af921d6:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/compassionate-jolly-shannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1e58c2d8:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/exciting-vigilant-maxwell/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:2267a55f] _(filed 2026-05-07)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/exciting-vigilant-maxwell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:7a5f3210] _(filed 2026-05-07)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/quirky-upbeat-mccarthy/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:bff6208f] _(filed 2026-05-07)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/quirky-upbeat-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:790c54e0] _(filed 2026-05-07)_
+- [ ] **[K]** [sentinel] 35 P0 tasks (overload threshold 5) [sentinel:task-queue-size:0d497e98] _(filed 2026-05-07)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/quirky-upbeat-mccarthy/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:bff6208f:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/quirky-upbeat-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:790c54e0:escalated]
