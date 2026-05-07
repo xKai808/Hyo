@@ -3,342 +3,241 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Explore Agents — Hyo</title>
-  <meta name="description" content="Browse and hire verified AI agents for your business and personal life." />
+  <title>Agents — Hyo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:          #080810;
-      --bg-card:     #0d0d1a;
-      --bg-card-h:   #111122;
-      --fg:          #e8d5b7;
-      --muted:       rgba(232,213,183,0.5);
-      --dim:         rgba(232,213,183,0.28);
-      --faint:       rgba(232,213,183,0.12);
-      --border:      rgba(232,213,183,0.08);
-      --border-h:    rgba(232,213,183,0.16);
-      --gold:        #e8b877;
-      --gold-dim:    rgba(232,184,119,0.08);
-      --gold-glow:   rgba(232,184,119,0.18);
-      --gold-line:   rgba(232,184,119,0.30);
-      --ok:          #88c98a;
+      --bg:      #f4f1eb;
+      --accent:  #1a1a2e;
+      --muted:   rgba(26,26,46,0.42);
+      --dim:     rgba(26,26,46,0.28);
+      --border:  rgba(26,26,46,0.1);
+      --card:    #ffffff;
+      --gold:    #c9a96e;
+      --gold-d:  rgba(201,169,110,0.08);
+      --gold-b:  rgba(201,169,110,0.22);
+      --ok:      #3a7d44;
       --font-d:  'Syne', sans-serif;
-      --font-b:  'Inter', sans-serif;
       --font-m:  'DM Mono', monospace;
       --ease:    cubic-bezier(0.16, 1, 0.3, 1);
-      --r:       14px;
     }
 
-    html, body { background: var(--bg); min-height: 100vh; color: var(--fg); font-family: var(--font-b); cursor: none; }
+    html, body {
+      background: var(--bg); color: var(--accent);
+      font-family: var(--font-m); min-height: 100vh; cursor: none;
+    }
 
-    /* custom cursor */
+    /* grid background */
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(26,26,46,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,26,46,0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    /* cursor */
     .cursor {
       position: fixed; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--gold); pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%); transition: background 0.3s;
+      background: var(--accent); pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
     }
     .cursor-ring {
       position: fixed; width: 32px; height: 32px; border-radius: 50%;
-      border: 1px solid var(--gold); pointer-events: none; z-index: 9998;
-      transform: translate(-50%, -50%); opacity: 0.45;
+      border: 1px solid rgba(26,26,46,0.3); pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%); opacity: 0.5;
     }
 
-    /* ambient glow */
-    body::before {
-      content: ''; position: fixed; inset: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 70% 35% at 50% -5%, rgba(232,184,119,0.06) 0%, transparent 65%),
-        radial-gradient(ellipse 40% 30% at 80% 10%, rgba(180,154,240,0.03) 0%, transparent 60%);
-    }
-
-    /* ── nav ── */
+    /* nav */
     nav {
-      position: sticky; top: 0; z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 40px;
-      background: rgba(8,8,16,0.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
     }
-    .nav-logo { font-family: var(--font-d); font-weight: 700; font-size: 18px; color: var(--gold); text-decoration: none; letter-spacing: 0.04em; }
+    .nav-logo {
+      font-family: var(--font-d); font-weight: 700; font-size: 17px;
+      color: var(--accent); text-decoration: none; letter-spacing: 0.02em;
+    }
     .nav-back {
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--dim); text-decoration: none; display: flex; align-items: center; gap: 8px;
-      transition: color 0.2s;
+      display: flex; align-items: center; gap: 8px; font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
     }
-    .nav-back:hover { color: var(--fg); }
+    .nav-back:hover { color: var(--accent); }
     .nav-back svg { transform: scaleX(-1); }
 
-    /* ── hero ── */
-    .hero {
-      padding: 72px 40px 48px;
-      max-width: 1100px; margin: 0 auto;
-      animation: riseUp 0.9s var(--ease) both;
-    }
-    .hero-eye {
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.32em;
-      text-transform: uppercase; color: var(--gold); opacity: 0.7; margin-bottom: 18px;
-    }
-    .hero-title {
-      font-family: var(--font-d); font-weight: 800; font-size: clamp(36px, 5vw, 64px);
-      line-height: 0.95; letter-spacing: -0.03em; color: var(--fg); margin-bottom: 20px;
-    }
-    .hero-sub {
-      font-size: 15px; line-height: 1.7; color: var(--muted); max-width: 520px; font-weight: 300;
+    /* main grid */
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 1040px; margin: 0 auto;
+      padding: 108px 40px 80px;
     }
 
-    /* ── filters ── */
-    .filter-bar {
-      padding: 0 40px 40px;
-      max-width: 1100px; margin: 0 auto;
-      display: flex; gap: 10px; flex-wrap: wrap;
-      animation: riseUp 0.9s var(--ease) 0.1s both;
-    }
-    .filter-btn {
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
-      padding: 8px 16px; border-radius: 2px; border: 1px solid var(--border);
-      background: transparent; color: var(--dim); cursor: none;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-    }
-    .filter-btn.active, .filter-btn:hover {
-      border-color: var(--gold-line); color: var(--gold); background: var(--gold-dim);
-    }
-
-    /* ── grid ── */
-    .catalog {
-      padding: 0 40px 80px;
-      max-width: 1100px; margin: 0 auto;
+    /* ── Agent grid ── */
+    .agents {
       display: grid;
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
     }
 
-    /* ── featured card (Aurora) ── */
-    .card-featured {
-      position: relative; border-radius: var(--r);
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      overflow: hidden;
+    /* card base */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 32px 28px;
+      position: relative; overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s var(--ease);
+      animation: up 0.7s var(--ease) both;
       cursor: none;
-      transition: border-color 0.3s, transform 0.3s var(--ease);
-      animation: riseUp 0.9s var(--ease) 0.15s both;
     }
-    .card-featured::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent 0%, var(--gold) 40%, var(--gold) 60%, transparent 100%);
-    }
-    .card-featured::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 120px;
-      background: radial-gradient(ellipse 60% 100% at 50% 0%, rgba(232,184,119,0.07) 0%, transparent 100%);
-      pointer-events: none;
-    }
-    .card-featured:hover { border-color: var(--border-h); transform: translateY(-2px); }
-
-    .card-featured-inner {
-      display: grid; grid-template-columns: 1fr auto;
-      gap: 32px; padding: 40px 44px; align-items: start;
+    .card:hover {
+      box-shadow: 0 8px 32px rgba(26,26,46,0.09);
+      transform: translateY(-3px);
     }
 
+    /* Aurora: featured — wider, gold top */
+    .card-aurora {
+      grid-column: 1 / -1;
+      border-top: 3px solid var(--gold);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: start;
+      animation-delay: 0s;
+    }
+
+    /* waitlist cards */
+    .card-wait { animation-delay: calc(var(--i, 0) * 0.06s); }
+    .card-wait:nth-child(2) { --i:1; }
+    .card-wait:nth-child(3) { --i:2; }
+    .card-wait:nth-child(4) { --i:3; }
+    .card-wait:nth-child(5) { --i:4; }
+
+    /* card elements */
+    .card-icon { font-size: 28px; margin-bottom: 18px; display: block; }
+
+    .card-name {
+      font-family: var(--font-d); font-weight: 700;
+      font-size: 28px; letter-spacing: -0.02em;
+      color: var(--accent); margin-bottom: 4px; line-height: 1;
+    }
+    .card-aurora .card-name { font-size: 42px; }
+
+    .card-role {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 16px;
+    }
+
+    .card-desc {
+      font-size: 13px; line-height: 1.8; color: var(--muted); font-weight: 300;
+    }
+    .card-aurora .card-desc { max-width: 480px; }
+
+    /* live badge */
     .live-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.24em;
-      text-transform: uppercase; color: var(--ok);
-      margin-bottom: 18px;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ok); margin-bottom: 14px;
     }
     .live-dot {
       width: 5px; height: 5px; border-radius: 50%; background: var(--ok);
-      animation: pulse-dot 2s infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(136,201,138,0.4); }
-      50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(136,201,138,0); }
+      animation: blink 2.2s infinite;
     }
 
-    .card-agent-name {
-      font-family: var(--font-d); font-weight: 800;
-      font-size: clamp(32px, 4vw, 52px);
-      letter-spacing: -0.03em; color: var(--fg);
-      line-height: 0.95; margin-bottom: 10px;
-    }
-    .card-agent-role {
-      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 20px; opacity: 0.85;
-    }
-    .card-agent-desc {
-      font-size: 14px; line-height: 1.75; color: var(--muted); max-width: 480px; font-weight: 300;
-    }
-
-    .card-meta {
-      display: flex; gap: 32px; margin-top: 28px; flex-wrap: wrap;
-    }
-    .card-stat { display: flex; flex-direction: column; gap: 4px; }
-    .card-stat-val {
-      font-family: var(--font-d); font-weight: 700; font-size: 22px;
-      color: var(--fg); letter-spacing: -0.02em;
-    }
-    .card-stat-label {
-      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.2em;
+    /* ETA badge */
+    .eta-badge {
+      display: inline-block; font-size: 8px; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--dim);
+      border: 1px solid var(--border); padding: 3px 9px; border-radius: 2px;
+      margin-bottom: 16px;
     }
 
-    .card-tags {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 24px;
-    }
-    .tag {
-      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.16em;
-      text-transform: uppercase; padding: 5px 10px;
-      border-radius: 2px; border: 1px solid var(--border);
-      color: var(--dim); background: rgba(232,213,183,0.03);
-    }
-
-    .card-right {
-      display: flex; flex-direction: column; align-items: flex-end; gap: 16px;
-      padding-top: 8px; min-width: 180px;
-    }
-    .card-icon {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, rgba(232,184,119,0.18) 0%, rgba(232,184,119,0.04) 100%);
-      border: 1px solid var(--gold-line);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 30px; margin-bottom: 8px;
+    /* aurora right col */
+    .aurora-right {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 16px; padding-top: 4px; min-width: 160px;
     }
     .cta-btn {
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 24px; border-radius: 2px;
-      background: var(--gold); color: #0d0c08;
-      font-weight: 500; transition: opacity 0.2s, transform 0.2s;
-      cursor: none; white-space: nowrap;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; border-radius: 2px;
+      background: var(--accent); color: var(--bg); font-weight: 500;
+      transition: opacity 0.2s; cursor: none;
     }
-    .cta-btn:hover { opacity: 0.9; transform: translateX(2px); }
-    .cta-btn svg { flex-shrink: 0; }
-
-    /* ── waitlist grid ── */
-    .waitlist-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      animation: riseUp 0.9s var(--ease) 0.25s both;
-    }
-
-    .card-waitlist {
-      position: relative; border-radius: var(--r);
-      background: var(--bg-card); border: 1px solid var(--border);
-      padding: 32px 28px; overflow: hidden; cursor: none;
-      transition: border-color 0.3s, background 0.3s, transform 0.3s var(--ease);
-    }
-    .card-waitlist::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--faint) 50%, transparent);
-    }
-    .card-waitlist:hover { border-color: var(--border-h); background: var(--bg-card-h); transform: translateY(-2px); }
-
-    .waitlist-badge {
-      display: inline-block;
-      font-family: var(--font-m); font-size: 8px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--dim);
-      border: 1px solid var(--border); padding: 4px 8px; border-radius: 2px;
-      margin-bottom: 20px;
-    }
-    .waitlist-icon {
-      font-size: 26px; margin-bottom: 14px; display: block;
-    }
-    .waitlist-name {
-      font-family: var(--font-d); font-weight: 700; font-size: 24px;
-      letter-spacing: -0.02em; color: var(--fg); margin-bottom: 6px;
-    }
-    .waitlist-role {
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: 14px;
-    }
-    .waitlist-desc {
-      font-size: 13px; line-height: 1.7; color: var(--muted); font-weight: 300;
-      margin-bottom: 24px;
-    }
+    .cta-btn:hover { opacity: 0.85; }
 
     /* waitlist form */
-    .waitlist-form { display: none; flex-direction: column; gap: 8px; }
-    .waitlist-form.open { display: flex; }
-    .waitlist-input {
-      font-family: var(--font-m); font-size: 11px; letter-spacing: 0.08em;
+    .wl-toggle {
+      width: 100%; margin-top: 20px;
+      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 10px 0; border-radius: 2px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--dim); cursor: none; transition: all 0.2s;
+    }
+    .wl-toggle:hover { border-color: rgba(26,26,46,0.25); color: var(--accent); }
+
+    .wl-form { display: none; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .wl-form.open { display: flex; }
+
+    .wl-input {
+      font-family: var(--font-m); font-size: 11px;
       padding: 10px 14px; border-radius: 2px;
-      background: rgba(232,213,183,0.05); border: 1px solid var(--border);
-      color: var(--fg); outline: none; width: 100%;
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--accent); outline: none; width: 100%;
       transition: border-color 0.2s;
     }
-    .waitlist-input::placeholder { color: var(--dim); }
-    .waitlist-input:focus { border-color: var(--gold-line); }
+    .wl-input::placeholder { color: var(--dim); }
+    .wl-input:focus { border-color: rgba(26,26,46,0.3); }
 
-    .waitlist-actions { display: flex; gap: 8px; }
-    .btn-join {
+    .wl-row { display: flex; gap: 8px; }
+    .btn-notify {
       font-family: var(--font-m); font-size: 9px; letter-spacing: 0.18em;
       text-transform: uppercase; padding: 9px 16px; border-radius: 2px;
-      background: var(--gold-dim); border: 1px solid var(--gold-line);
-      color: var(--gold); cursor: none; transition: background 0.2s; flex: 1;
+      background: var(--gold-d); border: 1px solid var(--gold-b);
+      color: var(--gold); cursor: none; flex: 1; transition: background 0.2s;
     }
-    .btn-join:hover { background: rgba(232,184,119,0.16); }
+    .btn-notify:hover { background: rgba(201,169,110,0.15); }
     .btn-cancel {
-      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.18em;
-      text-transform: uppercase; padding: 9px 14px; border-radius: 2px;
+      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; padding: 9px 12px; border-radius: 2px;
       background: transparent; border: 1px solid var(--border);
       color: var(--dim); cursor: none; transition: color 0.2s;
     }
-    .btn-cancel:hover { color: var(--fg); }
+    .btn-cancel:hover { color: var(--accent); }
 
-    .btn-waitlist-toggle {
-      font-family: var(--font-m); font-size: 9px; letter-spacing: 0.18em;
-      text-transform: uppercase; padding: 10px 18px; border-radius: 2px;
-      background: transparent; border: 1px solid var(--border);
-      color: var(--dim); cursor: none; transition: all 0.2s;
-      width: 100%;
+    .wl-confirm {
+      display: none; align-items: center; gap: 7px; margin-top: 16px;
+      font-size: 10px; letter-spacing: 0.14em; color: var(--ok);
     }
-    .btn-waitlist-toggle:hover { border-color: var(--gold-line); color: var(--gold); background: var(--gold-dim); }
+    .wl-confirm.show { display: flex; }
 
-    .join-confirm {
-      display: none; align-items: center; gap: 8px;
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.14em;
-      color: var(--ok);
+    /* separator */
+    .section-line {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 20px; grid-column: 1 / -1;
     }
-    .join-confirm.visible { display: flex; }
-    .join-confirm svg { flex-shrink: 0; }
+    .section-line-label {
+      font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--dim); white-space: nowrap;
+    }
+    .section-line-rule { flex: 1; height: 1px; background: var(--border); }
 
-    /* ── section header ── */
-    .section-head {
-      display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
-    }
-    .section-label {
-      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.28em;
-      text-transform: uppercase; color: var(--dim);
-    }
-    .section-line { flex: 1; height: 1px; background: var(--border); }
-
-    /* ── footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 40px;
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .footer-logo { font-family: var(--font-d); font-weight: 700; font-size: 15px; color: var(--gold); opacity: 0.6; }
-    .footer-note { font-family: var(--font-m); font-size: 10px; letter-spacing: 0.12em; color: var(--dim); }
-
-    @keyframes riseUp {
-      from { opacity: 0; transform: translateY(18px); }
+    @keyframes up {
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-    @media (max-width: 760px) {
-      html, body { cursor: auto; }
-      .cursor, .cursor-ring { display: none; }
-      nav { padding: 16px 20px; }
-      .hero, .filter-bar, .catalog { padding-left: 20px; padding-right: 20px; }
-      .card-featured-inner { grid-template-columns: 1fr; }
-      .card-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; padding-top: 0; }
-      .waitlist-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; padding: 24px 20px; }
+    @media (max-width: 720px) {
+      html,body { cursor: auto; }
+      .cursor,.cursor-ring { display: none; }
+      nav { padding: 20px; }
+      .wrap { padding: 88px 20px 60px; }
+      .card-aurora { grid-template-columns: 1fr; gap: 20px; }
+      .aurora-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -347,7 +246,6 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="ring"></div>
 
-<!-- nav -->
 <nav>
   <a href="/" class="nav-logo">Hyo</a>
   <a href="/" class="nav-back">
@@ -358,63 +256,19 @@
   </a>
 </nav>
 
-<!-- hero -->
-<div class="hero">
-  <p class="hero-eye">Agent Catalog &nbsp;/&nbsp; Browse &amp; Hire</p>
-  <h1 class="hero-title">Your people.<br>Redefined.</h1>
-  <p class="hero-sub">Verified AI agents for your business and personal life. Each one checked, scored, and trusted before you meet them. Start with Aurora — or join the waitlist for what's coming next.</p>
-</div>
+<div class="wrap">
+  <div class="agents">
 
-<!-- filters -->
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
-  <button class="filter-btn" onclick="setFilter(this,'intel')">News &amp; Intel</button>
-  <button class="filter-btn" onclick="setFilter(this,'finance')">Finance</button>
-  <button class="filter-btn" onclick="setFilter(this,'wellness')">Wellness</button>
-  <button class="filter-btn" onclick="setFilter(this,'security')">Security</button>
-  <button class="filter-btn" onclick="setFilter(this,'culture')">Culture</button>
-</div>
-
-<!-- catalog -->
-<div class="catalog">
-
-  <!-- Aurora: featured -->
-  <div class="section-head">
-    <span class="section-label">Live Now</span>
-    <span class="section-line"></span>
-  </div>
-
-  <div class="card-featured" data-category="intel" onclick="location.href='/aurora'">
-    <div class="card-featured-inner">
+    <!-- Aurora — featured -->
+    <div class="card card-aurora" onclick="location.href='/aurora'">
       <div>
-        <div class="live-badge"><span class="live-dot"></span> Live &amp; Active</div>
-        <div class="card-agent-name">Aurora</div>
-        <div class="card-agent-role">Morning Intelligence</div>
-        <p class="card-agent-desc">Your daily brief, delivered before you open anything else. Aurora tracks the stories that matter to you — markets, tech, politics, culture — and synthesizes them into a clear, concise morning read calibrated to your depth, voice, and pace.</p>
-        <div class="card-meta">
-          <div class="card-stat">
-            <span class="card-stat-val">Daily</span>
-            <span class="card-stat-label">Delivery</span>
-          </div>
-          <div class="card-stat">
-            <span class="card-stat-val">5–12 min</span>
-            <span class="card-stat-label">Read time</span>
-          </div>
-          <div class="card-stat">
-            <span class="card-stat-val">30+</span>
-            <span class="card-stat-label">Topic areas</span>
-          </div>
-        </div>
-        <div class="card-tags">
-          <span class="tag">News</span>
-          <span class="tag">Markets</span>
-          <span class="tag">Tech</span>
-          <span class="tag">Personalized</span>
-          <span class="tag">AI-Synthesized</span>
-        </div>
+        <div class="live-badge"><span class="live-dot"></span>Live</div>
+        <div class="card-name">Aurora</div>
+        <div class="card-role">Morning Intelligence</div>
+        <p class="card-desc">Your daily brief, before you open anything else. Markets, tech, politics, culture — synthesized to your depth, voice, and pace.</p>
       </div>
-      <div class="card-right">
-        <div class="card-icon">📰</div>
+      <div class="aurora-right">
+        <span class="card-icon" style="margin:0">📰</span>
         <a href="/aurora" class="cta-btn" onclick="event.stopPropagation()">
           Get Aurora
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -423,172 +277,143 @@
         </a>
       </div>
     </div>
-  </div>
 
-  <!-- Waitlist section -->
-  <div class="section-head" style="margin-top: 16px;">
-    <span class="section-label">Coming Soon</span>
-    <span class="section-line"></span>
-  </div>
-
-  <div class="waitlist-grid">
+    <!-- divider -->
+    <div class="section-line">
+      <span class="section-line-label">Coming Soon</span>
+      <span class="section-line-rule"></span>
+    </div>
 
     <!-- Cipher -->
-    <div class="card-waitlist" data-category="security">
-      <span class="waitlist-badge">Q3 2026</span>
-      <span class="waitlist-icon">🔐</span>
-      <div class="waitlist-name">Cipher</div>
-      <div class="waitlist-role">Security &amp; Privacy</div>
-      <p class="waitlist-desc">Monitors your digital footprint, flags exposure risks, and keeps your data where it belongs — with you. Continuous threat scanning, breach alerts, and plain-language recommendations.</p>
-      <div class="join-confirm" id="confirm-cipher">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="#88c98a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="card card-wait">
+      <span class="card-icon">🔐</span>
+      <div class="eta-badge">Q3 2026</div>
+      <div class="card-name">Cipher</div>
+      <div class="card-role">Security &amp; Privacy</div>
+      <p class="card-desc">Your digital footprint, monitored. Breach alerts, exposure risks, and plain-language guidance — no jargon.</p>
+      <div class="wl-confirm" id="c-cipher">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 7l3.5 3.5L11 3" stroke="#3a7d44" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         You're on the list.
       </div>
-      <div class="waitlist-form" id="form-cipher">
-        <input class="waitlist-input" type="email" placeholder="your@email.com" id="email-cipher" />
-        <div class="waitlist-actions">
-          <button class="btn-join" onclick="submitWaitlist('cipher')">Notify Me</button>
-          <button class="btn-cancel" onclick="closeForm('cipher')">Cancel</button>
+      <div class="wl-form" id="f-cipher">
+        <input class="wl-input" type="email" placeholder="your@email.com" id="e-cipher" />
+        <div class="wl-row">
+          <button class="btn-notify" onclick="join('cipher')">Notify Me</button>
+          <button class="btn-cancel" onclick="close_f('cipher')">Cancel</button>
         </div>
       </div>
-      <button class="btn-waitlist-toggle" id="toggle-cipher" onclick="openForm('cipher')">Join Waitlist</button>
+      <button class="wl-toggle" id="t-cipher" onclick="open_f('cipher')">Join Waitlist</button>
     </div>
 
     <!-- Meridian -->
-    <div class="card-waitlist" data-category="finance">
-      <span class="waitlist-badge">Q3 2026</span>
-      <span class="waitlist-icon">📊</span>
-      <div class="waitlist-name">Meridian</div>
-      <div class="waitlist-role">Financial Intelligence</div>
-      <p class="waitlist-desc">Portfolio tracking, macro trends, earnings signals — unified into one daily financial brief. Meridian speaks in plain terms, not jargon. Designed for investors who think, not trade on impulse.</p>
-      <div class="join-confirm" id="confirm-meridian">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="#88c98a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="card card-wait">
+      <span class="card-icon">📊</span>
+      <div class="eta-badge">Q3 2026</div>
+      <div class="card-name">Meridian</div>
+      <div class="card-role">Financial Intelligence</div>
+      <p class="card-desc">Portfolio, macro, earnings — one daily brief. Plain language. For investors who think, not react.</p>
+      <div class="wl-confirm" id="c-meridian">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 7l3.5 3.5L11 3" stroke="#3a7d44" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         You're on the list.
       </div>
-      <div class="waitlist-form" id="form-meridian">
-        <input class="waitlist-input" type="email" placeholder="your@email.com" id="email-meridian" />
-        <div class="waitlist-actions">
-          <button class="btn-join" onclick="submitWaitlist('meridian')">Notify Me</button>
-          <button class="btn-cancel" onclick="closeForm('meridian')">Cancel</button>
+      <div class="wl-form" id="f-meridian">
+        <input class="wl-input" type="email" placeholder="your@email.com" id="e-meridian" />
+        <div class="wl-row">
+          <button class="btn-notify" onclick="join('meridian')">Notify Me</button>
+          <button class="btn-cancel" onclick="close_f('meridian')">Cancel</button>
         </div>
       </div>
-      <button class="btn-waitlist-toggle" id="toggle-meridian" onclick="openForm('meridian')">Join Waitlist</button>
+      <button class="wl-toggle" id="t-meridian" onclick="open_f('meridian')">Join Waitlist</button>
     </div>
 
     <!-- Grove -->
-    <div class="card-waitlist" data-category="wellness">
-      <span class="waitlist-badge">Q4 2026</span>
-      <span class="waitlist-icon">🌿</span>
-      <div class="waitlist-name">Grove</div>
-      <div class="waitlist-role">Wellness &amp; Life</div>
-      <p class="waitlist-desc">Your personal wellness strategist. Tracks habits, surfaces patterns, and offers grounded recommendations without toxic optimization culture. Grove works with your life, not against it.</p>
-      <div class="join-confirm" id="confirm-grove">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="#88c98a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="card card-wait">
+      <span class="card-icon">🌿</span>
+      <div class="eta-badge">Q4 2026</div>
+      <div class="card-name">Grove</div>
+      <div class="card-role">Wellness &amp; Life</div>
+      <p class="card-desc">Habits tracked, patterns surfaced. Grounded recommendations without the toxic optimization culture.</p>
+      <div class="wl-confirm" id="c-grove">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 7l3.5 3.5L11 3" stroke="#3a7d44" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         You're on the list.
       </div>
-      <div class="waitlist-form" id="form-grove">
-        <input class="waitlist-input" type="email" placeholder="your@email.com" id="email-grove" />
-        <div class="waitlist-actions">
-          <button class="btn-join" onclick="submitWaitlist('grove')">Notify Me</button>
-          <button class="btn-cancel" onclick="closeForm('grove')">Cancel</button>
+      <div class="wl-form" id="f-grove">
+        <input class="wl-input" type="email" placeholder="your@email.com" id="e-grove" />
+        <div class="wl-row">
+          <button class="btn-notify" onclick="join('grove')">Notify Me</button>
+          <button class="btn-cancel" onclick="close_f('grove')">Cancel</button>
         </div>
       </div>
-      <button class="btn-waitlist-toggle" id="toggle-grove" onclick="openForm('grove')">Join Waitlist</button>
+      <button class="wl-toggle" id="t-grove" onclick="open_f('grove')">Join Waitlist</button>
     </div>
 
     <!-- Pulse -->
-    <div class="card-waitlist" data-category="culture">
-      <span class="waitlist-badge">Q4 2026</span>
-      <span class="waitlist-icon">🎙️</span>
-      <div class="waitlist-name">Pulse</div>
-      <div class="waitlist-role">Culture &amp; Conversation</div>
-      <p class="waitlist-desc">Keeps you culturally fluent without the doomscrolling. Pulse tracks music, film, social moments, and discourse — so you're always in the conversation, never buried in it.</p>
-      <div class="join-confirm" id="confirm-pulse">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="#88c98a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="card card-wait">
+      <span class="card-icon">🎙️</span>
+      <div class="eta-badge">Q4 2026</div>
+      <div class="card-name">Pulse</div>
+      <div class="card-role">Culture &amp; Conversation</div>
+      <p class="card-desc">Stay culturally fluent without the doomscrolling. Music, film, discourse — always in the conversation.</p>
+      <div class="wl-confirm" id="c-pulse">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 7l3.5 3.5L11 3" stroke="#3a7d44" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         You're on the list.
       </div>
-      <div class="waitlist-form" id="form-pulse">
-        <input class="waitlist-input" type="email" placeholder="your@email.com" id="email-pulse" />
-        <div class="waitlist-actions">
-          <button class="btn-join" onclick="submitWaitlist('pulse')">Notify Me</button>
-          <button class="btn-cancel" onclick="closeForm('pulse')">Cancel</button>
+      <div class="wl-form" id="f-pulse">
+        <input class="wl-input" type="email" placeholder="your@email.com" id="e-pulse" />
+        <div class="wl-row">
+          <button class="btn-notify" onclick="join('pulse')">Notify Me</button>
+          <button class="btn-cancel" onclick="close_f('pulse')">Cancel</button>
         </div>
       </div>
-      <button class="btn-waitlist-toggle" id="toggle-pulse" onclick="openForm('pulse')">Join Waitlist</button>
+      <button class="wl-toggle" id="t-pulse" onclick="open_f('pulse')">Join Waitlist</button>
     </div>
 
-  </div><!-- /waitlist-grid -->
-</div><!-- /catalog -->
-
-<footer style="border-top:1px solid var(--border);padding:32px 40px;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
-  <span class="footer-logo">Hyo</span>
-  <span class="footer-note">More agents arriving Q3–Q4 2026 &nbsp;·&nbsp; All agents verified &amp; scored</span>
-</footer>
+  </div>
+</div>
 
 <script>
-  // custom cursor
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('ring');
   let mx=0,my=0,rx=0,ry=0;
   document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx+'px'; cursor.style.top = my+'px';
+    mx=e.clientX; my=e.clientY;
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
   });
   (function loop(){
-    rx += (mx-rx)*0.1; ry += (my-ry)*0.1;
-    ring.style.left = rx+'px'; ring.style.top = ry+'px';
+    rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
     requestAnimationFrame(loop);
   })();
 
-  // filter
-  function setFilter(btn, cat) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('[data-category]').forEach(el => {
-      const match = cat === 'all' || el.dataset.category === cat;
-      el.style.display = match ? '' : 'none';
-    });
-    // always show featured if intel or all
-    const featured = document.querySelector('.card-featured');
-    if (featured) {
-      featured.style.display = (cat === 'all' || cat === 'intel') ? '' : 'none';
-    }
+  function open_f(id) {
+    document.getElementById('f-'+id).classList.add('open');
+    document.getElementById('t-'+id).style.display='none';
+    document.getElementById('e-'+id).focus();
   }
-
-  // waitlist form
-  function openForm(id) {
-    document.getElementById('form-'+id).classList.add('open');
-    document.getElementById('toggle-'+id).style.display = 'none';
-    const inp = document.getElementById('email-'+id);
-    if (inp) inp.focus();
+  function close_f(id) {
+    document.getElementById('f-'+id).classList.remove('open');
+    document.getElementById('t-'+id).style.display='';
   }
-  function closeForm(id) {
-    document.getElementById('form-'+id).classList.remove('open');
-    document.getElementById('toggle-'+id).style.display = '';
-  }
-  function submitWaitlist(id) {
-    const email = (document.getElementById('email-'+id).value || '').trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('email-'+id).style.borderColor = 'rgba(232,144,112,0.5)';
+  function join(id) {
+    const email=(document.getElementById('e-'+id).value||'').trim();
+    if(!email||!email.includes('@')){
+      document.getElementById('e-'+id).style.borderColor='rgba(180,60,60,0.4)';
       return;
     }
-    // store locally (real submission would POST to /api/waitlist)
-    const stored = JSON.parse(localStorage.getItem('hyo_waitlist') || '[]');
-    stored.push({ agent: id, email, ts: new Date().toISOString() });
-    localStorage.setItem('hyo_waitlist', JSON.stringify(stored));
-    // show confirm
-    document.getElementById('form-'+id).classList.remove('open');
-    document.getElementById('toggle-'+id).style.display = 'none';
-    document.getElementById('confirm-'+id).classList.add('visible');
+    const list=JSON.parse(localStorage.getItem('hyo_wl')||'[]');
+    list.push({agent:id,email,ts:new Date().toISOString()});
+    localStorage.setItem('hyo_wl',JSON.stringify(list));
+    document.getElementById('f-'+id).classList.remove('open');
+    document.getElementById('t-'+id).style.display='none';
+    document.getElementById('c-'+id).classList.add('show');
   }
 
-  // restore saved confirmations
-  const stored = JSON.parse(localStorage.getItem('hyo_waitlist') || '[]');
-  stored.forEach(({ agent }) => {
-    const c = document.getElementById('confirm-'+agent);
-    const t = document.getElementById('toggle-'+agent);
-    if (c) c.classList.add('visible');
-    if (t) t.style.display = 'none';
+  // restore saved
+  (JSON.parse(localStorage.getItem('hyo_wl')||'[]')).forEach(({agent})=>{
+    const c=document.getElementById('c-'+agent);
+    const t=document.getElementById('t-'+agent);
+    if(c) c.classList.add('show');
+    if(t) t.style.display='none';
   });
 </script>
 

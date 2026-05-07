@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -7,835 +7,609 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ══════════════════════════════════════════
-       THEME DEFINITIONS
-       Each theme overrides CSS custom properties.
-       Switching themes = one setAttribute call.
-    ══════════════════════════════════════════ */
-
-    :root, [data-theme="dark"] {
-      --bg:           #080810;
-      --bg-deep:      #050509;
-      --bg-card:      #0f0f1a;
-      --bg-card-h:    #131322;
-      --bg-mast:      rgba(8,8,16,0.88);
-      --fg:           #e8d5b7;
-      --muted:        rgba(232,213,183,0.55);
-      --dim:          rgba(232,213,183,0.32);
-      --faint:        rgba(232,213,183,0.14);
-      --border:       rgba(232,213,183,0.09);
-      --border-h:     rgba(232,213,183,0.18);
-      --accent:       #e8b877;
-      --accent-dim:   rgba(232,184,119,0.08);
-      --accent-line:  rgba(232,184,119,0.28);
-      --ok:           #88c98a;
-      --chip-bg:      rgba(232,213,183,0.07);
-      --chip-border:  rgba(232,213,183,0.12);
-      --reader-bg:    #0a0a16;
-      --shadow:       0 4px 24px rgba(0,0,0,0.5);
-      --glow:         radial-gradient(ellipse 70% 35% at 50% -5%, rgba(232,184,119,0.07) 0%, transparent 65%);
+    /* ── THEMES ── */
+    :root, [data-theme="light"] {
+      --bg:       #f4f1eb;
+      --card:     #ffffff;
+      --card-h:   #fafaf7;
+      --fg:       #1a1a2e;
+      --muted:    rgba(26,26,46,0.48);
+      --dim:      rgba(26,26,46,0.3);
+      --faint:    rgba(26,26,46,0.14);
+      --border:   rgba(26,26,46,0.10);
+      --border-h: rgba(26,26,46,0.20);
+      --gold:     #c9a96e;
+      --gold-d:   rgba(201,169,110,0.09);
+      --gold-b:   rgba(201,169,110,0.24);
+      --ok:       #3a7d44;
+      --chip:     rgba(26,26,46,0.05);
+      --chip-b:   rgba(26,26,46,0.10);
+      --mast-bg:  rgba(244,241,235,0.9);
+      --grd: linear-gradient(rgba(26,26,46,0.04) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(26,26,46,0.04) 1px, transparent 1px);
     }
 
-    [data-theme="paper"] {
-      --bg:           #f8f4ee;
-      --bg-deep:      #f0ebe2;
-      --bg-card:      #fffdf9;
-      --bg-card-h:    #faf7f2;
-      --bg-mast:      rgba(248,244,238,0.92);
-      --fg:           #1a1612;
-      --muted:        rgba(26,22,18,0.58);
-      --dim:          rgba(26,22,18,0.36);
-      --faint:        rgba(26,22,18,0.14);
-      --border:       rgba(26,22,18,0.10);
-      --border-h:     rgba(26,22,18,0.20);
-      --accent:       #8a6030;
-      --accent-dim:   rgba(138,96,48,0.08);
-      --accent-line:  rgba(138,96,48,0.25);
-      --ok:           #3a7d44;
-      --chip-bg:      rgba(26,22,18,0.06);
-      --chip-border:  rgba(26,22,18,0.12);
-      --reader-bg:    #fdfbf7;
-      --shadow:       0 4px 24px rgba(0,0,0,0.08);
-      --glow:         radial-gradient(ellipse 70% 35% at 50% -5%, rgba(138,96,48,0.04) 0%, transparent 65%);
+    [data-theme="dark"] {
+      --bg:       #080810;
+      --card:     #0f0f1a;
+      --card-h:   #131322;
+      --fg:       #e8d5b7;
+      --muted:    rgba(232,213,183,0.52);
+      --dim:      rgba(232,213,183,0.30);
+      --faint:    rgba(232,213,183,0.12);
+      --border:   rgba(232,213,183,0.09);
+      --border-h: rgba(232,213,183,0.18);
+      --gold:     #e8b877;
+      --gold-d:   rgba(232,184,119,0.08);
+      --gold-b:   rgba(232,184,119,0.25);
+      --ok:       #88c98a;
+      --chip:     rgba(232,213,183,0.06);
+      --chip-b:   rgba(232,213,183,0.11);
+      --mast-bg:  rgba(8,8,16,0.88);
+      --grd: radial-gradient(ellipse 70% 35% at 50% -5%, rgba(232,184,119,0.06) 0%, transparent 65%);
     }
 
     [data-theme="rose"] {
-      --bg:           #12050c;
-      --bg-deep:      #0a0308;
-      --bg-card:      #1a0812;
-      --bg-card-h:    #200c18;
-      --bg-mast:      rgba(18,5,12,0.90);
-      --fg:           #f5d8e8;
-      --muted:        rgba(245,216,232,0.55);
-      --dim:          rgba(245,216,232,0.32);
-      --faint:        rgba(245,216,232,0.13);
-      --border:       rgba(245,216,232,0.08);
-      --border-h:     rgba(245,216,232,0.18);
-      --accent:       #e880b0;
-      --accent-dim:   rgba(232,128,176,0.09);
-      --accent-line:  rgba(232,128,176,0.28);
-      --ok:           #88c98a;
-      --chip-bg:      rgba(245,216,232,0.07);
-      --chip-border:  rgba(245,216,232,0.12);
-      --reader-bg:    #140610;
-      --shadow:       0 4px 24px rgba(0,0,0,0.6);
-      --glow:         radial-gradient(ellipse 70% 35% at 50% -5%, rgba(232,128,176,0.08) 0%, transparent 65%);
+      --bg:       #fdf0f5;
+      --card:     #ffffff;
+      --card-h:   #fdf6f9;
+      --fg:       #2a0a1a;
+      --muted:    rgba(42,10,26,0.48);
+      --dim:      rgba(42,10,26,0.30);
+      --faint:    rgba(42,10,26,0.14);
+      --border:   rgba(42,10,26,0.10);
+      --border-h: rgba(42,10,26,0.20);
+      --gold:     #c96090;
+      --gold-d:   rgba(201,96,144,0.08);
+      --gold-b:   rgba(201,96,144,0.22);
+      --ok:       #3a7d44;
+      --chip:     rgba(42,10,26,0.05);
+      --chip-b:   rgba(42,10,26,0.10);
+      --mast-bg:  rgba(253,240,245,0.92);
+      --grd: linear-gradient(rgba(201,96,144,0.03) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(201,96,144,0.03) 1px, transparent 1px);
     }
 
     [data-theme="slate"] {
-      --bg:           #0d1117;
-      --bg-deep:      #080d12;
-      --bg-card:      #131a22;
-      --bg-card-h:    #18202a;
-      --bg-mast:      rgba(13,17,23,0.90);
-      --fg:           #cdd9e5;
-      --muted:        rgba(205,217,229,0.55);
-      --dim:          rgba(205,217,229,0.32);
-      --faint:        rgba(205,217,229,0.13);
-      --border:       rgba(205,217,229,0.09);
-      --border-h:     rgba(205,217,229,0.18);
-      --accent:       #58a6ff;
-      --accent-dim:   rgba(88,166,255,0.09);
-      --accent-line:  rgba(88,166,255,0.28);
-      --ok:           #3fb950;
-      --chip-bg:      rgba(205,217,229,0.07);
-      --chip-border:  rgba(205,217,229,0.12);
-      --reader-bg:    #0f1621;
-      --shadow:       0 4px 24px rgba(0,0,0,0.5);
-      --glow:         radial-gradient(ellipse 70% 35% at 50% -5%, rgba(88,166,255,0.06) 0%, transparent 65%);
+      --bg:       #f0f3f7;
+      --card:     #ffffff;
+      --card-h:   #f7f9fc;
+      --fg:       #0d1117;
+      --muted:    rgba(13,17,23,0.48);
+      --dim:      rgba(13,17,23,0.30);
+      --faint:    rgba(13,17,23,0.14);
+      --border:   rgba(13,17,23,0.10);
+      --border-h: rgba(13,17,23,0.20);
+      --gold:     #0969da;
+      --gold-d:   rgba(9,105,218,0.07);
+      --gold-b:   rgba(9,105,218,0.22);
+      --ok:       #1a7f37;
+      --chip:     rgba(13,17,23,0.05);
+      --chip-b:   rgba(13,17,23,0.10);
+      --mast-bg:  rgba(240,243,247,0.92);
+      --grd: linear-gradient(rgba(13,17,23,0.04) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(13,17,23,0.04) 1px, transparent 1px);
     }
 
-    /* ══════════════════════════════════════════
-       BASE STYLES
-    ══════════════════════════════════════════ */
     html { background: var(--bg); min-height: 100vh; }
     body {
       min-height: 100vh; color: var(--fg);
-      font-family: 'Inter', sans-serif;
-      position: relative; overflow-x: hidden;
-      transition: background 0.4s, color 0.4s;
+      font-family: 'DM Mono', monospace;
+      position: relative; overflow-x: hidden; cursor: none;
+      transition: background 0.3s, color 0.3s;
     }
     body::before {
       content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background: var(--glow);
-      transition: background 0.4s;
+      background: var(--grd); background-size: 44px 44px;
+      transition: background 0.3s;
     }
 
-    a { color: inherit; text-decoration: none; }
+    /* cursor */
+    .cursor {
+      position: fixed; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--fg); pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%); transition: background 0.3s;
+    }
+    .cursor-ring {
+      position: fixed; width: 32px; height: 32px; border-radius: 50%;
+      border: 1px solid var(--fg); pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%); opacity: 0.25;
+    }
 
-    /* ── nav ── */
+    /* ── NAV ── */
     .mast {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 32px;
-      background: var(--bg-mast); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      padding: 18px 36px;
+      background: var(--mast-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      transition: background 0.4s, border-color 0.4s;
-      gap: 16px;
+      transition: background 0.3s, border-color 0.3s;
     }
-    .mast-left { display: flex; align-items: center; gap: 20px; }
     .mast-logo {
-      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
-      color: var(--accent); letter-spacing: 0.04em;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px;
+      color: var(--fg); text-decoration: none; letter-spacing: 0.02em;
       transition: color 0.3s;
     }
-    .mast-title {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--dim);
-      transition: color 0.3s;
-    }
-    .mast-right { display: flex; align-items: center; gap: 14px; }
+    .mast-right { display: flex; align-items: center; gap: 16px; }
 
-    /* theme switcher */
-    .theme-switcher { display: flex; align-items: center; gap: 8px; }
-    .theme-dot {
-      width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
-      border: 2px solid transparent;
-      transition: transform 0.2s, border-color 0.2s;
-      position: relative;
+    /* theme dots */
+    .themes { display: flex; gap: 7px; align-items: center; }
+    .tdot {
+      width: 17px; height: 17px; border-radius: 50%; cursor: pointer;
+      border: 2px solid transparent; transition: transform 0.2s, border-color 0.2s;
     }
-    .theme-dot:hover { transform: scale(1.25); }
-    .theme-dot.active { border-color: var(--fg); }
-    .theme-dot[data-t="dark"]  { background: radial-gradient(circle at 35% 35%, #1a1a30, #080810); }
-    .theme-dot[data-t="paper"] { background: radial-gradient(circle at 35% 35%, #fff8ee, #e8d5b8); }
-    .theme-dot[data-t="rose"]  { background: radial-gradient(circle at 35% 35%, #2a0818, #12050c); }
-    .theme-dot[data-t="slate"] { background: radial-gradient(circle at 35% 35%, #1c2836, #0d1117); }
+    .tdot:hover { transform: scale(1.3); }
+    .tdot.on { border-color: var(--fg); }
+    .tdot[data-t="light"] { background: radial-gradient(circle at 35% 35%, #fff, #e8d5b8); }
+    .tdot[data-t="dark"]  { background: radial-gradient(circle at 35% 35%, #1a1a30, #080810); }
+    .tdot[data-t="rose"]  { background: radial-gradient(circle at 35% 35%, #fce8f2, #f0c0d8); }
+    .tdot[data-t="slate"] { background: radial-gradient(circle at 35% 35%, #e8f0f8, #c8d8e8); }
 
     .mast-explore {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--dim);
-      padding: 7px 14px; border-radius: 2px;
-      border: 1px solid var(--border); transition: all 0.2s;
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--dim); text-decoration: none; padding: 7px 13px;
+      border: 1px solid var(--border); border-radius: 2px;
+      transition: all 0.2s;
     }
-    .mast-explore:hover { border-color: var(--accent-line); color: var(--accent); background: var(--accent-dim); }
+    .mast-explore:hover { color: var(--fg); border-color: var(--border-h); }
 
-    /* ── main layout ── */
+    /* ── SHELL ── */
     .shell {
-      max-width: 1060px; margin: 0 auto;
-      padding: 48px 32px 80px;
       position: relative; z-index: 1;
+      max-width: 1040px; margin: 0 auto;
+      padding: 48px 36px 80px;
     }
 
-    /* ══════════════════════════════════════════
+    /* ══════════════════════════════
        STATE: NO TOKEN — topic picker
-    ══════════════════════════════════════════ */
-    #state-no-token { display: none; }
-    #state-no-token.visible { display: block; }
+    ══════════════════════════════ */
+    #s-pick { display: none; }
+    #s-pick.on { display: block; }
 
-    .welcome-head {
-      margin-bottom: 48px;
-      animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) both;
-    }
-    .welcome-eye {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.3em;
-      text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-bottom: 14px;
-    }
-    .welcome-title {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(28px, 4vw, 48px); letter-spacing: -0.03em;
-      color: var(--fg); margin-bottom: 14px;
-    }
-    .welcome-sub {
-      font-size: 14px; line-height: 1.75; color: var(--muted); max-width: 500px; font-weight: 300;
-    }
-
-    /* topic picker */
-    .topic-picker { animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
-    .tp-group { margin-bottom: 32px; }
+    .tp-groups { display: flex; flex-direction: column; gap: 28px; margin-bottom: 36px; }
     .tp-group-label {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.24em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: 14px;
+      font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 10px;
     }
     .tp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tp-chip {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.14em;
-      text-transform: uppercase; padding: 8px 14px; border-radius: 2px;
-      background: var(--chip-bg); border: 1px solid var(--chip-border);
-      color: var(--dim); cursor: pointer; transition: all 0.2s; user-select: none;
+    .chip {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 8px 14px; border-radius: 2px;
+      background: var(--chip); border: 1px solid var(--chip-b);
+      color: var(--dim); cursor: pointer; transition: all 0.18s; user-select: none;
     }
-    .tp-chip.selected {
-      background: var(--accent-dim); border-color: var(--accent-line); color: var(--accent);
-    }
-    .tp-chip:hover:not(.selected) { border-color: var(--border-h); color: var(--fg); }
+    .chip.sel { background: var(--gold-d); border-color: var(--gold-b); color: var(--gold); }
+    .chip:hover:not(.sel) { border-color: var(--border-h); color: var(--fg); }
 
-    .preview-cta {
-      margin-top: 36px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-    }
+    .pick-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn-preview {
       font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; padding: 13px 26px; border-radius: 2px;
-      background: var(--accent); color: #0d0c08; font-weight: 500;
-      border: none; cursor: pointer; transition: opacity 0.2s;
+      text-transform: uppercase; padding: 12px 22px; border-radius: 2px;
+      background: var(--fg); color: var(--bg); border: none; cursor: pointer;
+      transition: opacity 0.2s;
     }
-    .btn-preview:hover { opacity: 0.88; }
-    .btn-signup {
+    .btn-preview:hover { opacity: 0.8; }
+    .btn-aurora {
       font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; padding: 13px 26px; border-radius: 2px;
+      text-transform: uppercase; padding: 12px 22px; border-radius: 2px;
       background: transparent; border: 1px solid var(--border-h);
       color: var(--dim); cursor: pointer; transition: all 0.2s;
     }
-    .btn-signup:hover { border-color: var(--accent-line); color: var(--accent); }
+    .btn-aurora:hover { color: var(--fg); border-color: var(--border-h); }
 
-    /* ══════════════════════════════════════════
-       SAMPLE BRIEF (no-token preview)
-    ══════════════════════════════════════════ */
-    #state-sample { display: none; }
-    #state-sample.visible { display: block; }
+    /* ══════════════════════════════
+       STATE: SAMPLE BRIEF
+    ══════════════════════════════ */
+    #s-sample { display: none; }
+    #s-sample.on { display: block; }
 
-    .sample-banner {
+    .sample-strip {
       display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; flex-wrap: wrap;
-      padding: 14px 20px; border-radius: 8px;
-      background: var(--accent-dim); border: 1px solid var(--accent-line);
-      margin-bottom: 32px;
-      font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em;
-      color: var(--accent); animation: riseUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 32px;
+      padding: 12px 18px; border-radius: 4px;
+      background: var(--gold-d); border: 1px solid var(--gold-b);
+      font-size: 10px; letter-spacing: 0.1em; color: var(--gold);
     }
-    .sample-banner a {
-      color: var(--accent); font-weight: 500; text-decoration: underline;
-      text-underline-offset: 3px;
+    .sample-strip a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+    .btn-back-topics {
+      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; background: none; border: none; color: var(--dim);
+      cursor: pointer; transition: color 0.2s;
     }
+    .btn-back-topics:hover { color: var(--fg); }
 
-    /* ══════════════════════════════════════════
-       STATE: HAS TOKEN — real briefs
-    ══════════════════════════════════════════ */
-    #state-has-token { display: none; }
-    #state-has-token.visible { display: block; }
+    /* ══════════════════════════════
+       STATE: REAL TOKEN
+    ══════════════════════════════ */
+    #s-real { display: none; }
+    #s-real.on { display: block; }
 
-    .greeting-bar {
+    /* greeting */
+    .greeting {
       display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
-      animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) both;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 10px;
     }
-    .greeting-text {
+    .greeting-name {
       font-family: 'Syne', sans-serif; font-weight: 700;
-      font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.02em; color: var(--fg);
+      font-size: clamp(22px, 3vw, 36px); letter-spacing: -0.02em; color: var(--fg);
     }
     .greeting-date {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--dim);
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim);
     }
 
-    /* settings strip */
-    .settings-strip {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
-      animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.05s both;
-    }
+    /* settings + topic pills */
+    .pill-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
     .pill {
-      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.18em;
-      text-transform: uppercase; padding: 6px 12px; border-radius: 2px;
-      background: var(--chip-bg); border: 1px solid var(--chip-border); color: var(--dim);
+      font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 5px 10px; border-radius: 2px;
+      background: var(--chip); border: 1px solid var(--chip-b); color: var(--dim);
     }
-    .pill span { color: var(--accent); margin-left: 4px; }
-
-    /* topic chips */
-    .topic-strip {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 36px;
-      animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.08s both;
-    }
-    .topic-chip {
-      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em;
-      text-transform: uppercase; padding: 6px 12px; border-radius: 2px;
-      background: var(--chip-bg); border: 1px solid var(--chip-border); color: var(--dim);
-    }
+    .pill em { font-style: normal; color: var(--gold); margin-left: 3px; }
 
     /* brief cards */
-    .briefs-label {
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.28em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: 20px;
-      animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both;
-    }
-    .briefs-grid {
-      display: flex; flex-direction: column; gap: 14px;
-      animation: riseUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.12s both;
-    }
+    .briefs { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
 
     .brief-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 24px 28px; cursor: pointer;
-      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 24px 28px; cursor: pointer;
+      transition: box-shadow 0.22s, transform 0.22s;
       position: relative; overflow: hidden;
     }
     .brief-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, var(--faint) 50%, transparent);
-      transition: background 0.3s;
     }
-    .brief-card.today::before { background: linear-gradient(90deg, transparent, var(--accent-line) 50%, transparent); }
-    .brief-card:hover { background: var(--bg-card-h); border-color: var(--border-h); transform: translateY(-1px); }
+    .brief-card.today { border-top: 2px solid var(--gold); }
+    .brief-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); transform: translateY(-2px); }
 
-    .brief-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
-    .brief-card-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .brief-badge-today {
-      font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.2em;
-      text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
-      background: var(--accent-dim); border: 1px solid var(--accent-line);
-      color: var(--accent);
+    .bc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 12px; }
+    .bc-meta { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .badge-today {
+      font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px;
+      background: var(--gold-d); border: 1px solid var(--gold-b); color: var(--gold);
     }
-    .brief-date {
-      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--dim);
-    }
-    .brief-arrow { color: var(--dim); transition: color 0.2s, transform 0.2s; }
-    .brief-card:hover .brief-arrow { color: var(--accent); transform: translateX(3px); }
+    .bc-date { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+    .bc-arrow { color: var(--dim); transition: color 0.2s, transform 0.2s; }
+    .brief-card:hover .bc-arrow { color: var(--gold); transform: translateX(3px); }
 
-    .brief-card-title {
+    .bc-title {
       font-family: 'Syne', sans-serif; font-weight: 600;
-      font-size: 17px; letter-spacing: -0.01em;
-      color: var(--fg); margin-bottom: 8px;
+      font-size: 18px; letter-spacing: -0.01em; color: var(--fg); margin-bottom: 7px;
     }
-    .brief-card-bluf {
-      font-size: 13.5px; line-height: 1.7; color: var(--muted); font-weight: 300;
-    }
-    .brief-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
-    .brief-tag {
-      font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.14em;
-      text-transform: uppercase; padding: 4px 8px; border-radius: 2px;
-      background: var(--chip-bg); border: 1px solid var(--chip-border); color: var(--dim);
+    .bc-bluf { font-size: 13px; line-height: 1.75; color: var(--muted); font-weight: 300; }
+    .bc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .bc-tag {
+      font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px;
+      background: var(--chip); border: 1px solid var(--chip-b); color: var(--dim);
     }
 
-    /* ══════════════════════════════════════════
-       INLINE READER OVERLAY
-    ══════════════════════════════════════════ */
-    .reader-overlay {
+    /* ── READER OVERLAY ── */
+    .reader-bg {
       display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.35); backdrop-filter: blur(3px);
       align-items: flex-start; justify-content: center;
       padding: 40px 20px; overflow-y: auto;
     }
-    .reader-overlay.open { display: flex; }
-
-    .reader-panel {
-      background: var(--reader-bg); border: 1px solid var(--border-h);
-      border-radius: 16px; max-width: 680px; width: 100%;
+    .reader-bg.open { display: flex; }
+    .reader-box {
+      background: var(--card); border: 1px solid var(--border-h);
+      border-radius: 10px; max-width: 660px; width: 100%;
       padding: 40px 44px; position: relative;
-      box-shadow: var(--shadow);
-      animation: riseUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
-      transition: background 0.4s;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      animation: up 0.4s cubic-bezier(0.16,1,0.3,1) both;
+      transition: background 0.3s;
     }
     .reader-close {
-      position: absolute; top: 20px; right: 20px;
-      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.16em;
+      position: absolute; top: 18px; right: 18px;
+      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.16em;
       text-transform: uppercase; color: var(--dim);
       background: none; border: 1px solid var(--border); padding: 6px 12px;
       border-radius: 2px; cursor: pointer; transition: all 0.2s;
     }
     .reader-close:hover { color: var(--fg); border-color: var(--border-h); }
-
-    .reader-eyebrow {
-      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.26em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    .reader-eye {
+      font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
     }
+    .reader-meta { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); margin-bottom: 18px; }
     .reader-title {
       font-family: 'Syne', sans-serif; font-weight: 700;
       font-size: clamp(20px, 3vw, 28px); letter-spacing: -0.02em;
       color: var(--fg); margin-bottom: 20px; line-height: 1.2;
     }
-    .reader-body {
-      font-size: 15px; line-height: 1.85; color: var(--muted); font-weight: 300;
-    }
-    .reader-body p { margin-bottom: 18px; }
+    .reader-hr { height: 1px; background: var(--border); margin: 20px 0; }
+    .reader-body { font-size: 14.5px; line-height: 1.85; color: var(--muted); font-weight: 300; }
+    .reader-body p { margin-bottom: 16px; }
     .reader-body h2 {
       font-family: 'Syne', sans-serif; font-weight: 600;
-      font-size: 16px; color: var(--fg); margin: 28px 0 12px;
+      font-size: 15px; color: var(--fg); margin: 24px 0 10px;
     }
     .reader-body strong { color: var(--fg); font-weight: 500; }
-    .reader-body em { color: var(--accent); font-style: normal; font-weight: 400; }
-    .reader-divider { height: 1px; background: var(--border); margin: 28px 0; }
-    .reader-meta {
-      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--dim); margin-bottom: 28px;
-    }
+    .reader-body em { color: var(--gold); font-style: normal; }
 
-    /* ══════════════════════════════════════════
-       LOADING / ERROR
-    ══════════════════════════════════════════ */
-    #state-loading {
-      padding: 80px 0; text-align: center;
-      font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--dim);
-      animation: riseUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+    /* ── LOADER ── */
+    #s-load {
+      padding: 80px 0; text-align: center; font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim);
     }
-    .loader-ring {
-      display: inline-block; width: 32px; height: 32px; border-radius: 50%;
-      border: 2px solid var(--faint); border-top-color: var(--accent);
-      animation: spin 1s linear infinite; margin-bottom: 20px;
+    .spin {
+      display: inline-block; width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--faint); border-top-color: var(--gold);
+      animation: rotate 0.9s linear infinite; margin-bottom: 18px;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
 
-    @keyframes riseUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 680px) {
+    @media (max-width: 640px) {
+      html,body { cursor: auto; }
+      .cursor,.cursor-ring { display: none; }
       .mast { padding: 14px 20px; }
       .shell { padding: 32px 20px 60px; }
-      .reader-panel { padding: 32px 24px; }
-      .mast-title { display: none; }
-      .brief-card { padding: 20px 20px; }
+      .reader-box { padding: 28px 22px; }
     }
   </style>
 </head>
 <body>
 
-<!-- nav -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+
 <nav class="mast">
-  <div class="mast-left">
-    <a href="/" class="mast-logo">Hyo</a>
-    <span class="mast-title" id="mast-agent-label">Aurora</span>
-  </div>
+  <a href="/" class="mast-logo">Hyo</a>
   <div class="mast-right">
-    <!-- theme switcher -->
-    <div class="theme-switcher" title="Switch theme">
-      <div class="theme-dot active" data-t="dark"  onclick="setTheme('dark')"  title="Dark"></div>
-      <div class="theme-dot"        data-t="paper" onclick="setTheme('paper')" title="Paper"></div>
-      <div class="theme-dot"        data-t="rose"  onclick="setTheme('rose')"  title="Rose"></div>
-      <div class="theme-dot"        data-t="slate" onclick="setTheme('slate')" title="Slate"></div>
+    <div class="themes">
+      <div class="tdot on" data-t="light"  onclick="setTheme('light')"  title="Light"></div>
+      <div class="tdot"    data-t="dark"   onclick="setTheme('dark')"   title="Dark"></div>
+      <div class="tdot"    data-t="rose"   onclick="setTheme('rose')"   title="Rose"></div>
+      <div class="tdot"    data-t="slate"  onclick="setTheme('slate')"  title="Slate"></div>
     </div>
-    <a href="/explore" class="mast-explore">Explore Agents</a>
+    <a href="/explore" class="mast-explore">Agents</a>
   </div>
 </nav>
 
-<!-- main -->
 <div class="shell">
-
   <!-- loading -->
-  <div id="state-loading">
-    <div class="loader-ring"></div>
-    <div>Loading your brief&hellip;</div>
-  </div>
+  <div id="s-load"><div class="spin"></div><div>Loading&hellip;</div></div>
 
-  <!-- no token: topic picker -->
-  <div id="state-no-token">
-    <div class="welcome-head">
-      <p class="welcome-eye">Your Dashboard</p>
-      <h1 class="welcome-title">What are you<br>interested in?</h1>
-      <p class="welcome-sub">Pick your topics and we'll generate a sample brief. Sign up with Aurora to get it every morning, personalized to your exact depth and voice.</p>
-    </div>
-    <div class="topic-picker" id="topic-picker">
-      <!-- rendered by JS from TOPIC_GROUPS -->
-    </div>
-    <div class="preview-cta">
-      <button class="btn-preview" onclick="showSample()">Preview My Brief</button>
-      <button class="btn-signup" onclick="location.href='/aurora'">Get Aurora — Free</button>
+  <!-- topic picker (no token) -->
+  <div id="s-pick">
+    <div class="tp-groups" id="tp-groups"></div>
+    <div class="pick-actions">
+      <button class="btn-preview" onclick="showSample()">Preview Brief</button>
+      <button class="btn-aurora" onclick="location.href='/aurora'">Sign Up Free</button>
     </div>
   </div>
 
-  <!-- sample brief (no-token preview) -->
-  <div id="state-sample">
-    <div class="sample-banner">
-      <span>📰 &nbsp;This is a sample brief based on your selections. <a href="/aurora">Sign up with Aurora</a> to get the real thing every morning.</span>
-      <button style="background:none;border:none;color:var(--dim);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;" onclick="backToPicker()">← Change topics</button>
+  <!-- sample (no token) -->
+  <div id="s-sample">
+    <div class="sample-strip">
+      <span>Sample brief &nbsp;·&nbsp; <a href="/aurora">Sign up with Aurora</a> to get the real thing every morning.</span>
+      <button class="btn-back-topics" onclick="showState('s-pick')">← Change topics</button>
     </div>
-    <div class="greeting-bar">
-      <div class="greeting-text" id="sample-greeting">Good morning.</div>
-      <div class="greeting-date" id="sample-date"></div>
+    <div class="greeting">
+      <div class="greeting-name" id="sg"></div>
+      <div class="greeting-date" id="sd"></div>
     </div>
-    <div class="briefs-label">Your Sample Brief</div>
-    <div class="briefs-grid" id="sample-cards"></div>
+    <div class="briefs" id="s-briefs"></div>
   </div>
 
-  <!-- has token: real briefs -->
-  <div id="state-has-token">
-    <div class="greeting-bar">
-      <div class="greeting-text" id="real-greeting">Good morning.</div>
-      <div class="greeting-date" id="real-date"></div>
+  <!-- real token -->
+  <div id="s-real">
+    <div class="greeting">
+      <div class="greeting-name" id="rg"></div>
+      <div class="greeting-date" id="rd"></div>
     </div>
-    <div class="settings-strip" id="settings-strip"></div>
-    <div class="topic-strip" id="topic-strip"></div>
-    <div class="briefs-label">Your Briefs</div>
-    <div class="briefs-grid" id="real-cards"></div>
+    <div class="pill-row" id="r-pills"></div>
+    <div class="pill-row" id="r-topics"></div>
+    <div class="briefs" id="r-briefs"></div>
   </div>
+</div>
 
-</div><!-- /shell -->
-
-<!-- inline reader -->
-<div class="reader-overlay" id="reader" onclick="closeReader(event)">
-  <div class="reader-panel" onclick="event.stopPropagation()">
-    <button class="reader-close" onclick="closeReader()">Close</button>
-    <div class="reader-eyebrow" id="r-eyebrow">Aurora &nbsp;·&nbsp; Daily Brief</div>
+<!-- reader -->
+<div class="reader-bg" id="reader" onclick="closeReader(event)">
+  <div class="reader-box" onclick="event.stopPropagation()">
+    <button class="reader-close" onclick="closeReader({target:document.getElementById('reader')})">Close</button>
+    <div class="reader-eye">Aurora &nbsp;·&nbsp; Daily Brief</div>
     <div class="reader-meta" id="r-meta"></div>
-    <h2 class="reader-title" id="r-title"></h2>
-    <div class="reader-divider"></div>
+    <div class="reader-title" id="r-title"></div>
+    <div class="reader-hr"></div>
     <div class="reader-body" id="r-body"></div>
   </div>
 </div>
 
 <script>
-/* ════════════════════════════════════════════
-   CONFIG
-════════════════════════════════════════════ */
-const TOPIC_GROUPS = {
-  money:   { label: 'Money & Markets', topics: [
-    {slug:'finance',label:'Finance'},{slug:'macro',label:'Macro'},{slug:'stocks',label:'Stocks'},
-    {slug:'crypto',label:'Crypto'},{slug:'real-estate',label:'Real Estate'}
-  ]},
-  tech:    { label: 'Tech & Build', topics: [
-    {slug:'ai',label:'AI'},{slug:'tech',label:'Tech'},{slug:'startups',label:'Startups'},
-    {slug:'gaming',label:'Gaming'},{slug:'design',label:'Design'}
-  ]},
-  culture: { label: 'Culture & Life', topics: [
-    {slug:'fashion',label:'Fashion'},{slug:'celebrity',label:'Celebrity'},
-    {slug:'film-and-tv',label:'Film & TV'},{slug:'music',label:'Music'},
-    {slug:'books',label:'Books'},{slug:'gossip',label:'Gossip'}
-  ]},
-  world:   { label: 'The World', topics: [
-    {slug:'politics',label:'Politics'},{slug:'science',label:'Science'},
-    {slug:'climate',label:'Climate'},{slug:'space',label:'Space'},
-    {slug:'education',label:'Education'},{slug:'labor',label:'Labor'},
-    {slug:'culture-wars',label:'Culture Wars'},{slug:'architecture',label:'Architecture'}
-  ]},
-  body:    { label: 'Body & Play', topics: [
-    {slug:'health',label:'Health'},{slug:'fitness',label:'Fitness'},
-    {slug:'food',label:'Food'},{slug:'travel',label:'Travel'},
-    {slug:'sports',label:'Sports'},{slug:'social-media',label:'Social Media'}
-  ]},
+const GROUPS = {
+  money:   { label:'Money & Markets', topics:[{s:'finance',l:'Finance'},{s:'macro',l:'Macro'},{s:'stocks',l:'Stocks'},{s:'crypto',l:'Crypto'},{s:'real-estate',l:'Real Estate'}]},
+  tech:    { label:'Tech & Build',    topics:[{s:'ai',l:'AI'},{s:'tech',l:'Tech'},{s:'startups',l:'Startups'},{s:'gaming',l:'Gaming'},{s:'design',l:'Design'}]},
+  culture: { label:'Culture & Life',  topics:[{s:'fashion',l:'Fashion'},{s:'celebrity',l:'Celebrity'},{s:'film-and-tv',l:'Film & TV'},{s:'music',l:'Music'},{s:'books',l:'Books'},{s:'gossip',l:'Gossip'}]},
+  world:   { label:'The World',       topics:[{s:'politics',l:'Politics'},{s:'science',l:'Science'},{s:'climate',l:'Climate'},{s:'space',l:'Space'},{s:'education',l:'Education'},{s:'labor',l:'Labor'},{s:'culture-wars',l:'Culture Wars'},{s:'architecture',l:'Architecture'}]},
+  body:    { label:'Body & Play',     topics:[{s:'health',l:'Health'},{s:'fitness',l:'Fitness'},{s:'food',l:'Food'},{s:'travel',l:'Travel'},{s:'sports',l:'Sports'},{s:'social-media',l:'Social Media'}]},
 };
 
-/* ════════════════════════════════════════════
-   THEME
-════════════════════════════════════════════ */
+const SAMPLES = {
+  ai:       { title:'The AI Acceleration Inflection', bluf:'Foundation models crossed a new threshold. What it means for everything downstream.', tags:['AI','Tech'], body:`<p>This week marked what several researchers are calling an inflection moment for foundation model capability. Three labs published results showing qualitatively different reasoning performance on benchmarks that had previously plateaued.</p><h2>What Actually Changed</h2><p>The shift isn't in raw benchmark numbers — it's in the <strong>coherence of multi-step reasoning</strong> under novel conditions. Models now demonstrate something closer to compositional generalization: applying rules learned in one context to genuinely new problem structures.</p><h2>What to Watch</h2><p>The key question isn't whether models will continue improving — it's whether <em>deployment infrastructure</em> can keep pace. The bottleneck is shifting from model capability to evaluation, safety testing, and integration tooling.</p>` },
+  finance:  { title:'Credit Conditions: The Signal Beneath the Noise', bluf:'Rate expectations are stabilizing, but credit spreads are telling a different story at the margin.', tags:['Finance','Macro'], body:`<p>The headline rate narrative has dominated coverage for months, but the more granular signal — credit spreads, IG vs HY divergence, leveraged loan pricing — tells a more textured story entering this quarter.</p><h2>Where the Stress Is</h2><p>Investment-grade spreads remain historically contained, but the <strong>HY-to-IG gap</strong> has widened measurably over the past six weeks. This pattern has historically preceded softer growth prints by two to three quarters.</p><p><em>Watch Q2 earnings calls for commentary on demand durability, not just headline beats.</em></p>` },
+  politics: { title:'The Institutional Moment', bluf:'Three governance disputes this week are testing the same underlying question: who enforces norms when norms are contested?', tags:['Politics','World'], body:`<p>Political coverage tends to focus on events. This week, three disputes surfaced the same structural question: what happens when the mechanism for resolving disagreements is itself in dispute?</p><h2>The Pattern</h2><p>Institutional legitimacy is not binary. It erodes gradually, then suddenly. The early indicators are <strong>non-compliance, procedural challenges, and forum shopping</strong> — all three visible this week.</p><p>Markets price political stability, not political agreement. What the data suggests is that stability — as measured by procedural predictability — is becoming harder to assume as a baseline condition.</p>` },
+  crypto:   { title:'Onchain Liquidity: Where Smart Money Is Moving', bluf:'DeFi TVL is recovering, but the composition of capital has shifted materially from the last cycle.', tags:['Crypto','Finance'], body:`<p>Total value locked across DeFi protocols has recovered to levels not seen since late 2022 — but the capital structure underneath looks nothing like that era.</p><h2>What's Different</h2><p>Institutional capital now represents a <strong>meaningfully larger share</strong> of onchain liquidity. Behavioral implications: less reflexive leverage, longer holding periods, more sensitivity to regulatory clarity.</p><p><em>Protocol-level concentration risk — not aggregate market cap — is the metric worth tracking.</em></p>` },
+  health:   { title:'Sleep Science Is Catching Up to Practice', bluf:'New research is reshuffling recommendations on sleep timing, duration, and the downstream effects most people aren\'t measuring.', tags:['Health','Science'], body:`<p>Sleep research has reached a maturity point where population-level findings have genuine clinical implications — and are different enough from conventional wisdom to be worth revisiting.</p><h2>The Duration Question</h2><p><strong>Sleep need is highly individual</strong> and more genetically determined than previously understood. Chronic mild restriction accumulates deficits that subjects consistently underestimate.</p><p><em>Track subjective alertness at consistent intervals, not just duration. Duration without quality is an incomplete signal.</em></p>` },
+};
+
+// ── theme ──
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
-  localStorage.setItem('hyo_dash_theme', t);
-  document.querySelectorAll('.theme-dot').forEach(d => {
-    d.classList.toggle('active', d.dataset.t === t);
-  });
+  localStorage.setItem('hyo_dt', t);
+  document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.t === t));
 }
 
-/* ════════════════════════════════════════════
-   GREETING
-════════════════════════════════════════════ */
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning.';
-  if (h < 17) return 'Good afternoon.';
-  return 'Good evening.';
-}
-function fmtDate(d) {
-  return d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-}
-
-/* ════════════════════════════════════════════
-   STATE SWITCHER
-════════════════════════════════════════════ */
+// ── state ──
 function showState(id) {
-  ['state-loading','state-no-token','state-sample','state-has-token'].forEach(s => {
-    const el = document.getElementById(s);
-    el.classList.toggle('visible', s === id);
+  ['s-load','s-pick','s-sample','s-real'].forEach(s => {
+    document.getElementById(s).classList.toggle('on', s===id);
   });
 }
 
-/* ════════════════════════════════════════════
-   TOPIC PICKER
-════════════════════════════════════════════ */
-let selectedTopics = new Set();
+// ── greeting ──
+const greet = () => { const h=new Date().getHours(); return h<12?'Good morning.':h<17?'Good afternoon.':'Good evening.'; };
+const fmtD  = d => d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 
+// ── topic picker ──
+let sel = new Set();
 function renderPicker() {
-  const container = document.getElementById('topic-picker');
-  container.innerHTML = '';
-  Object.entries(TOPIC_GROUPS).forEach(([key, group]) => {
+  const c = document.getElementById('tp-groups');
+  c.innerHTML = '';
+  Object.values(GROUPS).forEach(g => {
     const div = document.createElement('div');
-    div.className = 'tp-group';
-    div.innerHTML = `<div class="tp-group-label">${group.label}</div><div class="tp-chips"></div>`;
+    div.innerHTML = `<div class="tp-group-label">${g.label}</div><div class="tp-chips"></div>`;
     const chips = div.querySelector('.tp-chips');
-    group.topics.forEach(t => {
-      const btn = document.createElement('button');
-      btn.className = 'tp-chip' + (selectedTopics.has(t.slug) ? ' selected' : '');
-      btn.textContent = t.label;
-      btn.onclick = () => {
-        if (selectedTopics.has(t.slug)) { selectedTopics.delete(t.slug); btn.classList.remove('selected'); }
-        else { selectedTopics.add(t.slug); btn.classList.add('selected'); }
-      };
-      chips.appendChild(btn);
+    g.topics.forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (sel.has(t.s)?' sel':'');
+      b.textContent = t.l;
+      b.onclick = () => { sel.has(t.s)?sel.delete(t.s):sel.add(t.s); b.classList.toggle('sel'); };
+      chips.appendChild(b);
     });
-    container.appendChild(div);
+    c.appendChild(div);
   });
 }
 
-function backToPicker() { showState('state-no-token'); }
-
-/* ════════════════════════════════════════════
-   SAMPLE BRIEF GENERATOR
-════════════════════════════════════════════ */
-const SAMPLE_BRIEFS = {
-  ai: {
-    title: 'The AI Acceleration Inflection',
-    bluf: 'Foundation models crossed a new threshold this week. What it means for everything downstream.',
-    tags: ['AI','Tech'],
-    body: `<p>This week marked what several researchers are calling an "inflection moment" for foundation model capability. Three separate labs published results showing qualitatively different reasoning performance on benchmarks that previously plateaued.</p><h2>What Actually Changed</h2><p>The shift isn't in raw benchmark numbers — it's in the <strong>coherence of multi-step reasoning</strong> under novel conditions. Models are now demonstrating something closer to compositional generalization: applying rules learned in one context to genuinely new problem structures.</p><p>The practical implications are already surfacing in developer tools, autonomous coding agents, and scientific research pipelines. The pace of adoption is outrunning the pace of understanding.</p><h2>What to Watch</h2><p>The key question isn't whether models will continue improving — it's whether <em>deployment infrastructure</em> can keep pace. The bottleneck is shifting from model capability to evaluation, safety testing, and integration tooling.</p><p>Expect Q3 announcements from the major labs to center on reliability and deployment, not headline capability numbers.</p>`
-  },
-  finance: {
-    title: 'Credit Conditions: The Signal Beneath the Noise',
-    bluf: 'Rate expectations are stabilizing, but credit spreads are telling a different story at the margin.',
-    tags: ['Finance','Macro'],
-    body: `<p>The headline rate narrative has dominated coverage for months, but the more granular signal — credit spreads, IG vs HY divergence, leveraged loan pricing — tells a more textured story entering this quarter.</p><h2>Where the Stress Is</h2><p>Investment-grade spreads remain historically contained, but the <strong>HY-to-IG gap</strong> has widened measurably over the past six weeks. This pattern has historically preceded softer growth prints by two to three quarters — not a recession signal, but a deceleration one.</p><h2>The Offset</h2><p>Labor market data continues to confound the bears. Job openings remain elevated in services, and wage growth — while decelerating — hasn't broken. The soft-landing narrative retains its scaffolding, even if some of the load-bearing beams are showing strain.</p><p><em>Watch: Q2 earnings calls for commentary on demand durability, not just headline beats.</em></p>`
-  },
-  politics: {
-    title: 'The Institutional Moment',
-    bluf: 'Three separate governance disputes this week are testing the same underlying question: who enforces norms when norms are contested?',
-    tags: ['Politics','World'],
-    body: `<p>Political coverage tends to focus on events. This week, three separate disputes — different actors, different jurisdictions — surfaced the same structural question: what happens when the mechanism for resolving disagreements is itself in dispute?</p><h2>The Pattern</h2><p>Institutional legitimacy is not binary. It erodes gradually, then suddenly. The early indicators are <strong>non-compliance, procedural challenges, and forum shopping</strong> — all three visible this week across different contexts.</p><p>This isn't a partisan observation. The same dynamic has played out across administrations and coalitions. The underlying variable is trust in the referee, not the identity of the players.</p><h2>Why It Matters</h2><p>Markets price political stability, not political agreement. What the data suggests is that stability — as measured by procedural predictability — is becoming harder to assume as a baseline condition.</p>`
-  },
-  crypto: {
-    title: 'Onchain Liquidity: Where the Smart Money Is Moving',
-    bluf: 'DeFi TVL is recovering, but the composition of capital has shifted materially from the last cycle.',
-    tags: ['Crypto','Finance'],
-    body: `<p>Total value locked across DeFi protocols has recovered to levels not seen since late 2022 — but the capital structure underneath looks nothing like that era. Understanding the composition change matters more than the headline number.</p><h2>What's Different This Cycle</h2><p>Institutional and semi-institutional capital now represents a <strong>meaningfully larger share</strong> of onchain liquidity than in prior cycles. The behavioral implications: less reflexive leverage, longer holding periods, more sensitivity to regulatory clarity.</p><p>Retail participation, by contrast, remains subdued relative to 2021 peaks. The meme cycle and NFT speculation that characterized that era hasn't returned in force — yet.</p><h2>The Risk to Watch</h2><p>Concentrated liquidity in a handful of large protocols creates fragility that aggregate TVL numbers obscure. <em>Protocol-level concentration risk</em> — not aggregate market cap — is the metric worth tracking.</p>`
-  },
-  health: {
-    title: 'Sleep Science Is Catching Up to Practice',
-    bluf: 'New research is reshuffling recommendations on sleep timing, duration, and the downstream effects most people aren\'t measuring.',
-    tags: ['Health','Science'],
-    body: `<p>Sleep research has reached a maturity point where the population-level findings are stable enough to have genuine clinical implications — and different enough from conventional wisdom to be worth revisiting.</p><h2>The Duration Question</h2><p>The "eight hours" norm turns out to be more nuanced than the shorthand implies. <strong>Sleep need is highly individual</strong> and more genetically determined than previously understood. Chronic mild restriction — consistently sleeping 30-60 minutes less than your biological need — accumulates deficits that subjects consistently underestimate.</p><h2>Timing Matters More Than Previously Understood</h2><p>Chronotype research has shifted from novelty to mainstream clinical relevance. Forcing early-chronotype schedules on late chronotypes produces measurable performance and health deficits — not a personality issue, a biology one.</p><p><em>The practical recommendation: track subjective alertness at consistent intervals, not just sleep duration. Duration without quality is an incomplete signal.</em></p>`
-  },
-};
-
-const DEFAULT_SAMPLE = {
-  title: 'Your Morning Brief',
-  bluf: 'Select topics above to see a personalized sample based on your interests.',
-  tags: [],
-  body: '<p>Choose at least one topic from the list above, then click "Preview My Brief" to generate a sample brief tailored to your selections.</p>'
-};
+// ── sample brief ──
+function buildCard(brief, isFirst) {
+  const card = document.createElement('div');
+  card.className = 'brief-card' + (isFirst?' today':'');
+  card.innerHTML = `
+    <div class="bc-head">
+      <div class="bc-meta">
+        ${isFirst?'<span class="badge-today">Sample</span>':''}
+        <span class="bc-date">${fmtD(new Date())}</span>
+      </div>
+      <svg class="bc-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="bc-title">${brief.title}</div>
+    <div class="bc-bluf">${brief.bluf}</div>
+    <div class="bc-tags">${brief.tags.map(t=>`<span class="bc-tag">${t}</span>`).join('')}</div>
+  `;
+  card.onclick = () => openReader(brief.title, fmtD(new Date()), brief.body);
+  return card;
+}
 
 function showSample() {
-  const sel = [...selectedTopics];
-  if (sel.length === 0) {
-    // shake the button gently
-    const btn = document.querySelector('.btn-preview');
-    btn.style.transform = 'translateX(-4px)';
-    setTimeout(() => btn.style.transform = 'translateX(4px)', 100);
-    setTimeout(() => btn.style.transform = '', 200);
-    return;
-  }
-
-  document.getElementById('sample-greeting').textContent = greeting();
-  document.getElementById('sample-date').textContent = fmtDate(new Date());
-
-  // pick briefs matching selected topics, up to 3
-  const matched = sel
-    .filter(slug => SAMPLE_BRIEFS[slug])
-    .map(slug => SAMPLE_BRIEFS[slug])
-    .slice(0, 3);
-
-  // if no exact match, use first available
-  if (matched.length === 0) matched.push(Object.values(SAMPLE_BRIEFS)[0]);
-
-  const grid = document.getElementById('sample-cards');
+  if(sel.size===0){ shake(document.querySelector('.btn-preview')); return; }
+  document.getElementById('sg').textContent = greet();
+  document.getElementById('sd').textContent = fmtD(new Date());
+  const matched = [...sel].filter(s=>SAMPLES[s]).map(s=>SAMPLES[s]).slice(0,3);
+  if(matched.length===0) matched.push(Object.values(SAMPLES)[0]);
+  const grid = document.getElementById('s-briefs');
   grid.innerHTML = '';
-  matched.forEach((brief, i) => {
-    const card = document.createElement('div');
-    card.className = 'brief-card' + (i === 0 ? ' today' : '');
-    card.innerHTML = `
-      <div class="brief-card-head">
-        <div class="brief-card-meta">
-          ${i === 0 ? '<span class="brief-badge-today">Sample</span>' : ''}
-          <span class="brief-date">${fmtDate(new Date())}</span>
-        </div>
-        <svg class="brief-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="brief-card-title">${brief.title}</div>
-      <div class="brief-card-bluf">${brief.bluf}</div>
-      <div class="brief-card-tags">${brief.tags.map(t=>`<span class="brief-tag">${t}</span>`).join('')}</div>
-    `;
-    card.onclick = () => openReader({
-      title: brief.title,
-      date: fmtDate(new Date()),
-      body: brief.body
-    });
-    grid.appendChild(card);
-  });
-
-  showState('state-sample');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  matched.forEach((b,i) => grid.appendChild(buildCard(b, i===0)));
+  showState('s-sample');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ════════════════════════════════════════════
-   READER
-════════════════════════════════════════════ */
-function openReader({ title, date, body }) {
+function shake(el) {
+  el.style.transform='translateX(-4px)';
+  setTimeout(()=>el.style.transform='translateX(4px)',80);
+  setTimeout(()=>el.style.transform='',160);
+}
+
+// ── reader ──
+function openReader(title, date, body) {
   document.getElementById('r-title').textContent = title;
-  document.getElementById('r-meta').textContent = date;
-  document.getElementById('r-body').innerHTML = body;
+  document.getElementById('r-meta').textContent  = date;
+  document.getElementById('r-body').innerHTML    = body;
   document.getElementById('reader').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeReader(e) {
-  if (e && e.target !== document.getElementById('reader')) return;
+  if(e && e.target !== document.getElementById('reader')) return;
   document.getElementById('reader').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.getElementById('reader').querySelector('.reader-close').onclick = () => closeReader({target:document.getElementById('reader')});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReader({target:document.getElementById('reader')}); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeReader({target:document.getElementById('reader')}); });
 
-/* ════════════════════════════════════════════
-   REAL TOKEN FLOW — fetch from API
-════════════════════════════════════════════ */
-async function loadSubscriberData(token) {
+// ── real token ──
+async function loadReal(token) {
   try {
-    const res = await fetch('/api/aurora?token=' + encodeURIComponent(token));
-    if (!res.ok) throw new Error('not found');
-    return await res.json();
-  } catch {
-    return null;
-  }
+    const r = await fetch('/api/aurora?token='+encodeURIComponent(token));
+    if(!r.ok) throw 0;
+    return await r.json();
+  } catch { return null; }
 }
 
-function renderRealDashboard(data) {
-  document.getElementById('real-greeting').textContent = greeting();
-  document.getElementById('real-date').textContent = fmtDate(new Date());
-
-  // settings strip
-  const strip = document.getElementById('settings-strip');
-  strip.innerHTML = '';
-  if (data.voice)  strip.innerHTML += `<span class="pill">Voice <span>${data.voice}</span></span>`;
-  if (data.depth)  strip.innerHTML += `<span class="pill">Depth <span>${data.depth}</span></span>`;
-  if (data.length) strip.innerHTML += `<span class="pill">Length <span>${data.length}</span></span>`;
-
-  // topic chips
-  const ts = document.getElementById('topic-strip');
-  ts.innerHTML = (data.topics || []).map(t => `<span class="topic-chip">${t}</span>`).join('');
-
-  // briefs
-  const grid = document.getElementById('real-cards');
+function renderReal(data) {
+  document.getElementById('rg').textContent = greet();
+  document.getElementById('rd').textContent = fmtD(new Date());
+  const pills = document.getElementById('r-pills');
+  pills.innerHTML = '';
+  if(data.voice)  pills.innerHTML += `<span class="pill">Voice<em>${data.voice}</em></span>`;
+  if(data.depth)  pills.innerHTML += `<span class="pill">Depth<em>${data.depth}</em></span>`;
+  if(data.length) pills.innerHTML += `<span class="pill">Length<em>${data.length}</em></span>`;
+  const ts = document.getElementById('r-topics');
+  ts.innerHTML = (data.topics||[]).map(t=>`<span class="pill">${t}</span>`).join('');
+  const grid = document.getElementById('r-briefs');
   grid.innerHTML = '';
   const briefs = data.briefs || [];
-  if (briefs.length === 0) {
-    grid.innerHTML = '<p style="color:var(--dim);font-family:\'DM Mono\',monospace;font-size:12px;letter-spacing:0.14em;">Your first brief will arrive tomorrow morning.</p>';
+  if(!briefs.length) {
+    grid.innerHTML='<p style="font-size:11px;color:var(--dim);letter-spacing:0.12em">Your first brief arrives tomorrow morning.</p>';
   } else {
-    briefs.forEach((brief, i) => {
-      const isToday = i === 0;
-      const card = document.createElement('div');
-      card.className = 'brief-card' + (isToday ? ' today' : '');
-      card.innerHTML = `
-        <div class="brief-card-head">
-          <div class="brief-card-meta">
-            ${isToday ? '<span class="brief-badge-today">Today</span>' : ''}
-            <span class="brief-date">${brief.date || ''}</span>
-          </div>
-          <svg class="brief-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+    briefs.forEach((b,i)=>{
+      const card=document.createElement('div');
+      card.className='brief-card'+(i===0?' today':'');
+      card.innerHTML=`
+        <div class="bc-head">
+          <div class="bc-meta">${i===0?'<span class="badge-today">Today</span>':''}<span class="bc-date">${b.date||''}</span></div>
+          <svg class="bc-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <div class="brief-card-title">${brief.title || 'Aurora Brief'}</div>
-        <div class="brief-card-bluf">${brief.summary || ''}</div>
-        ${brief.topics ? `<div class="brief-card-tags">${brief.topics.slice(0,4).map(t=>`<span class="brief-tag">${t}</span>`).join('')}</div>` : ''}
+        <div class="bc-title">${b.title||'Aurora Brief'}</div>
+        <div class="bc-bluf">${b.summary||''}</div>
+        ${b.topics?`<div class="bc-tags">${b.topics.slice(0,4).map(t=>`<span class="bc-tag">${t}</span>`).join('')}</div>`:''}
       `;
-      card.onclick = () => {
-        if (brief.readLink) {
-          window.location.href = brief.readLink;
-        } else {
-          openReader({ title: brief.title || 'Aurora Brief', date: brief.date || '', body: brief.body || brief.summary || '' });
-        }
-      };
+      card.onclick=()=>b.readLink?location.href=b.readLink:openReader(b.title,b.date||'',b.body||b.summary||'');
       grid.appendChild(card);
     });
   }
-
-  showState('state-has-token');
+  showState('s-real');
 }
 
-/* ════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════ */
-(async function init() {
-  // restore theme
-  const saved = localStorage.getItem('hyo_dash_theme') || 'dark';
-  setTheme(saved);
+// ── cursor ──
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'; });
+(function loop(){ rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop); })();
 
-  // check for token in URL (?token=...) or localStorage
-  const params = new URLSearchParams(window.location.search);
+// ── INIT ──
+(async function() {
+  // theme
+  const t = localStorage.getItem('hyo_dt') || 'light';
+  setTheme(t);
+
+  // saved topics
+  const st = JSON.parse(localStorage.getItem('hyo_pt')||'[]');
+  st.forEach(s=>sel.add(s));
+
+  // token
+  const params = new URLSearchParams(location.search);
   const token = params.get('token') || localStorage.getItem('aurora_token');
 
-  if (token) {
+  if(token) {
     localStorage.setItem('aurora_token', token);
-    const data = await loadSubscriberData(token);
-    if (data && !data.error) {
-      renderRealDashboard(data);
-      return;
-    }
+    const data = await loadReal(token);
+    if(data && !data.error) { renderReal(data); return; }
   }
 
-  // no token — show topic picker
-  // pre-select from localStorage if returning visitor
-  const saved_topics = JSON.parse(localStorage.getItem('hyo_preview_topics') || '[]');
-  saved_topics.forEach(s => selectedTopics.add(s));
   renderPicker();
-  showState('state-no-token');
+  showState('s-pick');
 })();
 
-// save topic selections on page unload
-window.addEventListener('beforeunload', () => {
-  localStorage.setItem('hyo_preview_topics', JSON.stringify([...selectedTopics]));
-});
+window.addEventListener('beforeunload', ()=>{ localStorage.setItem('hyo_pt', JSON.stringify([...sel])); });
 </script>
-
 </body>
 </html>
