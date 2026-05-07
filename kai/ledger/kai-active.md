@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-05-07T10:04:53-0600
+**Last updated:** 2026-05-07T10:34:57-0600
 
 ## System Health
 - Status: ISSUES (7 P0/P1)
@@ -8,7 +8,7 @@
 
 ## Agent ACTIVE.md Status
 - aether: updated 0h ago
-- ant: updated 340h ago
+- ant: updated 341h ago
 - dex: updated 0h ago
 - hyo: updated 0h ago
 - kai: updated 229h ago
@@ -18,6 +18,4 @@
 - sam: updated 0h ago
 
 ## Top Issues
-- [P1] dead-loop: nel stuck in dead-loop (assessment_stuck): routine maintenance run
-- [P1] dead-loop: sam stuck in dead-loop (assessment_stuck): routine engineering check
-- [P1] dead-loop: ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)
+
