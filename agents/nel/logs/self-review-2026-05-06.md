@@ -1,9 +1,7 @@
-# nel Self-Review — 2026-05-06T13:46
+# nel Self-Review — 2026-05-06T23:30
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-05-06-nel-results.json**: WHAT triggers this? Found 0 callers.
-  - Agent: investigate. Is this dead or newly created?
-- ✗ **nel-agent-reflection-2026-05-06.json**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
@@ -11,6 +9,7 @@ Questions for nel to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
+- ✗ **agents.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-002** is relevant to nel
@@ -60,5 +59,5 @@ Questions for nel to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 13
-- Gate results: trigger=10/12, visibility=checked, resolutions=7, adoption=-6/5
+- Gate results: trigger=9/10, visibility=checked, resolutions=7, adoption=-6/5
 

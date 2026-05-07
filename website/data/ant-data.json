@@ -1,13 +1,13 @@
 {
   "status": "active",
   "note": "Costs from api-usage.jsonl. Revenue from aether-metrics.json. Subscriptions hardcoded.",
-  "updatedAt": "2026-05-06T04:30:14.717258-06:00",
+  "updatedAt": "2026-05-06T23:45:01.416624-06:00",
   "dataSource": "api-usage.jsonl + aether-metrics.json",
   "staleness": {
-    "lastUpdated": "2026-05-06T04:30:14.717260-06:00",
+    "lastUpdated": "2026-05-06T23:45:01.416628-06:00",
     "staleAfterHours": 24,
     "creditScrapedAt": "2026-04-22T22:05:14.990668-06:00",
-    "creditScrapeAgeH": 318.4,
+    "creditScrapeAgeH": 337.7,
     "creditScrapeStale": true,
     "note": "ant-data.json updates nightly 23:45 MT. Credits use scraped baseline + continuous api-usage.jsonl adjustment. Run 'kai ant-scrape' weekly or when credits change."
   },
@@ -15,7 +15,7 @@
     "how_to_refresh": "kai ant-scrape (browser automation via Cowork session)",
     "recommended_frequency": "weekly or after any credit purchase",
     "last_scraped": "2026-04-22T22:05:14.990668-06:00",
-    "scrape_age_hours": 318.4,
+    "scrape_age_hours": 337.7,
     "action_needed": true
   },
   "alerts": [],
@@ -55,14 +55,14 @@
     }
   ],
   "income": {
-    "total_monthly": 11.0,
+    "total_monthly": 11.12,
     "streams": [
       {
         "name": "AetherBot Trading",
         "source": "aether-metrics.json",
-        "weekly_pnl": 11.0,
-        "pnl_pct": 9.27,
-        "balance": 129.72,
+        "weekly_pnl": 11.12,
+        "pnl_pct": 9.37,
+        "balance": 129.84,
         "week_start": "2026-04-27",
         "note": "Current week P&L from autonomous trading"
       }
@@ -112,7 +112,7 @@
       "depletion_date": null,
       "days_until_depleted": null,
       "expires": "2027-04-09",
-      "source": "console.anthropic.com (scraped 318h ago, adjusted by api-usage.jsonl)",
+      "source": "console.anthropic.com (scraped 338h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22. Run 'kai ant-scrape' to reset baseline."
@@ -127,7 +127,7 @@
       "depletion_date": null,
       "days_until_depleted": null,
       "expires": "2027-04-30",
-      "source": "platform.openai.com (scraped 318h ago, adjusted by api-usage.jsonl)",
+      "source": "platform.openai.com (scraped 338h ago, adjusted by api-usage.jsonl)",
       "scraped_at": "2026-04-22T22:05:14.990668-06:00",
       "confidence": "estimated",
       "note": "Remaining = scraped balance minus api-usage.jsonl spend since 2026-04-22."

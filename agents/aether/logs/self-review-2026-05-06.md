@@ -1,4 +1,4 @@
-# aether Self-Review — 2026-05-06T19:44
+# aether Self-Review — 2026-05-06T23:59
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-05-06-aether-results.json**: WHAT triggers this? Found 0 callers.
@@ -9,6 +9,7 @@ Questions for aether to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
+- ✗ **agents.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-004** is relevant to aether
@@ -54,6 +55,6 @@ Questions for aether to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 12
-- Gate results: trigger=8/9, visibility=checked, resolutions=6, adoption=-6/5
+- Findings: 13
+- Gate results: trigger=6/7, visibility=checked, resolutions=6, adoption=-6/5
 

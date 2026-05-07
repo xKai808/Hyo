@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="bright">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Your Dashboard — Hyo</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── THEMES ── */
+    :root, [data-theme="bright"] {
+      --bg:       #f4f1eb;
+      --card:     #ffffff;
+      --card-h:   #fafaf7;
+      --fg:       #1a1a2e;
+      --muted:    rgba(26,26,46,0.48);
+      --dim:      rgba(26,26,46,0.3);
+      --faint:    rgba(26,26,46,0.14);
+      --border:   rgba(26,26,46,0.10);
+      --border-h: rgba(26,26,46,0.20);
+      --gold:     #c9a96e;
+      --gold-d:   rgba(201,169,110,0.09);
+      --gold-b:   rgba(201,169,110,0.24);
+      --ok:       #3a7d44;
+      --chip:     rgba(26,26,46,0.05);
+      --chip-b:   rgba(26,26,46,0.10);
+      --mast-bg:  rgba(244,241,235,0.9);
+      --grd: linear-gradient(rgba(26,26,46,0.04) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(26,26,46,0.04) 1px, transparent 1px);
+    }
+
+    [data-theme="dark"] {
+      --bg:       #080810;
+      --card:     #0f0f1a;
+      --card-h:   #131322;
+      --fg:       #e8d5b7;
+      --muted:    rgba(232,213,183,0.52);
+      --dim:      rgba(232,213,183,0.30);
+      --faint:    rgba(232,213,183,0.12);
+      --border:   rgba(232,213,183,0.09);
+      --border-h: rgba(232,213,183,0.18);
+      --gold:     #e8b877;
+      --gold-d:   rgba(232,184,119,0.08);
+      --gold-b:   rgba(232,184,119,0.25);
+      --ok:       #88c98a;
+      --chip:     rgba(232,213,183,0.06);
+      --chip-b:   rgba(232,213,183,0.11);
+      --mast-bg:  rgba(8,8,16,0.88);
+      --grd: radial-gradient(ellipse 70% 35% at 50% -5%, rgba(232,184,119,0.06) 0%, transparent 65%);
+    }
+
+
+    html { background: var(--bg); min-height: 100vh; }
+    body {
+      min-height: 100vh; color: var(--fg);
+      font-family: 'DM Mono', monospace;
+      position: relative; overflow-x: hidden;       transition: background 0.3s, color 0.3s;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: var(--grd); background-size: 44px 44px;
+      transition: background 0.3s;
+    }
+
+
+    /* ── NAV ── */
+    .mast {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 36px;
+      background: var(--mast-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .mast-logo {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px;
+      color: var(--fg); text-decoration: none; letter-spacing: 0.02em;
+      transition: color 0.3s;
+    }
+    .mast-right { display: flex; align-items: center; gap: 16px; }
+
+    /* theme toggle */
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 100px;
+      color: var(--muted); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--border-h); }
+
+    .mast-explore {
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--dim); text-decoration: none; padding: 7px 13px;
+      border: 1px solid var(--border); border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .mast-explore:hover { color: var(--fg); border-color: var(--border-h); }
+
+    /* ── SHELL ── */
+    .shell {
+      position: relative; z-index: 1;
+      max-width: 1040px; margin: 0 auto;
+      padding: 48px 36px 80px;
+    }
+
+    /* ══════════════════════════════
+       STATE: NO TOKEN — topic picker
+    ══════════════════════════════ */
+    #s-pick { display: none; }
+    #s-pick.on { display: block; }
+
+    .tp-groups { display: flex; flex-direction: column; gap: 28px; margin-bottom: 36px; }
+    .tp-group-label {
+      font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--dim); margin-bottom: 10px;
+    }
+    .tp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 8px 14px; border-radius: 2px;
+      background: var(--chip); border: 1px solid var(--chip-b);
+      color: var(--dim); cursor: pointer; transition: all 0.18s; user-select: none;
+    }
+    .chip.sel { background: var(--gold-d); border-color: var(--gold-b); color: var(--gold); }
+    .chip:hover:not(.sel) { border-color: var(--border-h); color: var(--fg); }
+
+    .pick-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-preview {
+      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 12px 22px; border-radius: 2px;
+      background: var(--fg); color: var(--bg); border: none; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-preview:hover { opacity: 0.8; }
+    .btn-aurora {
+      font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 12px 22px; border-radius: 2px;
+      background: transparent; border: 1px solid var(--border-h);
+      color: var(--dim); cursor: pointer; transition: all 0.2s;
+    }
+    .btn-aurora:hover { color: var(--fg); border-color: var(--border-h); }
+
+    /* ══════════════════════════════
+       STATE: SAMPLE BRIEF
+    ══════════════════════════════ */
+    #s-sample { display: none; }
+    #s-sample.on { display: block; }
+
+    .sample-strip {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap; margin-bottom: 32px;
+      padding: 12px 18px; border-radius: 4px;
+      background: var(--gold-d); border: 1px solid var(--gold-b);
+      font-size: 10px; letter-spacing: 0.1em; color: var(--gold);
+    }
+    .sample-strip a { color: var(--gold); text-decoration: underline; text-underline-offset: 3px; }
+    .btn-back-topics {
+      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; background: none; border: none; color: var(--dim);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .btn-back-topics:hover { color: var(--fg); }
+
+    /* ══════════════════════════════
+       STATE: REAL TOKEN
+    ══════════════════════════════ */
+    #s-real { display: none; }
+    #s-real.on { display: block; }
+
+    /* greeting */
+    .greeting {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 10px;
+    }
+    .greeting-name {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: clamp(22px, 3vw, 36px); letter-spacing: -0.02em; color: var(--fg);
+    }
+    .greeting-date {
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim);
+    }
+
+    /* settings + topic pills */
+    .pill-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
+    .pill {
+      font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 5px 10px; border-radius: 2px;
+      background: var(--chip); border: 1px solid var(--chip-b); color: var(--dim);
+    }
+    .pill em { font-style: normal; color: var(--gold); margin-left: 3px; }
+
+    /* brief cards */
+    .briefs { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+
+    .brief-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 24px 28px; cursor: pointer;
+      transition: box-shadow 0.22s, transform 0.22s;
+      position: relative; overflow: hidden;
+    }
+    .brief-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--faint) 50%, transparent);
+    }
+    .brief-card.today { border-top: 2px solid var(--gold); }
+    .brief-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); transform: translateY(-2px); }
+
+    .bc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 12px; }
+    .bc-meta { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .badge-today {
+      font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px;
+      background: var(--gold-d); border: 1px solid var(--gold-b); color: var(--gold);
+    }
+    .bc-date { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+    .bc-arrow { color: var(--dim); transition: color 0.2s, transform 0.2s; }
+    .brief-card:hover .bc-arrow { color: var(--gold); transform: translateX(3px); }
+
+    .bc-title {
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-size: 18px; letter-spacing: -0.01em; color: var(--fg); margin-bottom: 7px;
+    }
+    .bc-bluf { font-size: 13px; line-height: 1.75; color: var(--muted); font-weight: 300; }
+    .bc-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .bc-tag {
+      font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 2px;
+      background: var(--chip); border: 1px solid var(--chip-b); color: var(--dim);
+    }
+
+    /* ── READER OVERLAY ── */
+    .reader-bg {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.35); backdrop-filter: blur(3px);
+      align-items: flex-start; justify-content: center;
+      padding: 40px 20px; overflow-y: auto;
+    }
+    .reader-bg.open { display: flex; }
+    .reader-box {
+      background: var(--card); border: 1px solid var(--border-h);
+      border-radius: 10px; max-width: 660px; width: 100%;
+      padding: 40px 44px; position: relative;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      animation: up 0.4s cubic-bezier(0.16,1,0.3,1) both;
+      transition: background 0.3s;
+    }
+    .reader-close {
+      position: absolute; top: 18px; right: 18px;
+      font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--dim);
+      background: none; border: 1px solid var(--border); padding: 6px 12px;
+      border-radius: 2px; cursor: pointer; transition: all 0.2s;
+    }
+    .reader-close:hover { color: var(--fg); border-color: var(--border-h); }
+    .reader-eye {
+      font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+    }
+    .reader-meta { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); margin-bottom: 18px; }
+    .reader-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      font-size: clamp(20px, 3vw, 28px); letter-spacing: -0.02em;
+      color: var(--fg); margin-bottom: 20px; line-height: 1.2;
+    }
+    .reader-hr { height: 1px; background: var(--border); margin: 20px 0; }
+    .reader-body { font-size: 14.5px; line-height: 1.85; color: var(--muted); font-weight: 300; }
+    .reader-body p { margin-bottom: 16px; }
+    .reader-body h2 {
+      font-family: 'Syne', sans-serif; font-weight: 600;
+      font-size: 15px; color: var(--fg); margin: 24px 0 10px;
+    }
+    .reader-body strong { color: var(--fg); font-weight: 500; }
+    .reader-body em { color: var(--gold); font-style: normal; }
+
+    /* ── LOADER ── */
+    #s-load {
+      padding: 80px 0; text-align: center; font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim);
+    }
+    .spin {
+      display: inline-block; width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--faint); border-top-color: var(--gold);
+      animation: rotate 0.9s linear infinite; margin-bottom: 18px;
+    }
+    @keyframes rotate { to { transform: rotate(360deg); } }
+    @keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+
+    @media (max-width: 640px) {
+      .mast { padding: 14px 20px; }
+      .shell { padding: 32px 20px 60px; }
+      .reader-box { padding: 28px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+
+<nav class="mast">
+  <a href="/" class="mast-logo">Hyo</a>
+  <div class="mast-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☾</button>
+    <a href="/explore" class="mast-explore">Agents</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <!-- loading -->
+  <div id="s-load"><div class="spin"></div><div>Loading&hellip;</div></div>
+
+  <!-- topic picker (no token) -->
+  <div id="s-pick">
+    <div class="tp-groups" id="tp-groups"></div>
+    <div class="pick-actions">
+      <button class="btn-preview" onclick="showSample()">Preview Brief</button>
+      <button class="btn-aurora" onclick="location.href='/aurora'">Sign Up Free</button>
+    </div>
+  </div>
+
+  <!-- sample (no token) -->
+  <div id="s-sample">
+    <div class="sample-strip">
+      <span>Sample brief &nbsp;·&nbsp; <a href="/aurora">Sign up with Aurora</a> to get the real thing every morning.</span>
+      <button class="btn-back-topics" onclick="showState('s-pick')">← Change topics</button>
+    </div>
+    <div class="greeting">
+      <div class="greeting-name" id="sg"></div>
+      <div class="greeting-date" id="sd"></div>
+    </div>
+    <div class="briefs" id="s-briefs"></div>
+  </div>
+
+  <!-- real token -->
+  <div id="s-real">
+    <div class="greeting">
+      <div class="greeting-name" id="rg"></div>
+      <div class="greeting-date" id="rd"></div>
+    </div>
+    <div class="pill-row" id="r-pills"></div>
+    <div class="pill-row" id="r-topics"></div>
+    <div class="briefs" id="r-briefs"></div>
+  </div>
+</div>
+
+<!-- reader -->
+<div class="reader-bg" id="reader" onclick="closeReader(event)">
+  <div class="reader-box" onclick="event.stopPropagation()">
+    <button class="reader-close" onclick="closeReader({target:document.getElementById('reader')})">Close</button>
+    <div class="reader-eye">Aurora &nbsp;·&nbsp; Daily Brief</div>
+    <div class="reader-meta" id="r-meta"></div>
+    <div class="reader-title" id="r-title"></div>
+    <div class="reader-hr"></div>
+    <div class="reader-body" id="r-body"></div>
+  </div>
+</div>
+
+<script>
+const GROUPS = {
+  money:   { label:'Money & Markets', topics:[{s:'finance',l:'Finance'},{s:'macro',l:'Macro'},{s:'stocks',l:'Stocks'},{s:'crypto',l:'Crypto'},{s:'real-estate',l:'Real Estate'}]},
+  tech:    { label:'Tech & Build',    topics:[{s:'ai',l:'AI'},{s:'tech',l:'Tech'},{s:'startups',l:'Startups'},{s:'gaming',l:'Gaming'},{s:'design',l:'Design'}]},
+  culture: { label:'Culture & Life',  topics:[{s:'fashion',l:'Fashion'},{s:'celebrity',l:'Celebrity'},{s:'film-and-tv',l:'Film & TV'},{s:'music',l:'Music'},{s:'books',l:'Books'},{s:'gossip',l:'Gossip'}]},
+  world:   { label:'The World',       topics:[{s:'politics',l:'Politics'},{s:'science',l:'Science'},{s:'climate',l:'Climate'},{s:'space',l:'Space'},{s:'education',l:'Education'},{s:'labor',l:'Labor'},{s:'culture-wars',l:'Culture Wars'},{s:'architecture',l:'Architecture'}]},
+  body:    { label:'Body & Play',     topics:[{s:'health',l:'Health'},{s:'fitness',l:'Fitness'},{s:'food',l:'Food'},{s:'travel',l:'Travel'},{s:'sports',l:'Sports'},{s:'social-media',l:'Social Media'}]},
+};
+
+const SAMPLES = {
+  ai:       { title:'The AI Acceleration Inflection', bluf:'Foundation models crossed a new threshold. What it means for everything downstream.', tags:['AI','Tech'], body:`<p>This week marked what several researchers are calling an inflection moment for foundation model capability. Three labs published results showing qualitatively different reasoning performance on benchmarks that had previously plateaued.</p><h2>What Actually Changed</h2><p>The shift isn't in raw benchmark numbers — it's in the <strong>coherence of multi-step reasoning</strong> under novel conditions. Models now demonstrate something closer to compositional generalization: applying rules learned in one context to genuinely new problem structures.</p><h2>What to Watch</h2><p>The key question isn't whether models will continue improving — it's whether <em>deployment infrastructure</em> can keep pace. The bottleneck is shifting from model capability to evaluation, safety testing, and integration tooling.</p>` },
+  finance:  { title:'Credit Conditions: The Signal Beneath the Noise', bluf:'Rate expectations are stabilizing, but credit spreads are telling a different story at the margin.', tags:['Finance','Macro'], body:`<p>The headline rate narrative has dominated coverage for months, but the more granular signal — credit spreads, IG vs HY divergence, leveraged loan pricing — tells a more textured story entering this quarter.</p><h2>Where the Stress Is</h2><p>Investment-grade spreads remain historically contained, but the <strong>HY-to-IG gap</strong> has widened measurably over the past six weeks. This pattern has historically preceded softer growth prints by two to three quarters.</p><p><em>Watch Q2 earnings calls for commentary on demand durability, not just headline beats.</em></p>` },
+  politics: { title:'The Institutional Moment', bluf:'Three governance disputes this week are testing the same underlying question: who enforces norms when norms are contested?', tags:['Politics','World'], body:`<p>Political coverage tends to focus on events. This week, three disputes surfaced the same structural question: what happens when the mechanism for resolving disagreements is itself in dispute?</p><h2>The Pattern</h2><p>Institutional legitimacy is not binary. It erodes gradually, then suddenly. The early indicators are <strong>non-compliance, procedural challenges, and forum shopping</strong> — all three visible this week.</p><p>Markets price political stability, not political agreement. What the data suggests is that stability — as measured by procedural predictability — is becoming harder to assume as a baseline condition.</p>` },
+  crypto:   { title:'Onchain Liquidity: Where Smart Money Is Moving', bluf:'DeFi TVL is recovering, but the composition of capital has shifted materially from the last cycle.', tags:['Crypto','Finance'], body:`<p>Total value locked across DeFi protocols has recovered to levels not seen since late 2022 — but the capital structure underneath looks nothing like that era.</p><h2>What's Different</h2><p>Institutional capital now represents a <strong>meaningfully larger share</strong> of onchain liquidity. Behavioral implications: less reflexive leverage, longer holding periods, more sensitivity to regulatory clarity.</p><p><em>Protocol-level concentration risk — not aggregate market cap — is the metric worth tracking.</em></p>` },
+  health:   { title:'Sleep Science Is Catching Up to Practice', bluf:'New research is reshuffling recommendations on sleep timing, duration, and the downstream effects most people aren\'t measuring.', tags:['Health','Science'], body:`<p>Sleep research has reached a maturity point where population-level findings have genuine clinical implications — and are different enough from conventional wisdom to be worth revisiting.</p><h2>The Duration Question</h2><p><strong>Sleep need is highly individual</strong> and more genetically determined than previously understood. Chronic mild restriction accumulates deficits that subjects consistently underestimate.</p><p><em>Track subjective alertness at consistent intervals, not just duration. Duration without quality is an incomplete signal.</em></p>` },
+};
+
+// ── theme ──
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('hyo_theme', t);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = t === 'bright' ? '☾' : '☀';
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'bright';
+  applyTheme(cur === 'dark' ? 'bright' : 'dark');
+}
+
+// ── state ──
+function showState(id) {
+  ['s-load','s-pick','s-sample','s-real'].forEach(s => {
+    document.getElementById(s).classList.toggle('on', s===id);
+  });
+}
+
+// ── greeting ──
+const greet = () => { const h=new Date().getHours(); return h<12?'Good morning.':h<17?'Good afternoon.':'Good evening.'; };
+const fmtD  = d => d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+// ── topic picker ──
+let sel = new Set();
+function renderPicker() {
+  const c = document.getElementById('tp-groups');
+  c.innerHTML = '';
+  Object.values(GROUPS).forEach(g => {
+    const div = document.createElement('div');
+    div.innerHTML = `<div class="tp-group-label">${g.label}</div><div class="tp-chips"></div>`;
+    const chips = div.querySelector('.tp-chips');
+    g.topics.forEach(t => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (sel.has(t.s)?' sel':'');
+      b.textContent = t.l;
+      b.onclick = () => { sel.has(t.s)?sel.delete(t.s):sel.add(t.s); b.classList.toggle('sel'); };
+      chips.appendChild(b);
+    });
+    c.appendChild(div);
+  });
+}
+
+// ── sample brief ──
+function buildCard(brief, isFirst) {
+  const card = document.createElement('div');
+  card.className = 'brief-card' + (isFirst?' today':'');
+  card.innerHTML = `
+    <div class="bc-head">
+      <div class="bc-meta">
+        ${isFirst?'<span class="badge-today">Sample</span>':''}
+        <span class="bc-date">${fmtD(new Date())}</span>
+      </div>
+      <svg class="bc-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="bc-title">${brief.title}</div>
+    <div class="bc-bluf">${brief.bluf}</div>
+    <div class="bc-tags">${brief.tags.map(t=>`<span class="bc-tag">${t}</span>`).join('')}</div>
+  `;
+  card.onclick = () => openReader(brief.title, fmtD(new Date()), brief.body);
+  return card;
+}
+
+function showSample() {
+  if(sel.size===0){ shake(document.querySelector('.btn-preview')); return; }
+  document.getElementById('sg').textContent = greet();
+  document.getElementById('sd').textContent = fmtD(new Date());
+  const matched = [...sel].filter(s=>SAMPLES[s]).map(s=>SAMPLES[s]).slice(0,3);
+  if(matched.length===0) matched.push(Object.values(SAMPLES)[0]);
+  const grid = document.getElementById('s-briefs');
+  grid.innerHTML = '';
+  matched.forEach((b,i) => grid.appendChild(buildCard(b, i===0)));
+  showState('s-sample');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function shake(el) {
+  el.style.transform='translateX(-4px)';
+  setTimeout(()=>el.style.transform='translateX(4px)',80);
+  setTimeout(()=>el.style.transform='',160);
+}
+
+// ── reader ──
+function openReader(title, date, body) {
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-meta').textContent  = date;
+  document.getElementById('r-body').innerHTML    = body;
+  document.getElementById('reader').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeReader(e) {
+  if(e && e.target !== document.getElementById('reader')) return;
+  document.getElementById('reader').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeReader({target:document.getElementById('reader')}); });
+
+// ── real token ──
+async function loadReal(token) {
+  try {
+    const r = await fetch('/api/aurora?token='+encodeURIComponent(token));
+    if(!r.ok) throw 0;
+    return await r.json();
+  } catch { return null; }
+}
+
+function renderReal(data) {
+  document.getElementById('rg').textContent = greet();
+  document.getElementById('rd').textContent = fmtD(new Date());
+  const pills = document.getElementById('r-pills');
+  pills.innerHTML = '';
+  if(data.voice)  pills.innerHTML += `<span class="pill">Voice<em>${data.voice}</em></span>`;
+  if(data.depth)  pills.innerHTML += `<span class="pill">Depth<em>${data.depth}</em></span>`;
+  if(data.length) pills.innerHTML += `<span class="pill">Length<em>${data.length}</em></span>`;
+  const ts = document.getElementById('r-topics');
+  ts.innerHTML = (data.topics||[]).map(t=>`<span class="pill">${t}</span>`).join('');
+  const grid = document.getElementById('r-briefs');
+  grid.innerHTML = '';
+  const briefs = data.briefs || [];
+  if(!briefs.length) {
+    grid.innerHTML='<p style="font-size:11px;color:var(--dim);letter-spacing:0.12em">Your first brief arrives tomorrow morning.</p>';
+  } else {
+    briefs.forEach((b,i)=>{
+      const card=document.createElement('div');
+      card.className='brief-card'+(i===0?' today':'');
+      card.innerHTML=`
+        <div class="bc-head">
+          <div class="bc-meta">${i===0?'<span class="badge-today">Today</span>':''}<span class="bc-date">${b.date||''}</span></div>
+          <svg class="bc-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h9M9 4l3.5 3.5L9 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="bc-title">${b.title||'Aurora Brief'}</div>
+        <div class="bc-bluf">${b.summary||''}</div>
+        ${b.topics?`<div class="bc-tags">${b.topics.slice(0,4).map(t=>`<span class="bc-tag">${t}</span>`).join('')}</div>`:''}
+      `;
+      card.onclick=()=>b.readLink?location.href=b.readLink:openReader(b.title,b.date||'',b.body||b.summary||'');
+      grid.appendChild(card);
+    });
+  }
+  showState('s-real');
+}
+
+
+// ── INIT ──
+(async function() {
+  // theme
+  applyTheme(localStorage.getItem('hyo_theme') || 'bright');
+
+  // saved topics
+  const st = JSON.parse(localStorage.getItem('hyo_pt')||'[]');
+  st.forEach(s=>sel.add(s));
+
+  // token
+  const params = new URLSearchParams(location.search);
+  const token = params.get('token') || localStorage.getItem('aurora_token');
+
+  if(token) {
+    localStorage.setItem('aurora_token', token);
+    const data = await loadReal(token);
+    if(data && !data.error) { renderReal(data); return; }
+  }
+
+  renderPicker();
+  showState('s-pick');
+})();
+
+window.addEventListener('beforeunload', ()=>{ localStorage.setItem('hyo_pt', JSON.stringify([...sel])); });
+</script>
+</body>
+</html>

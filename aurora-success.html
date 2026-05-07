@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aurora — you're in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a12; --fg: #f2e2c4; --muted: rgba(242,226,196,0.50);
+      --border: rgba(242,226,196,0.12); --accent: #e8b877; --ok: #a3c98a;
+      --font-d: 'Syne', sans-serif; --font-b: 'Inter', sans-serif;
+    }
+    html, body { height: 100%; background: var(--bg); }
+    body {
+      min-height: 100%; color: var(--fg); font-family: var(--font-b);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 24px;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(232,184,119,0.10), transparent 65%);
+    }
+    .card {
+      position: relative; z-index: 1;
+      max-width: 520px; width: 100%;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 20px; padding: 48px 40px; text-align: center;
+    }
+    .icon { font-size: 3em; margin-bottom: 24px; }
+    h1 { font-family: var(--font-d); font-size: 2em; font-weight: 800; margin-bottom: 14px; }
+    .sub { color: var(--muted); font-size: 1em; line-height: 1.7; margin-bottom: 32px; }
+    .trial-badge {
+      display: inline-block; padding: 8px 18px;
+      border: 1px solid rgba(163,201,138,0.3); border-radius: 100px;
+      color: var(--ok); font-size: 0.875em; font-weight: 600;
+      background: rgba(163,201,138,0.06); margin-bottom: 32px;
+    }
+    .what-next {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; text-align: left; margin-bottom: 32px;
+    }
+    .what-next h3 {
+      font-family: var(--font-d); font-size: 0.75em; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .step {
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: 0.9em; color: var(--muted); margin-bottom: 12px;
+    }
+    .step:last-child { margin-bottom: 0; }
+    .step-num {
+      flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(232,184,119,0.12); color: var(--accent);
+      font-size: 0.75em; font-weight: 700; display: flex;
+      align-items: center; justify-content: center;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 100px; border: none;
+      font-size: 0.9375em; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+      background: var(--accent); color: #0a0a12;
+    }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .fine { font-size: 0.78em; color: var(--muted); margin-top: 20px; line-height: 1.6; }
+    #pageUrl { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">☀️</div>
+    <h1>Your trial has started.</h1>
+    <div class="trial-badge">5-day free trial · then $19/mo</div>
+    <p class="sub">
+      Aurora is now reading the world for you. Your first brief arrives tomorrow morning at 6:30 AM MT — built around exactly what you told us.
+    </p>
+    <div class="what-next">
+      <h3>What happens next</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>Check your email tomorrow morning — your first Aurora brief lands at 6:30 AM.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>Your 5-day trial is free. No charge until day 6.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>After the trial, Aurora continues at $19/mo. Cancel anytime — no questions.</div>
+      </div>
+    </div>
+    <a id="pageLink" href="#" class="btn" style="display:none;">
+      View your Aurora page
+    </a>
+    <p class="fine">
+      Questions? Cancel anytime via the link in any Aurora email.<br>
+      Your card will not be charged until the trial ends.
+    </p>
+  </div>
+  <script>
+    // Extract id/token from URL params to show personal page link
+    const params = new URLSearchParams(window.location.search);
+    const id    = params.get('id');
+    const token = params.get('token');
+    if (id && token) {
+      const link = document.getElementById('pageLink');
+      link.href  = `/aurora-page?id=${encodeURIComponent(id)}&token=${encodeURIComponent(token)}`;
+      link.style.display = 'inline-flex';
+    }
+  </script>
+</body>
+</html>

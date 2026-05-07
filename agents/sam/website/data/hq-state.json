@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-05-06T22:10:00Z",
+  "updatedAt": "2026-05-07T06:11:00Z",
   "morningReport": {
     "date": "2026-04-28",
     "generatedAt": "2026-04-28T08:15:30-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync @ 16:10 MT 2026-05-06 (hq-ops-sync, cowork, scheduled-task). Sentinel run #259: 6p/3f FLAT vs #256 (6 cowork runs today identical shape). Recurring elevated: P0 aurora-ran-today day 3 (newsletter 2026-05-06 missing in sandbox), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox), P2 task-queue-size day 54 (33 P0 FLAT vs threshold 5, 54-run streak \u2014 was 51 at 12:14 MT). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial run (Phases 1-5 captured: sentinel synth FLAT \u2014 hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f; cipher synth clean; stale files clean; broken links 29 FLAT; untested 47 \u2014 UP from 45 at 12:14 MT, +2 scripts). Phase 6+ inefficient-pattern + final report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 7+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only.",
+    "summary": "Ops sync @ 20:10 MT 2026-05-06 (hq-ops-sync, cowork, scheduled-task). Sentinel run #262: 6p/3f FLAT vs #259 (3 cowork runs since 16:10 MT, 7 total today identical shape). Recurring elevated: P0 aurora-ran-today day 3 (newsletter 2026-05-07.md missing in sandbox \u2014 sandbox UTC clock past midnight, so sentinel checks tomorrow's newsletter from MT POV), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox), P2 task-queue-size day 57 (33 P0 FLAT vs threshold 5, 57-run streak \u2014 was 54 at 16:10 MT). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial run (Phases 1-5 captured: sentinel synth FLAT \u2014 hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f; cipher synth clean; stale files clean; broken links 29 FLAT; untested 47 FLAT vs 16:10 MT). Phase 6+ inefficient-pattern + final report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 8+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,20 +14,48 @@
       "dex": "active"
     },
     "topIssues": [
-      "Sentinel #259: 6p/3f FLAT (6 cowork runs today identical shape)",
-      "P0 aurora-ran-today day 3 ESCALATED \u2014 newsletter 2026-05-06 still missing in sandbox",
+      "Sentinel #262: 6p/3f FLAT (7 cowork runs today identical shape)",
+      "P0 aurora-ran-today day 3 ESCALATED \u2014 newsletter 2026-05-07.md missing in sandbox (UTC clock rolled past MT midnight)",
       "P1 scheduled-tasks-fired day 3 ELEVATED \u2014 no aurora logs in sandbox",
-      "P2 task-queue-size day 54 ELEVATED \u2014 33 P0 tasks FLAT vs threshold 5 (54-run streak)",
+      "P2 task-queue-size day 57 ELEVATED \u2014 33 P0 tasks FLAT vs threshold 5 (57-run streak, +3 vs 16:10 MT)",
       "Cipher: clean (0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK)",
-      "Nel: partial run (Phases 1-5) \u2014 broken links 29 FLAT, untested 47 (UP +2 vs 12:14 MT)",
-      "flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 7+, auto-cascade not landing in sandbox)"
+      "Nel: partial run (Phases 1-5) \u2014 broken links 29 FLAT, untested 47 FLAT vs 16:10 MT",
+      "flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 8+, auto-cascade not landing in sandbox)"
     ],
     "lastOpsSync": {
-      "ts": "2026-05-06T22:10:00Z",
-      "note": "Ops sync @ 16:10 MT 2026-05-06 (hq-ops-sync, cowork, scheduled-task). Sentinel run #259: 6p/3f FLAT vs #256 (6 cowork runs today identical shape). Recurring elevated: P0 aurora-ran-today day 3 (newsletter 2026-05-06 missing in sandbox), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox), P2 task-queue-size day 54 (33 P0 FLAT vs threshold 5, 54-run streak \u2014 was 51 at 12:14 MT). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial run (Phases 1-5 captured: sentinel synth FLAT \u2014 hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f; cipher synth clean; stale files clean; broken links 29 FLAT; untested 47 \u2014 UP from 45 at 12:14 MT, +2 scripts). Phase 6+ inefficient-pattern + final report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 7+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only."
+      "ts": "2026-05-07T02:10:00Z",
+      "note": "Ops sync @ 20:10 MT 2026-05-06 (hq-ops-sync, cowork, scheduled-task). Sentinel run #262: 6p/3f FLAT vs #259 (3 cowork runs since 16:10 MT, 7 total today identical shape). Recurring elevated: P0 aurora-ran-today day 3 (newsletter 2026-05-07.md missing in sandbox \u2014 sandbox UTC clock past midnight, so sentinel checks tomorrow's newsletter from MT POV), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox), P2 task-queue-size day 57 (33 P0 FLAT vs threshold 5, 57-run streak \u2014 was 54 at 16:10 MT). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial run (Phases 1-5 captured: sentinel synth FLAT \u2014 hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f; cipher synth clean; stale files clean; broken links 29 FLAT; untested 47 FLAT vs 16:10 MT). Phase 6+ inefficient-pattern + final report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 8+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only."
     }
   },
   "events": [
+    {
+      "ts": "2026-05-07T02:10:00Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 20:10 MT 2026-05-06, scheduled-task)",
+      "detail": "Ops sync @ 20:10 MT 2026-05-06 (hq-ops-sync, cowork, scheduled-task). Sentinel run #262: 6p/3f FLAT vs #259 (3 cowork runs since 16:10 MT, 7 total today identical shape). Recurring elevated: P0 aurora-ran-today day 3 (newsletter 2026-05-07.md missing in sandbox \u2014 sandbox UTC clock past midnight, so sentinel checks tomorrow's newsletter from MT POV), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox), P2 task-queue-size day 57 (33 P0 FLAT vs threshold 5, 57-run streak \u2014 was 54 at 16:10 MT). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial run (Phases 1-5 captured: sentinel synth FLAT \u2014 hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f; cipher synth clean; stale files clean; broken links 29 FLAT; untested 47 FLAT vs 16:10 MT). Phase 6+ inefficient-pattern + final report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 8+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only.",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-05-07T02:10:00Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #262",
+      "msg": "QA sweep run #262 \u2014 6 passed, 3 failed (FLAT vs #259, 7 cowork sandbox runs same shape today). 0 new, 3 recurring elevated. P0 aurora-ran-today day 3 ESCALATED (newsletter 2026-05-07.md missing in sandbox \u2014 UTC date rolled, sentinel checks tomorrow-from-MT-POV file). P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox). P2 task-queue-size day 57 ELEVATED (33 P0 tasks FLAT vs threshold 5, 57-run streak \u2014 was 54 at 16:10 MT). Sandbox path artifacts; authoritative state on Mini.",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-05-07T02:10:00Z",
+      "agent": "cipher",
+      "event": "Scan \u2014 0 findings, 0 autofixes",
+      "msg": "Security scan clean \u2014 0 findings, 0 autofixes, 0 leaks. .secrets/ symlink target 700, founder.token 600. HQ push 200 OK (no verification \u2014 HYO_HQ_PASSWORD unset in sandbox). gitleaks unavailable in sandbox; authoritative scan on Mini.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-05-07T02:10:00Z",
+      "agent": "nel",
+      "event": "Partial sweep complete \u2014 Phases 1-5 captured",
+      "msg": "Nel partial run (Phases 1-5 captured) \u2014 sentinel synthesis: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT vs 16:10 MT). Cipher synthesis: no active leaks. Stale files: clean. Broken links: 29 FLAT. Untested scripts: 47 FLAT vs 16:10 MT (no new gaps, no closed gaps). Self-delegation gates: P2 (sentinel test failures) deferred (only 2 projects vs P1 threshold of 3+); newsletter flag P1 (past 06:00 MT deadline, hour 20 \u2265 6). Phase 6+ (inefficient patterns) + final-report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 8+).",
+      "type": "nel"
+    },
     {
       "ts": "2026-05-06T22:10:00Z",
       "agent": "kai",
@@ -488,17 +516,16 @@
     "subscribers": []
   },
   "sentinel": {
-    "ts": "2026-05-06T22:10:00Z",
-    "event": "QA sweep run #259",
-    "summary": "QA sweep run #259 \u2014 6 passed, 3 failed (FLAT vs #256, 6 cowork sandbox runs same shape today). 0 new, 3 recurring elevated. P0 aurora-ran-today day 3 ESCALATED (newsletter 2026-05-06 still missing). P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox). P2 task-queue-size day 54 ELEVATED (33 P0 tasks FLAT vs threshold 5, 54-run streak). Sandbox path artifacts; authoritative state on Mini.",
+    "ts": "2026-05-07T06:11:00Z",
+    "event": "QA sweep run #265",
+    "summary": "QA sweep run #265 \u2014 6 passed, 3 failed (FLAT vs #262, +3 cowork sandbox runs since 20:10 MT 2026-05-06). 0 new, 3 recurring elevated. P0 aurora-ran-today day 3 ESCALATED (newsletter 2026-05-07.md missing in sandbox view \u2014 sandbox UTC clock past midnight, sentinel checks tomorrow-from-MT-POV file). P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox /agents/nel/logs view). P2 task-queue-size day 60 ELEVATED (33 P0 tasks FLAT vs threshold 5, +3 vs 02:10 UTC). Sandbox path artifacts; authoritative state on Mini.",
+    "type": "sentinel",
     "passed": 6,
     "failed": 3,
-    "newIssues": 0,
-    "recurring": 3,
-    "resolved": 0
+    "run": 265
   },
   "cipher": {
-    "ts": "2026-05-06T22:10:00Z",
+    "ts": "2026-05-07T06:11:00Z",
     "event": "Scan \u2014 0 findings, 0 autofixes",
     "summary": "Security scan clean \u2014 0 findings, 0 autofixes, 0 leaks. .secrets/ symlink target 700, founder.token 600. HQ push 200 OK (no verification \u2014 HYO_HQ_PASSWORD unset in sandbox). gitleaks unavailable in sandbox; authoritative scan on Mini.",
     "findings": 0,
@@ -515,12 +542,12 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-05-06T19:45:51Z",
+    "lastRun": "2026-05-07T07:00:02Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 29,
-    "untested": 45,
+    "untested": 47,
     "inefficient": 9,
     "sentinel": {
       "pass": 4,
@@ -528,21 +555,12 @@
     },
     "cipher": {
       "leaks": 0
-    },
-    "ts": "2026-05-06T22:10:00Z",
-    "event": "Partial sweep \u2014 Phases 1-5 captured",
-    "summary": "Nel partial run (Phases 1-5 captured) \u2014 sentinel synthesis: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT vs 12:14 MT). Cipher synthesis: no active leaks. Stale files: clean. Broken links: 29 FLAT. Untested scripts: 47 (UP from 45 at 12:14 MT, +2). Self-delegation gates: P2 (sentinel test failures) deferred (only 2 projects vs P1 threshold of 3+); newsletter flag P1 (past 06:00 MT deadline). Phase 6+ (inefficient patterns) + final-report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 7+).",
-    "untestedScripts": 47,
-    "sentinelByProject": {
-      "hyo": "2p/2f",
-      "aurora-ra": "4p/0f",
-      "aether": "1p/1f",
-      "kai-ceo": "4p/0f"
     }
   },
   "ops_sync": {
-    "ts": "2026-05-06T22:10:00Z",
-    "event": "hq-ops-sync cycle complete (cowork, 16:10 MT 2026-05-06, scheduled-task)",
-    "summary": "Ops sync @ 16:10 MT 2026-05-06 (hq-ops-sync, cowork, scheduled-task). Sentinel run #259: 6p/3f FLAT vs #256 (6 cowork runs today identical shape). Recurring elevated: P0 aurora-ran-today day 3 (newsletter 2026-05-06 missing in sandbox), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox), P2 task-queue-size day 54 (33 P0 FLAT vs threshold 5, 54-run streak \u2014 was 51 at 12:14 MT). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial run (Phases 1-5 captured: sentinel synth FLAT \u2014 hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f; cipher synth clean; stale files clean; broken links 29 FLAT; untested 47 \u2014 UP from 45 at 12:14 MT, +2 scripts). Phase 6+ inefficient-pattern + final report write truncated by sandbox 45s bash boundary; HQ push not executed from sandbox. flag-nel-008 P1 newsletter-gap STILL OPEN (cycle 7+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only."
+    "ts": "2026-05-07T06:11:00Z",
+    "event": "hq-ops-sync cycle complete (cowork, 00:11 MT 2026-05-07, scheduled-task)",
+    "summary": "Ops sync @ 00:11 MT 2026-05-07 (hq-ops-sync, cowork, scheduled-task). Sentinel run #265: 6p/3f FLAT vs #262 (3 cowork runs since 20:10 MT 2026-05-06, all identical shape). Recurring elevated unchanged shape, day counters advanced: P0 aurora-ran-today day 3, P1 scheduled-tasks-fired day 3, P2 task-queue-size day 60 (33 P0 FLAT vs threshold 5). Cipher CLEAN: 0 findings, 0 autofixes, 0 leaks, founder.token 600, HQ push 200 OK. Nel partial: Phases 1-5 captured (sentinel synth FLAT, cipher clean, stale clean, 29 broken links FLAT, 47 untested FLAT). Phase 6+ + final HQ push truncated by sandbox 45s bash boundary. flag-nel-008 P1 newsletter-gap pattern STILL OPEN (cycle 9+, no auto-cascade landing in sandbox path). Authoritative state on Mini; sandbox sees mounted snapshot only \u2014 gitwatch will reconcile after Mini's next cycle.",
+    "type": "ops-sync"
   }
 }

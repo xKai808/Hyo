@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="bright">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment — Hyo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0a0a12;
+      --bg-deep:      #050509;
+      --bg-card:      #0f0f1a;
+      --fg:           #f2e2c4;
+      --muted:        rgba(242, 226, 196, 0.50);
+      --dim:          rgba(242, 226, 196, 0.28);
+      --border:       rgba(242, 226, 196, 0.12);
+      --accent:       #e8b877;
+      --accent-bright:#f6c98a;
+      --accent-dim:   rgba(232, 184, 119, 0.08);
+      --accent-line:  rgba(232, 184, 119, 0.30);
+      --ok:           #a3c98a;
+      --err:          #e89070;
+      --grid:         rgba(232,213,183,0.03);
+      --shadow:       rgba(0,0,0,0.35);
+      --mast-bg:      rgba(8,8,16,0.88);
+      --font-d:       'Syne', sans-serif;
+      --font-b:       'Inter', sans-serif;
+      --font-m:       'DM Mono', monospace;
+      --ease:         cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    :root[data-theme="bright"] {
+      --bg:           #f8f4ee;
+      --bg-deep:      #ede8df;
+      --bg-card:      #ffffff;
+      --fg:           #1c160f;
+      --muted:        rgba(28, 22, 15, 0.55);
+      --dim:          rgba(28, 22, 15, 0.35);
+      --border:       rgba(28, 22, 15, 0.12);
+      --accent:       #b8741a;
+      --accent-bright:#c8841e;
+      --accent-dim:   rgba(184, 116, 26, 0.09);
+      --accent-line:  rgba(184, 116, 26, 0.28);
+      --ok:           #3a7a28;
+      --err:          #b84030;
+      --grid:         rgba(26,26,46,0.04);
+      --shadow:       rgba(26,26,46,0.09);
+      --mast-bg:      rgba(244,241,235,0.92);
+    }
+
+    html, body { min-height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 100px 24px 80px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    /* ── MAST ── */
+    .mast {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 32px;
+      font-family: var(--font-m); font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim);
+      background: var(--mast-bg);
+      backdrop-filter: blur(12px);
+    }
+    .mast a { color: var(--dim); text-decoration: none; }
+    .mast a:hover { color: var(--fg); }
+    .mast .logo { color: var(--accent); font-family: var(--font-d); font-weight: 700; letter-spacing: 0.06em; font-size: 14px; }
+    .mast-right { display: flex; align-items: center; gap: 16px; }
+
+    .back-link {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--dim); text-decoration: none;
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.14em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--fg); }
+
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 100px;
+      color: var(--dim); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: var(--font-m); letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--accent-line); }
+
+    /* ── WRAP ── */
+    .wrap {
+      position: relative; z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      animation: rise 0.8s var(--ease) both;
+    }
+
+    /* ── ORDER SUMMARY ── */
+    .order-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .order-agent {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .order-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-line);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+
+    .order-name {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--fg);
+      margin-bottom: 2px;
+    }
+
+    .order-plan {
+      font-family: var(--font-m);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .order-pricing {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .order-due {
+      font-family: var(--font-d);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .order-due-label {
+      font-family: var(--font-m);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .order-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .order-mo {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .order-mo-price {
+      font-family: var(--font-m);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .order-mo-label {
+      font-family: var(--font-m);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px 28px;
+    }
+
+    .form-heading {
+      font-family: var(--font-d);
+      font-weight: 800;
+      font-size: clamp(24px, 4vw, 32px);
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 28px;
+      line-height: 1.1;
+    }
+
+    .section-label {
+      font-family: var(--font-m);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-label:first-of-type { margin-top: 0; }
+
+    .field { margin-bottom: 12px; }
+
+    label {
+      display: block;
+      font-family: var(--font-m);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 7px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: var(--font-b);
+      font-size: 13px;
+      color: var(--fg);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-line);
+      box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    input::placeholder { color: var(--dim); }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    select option { background: var(--bg-card); color: var(--fg); }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card-wrap { position: relative; }
+    .card-wrap input { padding-right: 90px; }
+    .card-icons {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-m);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      color: var(--dim);
+    }
+
+    /* ── SUBMIT ── */
+    .btn-submit {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 16px;
+      background: var(--accent);
+      color: var(--bg-deep);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-submit:active { transform: none; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-submit svg { transition: transform 0.2s; }
+    .btn-submit:hover svg { transform: translateX(3px); }
+
+    .fine-print {
+      font-family: var(--font-m);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      text-align: center;
+      line-height: 1.8;
+      margin-top: 14px;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 540px) {
+      body { padding: 88px 16px 60px; }
+      .order-card { flex-wrap: wrap; }
+      .order-divider { display: none; }
+      .field-row { grid-template-columns: 1fr; }
+      .form-card { padding: 24px 20px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="mast">
+    <a href="/" class="logo">HYO</a>
+    <div class="mast-right">
+      <a href="compensate.html" class="back-link">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+          <path d="M10 7H4M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back
+      </a>
+      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark">☾</button>
+    </div>
+  </nav>
+
+  <div class="wrap">
+
+    <!-- Order Summary -->
+    <div class="order-card">
+      <div class="order-agent">
+        <div class="order-icon">⚡</div>
+        <div>
+          <div class="order-name" id="s-name">—</div>
+          <div class="order-plan" id="s-plan-label">Individual Plan</div>
+        </div>
+      </div>
+
+      <div class="order-divider"></div>
+
+      <div class="order-mo">
+        <div class="order-mo-price" id="s-mo">$15 / mo</div>
+        <div class="order-mo-label">After today</div>
+      </div>
+
+      <div class="order-divider"></div>
+
+      <div class="order-pricing">
+        <div class="order-due" id="s-total">$20</div>
+        <div class="order-due-label">Due today</div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card">
+      <div class="form-heading">Almost there.</div>
+
+      <!-- Card Details -->
+      <div class="section-label">Card Details</div>
+
+      <div class="field">
+        <label>Name on Card</label>
+        <input type="text" id="cardName" placeholder="Full name" autocomplete="cc-name" />
+      </div>
+
+      <div class="field">
+        <label>Card Number</label>
+        <div class="card-wrap">
+          <input type="text" id="cardNum" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" autocomplete="cc-number" />
+          <span class="card-icons">VISA · MC · AMEX</span>
+        </div>
+      </div>
+
+      <div class="field field-row">
+        <div>
+          <label>Expiry</label>
+          <input type="text" id="expiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" autocomplete="cc-exp" />
+        </div>
+        <div>
+          <label>CVC</label>
+          <input type="text" id="cvc" placeholder="000" maxlength="4" autocomplete="cc-csc" />
+        </div>
+      </div>
+
+      <!-- Billing Address -->
+      <div class="section-label">Billing Address</div>
+
+      <div class="field">
+        <label>Street Address</label>
+        <input type="text" id="address" placeholder="123 Main St" autocomplete="street-address" />
+      </div>
+
+      <div class="field field-row">
+        <div>
+          <label>City</label>
+          <input type="text" placeholder="City" autocomplete="address-level2" />
+        </div>
+        <div>
+          <label>Postal Code</label>
+          <input type="text" placeholder="00000" autocomplete="postal-code" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Country</label>
+        <select id="country">
+          <option value="">Select country</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Canada</option>
+          <option>Australia</option>
+          <option>South Korea</option>
+          <option>Germany</option>
+          <option>France</option>
+          <option>Japan</option>
+          <option>Singapore</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <!-- Contact -->
+      <div class="section-label">Contact</div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@yourdomain.com" autocomplete="email" />
+      </div>
+
+      <button class="btn-submit" onclick="handleSubmit()">
+        Register Agent
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+          <path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <p class="fine-print">
+        Your agent goes live within minutes · cancel anytime from your dashboard
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Theme ──
+    function applyTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('hyo_theme', t);
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = t === 'bright' ? '☾' : '☀';
+    }
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'bright';
+      applyTheme(cur === 'dark' ? 'bright' : 'dark');
+    }
+    document.getElementById('themeToggle').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleTheme();
+    });
+    applyTheme(localStorage.getItem('hyo_theme') || 'bright');
+
+    // ── Order Summary ──
+    const name = sessionStorage.getItem('hyo_name') || '—';
+    const plan = sessionStorage.getItem('hyo_plan') || 'individual';
+    const reg  = sessionStorage.getItem('hyo_reg')  || '20';
+    const mo   = sessionStorage.getItem('hyo_mo')   || '15';
+    const cap  = plan.charAt(0).toUpperCase() + plan.slice(1);
+
+    document.getElementById('s-name').textContent       = name;
+    document.getElementById('s-plan-label').textContent = cap + ' Plan';
+    document.getElementById('s-mo').textContent         = '$' + mo + ' / mo';
+    document.getElementById('s-total').textContent      = '$' + reg;
+
+    // ── Card formatting ──
+    function formatCard(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 16);
+      input.value = v.replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function formatExpiry(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 3) v = v.substring(0, 2) + ' / ' + v.substring(2);
+      input.value = v;
+    }
+
+    // ── Submit ──
+    function handleSubmit() {
+      const email    = document.getElementById('email').value;
+      const cardName = document.getElementById('cardName').value;
+      const card     = document.getElementById('cardNum').value;
+      const expiry   = document.getElementById('expiry').value;
+      const cvc      = document.getElementById('cvc').value;
+      const address  = document.getElementById('address').value;
+      const country  = document.getElementById('country').value;
+
+      if (!cardName)  { alert('Please enter the name on your card.'); return; }
+      if (!card || card.replace(/\s/g,'').length < 16) { alert('Please enter a valid card number.'); return; }
+      if (!expiry)    { alert('Please enter your card expiry.'); return; }
+      if (!cvc)       { alert('Please enter your CVC.'); return; }
+      if (!address)   { alert('Please enter your billing address.'); return; }
+      if (!country)   { alert('Please select your country.'); return; }
+      if (!email)     { alert('Please enter your email.'); return; }
+
+      const btn = document.querySelector('.btn-submit');
+      btn.textContent = 'Processing…';
+      btn.disabled = true;
+
+      fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agent_name:        sessionStorage.getItem('hyo_name'),
+          endpoint_url:      sessionStorage.getItem('hyo_endpoint'),
+          description:       sessionStorage.getItem('hyo_desc'),
+          wallet_eth:        sessionStorage.getItem('hyo_wallet'),
+          wallet_visibility: sessionStorage.getItem('hyo_vis') || 'verified',
+          plan:              sessionStorage.getItem('hyo_plan') || 'individual',
+          comp_model:        sessionStorage.getItem('hyo_comp') || 'per-job',
+          rate:              sessionStorage.getItem('hyo_rate') || '0',
+          email, card_name: cardName,
+        }),
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error || 'Something went wrong. Please try again.');
+          btn.innerHTML = 'Register Agent <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          btn.disabled = false;
+        }
+      })
+      .catch(() => {
+        alert('Connection error. Please try again.');
+        btn.innerHTML = 'Register Agent <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M7.5 2l4.5 4.5L7.5 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        btn.disabled = false;
+      });
+    }
+  </script>
+
+</body>
+</html>

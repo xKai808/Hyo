@@ -1,13 +1,17 @@
-# ra Self-Review — 2026-05-06T13:46
+# ra Self-Review — 2026-05-06T23:30
 
 ## Gate 1: Trigger Validation
-- ✓ 7 files checked, all have triggers.
+- ✗ **2026-05-06-ra-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
+- ✗ **nel-card.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
 Questions for ra to answer:
 - Did the output of my last cycle reach somewhere visible?
 - If I generated data, does it render on HQ or another surface?
 - If I fixed something, is the fix deployed?
+- ✗ **agents.json**: data exists but is NOT referenced in hq.html — invisible to user
 
 ## Gate 3: Resolution Pickup
 - Open resolution **RES-007** is relevant to ra
@@ -53,6 +57,6 @@ Questions for ra to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 11
-- Gate results: trigger=7/7, visibility=checked, resolutions=6, adoption=-6/5
+- Findings: 14
+- Gate results: trigger=4/6, visibility=checked, resolutions=6, adoption=-6/5
 
