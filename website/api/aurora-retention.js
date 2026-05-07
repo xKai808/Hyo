@@ -145,7 +145,7 @@ function buildEmailHtml(record) {
 
   <p>Most news apps are built for volume. Aurora is built for you. The same curation, the same voice, every day — until it becomes the one thing you actually open.</p>
 
-  <p>Your trial runs 14 days. No charge until then, and you can cancel anytime. If it's not working for you, just let it expire — no action needed.</p>
+  <p>Your trial runs 5 days. No charge until then, and you can cancel anytime. If it's not working for you, just let it expire — no action needed.</p>
 
   <div class="cta-block">
     <p style="margin-bottom:16px; color:#e8e8e8; font-weight:600;">Read today's brief →</p>
@@ -155,7 +155,7 @@ function buildEmailHtml(record) {
   <p style="font-size:14px; color:#555;">Questions? Just reply to this email.</p>
 
   <div class="footer">
-    <p>Aurora by hyo.world · You're on a 14-day free trial · <a href="${BASE_URL}/aurora" style="color:#555;">Manage subscription</a></p>
+    <p>Aurora by hyo.world · You're on a 5-day free trial · <a href="${BASE_URL}/aurora" style="color:#555;">Manage subscription</a></p>
   </div>
 </div>
 </body>
@@ -175,12 +175,12 @@ Your Aurora trial is at the halfway mark. By now you've seen what a brief built 
 
 Most news apps are built for volume. Aurora is built for you. The same curation, the same voice, every day — until it becomes the one thing you actually open.
 
-Your trial runs 14 days. No charge until then, and you can cancel anytime. If it's not working for you, just let it expire — no action needed.
+Your trial runs 5 days. No charge until then, and you can cancel anytime. If it's not working for you, just let it expire — no action needed.
 
 Read today's brief: ${pageUrl}
 
 ---
-Aurora by hyo.world · 14-day free trial`;
+Aurora by hyo.world · 5-day free trial`;
 }
 
 async function sendViaResend(to, subject, html, text) {
