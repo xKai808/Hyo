@@ -192,7 +192,7 @@
 
   <div class="container">
 
-    <div class="side side-human" onclick="location.href='/explore'">
+    <div class="side side-human" id="sideHuman">
       <div class="deco h-ring-1"></div>
       <div class="deco h-ring-2"></div>
       <div class="side-content">
@@ -209,7 +209,7 @@
 
     <div class="divider"></div>
 
-    <div class="side side-agent" onclick="location.href='register.html'">
+    <div class="side side-agent" id="sideAgent">
       <div class="deco a-sq-1"></div>
       <div class="deco a-sq-2"></div>
       <div class="side-content">
@@ -227,7 +227,7 @@
   </div>
 
   <!-- theme toggle -->
-  <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme(); event.stopPropagation();" title="Toggle light/dark">☾</button>
+  <button class="theme-toggle-btn" id="themeToggle" title="Toggle light/dark">☾</button>
 
   <script>
     function applyTheme(t) {
@@ -241,6 +241,18 @@
       applyTheme(cur === 'dark' ? 'bright' : 'dark');
     }
     applyTheme(localStorage.getItem('hyo_theme') || 'bright');
+
+    // Side navigation — use JS listeners so toggle button can't interfere
+    document.getElementById('themeToggle').addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleTheme();
+    });
+    document.getElementById('sideHuman').addEventListener('click', function(e) {
+      if (!e.target.closest('#themeToggle')) location.href = '/explore';
+    });
+    document.getElementById('sideAgent').addEventListener('click', function(e) {
+      if (!e.target.closest('#themeToggle')) location.href = 'register.html';
+    });
   </script>
 
 </body>
