@@ -705,3 +705,18 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/quirky-upbeat-mccarthy/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:bff6208f:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/quirky-upbeat-mccarthy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:790c54e0:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/confident-funny-wright/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:14d0348f] _(filed 2026-05-07)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-funny-wright/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e1f7b7b7] _(filed 2026-05-07)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/confident-funny-wright/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:14d0348f:escalated]
+- [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 35 P0 tasks (overload threshold 5) [sentinel:task-queue-size:0d497e98:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/confident-funny-wright/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e1f7b7b7:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/loving-optimistic-franklin/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:caa77509] _(filed 2026-05-07)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/loving-optimistic-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e1b67fc7] _(filed 2026-05-07)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/loving-optimistic-franklin/mnt/Hyo/newsletters/2026-05-07.md [sentinel:aurora-ran-today:caa77509:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/loving-optimistic-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e1b67fc7:escalated]

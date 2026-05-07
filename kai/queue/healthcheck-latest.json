@@ -1,23 +1,18 @@
 {
-  "ts": "2026-05-07T13:34:30Z",
+  "ts": "2026-05-07T19:35:21Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 4,
+  "issues": 6,
+  "warnings": 2,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "2 unaddressed P0/P1 flags in last 2h"
+    },
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "dex has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "ra has no output today"
     },
     {
       "severity": "P2",
@@ -50,34 +45,34 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1778160831-6122",
+      "id": "cmd-1778182456-90070",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605070732",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605071333",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778160775-5534",
-      "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605070731",
-      "exit_code": 0
-    },
-    {
-      "id": "c4c9316f-023b-4afe-a686-dd3370302cae",
+      "id": "f8d768db-ce65-48b5-b4f2-ad26443f1356",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "b0d02115-9bac-4bd6-9067-9290223aafb4",
+      "id": "cmd-1778182383-89456",
+      "status": "ok",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605071331",
+      "exit_code": 0
+    },
+    {
+      "id": "91d8525b-811e-4c7a-82a0-21d7e563baf2",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "a30a6f5a-5f53-46b4-8fdf-c00b41bc0abe",
+      "id": "7609bc0d-1899-4aee-96c4-d7ea5200cc89",
       "status": "ok",
       "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
