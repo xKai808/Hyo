@@ -129,6 +129,7 @@ See `kai/memory/MEMORY_SYSTEM.md` for full architecture.
    When any agent behavior changes, bump the protocol version. See KNOWLEDGE.md "Agent Execution Protocols".
    **Task-type protocols (read before starting the task — same rule, different trigger):**
    - Creating any Hyo Research PDF → `kai/protocols/PROTOCOL_HYO_RESEARCH_PDF.md` — design system, colors, ReportLab patterns, output checklist, failure modes. The PDF version is at `agents/sam/website/docs/research/PROTOCOL_HYO_RESEARCH_PDF.pdf`.
+   - Creating or editing ANY hyo.world HTML page → `agents/sam/website/PROTOCOL_HYO_WEB.md` — design tokens, theme system, font stack, card/button patterns, dual-path file rule, deployment checklist, anti-patterns, page inventory. Read before touching a single line of HTML.
 10. `NFT/HyoRegistry_Notes.md` — canonical architecture notes
 11. Any file in `agents/manifests/` relevant to the current task
 12. Latest log in `agents/nel/logs/` if one exists
