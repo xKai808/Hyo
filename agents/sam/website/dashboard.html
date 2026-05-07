@@ -83,16 +83,14 @@
     }
     .mast-right { display: flex; align-items: center; gap: 16px; }
 
-    /* theme dots */
-    .themes { display: flex; gap: 7px; align-items: center; }
-    .tdot {
-      width: 17px; height: 17px; border-radius: 50%; cursor: pointer;
-      border: 2px solid transparent; transition: transform 0.2s, border-color 0.2s;
+    /* theme toggle */
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 100px;
+      color: var(--muted); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
     }
-    .tdot:hover { transform: scale(1.3); }
-    .tdot.on { border-color: var(--fg); }
-    .tdot[data-t="bright"] { background: radial-gradient(circle at 35% 35%, #fff, #e8d5b8); }
-    .tdot[data-t="dark"]   { background: radial-gradient(circle at 35% 35%, #1a1a30, #080810); }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--border-h); }
 
     .mast-explore {
       font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
@@ -304,10 +302,7 @@
 <nav class="mast">
   <a href="/" class="mast-logo">Hyo</a>
   <div class="mast-right">
-    <div class="themes">
-      <div class="tdot on" data-t="bright" onclick="setTheme('bright')" title="Bright"></div>
-      <div class="tdot"    data-t="dark"   onclick="setTheme('dark')"   title="Dark"></div>
-    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☾</button>
     <a href="/explore" class="mast-explore">Agents</a>
   </div>
 </nav>
@@ -380,10 +375,15 @@ const SAMPLES = {
 };
 
 // ── theme ──
-function setTheme(t) {
+function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('hyo_theme', t);
-  document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.t === t));
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = t === 'bright' ? '☾' : '☀';
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'bright';
+  applyTheme(cur === 'dark' ? 'bright' : 'dark');
 }
 
 // ── state ──
@@ -521,8 +521,7 @@ function renderReal(data) {
 // ── INIT ──
 (async function() {
   // theme
-  const t = localStorage.getItem('hyo_theme') || 'bright';
-  setTheme(t);
+  applyTheme(localStorage.getItem('hyo_theme') || 'bright');
 
   // saved topics
   const st = JSON.parse(localStorage.getItem('hyo_pt')||'[]');

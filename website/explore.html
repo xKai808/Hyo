@@ -85,16 +85,14 @@
     }
     .nav-back:hover { color: var(--accent); }
 
-    /* theme dots */
-    .themes { display: flex; gap: 7px; }
-    .tdot {
-      width: 16px; height: 16px; border-radius: 50%; cursor: pointer;
-      border: 2px solid transparent; transition: transform 0.2s, border-color 0.2s;
+    /* theme toggle */
+    .theme-toggle {
+      background: none; border: 1px solid var(--border); border-radius: 100px;
+      color: var(--accent); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
     }
-    .tdot:hover { transform: scale(1.25); }
-    .tdot.on { border-color: var(--accent); }
-    .tdot[data-t="bright"] { background: radial-gradient(circle at 35% 35%, #fff, #e8d5b8); }
-    .tdot[data-t="dark"]   { background: radial-gradient(circle at 35% 35%, #1a1a30, #080810); }
+    .theme-toggle:hover { color: var(--accent); border-color: var(--border-h); }
 
     /* wrap */
     .wrap {
@@ -261,10 +259,7 @@
 <nav>
   <a href="/" class="nav-logo">Hyo</a>
   <div class="nav-right">
-    <div class="themes">
-      <div class="tdot on" data-t="bright" onclick="setTheme('bright')" title="Bright"></div>
-      <div class="tdot"    data-t="dark"   onclick="setTheme('dark')"   title="Dark"></div>
-    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☾</button>
     <a href="/" class="nav-back">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
         <path d="M11 6H1M5 2L1 6l4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -389,14 +384,17 @@
 </div>
 
 <script>
-  function setTheme(t) {
+  function applyTheme(t) {
     document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem('hyo_theme', t);
-    document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.t === t));
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = t === 'bright' ? '☾' : '☀';
   }
-  // sync with saved preference
-  const saved = localStorage.getItem('hyo_theme');
-  if (saved) setTheme(saved);
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme') || 'bright';
+    applyTheme(cur === 'dark' ? 'bright' : 'dark');
+  }
+  applyTheme(localStorage.getItem('hyo_theme') || 'bright');
 
   function open_f(id) {
     document.getElementById('f-'+id).classList.add('open');

@@ -165,19 +165,14 @@
     .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: blink 2.2s infinite; }
 
     /* ── theme toggle ── */
-    .theme-toggle {
+    .theme-toggle-btn {
       position: fixed; bottom: 28px; right: 28px; z-index: 200;
-      display: flex; gap: 7px; align-items: center;
+      background: none; border: 1px solid rgba(201,169,110,0.25); border-radius: 100px;
+      color: rgba(201,169,110,0.6); cursor: pointer; font-size: 13px; padding: 4px 10px;
+      font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
     }
-    .tdot {
-      width: 16px; height: 16px; border-radius: 50%;
-      border: 2px solid transparent; cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .tdot:hover { transform: scale(1.25); }
-    .tdot.on { border-color: rgba(200,200,200,0.6); }
-    .tdot[data-t="bright"] { background: radial-gradient(circle at 35% 35%, #fff, #e8d5b8); }
-    .tdot[data-t="dark"]   { background: radial-gradient(circle at 35% 35%, #1a1a30, #080810); }
+    .theme-toggle-btn:hover { color: #c9a96e; border-color: rgba(201,169,110,0.5); }
 
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
     @keyframes riseUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
@@ -232,19 +227,20 @@
   </div>
 
   <!-- theme toggle -->
-  <div class="theme-toggle">
-    <div class="tdot on" data-t="bright" onclick="setTheme('bright')" title="Bright"></div>
-    <div class="tdot"    data-t="dark"   onclick="setTheme('dark')"   title="Dark"></div>
-  </div>
+  <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☾</button>
 
   <script>
-    function setTheme(t) {
+    function applyTheme(t) {
       document.documentElement.setAttribute('data-theme', t);
       localStorage.setItem('hyo_theme', t);
-      document.querySelectorAll('.tdot').forEach(d => d.classList.toggle('on', d.dataset.t === t));
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = t === 'bright' ? '☾' : '☀';
     }
-    const saved = localStorage.getItem('hyo_theme');
-    if (saved) setTheme(saved);
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'bright';
+      applyTheme(cur === 'dark' ? 'bright' : 'dark');
+    }
+    applyTheme(localStorage.getItem('hyo_theme') || 'bright');
   </script>
 
 </body>
