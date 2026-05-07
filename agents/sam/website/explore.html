@@ -28,7 +28,7 @@
 
     html, body {
       background: var(--bg); color: var(--accent);
-      font-family: var(--font-m); min-height: 100vh; cursor: none;
+      font-family: var(--font-m); min-height: 100vh;
     }
 
     /* grid background */
@@ -40,17 +40,6 @@
       background-size: 44px 44px;
     }
 
-    /* cursor */
-    .cursor {
-      position: fixed; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent); pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%);
-    }
-    .cursor-ring {
-      position: fixed; width: 32px; height: 32px; border-radius: 50%;
-      border: 1px solid rgba(26,26,46,0.3); pointer-events: none; z-index: 9998;
-      transform: translate(-50%, -50%); opacity: 0.5;
-    }
 
     /* nav */
     nav {
@@ -91,8 +80,7 @@
       position: relative; overflow: hidden;
       transition: box-shadow 0.25s, transform 0.25s var(--ease);
       animation: up 0.7s var(--ease) both;
-      cursor: none;
-    }
+          }
     .card:hover {
       box-shadow: 0 8px 32px rgba(26,26,46,0.09);
       transform: translateY(-3px);
@@ -165,8 +153,7 @@
       text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
       padding: 12px 22px; border-radius: 2px;
       background: var(--accent); color: var(--bg); font-weight: 500;
-      transition: opacity 0.2s; cursor: none;
-    }
+      transition: opacity 0.2s;     }
     .cta-btn:hover { opacity: 0.85; }
 
     /* waitlist form */
@@ -175,7 +162,7 @@
       font-family: var(--font-m); font-size: 9px; letter-spacing: 0.2em;
       text-transform: uppercase; padding: 10px 0; border-radius: 2px;
       background: transparent; border: 1px solid var(--border);
-      color: var(--dim); cursor: none; transition: all 0.2s;
+      color: var(--dim);  transition: all 0.2s;
     }
     .wl-toggle:hover { border-color: rgba(26,26,46,0.25); color: var(--accent); }
 
@@ -197,14 +184,14 @@
       font-family: var(--font-m); font-size: 9px; letter-spacing: 0.18em;
       text-transform: uppercase; padding: 9px 16px; border-radius: 2px;
       background: var(--gold-d); border: 1px solid var(--gold-b);
-      color: var(--gold); cursor: none; flex: 1; transition: background 0.2s;
+      color: var(--gold);  flex: 1; transition: background 0.2s;
     }
     .btn-notify:hover { background: rgba(201,169,110,0.15); }
     .btn-cancel {
       font-family: var(--font-m); font-size: 9px; letter-spacing: 0.16em;
       text-transform: uppercase; padding: 9px 12px; border-radius: 2px;
       background: transparent; border: 1px solid var(--border);
-      color: var(--dim); cursor: none; transition: color 0.2s;
+      color: var(--dim);  transition: color 0.2s;
     }
     .btn-cancel:hover { color: var(--accent); }
 
@@ -232,8 +219,6 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
     @media (max-width: 720px) {
-      html,body { cursor: auto; }
-      .cursor,.cursor-ring { display: none; }
       nav { padding: 20px; }
       .wrap { padding: 88px 20px 60px; }
       .card-aurora { grid-template-columns: 1fr; gap: 20px; }
@@ -243,8 +228,6 @@
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="ring"></div>
 
 <nav>
   <a href="/" class="nav-logo">Hyo</a>

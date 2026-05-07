@@ -99,8 +99,7 @@
     body {
       min-height: 100vh; color: var(--fg);
       font-family: 'DM Mono', monospace;
-      position: relative; overflow-x: hidden; cursor: none;
-      transition: background 0.3s, color 0.3s;
+      position: relative; overflow-x: hidden;       transition: background 0.3s, color 0.3s;
     }
     body::before {
       content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
@@ -108,17 +107,6 @@
       transition: background 0.3s;
     }
 
-    /* cursor */
-    .cursor {
-      position: fixed; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--fg); pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%); transition: background 0.3s;
-    }
-    .cursor-ring {
-      position: fixed; width: 32px; height: 32px; border-radius: 50%;
-      border: 1px solid var(--fg); pointer-events: none; z-index: 9998;
-      transform: translate(-50%, -50%); opacity: 0.25;
-    }
 
     /* ── NAV ── */
     .mast {
@@ -347,8 +335,6 @@
     @keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
 
     @media (max-width: 640px) {
-      html,body { cursor: auto; }
-      .cursor,.cursor-ring { display: none; }
       .mast { padding: 14px 20px; }
       .shell { padding: 32px 20px 60px; }
       .reader-box { padding: 28px 22px; }
@@ -357,8 +343,6 @@
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="ring"></div>
 
 <nav class="mast">
   <a href="/" class="mast-logo">Hyo</a>
@@ -578,12 +562,6 @@ function renderReal(data) {
   showState('s-real');
 }
 
-// ── cursor ──
-const cursor=document.getElementById('cursor');
-const ring=document.getElementById('ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{ mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'; });
-(function loop(){ rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop); })();
 
 // ── INIT ──
 (async function() {
