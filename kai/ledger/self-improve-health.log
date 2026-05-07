@@ -631,3 +631,78 @@ TASK-20260505-kai-021
 [2026-05-06T07:04:41-0600]   Q5 OK: failure_count=1 (cap=3)
 [2026-05-06T07:04:41-0600] === Health check done: 11 passed | 20 unresolved | 0 auto-fixed ===
 [2026-05-06T07:04:41-0600] Summary written: /Users/kai/Documents/Projects/Hyo/kai/ledger/self-improve-health-2026-05-06.json
+[2026-05-07T07:00:45-0600] === Self-improve health check: 2026-05-07 ===
+[2026-05-07T07:00:45-0600] --- GLOBAL: launchd ---
+[2026-05-07T07:00:45-0600]   Q6 OK: kai-autonomous loaded in launchd
+[2026-05-07T07:00:45-0600] --- nel ---
+[2026-05-07T07:00:45-0600]   Q1 OK
+[2026-05-07T07:00:45-0600]   Q2 FAIL: stale — last written 538750s ago (>28h)
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q2-nel-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q3 FAIL: stuck at W2/verify for 2+ days (failure_count=0)
+[2026-05-07T07:00:45-0600]   → Issue logged: q3-nel-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q4 FAIL: stage=verify but no research file at /Users/kai/Documents/Projects/Hyo/agents/nel/research/improvements/W2-2026-05-07.md
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q4-nel-2026-05-07 (P2)
+[2026-05-07T07:00:45-0600]   Q7 WARN: no daily-assess file for nel at /Users/kai/Documents/Projects/Hyo/agents/nel/ledger/daily-assess-2026-05-07.json — self-improve ran without 4AM grounding
+[2026-05-07T07:00:45-0600]   → Issue logged: q7-no-assess-nel-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q5 OK: failure_count=0 (cap=3)
+[2026-05-07T07:00:45-0600] --- sam ---
+[2026-05-07T07:00:45-0600]   Q1 OK
+[2026-05-07T07:00:45-0600]   Q2 FAIL: stale — last written 216287s ago (>28h)
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q2-sam-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q3 FAIL: stuck at W1/research for 2+ days (failure_count=1)
+[2026-05-07T07:00:45-0600]   → Issue logged: q3-sam-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q4 OK (stage=research — research file will be written this cycle, absence expected)
+[2026-05-07T07:00:45-0600]   Q7 WARN: no daily-assess file for sam at /Users/kai/Documents/Projects/Hyo/agents/sam/ledger/daily-assess-2026-05-07.json — self-improve ran without 4AM grounding
+[2026-05-07T07:00:45-0600]   → Issue logged: q7-no-assess-sam-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q5 OK: failure_count=1 (cap=3)
+[2026-05-07T07:00:45-0600] --- aether ---
+[2026-05-07T07:00:45-0600]   Q1 OK
+[2026-05-07T07:00:45-0600]   Q2 FAIL: stale — last written 549768s ago (>28h)
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q2-aether-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q3 FAIL: stuck at W1/verify for 2+ days (failure_count=0)
+[2026-05-07T07:00:45-0600]   → Issue logged: q3-aether-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q4 FAIL: stage=verify but no research file at /Users/kai/Documents/Projects/Hyo/agents/aether/research/improvements/W1-2026-05-07.md
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q4-aether-2026-05-07 (P2)
+[2026-05-07T07:00:45-0600]   Q7 WARN: no daily-assess file for aether at /Users/kai/Documents/Projects/Hyo/agents/aether/ledger/daily-assess-2026-05-07.json — self-improve ran without 4AM grounding
+[2026-05-07T07:00:45-0600]   → Issue logged: q7-no-assess-aether-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q5 OK: failure_count=0 (cap=3)
+[2026-05-07T07:00:45-0600] --- ra ---
+[2026-05-07T07:00:45-0600]   Q1 OK
+[2026-05-07T07:00:45-0600]   Q2 FAIL: last_run empty — state never written
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q2-ra-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q3 FAIL: stuck at W1/research for 2+ days (failure_count=0)
+[2026-05-07T07:00:45-0600]   → Issue logged: q3-ra-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q4 OK (stage=research — research file will be written this cycle, absence expected)
+[2026-05-07T07:00:45-0600]   Q7 WARN: no daily-assess file for ra at /Users/kai/Documents/Projects/Hyo/agents/ra/ledger/daily-assess-2026-05-07.json — self-improve ran without 4AM grounding
+[2026-05-07T07:00:45-0600]   → Issue logged: q7-no-assess-ra-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q5 OK: failure_count=0 (cap=3)
+[2026-05-07T07:00:45-0600] --- dex ---
+[2026-05-07T07:00:45-0600]   Q1 OK
+[2026-05-07T07:00:45-0600]   Q2 FAIL: last_run empty — state never written
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q2-dex-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q3 FAIL: stuck at W1/research for 2+ days (failure_count=0)
+[2026-05-07T07:00:45-0600]   → Issue logged: q3-dex-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q4 OK (stage=research — research file will be written this cycle, absence expected)
+[2026-05-07T07:00:45-0600]   Q7 WARN: no daily-assess file for dex at /Users/kai/Documents/Projects/Hyo/agents/dex/ledger/daily-assess-2026-05-07.json — self-improve ran without 4AM grounding
+[2026-05-07T07:00:45-0600]   → Issue logged: q7-no-assess-dex-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q5 OK: failure_count=0 (cap=3)
+[2026-05-07T07:00:45-0600] --- kai ---
+[2026-05-07T07:00:45-0600]   Q1 OK
+[2026-05-07T07:00:45-0600]   Q2 FAIL: stale — last written 560333s ago (>28h)
+[2026-05-07T07:00:45-0600]   → Cannot re-trigger: /Users/kai/Documents/Projects/Hyo/bin/agent-self-improve.sh not found/not executable
+[2026-05-07T07:00:45-0600]   → Issue logged: q2-kai-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q3 FAIL: stuck at W1/research for 2+ days (failure_count=1)
+[2026-05-07T07:00:45-0600]   → Issue logged: q3-kai-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q4 OK (stage=research — research file will be written this cycle, absence expected)
+[2026-05-07T07:00:45-0600]   Q7 WARN: no daily-assess file for kai at /Users/kai/Documents/Projects/Hyo/agents/kai/ledger/daily-assess-2026-05-07.json — self-improve ran without 4AM grounding
+[2026-05-07T07:00:45-0600]   → Issue logged: q7-no-assess-kai-2026-05-07 (P1)
+[2026-05-07T07:00:45-0600]   Q5 OK: failure_count=1 (cap=3)
+[2026-05-07T07:00:45-0600] === Health check done: 11 passed | 20 unresolved | 0 auto-fixed ===
+[2026-05-07T07:00:45-0600] Summary written: /Users/kai/Documents/Projects/Hyo/kai/ledger/self-improve-health-2026-05-07.json
