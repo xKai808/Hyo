@@ -781,12 +781,12 @@
       if (btn) btn.textContent = t === 'light' ? '☾' : '☀';
     }
     function toggleTheme() {
-      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
       const next = cur === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('aurora-theme', next);
+      localStorage.setItem('hyo_theme', next);
       applyTheme(next);
     }
-    (function() { applyTheme(localStorage.getItem('aurora-theme') || 'dark'); })();
+    (function() { applyTheme(localStorage.getItem('hyo_theme') || 'light'); })();
   </script>
 </body>
 </html>
