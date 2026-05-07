@@ -227,7 +227,7 @@
   </div>
 
   <!-- theme toggle -->
-  <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☾</button>
+  <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme(); event.stopPropagation();" title="Toggle light/dark">☾</button>
 
   <script>
     function applyTheme(t) {
