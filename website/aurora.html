@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="bright">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,7 +32,7 @@
     }
 
     /* ── Light mode ── */
-    :root[data-theme="light"] {
+    :root[data-theme="bright"] {
       --bg:       #f8f4ee;
       --bg-deep:  #ede8df;
       --bg-card:  #ffffff;
@@ -47,7 +47,7 @@
       --ok:       #3a7a28;
       --err:      #b84030;
     }
-    :root[data-theme="light"] body::before {
+    :root[data-theme="bright"] body::before {
       background:
         radial-gradient(ellipse 80% 50% at 50% 0%, rgba(184,116,26,0.07), transparent 65%),
         radial-gradient(ellipse 60% 40% at 80% 20%, rgba(184,116,26,0.03), transparent 60%);
@@ -371,7 +371,7 @@
     <a href="/" class="logo">hyo</a>
     <div style="display:flex;align-items:center;gap:16px;">
       <span>&#9737; aurora &middot; beta</span>
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☀</button>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark">☾</button>
     </div>
   </div>
 
@@ -778,15 +778,15 @@
     function applyTheme(t) {
       document.documentElement.setAttribute('data-theme', t);
       const btn = document.getElementById('themeToggle');
-      if (btn) btn.textContent = t === 'light' ? '☾' : '☀';
+      if (btn) btn.textContent = t === 'bright' ? '☾' : '☀';
     }
     function toggleTheme() {
-      const cur = document.documentElement.getAttribute('data-theme') || 'light';
-      const next = cur === 'dark' ? 'light' : 'dark';
+      const cur = document.documentElement.getAttribute('data-theme') || 'bright';
+      const next = cur === 'dark' ? 'bright' : 'dark';
       localStorage.setItem('hyo_theme', next);
       applyTheme(next);
     }
-    (function() { applyTheme(localStorage.getItem('hyo_theme') || 'light'); })();
+    (function() { applyTheme(localStorage.getItem('hyo_theme') || 'bright'); })();
   </script>
 </body>
 </html>
