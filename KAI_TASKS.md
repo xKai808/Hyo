@@ -748,3 +748,15 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/fervent-jolly-euler/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:84b67d92:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/fervent-jolly-euler/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f507279a:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/gallant-serene-maxwell/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:9542689c] _(filed 2026-05-08)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/gallant-serene-maxwell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:771b9184] _(filed 2026-05-08)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/gallant-serene-maxwell/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:9542689c:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/cool-vigilant-allen/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:60ea2540] _(filed 2026-05-08)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/cool-vigilant-allen/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:84cb2ada] _(filed 2026-05-08)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/cool-vigilant-allen/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:60ea2540:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/cool-vigilant-allen/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:84cb2ada:escalated]
