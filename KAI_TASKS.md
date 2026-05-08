@@ -125,8 +125,8 @@ Format: `{"timestamp":"...","decision":"...","rationale":"...","type":"orchestra
 
 ## Scheduled sentinel run (2026-05-07 ~10:04 UTC, exciting-vigilant-maxwell sandbox) — Run #266
 
-- [ ] **[K]** **SENT-2026-05-07-001 (P0 → P1 reclassify candidate):** Sentinel run #266 re-flagged the chronic Aurora pair — `aurora-ran-today` (P0, missing `newsletters/2026-05-07.md`, hash `2af921d6`) and `scheduled-tasks-fired` (P1, no aurora-*.log in `agents/nel/logs/`, hash `1e58c2d8`). Both are sandbox-path-scoped re-flags of SENT-002's deferred decision (2026-04-21): Aurora is consolidated/dormant but two sentinel checks still scan for it. Decide one of (a) revive Aurora runner so the checks pass, or (b) retire `aurora-ran-today` + `scheduled-tasks-fired` and replace with a Ra-newsletter freshness proxy (`agents/ra/output/YYYY-MM-DD.html` mtime < 25h) which is the actual production newsletter path. Owner: Kai next interactive on Mini. Don't pile per-hash dupes into KAI_TASKS in the meantime — this single entry tracks the chronic; new hashes per sandbox session are noise until the underlying check is rewired.
-- [ ] **[K]** **SENT-2026-05-07-002 (P2):** `task-queue-size` day 61 escalated, **33 P0 tasks** vs threshold 5 (drifted up from 29 on 04-26/04-23). The "P0" count is inflated by stale sandbox-path-scoped sentinel entries from prior Cowork sessions (`[sentinel:...:escalated]` lines from Apr 17–18). Prune pass owed across 5+ briefs now. Action: dedupe sentinel-emitted P0s in this file by check-name-only (not by hash), close anything older than 14 days that has a matching newer entry.
+- [ ] **[K]** **SENT-2026-05-07-001 (P0 → P1 reclassify candidate):** Sentinel run #266 re-flagged the chronic Aurora pair — `aurora-ran-today` (P0, missing `newsletters/2026-05-07.md`, hash `2af921d6`) and `scheduled-tasks-fired` (P1, no aurora-*.log in `agents/nel/logs/`, hash `1e58c2d8`). Both are sandbox-path-scoped re-flags of SENT-002's deferred decision (2026-04-21): Aurora is consolidated/dormant but two sentinel checks still scan for it. Decide one of (a) revive Aurora runner so the checks pass, or (b) retire `aurora-ran-today` + `scheduled-tasks-fired` and replace with a Ra-newsletter freshness proxy (`agents/ra/output/YYYY-MM-DD.html` mtime < 25h) which is the actual production newsletter path. Owner: Kai next interactive on Mini. Don't pile per-hash dupes into KAI_TASKS in the meantime — this single entry tracks the chronic; new hashes per sandbox session are noise until the underlying check is rewired. **Re-flagged 2026-05-08 (run #287, fervent-jolly-euler sandbox)** — same chronic, no per-day dup added per this rule. Day-21 in current state file.
+- [ ] **[K]** **SENT-2026-05-07-002 (P2):** `task-queue-size` day 61 escalated, **33 P0 tasks** vs threshold 5 (drifted up from 29 on 04-26/04-23). **Updated 2026-05-08 run #287: now 35 P0 tasks (+2).** The "P0" count is inflated by stale sandbox-path-scoped sentinel entries from prior Cowork sessions (`[sentinel:...:escalated]` lines from Apr 17–18). Prune pass owed across 5+ briefs now. Action: dedupe sentinel-emitted P0s in this file by check-name-only (not by hash), close anything older than 14 days that has a matching newer entry.
 
 ## P1 — NEXT SESSION
 
@@ -734,3 +734,17 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/modest-gifted-wright/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:9fb9e24c] _(filed 2026-05-08)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/modest-gifted-wright/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:992a6d87:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/exciting-blissful-thompson/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:667acfdd] _(filed 2026-05-08)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/exciting-blissful-thompson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e6d4f031] _(filed 2026-05-08)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/exciting-blissful-thompson/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:667acfdd:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/exciting-blissful-thompson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e6d4f031:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/fervent-jolly-euler/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:84b67d92] _(filed 2026-05-08)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/fervent-jolly-euler/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f507279a] _(filed 2026-05-08)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/fervent-jolly-euler/mnt/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:84b67d92:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/fervent-jolly-euler/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f507279a:escalated]
