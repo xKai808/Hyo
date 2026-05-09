@@ -2,33 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-09T06:10:01Z",
-  "totalRuns": 298,
+  "lastRunAt": "2026-05-09T10:04:44Z",
+  "totalRuns": 301,
   "runHistory": [
-    {
-      "ts": "2026-05-07T10:09:57Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-07T14:09:44Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-05-07T14:09:48Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
     {
       "ts": "2026-05-07T14:09:58Z",
       "passed": 6,
@@ -244,6 +220,30 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-05-09T10:04:39Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 1,
+      "recurringIssues": 2,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-09T10:04:40Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-09T10:04:44Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -252,10 +252,10 @@
       "check_id": "scheduled-tasks-fired",
       "detail": "no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-18T06:14:01Z",
-      "lastSeen": "2026-05-08T22:13:13Z",
-      "daysFailing": 36,
+      "lastSeen": "2026-05-09T10:04:39Z",
+      "daysFailing": 37,
       "status": "resolved",
-      "resolvedAt": "2026-05-09T02:09:47Z"
+      "resolvedAt": "2026-05-09T10:04:40Z"
     },
     "task-queue-size:611f797a": {
       "severity": "P2",
@@ -552,8 +552,8 @@
       "check_id": "task-queue-size",
       "detail": "35 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-05-07T10:09:44Z",
-      "lastSeen": "2026-05-09T06:10:01Z",
-      "daysFailing": 32,
+      "lastSeen": "2026-05-09T10:04:44Z",
+      "daysFailing": 35,
       "status": "open"
     },
     "aurora-ran-today:14d0348f": {
@@ -763,7 +763,8 @@
       "firstSeen": "2026-05-09T06:09:57Z",
       "lastSeen": "2026-05-09T06:10:01Z",
       "daysFailing": 2,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-09T10:04:39Z"
     },
     "scheduled-tasks-fired:847ce12e": {
       "severity": "P1",
@@ -771,6 +772,35 @@
       "detail": "no aurora logs in /sessions/eloquent-elegant-turing/mnt/Hyo/agents/nel/logs",
       "firstSeen": "2026-05-09T06:09:57Z",
       "lastSeen": "2026-05-09T06:10:01Z",
+      "daysFailing": 2,
+      "status": "resolved",
+      "resolvedAt": "2026-05-09T10:04:39Z"
+    },
+    "aurora-ran-today:40d4c946": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-05-09.md",
+      "firstSeen": "2026-05-09T10:04:39Z",
+      "lastSeen": "2026-05-09T10:04:39Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-05-09T10:04:40Z"
+    },
+    "aurora-ran-today:3f1bdac7": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/confident-ecstatic-ptolemy/mnt/Hyo/newsletters/2026-05-09.md",
+      "firstSeen": "2026-05-09T10:04:40Z",
+      "lastSeen": "2026-05-09T10:04:44Z",
+      "daysFailing": 2,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:dc43cdcc": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/confident-ecstatic-ptolemy/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-09T10:04:40Z",
+      "lastSeen": "2026-05-09T10:04:44Z",
       "daysFailing": 2,
       "status": "open"
     }

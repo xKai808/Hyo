@@ -1,16 +1,16 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-09T07:49:32Z
+Last updated: 2026-05-09T13:49:53Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-09T07:49:32Z
+  - Delegated: 2026-05-09T13:49:53Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-09 — past 06:00 MT deadline
-  - Delegated: 2026-05-09T02:10:15Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-007) — scan entire codebase for similar patterns: Daily audit 2026-05-09: aether-002 systemic dead-loop UNRESOLVED 3d post-flag — newsletter pipeline still broken (no 2026-05-09 newsletter), verified-state.json 79h stale (kai-session-prep.sh not running on 15-min cadence per CLAUDE.md), all 5 agents in [GUIDANCE] loop, 53 failed queue items including 4 git-push attempts (commits may not be on origin). aether-002 itself stuck DELEGATED — auto-remediation cascade is not actually remediating; cascade dispatcher fires, agents ack DELEGATED, work never completes. ESCALATION: this is no longer an automation gap — needs Hyo decision on whether to (a) manually unblock pipeline, (b) tear down auto-remediate cascade and rebuild, or (c) audit why DELEGATED never transitions to COMPLETE.
+  - Delegated: 2026-05-09T08:05:32Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-09 — past 06:00 MT deadline
