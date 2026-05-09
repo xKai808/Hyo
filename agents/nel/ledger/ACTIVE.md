@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-09T01:49:08Z
+Last updated: 2026-05-09T07:49:32Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-09T01:49:08Z
+  - Delegated: 2026-05-09T07:49:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-005) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-08 — past 06:00 MT deadline
-  - Delegated: 2026-05-08T18:10:23Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-09 — past 06:00 MT deadline
+  - Delegated: 2026-05-09T02:10:15Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-08 — past 06:00 MT deadline
-  - Delegated: 2026-05-08T18:11:18Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-09 — past 06:00 MT deadline
+  - Delegated: 2026-05-09T02:11:34Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline

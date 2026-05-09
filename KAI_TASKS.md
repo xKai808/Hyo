@@ -762,3 +762,15 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/cool-vigilant-allen/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:84cb2ada:escalated]
 
 - [ ] **[K]** [sentinel] missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-05-08.md [sentinel:aurora-ran-today:54edd94a] _(filed 2026-05-08)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/dazzling-inspiring-noether/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:9fb39f7e] _(filed 2026-05-09)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/dazzling-inspiring-noether/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:95b18568] _(filed 2026-05-09)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/dazzling-inspiring-noether/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:9fb39f7e:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/dazzling-inspiring-noether/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:95b18568:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/eloquent-elegant-turing/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:8a676d4f] _(filed 2026-05-09)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/eloquent-elegant-turing/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:847ce12e] _(filed 2026-05-09)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/eloquent-elegant-turing/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:8a676d4f:escalated]
