@@ -781,3 +781,17 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-ecstatic-ptolemy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:dc43cdcc] _(filed 2026-05-09)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/confident-ecstatic-ptolemy/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:3f1bdac7:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/vibrant-nifty-carson/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:8ae45ed6] _(filed 2026-05-09)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/vibrant-nifty-carson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:39b1c31e] _(filed 2026-05-09)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/vibrant-nifty-carson/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:8ae45ed6:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/vibrant-nifty-carson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:39b1c31e:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/zen-sleepy-heisenberg/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:152f66bd] _(filed 2026-05-09)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/zen-sleepy-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:76430ebe] _(filed 2026-05-09)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/zen-sleepy-heisenberg/mnt/Hyo/newsletters/2026-05-09.md [sentinel:aurora-ran-today:152f66bd:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/zen-sleepy-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:76430ebe:escalated]
