@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-10T13:51:27Z
+Last updated: 2026-05-10T14:18:30Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-10T13:51:27Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-10 — past 06:00 MT deadline
+  - Delegated: 2026-05-10T13:51:31Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-10T13:45:26Z
+  - Delegated: 2026-05-10T14:15:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-10T13:51:27Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-10T14:15:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-10T13:45:26Z
+  - Delegated: 2026-05-10T14:15:31Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-10T13:45:26Z
+  - Delegated: 2026-05-10T14:15:31Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-10: dex no runner output today; PRIORITIES.md stale 18d for sam/ra/aether/dex; 4 stuck AUTO-REMEDIATE items >24h (aether-002 5d, sam-005 5d, ra-002/003 1d) — DELEGATED→complete transition still broken (root cause flagged in aether-002 not yet resolved). (flagged by kai)
-  - Delegated: 2026-05-10T09:59:56Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-10 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-05-10T14:15:31Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-008) — scan entire codebase for similar patterns: Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs.
