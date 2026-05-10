@@ -1,6 +1,6 @@
 # Aether Strategy Health Report
 **Generated:** 2026-05-10
-**Period:** None → None (7 sessions)
+**Period:** None → None (8 sessions)
 
 ## Overall Performance
 - Total net P&L: **$+0.00**

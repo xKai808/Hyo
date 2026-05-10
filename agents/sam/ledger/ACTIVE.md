@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-10T01:50:41Z
+Last updated: 2026-05-10T07:51:03Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-10T01:50:41Z
+  - Delegated: 2026-05-10T07:51:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-09 — past 06:00 MT deadline
-  - Delegated: 2026-05-09T22:10:18Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-10 — past 06:00 MT deadline
+  - Delegated: 2026-05-10T02:10:23Z
   - Status: DELEGATED
 
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-09 — past 06:00 MT deadline

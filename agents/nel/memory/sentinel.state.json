@@ -2,49 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-09T22:09:59Z",
-  "totalRuns": 310,
+  "lastRunAt": "2026-05-10T06:05:06Z",
+  "totalRuns": 315,
   "runHistory": [
-    {
-      "ts": "2026-05-08T06:09:44Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T10:02:31Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-05-08T10:02:43Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T10:02:56Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T10:04:33Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
     {
       "ts": "2026-05-08T10:04:40Z",
       "passed": 6,
@@ -244,6 +204,46 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T02:09:40Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-10T02:09:49Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T02:09:57Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T02:10:01Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T06:05:06Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 1,
+      "recurringIssues": 2,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -252,9 +252,9 @@
       "check_id": "scheduled-tasks-fired",
       "detail": "no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-18T06:14:01Z",
-      "lastSeen": "2026-05-09T10:04:39Z",
-      "daysFailing": 37,
-      "status": "resolved",
+      "lastSeen": "2026-05-10T06:05:06Z",
+      "daysFailing": 38,
+      "status": "open",
       "resolvedAt": "2026-05-09T10:04:40Z"
     },
     "task-queue-size:611f797a": {
@@ -552,8 +552,8 @@
       "check_id": "task-queue-size",
       "detail": "35 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-05-07T10:09:44Z",
-      "lastSeen": "2026-05-09T22:09:59Z",
-      "daysFailing": 44,
+      "lastSeen": "2026-05-10T06:05:06Z",
+      "daysFailing": 49,
       "status": "open"
     },
     "aurora-ran-today:14d0348f": {
@@ -853,7 +853,8 @@
       "firstSeen": "2026-05-09T22:09:46Z",
       "lastSeen": "2026-05-09T22:09:59Z",
       "daysFailing": 3,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T02:09:40Z"
     },
     "scheduled-tasks-fired:f598fe8f": {
       "severity": "P1",
@@ -862,6 +863,36 @@
       "firstSeen": "2026-05-09T22:09:46Z",
       "lastSeen": "2026-05-09T22:09:59Z",
       "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T02:09:40Z"
+    },
+    "aurora-ran-today:5068fd49": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/great-admiring-bell/mnt/Hyo/newsletters/2026-05-10.md",
+      "firstSeen": "2026-05-10T02:09:40Z",
+      "lastSeen": "2026-05-10T02:10:01Z",
+      "daysFailing": 4,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T06:05:06Z"
+    },
+    "scheduled-tasks-fired:81187b92": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/great-admiring-bell/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-10T02:09:40Z",
+      "lastSeen": "2026-05-10T02:10:01Z",
+      "daysFailing": 4,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T06:05:06Z"
+    },
+    "aurora-ran-today:eb7a6238": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-05-10.md",
+      "firstSeen": "2026-05-10T06:05:06Z",
+      "lastSeen": "2026-05-10T06:05:06Z",
+      "daysFailing": 1,
       "status": "open"
     }
   },
