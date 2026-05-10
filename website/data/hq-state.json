@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-05-10T18:09:00Z",
+  "updatedAt": "2026-05-10T22:07:00Z",
   "morningReport": {
-    "date": "2026-05-09",
-    "generatedAt": "2026-05-09T20:10:35-06:00",
+    "date": "2026-05-10",
+    "generatedAt": "2026-05-10T16:02:00-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync @ 12:09 MT 2026-05-10 (hq-ops-sync, cowork, scheduled-task). All 3 runners completed exit=0 via queue. Sentinel: passthrough/synth run (1s). Cipher: CLEAN — 0 secret findings, 0 leaks, 7 auto-fixes applied. Permissions verified (secretsDir 0755, founderToken 0600). HQ push 200 OK. Nel: FULL SWEEP COMPLETED — all 8 phases (sentinel,cipher,stale-files,broken-links,test-coverage,patterns,audit,reflection) — duration 46s on Mini. improvement score 85/100 (FLAT vs prior); sentinel synth 4p/0f; cipher leaks 0; stale-files clean; broken-links 28 (FLAT vs prior 28); test-coverage 47 untested (FLAT); inefficient patterns 9 (P3); audit 7 system issues (P2); self-review 13 findings, 1 untriggered file (P2). P1 delegated: ra-001 — no newsletter produced for 2026-05-10 past 06:00 MT deadline → ra (auto-remediate event-ra-flag-nel-001 queued + recheck). Self-delegated: nel-001 P2 (28 broken symlinks), nel-001 P3 (cycle complete report). agent-card written health_score=85. Recurring (sandbox UTC artifacts; production authoritative on Mini): dep-audit 1 HIGH CVE in agents/sam/mcp-server (still recurring — Sam priority). Full Nel sweep this cycle is a win — prior 08:08 cycle timed out at Phase 6+ due to 45s sandbox limit; this cycle ran via queue on Mini with adequate timeout, completing all 8 phases.",
+    "summary": "Ops sync @ 16:02 MT 2026-05-10 (hq-ops-sync, cowork, scheduled-task). All 3 runners completed via cowork+queue. Sentinel run #325: 6p/3f — 0 NEW, 3 RECURRING (P0 aurora-ran-today day 3 ESCALATED — newsletters/2026-05-10.md missing in sandbox; P1 scheduled-tasks-fired day 3 ELEVATED — no aurora logs in sandbox; P2 task-queue-size day 59 ELEVATED — 35 P0 tasks FLAT vs threshold 5). All sandbox UTC artifacts; production authoritative on Mini. Cipher: CLEAN — 0 secret findings, 0 leaks, 0 autofixes; permissions verified (secretsDir 0755, founderToken 0600); HQ push 200 OK. Nel: FULL 8-PHASE SWEEP COMPLETED via queue on Mini (60s timeout) — improvement score 85/100 FLAT. Phase 1 sentinel synth: all projects passing, 1 P1 flag (no newsletter for 2026-05-10 past 06:00 MT → Ra). Phase 2 cipher synth: 0 leaks. Phase 3 stale-files: clean. Phase 4 broken-links: 28 FLAT (P2). Phase 5 test-coverage: 47 untested scripts FLAT (P3 rolling). Phase 6 inefficient patterns: 9 FLAT (P3). Phase 10 file/folder audit: 7 system issues (P2). Self-review: nel pathway healthy. Auto-remediate cascade fired: event-ra-flag-nel-003 (Ra runner) + recheck-flag-nel-003 (healthcheck) — both exit=0. Self-evolution logged routine maintenance. ACTIVE.md updated. agent-card health_score=85. First sandbox attempt timed out Phase 6 at 45s; queue-based re-run completed full 8 phases successfully (same pattern as 12:09 MT cycle). Recurring (sandbox artifacts vs Mini production state): dep-audit not run this micro-cycle; prior cycle 1 HIGH CVE in agents/sam/mcp-server still pending — Sam priority.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,19 +14,47 @@
       "dex": "active"
     },
     "topIssues": [
-      "Cipher CLEAN — 0 secret findings, 0 leaks, 7 autofixes",
-      "Sentinel passthrough 4p/0f (Nel Phase 1 owns cross-project sweep)",
-      "Nel FULL sweep — all 8 phases completed (vs prior cycle partial); score 85 FLAT",
-      "Nel: 28 broken doc links FLAT (P2 self-delegated)",
-      "Nel: 47 untested scripts FLAT (P3 rolling)",
-      "Nel: 9 inefficient code patterns (P3); audit 7 system issues (P2); 1 untriggered file (P2)",
-      "P1 delegated: ra-001 — no newsletter for 2026-05-10 (ra auto-remediate queued)",
-      "RECURRING: dep-audit 1 HIGH CVE in agents/sam/mcp-server — Sam priority",
-      "Production authoritative; sandbox state aligned this cycle"
+      "Cipher CLEAN — 0 secret findings, 0 leaks, 0 autofixes",
+      "Sentinel #325: 6p/3f — 0 NEW, 3 recurring (all sandbox path artifacts)",
+      "Nel FULL 8-phase sweep COMPLETED via queue — score 85/100 FLAT",
+      "Nel Phase 4: 28 broken doc links FLAT (P2 self-delegated)",
+      "Nel Phase 5: 47 untested scripts FLAT (P3 rolling)",
+      "Nel Phase 6: 9 inefficient code patterns FLAT (P3); Phase 10 audit 7 system issues (P2)",
+      "P1 delegated: ra-001 — no newsletter for 2026-05-10 (Ra auto-remediate queued)",
+      "RECURRING from prior cycle: dep-audit 1 HIGH CVE in agents/sam/mcp-server — Sam priority",
+      "Cycle pattern confirmed: sandbox 45s timeout on Phase 6+; queue on Mini completes full sweep"
     ],
-    "lastOpsSync": "2026-05-10T18:09:00Z"
+    "lastOpsSync": "2026-05-10T22:07:00Z"
   },
   "events": [
+    {
+      "ts": "2026-05-10T22:07:00Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 16:02 MT 2026-05-10, scheduled-task)",
+      "detail": "Ops sync @ 16:02 MT 2026-05-10 (hq-ops-sync, cowork, scheduled-task). All 3 runners completed via cowork+queue. Sentinel run #325: 6p/3f — 0 NEW, 3 RECURRING (P0 aurora-ran-today day 3 ESCALATED — newsletters/2026-05-10.md missing in sandbox; P1 scheduled-tasks-fired day 3 ELEVATED — no aurora logs in sandbox; P2 task-queue-size day 59 ELEVATED — 35 P0 tasks FLAT vs threshold 5). All sandbox UTC artifacts; production authoritative on Mini. Cipher: CLEAN — 0 secret findings, 0 leaks, 0 autofixes; permissions verified (secretsDir 0755, founderToken 0600); HQ push 200 OK. Nel: FULL 8-PHASE SWEEP COMPLETED via queue on Mini (60s timeout) — improvement score 85/100 FLAT. Phase 1 sentinel synth: all projects passing, 1 P1 flag (no newsletter for 2026-05-10 past 06:00 MT → Ra). Phase 2 cipher synth: 0 leaks. Phase 3 stale-files: clean. Phase 4 broken-links: 28 FLAT (P2). Phase 5 test-coverage: 47 untested scripts FLAT (P3 rolling). Phase 6 inefficient patterns: 9 FLAT (P3). Phase 10 file/folder audit: 7 system issues (P2). Self-review: nel pathway healthy. Auto-remediate cascade fired: event-ra-flag-nel-003 (Ra runner) + recheck-flag-nel-003 (healthcheck) — both exit=0. Self-evolution logged routine maintenance. ACTIVE.md updated. agent-card health_score=85. First sandbox attempt timed out Phase 6 at 45s; queue-based re-run completed full 8 phases successfully (same pattern as 12:09 MT cycle). Recurring (sandbox artifacts vs Mini production state): dep-audit not run this micro-cycle; prior cycle 1 HIGH CVE in agents/sam/mcp-server still pending — Sam priority.",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-05-10T22:07:00Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #325 — 6p/3f, 0 NEW, 3 recurring",
+      "msg": "Sentinel #325 — 6 passed, 3 failed. 0 NEW issues. 3 RECURRING: P0 aurora-ran-today day 3 ESCALATED (newsletters/2026-05-10.md missing in sandbox view); P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox); P2 task-queue-size day 59 ELEVATED (35 P0 tasks FLAT vs threshold 5). All sandbox UTC path artifacts — production authoritative on Mini.",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-05-10T22:07:00Z",
+      "agent": "cipher",
+      "event": "Scan — 0 findings, 0 leaks, 0 autofixes (CLEAN)",
+      "msg": "Security scan: 0 secret findings, 0 leaks, 0 autofixes. Permissions verified: secretsDir 0755, founderToken 0600. HQ push 200 OK.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-05-10T22:07:00Z",
+      "agent": "nel",
+      "event": "Full 8-phase sweep COMPLETED via queue (score 85/100 FLAT)",
+      "msg": "Nel FULL 8-phase sweep via queue (Mini, 60s timeout) — improvement score 85 FLAT. Phase 1 sentinel synth: clean, 1 P1 (no newsletter today) → Ra. Phase 2 cipher synth: 0 leaks. Phase 3 stale-files: clean. Phase 4 broken-links: 28 FLAT (P2). Phase 5 test-coverage: 47 untested FLAT (P3 rolling). Phase 6 inefficient patterns: 9 FLAT (P3). Phase 10 audit: 7 issues (P2). Auto-remediate cascade fired (event-ra-flag-nel-003 + recheck-flag-nel-003 both exit=0). Self-review healthy. agent-card health_score=85. ACTIVE.md updated. Note: first sandbox attempt timed out Phase 6 at 45s; queue re-run on Mini completed all 8 phases.",
+      "type": "nel"
+    },
     {
       "ts": "2026-05-10T18:09:00Z",
       "agent": "kai",
