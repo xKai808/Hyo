@@ -1,46 +1,46 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-10T21:44:10Z
+Last updated: 2026-05-10T22:14:12Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-10 — past 06:00 MT deadline
-  - Delegated: 2026-05-10T19:51:57Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-10T22:06:48Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-10T21:31:37Z
+  - Delegated: 2026-05-10T22:06:48Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-10T21:31:37Z
+  - Delegated: 2026-05-10T22:06:48Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-10T21:31:37Z
+  - Delegated: 2026-05-10T22:06:48Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-10T21:31:37Z
+  - Delegated: 2026-05-10T22:06:49Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-10 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-05-10T21:31:38Z
+  - Delegated: 2026-05-10T22:06:49Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-008) — scan entire codebase for similar patterns: Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs.
-  - Delegated: 2026-05-10T08:07:20Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-10 — past 06:00 MT deadline
+  - Delegated: 2026-05-10T22:03:09Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-008): Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs.
-  - Delegated: 2026-05-10T08:07:20Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-10 — past 06:00 MT deadline
+  - Delegated: 2026-05-10T22:03:09Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs. (flagged by kai, cascade flag-kai-008)
-  - Delegated: 2026-05-10T08:07:20Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-10 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-05-10T22:03:09Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-009) — scan entire codebase for similar patterns: Daily audit 2026-05-10: scheduled task wraps daily-audit.sh without HYO_ROOT — Cowork sandbox $HOME=/sessions/awesome-wonderful-planck so audit looked at empty stub dir and produced 5 phantom FAIL/8 phantom GAP entries (audit fixed by re-running with HYO_ROOT=mount). FIX: add 'export HYO_ROOT=...' or 'cd $ROOT' guard at top of daily-audit.sh, or pin the SKILL.md task to set it.
