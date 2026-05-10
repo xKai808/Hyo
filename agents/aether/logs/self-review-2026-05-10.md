@@ -1,9 +1,9 @@
-# aether Self-Review — 2026-05-10T01:50
+# aether Self-Review — 2026-05-10T07:50
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-05-10-aether-results.json**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
-- ✗ **aether-agent-reflection-2026-05-10.json**: WHAT triggers this? Found 0 callers.
+- ✗ **sam-card.json**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check

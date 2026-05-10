@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-10T06:06:09Z",
+  "updatedAt": "2026-05-10T10:10:35Z",
   "morningReport": {
     "date": "2026-05-09",
     "generatedAt": "2026-05-09T20:10:35-06:00",
@@ -719,9 +719,9 @@
     "subscribers": []
   },
   "sentinel": {
-    "ts": "2026-05-10T02:10:35Z",
-    "event": "QA sweep run #314",
-    "summary": "QA sweep run #314 \u2014 6 passed, 3 failed. 0 NEW. 3 recurring (P0 day 4 / P1 day 4 / P2 day 48). 0 resolved. Sandbox path artifacts (production authoritative on Mini).",
+    "ts": "2026-05-10T10:10:35Z",
+    "event": "QA sweep run #318",
+    "summary": "QA sweep run #318 \u2014 6 passed, 3 failed. 0 NEW. 3 recurring (P0 aurora-ran-today day 2 escalated / P1 scheduled-tasks-fired day 2 / P2 task-queue-size day 52 elevated). 0 resolved this run. Sandbox path artifacts (production authoritative on Mini).",
     "type": "ops-sync",
     "passed": 6,
     "failed": 3,
@@ -730,7 +730,7 @@
     "resolved": 0
   },
   "cipher": {
-    "ts": "2026-05-10T02:10:35Z",
+    "ts": "2026-05-10T10:10:35Z",
     "event": "Scan \u2014 0 secret findings; dep-audit 1 HIGH CVE (recurring 3 cycles)",
     "summary": "Security scan clean for secrets \u2014 0 findings, 0 leaks, 0 autofixes. dep-audit: 3p/0w/1f \u2014 1 HIGH CVE in agents/sam/mcp-server (RECURRING \u2014 3 cycles unresolved, escalating to Sam priority). HQ push 200 OK.",
     "findings": 0,
@@ -755,25 +755,54 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-05-10T07:00:06Z",
-    "improvementScore": 85,
-    "findingsCount": 1,
+    "lastRun": "2026-05-10T10:10:35Z",
+    "improvementScore": 65,
+    "findingsCount": 2,
     "staleFiles": 0,
-    "brokenLinks": 29,
+    "brokenLinks": 28,
     "untested": 47,
     "inefficient": 9,
     "sentinel": {
-      "pass": 4,
-      "fail": 0
+      "pass": 2,
+      "fail": 2
     },
     "cipher": {
       "leaks": 0
     }
   },
   "ops_sync": {
-    "ts": "2026-05-10T02:10:35Z",
-    "event": "hq-ops-sync cycle complete (cowork, 20:10 MT 2026-05-09, scheduled-task)",
-    "summary": "Ops sync @ 20:10 MT 2026-05-09 (hq-ops-sync, cowork, scheduled-task). Sentinel run #314: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring (sandbox UTC artifacts; production authoritative on Mini): P0 aurora-ran-today day 4 ESCALATED (newsletters/2026-05-10.md \u2014 that file is tomorrow's date in MT); P1 scheduled-tasks-fired day 4 ELEVATED; P2 task-queue-size day 48 ELEVATED (35 P0 tasks FLAT vs threshold 5 \u2014 +4 days vs 16:11 cycle). Cipher CLEAN for secrets: 0 findings, 0 leaks, 0 autofixes (HQ push 200 OK). dep-audit: 3p/0w/1f \u2014 RECURRING HIGH CVE in agents/sam/mcp-server (now 3 cycles unresolved \u2014 escalate to Sam). Nel FULL run COMPLETED \u2014 all 6 phases captured. Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT). Stale files clean. Broken links 29 (FLAT). Untested scripts 47 (FLAT). Self-delegated this cycle: flag-nel-002 P2 (sentinel test failures in 2 projects), flag-nel-003 P1 + auto-cascade ra-002/sam-002/nel-002 (no newsletter for 2026-05-10 \u2014 sandbox UTC date artifact), flag-nel-004 P2 (29 broken doc links). All recurring sentinel findings remain sandbox path artifacts; production state authoritative on Mini. RECURRING THIS CYCLE: dep-audit FAIL on mcp-server HIGH CVE \u2014 3 cycles unresolved, needs Sam priority.",
-    "type": "ops-sync"
+    "ts": "2026-05-10T10:10:35Z",
+    "event": "hq-ops-sync cycle complete (cowork, 04:10 MT 2026-05-10, scheduled-task)",
+    "summary": "Ops sync @ 04:10 MT 2026-05-10 (hq-ops-sync, cowork, scheduled-task). Sentinel run #318: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring (sandbox UTC artifacts; production authoritative on Mini): P0 aurora-ran-today day 2 ESCALATED (newsletters/2026-05-10.md missing \u2014 sandbox-date artifact, MT-vs-UTC); P1 scheduled-tasks-fired day 2 (no aurora logs in agents/nel/logs); P2 task-queue-size day 52 ELEVATED (35 P0 tasks, threshold 5). Cipher clean: 0 secret leaks, 0 autofixes; dep-audit 3p/0w/1f \u2014 1 HIGH CVE in agents/sam/mcp-server (recurring 3 cycles, escalating to Sam priority). Nel run: improvement score 65/100 (regression 85\u219265, -20), sentinel 2p/2f across 4 projects (hyo + aether failing; aurora-ra + kai-ceo passing), 28 broken markdown link references, 47 untested scripts, 9 inefficient patterns, 5 audit issues (incl. 9 sensitive files outside .secrets/). Self-delegated: nel-002 P2 fix 28 broken links; nel-003 P3 cycle complete. TASK-20260510-nel-029 P2 emitted (health<70). HQ push 200 OK.",
+    "type": "ops-sync",
+    "source": "cowork-scheduled-task",
+    "sentinel": {
+      "passed": 6,
+      "failed": 3,
+      "new": 0,
+      "recurring": 3,
+      "resolved": 0,
+      "run": 318
+    },
+    "cipher": {
+      "leaks": 0,
+      "findings": 0,
+      "autofixes": 0,
+      "depAudit": {
+        "passed": 3,
+        "warnings": 0,
+        "failures": 1,
+        "highCves": 1
+      }
+    },
+    "nel": {
+      "improvementScore": 65,
+      "delta": -20,
+      "findings": 2,
+      "brokenLinks": 28,
+      "untested": 47,
+      "inefficient": 9,
+      "auditIssues": 5
+    }
   }
 }

@@ -2,33 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-10T06:05:06Z",
-  "totalRuns": 315,
+  "lastRunAt": "2026-05-10T10:08:43Z",
+  "totalRuns": 318,
   "runHistory": [
-    {
-      "ts": "2026-05-08T10:04:40Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T10:04:54Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T14:09:39Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
     {
       "ts": "2026-05-08T14:10:46Z",
       "passed": 6,
@@ -244,6 +220,30 @@
       "newIssues": 1,
       "recurringIssues": 2,
       "resolved": 2
+    },
+    {
+      "ts": "2026-05-10T10:04:46Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-10T10:08:40Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-10T10:08:43Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
     }
   ],
   "knownIssues": {
@@ -254,8 +254,8 @@
       "firstSeen": "2026-04-18T06:14:01Z",
       "lastSeen": "2026-05-10T06:05:06Z",
       "daysFailing": 38,
-      "status": "open",
-      "resolvedAt": "2026-05-09T10:04:40Z"
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T10:04:46Z"
     },
     "task-queue-size:611f797a": {
       "severity": "P2",
@@ -552,8 +552,8 @@
       "check_id": "task-queue-size",
       "detail": "35 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-05-07T10:09:44Z",
-      "lastSeen": "2026-05-10T06:05:06Z",
-      "daysFailing": 49,
+      "lastSeen": "2026-05-10T10:08:43Z",
+      "daysFailing": 52,
       "status": "open"
     },
     "aurora-ran-today:14d0348f": {
@@ -893,6 +893,45 @@
       "firstSeen": "2026-05-10T06:05:06Z",
       "lastSeen": "2026-05-10T06:05:06Z",
       "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T10:04:46Z"
+    },
+    "aurora-ran-today:1941d6ba": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/clever-determined-keller/mnt/Hyo/newsletters/2026-05-10.md",
+      "firstSeen": "2026-05-10T10:04:46Z",
+      "lastSeen": "2026-05-10T10:04:46Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T10:08:40Z"
+    },
+    "scheduled-tasks-fired:92186fce": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/clever-determined-keller/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-10T10:04:46Z",
+      "lastSeen": "2026-05-10T10:04:46Z",
+      "daysFailing": 1,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T10:08:40Z"
+    },
+    "aurora-ran-today:5252bfbc": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/optimistic-gracious-mccarthy/mnt/Hyo/newsletters/2026-05-10.md",
+      "firstSeen": "2026-05-10T10:08:40Z",
+      "lastSeen": "2026-05-10T10:08:43Z",
+      "daysFailing": 2,
+      "status": "open"
+    },
+    "scheduled-tasks-fired:0fe6a11e": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/optimistic-gracious-mccarthy/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-10T10:08:40Z",
+      "lastSeen": "2026-05-10T10:08:43Z",
+      "daysFailing": 2,
       "status": "open"
     }
   },

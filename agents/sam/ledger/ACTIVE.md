@@ -1,24 +1,24 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-10T07:51:03Z
+Last updated: 2026-05-10T13:51:27Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-10T07:51:03Z
+  - Delegated: 2026-05-10T13:51:27Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-10 — past 06:00 MT deadline
-  - Delegated: 2026-05-10T02:10:23Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-008): Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs.
+  - Delegated: 2026-05-10T08:07:20Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-09 — past 06:00 MT deadline
-  - Delegated: 2026-05-09T22:11:30Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-009): Daily audit 2026-05-10: scheduled task wraps daily-audit.sh without HYO_ROOT — Cowork sandbox $HOME=/sessions/awesome-wonderful-planck so audit looked at empty stub dir and produced 5 phantom FAIL/8 phantom GAP entries (audit fixed by re-running with HYO_ROOT=mount). FIX: add 'export HYO_ROOT=...' or 'cd $ROOT' guard at top of daily-audit.sh, or pin the SKILL.md task to set it.
+  - Delegated: 2026-05-10T08:07:30Z
   - Status: DELEGATED
 
-- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-015): No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Delegated: 2026-05-06T18:13:22Z
+- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-010): Daily audit 2026-05-10: dex no runner output today; PRIORITIES.md stale 18d for sam/ra/aether/dex; 4 stuck AUTO-REMEDIATE items >24h (aether-002 5d, sam-005 5d, ra-002/003 1d) — DELEGATED→complete transition still broken (root cause flagged in aether-002 not yet resolved).
+  - Delegated: 2026-05-10T08:07:30Z
   - Status: DELEGATED
 
 - **sam-005** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-01: Nel ledger has 13 queued flags from Apr 27-28 (3-4 days untouched). Backlog growing — Nel cycle not draining queue. Investigate why flag-nel-001..013 remain QUEUED with no DELEGATED transition. (flagged by kai, cascade flag-kai-003)
