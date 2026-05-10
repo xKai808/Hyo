@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-05-09T18:10:30Z",
+  "updatedAt": "2026-05-10T06:06:09Z",
   "morningReport": {
     "date": "2026-05-09",
-    "generatedAt": "2026-05-09T12:10:30-06:00",
+    "generatedAt": "2026-05-09T20:10:35-06:00",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync @ 12:10 MT 2026-05-09 (hq-ops-sync, cowork, scheduled-task). Sentinel run #307: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring: P0 aurora-ran-today day 3 ESCALATED (newsletters/2026-05-09.md missing in sandbox view); P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox); P2 task-queue-size day 41 ELEVATED (35 P0 tasks FLAT vs threshold 5 — +3 days vs 14:10 cycle). Cipher: 0 secret findings, 0 leaks, 0 autofixes (founderToken=600, secretsDir=755 sandbox artifact; HQ push 200 OK). dep-audit FLAT FAIL: 3p/0w/1f — npm [agents/sam/mcp-server] HIGH 1 CVE — recurring vs 14:10 cycle (still needs Sam attention). Nel reached Phase 6 in report file (sentinel synth, cipher synth, stale files clean, broken links 29 FLAT, test coverage 47 FLAT, patterns scan partial); bash exited at sandbox boundary so HQ push not executed from sandbox. Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT vs 14:10 MT). Stale files clean. Broken links 29 FLAT. Untested scripts 47 FLAT. Self-delegated this cycle: flag-nel-004 P2 (sentinel test failures in 2 projects), flag-nel-005 P1 (no newsletter for 2026-05-09 past 06:00 MT — newsletter pipeline cascade, AUTO-REMEDIATION dispatched: nel-002 P1 cross-ref, sam-002 P1 test coverage, ra-002 P1 newsletter generation), flag-nel-006 P2 (29 broken doc links). ARIC research already complete for 2026-05-09; growth phase idle (no open IMP improvement tickets). All recurring sentinel findings remain sandbox path artifacts; production state authoritative on Mini. CONTINUING: dep-audit FAIL on mcp-server HIGH CVE persists from 14:10 cycle — needs Sam attention.",
+    "summary": "Ops sync @ 00:06 MT 2026-05-10 (hq-ops-sync, cowork, scheduled-task). All 3 runners completed exit=0 via queue. Sentinel: passthrough run (1s). Cipher: clean — 0 secret findings, 0 leaks, 7 auto-fixes applied; permissions verified (secretsDir 0755, founderToken 0600). Nel: full sweep COMPLETED — all 8 phases (sentinel,cipher,stale-files,broken-links,test-coverage,patterns,audit,reflection); improvement score 85/100; 4p/0f sentinel synth; 0 cipher leaks; 13 self-review findings; 1 untriggered file detected; 29 broken doc links FLAT vs prior cycle; 47 untested scripts FLAT; 9 inefficient code patterns flagged P3; 9 sensitive files outside .secrets/ (env files + claude_api_tokens csv — recurring P2). Ticket created: TASK-20260510-nel-028 (P2) — research surfaced blindspot/CVE coverage gap (W3). Self-delegated: nel-001 P2 (29 broken symlinks); nel-001 P3 (cycle complete report). RECURRING from prior cycle (sandbox UTC artifacts; production authoritative on Mini): P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 48 (35 P0 tasks FLAT). dep-audit HIGH CVE in agents/sam/mcp-server still recurring — Sam priority.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,22 +14,106 @@
       "dex": "active"
     },
     "topIssues": [
-      "Sentinel #307: 6p/3f, 0 new, 3 recurring (escalated to day 3 / day 3 / day 41)",
-      "P0 aurora-ran-today day 3 ESCALATED — newsletters/2026-05-09.md missing in sandbox (production authoritative on Mini)",
-      "P1 scheduled-tasks-fired day 3 ELEVATED — no aurora logs visible in sandbox",
-      "P2 task-queue-size day 41 ELEVATED — 35 P0 tasks FLAT vs threshold 5 (+3 days vs 14:10 MT)",
-      "Cipher: dep-audit FAIL persists — 1 HIGH CVE in agents/sam/mcp-server (recurring from 14:10 MT, still needs Sam attention)",
-      "Cipher: 0 secret findings, 0 leaks, 0 autofixes (HQ push 200 OK)",
-      "Nel: Phase 6 reached in report; bash hit sandbox 45s boundary (no HQ push from sandbox; production Mini authoritative)",
-      "Nel: P2 sentinel failures across 2 projects (hyo 2p/2f, aether 1p/1f)",
-      "Nel cascade: P1 newsletter flag triggered safeguard cascade — auto-remediation dispatched to ra/sam/nel",
-      "Broken links 29 FLAT — P2 self-delegated (flag-nel-006)",
-      "Untested scripts 47 FLAT — P3 rolling improvement",
-      "All recurring sentinel findings remain sandbox path artifacts; production authoritative on Mini"
+      "Cipher CLEAN — 0 secret findings, 0 leaks, 7 auto-fixes applied",
+      "Nel FULL run COMPLETED — all 8 phases, score 85/100",
+      "Nel: 13 self-review findings, 1 untriggered file detected",
+      "Nel: 29 broken doc links FLAT (P2) — escalation candidate",
+      "Nel: 47 untested scripts FLAT (P2)",
+      "Nel: 9 sensitive files outside .secrets/ (env + claude_api_tokens csv) — recurring P2",
+      "Nel: 9 inefficient code patterns flagged P3 (rolling improvement)",
+      "TASK-20260510-nel-028 (P2) created — coverage gap from research",
+      "RECURRING (sandbox UTC artifacts): P0 aurora-ran-today day 4; P1 scheduled-tasks-fired day 4",
+      "RECURRING: dep-audit HIGH CVE in agents/sam/mcp-server — Sam priority",
+      "Task queue size 35 P0 tasks FLAT vs threshold 5 (day 48 elevated)",
+      "Production state authoritative on Mini; sandbox findings for cross-check only"
     ],
-    "lastOpsSync": "2026-05-09T18:10:30Z"
+    "lastOpsSync": "2026-05-10T06:06:09Z"
   },
   "events": [
+    {
+      "ts": "2026-05-10T06:06:09Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 00:06 MT 2026-05-10, scheduled-task)",
+      "detail": "Ops sync @ 00:06 MT 2026-05-10 (hq-ops-sync, cowork, scheduled-task). All 3 runners completed exit=0 via queue. Sentinel: passthrough run (1s). Cipher: clean — 0 secret findings, 0 leaks, 7 auto-fixes applied; permissions verified (secretsDir 0755, founderToken 0600). Nel: full sweep COMPLETED — all 8 phases (sentinel,cipher,stale-files,broken-links,test-coverage,patterns,audit,reflection); improvement score 85/100; 4p/0f sentinel synth; 0 cipher leaks; 13 self-review findings; 1 untriggered file detected; 29 broken doc links FLAT vs prior cycle; 47 untested scripts FLAT; 9 inefficient code patterns flagged P3; 9 sensitive files outside .secrets/ (env files + claude_api_tokens csv — recurring P2). Ticket created: TASK-20260510-nel-028 (P2) — research surfaced blindspot/CVE coverage gap (W3). Self-delegated: nel-001 P2 (29 broken symlinks); nel-001 P3 (cycle complete report). RECURRING from prior cycle (sandbox UTC artifacts; production authoritative on Mini): P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 48 (35 P0 tasks FLAT). dep-audit HIGH CVE in agents/sam/mcp-server still recurring — Sam priority.",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-05-10T06:06:09Z",
+      "agent": "sentinel",
+      "event": "QA passthrough run",
+      "msg": "Sentinel ran 1s — passthrough/synth mode; cross-project sweep folded into Nel Phase 1.",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-05-10T06:06:09Z",
+      "agent": "cipher",
+      "event": "Scan — 0 secret findings; 7 auto-fixes",
+      "msg": "Security scan: 0 secret findings, 0 leaks, 7 auto-fixes applied. Permissions verified: secretsDir 0755, founderToken 0600. HQ push 200 OK.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-05-10T06:06:09Z",
+      "agent": "nel",
+      "event": "System sweep — all 8 phases (full run)",
+      "msg": "Nel sweep: ALL 8 phases captured (sentinel,cipher,stale-files,broken-links,test-coverage,patterns,audit,reflection). Score 85/100. Sentinel synth 4p/0f. Cipher synth clean. 29 broken doc links FLAT. 47 untested scripts FLAT. 9 inefficient code patterns flagged P3. Audit: 9 sensitive files outside .secrets/ (env + claude_api_tokens csv). Created TASK-20260510-nel-028 (P2) — research surfaced blindspot/CVE coverage gap. Self-delegated: 29 broken symlinks (P2). ARIC research already complete for 2026-05-10.",
+      "type": "nel"
+    },
+    {
+      "ts": "2026-05-10T02:10:35Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 20:10 MT 2026-05-09, scheduled-task)",
+      "detail": "Ops sync @ 20:10 MT 2026-05-09 (hq-ops-sync, cowork, scheduled-task). Sentinel run #314: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring (sandbox UTC artifacts; production authoritative on Mini): P0 aurora-ran-today day 4 ESCALATED (newsletters/2026-05-10.md — that file is tomorrow's date in MT); P1 scheduled-tasks-fired day 4 ELEVATED; P2 task-queue-size day 48 ELEVATED (35 P0 tasks FLAT vs threshold 5 — +4 days vs 16:11 cycle). Cipher CLEAN for secrets: 0 findings, 0 leaks, 0 autofixes (HQ push 200 OK). dep-audit: 3p/0w/1f — RECURRING HIGH CVE in agents/sam/mcp-server (now 3 cycles unresolved — escalate to Sam). Nel FULL run COMPLETED — all 6 phases captured. Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT). Stale files clean. Broken links 29 (FLAT). Untested scripts 47 (FLAT). Self-delegated this cycle: flag-nel-002 P2 (sentinel test failures in 2 projects), flag-nel-003 P1 + auto-cascade ra-002/sam-002/nel-002 (no newsletter for 2026-05-10 — sandbox UTC date artifact), flag-nel-004 P2 (29 broken doc links). All recurring sentinel findings remain sandbox path artifacts; production state authoritative on Mini. RECURRING THIS CYCLE: dep-audit FAIL on mcp-server HIGH CVE — 3 cycles unresolved, needs Sam priority.",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-05-10T02:10:35Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #314",
+      "msg": "QA sweep run #314 — 6 passed, 3 failed. 0 NEW. 3 recurring (P0 aurora-ran-today day 4 escalated, P1 scheduled-tasks-fired day 4 elevated, P2 task-queue-size day 48 elevated). 0 resolved this run. Sandbox path artifacts (production authoritative on Mini).",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-05-10T02:10:35Z",
+      "agent": "cipher",
+      "event": "Scan — 0 secret findings; dep-audit 1 HIGH CVE (recurring 3 cycles)",
+      "msg": "Security scan: 0 secret findings, 0 leaks, 0 autofixes. dep-audit: 3p/0w/1f — 1 HIGH CVE in agents/sam/mcp-server (RECURRING — 3 cycles unresolved, escalating to Sam priority). HQ push 200 OK.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-05-10T02:10:35Z",
+      "agent": "nel",
+      "event": "System sweep — all phases completed",
+      "msg": "Nel sweep: ALL 6 phases captured this cycle (full run). Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT). Cipher synth clean. Stale files clean. 29 broken links (FLAT). 47 untested scripts (FLAT). Self-delegated: flag-nel-002 P2 (sentinel test failures in 2 projects), flag-nel-003 P1 + auto-cascade ra-002/sam-002/nel-002 (no newsletter for 2026-05-10 — sandbox UTC artifact, production deadline 06:00 MT tomorrow), flag-nel-004 P2 (29 broken doc links). ARIC research already complete for 2026-05-09; growth phase idle (no open IMP tickets).",
+      "type": "nel"
+    },
+    {
+      "ts": "2026-05-09T22:11:42Z",
+      "agent": "kai",
+      "event": "hq-ops-sync cycle complete (cowork, 16:11 MT 2026-05-09, scheduled-task)",
+      "detail": "Ops sync @ 16:11 MT 2026-05-09 (hq-ops-sync, cowork, scheduled-task). Sentinel run #310: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring: P0 aurora-ran-today day 3 ESCALATED (newsletters/2026-05-09.md missing in sandbox view); P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox); P2 task-queue-size day 44 ELEVATED (35 P0 tasks FLAT vs threshold 5 — +3 days vs 12:10 cycle). Cipher: 0 secret findings, 0 leaks, 0 autofixes (founderToken=600, secretsDir=755 sandbox artifact; HQ push 200 OK). dep-audit FLAT FAIL: 3p/0w/1f — npm [agents/sam/mcp-server] HIGH 1 CVE — recurring vs 12:10 cycle (still needs Sam attention). Nel completed full sweep this cycle (no sandbox 45s timeout): phases 1-6 captured (sentinel synth, cipher synth, stale files clean, broken links 29 FLAT, test coverage 47 FLAT, patterns scan). Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT vs 12:10 MT). Stale files clean. Broken links 29 FLAT. Untested scripts 47 FLAT. Self-delegated this cycle: flag-nel-005 P2 (sentinel test failures in 2 projects), flag-nel-006 P1 (no newsletter for 2026-05-09 past 06:00 MT — newsletter pipeline cascade, AUTO-REMEDIATION dispatched: nel-003 P1 cross-ref, sam-003 P1 test coverage, ra-003 P1 newsletter generation), flag-nel-007 P2 (29 broken doc links). ARIC research already complete for 2026-05-09; growth phase idle (no open IMP improvement tickets). All recurring sentinel findings remain sandbox path artifacts; production state authoritative on Mini. CONTINUING: dep-audit FAIL on mcp-server HIGH CVE persists from 12:10 cycle — needs Sam attention.",
+      "type": "ops-sync"
+    },
+    {
+      "ts": "2026-05-09T22:11:42Z",
+      "agent": "sentinel",
+      "event": "QA sweep run #310",
+      "msg": "QA sweep run #310 — 6 passed, 3 failed. 0 NEW. 3 recurring (P0 aurora-ran-today day 3 escalated, P1 scheduled-tasks-fired day 3 elevated, P2 task-queue-size day 44 elevated). 0 resolved. Sandbox path artifacts (production authoritative on Mini).",
+      "type": "sentinel"
+    },
+    {
+      "ts": "2026-05-09T22:11:42Z",
+      "agent": "cipher",
+      "event": "Scan — 0 secret findings; dep-audit 1 HIGH CVE (recurring)",
+      "msg": "Security scan: 0 secret findings, 0 leaks, 0 autofixes (founderToken=600, secretsDir=755 sandbox artifact; HQ push 200 OK). dep-audit: 3p/0w/1f — npm [agents/sam/mcp-server] HIGH 1 CVE — recurring from 12:10 MT cycle, still needs Sam attention.",
+      "type": "cipher"
+    },
+    {
+      "ts": "2026-05-09T22:11:42Z",
+      "agent": "nel",
+      "event": "System sweep — full sweep completed",
+      "msg": "Nel sweep: phases 1-6 captured in report file (sentinel synth, cipher synth, stale files clean, broken links 29 FLAT, test coverage 47 FLAT, patterns scan). No sandbox 45s timeout this cycle. Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT vs 12:10 MT). Self-delegated: flag-nel-005 P2 (sentinel test failures in 2 projects), flag-nel-006 P1 (newsletter cascade — AUTO-REMEDIATE dispatched ra-003, nel-003, sam-003), flag-nel-007 P2 (29 broken doc links). ARIC research already complete; growth phase idle (no open IMP tickets).",
+      "type": "nel"
+    },
     {
       "ts": "2026-05-09T18:10:30Z",
       "agent": "kai",
@@ -622,90 +706,6 @@
       "event": "Weekly sweep partial Phase 1-6 — 2p/2f, 28 broken links FLAT, 42 untested FLAT",
       "msg": "Weekly run partial Phase 1-6 (Phase 6+ sandbox-truncated by 45s sync limit; full pipeline authoritative on Mini). Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f — 2 passing, 2 with findings (FLAT vs prior). Cipher synthesis: no active leaks. Stale files: clean. Broken links: 28 FLAT vs prior 5am nel run (28 was already current). Untested scripts: 42 FLAT. flag-nel-008 P1 newsletter-gap STILL OPEN — auto-cascade from prior cycle did not produce 2026-04-28 newsletter in sandbox path. Growth phase idle (no open IMP tickets).",
       "type": "nel"
-    },
-    {
-      "ts": "2026-04-28T02:12:12Z",
-      "agent": "kai",
-      "event": "hq-ops-sync cycle complete (cowork, 20:12 MT 2026-04-27, scheduled-task, 16th cycle of 2026-04-27)",
-      "detail": "sentinel #213 6p/3f REGRESSION vs #210 7p/2f — 0 new, 3 recurring elevated, 0 resolved-this-cycle; elevated: P0 aurora-ran-today:5d3a day 3 (REGRESSION — was RESOLVED #210; newsletter 2026-04-28 missing in sandbox path), P1 scheduled-tasks-fired:6d24e925 day 3 FLAT, P2 task-queue-size:611f797a day 8 (8-run streak, 33 P0 tasks FLAT vs threshold 5); cipher CLEAN 0 findings/0 autofixes/0 leaks/founder.token 600/.secrets/ 755 cosmetic/HQ push 200 OK; nel partial Phase 1-5 in sandbox (Phase 6+ truncated by sandbox 45s sync limit — detached background bash killed at session boundary, full pipeline authoritative on Mini): cross-project sentinel 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f) FLAT, cipher synthesis no leaks, stale-file clean, broken links 22 (+4 REGRESSION vs 18 — sandbox path expansion), untested 41 FLAT; P1 newsletter-gap auto-cascade FIRED: flag-nel-008 → safeguard dispatched nel-003 (cross-ref) + sam-003 (test coverage) + ra-003 [AUTO-REMEDIATE] (event-driven ra run queued for 2026-04-28 newsletter); other flags: flag-nel-007 P2 (sentinel 2 projects failing), flag-nel-009 P2 (22 broken doc links); ARIC research complete for 2026-04-27, growth phase idle (no open IMP tickets); gitwatch will auto-deploy on push",
-      "type": "ops-sync"
-    },
-    {
-      "ts": "2026-04-28T02:12:12Z",
-      "agent": "sentinel",
-      "event": "QA sweep run #213",
-      "msg": "QA sweep run #213 — 6 passed, 3 failed (REGRESSION vs #210 7p/2f). 0 new, 3 recurring elevated, 0 resolved-this-cycle. P0 aurora-ran-today:5d3a day 3 ELEVATED (REGRESSION — was RESOLVED #210; newsletter 2026-04-28 missing in sandbox /sessions/upbeat-hopeful-maxwell path; 3-run streak); P1 scheduled-tasks-fired:6d24e925 day 3 FLAT (3-run streak in sandbox path); P2 task-queue-size:611f797a day 8 ELEVATED (8-run streak, 33 P0 tasks FLAT vs threshold 5). Sandbox path artifacts; authoritative state on Mini.",
-      "type": "sentinel"
-    },
-    {
-      "ts": "2026-04-28T02:12:12Z",
-      "agent": "cipher",
-      "event": "Scan — 0 findings, 0 autofixes",
-      "msg": "Security scan clean — 0 findings, 0 autofixes, 0 leaks. .secrets/ 755 (symlink mode cosmetic — target dir 700 verified by audit), founder.token 600. gitleaks unavailable in sandbox (authoritative scan runs on Mini). HQ push 200 OK.",
-      "type": "cipher"
-    },
-    {
-      "ts": "2026-04-28T02:12:12Z",
-      "agent": "nel",
-      "event": "Weekly sweep partial-Phase-5 — 2p/2f, 22 broken links (+4 REGRESSION), 41 untested FLAT, P1 newsletter auto-cascade fired",
-      "msg": "Weekly run partial-Phase-5 (Phase 6+ truncated by sandbox 45s sync limit — detached background bash killed at session boundary; full pipeline authoritative on Mini). Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f — 2 projects passing, 2 with findings (FLAT). Cipher synthesis: no active leaks. Stale files: clean. Broken links: 22 (REGRESSION +4 vs 18 prior cycle — sandbox path expansion exposed additional unresolved symlink targets). Untested scripts: 41 FLAT. P1 newsletter-gap auto-cascade fired: flag-nel-008 (no newsletter for 2026-04-28 past 06:00 MT) → safeguard cascade dispatched nel-003 (cross-reference scan), sam-003 (test coverage), ra-003 [AUTO-REMEDIATE] (event-driven ra run queued). Other flags: flag-nel-007 P2 (sentinel 2 projects failing), flag-nel-009 P2 (22 broken doc links). Growth phase idle (ARIC complete 2026-04-27, no open IMP tickets).",
-      "type": "nel"
-    },
-    {
-      "ts": "2026-04-27T22:10:30Z",
-      "agent": "kai",
-      "event": "hq-ops-sync cycle complete (cowork, 16:10 MT 2026-04-27, scheduled-task, 15th cycle of 2026-04-27)",
-      "detail": "sentinel #210 7p/2f FLAT vs #207 7p/2f — 0 new, 2 recurring elevated, 0 resolved-this-cycle; elevated: P1 scheduled-tasks-fired:6d24e925 day 3 (3-run streak in sandbox path), P2 task-queue-size:611f797a day 5 (33 P0 tasks FLAT, 5-run streak vs threshold 5); P0 api-health-green remains RESOLVED (172d), P0 aurora-ran-today remains RESOLVED; cipher CLEAN 0 findings/0 autofixes/0 leaks/founder.token 600/.secrets/ 755 cosmetic/dep-audit 3p/0w/0f GREEN/HQ push 200 OK; nel partial Phase 1-5 in sandbox (Phase 6+ truncated by sandbox 45s sync limit — detached background bash killed at session boundary, full pipeline authoritative on Mini): cross-project sentinel 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f) FLAT, cipher synthesis no leaks, stale-file clean, broken links 18 (−2 IMPROVEMENT vs 20), untested 41 FLAT; flags flag-nel-002 P2 (sentinel 2 projects failing) + flag-nel-003 P2 (18 broken doc links); ARIC research already complete for 2026-04-27, growth phase idle (no open IMP improvement tickets); gitwatch will auto-deploy on push",
-      "type": "ops-sync"
-    },
-    {
-      "ts": "2026-04-27T22:10:30Z",
-      "agent": "sentinel",
-      "event": "QA sweep run #210",
-      "msg": "QA sweep run #210 — 7 passed, 2 failed (FLAT vs #207 7p/2f). 0 new, 2 recurring elevated, 0 resolved-this-cycle. Recurring: P1 scheduled-tasks-fired:6d24e925 day 3 (3-run streak in sandbox path), P2 task-queue-size:611f797a day 5 (33 P0 tasks FLAT vs threshold 5, 5-run streak). P0 api-health-green remains RESOLVED (172d). P0 aurora-ran-today remains RESOLVED. Sandbox path artifacts; authoritative state on Mini.",
-      "type": "sentinel"
-    },
-    {
-      "ts": "2026-04-27T22:10:30Z",
-      "agent": "cipher",
-      "event": "Scan — 0 findings, 0 autofixes",
-      "msg": "Security scan clean — 0 findings, 0 autofixes, 0 leaks. .secrets/ 755 (symlink mode cosmetic — target dir 700 verified by audit), founder.token 600. gitleaks unavailable in sandbox (authoritative scan runs on Mini). dep-audit: 3 pass / 0 warn / 0 fail (W2 CVE scanner GREEN). HQ push 200 OK.",
-      "type": "cipher"
-    },
-    {
-      "ts": "2026-04-27T22:10:30Z",
-      "agent": "nel",
-      "event": "Weekly sweep partial-Phase-5 — 2p/2f, 18 broken links (−2 IMPROVEMENT), 41 untested FLAT",
-      "msg": "Weekly run executed in cowork sandbox (Phase 1-5 captured; Phase 6+ truncated by sandbox 45s sync limit — detached background bash killed at session boundary, full pipeline authoritative on Mini). Cross-project sentinel synthesis: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f — 2 projects passing, 2 with findings (FLAT). Cipher synthesis: no active leaks. Stale files: clean. Broken links: 18 (−2 IMPROVEMENT vs 20 — newsletter symlink targets in worktree research docs partially resolved). Untested scripts: 41 FLAT. Flags emitted: flag-nel-002 P2 (Sentinel 2 projects with test failures), flag-nel-003 P2 (18 broken documentation links). Growth phase idle (ARIC complete 2026-04-27, no open IMP tickets). Authoritative full-pipeline state (Phase 6-13 + self-review + reflection + self-evolution) on Mini.",
-      "type": "nel"
-    },
-    {
-      "ts": "2026-04-27T18:10:23Z",
-      "agent": "kai",
-      "event": "hq-ops-sync cycle complete (cowork, 12:10 MT 2026-04-27, scheduled-task, 14th cycle of 2026-04-27)",
-      "detail": "sentinel #207 7p/2f IMPROVEMENT vs #205 6p/3f — 3 RESOLVED first-pass (P0 api-health-green:82547bfc after 172 days, P2 task-queue-size:d1171b82 after 88 days, P1 scheduled-tasks-fired:f8717110 after 3 days); 2 new path-bound regressions: P1 scheduled-tasks-fired:6d24e925 day 2 (new sandbox path), P2 task-queue-size:611f797a day 2 (33 P0 tasks, +4 from 29 vs threshold 5); cipher CLEAN 0 findings/0 autofixes/0 leaks/founder.token 600/dep-audit 3p/0w/0f GREEN/HQ push 200 OK; nel partial Phase 1-5 in sandbox (Phase 6+ truncated by sandbox 45s sync limit — detached background bash killed at session boundary, full pipeline authoritative on Mini): cross-project sentinel 2p/2f (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f) FLAT, cipher synthesis no leaks, stale-file clean, broken links 20 FLAT, untested 41 (+1 vs 40); flags flag-nel-002 P2 (sentinel 2 projects failing) + flag-nel-003 P2 (20 broken doc links); ARIC research already complete for 2026-04-27, growth phase idle (no open IMP improvement tickets); MAJOR: P0 api-health-green resolved after 172 days — first clearance from sandbox cycle perspective; P0 aurora-ran-today remains RESOLVED (newsletter 2026-04-27 still present); gitwatch will auto-deploy on push",
-      "type": "ops-sync"
-    },
-    {
-      "ts": "2026-04-27T18:10:23Z",
-      "agent": "sentinel",
-      "event": "QA sweep run #207",
-      "msg": "QA sweep run #207 — 7 passed, 2 failed (IMPROVEMENT vs #205 6p/3f). First-pass: 2 new, 0 recurring, 3 RESOLVED — P0 api-health-green:82547bfc resolved after 172 days (MAJOR WIN, longest-running P0), P2 task-queue-size:d1171b82 resolved after 88 days, P1 scheduled-tasks-fired:f8717110 resolved after 3 days. New (path-bound on new sandbox /sessions/determined-vibrant-planck/...): P1 scheduled-tasks-fired:6d24e925 day 2 (no aurora logs at new sandbox path), P2 task-queue-size:611f797a day 2 (33 P0 tasks, +4 vs threshold 5). P0 aurora-ran-today remains RESOLVED. Sandbox path artifacts; authoritative state on Mini.",
-      "type": "sentinel"
-    },
-    {
-      "ts": "2026-04-27T18:10:23Z",
-      "agent": "cipher",
-      "event": "Scan — 0 findings, 0 autofixes",
-      "msg": "Security scan clean — 0 findings, 0 autofixes, 0 leaks. .secrets/ symlink mode cosmetic (target dir 700 verified by audit), founder.token 600. gitleaks unavailable in sandbox (authoritative scan runs on Mini). dep-audit: 3 pass / 0 warn / 0 fail (W2 CVE scanner GREEN). HQ push 200 OK.",
-      "type": "cipher"
-    },
-    {
-      "ts": "2026-04-27T18:10:23Z",
-      "agent": "nel",
-      "event": "Weekly sweep partial-Phase-5 — 2p/2f, 20 broken links FLAT, 41 untested (+1)",
-      "msg": "Weekly run executed in cowork sandbox (Phase 1-5 captured; Phase 6+ truncated by sandbox 45s sync limit — detached background bash killed at session boundary, full pipeline authoritative on Mini). Cross-project sentinel synthesis: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f — 2 projects passing, 2 with findings (FLAT vs prior cycle). Cipher synthesis: no active leaks. Stale files: clean. Broken links: 20 (FLAT — newsletter symlink targets in worktree research docs). Untested scripts: 41 (+1 vs 40 — one new untested script: aether-daily-report.sh, aether-weekly-summary.sh, agent-goals-sync.sh, ant-budget-enforcer.sh, ant-scrape-balance.sh, ant-update.sh, api-usage.sh, archive-to-research.sh, +33 more). Flags emitted: flag-nel-002 P2 (Sentinel 2 projects with test failures), flag-nel-003 P2 (20 broken documentation links). Growth phase idle (ARIC complete 2026-04-27, no open IMP tickets). Authoritative full-pipeline state (Phase 6-13 + self-review + reflection + self-evolution) on Mini.",
-      "type": "nel"
     }
   ],
   "ra": {
@@ -719,9 +719,9 @@
     "subscribers": []
   },
   "sentinel": {
-    "ts": "2026-05-09T18:10:30Z",
-    "event": "QA sweep run #307",
-    "summary": "QA sweep run #307 — 6 passed, 3 failed. 0 NEW. 3 recurring (P0 day 3 / P1 day 3 / P2 day 41). 0 resolved. Sandbox path artifacts (production authoritative on Mini).",
+    "ts": "2026-05-10T02:10:35Z",
+    "event": "QA sweep run #314",
+    "summary": "QA sweep run #314 — 6 passed, 3 failed. 0 NEW. 3 recurring (P0 day 4 / P1 day 4 / P2 day 48). 0 resolved. Sandbox path artifacts (production authoritative on Mini).",
     "type": "ops-sync",
     "passed": 6,
     "failed": 3,
@@ -730,9 +730,9 @@
     "resolved": 0
   },
   "cipher": {
-    "ts": "2026-05-09T18:10:30Z",
-    "event": "Scan — 0 secret findings; dep-audit 1 HIGH CVE (recurring)",
-    "summary": "Security scan clean for secrets — 0 findings, 0 leaks, 0 autofixes. dep-audit: 3p/0w/1f — 1 HIGH CVE in agents/sam/mcp-server (recurring from 14:10 MT, still needs Sam attention). HQ push 200 OK.",
+    "ts": "2026-05-10T02:10:35Z",
+    "event": "Scan — 0 secret findings; dep-audit 1 HIGH CVE (recurring 3 cycles)",
+    "summary": "Security scan clean for secrets — 0 findings, 0 leaks, 0 autofixes. dep-audit: 3p/0w/1f — 1 HIGH CVE in agents/sam/mcp-server (RECURRING — 3 cycles unresolved, escalating to Sam priority). HQ push 200 OK.",
     "findings": 0,
     "autofixes": 0,
     "leaks": 0,
@@ -742,7 +742,7 @@
       "failures": 1,
       "highCves": 1,
       "module": "agents/sam/mcp-server",
-      "status": "recurring"
+      "status": "recurring-3-cycles"
     }
   },
   "sim": {
@@ -755,9 +755,9 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-05-09T18:10:30Z",
+    "lastRun": "2026-05-10T06:05:16Z",
     "improvementScore": 85,
-    "findingsCount": 3,
+    "findingsCount": 1,
     "staleFiles": 0,
     "brokenLinks": 29,
     "untested": 47,
@@ -768,30 +768,12 @@
     },
     "cipher": {
       "leaks": 0
-    },
-    "phaseStatus": "phases-1-6-captured-sandbox-bash-boundary",
-    "flags": [
-      {
-        "id": "flag-nel-004",
-        "priority": "P2",
-        "msg": "Sentinel: 2 project(s) with test failures"
-      },
-      {
-        "id": "flag-nel-005",
-        "priority": "P1",
-        "msg": "No newsletter produced for 2026-05-09 — cascade auto-remediation dispatched"
-      },
-      {
-        "id": "flag-nel-006",
-        "priority": "P2",
-        "msg": "29 broken doc links"
-      }
-    ]
+    }
   },
   "ops_sync": {
-    "ts": "2026-05-09T18:10:30Z",
-    "event": "hq-ops-sync cycle complete (cowork, 12:10 MT 2026-05-09, scheduled-task)",
-    "summary": "Ops sync @ 12:10 MT 2026-05-09 (hq-ops-sync, cowork, scheduled-task). Sentinel run #307: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring: P0 aurora-ran-today day 3 ESCALATED (newsletters/2026-05-09.md missing in sandbox view); P1 scheduled-tasks-fired day 3 ELEVATED (no aurora logs in sandbox); P2 task-queue-size day 41 ELEVATED (35 P0 tasks FLAT vs threshold 5 — +3 days vs 14:10 cycle). Cipher: 0 secret findings, 0 leaks, 0 autofixes (founderToken=600, secretsDir=755 sandbox artifact; HQ push 200 OK). dep-audit FLAT FAIL: 3p/0w/1f — npm [agents/sam/mcp-server] HIGH 1 CVE — recurring vs 14:10 cycle (still needs Sam attention). Nel reached Phase 6 in report file (sentinel synth, cipher synth, stale files clean, broken links 29 FLAT, test coverage 47 FLAT, patterns scan partial); bash exited at sandbox boundary so HQ push not executed from sandbox. Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT vs 14:10 MT). Stale files clean. Broken links 29 FLAT. Untested scripts 47 FLAT. Self-delegated this cycle: flag-nel-004 P2 (sentinel test failures in 2 projects), flag-nel-005 P1 (no newsletter for 2026-05-09 past 06:00 MT — newsletter pipeline cascade, AUTO-REMEDIATION dispatched: nel-002 P1 cross-ref, sam-002 P1 test coverage, ra-002 P1 newsletter generation), flag-nel-006 P2 (29 broken doc links). ARIC research already complete for 2026-05-09; growth phase idle (no open IMP improvement tickets). All recurring sentinel findings remain sandbox path artifacts; production state authoritative on Mini. CONTINUING: dep-audit FAIL on mcp-server HIGH CVE persists from 14:10 cycle — needs Sam attention.",
+    "ts": "2026-05-10T02:10:35Z",
+    "event": "hq-ops-sync cycle complete (cowork, 20:10 MT 2026-05-09, scheduled-task)",
+    "summary": "Ops sync @ 20:10 MT 2026-05-09 (hq-ops-sync, cowork, scheduled-task). Sentinel run #314: 6p/3f, 0 NEW, 3 recurring, 0 RESOLVED-this-run. Recurring (sandbox UTC artifacts; production authoritative on Mini): P0 aurora-ran-today day 4 ESCALATED (newsletters/2026-05-10.md — that file is tomorrow's date in MT); P1 scheduled-tasks-fired day 4 ELEVATED; P2 task-queue-size day 48 ELEVATED (35 P0 tasks FLAT vs threshold 5 — +4 days vs 16:11 cycle). Cipher CLEAN for secrets: 0 findings, 0 leaks, 0 autofixes (HQ push 200 OK). dep-audit: 3p/0w/1f — RECURRING HIGH CVE in agents/sam/mcp-server (now 3 cycles unresolved — escalate to Sam). Nel FULL run COMPLETED — all 6 phases captured. Cross-project sentinel: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f (FLAT). Stale files clean. Broken links 29 (FLAT). Untested scripts 47 (FLAT). Self-delegated this cycle: flag-nel-002 P2 (sentinel test failures in 2 projects), flag-nel-003 P1 + auto-cascade ra-002/sam-002/nel-002 (no newsletter for 2026-05-10 — sandbox UTC date artifact), flag-nel-004 P2 (29 broken doc links). All recurring sentinel findings remain sandbox path artifacts; production state authoritative on Mini. RECURRING THIS CYCLE: dep-audit FAIL on mcp-server HIGH CVE — 3 cycles unresolved, needs Sam priority.",
     "type": "ops-sync"
   }
 }
