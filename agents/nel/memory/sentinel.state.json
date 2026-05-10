@@ -2,41 +2,9 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "sentinel.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-05-10T10:08:43Z",
-  "totalRuns": 318,
+  "lastRunAt": "2026-05-10T18:07:23Z",
+  "totalRuns": 322,
   "runHistory": [
-    {
-      "ts": "2026-05-08T14:10:46Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T18:09:44Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 2,
-      "recurringIssues": 1,
-      "resolved": 2
-    },
-    {
-      "ts": "2026-05-08T18:09:48Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
-    {
-      "ts": "2026-05-08T18:09:57Z",
-      "passed": 6,
-      "failed": 3,
-      "newIssues": 0,
-      "recurringIssues": 3,
-      "resolved": 0
-    },
     {
       "ts": "2026-05-08T22:13:13Z",
       "passed": 6,
@@ -244,6 +212,38 @@
       "newIssues": 0,
       "recurringIssues": 3,
       "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T14:02:43Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 2,
+      "recurringIssues": 1,
+      "resolved": 2
+    },
+    {
+      "ts": "2026-05-10T14:02:47Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T14:02:50Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 0
+    },
+    {
+      "ts": "2026-05-10T18:07:23Z",
+      "passed": 6,
+      "failed": 3,
+      "newIssues": 0,
+      "recurringIssues": 3,
+      "resolved": 2
     }
   ],
   "knownIssues": {
@@ -252,9 +252,9 @@
       "check_id": "scheduled-tasks-fired",
       "detail": "no aurora logs in /Users/kai/Documents/Projects/Hyo/agents/nel/logs",
       "firstSeen": "2026-04-18T06:14:01Z",
-      "lastSeen": "2026-05-10T06:05:06Z",
-      "daysFailing": 38,
-      "status": "resolved",
+      "lastSeen": "2026-05-10T18:07:23Z",
+      "daysFailing": 39,
+      "status": "open",
       "resolvedAt": "2026-05-10T10:04:46Z"
     },
     "task-queue-size:611f797a": {
@@ -552,8 +552,8 @@
       "check_id": "task-queue-size",
       "detail": "35 P0 tasks (overload threshold 5)",
       "firstSeen": "2026-05-07T10:09:44Z",
-      "lastSeen": "2026-05-10T10:08:43Z",
-      "daysFailing": 52,
+      "lastSeen": "2026-05-10T18:07:23Z",
+      "daysFailing": 56,
       "status": "open"
     },
     "aurora-ran-today:14d0348f": {
@@ -891,9 +891,9 @@
       "check_id": "aurora-ran-today",
       "detail": "missing or empty /Users/kai/Documents/Projects/Hyo/newsletters/2026-05-10.md",
       "firstSeen": "2026-05-10T06:05:06Z",
-      "lastSeen": "2026-05-10T06:05:06Z",
-      "daysFailing": 1,
-      "status": "resolved",
+      "lastSeen": "2026-05-10T18:07:23Z",
+      "daysFailing": 2,
+      "status": "open",
       "resolvedAt": "2026-05-10T10:04:46Z"
     },
     "aurora-ran-today:1941d6ba": {
@@ -923,7 +923,8 @@
       "firstSeen": "2026-05-10T10:08:40Z",
       "lastSeen": "2026-05-10T10:08:43Z",
       "daysFailing": 2,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T14:02:43Z"
     },
     "scheduled-tasks-fired:0fe6a11e": {
       "severity": "P1",
@@ -932,7 +933,28 @@
       "firstSeen": "2026-05-10T10:08:40Z",
       "lastSeen": "2026-05-10T10:08:43Z",
       "daysFailing": 2,
-      "status": "open"
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T14:02:43Z"
+    },
+    "aurora-ran-today:1ced4a59": {
+      "severity": "P0",
+      "check_id": "aurora-ran-today",
+      "detail": "missing or empty /sessions/gracious-gallant-carson/mnt/Hyo/newsletters/2026-05-10.md",
+      "firstSeen": "2026-05-10T14:02:43Z",
+      "lastSeen": "2026-05-10T14:02:50Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T18:07:23Z"
+    },
+    "scheduled-tasks-fired:afa78224": {
+      "severity": "P1",
+      "check_id": "scheduled-tasks-fired",
+      "detail": "no aurora logs in /sessions/gracious-gallant-carson/mnt/Hyo/agents/nel/logs",
+      "firstSeen": "2026-05-10T14:02:43Z",
+      "lastSeen": "2026-05-10T14:02:50Z",
+      "daysFailing": 3,
+      "status": "resolved",
+      "resolvedAt": "2026-05-10T18:07:23Z"
     }
   },
   "falsePositives": [],

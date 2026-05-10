@@ -1,23 +1,18 @@
 {
-  "ts": "2026-05-10T13:45:25Z",
+  "ts": "2026-05-10T19:46:19Z",
   "status": "ISSUES",
-  "issues": 4,
-  "warnings": 4,
+  "issues": 5,
+  "warnings": 2,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "1 unaddressed P0/P1 flags in last 2h"
+    },
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "dex has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "ra has no output today"
     },
     {
       "severity": "P2",
@@ -45,36 +40,36 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1778420609-78594",
+      "id": "cmd-1778442376-31027",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605100742",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101345",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778420464-77559",
+      "id": "cmd-1778442233-29928",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605100739",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101342",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778420333-75790",
+      "id": "cmd-1778442089-28930",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605100737",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101340",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778420286-75137",
+      "id": "cmd-1778441959-27169",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605100736",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101338",
       "exit_code": 0
     },
     {
-      "id": "fd65b82e-413d-4cf4-a3f6-5857e3b867cd",
+      "id": "cmd-1778441907-26572",
       "status": "ok",
-      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
+      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101337",
       "exit_code": 0
     }
   ],
