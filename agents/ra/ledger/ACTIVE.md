@@ -1,16 +1,16 @@
 # Ra Active Tasks
 
-Last updated: 2026-05-10T19:46:20Z
+Last updated: 2026-05-11T01:47:19Z
 
 ## In Progress
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-10T19:46:20Z
+  - Delegated: 2026-05-11T01:47:19Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **ra-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs. (flagged by kai, cascade flag-kai-008)
-  - Delegated: 2026-05-10T08:07:20Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-10 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-05-10T22:03:09Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-09 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)

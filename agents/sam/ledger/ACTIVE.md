@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-10T19:51:53Z
+Last updated: 2026-05-11T01:52:19Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-10T19:51:53Z
+  - Delegated: 2026-05-11T01:52:19Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-008): Daily audit 2026-05-10: verified-state.json STALE 109h (last 2026-05-05; threshold 2h). kai-session-prep.sh not running or failing. Single authoritative state source is dead. Investigate launchd plist + last run logs.
-  - Delegated: 2026-05-10T08:07:20Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-10 — past 06:00 MT deadline
+  - Delegated: 2026-05-10T22:03:09Z
   - Status: DELEGATED
 
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-009): Daily audit 2026-05-10: scheduled task wraps daily-audit.sh without HYO_ROOT — Cowork sandbox $HOME=/sessions/awesome-wonderful-planck so audit looked at empty stub dir and produced 5 phantom FAIL/8 phantom GAP entries (audit fixed by re-running with HYO_ROOT=mount). FIX: add 'export HYO_ROOT=...' or 'cd $ROOT' guard at top of daily-audit.sh, or pin the SKILL.md task to set it.
