@@ -1,16 +1,16 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-11T01:52:19Z
+Last updated: 2026-05-11T07:52:44Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-11T01:52:19Z
+  - Delegated: 2026-05-11T07:52:44Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-10 — past 06:00 MT deadline
-  - Delegated: 2026-05-10T22:03:09Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-11 — past 06:00 MT deadline
+  - Delegated: 2026-05-11T02:10:38Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-009) — scan entire codebase for similar patterns: Daily audit 2026-05-10: scheduled task wraps daily-audit.sh without HYO_ROOT — Cowork sandbox $HOME=/sessions/awesome-wonderful-planck so audit looked at empty stub dir and produced 5 phantom FAIL/8 phantom GAP entries (audit fixed by re-running with HYO_ROOT=mount). FIX: add 'export HYO_ROOT=...' or 'cd $ROOT' guard at top of daily-audit.sh, or pin the SKILL.md task to set it.

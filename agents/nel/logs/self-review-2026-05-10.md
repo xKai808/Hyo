@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-05-10T16:06
+# nel Self-Review — 2026-05-10T23:30
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-05-10-nel-results.json**: WHAT triggers this? Found 0 callers.

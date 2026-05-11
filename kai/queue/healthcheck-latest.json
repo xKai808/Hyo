@@ -1,13 +1,28 @@
 {
-  "ts": "2026-05-11T01:47:18Z",
+  "ts": "2026-05-11T07:48:19Z",
   "status": "ISSUES",
   "issues": 5,
-  "warnings": 2,
+  "warnings": 5,
   "findings": [
     {
       "severity": "P3",
       "area": "agent-output",
       "detail": "dex has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "ra has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "sam has no output today"
     },
     {
       "severity": "P2",
@@ -32,7 +47,7 @@
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
+      "detail": "aether stuck in dead-loop (assessment_stuck): standby mode: no trades this cycle; WARNING: dashboard out-o"
     },
     {
       "severity": "P1",
@@ -43,33 +58,33 @@
   "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
   "recent_queue_results": [
     {
-      "id": "cmd-1778464001-74048",
+      "id": "cmd-1778485591-77451",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101945",
+      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && ",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778463858-72957",
+      "id": "a7c6e8c3-9015-4925-8079-4de4a2f3b64c",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101943",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778463714-71929",
+      "id": "4b251d7d-59e0-497c-9893-7e66f56cf55e",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101940",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778463584-70184",
+      "id": "3c14139f-86af-430c-88ce-7c1d07eea55e",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101938",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     },
     {
-      "id": "cmd-1778463529-69618",
+      "id": "94cfd98f-6435-4f88-a3fd-0b19d8e109b1",
       "status": "ok",
-      "command": "cd ~/Documents/Projects/Hyo && bash bin/ticket.sh --create --id AET-202605101937",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hy",
       "exit_code": 0
     }
   ],

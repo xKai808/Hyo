@@ -1,4 +1,4 @@
-# ra Self-Review — 2026-05-10T16:06
+# ra Self-Review — 2026-05-10T23:30
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-05-10-ra-results.json**: WHAT triggers this? Found 0 callers.
@@ -56,5 +56,5 @@ Questions for ra to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 13
-- Gate results: trigger=3/4, visibility=checked, resolutions=6, adoption=-6/5
+- Gate results: trigger=4/5, visibility=checked, resolutions=6, adoption=-6/5
 
