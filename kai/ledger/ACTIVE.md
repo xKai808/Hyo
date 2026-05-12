@@ -1,30 +1,30 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-12T10:43:31Z
+Last updated: 2026-05-12T11:15:26Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-12T10:37:58Z
+  - Delegated: 2026-05-12T11:08:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-12T10:37:58Z
+  - Delegated: 2026-05-12T11:08:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-12T10:37:58Z
+  - Delegated: 2026-05-12T11:08:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-12T10:37:58Z
+  - Delegated: 2026-05-12T11:08:03Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-12T10:37:59Z
+  - Delegated: 2026-05-12T11:08:04Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-12: HYO_ROOT default bug recurred 3rd consecutive day (flag-kai-009→kai-002→today). First audit run produced 5 phantom FAIL/8 phantom GAP because script defaults to $HOME/Documents/Projects/Hyo which doesn't exist in sandbox; must re-run with HYO_ROOT explicit. Fix proposed 2026-05-10, still DELEGATED. Parallel: auto-remediation pipeline still no-op — newsletter missing for 2026-05-12 (no input.md after 05-11), ra-002/003/004 stuck DELEGATED 0-6d, sam-005 stuck 11d. Same systemic break flagged daily since 2026-05-01. (flagged by kai)
