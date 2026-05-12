@@ -1,23 +1,23 @@
 # Dex Pattern Cluster Report
-**Generated:** 2026-05-11
-**Total entries analyzed:** 273
-**Noise reduction:** 273 entries → 135 clusters (50.5% dedup rate)
+**Generated:** 2026-05-12
+**Total entries analyzed:** 287
+**Noise reduction:** 287 entries → 137 clusters (52.3% dedup rate)
 
 ## Signal Summary
 - Multi-entry clusters: **8** (same root cause, different timestamps)
-- Singleton clusters: **127** (unique issues)
+- Singleton clusters: **129** (unique issues)
 - Recurring temporal patterns: **2**
 - Highest-volume agent: **ra**
-- Largest cluster: **75 entries** with same root cause
+- Largest cluster: **83 entries** with same root cause
 
 ## Agent Breakdown
 | Agent | Issues |
 |-------|--------|
-| ra | 116 |
-| unknown | 64 |
+| ra | 125 |
+| unknown | 68 |
 | aether | 23 |
+| kai | 20 |
 | sam | 19 |
-| kai | 19 |
 | dex | 15 |
 | nel | 13 |
 | ant | 4 |
@@ -25,25 +25,25 @@
 ## Top Issue Clusters (by impact score)
 
 ### Cluster 1 — No newsletter produced for 2026-04-24 — past 06:00 MT deadline
-- **Size:** 75 entries | **Score:** 103.02 | **Agent:** ra
-- **Range:** 2026-04-24 → 2026-05-11
-- **Status:** {'active': 75}
+- **Size:** 83 entries | **Score:** 113.15 | **Agent:** ra
+- **Range:** 2026-04-24 → 2026-05-12
+- **Status:** {'active': 83}
 - **Sample entries:**
   - No newsletter produced for 2026-04-24 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
 
 ### Cluster 2 — 1 broken links detected
-- **Size:** 56 entries | **Score:** 69.65 | **Agent:** unknown
-- **Range:** 2026-04-21 → 2026-05-11
-- **Status:** {'active': 56}
+- **Size:** 60 entries | **Score:** 74.25 | **Agent:** unknown
+- **Range:** 2026-04-21 → 2026-05-12
+- **Status:** {'active': 60}
 - **Sample entries:**
   - 1 broken links detected
   - 1 broken links detected
   - 1 broken links detected
 
 ### Cluster 3 — Daily audit: 5 critical issues found
-- **Size:** 3 entries | **Score:** 4.12 | **Agent:** dex
+- **Size:** 3 entries | **Score:** 4.05 | **Agent:** dex
 - **Range:** 2026-05-05 → 2026-05-06
 - **Status:** {'active': 3}
 - **Sample entries:**
@@ -52,7 +52,7 @@
   - Daily audit: 1 critical issues found
 
 ### Cluster 4 — /api/hq?action=data returned HTTP 401
-- **Size:** 3 entries | **Score:** 3.05 | **Agent:** sam
+- **Size:** 3 entries | **Score:** 2.98 | **Agent:** sam
 - **Range:** 2026-04-21 → 2026-04-21
 - **Status:** {'resolved_fp': 3}
 - **Sample entries:**
@@ -61,7 +61,7 @@
   - /api/hq?action=data returned HTTP 401
 
 ### Cluster 5 — Aether metrics JSON exists but hq.html has NO rendering code
-- **Size:** 3 entries | **Score:** 3.05 | **Agent:** ra
+- **Size:** 3 entries | **Score:** 2.98 | **Agent:** ra
 - **Range:** 2026-04-21 → 2026-04-21
 - **Status:** {'resolved_fp': 3}
 - **Sample entries:**
@@ -70,22 +70,22 @@
   - Aether metrics JSON exists but hq.html has NO rendering code
 
 ### Cluster 6 — daily-agent-report.sh used 'declare -A' associative arrays. macOS ships with bash 3.2 which does not
-- **Size:** 1 entries | **Score:** 2.5 | **Agent:** ra
+- **Size:** 1 entries | **Score:** 2.45 | **Agent:** ra
 - **Range:** 2026-04-30 → 2026-04-30
 - **Status:** {'unknown': 1}
 
 ### Cluster 7 — kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema gate (exit 1) for an
-- **Size:** 1 entries | **Score:** 2.5 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 2.45 | **Agent:** kai
 - **Range:** 2026-05-01 → 2026-05-01
 - **Status:** {'unknown': 1}
 
 ### Cluster 8 — AetherBot 401 auth failures were invisible — aether.sh reported 0 trades as standby mode instead of 
-- **Size:** 1 entries | **Score:** 2.4 | **Agent:** ra
+- **Size:** 1 entries | **Score:** 2.35 | **Agent:** ra
 - **Range:** 2026-04-28 → 2026-04-28
 - **Status:** {'unknown': 1}
 
 ### Cluster 9 — Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl — chronic system health RED (25
-- **Size:** 2 entries | **Score:** 2.25 | **Agent:** dex
+- **Size:** 2 entries | **Score:** 2.2 | **Agent:** dex
 - **Range:** 2026-04-24 → 2026-04-26
 - **Status:** {'active': 2}
 - **Sample entries:**
@@ -93,32 +93,32 @@
   - Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl — chronic s
 
 ### Cluster 10 — Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, exceeded GitHub 100MB
-- **Size:** 1 entries | **Score:** 2.2 | **Agent:** nel
+- **Size:** 1 entries | **Score:** 2.15 | **Agent:** nel
 - **Range:** 2026-04-24 → 2026-04-24
 - **Status:** {'unknown': 1}
 
 ### Cluster 11 — Anthropic API key on Mini hit usage quota (until 2026-05-01). kai_analysis.py had no fallback — fail
-- **Size:** 1 entries | **Score:** 2.15 | **Agent:** ra
+- **Size:** 1 entries | **Score:** 2.1 | **Agent:** ra
 - **Range:** 2026-04-23 → 2026-04-23
 - **Status:** {'unknown': 1}
 
 ### Cluster 12 — generate-morning-report.sh staged website/data/feed.json but not agents/sam/website/data/feed.json. 
-- **Size:** 1 entries | **Score:** 2.1 | **Agent:** sam
+- **Size:** 1 entries | **Score:** 2.05 | **Agent:** sam
 - **Range:** 2026-04-22 → 2026-04-22
 - **Status:** {'unknown': 1}
 
 ### Cluster 13 — Answered 12 Hyo questions without reading source files first. Made two wrong claims: (1) no follow-u
-- **Size:** 1 entries | **Score:** 2.1 | **Agent:** unknown
+- **Size:** 1 entries | **Score:** 2.05 | **Agent:** unknown
 - **Range:** 2026-04-22 → 2026-04-22
 - **Status:** {'unknown': 1}
 
 ### Cluster 14 — Injected score card JS into hq.html via Python string replace. Used escaped dollar (backslash-dollar
-- **Size:** 1 entries | **Score:** 2.1 | **Agent:** ra
+- **Size:** 1 entries | **Score:** 2.05 | **Agent:** ra
 - **Range:** 2026-04-22 → 2026-04-22
 - **Status:** {'unknown': 1}
 
 ### Cluster 15 — /api/usage returned HTTP 404
-- **Size:** 2 entries | **Score:** 2.05 | **Agent:** sam
+- **Size:** 2 entries | **Score:** 2.0 | **Agent:** sam
 - **Range:** 2026-04-21 → 2026-04-21
 - **Status:** {'resolved_fp': 2}
 - **Sample entries:**
@@ -128,18 +128,18 @@
 ## Temporal Patterns (recurring at consistent intervals)
 | Pattern | Occurrences | Avg Interval | Consistency | Last Seen |
 |---------|-------------|--------------|-------------|-----------|
-| returned action data http | 3 | 6.0h | 100.0% | 2026-04-21 |
-| exists html code json | 3 | 6.0h | 100.0% | 2026-04-21 |
+| api/hq action returned http | 3 | 6.0h | 100.0% | 2026-04-21 |
+| html code json exists | 3 | 6.0h | 100.0% | 2026-04-21 |
 
 ## Deduplication Candidates
 The following clusters contain multiple entries with the same root cause.
 Consider merging them into a single canonical issue:
 
-- **No newsletter produced for 2026-04-24 — past 06:00 MT deadline** (75 entries, ra)
+- **No newsletter produced for 2026-04-24 — past 06:00 MT deadline** (83 entries, ra)
   - No newsletter produced for 2026-04-24 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
 
-- **1 broken links detected** (56 entries, unknown)
+- **1 broken links detected** (60 entries, unknown)
   - 1 broken links detected
   - 1 broken links detected
 
