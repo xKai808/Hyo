@@ -699,6 +699,650 @@ Every 15 minutes launchd fires aether.sh:
 
 - **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
 
+- **2026-05-12:** Researched 6/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 6/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
+- **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
+
 - **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.
 
 - **2026-05-12:** Researched 7/7 sources. See `research/findings-2026-05-12.md` for details.

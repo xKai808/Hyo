@@ -1,7 +1,7 @@
-# nel Self-Review — 2026-05-12T07:55
+# nel Self-Review — 2026-05-12T13:55
 
 ## Gate 1: Trigger Validation
-- ✓ 8 files checked, all have triggers.
+- ✓ 4 files checked, all have triggers.
 
 ## Gate 2: Visibility Check
 Questions for nel to answer:
@@ -58,5 +58,5 @@ Questions for nel to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 12
-- Gate results: trigger=8/8, visibility=checked, resolutions=7, adoption=-6/5
+- Gate results: trigger=4/4, visibility=checked, resolutions=7, adoption=-6/5
 

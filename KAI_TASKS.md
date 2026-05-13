@@ -908,3 +908,10 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 
 - [ ] **[K]** [sentinel] missing or empty /sessions/laughing-elegant-ride/mnt/Hyo/newsletters/2026-05-12.md [sentinel:aurora-ran-today:2557b70c] _(filed 2026-05-12)_
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/laughing-elegant-ride/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:605c7249] _(filed 2026-05-12)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/elegant-blissful-ride/mnt/Hyo/newsletters/2026-05-12.md [sentinel:aurora-ran-today:18971439] _(filed 2026-05-12)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/elegant-blissful-ride/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:ba0e9b53] _(filed 2026-05-12)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/elegant-blissful-ride/mnt/Hyo/newsletters/2026-05-12.md [sentinel:aurora-ran-today:18971439:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/elegant-blissful-ride/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:ba0e9b53:escalated]
