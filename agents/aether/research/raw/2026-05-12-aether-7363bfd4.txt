@@ -12,97 +12,72 @@
     <atom:link href="http://rss.arxiv.org/rss/q-fin.TR" rel="self" type="application/rss+xml"/>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 May 2026 08:15:35 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 13 May 2026 04:00:26 +0000</lastBuildDate>
     <managingEditor>rss-help@arxiv.org</managingEditor>
-    <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
+    <pubDate>Wed, 13 May 2026 00:00:00 -0400</pubDate>
     <skipDays>
       <day>Sunday</day>
       <day>Saturday</day>
     </skipDays>
     <item>
-      <title>Resolution-Aware Perpetual Futures on Binary Prediction Markets: An Empirical Risk-Design Framework Using Polymarket Data</title>
-      <link>https://arxiv.org/abs/2605.10400</link>
-      <description>arXiv:2605.10400v1 Announce Type: new 
-Abstract: We develop and counterfactually evaluate a resolution-aware risk-design framework (PIRAP) for perpetual futures whose underlying tracks a single binary prediction-market probability through resolution. The framework specifies six components: an index estimator combining mid-price, depth-weighted mid, and time-decayed VWAP; jump-aware tiered margin sized against bounded-event terminal-collapse magnitude; leverage compression schedule contracting toward resolution; resolution-aware funding rule with boundary-aware correction; a multi-stage halt protocol; and an eligibility framework. Two formal non-portability propositions establish that standard basis-only funding paired with continuous-vol static margin fails on bounded-event underlyings. Empirical evaluation uses Polymarket's PMXT v2 archive for 2026-04-21 to 2026-04-27 (13,298-market analysis sample passing adequacy gates from 61,087 ingested; 13,115 resolved within the empirical window for E3). E1 evaluates two pre-registered stylized facts; E2 conducts counterfactual replay across three engine configurations; E3 isolates the resolution-zone protocol's contribution. Results are mixed. Five pre-registered floors: stylized-fact floors (boundary depth asymmetry, terminal-jump magnitude) PASS; welfare-side directional floors (final-hour liquidation -6%, drawdown -5.1% pooled, median PnL +14%) two FAIL one PASS; E3 mechanic floors (final-hour liquidation -80% by halt construction PASS; bad-debt frequency +2.4% FAIL). Three of five materiality floors fail: the framework as specified does not validate deployment, but the empirical record establishes a halt-versus-margin scope distinction (halt addresses execution-channel risk; terminal-jump bad-debt remains margin-side) and documents a pre-emption trade-off constraining the dynamic-margin component. The paper concludes with structural recommendations and explicit non-deployable status.</description>
-      <guid isPermaLink="false">oai:arXiv.org:2605.10400v1</guid>
+      <title>A Validated Volatility-Volume-Gap Classifier for Regime Identification in MNQ Intraday Data</title>
+      <link>https://arxiv.org/abs/2605.11423</link>
+      <description>arXiv:2605.11423v1 Announce Type: new 
+Abstract: This paper constructs and validates a composite day-classification system for Micro E-Mini Nasdaq 100 futures (MNQ) using three pre-market observable conditions: first-30-minute return magnitude, overnight gap magnitude, and abnormal opening-bar volume relative to a rolling baseline. Using 947 regular trading days of five-minute data from 2021-2025, we find that classifier-positive days exhibit statistically distinct intraday behavior, including directional morning drift followed by systematic late-session reversal. Despite these descriptive characteristics, all tested directional trading strategies fail institutional validation standards after transaction costs and multi-year consistency requirements are applied. The highest-performing configuration achieves T = 1.46 and mean net +7.80 points but fails year-stability criteria. The primary contribution is the validation of the Volatility-Volume-Gap (VVG) classifier as a descriptive regime-identification framework and the documentation of failed attempts to convert these statistical patterns into deployable trading signals under realistic execution constraints.</description>
+      <guid isPermaLink="false">oai:arXiv.org:2605.11423v1</guid>
       <category>q-fin.TR</category>
-      <category>q-fin.GN</category>
-      <category>q-fin.RM</category>
-      <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
+      <category>q-fin.CP</category>
+      <category>q-fin.ST</category>
+      <pubDate>Wed, 13 May 2026 00:00:00 -0400</pubDate>
+      <arxiv:announce_type>new</arxiv:announce_type>
+      <dc:rights>http://creativecommons.org/licenses/by/4.0/</dc:rights>
+      <dc:creator>Mathias Mesfin</dc:creator>
+    </item>
+    <item>
+      <title>Fill-Side Non-Retail Trading on Polymarket: An Empirical Study of Behavioral Tiers and Microstructure Signatures Under Quote-Attribution Constraints</title>
+      <link>https://arxiv.org/abs/2605.11640</link>
+      <description>arXiv:2605.11640v1 Announce Type: new 
+Abstract: Prediction markets cannot exist without market makers, arbitrageurs, and other non-retail liquidity providers, yet the supply-side microstructure of Polymarket-class venues has not been characterized at on-chain pseudonymous-address scale. This paper studies non-retail participation on Polymarket using an empirical run on the PMXT v2 archive over 2026-04-21 through 2026-04-27 (13,356,931 OrderFilled events; 77,204 addresses with five+ fills; 43,116 markets).
+  We report three findings. First, Polymarket's off-chain CLOB architecture renders address-level quote-lifecycle attribution permanently unavailable: OrderPlaced and OrderCancelled events are off-chain and absent from public archives, so quote-intensity, two-sided-ratio, and posted-spread features cannot be built at address level. We document this as a structural validity-gate failure (G-QUOTE-LIFE universal fail) and restrict analysis to a six-feature fill-side vector. Second, density-based clustering (DBSCAN, fifteen sensitivity configurations) on the fill-side vector produces a single dense cluster with zero noise: fill-side behavior in the empirical window is uni-modal under the six-feature vector, contradicting the pre-registered hypothesis of four-to-five separable archetypes. Third, robust retail vs non-retail separation is achievable through clustering-independent feature-tier stratification: whale-tier, high-frequency-operator, and power-trader tiers jointly hold 81.4% of total notional across 12.6% of addresses.
+  Address-level market-making and liquidity-provision claims are withdrawn per the G-QUOTE-LIFE failure; spoof-by-non-fill manipulation detection is downgraded to market-level book diagnostics. A privacy-respecting derived-dataset deposit accompanies the paper as Bundle 3 of the PMXT family. Fourth paper in a four-paper programme on event-linked perpetuals and leveraged prediction-market microstructure.</description>
+      <guid isPermaLink="false">oai:arXiv.org:2605.11640v1</guid>
+      <category>q-fin.TR</category>
+      <category>cs.CY</category>
+      <category>q-fin.CP</category>
+      <pubDate>Wed, 13 May 2026 00:00:00 -0400</pubDate>
       <arxiv:announce_type>new</arxiv:announce_type>
       <dc:rights>http://creativecommons.org/licenses/by/4.0/</dc:rights>
       <dc:creator>Maksym Nechepurenko</dc:creator>
     </item>
     <item>
-      <title>A Taxonomy of Event-Linked Perpetual Futures: Variant Designs Beyond the Single-Market Binary Case</title>
-      <link>https://arxiv.org/abs/2605.10428</link>
-      <description>arXiv:2605.10428v1 Announce Type: new 
-Abstract: Paper 1 of this research programme develops a resolution-aware risk-design framework for the simplest event-linked perpetual: a contract whose underlying tracks a single binary prediction-market probability through resolution. The instrument class is broader. Variants span conditional probabilities P(A|B), spreads p^A - p^B, weighted baskets sum w_i p^(i), derivatives on variance or entropy of the probability process, contracts on liquidity itself, perpetual-on-expiring-event roll structures, and funding-only derivatives with no settlement. Each variant inherits some framework components from the single-market binary case and requires its own design adaptations. This paper develops a formal taxonomy of seven pure-form canonical variants beyond the probability-index perpetual of Paper 1, organised along four orthogonal design axes: underlying geometry, temporal structure, settlement structure, and venue composition. The list is not exhaustive; combinations are not treated separately. For each variant we provide a precise payoff definition; an inheritance map identifying which Paper 1 components carry over, are modified, or fail; variant-specific design constraints; microstructure properties; empirical evaluability on the PMXT v2 archive; and limitations. Notable findings: the conditional variant admits a candidate non-portability proposition (denominator instability as the conditioning event becomes improbable); the spread variant requires a three-channel decomposition of resolution risk; the volatility/entropy variant avoids random binary terminal-collapse but introduces estimator-convention and entropy-decay issues; the basket variant requires multi-period jump-aware margin whose aggregation is correlation-dependent. The paper is theoretical primarily; it specifies how demonstrative time series can be constructed and provides evaluability criteria to guide future work.</description>
-      <guid isPermaLink="false">oai:arXiv.org:2605.10428v1</guid>
+      <title>RED-2400: A Public Benchmark of Algorithmically-Rejected Trading Events with Outcome Labels</title>
+      <link>https://arxiv.org/abs/2605.12151</link>
+      <description>arXiv:2605.12151v1 Announce Type: new 
+Abstract: RED-2400 is a public benchmark of algorithmically-rejected trading events from a live Solana decentralized-exchange filter stack. I logged the data continuously between 2026-04-10 and 2026-05-02. The benchmark contains 6,659 rejection events linked to 169,122 post-rejection price and liquidity observations and 1,836 graveyard-tracker snapshots. Outcome labels follow the five-tier classification of Kamat (2026c): saved (windowed), saved (early-death), missed, flat, and unclassifiable. Thresholds use the trough-to-reference and peak-to-reference price ratios within a 24-hour window. Most filter-design datasets cover the accept side only. That gap leaves reject-side outcomes unmeasured and biases filter validation. RED-2400 lets researchers replicate filter-precision claims directly. RED-2400 is the first window in a planned dataset series; subsequent windows will extend the time horizon and enable regime-stratified analysis.</description>
+      <guid isPermaLink="false">oai:arXiv.org:2605.12151v1</guid>
       <category>q-fin.TR</category>
-      <category>q-fin.GN</category>
-      <category>q-fin.PR</category>
-      <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
+      <category>q-fin.CP</category>
+      <category>q-fin.ST</category>
+      <pubDate>Wed, 13 May 2026 00:00:00 -0400</pubDate>
       <arxiv:announce_type>new</arxiv:announce_type>
       <dc:rights>http://creativecommons.org/licenses/by/4.0/</dc:rights>
-      <dc:creator>Maksym Nechepurenko</dc:creator>
+      <arxiv:DOI>10.5281/zenodo.20011631</arxiv:DOI>
+      <dc:creator>Arati U. Kamat</dc:creator>
     </item>
     <item>
-      <title>Manipulation, Insider Information, and Regulation in Leveraged Event-Linked Markets</title>
-      <link>https://arxiv.org/abs/2605.10486</link>
-      <description>arXiv:2605.10486v1 Announce Type: new 
-Abstract: The introduction of leverage on prediction-market event contracts raises three structurally distinct questions that have not been addressed jointly: how leverage changes manipulation incentives, how it interacts with informed-trading rents, and how regulatory frameworks should respond. This paper develops a theoretical framework for the first two and a synthesis of the existing regulatory landscape for the third. The principal analytical move is a two-axis manipulation taxonomy distinguishing market-price manipulation from real-world outcome manipulation, where the manipulator affects the underlying event itself. Continuous-underlying derivative markets generally do not make outcome manipulation a venue-level payoff channel; event-linked markets do. Within this taxonomy, leverage plays asymmetric roles: it scales market-price manipulation linearly but shifts the cost-benefit threshold for outcome manipulation, and it scales informed-trading rents in three ways (direct multiplication, Sharpe-ratio preservation, detection-cost amortization). Section 7 connects Paper 1's pre-emption and halt-protocol findings (CC-007b, CC-008) to three manipulation channels: pre-emption introduced by the dynamic-margin engine, halt-arbitrage introduced by the resolution-zone halt protocol, and strategic bad-debt-shifting that no engine in Paper 1's framework family addresses. The framework's manipulation-resistance contribution is a re-allocation of attack surface, not a net reduction. The regulatory synthesis covers principal jurisdictions (US, EU, UK, Singapore, offshore) and identifies three regulatory-arbitrage pathways. The paper concludes with 14 recommendations for venue operators, regulatory bodies, and the research community, separated into framework-independent and framework-conditional categories.</description>
-      <guid isPermaLink="false">oai:arXiv.org:2605.10486v1</guid>
-      <category>q-fin.TR</category>
+      <title>The Value of Information: A Puzzle</title>
+      <link>https://arxiv.org/abs/2605.11180</link>
+      <description>arXiv:2605.11180v1 Announce Type: cross 
+Abstract: We show that under mild assumptions, the total value of information to informed traders in the market can be measured by the covariance between price changes and order flow. This covariance captures noise trader losses, which equal informed trader gains when market making is competitive. We estimate the value of information using high frequency data on US equities at about $3.5 million per year for the average stock. The aggregate value of information is about 0.04% of market cap, which is considerably lower than the 0.67% in fees investors pay each year searching for superior returns (French 2008). We discuss potential resolutions for these puzzling findings.</description>
+      <guid isPermaLink="false">oai:arXiv.org:2605.11180v1</guid>
+      <category>q-fin.GN</category>
       <category>econ.GN</category>
       <category>q-fin.EC</category>
-      <category>q-fin.GN</category>
-      <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
-      <arxiv:announce_type>new</arxiv:announce_type>
-      <dc:rights>http://creativecommons.org/licenses/by/4.0/</dc:rights>
-      <dc:creator>Maksym Nechepurenko</dc:creator>
-    </item>
-    <item>
-      <title>Estimation of an Order Book Dependent Hawkes Process for Large Datasets</title>
-      <link>https://arxiv.org/abs/2307.09077</link>
-      <description>arXiv:2307.09077v2 Announce Type: replace 
-Abstract: A point process for event arrivals in high frequency trading is presented. The intensity is the product of a Hawkes process and high dimensional functions of covariates derived from the order book. Conditions for stationarity of the process are stated. An algorithm is presented to estimate the model even in the presence of billions of data points, possibly mapping covariates into a high dimensional space. The large sample size can be common for high frequency data applications using multiple liquid instruments. Convergence of the algorithm is shown, consistency results under weak conditions is established, and a test statistic to assess out of sample performance of different model specifications is suggested. The methodology is applied to the study of four stocks that trade on the New York Stock Exchange (NYSE). The out of sample testing procedure suggests that capturing the nonlinearity of the order book information adds value to the self exciting nature of high frequency trading events.</description>
-      <guid isPermaLink="false">oai:arXiv.org:2307.09077v2</guid>
       <category>q-fin.TR</category>
-      <category>stat.ML</category>
-      <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
-      <arxiv:announce_type>replace</arxiv:announce_type>
-      <dc:rights>http://creativecommons.org/licenses/by-nc-nd/4.0/</dc:rights>
-      <arxiv:DOI>10.1093/jjfinec/nbad021</arxiv:DOI>
-      <dc:creator>Luca Mucciante, Alessio Sancetta</dc:creator>
-    </item>
-    <item>
-      <title>Hierarchical Reinforced Trader (HRT): A Bi-Level Approach for Optimizing Stock Selection and Execution</title>
-      <link>https://arxiv.org/abs/2410.14927</link>
-      <description>arXiv:2410.14927v2 Announce Type: replace 
-Abstract: Automated equity trading requires converting noisy market and news signals into executable portfolio decisions under risk, turnover, and transaction costs. We propose Hierarchical Reinforced Trader (HRT), a bi-level reinforcement learning framework for text-aware portfolio management in multi-asset equity markets. HRT separates trading into two coordinated decisions: a factorized sparse High-Level Controller (HLC) selects asset-level increase, reduce, or hold directions from compact market and text-derived signals, while a risk-aware Low-Level Controller (LLC) converts these directions into feasible portfolio weight adjustments under turnover, drawdown, and text-risk penalties. This decomposition avoids enumerating the full joint action space and makes selection and execution easier to inspect. We evaluate HRT on an open stock-news benchmark with a fixed 89-stock Nasdaq universe, using 2013--2018 for training, 2019 for validation, and 2020--2023 for final out-of-sample testing; the test horizon is restricted to 2020--2023 due to public benchmark data availability under the same timestamp-clean text-aware protocol. Across market-proxy, same-universe portfolio, alpha-only, flat-RL, and hierarchical ablation baselines, HRT delivers the strongest learning-based return--risk--cost trade-off. The full model improves Sharpe from 1.06 for HRT-Base to 1.24, reduces daily turnover from 0.112 to 0.090, and remains robust under transaction-cost stress. These results suggest that separating sparse directional selection from risk-aware execution is an effective way to incorporate market forecasts and text-derived risk signals into portfolio management.</description>
-      <guid isPermaLink="false">oai:arXiv.org:2410.14927v2</guid>
-      <category>q-fin.TR</category>
-      <category>cs.CE</category>
-      <category>cs.LG</category>
-      <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
-      <arxiv:announce_type>replace</arxiv:announce_type>
+      <pubDate>Wed, 13 May 2026 00:00:00 -0400</pubDate>
+      <arxiv:announce_type>cross</arxiv:announce_type>
       <dc:rights>http://arxiv.org/licenses/nonexclusive-distrib/1.0/</dc:rights>
-      <dc:creator>Zijie Zhao, Roy E. Welsch</dc:creator>
-    </item>
-    <item>
-      <title>The Invisible Handshake: Persistent Overpricing by Adaptive Market Agents</title>
-      <link>https://arxiv.org/abs/2510.15995</link>
-      <description>arXiv:2510.15995v3 Announce Type: replace 
-Abstract: We study overpricing in a repeated game between two representative agents: a market maker, who controls market liquidity, and a market taker, who chooses trade quantities. Market prices evolve through the endogenous price impact of trades and exogenous shocks. We define overpricing relative to a counterfactual price path that holds fixed the same sequence of shocks while shutting down price impact, and characterize the set of feasible strategy profiles that generate persistent overpricing while respecting cash and inventory constraints. We provide a sufficient condition for decentralized learning to reach the overpricing region in finite time, and we show that this condition is satisfied, in particular, by projected stochastic gradient ascent. A key step in the analysis is a decomposition of the game into a competitive component, which favors zero price impact, and a collaborative component, which makes overpricing jointly profitable when aggregate inventory is positive. We further show that the same structural incentives govern both myopic and farsighted objectives. Together, these results show how decentralized learning by adaptive market agents can lead to persistent overpricing in financial markets.</description>
-      <guid isPermaLink="false">oai:arXiv.org:2510.15995v3</guid>
-      <category>q-fin.TR</category>
-      <category>cs.GT</category>
-      <category>cs.LG</category>
-      <pubDate>Tue, 12 May 2026 00:00:00 -0400</pubDate>
-      <arxiv:announce_type>replace</arxiv:announce_type>
-      <dc:rights>http://creativecommons.org/licenses/by/4.0/</dc:rights>
-      <dc:creator>Luigi Foscari, Emanuele Guidotti, Nicol\`o Cesa-Bianchi, Tatjana Chavdarova, Alfio Ferrara</dc:creator>
+      <dc:creator>Ohad Kadan, Asaf Manela</dc:creator>
     </item>
   </channel>
 </rss>

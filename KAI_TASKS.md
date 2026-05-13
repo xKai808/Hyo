@@ -915,3 +915,13 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/elegant-blissful-ride/mnt/Hyo/newsletters/2026-05-12.md [sentinel:aurora-ran-today:18971439:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/elegant-blissful-ride/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:ba0e9b53:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/tender-awesome-feynman/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:a96281b5] _(filed 2026-05-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/tender-awesome-feynman/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f618fcae] _(filed 2026-05-13)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/tender-awesome-feynman/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:a96281b5:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/tender-awesome-feynman/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f618fcae:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/eloquent-bold-rubin/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:bb484dce] _(filed 2026-05-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/eloquent-bold-rubin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5581e213] _(filed 2026-05-13)_
