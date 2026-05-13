@@ -939,3 +939,11 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/beautiful-nice-cray/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:19dac388:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/beautiful-nice-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:94aa4a0b:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/admiring-epic-newton/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:0959aa8e] _(filed 2026-05-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/admiring-epic-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:566f3bd2] _(filed 2026-05-13)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/sweet-peaceful-planck/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:ad5b90d9] _(filed 2026-05-13)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/sweet-peaceful-planck/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:89d46e83] _(filed 2026-05-13)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/sweet-peaceful-planck/mnt/Hyo/newsletters/2026-05-13.md [sentinel:aurora-ran-today:ad5b90d9:escalated]
