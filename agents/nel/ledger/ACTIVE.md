@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-13T07:56:09Z
+Last updated: 2026-05-13T13:56:39Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-13T07:56:09Z
+  - Delegated: 2026-05-13T13:56:39Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-13 — past 06:00 MT deadline
-  - Delegated: 2026-05-13T02:10:03Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-014) — scan entire codebase for similar patterns: Daily audit 2026-05-13: daily-audit.sh produces silent false-negatives when run from non-Mini contexts (today: 5 agents reported FAIL despite all ACTIVE.md files present at canonical path). Script must assert canonical ledger files exist before reporting health; exit non-zero if absent. See kai/ledger/daily-audit-2026-05-13.md B1.
+  - Delegated: 2026-05-13T08:08:57Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-012) — scan entire codebase for similar patterns: Daily audit 2026-05-11: DELEGATED→COMPLETED transition systemically broken. Evidence: aether-002 (the meta-fix for this exact problem) stuck DELEGATED 1d; sam-005 stuck DELEGATED 10d (2026-05-01); ra-002/003/004 newsletter remediation cascades stuck 1-5d; nel ledger has 17 queued flags from 2026-04-28 (13d untouched). Yesterday's flag-kai-010 raised this; no progress. Newsletter missed 2026-05-06, 05-09, 05-11 because AUTO-REMEDIATE doesn't actually produce the newsletter — just records it as DELEGATED. The auto-remediation pipeline is a no-op.
-  - Delegated: 2026-05-11T08:08:48Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-015) — scan entire codebase for similar patterns: Daily audit 2026-05-13: aether-002 (the META-FIX for DELEGATED→COMPLETED transition) stuck DELEGATED 3 days. sam-005 stuck 12d. ra-004/nel-005 newsletter remediations stuck 7d. AUTO-REMEDIATE cascade keeps firing (4 newsletter misses since 2026-05-06) but pipeline is a no-op — only records DELEGATED. Root cause (flag-kai-012) also still stuck. Loop is self-reinforcing. Hyo intervention requested.
+  - Delegated: 2026-05-13T08:09:05Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-11 — past 06:00 MT deadline
