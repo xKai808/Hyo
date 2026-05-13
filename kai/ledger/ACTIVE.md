@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-13T13:56:39Z
+Last updated: 2026-05-13T14:19:16Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-13T13:56:39Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-13T14:13:23Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-13T13:43:18Z
+  - Delegated: 2026-05-13T14:13:24Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-13T13:56:39Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-13T14:13:24Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-13T13:43:18Z
+  - Delegated: 2026-05-13T14:13:24Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-13T13:43:18Z
+  - Delegated: 2026-05-13T14:13:25Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-13: aether-002 (the META-FIX for DELEGATED→COMPLETED transition) stuck DELEGATED 3 days. sam-005 stuck 12d. ra-004/nel-005 newsletter remediations stuck 7d. AUTO-REMEDIATE cascade keeps firing (4 newsletter misses since 2026-05-06) but pipeline is a no-op — only records DELEGATED. Root cause (flag-kai-012) also still stuck. Loop is self-reinforcing. Hyo intervention requested. (flagged by kai)
-  - Delegated: 2026-05-13T09:57:37Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-13 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-05-13T14:13:25Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-014) — scan entire codebase for similar patterns: Daily audit 2026-05-13: daily-audit.sh produces silent false-negatives when run from non-Mini contexts (today: 5 agents reported FAIL despite all ACTIVE.md files present at canonical path). Script must assert canonical ledger files exist before reporting health; exit non-zero if absent. See kai/ledger/daily-audit-2026-05-13.md B1.
