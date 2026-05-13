@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-05-13T00:41:51-0600
+**Last updated:** 2026-05-13T01:11:57-0600
 
 ## System Health
 - Status: ISSUES (8 P0/P1)
@@ -10,8 +10,8 @@
 - aether: updated 0h ago
 - ant: updated 475h ago
 - dex: updated 0h ago
-- hyo: updated 14h ago
-- kai: updated 363h ago
+- hyo: updated 15h ago
+- kai: updated 364h ago
 - manifests: NO ACTIVE.md
 - nel: updated 0h ago
 - ra: updated 0h ago
