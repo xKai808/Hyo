@@ -1,3 +1,6 @@
+import sys
+sys.stderr.write("\n*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): trader refused to start. Trading halted. Remove this block only with explicit approval. ***\n\n")
+sys.exit(1)
 import os
 import time
 import uuid

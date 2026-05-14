@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): aether-weekly-summary refused. AetherBot pipeline halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # bin/aether-weekly-summary.sh — Weekly synthesis of Aether daily analyses for Hyo
 #
 # Hyo directive 2026-04-23: Hyo does a manual analysis on weekly basis.

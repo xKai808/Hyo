@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import sys
+sys.stderr.write("\n*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): refusing to launch bot.py. Trading halted. Remove this block only with explicit approval. ***\n\n")
+sys.exit(1)
 """
 AetherBot Log Rotation Wrapper
 Runs AetherBot continuously and creates a new dated log file each day.

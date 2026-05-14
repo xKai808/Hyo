@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): aether-publish-analysis refused. AetherBot pipeline halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # bin/aether-publish-analysis.sh — Publish an aether-analysis entry to the HQ feed
 #
 # Reads an Analysis_YYYY-MM-DD.txt file, builds an aether-analysis feed entry

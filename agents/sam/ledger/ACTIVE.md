@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-13T19:57:09Z
+Last updated: 2026-05-14T01:57:39Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-13T19:57:09Z
+  - Delegated: 2026-05-14T01:57:39Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-13 — past 06:00 MT deadline
-  - Delegated: 2026-05-13T18:10:02Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-13 — past 06:00 MT deadline
+  - Delegated: 2026-05-13T22:10:07Z
   - Status: DELEGATED
 
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-015): Daily audit 2026-05-13: aether-002 (the META-FIX for DELEGATED→COMPLETED transition) stuck DELEGATED 3 days. sam-005 stuck 12d. ra-004/nel-005 newsletter remediations stuck 7d. AUTO-REMEDIATE cascade keeps firing (4 newsletter misses since 2026-05-06) but pipeline is a no-op — only records DELEGATED. Root cause (flag-kai-012) also still stuck. Loop is self-reinforcing. Hyo intervention requested.

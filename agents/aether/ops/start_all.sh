@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): refusing to start AetherBot. Trading halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # AetherBot + Kai Telegram — complete startup script
 # Kills conflicts, sets env, starts both services
 # Usage: bash ~/Documents/Projects/AetherBot/start_all.sh

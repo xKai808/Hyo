@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): aether.sh refused. AetherBot pipeline halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # agents/aether/aether.sh — Aether metrics collector + HQ uploader
 #
 # Runs on a schedule (every 15 min via launchd/cron). Does three things:

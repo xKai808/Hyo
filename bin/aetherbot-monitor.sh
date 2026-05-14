@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): aetherbot-monitor refused. AetherBot pipeline halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # bin/aetherbot-monitor.sh — Real 15-minute AetherBot trade monitor
 #
 # Runs every 15 min via kai-autonomous.sh. Looks at the ACTUAL last 15 minutes

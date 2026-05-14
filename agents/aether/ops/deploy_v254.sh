@@ -1,4 +1,6 @@
 #!/bin/bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): deploy refused. Trading halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # AetherBot v254 Deployment Script
 # Run from Mac Mini terminal: cd ~/Documents/Projects/AetherBot && bash deploy_v254.sh
 

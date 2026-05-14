@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo "*** AETHERBOT KILL-SWITCH 2026-05-13 (Hyo): analysis run refused. AetherBot pipeline halted. Remove this block only with explicit approval. ***" >&2
+exit 1
 # ═══════════════════════════════════════════════════════════════════════════
 # run_analysis.sh — Daily AetherBot analysis launcher
 # Runs via launchd at 23:00 MT daily
