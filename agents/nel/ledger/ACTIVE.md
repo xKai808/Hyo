@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-14T01:57:39Z
+Last updated: 2026-05-14T07:58:15Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-14T01:57:39Z
+  - Delegated: 2026-05-14T07:58:15Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-13 — past 06:00 MT deadline
-  - Delegated: 2026-05-13T22:10:07Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-14 — past 06:00 MT deadline
+  - Delegated: 2026-05-14T02:10:17Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-015) — scan entire codebase for similar patterns: Daily audit 2026-05-13: aether-002 (the META-FIX for DELEGATED→COMPLETED transition) stuck DELEGATED 3 days. sam-005 stuck 12d. ra-004/nel-005 newsletter remediations stuck 7d. AUTO-REMEDIATE cascade keeps firing (4 newsletter misses since 2026-05-06) but pipeline is a no-op — only records DELEGATED. Root cause (flag-kai-012) also still stuck. Loop is self-reinforcing. Hyo intervention requested.
-  - Delegated: 2026-05-13T08:09:05Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-14 — past 06:00 MT deadline
+  - Delegated: 2026-05-14T02:12:44Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-11 — past 06:00 MT deadline
