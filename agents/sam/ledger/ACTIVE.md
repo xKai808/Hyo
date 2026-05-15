@@ -1,20 +1,20 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-14T19:59:03Z
+Last updated: 2026-05-15T01:59:33Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-14T19:59:03Z
+  - Delegated: 2026-05-15T01:59:33Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-14 — past 06:00 MT deadline
-  - Delegated: 2026-05-14T02:10:17Z
+  - Delegated: 2026-05-14T22:10:06Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-008): No newsletter produced for 2026-05-14 — past 06:00 MT deadline
-  - Delegated: 2026-05-14T02:12:44Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-14 — past 06:00 MT deadline
+  - Delegated: 2026-05-14T22:11:02Z
   - Status: DELEGATED
 
 - **sam-004** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-11: DELEGATED→COMPLETED transition systemically broken. Evidence: aether-002 (the meta-fix for this exact problem) stuck DELEGATED 1d; sam-005 stuck DELEGATED 10d (2026-05-01); ra-002/003/004 newsletter remediation cascades stuck 1-5d; nel ledger has 17 queued flags from 2026-04-28 (13d untouched). Yesterday's flag-kai-010 raised this; no progress. Newsletter missed 2026-05-06, 05-09, 05-11 because AUTO-REMEDIATE doesn't actually produce the newsletter — just records it as DELEGATED. The auto-remediation pipeline is a no-op. (flagged by kai, cascade flag-kai-012)
