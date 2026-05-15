@@ -1,42 +1,65 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-15T08:00:00Z
+Last updated: 2026-05-15T08:10:00-06:00
+
+## Today's audit (2026-05-15) — findings
+
+See `kai/ledger/daily-audit-2026-05-15-supplement.md` for full detail.
+
+- **B1 (META, recurring)** AUTO-REMEDIATE pipeline is a confirmed no-op for 14d.
+  Stuck DELEGATED items: sam-005 (14d), aether-002 (5d), sam-004 META-FIX (4d),
+  dex-002 (2d), ra-002 (6h). Each new P1 flag compounds backlog via safeguard
+  cascade. **Stop filing new cascade flags until executor is repaired.**
+  flag-kai-016 was filed automatically by today's audit; it should be the LAST
+  cascade-generated flag until sam-004 is hand-driven by the next live Kai.
+- **B2** Newsletter 2026-05-15 not produced. ra-002 stuck DELEGATED 6h. Manual run
+  needed before Hyo wakes.
+- **B3** Aether silent since 2026-05-13 self-review. Runner needs investigation.
+- **B4** `daily-audit.sh` silent false-negative reproduced today — same bug
+  dex-002 logged 2026-05-13, still unfixed. 15-line fix: assert canonical paths
+  before reporting health, exit non-zero if absent.
+- **B5** 53 unreviewed items in `kai/queue/failed/` including `aurora-trial-push`,
+  `payment-redesign`, `commit-knowledge-fix`. Triage pass recommended.
+- **B6** kai/ledger/ACTIVE.md briefly observed at 0 bytes during audit run
+  (caught mid-write at 08:07). Self-resolved within seconds — likely the dispatch
+  cascade truncate-and-rewrite pattern, not a real loss, but worth confirming
+  the writer is atomic.
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-15T08:00:00Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-15T08:07:00Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-15T07:51:57Z
+  - Delegated: 2026-05-15T08:07:00Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-15T08:00:00Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-15T08:07:00Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-15T07:51:58Z
+  - Delegated: 2026-05-15T08:07:00Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-15T07:51:58Z
+  - Delegated: 2026-05-15T08:07:01Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-14 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-05-15T07:21:53Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai)
+  - Delegated: 2026-05-15T08:07:02Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-15 — past 06:00 MT deadline
-  - Delegated: 2026-05-15T02:11:14Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-016) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
+  - Delegated: 2026-05-15T08:06:20Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-15 — past 06:00 MT deadline
-  - Delegated: 2026-05-15T02:11:14Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-016): Daily audit: 1 critical issues found
+  - Delegated: 2026-05-15T08:06:20Z
   - Status: DELEGATED
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-15 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
@@ -51,8 +74,8 @@ Last updated: 2026-05-15T08:00:00Z
   - Delegated: 2026-05-14T22:11:02Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-11: flag-kai-009 (HYO_ROOT bug in daily-audit.sh) from 2026-05-10 still DELEGATED; today's scheduled task hit identical sandbox path bug, generated 5 phantom FAIL/8 phantom GAP. Fix proposed yesterday (add 'cd $ROOT' or pin SKILL.md to set HYO_ROOT) not yet implemented. Recurrence = systemic delegation-loop breakage. (flagged by kai, cascade flag-kai-011)
-  - Delegated: 2026-05-11T08:08:41Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-016)
+  - Delegated: 2026-05-15T08:06:20Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-14 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
@@ -193,4 +216,7 @@ Last updated: 2026-05-15T08:00:00Z
 
 - **flag-kai-015** [P2] Daily audit 2026-05-13: aether-002 (the META-FIX for DELEGATED→COMPLETED transition) stuck DELEGATED 3 days. sam-005 stuck 12d. ra-004/nel-005 newsletter remediations stuck 7d. AUTO-REMEDIATE cascade keeps firing (4 newsletter misses since 2026-05-06) but pipeline is a no-op — only records DELEGATED. Root cause (flag-kai-012) also still stuck. Loop is self-reinforcing. Hyo intervention requested.
   - Created: 2026-05-13T08:09:05Z
+
+- **flag-kai-016** [P2] Daily audit: 1 critical issues found
+  - Created: 2026-05-15T08:06:20Z
 
