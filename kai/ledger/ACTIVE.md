@@ -1,57 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-15T08:10:00-06:00
-
-## Today's audit (2026-05-15) — findings
-
-See `kai/ledger/daily-audit-2026-05-15-supplement.md` for full detail.
-
-- **B1 (META, recurring)** AUTO-REMEDIATE pipeline is a confirmed no-op for 14d.
-  Stuck DELEGATED items: sam-005 (14d), aether-002 (5d), sam-004 META-FIX (4d),
-  dex-002 (2d), ra-002 (6h). Each new P1 flag compounds backlog via safeguard
-  cascade. **Stop filing new cascade flags until executor is repaired.**
-  flag-kai-016 was filed automatically by today's audit; it should be the LAST
-  cascade-generated flag until sam-004 is hand-driven by the next live Kai.
-- **B2** Newsletter 2026-05-15 not produced. ra-002 stuck DELEGATED 6h. Manual run
-  needed before Hyo wakes.
-- **B3** Aether silent since 2026-05-13 self-review. Runner needs investigation.
-- **B4** `daily-audit.sh` silent false-negative reproduced today — same bug
-  dex-002 logged 2026-05-13, still unfixed. 15-line fix: assert canonical paths
-  before reporting health, exit non-zero if absent.
-- **B5** 53 unreviewed items in `kai/queue/failed/` including `aurora-trial-push`,
-  `payment-redesign`, `commit-knowledge-fix`. Triage pass recommended.
-- **B6** kai/ledger/ACTIVE.md briefly observed at 0 bytes during audit run
-  (caught mid-write at 08:07). Self-resolved within seconds — likely the dispatch
-  cascade truncate-and-rewrite pattern, not a real loss, but worth confirming
-  the writer is atomic.
+Last updated: 2026-05-15T08:37:09Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-15T08:07:00Z
+  - Delegated: 2026-05-15T08:37:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-15T08:07:00Z
+  - Delegated: 2026-05-15T08:37:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-15T08:07:00Z
+  - Delegated: 2026-05-15T08:37:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-15T08:07:00Z
+  - Delegated: 2026-05-15T08:37:08Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-15T08:07:01Z
+  - Delegated: 2026-05-15T08:37:08Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai)
-  - Delegated: 2026-05-15T08:07:02Z
+  - Delegated: 2026-05-15T08:37:09Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-016) — scan entire codebase for similar patterns: Daily audit: 1 critical issues found
