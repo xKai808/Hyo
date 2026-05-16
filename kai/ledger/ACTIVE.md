@@ -1,70 +1,70 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-16T02:01:24Z
+Last updated: 2026-05-16T02:25:35Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-16T02:01:24Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-16T02:25:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T01:55:26Z
+  - Delegated: 2026-05-16T02:25:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-16T02:01:24Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-16T02:25:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T01:55:27Z
+  - Delegated: 2026-05-16T02:25:33Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-16T01:55:27Z
+  - Delegated: 2026-05-16T02:25:33Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-15 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-05-16T00:10:09Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-05-16T02:25:35Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-15 — past 06:00 MT deadline
-  - Delegated: 2026-05-15T22:10:35Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Delegated: 2026-05-16T02:12:07Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-15 — past 06:00 MT deadline
-  - Delegated: 2026-05-15T22:10:35Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Delegated: 2026-05-16T02:12:07Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-15 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-05-15T22:10:35Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
+  - Delegated: 2026-05-16T02:12:07Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-14 — past 06:00 MT deadline
-  - Delegated: 2026-05-14T22:11:02Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Delegated: 2026-05-16T02:13:57Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-14 — past 06:00 MT deadline
-  - Delegated: 2026-05-14T22:11:02Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-010): No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Delegated: 2026-05-16T02:13:57Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-016)
   - Delegated: 2026-05-15T08:06:20Z
   - Status: DELEGATED
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-14 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
-  - Delegated: 2026-05-14T22:11:02Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-010)
+  - Delegated: 2026-05-16T02:13:57Z
   - Status: DELEGATED
 
 - **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-10: dex no runner output today; PRIORITIES.md stale 18d for sam/ra/aether/dex; 4 stuck AUTO-REMEDIATE items >24h (aether-002 5d, sam-005 5d, ra-002/003 1d) — DELEGATED→complete transition still broken (root cause flagged in aether-002 not yet resolved). (flagged by kai, cascade flag-kai-010)
   - Delegated: 2026-05-10T08:07:30Z
   - Status: DELEGATED
 
-- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-008) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-11 — past 06:00 MT deadline
-  - Delegated: 2026-05-11T18:10:03Z
+- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Delegated: 2026-05-16T02:15:27Z
   - Status: DELEGATED
 
 - **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
@@ -75,12 +75,12 @@ Last updated: 2026-05-16T02:01:24Z
   - Delegated: 2026-05-06T18:13:22Z
   - Status: DELEGATED
 
-- **sam-004** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-11: DELEGATED→COMPLETED transition systemically broken. Evidence: aether-002 (the meta-fix for this exact problem) stuck DELEGATED 1d; sam-005 stuck DELEGATED 10d (2026-05-01); ra-002/003/004 newsletter remediation cascades stuck 1-5d; nel ledger has 17 queued flags from 2026-04-28 (13d untouched). Yesterday's flag-kai-010 raised this; no progress. Newsletter missed 2026-05-06, 05-09, 05-11 because AUTO-REMEDIATE doesn't actually produce the newsletter — just records it as DELEGATED. The auto-remediation pipeline is a no-op. (flagged by kai, cascade flag-kai-012)
-  - Delegated: 2026-05-11T08:08:48Z
+- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-013): No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Delegated: 2026-05-16T02:15:27Z
   - Status: DELEGATED
 
-- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-06 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-015)
-  - Delegated: 2026-05-06T18:13:22Z
+- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-013)
+  - Delegated: 2026-05-16T02:15:27Z
   - Status: DELEGATED
 
 - **dex-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-13: daily-audit.sh produces silent false-negatives when run from non-Mini contexts (today: 5 agents reported FAIL despite all ACTIVE.md files present at canonical path). Script must assert canonical ledger files exist before reporting health; exit non-zero if absent. See kai/ledger/daily-audit-2026-05-13.md B1. (flagged by kai, cascade flag-kai-014)
