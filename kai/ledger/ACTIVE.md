@@ -1,30 +1,30 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-16T16:43:26Z
+Last updated: 2026-05-16T17:13:32Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T16:43:25Z
+  - Delegated: 2026-05-16T17:13:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T16:43:26Z
+  - Delegated: 2026-05-16T17:13:31Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T16:43:26Z
+  - Delegated: 2026-05-16T17:13:31Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T16:43:26Z
+  - Delegated: 2026-05-16T17:13:31Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-16T16:43:26Z
+  - Delegated: 2026-05-16T17:13:32Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
