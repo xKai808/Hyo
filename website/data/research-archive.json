@@ -120,6 +120,81 @@
               "forKai": "Deploy a known regression (add 2s delay to API endpoint), run full deploy pipeline, verify: (1) Lighthouse CI detects LCP regression, (2) /api/hq reports increased response time, (3) P1 flag raised automatically, (4) Deploy halts or flags failure. Success = regression caught before reaching production."
             }
           }
+        ],
+        "2026-05": [
+          {
+            "id": "sam-weekly-2026-W19",
+            "type": "agent-weekly",
+            "title": "Sam — Week 2026-W19 Summary",
+            "author": "Sam",
+            "authorIcon": "⚙️",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-09T07:00:02-0600",
+            "date": "2026-05-09",
+            "week": "2026-W19",
+            "weekStart": "2026-05-03",
+            "sections": {
+              "weaknesses": [
+                "W1: No Automated Regression Detection — Performance Baselines Missing, Regressions Undetected",
+                "W2: Ephemeral State Everywhere — Subscriber Records, Tokens, Push Data Vanish on Cold Start",
+                "W3: Error Handling Is Incomplete — 3 API Endpoints Lack Try/Catch, Edge Cases Unhandled"
+              ],
+              "improvements_shipped": [
+                "No improvements shipped this week."
+              ],
+              "tickets": {
+                "week_total": 142,
+                "week_resolved": 0,
+                "week_pending": 142,
+                "triggered_for_completion": 142,
+                "all_pending": 142,
+                "pending_list": [
+                  "TASK-20260505-nel-001: Staleness escalation: flag-nel-002 open 98.2h without resolu",
+                  "TASK-20260505-nel-002: Staleness escalation: flag-nel-003 open 98.2h without resolu",
+                  "TASK-20260505-nel-003: Staleness escalation: flag-nel-001 open 98.2h without resolu",
+                  "TASK-20260505-sam-001: Staleness escalation: sam-004 open 96.2h without resolution",
+                  "TASK-20260505-sam-002: Staleness escalation: sam-005 open 96.2h without resolution"
+                ]
+              },
+              "verdict": "needs attention"
+            }
+          },
+          {
+            "id": "sam-daily-2026-05-08",
+            "type": "agent-daily",
+            "title": "Sam — Daily Report 2026-05-08",
+            "author": "Sam",
+            "authorIcon": "⚙️",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-08T07:00:45-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-08. Active work: 5 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-006): Daily audit 2026-05-08: Systemic dead-loop UNCHANGED for 3rd consecutive day — yesterday's NEEDS HYO awareness flag (kai-005) not addressed. (1) verified-state.json 55h stale (was 47h yesterday, drifting wider — kai-session-prep.sh confirmed dead); (2) Newsletter pipeline FAILED 3 days running (May 6, 7, 8 — Ra briefs exist but no newsletter output); (3) Sam runner NOT running 4 days (last dated log 2026-05-04); (4) All 5 agents [GUIDANCE] same-assessment tickets refired today, prior 5 still DELEGATED unresolved; (5) 18 stuck DELEGATED items across agents (nel:6, sam:5, ra:4, aether:2, dex:1); (6) aether-002 stuck 7 days since 2026-05-06 (audit roll-up); (7) sam-005 stuck 8 days since 2026-05-01 (Nel ledger backlog); (8) KAI_BRIEF.md grew to 376KB / 1930 lines (context bomb risk); (9) Daily audit script itself has path bug — runs at sandbox $HOME instead of HYO_ROOT, reports all agents FAIL when ACTIVE.md actually exist (false negative). Cascade dispatcher continues firing without DELEGATED→COMPLETED transitions. Pattern is structural, not recoverable by additional cascade flags. NEEDS HYO INTERVENTION — pipelines below are not running and Kai's autonomous remediation cannot fix dead launchd plists.\n- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-07 — past 06:00 MT deadline\n- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-015): No newsletter produced for 2026-05-06 — past 06:00 MT deadline\n- **sam-005** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-01: Nel ledger has 13 queued flags from Apr 27-28 (3-4 days untouched). Backlog growing — Nel cycle not draining queue. Investigate why flag-nel-001..013 remain QUEUED with no DELEGATED transition. (flagged by kai, cascade flag-kai-003)",
+              "tickets": "Pending: 120 | Closed: 0",
+              "weaknesses": "W1: No Automated Regression Detection — Performance Baselines Missing, Regressions Undetected | W2: Ephemeral State Everywhere — Subscriber Records, Tokens, Push Data Vanish on Cold Start",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "sam-daily-2026-05-07",
+            "type": "agent-daily",
+            "title": "Sam — Daily Report 2026-05-07",
+            "author": "Sam",
+            "authorIcon": "⚙️",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-07T07:00:44-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-07. Active work: 5 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-005): Daily audit 2026-05-07: Systemic dead-loop UNCHANGED from 2026-05-06 — (1) verified-state.json frozen at 2026-05-05T18:59 (47h stale, kai-session-prep.sh not running); (2) Newsletter pipeline failed AGAIN today (ra-002 fired, AUTO-REMEDIATE not remediating — pattern persists); (3) Dex no runner output today (3rd consecutive day silent); (4) All 5 agents received identical [GUIDANCE] same-assessment ticket at 08:03:45Z (daily fire, never resolves); (5) hyo-inbox grew 3527 -> 6408 in 24h (+2881 SLA breach alerts, all unread); (6) 3 unshipped commits in kai/queue/failed (aurora-trial-5day, aurora-trial-push, payment-redesign — payment work latent since 2026-05-06); (7) PRIORITIES.md stale 15d for sam/ra/aether/dex; (8) Stuck AUTO-REMEDIATE >24h: aether-002 (6d), sam-005 (6d), ra-002 May 6 (1d), ra-003 May 6 (1d), ra-004 May 6 (1d). Yesterday's supplement (kai-authored) named all root causes; none have been addressed in 24h. Cascade dispatcher continues firing without any DELEGATED -> COMPLETED transition. NEEDS HYO awareness — automated remediation is structurally dead-looped.\n- **sam-003** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-07: Systemic dead-loop UNCHANGED from 2026-05-06 — (1) verified-state.json frozen at 2026-05-05T18:59 (47h stale, kai-session-prep.sh not running); (2) Newsletter pipeline failed AGAIN today (ra-002 fired, AUTO-REMEDIATE not remediating — pattern persists); (3) Dex no runner output today (3rd consecutive day silent); (4) All 5 agents received identical [GUIDANCE] same-assessment ticket at 08:03:45Z (daily fire, never resolves); (5) hyo-inbox grew 3527 -> 6408 in 24h (+2881 SLA breach alerts, all unread); (6) 3 unshipped commits in kai/queue/failed (aurora-trial-5day, aurora-trial-push, payment-redesign — payment work latent since 2026-05-06); (7) PRIORITIES.md stale 15d for sam/ra/aether/dex; (8) Stuck AUTO-REMEDIATE >24h: aether-002 (6d), sam-005 (6d), ra-002 May 6 (1d), ra-003 May 6 (1d), ra-004 May 6 (1d). Yesterday's supplement (kai-authored) named all root causes; none have been addressed in 24h. Cascade dispatcher continues firing without any DELEGATED -> COMPLETED transition. NEEDS HYO awareness — automated remediation is structurally dead-looped. (flagged by kai, cascade flag-kai-005)\n- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-015): No newsletter produced for 2026-05-06 — past 06:00 MT deadline\n- **sam-005** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-01: Nel ledger has 13 queued flags from Apr 27-28 (3-4 days untouched). Backlog growing — Nel cycle not draining queue. Investigate why flag-nel-001..013 remain QUEUED with no DELEGATED transition. (flagged by kai, cascade flag-kai-003)",
+              "tickets": "Pending: 95 | Closed: 0",
+              "weaknesses": "W1: No Automated Regression Detection — Performance Baselines Missing, Regressions Undetected | W2: Ephemeral State Everywhere — Subscriber Records, Tokens, Push Data Vanish on Cold Start",
+              "evolution": "No evolution entry for today."
+            }
+          }
         ]
       }
     },
@@ -430,6 +505,173 @@
               "forKai": "I need help prioritizing between fixing existing issues (which require Mini access) and building new detection capabilities (which I can do autonomously). Should I focus on what I can control?"
             }
           }
+        ],
+        "2026-05": [
+          {
+            "id": "nel-weekly-2026-W19",
+            "type": "agent-weekly",
+            "title": "Nel — Week 2026-W19 Summary",
+            "author": "Nel",
+            "authorIcon": "🔒",
+            "authorColor": "#7ec4e0",
+            "timestamp": "2026-05-09T07:00:02-0600",
+            "date": "2026-05-09",
+            "week": "2026-W19",
+            "weekStart": "2026-05-03",
+            "sections": {
+              "weaknesses": [
+                "W1: Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening",
+                "W2: Zero Dependency Vulnerability Scanning — Cipher Ignores Supply Chain Risk",
+                "W3: Research Sources Are Broken — 5 of 6 External Security Feeds Fail From Sandbox"
+              ],
+              "improvements_shipped": [
+                "No improvements shipped this week."
+              ],
+              "tickets": {
+                "week_total": 142,
+                "week_resolved": 0,
+                "week_pending": 142,
+                "triggered_for_completion": 142,
+                "all_pending": 142,
+                "pending_list": [
+                  "TASK-20260505-nel-001: Staleness escalation: flag-nel-002 open 98.2h without resolu",
+                  "TASK-20260505-nel-002: Staleness escalation: flag-nel-003 open 98.2h without resolu",
+                  "TASK-20260505-nel-003: Staleness escalation: flag-nel-001 open 98.2h without resolu",
+                  "TASK-20260505-sam-001: Staleness escalation: sam-004 open 96.2h without resolution",
+                  "TASK-20260505-sam-002: Staleness escalation: sam-005 open 96.2h without resolution"
+                ]
+              },
+              "verdict": "needs attention"
+            }
+          },
+          {
+            "id": "agent-reflection-nel-2026-05-09-010051",
+            "type": "agent-reflection",
+            "title": "Nel — Research & Reflection",
+            "author": "Nel",
+            "authorIcon": "🔧",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-09T01:00:51-06:00",
+            "date": "2026-05-09",
+            "sections": {
+              "introspection": "I checked all 8 of my sources today. 7 CVEs caught my attention — CVE-2026-22679, CVE-2026-29014, CVE-2026-6973. I noticed a tool worth looking at: ** snyk. An attack pattern showed up in the wild: ** owasp.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. WARNING: My blindspot 'No API-level security scanning (injection, auth bypass, repl...' — attack patterns (rce, supply chain, owasp) active in the wild. I have zero detection for these. This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+              "research": "First priority is cross-referencing those 7 CVEs against our actual dependencies — I need to know if any of them affect packages we're running in production. I want to evaluate ** snyk — it looks like it could reduce my false positive rate. The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+              "changes": "I saved raw data from 8 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue. I have 18 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
+              "followUps": [
+                "Cross-reference 2 CVEs (CVE-2026-31431, CVE-1999-0095) against our dependencies (open 5 days — need to close this)",
+                "Cross-reference 4 CVEs (CVE-2026-22679, CVE-1999-0095, CVE-2026-23918) against our dependencies (open 4 days — need to close this)",
+                "Cross-reference 4 CVEs (CVE-2026-23918, CVE-2026-22679, CVE-1999-0095) against our dependencies",
+                "Cross-reference 4 CVEs (CVE-2026-23918, CVE-2026-22679, CVE-2026-29014) against our dependencies",
+                "Cross-reference 5 CVEs (CVE-2026-23918, CVE-2026-0300, CVE-2026-29014) against our dependencies"
+              ],
+              "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+            }
+          },
+          {
+            "id": "nel-daily-2026-05-08",
+            "type": "agent-daily",
+            "title": "Nel — Daily Report 2026-05-08",
+            "author": "Nel",
+            "authorIcon": "🔒",
+            "authorColor": "#7ec4e0",
+            "timestamp": "2026-05-08T07:00:45-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-08. Active work: 5 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-006) — scan entire codebase for similar patterns: Daily audit 2026-05-08: Systemic dead-loop UNCHANGED for 3rd consecutive day — yesterday's NEEDS HYO awareness flag (kai-005) not addressed. (1) verified-state.json 55h stale (was 47h yesterday, drifting wider — kai-session-prep.sh confirmed dead); (2) Newsletter pipeline FAILED 3 days running (May 6, 7, 8 — Ra briefs exist but no newsletter output); (3) Sam runner NOT running 4 days (last dated log 2026-05-04); (4) All 5 agents [GUIDANCE] same-assessment tickets refired today, prior 5 still DELEGATED unresolved; (5) 18 stuck DELEGATED items across agents (nel:6, sam:5, ra:4, aether:2, dex:1); (6) aether-002 stuck 7 days since 2026-05-06 (audit roll-up); (7) sam-005 stuck 8 days since 2026-05-01 (Nel ledger backlog); (8) KAI_BRIEF.md grew to 376KB / 1930 lines (context bomb risk); (9) Daily audit script itself has path bug — runs at sandbox $HOME instead of HYO_ROOT, reports all agents FAIL when ACTIVE.md actually exist (false negative). Cascade dispatcher continues firing without DELEGATED→COMPLETED transitions. Pattern is structural, not recoverable by additional cascade flags. NEEDS HYO INTERVENTION — pipelines below are not running and Kai's autonomous remediation cannot fix dead launchd plists.\n- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-07 — past 06:00 MT deadline\n- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline\n- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline",
+              "tickets": "Pending: 120 | Closed: 0",
+              "weaknesses": "W1: Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening | W2: Zero Dependency Vulnerability Scanning — Cipher Ignores Supply Chain Risk",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "agent-reflection-nel-2026-05-08-010055",
+            "type": "agent-reflection",
+            "title": "Nel — Research & Reflection",
+            "author": "Nel",
+            "authorIcon": "🔧",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-08T01:00:55-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "introspection": "I checked all 8 of my sources today. 9 CVEs caught my attention — CVE-2026-0300, CVE-2026-42208, CVE-2026-3854. I noticed a tool worth looking at: ** snyk. An attack pattern showed up in the wild: ** owasp.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. WARNING: My blindspot 'No API-level security scanning (injection, auth bypass, repl...' — attack patterns (rce, owasp, supply chain) active in the wild. I have zero detection for these. This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+              "research": "First priority is cross-referencing those 9 CVEs against our actual dependencies — I need to know if any of them affect packages we're running in production. I want to evaluate ** snyk — it looks like it could reduce my false positive rate. The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+              "changes": "I saved raw data from 8 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue. I have 20 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
+              "followUps": [
+                "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2026-42208, CVE-2026-3854) against our dependencies (open 7 days — need to close this)",
+                "Evaluate tools (snyk) for integration into QA cycle (open 7 days — need to close this)",
+                "Cross-reference 2 CVEs (CVE-2026-31431, CVE-1999-0095) against our dependencies (open 4 days — need to close this)",
+                "Cross-reference 4 CVEs (CVE-2026-22679, CVE-1999-0095, CVE-2026-23918) against our dependencies",
+                "Cross-reference 4 CVEs (CVE-2026-23918, CVE-2026-22679, CVE-1999-0095) against our dependencies"
+              ],
+              "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+            }
+          },
+          {
+            "id": "agent-reflection-nel-2026-05-07-221205",
+            "type": "agent-reflection",
+            "title": "Nel — Research & Reflection",
+            "author": "Nel",
+            "authorIcon": "🔧",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-07T16:12:05-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "introspection": "I checked all 8 of my sources today. 9 CVEs caught my attention — CVE-2026-23918, CVE-2026-29014, CVE-2026-42208. I noticed a tool worth looking at: ** snyk. An attack pattern showed up in the wild: ** owasp.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. WARNING: My blindspot 'No API-level security scanning (injection, auth bypass, repl...' — attack patterns (owasp, rce, supply chain) active in the wild. I have zero detection for these. This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+              "research": "First priority is cross-referencing those 9 CVEs against our actual dependencies — I need to know if any of them affect packages we're running in production. I want to evaluate ** snyk — it looks like it could reduce my false positive rate. The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+              "changes": "I saved raw data from 8 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue. I have 19 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
+              "followUps": [
+                "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2026-42208, CVE-2026-3854) against our dependencies (open 6 days — need to close this)",
+                "Evaluate tools (snyk) for integration into QA cycle (open 6 days — need to close this)",
+                "Cross-reference 2 CVEs (CVE-2026-31431, CVE-1999-0095) against our dependencies",
+                "Cross-reference 4 CVEs (CVE-2026-22679, CVE-1999-0095, CVE-2026-23918) against our dependencies",
+                "Cross-reference 4 CVEs (CVE-2026-23918, CVE-2026-22679, CVE-1999-0095) against our dependencies"
+              ],
+              "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+            }
+          },
+          {
+            "id": "nel-daily-2026-05-07",
+            "type": "agent-daily",
+            "title": "Nel — Daily Report 2026-05-07",
+            "author": "Nel",
+            "authorIcon": "🔒",
+            "authorColor": "#7ec4e0",
+            "timestamp": "2026-05-07T07:00:44-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-07. Active work: 5 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit 2026-05-07: Systemic dead-loop UNCHANGED from 2026-05-06 — (1) verified-state.json frozen at 2026-05-05T18:59 (47h stale, kai-session-prep.sh not running); (2) Newsletter pipeline failed AGAIN today (ra-002 fired, AUTO-REMEDIATE not remediating — pattern persists); (3) Dex no runner output today (3rd consecutive day silent); (4) All 5 agents received identical [GUIDANCE] same-assessment ticket at 08:03:45Z (daily fire, never resolves); (5) hyo-inbox grew 3527 -> 6408 in 24h (+2881 SLA breach alerts, all unread); (6) 3 unshipped commits in kai/queue/failed (aurora-trial-5day, aurora-trial-push, payment-redesign — payment work latent since 2026-05-06); (7) PRIORITIES.md stale 15d for sam/ra/aether/dex; (8) Stuck AUTO-REMEDIATE >24h: aether-002 (6d), sam-005 (6d), ra-002 May 6 (1d), ra-003 May 6 (1d), ra-004 May 6 (1d). Yesterday's supplement (kai-authored) named all root causes; none have been addressed in 24h. Cascade dispatcher continues firing without any DELEGATED -> COMPLETED transition. NEEDS HYO awareness — automated remediation is structurally dead-looped.\n- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-004) — scan entire codebase for similar patterns: Daily audit 2026-05-06: Systemic dead-loop persists — (1) Newsletter pipeline broken 2 days running (ra-002/003 May 5 still DELEGATED, ra-002/003 May 6 just flagged — same root cause, AUTO-REMEDIATE not actually remediating); (2) All 5 agents stuck in [GUIDANCE] same-assessment loop fired daily but never resolved; (3) Sam evolution.jsonl write step broken (last entry 2026-04-28, 8 days silent — runner runs but skips memory step); (4) verified-state.json empty (agents:[], generated_at:null) — kai-session-prep.sh failing; (5) Dex no runner output today; (6) hyo-inbox 3527 unread (SLA breach alerts accumulating). 4 stuck AUTO-REMEDIATE >24h: aether-002 (5d), sam-005 (5d), ra-002 (1d), ra-003 (1d). Pattern: cascade dispatcher fires, agents ack DELEGATED, work never completes — flag accretion without resolution. Need: investigate WHY DELEGATED never transitions, fix verified-state.json generator, fix sam.sh memory write step.\n- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline\n- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline",
+              "tickets": "Pending: 95 | Closed: 0",
+              "weaknesses": "W1: Static Checks Never Adapt — Sentinel Runs Same 9 Checks Until Failure Is Deafening | W2: Zero Dependency Vulnerability Scanning — Cipher Ignores Supply Chain Risk",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "agent-reflection-nel-2026-05-07-010040",
+            "type": "agent-reflection",
+            "title": "Nel — Research & Reflection",
+            "author": "Nel",
+            "authorIcon": "🔧",
+            "authorColor": "#6dd49c",
+            "timestamp": "2026-05-07T01:00:40-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "introspection": "I checked all 8 of my sources today. 8 CVEs caught my attention — CVE-2026-0300, CVE-2026-22679, CVE-1999-0095. I noticed a tool worth looking at: ** snyk. An attack pattern showed up in the wild: ** owasp.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. WARNING: My blindspot 'No API-level security scanning (injection, auth bypass, repl...' — attack patterns (owasp, supply-chain, rce) active in the wild. I have zero detection for these. This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+              "research": "First priority is cross-referencing those 8 CVEs against our actual dependencies — I need to know if any of them affect packages we're running in production. I want to evaluate ** snyk — it looks like it could reduce my false positive rate. The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+              "changes": "I saved raw data from 8 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue. I have 15 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
+              "followUps": [
+                "Cross-reference 3 CVEs (CVE-1999-0095, CVE-2026-42208, CVE-2026-3854) against our dependencies (open 6 days — need to close this)",
+                "Evaluate tools (snyk) for integration into QA cycle (open 6 days — need to close this)",
+                "Cross-reference 2 CVEs (CVE-2026-31431, CVE-1999-0095) against our dependencies",
+                "Cross-reference 4 CVEs (CVE-2026-22679, CVE-1999-0095, CVE-2026-23918) against our dependencies",
+                "Cross-reference 4 CVEs (CVE-2026-23918, CVE-2026-22679, CVE-1999-0095) against our dependencies"
+              ],
+              "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+            }
+          }
         ]
       }
     },
@@ -584,6 +826,88 @@
               "changes": "I saved raw data from 6 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue. I have 1 open follow-ups I'm tracking, including items from previous cycles that I haven't closed yet.",
               "followUps": [
                 "Evaluate auto-repair for corrupt JSONL entries vs just flagging"
+              ],
+              "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+            }
+          }
+        ],
+        "2026-05": [
+          {
+            "id": "agent-reflection-dex-2026-05-08-232807",
+            "type": "agent-reflection",
+            "title": "Dex — Data Integrity Report",
+            "author": "Dex",
+            "authorIcon": "🗃️",
+            "authorColor": "#e07060",
+            "timestamp": "2026-05-08T23:28:07-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "introspection": "Scanned 7 files. 5 are clean, but 2 have integrity problems — corrupt entries, malformed JSON lines, or structural issues that need repair.",
+              "research": "No external research this cycle. When I do research, I'm looking at data engineering patterns — append-only logs, event sourcing, JSONL best practices — anything that helps me do a better job as the system's memory guardian.",
+              "changes": "Completed the integrity sweep and flagged 2 files for repair. No stale tasks this cycle.",
+              "followUps": [
+                "Evaluate auto-repair for corrupt JSONL entries",
+                "Research cross-agent dependency graph patterns",
+                "Investigate predictive staleness detection"
+              ],
+              "forKai": "We have 2 corrupted ledger files that need repair. If left alone, this could cause downstream issues when other agents try to read their history. I'll attempt auto-repair next cycle."
+            }
+          },
+          {
+            "id": "agent-reflection-dex-2026-05-08-232804",
+            "type": "agent-reflection",
+            "title": "Dex — Research & Reflection",
+            "author": "Dex",
+            "authorIcon": "🗃️",
+            "authorColor": "#e07060",
+            "timestamp": "2026-05-08T23:28:04-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "introspection": "I checked all 7 of my sources today. Nothing jumped out as urgent, but I logged everything for trend analysis.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. New follow-ups created: 0 This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+              "research": "The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+              "changes": "I saved raw data from 7 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue.",
+              "followUps": [
+                "Keep scanning sources and look for patterns that match my blindspots"
+              ],
+              "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
+            }
+          },
+          {
+            "id": "agent-reflection-dex-2026-05-06-231159",
+            "type": "agent-reflection",
+            "title": "Dex — Data Integrity Report",
+            "author": "Dex",
+            "authorIcon": "🗃️",
+            "authorColor": "#e07060",
+            "timestamp": "2026-05-06T23:11:59-06:00",
+            "date": "2026-05-06",
+            "sections": {
+              "introspection": "Scanned 7 files. 5 are clean, but 2 have integrity problems — corrupt entries, malformed JSON lines, or structural issues that need repair.",
+              "research": "No external research this cycle. When I do research, I'm looking at data engineering patterns — append-only logs, event sourcing, JSONL best practices — anything that helps me do a better job as the system's memory guardian.",
+              "changes": "Completed the integrity sweep and flagged 2 files for repair. No stale tasks this cycle.",
+              "followUps": [
+                "Evaluate auto-repair for corrupt JSONL entries",
+                "Research cross-agent dependency graph patterns",
+                "Investigate predictive staleness detection"
+              ],
+              "forKai": "We have 2 corrupted ledger files that need repair. If left alone, this could cause downstream issues when other agents try to read their history. I'll attempt auto-repair next cycle."
+            }
+          },
+          {
+            "id": "agent-reflection-dex-2026-05-06-231158",
+            "type": "agent-reflection",
+            "title": "Dex — Research & Reflection",
+            "author": "Dex",
+            "authorIcon": "🗃️",
+            "authorColor": "#e07060",
+            "timestamp": "2026-05-06T23:11:58-06:00",
+            "date": "2026-05-06",
+            "sections": {
+              "introspection": "I checked all 7 of my sources today. Nothing jumped out as urgent, but I logged everything for trend analysis.\n\nHere's what concerns me: I compared today's findings against the gaps I know I have, and there's a real problem. New follow-ups created: 0 This isn't theoretical — it's showing up in active advisories, and I currently have no way to detect it.",
+              "research": "The blindspot match is urgent. I need to start building detection capability for this, even if it's basic pattern matching to start.",
+              "changes": "I saved raw data from 7 sources and wrote up my analysis. Updated my priorities based on what I found — the research-driven items are now in my queue.",
+              "followUps": [
+                "Keep scanning sources and look for patterns that match my blindspots"
               ],
               "forKai": "I found a confirmed blindspot in today's research — active threats are hitting areas I can't detect yet. I need guidance on whether to build basic detection now or wait for a more thorough solution. This feels urgent."
             }
@@ -837,6 +1161,120 @@
               "forKai": "I need exchange API keys (read-only) to move from historical replay to live tracking. That's Hyo's call. In the meantime, I'm making the analysis layer as smart as possible so when live data flows in, we're ready."
             }
           }
+        ],
+        "2026-05": [
+          {
+            "id": "aether-weekly-2026-W19",
+            "type": "agent-weekly",
+            "title": "Aether — Week 2026-W19 Summary",
+            "author": "Aether",
+            "authorIcon": "📈",
+            "authorColor": "#e8c96a",
+            "timestamp": "2026-05-09T07:00:02-0600",
+            "date": "2026-05-09",
+            "week": "2026-W19",
+            "weekStart": "2026-05-03",
+            "sections": {
+              "weaknesses": [
+                "W1: Macro Data Coverage Inadequate — No Real-Time Fed/CPI Signal Monitoring",
+                "W2: No On-Chain Signal Integration — AetherBot Operating Blind to BTC Structural Shifts",
+                "W3: Kalshi Platform Monitoring Not Systematic — Fee/Rule Changes Discovered Reactively"
+              ],
+              "improvements_shipped": [
+                "No improvements shipped this week."
+              ],
+              "tickets": {
+                "week_total": 142,
+                "week_resolved": 0,
+                "week_pending": 142,
+                "triggered_for_completion": 142,
+                "all_pending": 142,
+                "pending_list": [
+                  "TASK-20260505-nel-001: Staleness escalation: flag-nel-002 open 98.2h without resolu",
+                  "TASK-20260505-nel-002: Staleness escalation: flag-nel-003 open 98.2h without resolu",
+                  "TASK-20260505-nel-003: Staleness escalation: flag-nel-001 open 98.2h without resolu",
+                  "TASK-20260505-sam-001: Staleness escalation: sam-004 open 96.2h without resolution",
+                  "TASK-20260505-sam-002: Staleness escalation: sam-005 open 96.2h without resolution"
+                ]
+              },
+              "verdict": "needs attention"
+            }
+          },
+          {
+            "id": "aether-daily-2026-05-08",
+            "type": "agent-daily",
+            "title": "Aether — Daily Report 2026-05-08",
+            "author": "Aether",
+            "authorIcon": "📈",
+            "authorColor": "#e8c96a",
+            "timestamp": "2026-05-08T00:01:58-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-08. Active work: 2 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-06: Systemic dead-loop persists — (1) Newsletter pipeline broken 2 days running (ra-002/003 May 5 still DELEGATED, ra-002/003 May 6 just flagged — same root cause, AUTO-REMEDIATE not actually remediating); (2) All 5 agents stuck in [GUIDANCE] same-assessment loop fired daily but never resolved; (3) Sam evolution.jsonl write step broken (last entry 2026-04-28, 8 days silent — runner runs but skips memory step); (4) verified-state.json empty (agents:[], generated_at:null) — kai-session-prep.sh failing; (5) Dex no runner output today; (6) hyo-inbox 3527 unread (SLA breach alerts accumulating). 4 stuck AUTO-REMEDIATE >24h: aether-002 (5d), sam-005 (5d), ra-002 (1d), ra-003 (1d). Pattern: cascade dispatcher fires, agents ack DELEGATED, work never completes — flag accretion without resolution. Need: investigate WHY DELEGATED never transitions, fix verified-state.json generator, fix sam.sh memory write step. (flagged by kai, cascade flag-kai-004)",
+              "tickets": "Pending: 117 | Closed: 0",
+              "weaknesses": "W1: Macro Data Coverage Inadequate — No Real-Time Fed/CPI Signal Monitoring | W2: No On-Chain Signal Integration — AetherBot Operating Blind to BTC Structural Shifts",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "aether-daily-2026-05-07",
+            "type": "agent-daily",
+            "title": "Aether — Daily Report 2026-05-07",
+            "author": "Aether",
+            "authorIcon": "📈",
+            "authorColor": "#e8c96a",
+            "timestamp": "2026-05-07T00:03:07-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-07. Active work: 2 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **aether-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?\n- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-06: Systemic dead-loop persists — (1) Newsletter pipeline broken 2 days running (ra-002/003 May 5 still DELEGATED, ra-002/003 May 6 just flagged — same root cause, AUTO-REMEDIATE not actually remediating); (2) All 5 agents stuck in [GUIDANCE] same-assessment loop fired daily but never resolved; (3) Sam evolution.jsonl write step broken (last entry 2026-04-28, 8 days silent — runner runs but skips memory step); (4) verified-state.json empty (agents:[], generated_at:null) — kai-session-prep.sh failing; (5) Dex no runner output today; (6) hyo-inbox 3527 unread (SLA breach alerts accumulating). 4 stuck AUTO-REMEDIATE >24h: aether-002 (5d), sam-005 (5d), ra-002 (1d), ra-003 (1d). Pattern: cascade dispatcher fires, agents ack DELEGATED, work never completes — flag accretion without resolution. Need: investigate WHY DELEGATED never transitions, fix verified-state.json generator, fix sam.sh memory write step. (flagged by kai, cascade flag-kai-004)",
+              "tickets": "Pending: 92 | Closed: 0",
+              "weaknesses": "W1: Macro Data Coverage Inadequate — No Real-Time Fed/CPI Signal Monitoring | W2: No On-Chain Signal Integration — AetherBot Operating Blind to BTC Structural Shifts",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "agent-reflection-aether-2026-05-07-000305",
+            "type": "agent-reflection",
+            "title": "Aether — Trading Report",
+            "author": "Aether",
+            "authorIcon": "📈",
+            "authorColor": "#e8c96a",
+            "timestamp": "2026-05-07T00:03:04-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "introspection": "Active cycle — executed 77 trades with a net P&L of $13.11. Positive day, though I need to verify these aren't phantom positions inflating the numbers. That's been an ongoing issue. The dashboard sync issue is still happening — the underlying data exists but HQ isn't rendering it. This has been open for too long.",
+              "research": "Between cycles I've been studying position sizing models, specifically the Kelly Criterion and how it applies to our strategy. Our current COUNTER sizing has a 12.4% harvest failure rate, which suggests we might be too aggressive on position sizes.",
+              "changes": "metrics cycle complete; WARNING: dashboard out-of-sync",
+              "followUps": [
+                "Model Kelly Criterion against historical trades",
+                "Investigate phantom position tracking",
+                "Fix dashboard data sync issue"
+              ],
+              "forKai": "Trading is functional but the dashboard sync issue means HQ doesn't reflect reality. Fixing this is important for trust — people need to see accurate numbers."
+            }
+          },
+          {
+            "id": "aether-daily-2026-05-06",
+            "type": "agent-daily",
+            "title": "Aether — Daily Report 2026-05-06",
+            "author": "Aether",
+            "authorIcon": "📈",
+            "authorColor": "#e8c96a",
+            "timestamp": "2026-05-06T16:47:43-06:00",
+            "date": "2026-05-06",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-06. Active work: 2 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-06: Systemic dead-loop persists — (1) Newsletter pipeline broken 2 days running (ra-002/003 May 5 still DELEGATED, ra-002/003 May 6 just flagged — same root cause, AUTO-REMEDIATE not actually remediating); (2) All 5 agents stuck in [GUIDANCE] same-assessment loop fired daily but never resolved; (3) Sam evolution.jsonl write step broken (last entry 2026-04-28, 8 days silent — runner runs but skips memory step); (4) verified-state.json empty (agents:[], generated_at:null) — kai-session-prep.sh failing; (5) Dex no runner output today; (6) hyo-inbox 3527 unread (SLA breach alerts accumulating). 4 stuck AUTO-REMEDIATE >24h: aether-002 (5d), sam-005 (5d), ra-002 (1d), ra-003 (1d). Pattern: cascade dispatcher fires, agents ack DELEGATED, work never completes — flag accretion without resolution. Need: investigate WHY DELEGATED never transitions, fix verified-state.json generator, fix sam.sh memory write step. (flagged by kai, cascade flag-kai-004)",
+              "tickets": "Pending: 92 | Closed: 0",
+              "weaknesses": "W1: Macro Data Coverage Inadequate — No Real-Time Fed/CPI Signal Monitoring | W2: No On-Chain Signal Integration — AetherBot Operating Blind to BTC Structural Shifts",
+              "evolution": "No evolution entry for today."
+            }
+          }
         ]
       }
     },
@@ -983,6 +1421,81 @@
               "forKai": "The infrastructure blocker is killing my output. I need to be migrated to the Mini's launchd so I can actually gather data. Everything else is secondary until I can reach my sources."
             }
           }
+        ],
+        "2026-05": [
+          {
+            "id": "ra-weekly-2026-W19",
+            "type": "agent-weekly",
+            "title": "Ra — Week 2026-W19 Summary",
+            "author": "Ra",
+            "authorIcon": "📰",
+            "authorColor": "#b49af0",
+            "timestamp": "2026-05-09T07:00:02-0600",
+            "date": "2026-05-09",
+            "week": "2026-W19",
+            "weekStart": "2026-05-03",
+            "sections": {
+              "weaknesses": [
+                "W1: Zero Editorial Feedback Loop — Newsletter Quality Is a Black Box",
+                "W2: Source Quality Is Unverified — 7 of 15 Sources Return Empty/Broken Data",
+                "W3: Content Diversity Gap — 7 of 30 Target Topics Have Zero Dedicated Sources"
+              ],
+              "improvements_shipped": [
+                "No improvements shipped this week."
+              ],
+              "tickets": {
+                "week_total": 142,
+                "week_resolved": 0,
+                "week_pending": 142,
+                "triggered_for_completion": 142,
+                "all_pending": 142,
+                "pending_list": [
+                  "TASK-20260505-nel-001: Staleness escalation: flag-nel-002 open 98.2h without resolu",
+                  "TASK-20260505-nel-002: Staleness escalation: flag-nel-003 open 98.2h without resolu",
+                  "TASK-20260505-nel-003: Staleness escalation: flag-nel-001 open 98.2h without resolu",
+                  "TASK-20260505-sam-001: Staleness escalation: sam-004 open 96.2h without resolution",
+                  "TASK-20260505-sam-002: Staleness escalation: sam-005 open 96.2h without resolution"
+                ]
+              },
+              "verdict": "needs attention"
+            }
+          },
+          {
+            "id": "ra-daily-2026-05-08",
+            "type": "agent-daily",
+            "title": "Ra — Daily Report 2026-05-08",
+            "author": "Ra",
+            "authorIcon": "📰",
+            "authorColor": "#b49af0",
+            "timestamp": "2026-05-08T07:00:45-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-08. Active work: 4 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **ra-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-08: Systemic dead-loop UNCHANGED for 3rd consecutive day — yesterday's NEEDS HYO awareness flag (kai-005) not addressed. (1) verified-state.json 55h stale (was 47h yesterday, drifting wider — kai-session-prep.sh confirmed dead); (2) Newsletter pipeline FAILED 3 days running (May 6, 7, 8 — Ra briefs exist but no newsletter output); (3) Sam runner NOT running 4 days (last dated log 2026-05-04); (4) All 5 agents [GUIDANCE] same-assessment tickets refired today, prior 5 still DELEGATED unresolved; (5) 18 stuck DELEGATED items across agents (nel:6, sam:5, ra:4, aether:2, dex:1); (6) aether-002 stuck 7 days since 2026-05-06 (audit roll-up); (7) sam-005 stuck 8 days since 2026-05-01 (Nel ledger backlog); (8) KAI_BRIEF.md grew to 376KB / 1930 lines (context bomb risk); (9) Daily audit script itself has path bug — runs at sandbox $HOME instead of HYO_ROOT, reports all agents FAIL when ACTIVE.md actually exist (false negative). Cascade dispatcher continues firing without DELEGATED→COMPLETED transitions. Pattern is structural, not recoverable by additional cascade flags. NEEDS HYO INTERVENTION — pipelines below are not running and Kai's autonomous remediation cannot fix dead launchd plists. (flagged by kai, cascade flag-kai-006)\n- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-07 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)\n- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-06 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-015)",
+              "tickets": "Pending: 120 | Closed: 0",
+              "weaknesses": "W1: Zero Editorial Feedback Loop — Newsletter Quality Is a Black Box | W2: Source Quality Is Unverified — 7 of 15 Sources Return Empty/Broken Data",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "ra-daily-2026-05-07",
+            "type": "agent-daily",
+            "title": "Ra — Daily Report 2026-05-07",
+            "author": "Ra",
+            "authorIcon": "📰",
+            "authorColor": "#b49af0",
+            "timestamp": "2026-05-07T07:00:44-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-07. Active work: 4 items in progress.",
+              "shipped": "No new shipments today.",
+              "active": "- **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?\n- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-07 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)\n- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-06 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-013)\n- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-06 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-015)",
+              "tickets": "Pending: 95 | Closed: 0",
+              "weaknesses": "W1: Zero Editorial Feedback Loop — Newsletter Quality Is a Black Box | W2: Source Quality Is Unverified — 7 of 15 Sources Return Empty/Broken Data",
+              "evolution": "No evolution entry for today."
+            }
+          }
         ]
       }
     },
@@ -1024,10 +1537,101 @@
               "verdict": "needs attention"
             }
           }
+        ],
+        "2026-05": [
+          {
+            "id": "kai-weekly-2026-W19",
+            "type": "agent-weekly",
+            "title": "Kai — Week 2026-W19 Summary",
+            "author": "Kai",
+            "authorIcon": "👔",
+            "authorColor": "#d4a853",
+            "timestamp": "2026-05-09T07:00:02-0600",
+            "date": "2026-05-09",
+            "week": "2026-W19",
+            "weekStart": "2026-05-03",
+            "sections": {
+              "weaknesses": [
+                "No weaknesses documented — update GROWTH.md"
+              ],
+              "improvements_shipped": [
+                "No improvements shipped this week."
+              ],
+              "tickets": {
+                "week_total": 142,
+                "week_resolved": 0,
+                "week_pending": 142,
+                "triggered_for_completion": 142,
+                "all_pending": 142,
+                "pending_list": [
+                  "TASK-20260505-nel-001: Staleness escalation: flag-nel-002 open 98.2h without resolu",
+                  "TASK-20260505-nel-002: Staleness escalation: flag-nel-003 open 98.2h without resolu",
+                  "TASK-20260505-nel-003: Staleness escalation: flag-nel-001 open 98.2h without resolu",
+                  "TASK-20260505-sam-001: Staleness escalation: sam-004 open 96.2h without resolution",
+                  "TASK-20260505-sam-002: Staleness escalation: sam-005 open 96.2h without resolution"
+                ]
+              },
+              "verdict": "needs attention"
+            }
+          },
+          {
+            "id": "kai-daily-2026-05-08",
+            "type": "agent-daily",
+            "title": "Kai — Daily Report 2026-05-08",
+            "author": "Kai",
+            "authorIcon": "👔",
+            "authorColor": "#d4a853",
+            "timestamp": "2026-05-08T07:00:45-06:00",
+            "date": "2026-05-08",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-08. No active items — queue empty or idle.",
+              "shipped": "shipped=no deployed=no",
+              "active": "Queue clear.",
+              "tickets": "Pending: 120 | Closed: 0",
+              "weaknesses": "See GROWTH.md for tracked weaknesses.",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "kai-daily-2026-05-07",
+            "type": "agent-daily",
+            "title": "Kai — Daily Report 2026-05-07",
+            "author": "Kai",
+            "authorIcon": "👔",
+            "authorColor": "#d4a853",
+            "timestamp": "2026-05-07T07:00:44-06:00",
+            "date": "2026-05-07",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-07. No active items — queue empty or idle.",
+              "shipped": "shipped=no deployed=no",
+              "active": "Queue clear.",
+              "tickets": "Pending: 95 | Closed: 0",
+              "weaknesses": "See GROWTH.md for tracked weaknesses.",
+              "evolution": "No evolution entry for today."
+            }
+          },
+          {
+            "id": "kai-daily-2026-05-06",
+            "type": "agent-daily",
+            "title": "Kai — Daily Report 2026-05-06",
+            "author": "Kai",
+            "authorIcon": "👔",
+            "authorColor": "#d4a853",
+            "timestamp": "2026-05-06T23:30:00-06:00",
+            "date": "2026-05-06",
+            "sections": {
+              "executed": "Cycle ran for 2026-05-06. No active items — queue empty or idle.",
+              "shipped": "shipped=no deployed=no",
+              "active": "Queue clear.",
+              "tickets": "Pending: 92 | Closed: 0",
+              "weaknesses": "See GROWTH.md for tracked weaknesses.",
+              "evolution": "No evolution entry for today."
+            }
+          }
         ]
       }
     }
   },
-  "lastUpdated": "2026-05-09T07:00:02-06:00",
-  "lastArchiveWeek": "2026-W19"
+  "lastUpdated": "2026-05-16T07:00:03-06:00",
+  "lastArchiveWeek": "2026-W20"
 }
