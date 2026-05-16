@@ -1,24 +1,24 @@
 # Ra Active Tasks
 
-Last updated: 2026-05-16T01:55:26Z
+Last updated: 2026-05-16T07:56:50Z
 
 ## In Progress
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-16T01:55:26Z
+  - Delegated: 2026-05-16T07:56:50Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-15 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-05-15T22:10:35Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
+  - Delegated: 2026-05-16T02:12:07Z
   - Status: DELEGATED
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-14 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
-  - Delegated: 2026-05-14T22:11:02Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-010)
+  - Delegated: 2026-05-16T02:13:57Z
   - Status: DELEGATED
 
-- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-06 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-015)
-  - Delegated: 2026-05-06T18:13:22Z
+- **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-013)
+  - Delegated: 2026-05-16T02:15:27Z
   - Status: DELEGATED
 
 ## Queued
