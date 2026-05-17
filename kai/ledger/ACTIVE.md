@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-17T08:46:47Z
+Last updated: 2026-05-17T09:16:58Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:46:43Z
+  - Delegated: 2026-05-17T09:16:54Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:46:44Z
+  - Delegated: 2026-05-17T09:16:55Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:46:44Z
+  - Delegated: 2026-05-17T09:16:55Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:46:44Z
+  - Delegated: 2026-05-17T09:16:55Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-17T08:46:45Z
+  - Delegated: 2026-05-17T09:16:55Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever. (flagged by kai)
-  - Delegated: 2026-05-17T08:46:47Z
+  - Delegated: 2026-05-17T09:16:58Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-017) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
