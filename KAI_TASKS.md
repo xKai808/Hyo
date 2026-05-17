@@ -1067,3 +1067,15 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/sharp-bold-cray/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5d5d3d40] _(filed 2026-05-16)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/sharp-bold-cray/mnt/Hyo/newsletters/2026-05-16.md [sentinel:aurora-ran-today:4f1e0002:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/sharp-laughing-sagan/mnt/Hyo/newsletters/2026-05-16.md [sentinel:aurora-ran-today:000f8937] _(filed 2026-05-16)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/sharp-laughing-sagan/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:9189320e] _(filed 2026-05-16)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/sharp-laughing-sagan/mnt/Hyo/newsletters/2026-05-16.md [sentinel:aurora-ran-today:000f8937:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/determined-pensive-ptolemy/mnt/Hyo/newsletters/2026-05-16.md [sentinel:aurora-ran-today:af1a5be4] _(filed 2026-05-16)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/determined-pensive-ptolemy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a330b6ac] _(filed 2026-05-16)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/determined-pensive-ptolemy/mnt/Hyo/newsletters/2026-05-16.md [sentinel:aurora-ran-today:af1a5be4:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/determined-pensive-ptolemy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a330b6ac:escalated]
