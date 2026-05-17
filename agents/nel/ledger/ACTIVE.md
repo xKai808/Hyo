@@ -1,28 +1,28 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-17T08:03:51Z
+Last updated: 2026-05-17T20:04:44Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-17T08:03:51Z
+  - Delegated: 2026-05-17T20:04:44Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-17 — past 06:00 MT deadline
-  - Delegated: 2026-05-17T02:10:05Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-17 — past 06:00 MT deadline
+  - Delegated: 2026-05-17T18:10:08Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-007) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Delegated: 2026-05-16T22:12:51Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-17 — past 06:00 MT deadline
+  - Delegated: 2026-05-17T18:11:18Z
   - Status: DELEGATED
 
-- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Delegated: 2026-05-16T02:15:27Z
+- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-019) — scan entire codebase for similar patterns: Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim)
+  - Delegated: 2026-05-17T08:07:37Z
   - Status: DELEGATED
 
-- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Delegated: 2026-05-06T18:11:39Z
+- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-kai-020) — scan entire codebase for similar patterns: Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
+  - Delegated: 2026-05-17T08:07:47Z
   - Status: DELEGATED
 
 - **nel-006** [P1] SAFEGUARD: Cross-reference issue (flag-nel-015) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline

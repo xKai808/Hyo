@@ -1,66 +1,22 @@
 {
-  "ts": "2026-05-17T08:01:29Z",
+  "ts": "2026-05-17T20:04:14Z",
   "status": "ISSUES",
-  "issues": 6,
-  "warnings": 5,
+  "issues": 7,
+  "warnings": 2,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "1 unaddressed P0/P1 flags in last 2h"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "aether has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "hyo has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "ra has no output today"
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "sam has no output today"
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Data file agents.json has no reference in hq.html"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "sam stuck in dead-loop (assessment_stuck): routine engineering check"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
-    }
+    {"severity":"P1","area":"flags","detail":"2 P1 flags in last 2h (flag-nel-010 @18:10:08Z, flag-nel-013 @18:11:18Z) — both 'No newsletter produced for 2026-05-17 past 06:00 MT deadline'. AUTO-REMEDIATE cascade already dispatched (nel-002/003, sam-002/003, ra-002/003). PROBABLE FALSE POSITIVE: agents/ra/output/script-2026-05-17.txt was produced 12:05 MT and 2026-05-17.input.md exists; flag likely checks for rendered .md/.html which is the day-14 Ra render outage per prior briefs."},
+    {"severity":"P1","area":"dead-loop","detail":"5 agents stuck assessment_stuck (nel/sam/ra/aether/dex) — identical wording from 60+ prior briefs; cron auto-dispatched 5x [GUIDANCE] this 2h window with no behavior change"},
+    {"severity":"P1","area":"queue-hygiene","detail":"queue/running depth=14 (all .failed orphans + zombie heads). queue-hygiene.sh still has no stale-RUNNING sweep across 65+ briefs. No worker activity moving items out of running."},
+    {"severity":"P1","area":"ra-render","detail":"Ra newsletter render outage day 14 — script/input present, no rendered .md/.html. Last successful newsletter 2026-05-05."},
+    {"severity":"P2","area":"render-binding","detail":"agents.json still 0 refs in hq.html (carries 37+ sweeps)"},
+    {"severity":"P3","area":"agent-output","detail":"aether 0 dated logs today (kill-switched indefinitely 2026-05-13 — expected)"},
+    {"severity":"P3","area":"agent-output","detail":"ra 0 dated logs today; Sunday 'No reports on Sunday' rule means partial expected; newsletter input/script exist (12:05 MT)"}
   ],
-  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
-  "recent_queue_results": [],
-  "next_check": "in 2 hours (30min if P0 found)"
+  "actions_taken": "Read-only sweep. No new dispatches — duplicate of 18:10Z cron auto-remediation cascade. Adding more would amplify the dead-loop cascade per pathway-closer bug (flag-kai-020).",
+  "recent_queue_results": [
+    {"id":"ec2fa02e","status":"completed","exit":0},
+    {"id":"8405f6bd","status":"completed","exit":0},
+    {"id":"3d59510a","status":"completed","exit":0}
+  ],
+  "next_check": "in 2 hours"
 }

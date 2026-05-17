@@ -1,15 +1,19 @@
 # Aether Active Tasks
 
-Last updated: 2026-05-17T08:01:30Z
+Last updated: 2026-05-17T20:04:07Z
 
 ## In Progress
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:01:30Z
+  - Delegated: 2026-05-17T20:04:07Z
   - Status: DELEGATED
 
-- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-10: dex no runner output today; PRIORITIES.md stale 18d for sam/ra/aether/dex; 4 stuck AUTO-REMEDIATE items >24h (aether-002 5d, sam-005 5d, ra-002/003 1d) — DELEGATED→complete transition still broken (root cause flagged in aether-002 not yet resolved). (flagged by kai, cascade flag-kai-010)
-  - Delegated: 2026-05-10T08:07:30Z
+- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim) (flagged by kai, cascade flag-kai-019)
+  - Delegated: 2026-05-17T08:07:37Z
+  - Status: DELEGATED
+
+- **aether-003** [P1] [AUTO-REMEDIATE] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever. (flagged by kai, cascade flag-kai-020)
+  - Delegated: 2026-05-17T08:07:47Z
   - Status: DELEGATED
 
 ## Queued
