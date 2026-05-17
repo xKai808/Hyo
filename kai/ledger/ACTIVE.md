@@ -1,82 +1,82 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-17T08:03:51Z
+Last updated: 2026-05-17T08:16:37Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-17T08:03:51Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-17T08:16:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:01:30Z
+  - Delegated: 2026-05-17T08:16:33Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-17T08:03:51Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-17T08:16:32Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-17T08:01:30Z
+  - Delegated: 2026-05-17T08:16:33Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-17T08:01:30Z
+  - Delegated: 2026-05-17T08:16:33Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 277 recurrent patterns detected — increased from 261, root-cause fix needed (flagged by kai)
-  - Delegated: 2026-05-17T08:01:31Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever. (flagged by kai)
+  - Delegated: 2026-05-17T08:16:37Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-17 — past 06:00 MT deadline
-  - Delegated: 2026-05-17T02:10:05Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-017) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-17T08:05:55Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-17 — past 06:00 MT deadline
-  - Delegated: 2026-05-17T02:10:05Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-017): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-17T08:05:55Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-17 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-05-17T02:10:05Z
+- **ra-002** [P1] [AUTO-REMEDIATE] Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/004 all stuck DELEGATED; auto-remediate cascade not closing tickets) (flagged by kai, cascade flag-kai-018)
+  - Delegated: 2026-05-17T08:07:31Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-007) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Delegated: 2026-05-16T22:12:51Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-018) — scan entire codebase for similar patterns: Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/004 all stuck DELEGATED; auto-remediate cascade not closing tickets)
+  - Delegated: 2026-05-17T08:07:31Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-007): No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Delegated: 2026-05-16T22:12:51Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-018): Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/004 all stuck DELEGATED; auto-remediate cascade not closing tickets)
+  - Delegated: 2026-05-17T08:07:31Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 1 critical issues found (flagged by kai, cascade flag-kai-016)
-  - Delegated: 2026-05-15T08:06:20Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-017)
+  - Delegated: 2026-05-17T08:05:55Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-007)
   - Delegated: 2026-05-16T22:12:51Z
   - Status: DELEGATED
 
-- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-10: dex no runner output today; PRIORITIES.md stale 18d for sam/ra/aether/dex; 4 stuck AUTO-REMEDIATE items >24h (aether-002 5d, sam-005 5d, ra-002/003 1d) — DELEGATED→complete transition still broken (root cause flagged in aether-002 not yet resolved). (flagged by kai, cascade flag-kai-010)
-  - Delegated: 2026-05-10T08:07:30Z
+- **aether-002** [P1] [AUTO-REMEDIATE] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim) (flagged by kai, cascade flag-kai-019)
+  - Delegated: 2026-05-17T08:07:37Z
   - Status: DELEGATED
 
-- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Delegated: 2026-05-16T02:15:27Z
+- **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-019) — scan entire codebase for similar patterns: Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim)
+  - Delegated: 2026-05-17T08:07:37Z
   - Status: DELEGATED
 
-- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Delegated: 2026-05-06T18:11:39Z
+- **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-kai-020) — scan entire codebase for similar patterns: Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
+  - Delegated: 2026-05-17T08:07:47Z
   - Status: DELEGATED
 
 - **nel-006** [P1] SAFEGUARD: Cross-reference issue (flag-nel-015) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
   - Delegated: 2026-05-06T18:13:22Z
   - Status: DELEGATED
 
-- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-013): No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Delegated: 2026-05-16T02:15:27Z
+- **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-019): Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim)
+  - Delegated: 2026-05-17T08:07:37Z
   - Status: DELEGATED
 
 - **ra-004** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-16 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-013)
@@ -85,6 +85,14 @@ Last updated: 2026-05-17T08:03:51Z
 
 - **dex-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-13: daily-audit.sh produces silent false-negatives when run from non-Mini contexts (today: 5 agents reported FAIL despite all ACTIVE.md files present at canonical path). Script must assert canonical ledger files exist before reporting health; exit non-zero if absent. See kai/ledger/daily-audit-2026-05-13.md B1. (flagged by kai, cascade flag-kai-014)
   - Delegated: 2026-05-13T08:08:57Z
+  - Status: DELEGATED
+
+- **sam-005** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-020): Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
+  - Delegated: 2026-05-17T08:07:47Z
+  - Status: DELEGATED
+
+- **aether-003** [P1] [AUTO-REMEDIATE] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever. (flagged by kai, cascade flag-kai-020)
+  - Delegated: 2026-05-17T08:07:47Z
   - Status: DELEGATED
 
 ## Queued
@@ -196,4 +204,16 @@ Last updated: 2026-05-17T08:03:51Z
 
 - **flag-kai-016** [P2] Daily audit: 1 critical issues found
   - Created: 2026-05-15T08:06:20Z
+
+- **flag-kai-017** [P2] Daily audit: 2 critical issues found
+  - Created: 2026-05-17T08:05:55Z
+
+- **flag-kai-018** [P2] Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/004 all stuck DELEGATED; auto-remediate cascade not closing tickets)
+  - Created: 2026-05-17T08:07:31Z
+
+- **flag-kai-019** [P2] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim)
+  - Created: 2026-05-17T08:07:37Z
+
+- **flag-kai-020** [P2] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
+  - Created: 2026-05-17T08:07:47Z
 
