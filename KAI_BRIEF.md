@@ -189,6 +189,36 @@
 
 # KAI_BRIEF.md
 
+## Health check note — 2026-05-18T02:05Z (20:05 MT 2026-05-17 — automated 2h sweep)
+
+**Status: ISSUES (5 P1 dead-loops carried, 2 P2 process, 1 P3 root-cause).** No new dispatches — guidance loop itself has now fired 4× identical without agent response. Escalation required, not more cascades.
+
+5 P1 dead-loops carried (nel/sam/ra/aether/dex) — same as 00:04Z sweep. Note: today is Sunday in MT; per CLAUDE.md cadence no reports are required, so "0 output today" for sam/ra/dex is EXPECTED. Dead-loop detector should be Sunday-aware. Only structural concern is aether (0 output Sat AND Sun — Mini API keys flagged failing at 07:00 MT completeness check; this is the real root cause).
+
+P2: 14 zombie items in `kai/queue/running/` (newest May 13, oldest May 5). Worker IS healthy (5min completion cadence, last commit 19:53 MT). These are orphans from past crashes — need reaper to drain. Also: guidance system itself in meta-loop (same [GUIDANCE] dispatched all 5 agents every 15min for 4 cycles, zero behavior change) — needs N-identical-dispatch escalation logic.
+
+P3: aether-analysis remediation failed at 07:00 MT — "check Mini API keys". Fix this and aether dead-loop resolves.
+
+Verified clean: hyo-inbox 1 unread / 0 URGENT, queue worker active, all ACTIVE.md files touched within last hour, today's commits flowing.
+
+Next interactive session priorities: (1) Mini API keys for aether, (2) Sunday-aware dead-loop detector, (3) zombie running/ reaper, (4) escalation path in guidance loop.
+
+## Health check note — 2026-05-18T00:04:32Z (automated 2h)
+
+**Status: ISSUES (1 P1 active, refresh of prior dead-loop set)** — newsletter P1 is a Sunday false-positive.
+
+Unaddressed P1:
+- `flag-nel-003` (22:10:35Z) — "No newsletter produced for 2026-05-17 past 06:00 MT deadline". Today is Sunday. Per CLAUDE.md "No reports on Sunday" this should NOT fire. **Action: patch flag-generator to skip newsletter check when TZ=America/Denver date +%u == 7.** (Same condition flagged 2h ago — patch still not applied.)
+
+Carried (no new dispatches):
+- 5 dead-loop warnings (nel/sam/ra/aether/dex) — all downstream of `aether-003` (DELEGATED→DONE close-loop bug). Highest-leverage fix.
+- 14 orphan entries in `kai/queue/running/` (oldest 11d). Needs reaper.
+- agents.json has no consumer in hq.html (cosmetic).
+
+Verified clean: pending=0; worker recently processed 3 cmds at 23:50Z; all 5 agents have output today (38/2/4/0/5 files for nel/sam/ra/aether/dex; aether 0 is EXPECTED — kill-switch). Ra DID produce `2026-05-17.input.md` at 13:00 MT and `script-2026-05-17.txt` at 12:05 MT — Ra pipeline ran today.
+
+Next interactive session priority unchanged: close-loop fix for `aether-003` + Sunday-aware nel-003 patch.
+
 > **[HEALTHCHECK 2026-05-08T10:07Z (04:07 MT 2026-05-08) — autonomous 2h sweep, Cowork scheduled task] ISSUES — 3 P1 (all carried), 2 P2, 2 P3. Refresh-only — prior 09:52Z cron sweep already auto-dispatched 6 remediations.**
 > - **P1 (carried, 22nd sweep): `agents/aether/aether.sh:1123` `ticket.sh --create` syntax bug LIVE.** Latest firings AET-202605080403/0404 (cmd-1778234663-34902, cmd-1778234718-35483) at 10:05:07Z + 10:05:19Z both exit 0 with Usage banner — NO tickets created. Aether Q2 data-gate escalations (startingBalance 118.72 + dailyPnl chain 121.05 != currentBalance 132.71, drift now $11.66, up from $10.48 in 04:04Z sweep) silently swallowed every cycle. Patch site unchanged across 22 sweeps.
 > - **P1 (carried, 22nd sweep): queue/running/ stuck-runner depth 13** — 6 real stale heads (oldest `274a60a7…` hyo.sh now ~78h, `cmd-1778071572…` git push of tickets.jsonl ~41h) + 7 `.json.failed` orphans frozen ~78h. No movement since prior sweep. Reaper still not draining. The 41h-stuck git push remains the structural reason today's commits aren't shipping to remote.
@@ -1039,6 +1069,24 @@
 - verified-state.json running autonomously every 15min on Mini
 
 
+## Health check note — 2026-05-17T22:04:23Z (automated 2h)
+
+**Status: ISSUES (4 P1, 2 P2)** — same dead-loop set as 21:49Z check; no agent has self-recovered.
+
+Unaddressed P1 flags (last 2h):
+- `flag-nel-001` — 1 broken doc link detected (logged 2026-05-17T20:04:44Z, still FLAGGED)
+- `flag-nel-001` — **No newsletter produced for 2026-05-17, past 06:00 MT deadline** (logged 20:04:50Z) — Ra pipeline failure or skipped run; investigate Ra runner output. NOTE: today is Sunday; per CLAUDE.md "No reports on Sunday" this may be a false-positive — patch flag-generator to honor `TZ=America/Denver date +%u` ≠ 7 before firing nel-001 on Sundays.
+
+Systemic root cause (already tracked as `aether-003`):
+- DELEGATED→DONE transition is broken across ALL agents — auto-remediate flags never close. sam-005 stuck 16d, aether-002 7d, dex-002 4d, ra-002/003/004 stuck. Every cascade fire-and-forget produces a new flag that nothing closes. This is the real reason dead-loops keep recurring; per-agent assessment_stuck warnings are downstream symptoms.
+
+Queue health: pending=0, worker processing fine. 14 orphan entries in `kai/queue/running/` (oldest 273h / ~11 days); needs reaper sweep but not blocking.
+
+Aether 0-output today: EXPECTED (kill-switch since 2026-05-13 by Hyo). `aether-002` tracks fixing `daily-audit.sh` to honor the kill-switch and stop false-positive flagging.
+
+Next interactive session: investigate (1) close-loop fix for `aether-003` (highest leverage — would silence ~5 recurring P1s), (2) Sunday-rule patch to flag-nel-001 generator, (3) reaper sweep for 14 orphaned `running/` entries.
+
+---
 ## ## Current open P0s
 - **Ra runner exit-2** — 8 days silent failure, TASK-20260421-ra-P0-runner-exit2 (ACTIVE)
 - **ACTIVE.md missing** — all 5 agents, Phase 1 freshness checks broken (P1 TASK-20260421-infra-P1-active-md-missing)

@@ -1,22 +1,63 @@
 {
-  "ts": "2026-05-17T20:04:14Z",
+  "ts": "2026-05-18T02:05:00Z",
   "status": "ISSUES",
-  "issues": 7,
-  "warnings": 2,
+  "issues": 5,
+  "warnings": 3,
   "findings": [
-    {"severity":"P1","area":"flags","detail":"2 P1 flags in last 2h (flag-nel-010 @18:10:08Z, flag-nel-013 @18:11:18Z) — both 'No newsletter produced for 2026-05-17 past 06:00 MT deadline'. AUTO-REMEDIATE cascade already dispatched (nel-002/003, sam-002/003, ra-002/003). PROBABLE FALSE POSITIVE: agents/ra/output/script-2026-05-17.txt was produced 12:05 MT and 2026-05-17.input.md exists; flag likely checks for rendered .md/.html which is the day-14 Ra render outage per prior briefs."},
-    {"severity":"P1","area":"dead-loop","detail":"5 agents stuck assessment_stuck (nel/sam/ra/aether/dex) — identical wording from 60+ prior briefs; cron auto-dispatched 5x [GUIDANCE] this 2h window with no behavior change"},
-    {"severity":"P1","area":"queue-hygiene","detail":"queue/running depth=14 (all .failed orphans + zombie heads). queue-hygiene.sh still has no stale-RUNNING sweep across 65+ briefs. No worker activity moving items out of running."},
-    {"severity":"P1","area":"ra-render","detail":"Ra newsletter render outage day 14 — script/input present, no rendered .md/.html. Last successful newsletter 2026-05-05."},
-    {"severity":"P2","area":"render-binding","detail":"agents.json still 0 refs in hq.html (carries 37+ sweeps)"},
-    {"severity":"P3","area":"agent-output","detail":"aether 0 dated logs today (kill-switched indefinitely 2026-05-13 — expected)"},
-    {"severity":"P3","area":"agent-output","detail":"ra 0 dated logs today; Sunday 'No reports on Sunday' rule means partial expected; newsletter input/script exist (12:05 MT)"}
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck) — 4 consecutive 15min cycles same assessment; guidance dispatched 4x with no behavior change"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "sam stuck in dead-loop (assessment_stuck) — 4 consecutive cycles; 0 log output today (Sunday)"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "ra stuck in dead-loop (assessment_stuck) — 4 consecutive cycles; 0 log output today (Sunday)"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "aether stuck in dead-loop (assessment_stuck) — 0 log output today AND yesterday (structural; Mini API keys flagged at 07:00 completeness check)"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "dex stuck in dead-loop (bottleneck_stuck) — 2 corrupt JSONL entries, auto-repair did not progress; 0 log output today"
+    },
+    {
+      "severity": "P2",
+      "area": "queue-hygiene",
+      "detail": "14 zombie items in kai/queue/running/ — oldest May 5, newest May 13. Worker is active (last completion 01:55Z) but these never moved to completed/failed."
+    },
+    {
+      "severity": "P2",
+      "area": "guidance-meta-loop",
+      "detail": "Same [GUIDANCE] question dispatched to all 5 agents every 15min for 4 cycles with no movement. Guidance system itself is in a loop — needs escalation logic."
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "aether-analysis remediation failed at 07:00 MT completeness check — 'check Mini API keys'. Root cause of aether 2-day silence."
+    }
   ],
-  "actions_taken": "Read-only sweep. No new dispatches — duplicate of 18:10Z cron auto-remediation cascade. Adding more would amplify the dead-loop cascade per pathway-closer bug (flag-kai-020).",
+  "context_notes": [
+    "Today is Sunday 2026-05-17 MT — no reports required per CLAUDE.md cadence, so '0 output today' is expected for most agents",
+    "Aether having 0 output Saturday AND Sunday is the only structural concern — Mini API keys flagged at 07:00 MT",
+    "Queue worker is healthy (last commit 19:53 MT, completions every ~5min)",
+    "All ACTIVE.md files touched within last hour — agents ARE running, they're just stuck on same assessment",
+    "Hyo inbox: 1 unread message, 0 URGENT"
+  ],
+  "actions_taken": "Healthcheck logged. No new auto-remediation dispatched — last 4 dispatches showed no agent response, indicating the remediation loop itself needs escalation rather than more dispatches.",
+  "recommended_next_action": "Next interactive session: (1) verify Mini API keys for aether, (2) decide whether dead-loop detector should ignore Sunday (when no reports are required), (3) clean 14 zombie items from running queue, (4) add escalation to guidance loop (3 identical dispatches → alternative remediation path).",
   "recent_queue_results": [
-    {"id":"ec2fa02e","status":"completed","exit":0},
-    {"id":"8405f6bd","status":"completed","exit":0},
-    {"id":"3d59510a","status":"completed","exit":0}
+    {"id": "cmd-1779069303-5487", "ts": "2026-05-18T01:55:10Z", "exit_code": 0, "summary": "enforcer commit + push OK"},
+    {"id": "6cee6bb3", "ts": "2026-05-18T01:50:30Z", "exit_code": 0, "summary": "queue-hygiene.sh OK"},
+    {"id": "3e325921", "ts": "2026-05-18T01:50:30Z", "exit_code": 0, "summary": "aetherbot-monitor — kill-switch held (expected per 2026-05-13 Hyo decision)"}
   ],
   "next_check": "in 2 hours"
 }
