@@ -1,79 +1,55 @@
 {
-  "ts": "2026-05-18T08:04:27Z",
+  "ts": "2026-05-18T14:04:33Z",
   "status": "ISSUES",
-  "issues": 7,
-  "warnings": 2,
+  "issues": 4,
+  "warnings": 4,
   "findings": [
     {
-      "severity": "P0",
-      "area": "verified-state",
-      "detail": "verified-state.json 295h / 12.3d stale (verified_at=2026-05-05); kai-session-prep.sh 15-min cron dead \u2014 every state claim suspect"
+      "severity": "P1",
+      "area": "hydration-data-layer",
+      "detail": "verified-state.json + session-handoff.json both ~301h (12.5d) stale; dispatch transcripts last 2026-04-22 (~26d stale). kai-session-prep.sh, session-close.sh, and dispatch-sync scheduled tasks appear dead. flag-kai-022 already filed at 08:08Z and unresolved."
     },
     {
       "severity": "P1",
-      "area": "pathway-closer",
-      "detail": "DELEGATED\u2192DONE pathway closure missing (flag-kai-020 / aether-003) \u2014 root cause of dead-loop cascade; ~80% of P1 noise collapses on fix"
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "5-agent assessment_stuck cluster (nel/sam/ra/aether/dex) identical wording from 60+ briefs \u2014 GUIDANCE re-dispatched with zero behavior change"
-    },
-    {
-      "severity": "P1",
-      "area": "queue-running-stuck",
-      "detail": "running/ depth=15: 8 alive heads aged 91min\u201312.2d (oldest 274a60a7), 7 .json.failed orphans misfiled since 2026-05-05; queue-hygiene.sh still no stale-RUNNING sweep"
-    },
-    {
-      "severity": "P1",
-      "area": "ra-render-outage",
-      "detail": "Ra render outage day 14+: 2026-05-17.input.md + script-2026-05-17.txt present, no rendered .md/.html; last successful render 2026-05-05"
-    },
-    {
-      "severity": "P1",
-      "area": "stranded-commits",
-      "detail": "3 commits stranded in failed/ \u2014 aurora-trial-push, aurora-trial-5day, payment-redesign \u2014 11d off origin since 2026-05-07 (HEAD.lock pattern)"
-    },
-    {
-      "severity": "P1",
-      "area": "aether-runner-not-gated",
-      "detail": "aether.sh still scheduled despite Hyo kill-switch 2026-05-13; aether-.log = 200K, each cron appends refusal line to misnamed (empty-date) file"
+      "area": "queue-running-zombies",
+      "detail": "running/ contains stuck items: recheck-flag-dex-001 (7.5h) and recheck-flag-nel-001 (6h) \u2014 auto-remediation rechecks queued today never completed. Plus 6+ entries 12+ days old (cmd-1778* from 2026-05-06). Queue worker is alive (last completion 13:51Z) but running/ janitor not reaping zombies."
     },
     {
       "severity": "P2",
-      "area": "render-binding",
-      "detail": "agents.json still 0 refs in hq.html (\u226538 sweeps)"
+      "area": "flag-closure",
+      "detail": "3 unresolved P2 flags from this morning still open: flag-nel-002 (2 projects with test failures, 10:10Z), flag-nel-003 (29 broken doc links, 10:10Z), flag-sam-001 (1 untriggered file, 10:30Z). Compounds with flag-kai-022 root cause: DELEGATED\u2192DONE pipeline broken (per flag-kai-020)."
+    },
+    {
+      "severity": "P2",
+      "area": "dead-loop-followup",
+      "detail": "Previous 13:52Z healthcheck dispatched P2 [GUIDANCE] tickets to nel/sam/ra/aether/dex for dead-loops. All ACTIVE.md files updated 0h ago \u2014 agents received the prompts but responses not yet visible. Recheck items above are part of this loop and are not landing."
     },
     {
       "severity": "P3",
-      "area": "agent-output-mt",
-      "detail": "Today MT (Mon 02:02 MT \u2014 pre-dawn) \u2014 nel=14, sam=0, ra=0, aether=0 (kill-switched expected), dex=3, hyo=0; sam/ra/hyo daily cadence 22:00\u201323:30 MT \u2014 not yet flaggable"
+      "area": "agent-output",
+      "detail": "aether: 0 files today (carry-over from 13:52Z check). ra: 0 files today (carry-over). aurora: 0 files today. sam: 1 file. nel: 21 files. dex: 3 files."
     }
   ],
-  "actions_taken": "Read-only sweep \u2014 no new dispatches. Same chronic pattern as prior sweeps; adding more would amplify cascade per pathway-closer bug. KAI_BRIEF.md updated with this sweep's note.",
+  "actions_taken": "Healthcheck-only run. No auto-remediation dispatched \u2014 the headline P1 (hydration data layer) requires Hyo to verify scheduled-task status on the Mini (launchctl list | grep com.hyo) per flag-kai-022. Queue worker is alive so no kickstart needed; root cause is the kai-session-prep.sh / session-close.sh / dispatch-sync launchd jobs, not the worker.",
   "recent_queue_results": [
     {
-      "id": "e4622cab",
-      "ts": "2026-05-18T07:50:56Z",
-      "cmd": "aether.sh",
+      "id": "e6a4fca2",
+      "ts": "2026-05-18T13:51:21Z",
       "exit": 0,
-      "note": "kill-switched refuse"
+      "cmd": "queue-hygiene.sh"
     },
     {
-      "id": "6a4c1267",
-      "ts": "2026-05-18T07:50:55Z",
-      "cmd": "aetherbot-monitor.sh",
+      "id": "83596d26",
+      "ts": "2026-05-18T13:51:21Z",
       "exit": 0,
-      "note": "kill-switched refuse"
+      "cmd": "aetherbot-monitor.sh (kill-switch active \u2014 refused as expected)"
     },
     {
-      "id": "4c33d34c",
-      "ts": "2026-05-18T07:50:55Z",
-      "cmd": "queue-hygiene.sh",
+      "id": "6cdaa04f",
+      "ts": "2026-05-18T13:51:21Z",
       "exit": 0,
-      "note": "no stale-RUNNING sweep"
+      "cmd": "aether.sh"
     }
   ],
-  "next_check": "in 2 hours (30min if P0 found)",
-  "session": "fervent-ecstatic-cori scheduled kai-health-check"
+  "next_check": "in 30min (P1 found \u2014 accelerated cadence)"
 }
