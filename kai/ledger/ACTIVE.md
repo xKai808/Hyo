@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-18T07:36:31Z
+Last updated: 2026-05-18T08:05:46Z
 
 ## In Progress
 
-- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T07:36:30Z
+- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-05-18T08:05:46Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T07:36:30Z
+  - Delegated: 2026-05-18T07:51:33Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T07:36:30Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
+  - Delegated: 2026-05-18T08:05:46Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T07:36:31Z
+  - Delegated: 2026-05-18T07:51:33Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-18T07:36:31Z
+  - Delegated: 2026-05-18T07:51:34Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 316 recurrent patterns detected — increased from 277, root-cause fix needed (flagged by kai)
-  - Delegated: 2026-05-18T07:36:31Z
+  - Delegated: 2026-05-18T07:51:34Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-18 — past 06:00 MT deadline

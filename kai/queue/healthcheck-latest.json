@@ -1,63 +1,79 @@
 {
-  "ts": "2026-05-18T02:05:00Z",
+  "ts": "2026-05-18T08:04:27Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 3,
+  "issues": 7,
+  "warnings": 2,
   "findings": [
     {
+      "severity": "P0",
+      "area": "verified-state",
+      "detail": "verified-state.json 295h / 12.3d stale (verified_at=2026-05-05); kai-session-prep.sh 15-min cron dead \u2014 every state claim suspect"
+    },
+    {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel stuck in dead-loop (assessment_stuck) — 4 consecutive 15min cycles same assessment; guidance dispatched 4x with no behavior change"
+      "area": "pathway-closer",
+      "detail": "DELEGATED\u2192DONE pathway closure missing (flag-kai-020 / aether-003) \u2014 root cause of dead-loop cascade; ~80% of P1 noise collapses on fix"
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "sam stuck in dead-loop (assessment_stuck) — 4 consecutive cycles; 0 log output today (Sunday)"
+      "detail": "5-agent assessment_stuck cluster (nel/sam/ra/aether/dex) identical wording from 60+ briefs \u2014 GUIDANCE re-dispatched with zero behavior change"
     },
     {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "ra stuck in dead-loop (assessment_stuck) — 4 consecutive cycles; 0 log output today (Sunday)"
+      "area": "queue-running-stuck",
+      "detail": "running/ depth=15: 8 alive heads aged 91min\u201312.2d (oldest 274a60a7), 7 .json.failed orphans misfiled since 2026-05-05; queue-hygiene.sh still no stale-RUNNING sweep"
     },
     {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "aether stuck in dead-loop (assessment_stuck) — 0 log output today AND yesterday (structural; Mini API keys flagged at 07:00 completeness check)"
+      "area": "ra-render-outage",
+      "detail": "Ra render outage day 14+: 2026-05-17.input.md + script-2026-05-17.txt present, no rendered .md/.html; last successful render 2026-05-05"
     },
     {
       "severity": "P1",
-      "area": "dead-loop",
-      "detail": "dex stuck in dead-loop (bottleneck_stuck) — 2 corrupt JSONL entries, auto-repair did not progress; 0 log output today"
+      "area": "stranded-commits",
+      "detail": "3 commits stranded in failed/ \u2014 aurora-trial-push, aurora-trial-5day, payment-redesign \u2014 11d off origin since 2026-05-07 (HEAD.lock pattern)"
+    },
+    {
+      "severity": "P1",
+      "area": "aether-runner-not-gated",
+      "detail": "aether.sh still scheduled despite Hyo kill-switch 2026-05-13; aether-.log = 200K, each cron appends refusal line to misnamed (empty-date) file"
     },
     {
       "severity": "P2",
-      "area": "queue-hygiene",
-      "detail": "14 zombie items in kai/queue/running/ — oldest May 5, newest May 13. Worker is active (last completion 01:55Z) but these never moved to completed/failed."
-    },
-    {
-      "severity": "P2",
-      "area": "guidance-meta-loop",
-      "detail": "Same [GUIDANCE] question dispatched to all 5 agents every 15min for 4 cycles with no movement. Guidance system itself is in a loop — needs escalation logic."
+      "area": "render-binding",
+      "detail": "agents.json still 0 refs in hq.html (\u226538 sweeps)"
     },
     {
       "severity": "P3",
-      "area": "agent-output",
-      "detail": "aether-analysis remediation failed at 07:00 MT completeness check — 'check Mini API keys'. Root cause of aether 2-day silence."
+      "area": "agent-output-mt",
+      "detail": "Today MT (Mon 02:02 MT \u2014 pre-dawn) \u2014 nel=14, sam=0, ra=0, aether=0 (kill-switched expected), dex=3, hyo=0; sam/ra/hyo daily cadence 22:00\u201323:30 MT \u2014 not yet flaggable"
     }
   ],
-  "context_notes": [
-    "Today is Sunday 2026-05-17 MT — no reports required per CLAUDE.md cadence, so '0 output today' is expected for most agents",
-    "Aether having 0 output Saturday AND Sunday is the only structural concern — Mini API keys flagged at 07:00 MT",
-    "Queue worker is healthy (last commit 19:53 MT, completions every ~5min)",
-    "All ACTIVE.md files touched within last hour — agents ARE running, they're just stuck on same assessment",
-    "Hyo inbox: 1 unread message, 0 URGENT"
-  ],
-  "actions_taken": "Healthcheck logged. No new auto-remediation dispatched — last 4 dispatches showed no agent response, indicating the remediation loop itself needs escalation rather than more dispatches.",
-  "recommended_next_action": "Next interactive session: (1) verify Mini API keys for aether, (2) decide whether dead-loop detector should ignore Sunday (when no reports are required), (3) clean 14 zombie items from running queue, (4) add escalation to guidance loop (3 identical dispatches → alternative remediation path).",
+  "actions_taken": "Read-only sweep \u2014 no new dispatches. Same chronic pattern as prior sweeps; adding more would amplify cascade per pathway-closer bug. KAI_BRIEF.md updated with this sweep's note.",
   "recent_queue_results": [
-    {"id": "cmd-1779069303-5487", "ts": "2026-05-18T01:55:10Z", "exit_code": 0, "summary": "enforcer commit + push OK"},
-    {"id": "6cee6bb3", "ts": "2026-05-18T01:50:30Z", "exit_code": 0, "summary": "queue-hygiene.sh OK"},
-    {"id": "3e325921", "ts": "2026-05-18T01:50:30Z", "exit_code": 0, "summary": "aetherbot-monitor — kill-switch held (expected per 2026-05-13 Hyo decision)"}
+    {
+      "id": "e4622cab",
+      "ts": "2026-05-18T07:50:56Z",
+      "cmd": "aether.sh",
+      "exit": 0,
+      "note": "kill-switched refuse"
+    },
+    {
+      "id": "6a4c1267",
+      "ts": "2026-05-18T07:50:55Z",
+      "cmd": "aetherbot-monitor.sh",
+      "exit": 0,
+      "note": "kill-switched refuse"
+    },
+    {
+      "id": "4c33d34c",
+      "ts": "2026-05-18T07:50:55Z",
+      "cmd": "queue-hygiene.sh",
+      "exit": 0,
+      "note": "no stale-RUNNING sweep"
+    }
   ],
-  "next_check": "in 2 hours"
+  "next_check": "in 2 hours (30min if P0 found)",
+  "session": "fervent-ecstatic-cori scheduled kai-health-check"
 }
