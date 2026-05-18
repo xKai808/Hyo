@@ -1,16 +1,16 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-18T14:06:17Z
+Last updated: 2026-05-18T20:06:48Z
 
 ## In Progress
 
 - **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-18T14:06:17Z
+  - Delegated: 2026-05-18T20:06:48Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-021): Daily audit: 2 critical issues found
-  - Delegated: 2026-05-18T08:06:44Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-007): No newsletter produced for 2026-05-18 — past 06:00 MT deadline
+  - Delegated: 2026-05-18T18:10:50Z
   - Status: DELEGATED
 
 - **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-022): Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died.

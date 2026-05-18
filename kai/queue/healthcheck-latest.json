@@ -1,55 +1,74 @@
 {
-  "ts": "2026-05-18T14:04:33Z",
+  "ts": "2026-05-18T20:03:00Z",
   "status": "ISSUES",
   "issues": 4,
-  "warnings": 4,
+  "warnings": 2,
   "findings": [
     {
       "severity": "P1",
-      "area": "hydration-data-layer",
-      "detail": "verified-state.json + session-handoff.json both ~301h (12.5d) stale; dispatch transcripts last 2026-04-22 (~26d stale). kai-session-prep.sh, session-close.sh, and dispatch-sync scheduled tasks appear dead. flag-kai-022 already filed at 08:08Z and unresolved."
+      "area": "newsletter",
+      "detail": "flag-nel-007 active — no newsletter produced for 2026-05-18 past 06:00 MT (flagged 18:10:50Z). Pattern recurring: also missed 2026-05-12, 2026-05-15, 2026-05-16. Auto-remediate delegations fired (ra-002) but newsletter still not published. Root cause not fixed; cascade is firing but not resolving."
     },
     {
       "severity": "P1",
-      "area": "queue-running-zombies",
-      "detail": "running/ contains stuck items: recheck-flag-dex-001 (7.5h) and recheck-flag-nel-001 (6h) \u2014 auto-remediation rechecks queued today never completed. Plus 6+ entries 12+ days old (cmd-1778* from 2026-05-06). Queue worker is alive (last completion 13:51Z) but running/ janitor not reaping zombies."
+      "area": "agent-output",
+      "detail": "aether dark since 2026-05-13 — latest self-review is self-review-2026-05-13.md (5 days stale). No aether logs for 2026-05-14 through 2026-05-18. Aether daily runner producing zero output despite queue showing exit_code=0 (silent failure)."
     },
     {
       "severity": "P2",
-      "area": "flag-closure",
-      "detail": "3 unresolved P2 flags from this morning still open: flag-nel-002 (2 projects with test failures, 10:10Z), flag-nel-003 (29 broken doc links, 10:10Z), flag-sam-001 (1 untriggered file, 10:30Z). Compounds with flag-kai-022 root cause: DELEGATED\u2192DONE pipeline broken (per flag-kai-020)."
+      "area": "queue",
+      "detail": "15 items stuck in running/ — oldest from 2026-05-05 (13 days), 6 from 2026-05-06, one from 2026-05-13. 6 of these are *.failed-suffix files that should be moved to failed/. Queue worker not cleaning stale running/ entries."
     },
     {
       "severity": "P2",
-      "area": "dead-loop-followup",
-      "detail": "Previous 13:52Z healthcheck dispatched P2 [GUIDANCE] tickets to nel/sam/ra/aether/dex for dead-loops. All ACTIVE.md files updated 0h ago \u2014 agents received the prompts but responses not yet visible. Recheck items above are part of this loop and are not landing."
+      "area": "agent-output",
+      "detail": "ra self-review for 2026-05-18 missing — last self-review is 2026-05-17. Ra newsletter input files exist (2026-05-18.input.md, script-2026-05-18.txt) but the runner didn't write a self-review log for today."
+    },
+    {
+      "severity": "P3",
+      "area": "kill-switch",
+      "detail": "aetherbot-monitor.sh continues to be invoked by scheduled task (queue id 70b637e3) and emits the 2026-05-13 Hyo kill-switch refusal every run. Expected behavior — flag noted only to confirm kill-switch is still honored. Consider removing the launchctl entry instead of relying on the script-level refusal."
     },
     {
       "severity": "P3",
       "area": "agent-output",
-      "detail": "aether: 0 files today (carry-over from 13:52Z check). ra: 0 files today (carry-over). aurora: 0 files today. sam: 1 file. nel: 21 files. dex: 3 files."
+      "detail": "dex has 3 log files for today (healthy); sam has 1 log file (acceptable); nel has 27 log files for today (healthy)."
     }
   ],
-  "actions_taken": "Healthcheck-only run. No auto-remediation dispatched \u2014 the headline P1 (hydration data layer) requires Hyo to verify scheduled-task status on the Mini (launchctl list | grep com.hyo) per flag-kai-022. Queue worker is alive so no kickstart needed; root cause is the kai-session-prep.sh / session-close.sh / dispatch-sync launchd jobs, not the worker.",
   "recent_queue_results": [
     {
-      "id": "e6a4fca2",
-      "ts": "2026-05-18T13:51:21Z",
-      "exit": 0,
-      "cmd": "queue-hygiene.sh"
+      "id": "70b637e3-3067-4f02-8770-2eaa6b41d924",
+      "ts": "2026-05-18T19:51:46Z",
+      "command": "bin/aetherbot-monitor.sh",
+      "exit_code": 0,
+      "note": "kill-switch refusal emitted (expected per 2026-05-13 Hyo directive)"
     },
     {
-      "id": "83596d26",
-      "ts": "2026-05-18T13:51:21Z",
-      "exit": 0,
-      "cmd": "aetherbot-monitor.sh (kill-switch active \u2014 refused as expected)"
+      "id": "0d177a01-0917-4ff3-8cbf-f3a933976645",
+      "ts": "2026-05-18T19:51:46Z",
+      "command": "agents/aether/aether.sh",
+      "exit_code": 0,
+      "note": "Exit 0 but produced no output — silent failure pattern (no self-review written, no log emission)"
     },
     {
-      "id": "6cdaa04f",
-      "ts": "2026-05-18T13:51:21Z",
-      "exit": 0,
-      "cmd": "aether.sh"
+      "id": "04d96472-3875-47df-bd85-cd42b91be709",
+      "ts": "2026-05-18T19:51:46Z",
+      "command": "bin/queue-hygiene.sh",
+      "exit_code": 0,
+      "note": "Exit 0 but 15 items remain in running/ — hygiene script not cleaning stale entries"
     }
   ],
-  "next_check": "in 30min (P1 found \u2014 accelerated cadence)"
+  "agent_freshness": {
+    "kai": "0h",
+    "nel": "0h",
+    "sam": "0h",
+    "ra": "0h",
+    "aether": "ACTIVE.md fresh — but daily output is 5 days stale",
+    "dex": "0h"
+  },
+  "queue": {
+    "pending": 0,
+    "running": 15,
+    "running_oldest_age_days": 13
+  }
 }

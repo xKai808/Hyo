@@ -1145,3 +1145,17 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/brave-keen-ptolemy/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:c0ddcbbd:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/brave-keen-ptolemy/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a898079d:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/dreamy-focused-heisenberg/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:2ef1c5f7] _(filed 2026-05-18)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/dreamy-focused-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5c8a1a31] _(filed 2026-05-18)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/dreamy-focused-heisenberg/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:2ef1c5f7:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/dreamy-focused-heisenberg/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5c8a1a31:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/optimistic-focused-carson/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:98817142] _(filed 2026-05-18)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/optimistic-focused-carson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:b06295f1] _(filed 2026-05-18)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/optimistic-focused-carson/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:98817142:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-focused-carson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:b06295f1:escalated]
