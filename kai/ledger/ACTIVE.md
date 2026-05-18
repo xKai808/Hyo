@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-18T14:37:59Z
+Last updated: 2026-05-18T15:08:04Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T14:37:57Z
+  - Delegated: 2026-05-18T15:08:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T14:37:58Z
+  - Delegated: 2026-05-18T15:08:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T14:37:57Z
+  - Delegated: 2026-05-18T15:08:03Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T14:37:58Z
+  - Delegated: 2026-05-18T15:08:04Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-18T14:37:58Z
+  - Delegated: 2026-05-18T15:08:04Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
-  - Delegated: 2026-05-18T14:37:59Z
+  - Delegated: 2026-05-18T15:08:04Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-022) — scan entire codebase for similar patterns: Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died.
