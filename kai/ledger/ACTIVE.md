@@ -1,42 +1,83 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-18T08:05:46Z
+Last updated: 2026-05-18T08:08:06Z
+
+## Daily Audit Findings — 2026-05-18
+
+Run by: scheduled `kai-daily-audit` task. Report: `kai/ledger/daily-audit-2026-05-18.md`.
+Initial sandbox run had a `$HYO_ROOT` resolution bug (default `$HOME/Documents/Projects/Hyo` is empty in Cowork sandbox → all 5 agents reported FAIL). Re-ran with `HYO_ROOT=/sessions/.../mnt/Hyo` — that is the canonical result reflected below. **This is the same false-negative pattern flag-kai-014/dex-002 has been stuck on for 5 days. The audit script still has not been patched.**
+
+**Real issues found (after correct HYO_ROOT):**
+- 2 P1 from audit script (auto-flagged as flag-kai-021): aether runner output missing for today, aether evolution.jsonl 104h stale. Both are downstream of the Aether KILL-SWITCH (active since 2026-05-13, Hyo refused aether.sh). **flag-kai-019 raised the audit-script-should-respect-kill-switch fix yesterday — still unaddressed.** The audit will keep flagging these every day until the script is patched OR the kill-switch is lifted.
+- 4 PRIORITIES.md files stale 26d (sam, ra, aether, dex). Daily growth-phase output is not flowing back into PRIORITIES.md.
+- AGENT_ALGORITHMS.md (constitution) not reviewed in 19d — Kai self-flag.
+- Queue: 0 pending / 53 failed / 12,033 completed (failed bucket should be triaged — 53 silent failures).
+
+**Compound bottlenecks (new flag dispatched: flag-kai-022 [P1]):**
+1. `kai/ledger/verified-state.json` is **12 days stale** (last write 2026-05-06). CLAUDE.md hydration rule says it must be <2h fresh — every Kai session since 2026-05-06 has booted on stale truth.
+2. `kai/ledger/session-handoff.json` is **12 days stale** (last write 2026-05-06). session-close.sh has not been running.
+3. `kai/dispatch/` transcript sync stopped **2026-04-30** — 18 days of Dispatch ↔ Hyo conversation missing from Kai's context.
+4. `kai/ledger/hyo-inbox.jsonl` has **38,279 unread messages** — overwhelmingly ticket-sla-enforcer noise about TASK-20260505-* (13 days overdue). Inbox is firehose-spammed; signal is lost. SLA-enforcer keeps firing because the underlying tickets are stuck DELEGATED and never close.
+
+All four root-cause to the same structural break flagged by flag-kai-020 yesterday: **DELEGATED→DONE transition is broken across every agent**. Stuck items as of today: sam-005 (17d), aether-002 (8d), aether-003 (1d), ra-002/003/004 (1-3d, newsletter remediation), dex-002 (5d), nel-002/003/004/005/006 (1-12d). 16 `flag-nel-*` items queued 20+ days untouched. flag-kai-020 — the meta-flag about this exact issue — is itself stuck DELEGATED.
+
+**Automation gaps (6 open [AUTOMATE] in KAI_TASKS, all dated 2026-04-16 — 32d old, well past the 7d freshness threshold):**
+- L246: Post-deploy API test via MCP
+- L247: "No newsletter by 06:00 MT" sentinel — IRONIC, this is firing now but the cascade no-ops (ra-002/003/004 stuck)
+- L248: kai-context-save scheduled task
+- L249: kai hydrate command
+- L272: watch-deploy.sh → launchd
+- L275: UTC timestamp check in Nel
+
+**Operational impact:**
+- Newsletter missed 3 consecutive days (2026-05-16, -17, -18). Ra auto-remediate cascade has fired daily and no-op'd each time.
+- Aether daily report and aether-analysis HQ feed entries missing since 2026-05-13 (kill-switch).
+- Hyo's morning context (verified-state, handoff, dispatch transcripts) is 12-18 days out of date.
+
+**CEO recommendation (Hyo decision required):**
+The auto-flag + cascade machinery is structurally broken because **nothing closes tickets**. Filing more flags into the same broken pipeline adds noise without resolution. The single highest-leverage fix is the pathway-closer described in flag-kai-020 — either a daemon that scans `DELEGATED` items and verifies completion against agent output, or agent runners that explicitly call `dispatch close` on completion. Until that ships, every audit will surface the same pattern with growing stuck-counts. Hyo: please confirm priority — should Sam ship pathway-closer this week, or should we accept the queue-drift and just lift the kill-switches?
+
+[NEEDS HYO] check: 0 `[NEEDS HYO]` markers in agent ACTIVE.md or KAI_TASKS — but the four compound bottlenecks above effectively all need Hyo's call on which scheduled tasks to restart and whether to authorize the pathway-closer build.
+
+**Audit-script meta-bug (still unfixed after 5 days):** Running `kai/queue/daily-audit.sh` from any context where `$HOME != /Users/kai` produces silent all-FAIL output without exit-non-zero. Filed as flag-kai-014 on 2026-05-13. The fix is one line: `[[ -d "$ROOT/agents" ]] || { echo "FATAL: $ROOT/agents missing — wrong HYO_ROOT?"; exit 2; }`. Adding to KAI_TASKS for immediate Sam delegation.
+
+---
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-18T08:05:46Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-18T08:06:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T07:51:33Z
+  - Delegated: 2026-05-18T08:06:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-18T08:05:46Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-18T08:06:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-18T07:51:33Z
+  - Delegated: 2026-05-18T08:06:36Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-18T07:51:34Z
+  - Delegated: 2026-05-18T08:06:37Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 316 recurrent patterns detected — increased from 277, root-cause fix needed (flagged by kai)
-  - Delegated: 2026-05-18T07:51:34Z
+- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
+  - Delegated: 2026-05-18T08:06:38Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-18 — past 06:00 MT deadline
-  - Delegated: 2026-05-18T02:11:02Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-022) — scan entire codebase for similar patterns: Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died.
+  - Delegated: 2026-05-18T08:08:06Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-18 — past 06:00 MT deadline
-  - Delegated: 2026-05-18T02:11:02Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-021): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-18T08:06:44Z
   - Status: DELEGATED
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-18 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
@@ -47,12 +88,12 @@ Last updated: 2026-05-18T08:05:46Z
   - Delegated: 2026-05-17T18:11:18Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-013): No newsletter produced for 2026-05-17 — past 06:00 MT deadline
-  - Delegated: 2026-05-17T18:11:18Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-022): Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died.
+  - Delegated: 2026-05-18T08:08:06Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-017)
-  - Delegated: 2026-05-17T08:05:55Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-021)
+  - Delegated: 2026-05-18T08:06:44Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-17 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-013)
@@ -83,8 +124,8 @@ Last updated: 2026-05-18T08:05:46Z
   - Delegated: 2026-05-16T02:15:27Z
   - Status: DELEGATED
 
-- **dex-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-13: daily-audit.sh produces silent false-negatives when run from non-Mini contexts (today: 5 agents reported FAIL despite all ACTIVE.md files present at canonical path). Script must assert canonical ledger files exist before reporting health; exit non-zero if absent. See kai/ledger/daily-audit-2026-05-13.md B1. (flagged by kai, cascade flag-kai-014)
-  - Delegated: 2026-05-13T08:08:57Z
+- **dex-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died. (flagged by kai, cascade flag-kai-022)
+  - Delegated: 2026-05-18T08:08:06Z
   - Status: DELEGATED
 
 - **sam-005** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-020): Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
@@ -216,4 +257,10 @@ Last updated: 2026-05-18T08:05:46Z
 
 - **flag-kai-020** [P2] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
   - Created: 2026-05-17T08:07:47Z
+
+- **flag-kai-021** [P2] Daily audit: 2 critical issues found
+  - Created: 2026-05-18T08:06:44Z
+
+- **flag-kai-022** [P2] Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died.
+  - Created: 2026-05-18T08:08:06Z
 
