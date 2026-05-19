@@ -1,74 +1,103 @@
 {
-  "ts": "2026-05-18T20:03:00Z",
+  "ts": "2026-05-19T02:02:35Z",
   "status": "ISSUES",
-  "issues": 4,
-  "warnings": 2,
+  "issues": 8,
+  "warnings": 3,
   "findings": [
     {
       "severity": "P1",
-      "area": "newsletter",
-      "detail": "flag-nel-007 active — no newsletter produced for 2026-05-18 past 06:00 MT (flagged 18:10:50Z). Pattern recurring: also missed 2026-05-12, 2026-05-15, 2026-05-16. Auto-remediate delegations fired (ra-002) but newsletter still not published. Root cause not fixed; cascade is firing but not resolving."
+      "area": "hydration-data",
+      "detail": "verified-state.json + session-handoff.json now 313h / 13.04d stale — kai-session-prep.sh and session-close.sh cron tasks dead since 2026-05-05. CLAUDE.md VERIFIED STATE RULE breached >13d. flag-kai-022 unresolved."
     },
     {
       "severity": "P1",
-      "area": "agent-output",
-      "detail": "aether dark since 2026-05-13 — latest self-review is self-review-2026-05-13.md (5 days stale). No aether logs for 2026-05-14 through 2026-05-18. Aether daily runner producing zero output despite queue showing exit_code=0 (silent failure)."
+      "area": "pathway-closer",
+      "detail": "DELEGATED→DONE pathway closer still missing — flag-kai-020 root cause. No resolutions.jsonl exists; every flag becomes an immortal zombie. Single highest-leverage fix collapses ~80% of P1 noise."
+    },
+    {
+      "severity": "P1",
+      "area": "ra-render",
+      "detail": "No newsletter produced for 2026-05-17 OR 2026-05-18 — past 06:00 MT deadline. flag-nel-007 (18:10Z), flag-nel-001 (20:06Z), flag-nel-003 (22:10Z) all unresolved today. Ra render outage day 14 (last successful 2026-05-05)."
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "5-agent dead-loop cluster carries from 01:55Z healthcheck: nel 'routine maintenance run', sam 'routine engineering check', ra 'health check 1 warning', aether 'metrics cycle / dashboard out-of-sync', dex 'bottleneck_stuck: 2 corrupt JSONL entries'. No behavior change across 60+ briefs."
+    },
+    {
+      "severity": "P1",
+      "area": "dex-patterns",
+      "detail": "Dex Phase 4: 316 recurrent patterns at 06:31Z today — up from 277 yesterday, 261 two days ago. Climbing monotonically. Root-cause fix never landed."
+    },
+    {
+      "severity": "P1",
+      "area": "broken-links",
+      "detail": "flag-nel-001 '1 broken link' fired 3× today (08:05Z, 14:06Z, 20:06Z) — same link, no resolution between firings. AUTO-REMEDIATE cascade stuck on pathway-closer bug."
+    },
+    {
+      "severity": "P1",
+      "area": "audit-cluster",
+      "detail": "flag-kai-021 'Daily audit: 2 critical issues found' fired twice at 08:06:44Z today, still FLAGGED. Compounds with flag-kai-022 hydration breakage."
+    },
+    {
+      "severity": "P1",
+      "area": "queue-running-stale",
+      "detail": "queue/running/ depth=15: 1 fresh (recheck-flag-dex-001 from 06:31Z today, 19h old) + 7 stale alive heads 134h-310h (oldest 274a60a7 = 310h/12.9d) + 7 .json.failed orphans misfiled inside running/ since 2026-05-05. queue-hygiene.sh still has no stale-RUNNING sweep."
     },
     {
       "severity": "P2",
-      "area": "queue",
-      "detail": "15 items stuck in running/ — oldest from 2026-05-05 (13 days), 6 from 2026-05-06, one from 2026-05-13. 6 of these are *.failed-suffix files that should be moved to failed/. Queue worker not cleaning stale running/ entries."
-    },
-    {
-      "severity": "P2",
-      "area": "agent-output",
-      "detail": "ra self-review for 2026-05-18 missing — last self-review is 2026-05-17. Ra newsletter input files exist (2026-05-18.input.md, script-2026-05-18.txt) but the runner didn't write a self-review log for today."
-    },
-    {
-      "severity": "P3",
-      "area": "kill-switch",
-      "detail": "aetherbot-monitor.sh continues to be invoked by scheduled task (queue id 70b637e3) and emits the 2026-05-13 Hyo kill-switch refusal every run. Expected behavior — flag noted only to confirm kill-switch is still honored. Consider removing the launchctl entry instead of relying on the script-level refusal."
+      "area": "render-binding",
+      "detail": "Data file agents.json still has no reference in hq.html (≥38 sweeps)."
     },
     {
       "severity": "P3",
       "area": "agent-output",
-      "detail": "dex has 3 log files for today (healthy); sam has 1 log file (acceptable); nel has 27 log files for today (healthy)."
+      "detail": "aether 0 logs dated 2026-05-18 (kill-switch active since 2026-05-13 — expected). aether-.log empty-date file still being appended to by scheduled aether.sh — runner naming bug + kill-switch gating gap unchanged."
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "kai 0 logs dated 2026-05-18 — kai-daily-2026-05-18 not yet produced; 23:30 MT cadence still ~3.5h out, within tolerance."
     }
   ],
+  "actions_taken": "Read-only sweep. Rewrote kai/queue/healthcheck-latest.json. No new remediation dispatched — adding more amplifies cascade per pathway-closer bug.",
   "recent_queue_results": [
     {
-      "id": "70b637e3-3067-4f02-8770-2eaa6b41d924",
-      "ts": "2026-05-18T19:51:46Z",
-      "command": "bin/aetherbot-monitor.sh",
+      "id": "cmd-1779155860-33281",
+      "ts": "2026-05-19T01:57:47Z",
       "exit_code": 0,
-      "note": "kill-switch refusal emitted (expected per 2026-05-13 Hyo directive)"
+      "summary": "enforcer commit+push: escalated=264 archived=0 — succeeded"
     },
     {
-      "id": "0d177a01-0917-4ff3-8cbf-f3a933976645",
-      "ts": "2026-05-18T19:51:46Z",
-      "command": "agents/aether/aether.sh",
+      "id": "d0151b15-2cfc-4eb5-b4d0-8d32bb77bab6",
+      "ts": "2026-05-19T01:52:12Z",
       "exit_code": 0,
-      "note": "Exit 0 but produced no output — silent failure pattern (no self-review written, no log emission)"
+      "summary": "queue-hygiene.sh — still no stale-RUNNING sweep"
     },
     {
-      "id": "04d96472-3875-47df-bd85-cd42b91be709",
-      "ts": "2026-05-18T19:51:46Z",
-      "command": "bin/queue-hygiene.sh",
+      "id": "6aca7ccf-eb2b-4b10-ad06-f3125fc832c2",
+      "ts": "2026-05-19T01:52:12Z",
       "exit_code": 0,
-      "note": "Exit 0 but 15 items remain in running/ — hygiene script not cleaning stale entries"
+      "summary": "aetherbot-monitor — kill-switched refuse (expected)"
     }
   ],
-  "agent_freshness": {
-    "kai": "0h",
-    "nel": "0h",
-    "sam": "0h",
-    "ra": "0h",
-    "aether": "ACTIVE.md fresh — but daily output is 5 days stale",
-    "dex": "0h"
-  },
-  "queue": {
+  "queue_state": {
     "pending": 0,
     "running": 15,
-    "running_oldest_age_days": 13
-  }
+    "running_alive_fresh": 1,
+    "running_alive_stale": 7,
+    "running_failed_orphans": 7,
+    "completed_total": 12287,
+    "failed_total": 53
+  },
+  "agent_output_today": {
+    "nel": 30,
+    "sam": 1,
+    "ra": 2,
+    "aether": 0,
+    "dex": 3,
+    "kai": 0
+  },
+  "top_fix": "Wire DELEGATED→DONE pathway closer — runner-side dispatch close on success OR central pathway-closer daemon. Without it, hydration restoration / Ra diagnostics / dex pattern fix all spawn more zombie tickets.",
+  "next_check": "in 2 hours (30min if P0 found)"
 }

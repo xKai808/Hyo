@@ -1159,3 +1159,10 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/optimistic-focused-carson/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:98817142:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/optimistic-focused-carson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:b06295f1:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/epic-focused-brahmagupta/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:d371520c] _(filed 2026-05-18)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/epic-focused-brahmagupta/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a2eec1cb] _(filed 2026-05-18)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/epic-focused-brahmagupta/mnt/Hyo/newsletters/2026-05-18.md [sentinel:aurora-ran-today:d371520c:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/epic-focused-brahmagupta/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a2eec1cb:escalated]
