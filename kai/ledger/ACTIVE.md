@@ -1,42 +1,42 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-19T07:41:26Z
+Last updated: 2026-05-19T08:07:52Z
 
 ## In Progress
 
-- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-19T07:41:25Z
+- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-05-19T08:07:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-19T07:41:25Z
+  - Delegated: 2026-05-19T07:56:28Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-19T07:41:25Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
+  - Delegated: 2026-05-19T08:07:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-19T07:41:26Z
+  - Delegated: 2026-05-19T07:56:29Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-19T07:41:26Z
+  - Delegated: 2026-05-19T07:56:29Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 343 recurrent patterns detected — increased from 316, root-cause fix needed (flagged by kai)
-  - Delegated: 2026-05-19T07:41:26Z
+  - Delegated: 2026-05-19T07:56:29Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-19 — past 06:00 MT deadline
-  - Delegated: 2026-05-19T02:10:44Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-023) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-19T08:07:00Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-19 — past 06:00 MT deadline
-  - Delegated: 2026-05-19T02:10:44Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-023): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-19T08:07:00Z
   - Status: DELEGATED
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-19 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
@@ -51,8 +51,8 @@ Last updated: 2026-05-19T07:41:26Z
   - Delegated: 2026-05-19T02:12:25Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-021)
-  - Delegated: 2026-05-18T08:06:44Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-023)
+  - Delegated: 2026-05-19T08:07:00Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-19 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
@@ -222,4 +222,7 @@ Last updated: 2026-05-19T07:41:26Z
 
 - **flag-kai-022** [P2] Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 days stale — hydration data layer is broken, every session boots on stale truth. Root cause: kai-session-prep.sh and session-close.sh + dispatch sync scheduled tasks have not run for ~12 days. This compounds with flag-kai-020 (DELEGATED→DONE pipeline broken) — flags pile up forever because closure is broken AND state cannot be re-verified. Hyo: please run 'launchctl list | grep com.hyo' on Mini to confirm which scheduled tasks died.
   - Created: 2026-05-18T08:08:06Z
+
+- **flag-kai-023** [P2] Daily audit: 2 critical issues found
+  - Created: 2026-05-19T08:07:00Z
 

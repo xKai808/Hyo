@@ -133,6 +133,12 @@ Format: `date | decision | reasoning | outcome`
 
 - **2026-05-18:** Researched 9/9 sources. See `research/findings-2026-05-18.md` for details.
 
+- **2026-05-18:** Researched 9/9 sources. See `research/findings-2026-05-18.md` for details.
+
+- **2026-05-18:** Researched 9/9 sources. See `research/findings-2026-05-18.md` for details.
+
+- **2026-05-18:** Researched 9/9 sources. See `research/findings-2026-05-18.md` for details.
+
 - **2026-05-17:** Researched 9/9 sources. See `research/findings-2026-05-17.md` for details.
 
 - **2026-05-17:** Researched 9/9 sources. See `research/findings-2026-05-17.md` for details.

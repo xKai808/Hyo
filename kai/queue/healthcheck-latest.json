@@ -1,103 +1,70 @@
 {
-  "ts": "2026-05-19T02:02:35Z",
+  "ts": "2026-05-19T08:03:24Z",
   "status": "ISSUES",
-  "issues": 8,
+  "issues": 2,
   "warnings": 3,
   "findings": [
     {
       "severity": "P1",
-      "area": "hydration-data",
-      "detail": "verified-state.json + session-handoff.json now 313h / 13.04d stale — kai-session-prep.sh and session-close.sh cron tasks dead since 2026-05-05. CLAUDE.md VERIFIED STATE RULE breached >13d. flag-kai-022 unresolved."
+      "area": "flags",
+      "detail": "Open P1: flag-dex-001 \u2014 Dex Phase 4: 343 recurrent patterns (up from 316). Auto-remediation already dispatched to nel/sam/dex; verify resolution."
     },
     {
-      "severity": "P1",
-      "area": "pathway-closer",
-      "detail": "DELEGATED→DONE pathway closer still missing — flag-kai-020 root cause. No resolutions.jsonl exists; every flag becomes an immortal zombie. Single highest-leverage fix collapses ~80% of P1 noise."
+      "severity": "P2",
+      "area": "queue",
+      "detail": "14 stale items in queue/running/ (oldest from May 5; 7 already marked .failed). Worker is processing new items normally (last completion 2026-05-19T07:52Z). Hygiene: sweep orphans."
     },
     {
-      "severity": "P1",
-      "area": "ra-render",
-      "detail": "No newsletter produced for 2026-05-17 OR 2026-05-18 — past 06:00 MT deadline. flag-nel-007 (18:10Z), flag-nel-001 (20:06Z), flag-nel-003 (22:10Z) all unresolved today. Ra render outage day 14 (last successful 2026-05-05)."
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "No today-dated logs for sam, ra, aether (matches prior healthcheck). nel=14, dex=3. Aether/Sam scheduled runs occurred per completed queue entries; missing dated logs suggests runner output not landing under agents/*/logs/ with date filename \u2014 check log conventions."
     },
     {
       "severity": "P1",
       "area": "dead-loop",
-      "detail": "5-agent dead-loop cluster carries from 01:55Z healthcheck: nel 'routine maintenance run', sam 'routine engineering check', ra 'health check 1 warning', aether 'metrics cycle / dashboard out-of-sync', dex 'bottleneck_stuck: 2 corrupt JSONL entries'. No behavior change across 60+ briefs."
-    },
-    {
-      "severity": "P1",
-      "area": "dex-patterns",
-      "detail": "Dex Phase 4: 316 recurrent patterns at 06:31Z today — up from 277 yesterday, 261 two days ago. Climbing monotonically. Root-cause fix never landed."
-    },
-    {
-      "severity": "P1",
-      "area": "broken-links",
-      "detail": "flag-nel-001 '1 broken link' fired 3× today (08:05Z, 14:06Z, 20:06Z) — same link, no resolution between firings. AUTO-REMEDIATE cascade stuck on pathway-closer bug."
-    },
-    {
-      "severity": "P1",
-      "area": "audit-cluster",
-      "detail": "flag-kai-021 'Daily audit: 2 critical issues found' fired twice at 08:06:44Z today, still FLAGGED. Compounds with flag-kai-022 hydration breakage."
-    },
-    {
-      "severity": "P1",
-      "area": "queue-running-stale",
-      "detail": "queue/running/ depth=15: 1 fresh (recheck-flag-dex-001 from 06:31Z today, 19h old) + 7 stale alive heads 134h-310h (oldest 274a60a7 = 310h/12.9d) + 7 .json.failed orphans misfiled inside running/ since 2026-05-05. queue-hygiene.sh still has no stale-RUNNING sweep."
+      "detail": "Carried over from prior healthcheck: nel, sam, ra, aether, dex all in assessment_stuck/bottleneck_stuck loops. Needs Kai guidance questions (open-ended) next interactive session."
     },
     {
       "severity": "P2",
       "area": "render-binding",
-      "detail": "Data file agents.json still has no reference in hq.html (≥38 sweeps)."
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "aether 0 logs dated 2026-05-18 (kill-switch active since 2026-05-13 — expected). aether-.log empty-date file still being appended to by scheduled aether.sh — runner naming bug + kill-switch gating gap unchanged."
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "kai 0 logs dated 2026-05-18 — kai-daily-2026-05-18 not yet produced; 23:30 MT cadence still ~3.5h out, within tolerance."
+      "detail": "Carried over: agents.json has no reference in hq.html."
     }
   ],
-  "actions_taken": "Read-only sweep. Rewrote kai/queue/healthcheck-latest.json. No new remediation dispatched — adding more amplifies cascade per pathway-closer bug.",
+  "actions_taken": "Logged findings; no new auto-remediation (carries forward from 07:56 cycle). KAI_BRIEF updated to surface flag-dex-001 + dead-loop cluster for next interactive session.",
   "recent_queue_results": [
     {
-      "id": "cmd-1779155860-33281",
-      "ts": "2026-05-19T01:57:47Z",
+      "file": "5f3eb766-ec44-4764-adc1-622298cafafa.json",
+      "status": "completed",
       "exit_code": 0,
-      "summary": "enforcer commit+push: escalated=264 archived=0 — succeeded"
+      "cmd": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/aetherbot-monitor.sh"
     },
     {
-      "id": "d0151b15-2cfc-4eb5-b4d0-8d32bb77bab6",
-      "ts": "2026-05-19T01:52:12Z",
+      "file": "5b4ab470-a3d0-4cb4-8c84-7b8df170d10c.json",
+      "status": "completed",
       "exit_code": 0,
-      "summary": "queue-hygiene.sh — still no stale-RUNNING sweep"
+      "cmd": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/agents/aether/aether.sh >> /Users/kai/"
     },
     {
-      "id": "6aca7ccf-eb2b-4b10-ad06-f3125fc832c2",
-      "ts": "2026-05-19T01:52:12Z",
+      "file": "58781c79-4063-4799-932a-bae244b482fe.json",
+      "status": "completed",
       "exit_code": 0,
-      "summary": "aetherbot-monitor — kill-switched refuse (expected)"
+      "cmd": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/queue-hygiene.sh >> /Users/kai/Doc"
+    },
+    {
+      "file": "aurora-trial-push.json",
+      "status": "failed",
+      "cmd": "rm -f ~/Documents/Projects/Hyo/.git/index.lock && cd ~/Documents/Projects/Hyo && git push origin main"
+    },
+    {
+      "file": "aurora-trial-5day.json",
+      "status": "failed",
+      "cmd": "rm -f ~/Documents/Projects/Hyo/.git/index.lock && cd ~/Documents/Projects/Hyo && git add agents/sam/website/api/aurora-c"
+    },
+    {
+      "file": "payment-redesign.json",
+      "status": "failed",
+      "cmd": "rm -f ~/Documents/Projects/Hyo/.git/index.lock && cd ~/Documents/Projects/Hyo && git add agents/sam/website/payment.html"
     }
   ],
-  "queue_state": {
-    "pending": 0,
-    "running": 15,
-    "running_alive_fresh": 1,
-    "running_alive_stale": 7,
-    "running_failed_orphans": 7,
-    "completed_total": 12287,
-    "failed_total": 53
-  },
-  "agent_output_today": {
-    "nel": 30,
-    "sam": 1,
-    "ra": 2,
-    "aether": 0,
-    "dex": 3,
-    "kai": 0
-  },
-  "top_fix": "Wire DELEGATED→DONE pathway closer — runner-side dispatch close on success OR central pathway-closer daemon. Without it, hydration restoration / Ra diagnostics / dex pattern fix all spawn more zombie tickets.",
-  "next_check": "in 2 hours (30min if P0 found)"
+  "next_check": "in 2 hours"
 }

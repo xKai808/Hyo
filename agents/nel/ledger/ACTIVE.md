@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-19T02:07:20Z
+Last updated: 2026-05-19T08:07:52Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-19T02:07:20Z
+  - Delegated: 2026-05-19T08:07:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-18 — past 06:00 MT deadline
-  - Delegated: 2026-05-18T22:10:10Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-023) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-19T08:07:00Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-013) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-17 — past 06:00 MT deadline
-  - Delegated: 2026-05-17T18:11:18Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-19 — past 06:00 MT deadline
+  - Delegated: 2026-05-19T02:12:25Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-kai-019) — scan entire codebase for similar patterns: Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim)
