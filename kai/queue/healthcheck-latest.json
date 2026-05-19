@@ -1,70 +1,24 @@
 {
-  "ts": "2026-05-19T08:03:24Z",
+  "ts": "2026-05-19T14:04:24Z",
   "status": "ISSUES",
-  "issues": 2,
-  "warnings": 3,
+  "issues": 5,
+  "warnings": 4,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "flags",
-      "detail": "Open P1: flag-dex-001 \u2014 Dex Phase 4: 343 recurrent patterns (up from 316). Auto-remediation already dispatched to nel/sam/dex; verify resolution."
-    },
-    {
-      "severity": "P2",
-      "area": "queue",
-      "detail": "14 stale items in queue/running/ (oldest from May 5; 7 already marked .failed). Worker is processing new items normally (last completion 2026-05-19T07:52Z). Hygiene: sweep orphans."
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "No today-dated logs for sam, ra, aether (matches prior healthcheck). nel=14, dex=3. Aether/Sam scheduled runs occurred per completed queue entries; missing dated logs suggests runner output not landing under agents/*/logs/ with date filename \u2014 check log conventions."
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "Carried over from prior healthcheck: nel, sam, ra, aether, dex all in assessment_stuck/bottleneck_stuck loops. Needs Kai guidance questions (open-ended) next interactive session."
-    },
-    {
-      "severity": "P2",
-      "area": "render-binding",
-      "detail": "Carried over: agents.json has no reference in hq.html."
-    }
+    {"severity": "P1", "area": "dead-loop", "detail": "nel/sam/ra/aether/dex still assessment_stuck — same wording as 13:57Z cron; GUIDANCE re-dispatched at 13:57:45-47Z but DELEGATED→DONE pathway closer (flag-kai-020) still missing, so behavior unchanged across 70+ briefs"},
+    {"severity": "P2", "area": "render-binding", "detail": "Data file agents.json still has no reference in hq.html (~40+ sweeps)"},
+    {"severity": "P2", "area": "queue-hygiene", "detail": "queue-hygiene.sh has syntax error at line 39 ('for f in glob 2>/dev/null' — bash rejects redirect on for-in line). running/ depth=14, all stale orphans from 2026-05-05/06; sweep never reaps them"},
+    {"severity": "P3", "area": "agent-output", "detail": "aether 0 dated logs today — kill-switched per Hyo 2026-05-13 directive (expected, not a real failure)"},
+    {"severity": "P3", "area": "agent-output-predicate", "detail": "Healthcheck reports 'ra no output today' but ra DID produce script-2026-05-19.txt + 2026-05-19.input.md + 3 research briefs under agents/ra/{output,research}. Predicate only checks agents/ra/logs/. Fix the check, not Ra"},
+    {"severity": "P3", "area": "agent-output", "detail": "'hyo has no output today' — hyo is not a daily-runner agent (not a real issue)"}
   ],
-  "actions_taken": "Logged findings; no new auto-remediation (carries forward from 07:56 cycle). KAI_BRIEF updated to surface flag-dex-001 + dead-loop cluster for next interactive session.",
+  "actions_taken": "Read-only sweep ~6min after 13:57:45Z cron healthcheck which dispatched 5 GUIDANCE delegations to nel/sam/ra/aether/dex. No new dispatches this sweep — would amplify dead-loop cascade per flag-kai-020 pathway-closer bug.",
   "recent_queue_results": [
-    {
-      "file": "5f3eb766-ec44-4764-adc1-622298cafafa.json",
-      "status": "completed",
-      "exit_code": 0,
-      "cmd": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/aetherbot-monitor.sh"
-    },
-    {
-      "file": "5b4ab470-a3d0-4cb4-8c84-7b8df170d10c.json",
-      "status": "completed",
-      "exit_code": 0,
-      "cmd": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/agents/aether/aether.sh >> /Users/kai/"
-    },
-    {
-      "file": "58781c79-4063-4799-932a-bae244b482fe.json",
-      "status": "completed",
-      "exit_code": 0,
-      "cmd": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/queue-hygiene.sh >> /Users/kai/Doc"
-    },
-    {
-      "file": "aurora-trial-push.json",
-      "status": "failed",
-      "cmd": "rm -f ~/Documents/Projects/Hyo/.git/index.lock && cd ~/Documents/Projects/Hyo && git push origin main"
-    },
-    {
-      "file": "aurora-trial-5day.json",
-      "status": "failed",
-      "cmd": "rm -f ~/Documents/Projects/Hyo/.git/index.lock && cd ~/Documents/Projects/Hyo && git add agents/sam/website/api/aurora-c"
-    },
-    {
-      "file": "payment-redesign.json",
-      "status": "failed",
-      "cmd": "rm -f ~/Documents/Projects/Hyo/.git/index.lock && cd ~/Documents/Projects/Hyo && git add agents/sam/website/payment.html"
-    }
+    {"id": "fe94de0f", "ts": "2026-05-19T13:53:03Z", "command": "aether.sh", "exit_code": 0, "note": "kill-switch refusal"},
+    {"id": "b181b7a7", "ts": "2026-05-19T13:53:03Z", "command": "aetherbot-monitor.sh", "exit_code": 0, "note": "kill-switch refusal"},
+    {"id": "5cd3f9e4", "ts": "2026-05-19T13:53:03Z", "command": "queue-hygiene.sh", "exit_code": 0, "note": "BUT syntax error in line 39 — no stale-RUNNING sweep across 70+ briefs"}
   ],
-  "next_check": "in 2 hours"
+  "queue_state": {"pending": 0, "running": 14, "running_alive": 7, "running_failed_orphans": 7, "completed_total": 12466, "failed_total": 53},
+  "agent_output_today_MT": {"nel": 21, "sam": 1, "dex": 3, "ra_logs": 0, "ra_output_dir": "script+input+3briefs present", "aether": 0, "ant": 0},
+  "active_md_freshness": "all 6 mtimes 0h (cron-touch artifact, not real content freshness)",
+  "next_check": "in 2 hours (30min if P0 found)"
 }
