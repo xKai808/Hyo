@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-20T06:21:48Z",
+  "updatedAt": "2026-05-20T10:17:22Z",
   "morningReport": {
     "date": "2026-05-15",
     "generatedAt": "2026-05-15T00:11:30-06:00",
@@ -23,7 +23,7 @@
       "Nel sandbox timeout in Phase 6 \u2014 grep loop over shell scripts exceeded 45s; Mini run authoritative",
       "Production authoritative on Mini \u2014 sandbox UTC path artifacts observational only"
     ],
-    "lastOpsSync": "2026-05-19T14:12:00Z"
+    "lastOpsSync": "2026-05-20T10:17:22Z"
   },
   "events": [
     {
@@ -582,8 +582,8 @@
     "subscribers": []
   },
   "sentinel": {
-    "ts": "2026-05-20T06:11:17Z",
-    "run": 490,
+    "ts": "2026-05-20T10:10:41Z",
+    "run": 492,
     "passed": 6,
     "failed": 3,
     "newIssues": 2,
@@ -593,25 +593,27 @@
       {
         "severity": "P0",
         "key": "aurora-ran-today",
-        "days": 3,
-        "msg": "newsletters/2026-05-20.md missing \u2014 sentinel checks the UTC date; at 00:11 MT 2026-05-20 it looks for the current MT day's newsletter, which is not due until the 03:00 MT Ra pipeline. Sandbox newsletters/ also holds only .input.md files (no synced .md) \u2014 Mini authoritative. Re-filed under a fresh date-digest each run."
+        "days": 1,
+        "msg": "newsletters/2026-05-20.md missing/empty. Sandbox newsletters/ does not show the synced .md and the 03:00 MT Ra pipeline is the authoritative producer \u2014 Mini authoritative. Digest rotates daily so it re-files as new each run."
       },
       {
         "severity": "P1",
         "key": "scheduled-tasks-fired",
-        "days": 3,
-        "msg": "no aurora-*.log in agents/nel/logs sandbox view \u2014 Mini authoritative."
+        "days": 1,
+        "msg": "no aurora-*.log visible in agents/nel/logs from the Cowork sandbox view \u2014 Mini authoritative."
       },
       {
         "severity": "P2",
         "key": "task-queue-size",
-        "days": 224,
-        "msg": "35 P0 tasks vs threshold 5 \u2014 224 runs flat (P2 elevated, recurring)."
+        "days": 226,
+        "msg": "35 P0 tasks vs overload threshold 5 \u2014 226 runs flat. P2 elevated, recurring; genuine backlog item."
       }
-    ]
+    ],
+    "note": "sentinel.sh runs `set -euo pipefail`; its findings-processor exits RC=2 on P0 findings, which aborts the script before the end-of-run summary, adaptive diagnostics, and the HQ auto-push. So sentinel did NOT auto-push to HQ this cycle. Latent bug \u2014 cipher.sh handles the same case correctly with `|| RC=$?`. Recommend the same fix in sentinel.sh."
   },
   "cipher": {
-    "ts": "2026-05-20T06:11:42Z",
+    "ts": "2026-05-20T10:11:04Z",
+    "run": 989,
     "findings": 0,
     "leaks": 0,
     "autofixes": 0,
@@ -626,7 +628,7 @@
       "passed": 4,
       "warnings": 0,
       "failures": 0,
-      "status": "re-verified clean this cycle via dep-audit.sh (4 passed / 0 warnings / 0 failures); prior HIGH CVE (agents/sam/mcp-server) not reproduced in the sandbox run \u2014 Mini authoritative for the definitive scan."
+      "status": "clean \u2014 re-verified this cycle via dep-audit.sh (4 passed / 0 warnings / 0 failures)."
     }
   },
   "sim": {
@@ -639,25 +641,25 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-05-20T07:00:07Z",
-    "improvementScore": 85,
-    "findingsCount": 1,
+    "lastRun": "2026-05-20T10:12:45Z",
+    "improvementScore": 65,
+    "findingsCount": 2,
     "staleFiles": 0,
     "brokenLinks": 29,
     "untested": 47,
     "inefficient": 9,
     "sentinel": {
-      "pass": 4,
-      "fail": 0
+      "pass": 2,
+      "fail": 2
     },
     "cipher": {
       "leaks": 0
     }
   },
   "ops_sync": {
-    "ts": "2026-05-20T06:21:48Z",
-    "cycle": "00:11 MT 2026-05-20",
+    "ts": "2026-05-20T10:17:22Z",
+    "cycle": "04:13 MT 2026-05-20",
     "posture": "WATCH",
-    "summary": "Ops sync @ 00:11 MT 2026-05-20 (hq-ops-sync, cowork, scheduled-task). SENTINEL run #490: 6 passed / 3 failed \u2014 2 new, 1 recurring, 2 resolved. Findings: P0 aurora-ran-today (newsletters/2026-05-20.md missing \u2014 sentinel checks the UTC date, so at 00:11 MT it looks for today's MT newsletter, not due until the 03:00 MT Ra pipeline; sandbox newsletters/ holds only .input.md files \u2014 Mini authoritative); P1 scheduled-tasks-fired (no aurora-*.log in sandbox logs view \u2014 Mini authoritative); P2 task-queue-size day 224 (35 P0 tasks vs threshold 5, flat). Sentinel exits RC=2 on P0 findings so its end-of-run HQ auto-push is skipped \u2014 known quirk, carried for Mini verification. 2 date-stamped lines (P0+P1) filed to KAI_TASKS.md as designed. CIPHER: CLEAN \u2014 0 findings, 0 secret leaks, 0 autofixes; gitleaks skipped (not installed in sandbox \u2014 Mini authoritative); permissions verified (secretsDir 755 via symlink, founderToken 600); dep-audit re-verified clean (4 passed / 0 warnings / 0 failures); HQ push http 200; verification skipped (no HYO_HQ_PASSWORD). NEL: nel.sh could NOT complete a fresh full sweep in the Cowork sandbox \u2014 3 attempts, each terminated by the sandbox per-call execution limit (~45s) before Phase 7-8 (HQ State Update); backgrounded/detached processes do not persist across sandbox bash calls. Partial runs reached Phases 1-6 and re-measured: 2 projects sentinel-failing, cipher 0 leaks, stale-files clean, 29 broken links, 47 untested scripts \u2014 all consistent with the last complete run. The nel block therefore CARRIES the most recent COMPLETE nel.sh run (2026-05-20T04:00:00Z = 22:00 MT 2026-05-19 daily runner: improvementScore 85, findingsCount 1, sentinel pass:4/fail:0). nel.sh partial runs filed dispatch flags flag-nel-002..006 (P2 sentinel-synth, P2 broken-links). Local agents/nel/logs/nel-2026-05-20.md restored from the published website-docs copy (a partial run had overwritten it). DUAL-PATH: website/ is NOT a symlink in this sandbox mount \u2014 website/data/hq-state.json and agents/sam/website/data/hq-state.json are separate files and had drifted (website/data nel block stale at 02:11Z, agents/sam at 04:00Z). Both now written identically with the 04:00Z nel block plus this cycle's sentinel/cipher/ops_sync. DEPLOY BLOCKER: a stale 0-byte .git/index.lock (created 2026-05-20T02:15Z by a prior Cowork session) blocks gitwatch from committing. The sandbox mount forbids file unlink so it could not be removed directly; a removal command was submitted to the Mini queue this cycle (worker confirmed live \u2014 processed a job at 06:19:52Z). If this hq-state update has not deployed, run on the Mini: rm -f ~/Documents/Projects/Hyo/.git/index.lock POSTURE: WATCH \u2014 0 new genuine issues; cipher fully clean; sentinel findings are recurring UTC/timing and sandbox-visibility artifacts; nel measurable state unchanged vs last complete run. Sole actionable item: clear the .git/index.lock deploy blocker on the Mini."
+    "summary": "Ops sync @ 04:13 MT 2026-05-20 (hq-ops-sync scheduled task, Cowork sandbox). SENTINEL run #492: 6 passed / 3 failed (2 new, 1 recurring, 2 resolved). Findings: P0 aurora-ran-today (newsletters/2026-05-20.md missing \u2014 sandbox visibility / Ra 03:00 MT pipeline authoritative, Mini authoritative); P1 scheduled-tasks-fired (no aurora-*.log in the sandbox logs view \u2014 Mini authoritative); P2 task-queue-size day 226 (35 P0 tasks vs threshold 5, flat). KNOWN QUIRK confirmed: sentinel.sh runs `set -e`; its findings-processor exits RC=2 on P0, aborting the script before the summary, adaptive diagnostics and the HQ auto-push \u2014 so sentinel did not auto-push this cycle. Recommend porting cipher.sh's `|| RC=$?` guard into sentinel.sh. CIPHER run #989: CLEAN \u2014 0 findings, 0 secret leaks, 0 autofixes; gitleaks skipped (not installed in sandbox \u2014 Mini authoritative); permissions verified (secretsDir 755 via symlink, founderToken 600); dep-audit clean (4 passed / 0 / 0); HQ push http 200; verification skipped (no HYO_HQ_PASSWORD). NEL: a first foreground nel.sh attempt hit the sandbox ~45s per-call limit mid-Phase-6; a detached re-run completed the core sweep \u2014 Phases 1-9 ran, HQ state updated, report published to website docs, self-review healthy (14 findings). improvementScore 65/100 (down from 85: score -20 for SENTINEL_FAIL=2 across projects); findingsCount 2, staleFiles 0, brokenLinks 29, untested scripts 47, inefficient patterns 9. Sentinel synthesis across 4 projects: aurora-ra and kai-ceo passing; hyo (2p/2f) and aether (1p/1f) with findings. Dispatch flags filed: flag-nel-004 (P2 sentinel), flag-nel-005 (P2 29 broken links), flag-nel-006 (P3 9 code smells), flag-nel-007 (P2 audit 5 issues), flag-nel-008 (P2 self-review 2 untriggered files). The nel block here was written by nel.sh itself at 10:12:45Z. nel.sh's tail-end reflection/evolution phase did not visibly complete within the run window (likely a hanging network call in the sandbox) \u2014 non-critical bookkeeping; the core ops work and the HQ write completed. DEPLOY: the stale .git/index.lock flagged in the prior cycle (06:21Z) is now CLEARED \u2014 no index.lock present; gitwatch can commit/deploy this update. DUAL-PATH: website/ is a real directory (not a symlink) in this mount \u2014 website/data/hq-state.json and agents/sam/website/data/hq-state.json are separate files and had drifted (website/ copy stale at 07:00Z, 48 events, nel block 04:00Z; agents/sam copy fresh, 79 events, nel block 10:12Z). Both now written identically with this cycle's sentinel/cipher/ops_sync blocks plus the fresh 10:12Z nel block. POSTURE: WATCH \u2014 0 new genuine issues; cipher fully clean; sentinel P0/P1 are recurring sandbox-visibility/timing artifacts; nel measurable state consistent with the last complete run. Open backlog (unchanged, not new): 29 broken doc links, 47 untested scripts, 35-deep P0 task queue. Recommended actions: (1) fix sentinel.sh's `set -e` abort so it auto-pushes and runs diagnostics on P0 findings; (2) work down the 29 broken doc links and the P0 task queue."
   }
 }

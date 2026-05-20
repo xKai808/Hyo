@@ -1,56 +1,26 @@
 {
-  "ts": "2026-05-20T08:05:24Z",
+  "ts": "2026-05-20T14:04:56Z",
   "status": "ISSUES",
-  "issues": 6,
-  "warnings": 2,
-  "meta": "This is the ~214th automated health check. KAI_BRIEF.md now holds 213 healthcheck notes and 84 'current state' sections. Every run for the past ~2 weeks has diagnosed the same root cause and declined to act. The monitoring has become the system's main output. This needs a human decision, not another automated cycle.",
+  "issues": 4,
+  "warnings": 3,
   "findings": [
-    {
-      "severity": "P1",
-      "area": "self-referential-loop",
-      "detail": "The 2-hour healthcheck has produced 200+ near-identical notes; the top item ('wire the DELEGATED->DONE pathway closer') has carried unchanged across 70+ briefs. Automated remediation cannot resolve this. Escalated to Hyo."
-    },
-    {
-      "severity": "P1",
-      "area": "hydration-state",
-      "detail": "verified-state.json and session-handoff.json frozen since 2026-05-06 (~14d). kai-session-prep.sh / session-close.sh / dispatch-sync schedulers appear dead. Per CLAUDE.md these are the authoritative state source; system has booted on stale truth for 14 days."
-    },
-    {
-      "severity": "P1",
-      "area": "newsletter",
-      "detail": "No rendered newsletter since ~2026-05-05 (~15 days). Ra gather phase returns 0 sources. The product the system exists to ship has not shipped in two weeks."
-    },
-    {
-      "severity": "P1",
-      "area": "closure-pipeline",
-      "detail": "DELEGATED->DONE transition broken across all agents; auto-remediate tasks never close. 287 tickets escalated / 0 archived; ~367 recurrent patterns and rising (was 343). Every flag re-fires forever."
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel/sam/ra/aether/dex all assessment_stuck. The agent runners are shell scripts that exit 0 with empty output; [GUIDANCE] tasks re-dispatched every cycle with zero behavior change."
-    },
-    {
-      "severity": "P1",
-      "area": "hyo-inbox",
-      "detail": "kai/ledger/hyo-inbox.jsonl holds unread 'P0 SLA BREACH' auto-messages up to ~355h overdue, all symptoms of the broken closure pipeline rather than new problems."
-    },
-    {
-      "severity": "P2",
-      "area": "queue-hygiene",
-      "detail": "14 stale orphan files in kai/queue/running/ dated 2026-05-05 to 05-13 (7 *.json.failed + 7 stale *.json). queue-hygiene.sh syntax error blocks the reap. NOTE: the queue worker itself is alive and processing normally."
-    },
-    {
-      "severity": "P3",
-      "area": "agent-output",
-      "detail": "aether produced no output today - EXPECTED. AetherBot was intentionally kill-switched by Hyo on 2026-05-13 (see agents/aether/STOPPED-2026-05-13.md). Not a fault."
-    }
+    {"severity": "P1", "area": "closure-pipeline", "detail": "DELEGATED->DONE closer never wired (flag-kai-020). 12+ remediation tasks stuck at status DELEGATED, oldest nel-006 ~14d; aether-002/003, sam-004/005, nel-004/005 all ~78h. Root cause of the recurring P1 cascade -- every auto-remediate re-fires and never closes."},
+    {"severity": "P1", "area": "hydration-state", "detail": "verified-state.json + session-handoff.json frozen 2026-05-06 (~14d stale; mandated 15-min refresh), memory-integrity-latest.json ~15d, newest dispatch transcript 2026-04-22 (~28d). kai-session-prep.sh / session-close.sh / dispatch-sync schedulers have not run for ~2 weeks."},
+    {"severity": "P1", "area": "newsletter", "detail": "No rendered newsletter since agents/ra/output/2026-05-05.html (~15d). Ra produced 0 dated output today. Flags re-firing for 2026-05-16 / 05-19 / 05-20 missed deadlines."},
+    {"severity": "P1", "area": "dead-loop", "detail": "nel/sam/ra/aether/dex stuck in identical assessment 3+ cycles. [GUIDANCE] re-dispatched every 15min: 45 DELEGATE actions in last 2h, 0 ACK / 0 REPORT / 0 RESOLVE. Remediation is sim-acked only -- zero behavior change."},
+    {"severity": "P2", "area": "queue-hygiene", "detail": "kai/queue/running/ holds 14 stale orphans (7 .json.failed + 7 .json, aged 2026-05-05 -> 05-13). queue-hygiene.sh ran 13:54Z exit=0 but does not reap stale-RUNNING entries."},
+    {"severity": "P2", "area": "render-binding", "detail": "Data file agents.json has no reference in hq.html (carried from prior sweep)."},
+    {"severity": "P3", "area": "agent-output", "detail": "ra 0 dated output today; aether 0 output (kill-switch active since 2026-05-13, expected). nel=21, dex=3, sam=1 produced output today."}
   ],
-  "actions_taken": "None. Deliberately did NOT dispatch auto-remediation - re-firing the cascade is the exact loop this report flags. Escalated to Hyo via a plain-language note at the top of KAI_BRIEF.md.",
+  "flags_p0_p1_last_2h": 0,
+  "stale_tasks_over_72h": ["aether-002", "aether-003", "nel-004", "nel-005", "nel-006", "sam-004", "sam-005", "ra-004", "flag-dex-001", "flag-sam-001", "flag-ra-001", "flag-nel-004", "flag-nel-005", "flag-nel-006"],
+  "queue": {"pending": 0, "running": 14, "running_note": "14 stale orphans; worker itself is alive and IDLE", "worker_alive": true},
+  "actions_taken": "None. Read-only sweep. Remediation deliberately withheld -- another auto-remediate cascade would only add immortal zombies per flag-kai-020. See KAI_BRIEF.md 2026-05-20 02:05 MT note: the fix requires Hyo present, not another automated cycle.",
   "recent_queue_results": [
-    {"id": "cmd-1779263774-31038", "exit_code": 0, "ts": "2026-05-20T07:56:21Z", "note": "enforcer commit+push (escalated=287 archived=0)"},
-    {"id": "8e4faceb-87d2-46b5-9427-558269e90685", "exit_code": 0, "ts": "2026-05-20T07:54:19Z", "note": "aether.sh - kill-switched, refused (expected)"},
-    {"id": "802b95e8-2879-4bee-85d8-c7022bedb77d", "exit_code": 0, "ts": "2026-05-20T07:54:19Z", "note": "aetherbot-monitor.sh - kill-switched, refused (expected)"}
+    {"id": "d7adc808", "ts": "2026-05-20T13:54:45Z", "cmd": "aetherbot-monitor.sh", "exit_code": 0, "note": "kill-switch refused (expected)"},
+    {"id": "c542f0f6", "ts": "2026-05-20T13:54:44Z", "cmd": "aether.sh", "exit_code": 0, "note": "kill-switch active (expected)"},
+    {"id": "29163663", "ts": "2026-05-20T13:54:44Z", "cmd": "queue-hygiene.sh", "exit_code": 0}
   ],
-  "next_check": "Recommend pausing the 2-hour healthcheck task until Hyo has reviewed. More cycles will not change this result."
+  "next_check": "in 2 hours",
+  "summary": "Stable-stuck. No new failure, no self-resolution. The system has been in a self-reinforcing dead-loop for ~2 weeks and the 2-hour healthcheck has become its main output. This needs a deliberate decision from Hyo, not another automated cycle."
 }

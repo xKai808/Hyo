@@ -21,6 +21,8 @@
 
 | ? | P1 | [RESEARCH] Fix weakness using discovered tool: My weakness 'Limited to filesystem + git scanning; no runtime security ob...' —  | OPEN | 2026-05-20 |
 
+| ? | P2 | [RESEARCH] Evaluate trivy for integration into QA cycle | OPEN | 2026-05-20 |
+
 
 ## Daily Research Mandate
 
