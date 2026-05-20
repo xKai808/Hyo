@@ -1,24 +1,90 @@
 {
-  "ts": "2026-05-19T14:04:24Z",
+  "ts": "2026-05-20T02:04:55Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 4,
+  "issues": 6,
+  "warnings": 6,
   "findings": [
-    {"severity": "P1", "area": "dead-loop", "detail": "nel/sam/ra/aether/dex still assessment_stuck — same wording as 13:57Z cron; GUIDANCE re-dispatched at 13:57:45-47Z but DELEGATED→DONE pathway closer (flag-kai-020) still missing, so behavior unchanged across 70+ briefs"},
-    {"severity": "P2", "area": "render-binding", "detail": "Data file agents.json still has no reference in hq.html (~40+ sweeps)"},
-    {"severity": "P2", "area": "queue-hygiene", "detail": "queue-hygiene.sh has syntax error at line 39 ('for f in glob 2>/dev/null' — bash rejects redirect on for-in line). running/ depth=14, all stale orphans from 2026-05-05/06; sweep never reaps them"},
-    {"severity": "P3", "area": "agent-output", "detail": "aether 0 dated logs today — kill-switched per Hyo 2026-05-13 directive (expected, not a real failure)"},
-    {"severity": "P3", "area": "agent-output-predicate", "detail": "Healthcheck reports 'ra no output today' but ra DID produce script-2026-05-19.txt + 2026-05-19.input.md + 3 research briefs under agents/ra/{output,research}. Predicate only checks agents/ra/logs/. Fix the check, not Ra"},
-    {"severity": "P3", "area": "agent-output", "detail": "'hyo has no output today' — hyo is not a daily-runner agent (not a real issue)"}
+    {
+      "severity": "P1",
+      "area": "closure-pipeline",
+      "detail": "flag-kai-020 DELEGATED->DONE pathway closer still missing. 0 RESOLVE/ACK/CLOSE actions logged in log.jsonl since 00:00Z; auto-remediate kai-001 re-delegated every cycle, never closes. Root cause of ~80% of recurring P1 noise."
+    },
+    {
+      "severity": "P1",
+      "area": "hydration-state",
+      "detail": "verified-state.json + session-handoff.json frozen 2026-05-05 (~14d stale). kai-session-prep.sh (15-min) and session-close.sh schedulers dead. CLAUDE.md VERIFIED STATE RULE breached >14d."
+    },
+    {
+      "severity": "P1",
+      "area": "newsletter",
+      "detail": "No rendered newsletter for 2026-05-19 - only 2026-05-19.input.md (46kB) + script-2026-05-19.txt (2.4kB) present, no .md/.html (render outage since 2026-05-05). newsletter-ra-2026-05-19 absent from feed.json. flag-nel re-flagged 18:10/20:09/22:11Z, 0 RESOLVE."
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel/sam/ra/aether/dex identical assessment 3+ cycles. [GUIDANCE] re-dispatched at 02:00Z with zero behavior change."
+    },
+    {
+      "severity": "P1",
+      "area": "stale-delegated",
+      "detail": "DELEGATED >72h with no update: nel-004/005/006 (nel-006 ~13d), sam-004/005, aether-002/003, ra-004. Direct child of the broken DELEGATED->DONE closure pipeline."
+    },
+    {
+      "severity": "P1",
+      "area": "report-visibility",
+      "detail": "morning-report-2026-05-19 absent from HQ feed.json (flag-kai-001 - pushed to git but not visible live; Vercel deploy suspect)."
+    },
+    {
+      "severity": "P2",
+      "area": "queue-hygiene",
+      "detail": "kai/queue/running/ depth=14 stale orphans (2026-05-05 to 05-13; 7 .json.failed + 7 .json). Root cause: bin/queue-hygiene.sh fails 'bash -n' - syntax error line 39 (redirection inside for-list). completed/ holds 12641 unarchived files. One-line fix: drop 2>/dev/null, add 'shopt -s nullglob'."
+    },
+    {
+      "severity": "P2",
+      "area": "stranded-commits",
+      "detail": "3 commits stuck in kai/queue/failed/ since 2026-05-06: aurora-trial-push, aurora-trial-5day, payment-redesign."
+    },
+    {
+      "severity": "P2",
+      "area": "render-binding",
+      "detail": "Data file agents.json has no reference in hq.html."
+    },
+    {
+      "severity": "P2",
+      "area": "stale-queued-flags",
+      "detail": "Queued flags never processed: flag-ra-001 (2026-04-28), flag-aether-001 (2026-04-29), flag-dex-001 (2026-05-01) - 18-22d old."
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "ant produced no output today (last log ant-2026-05-18.log) - verify schedule."
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "aether 0 dated output - kill-switch active since 2026-05-13 per Hyo directive; expected, false positive."
+    }
   ],
-  "actions_taken": "Read-only sweep ~6min after 13:57:45Z cron healthcheck which dispatched 5 GUIDANCE delegations to nel/sam/ra/aether/dex. No new dispatches this sweep — would amplify dead-loop cascade per flag-kai-020 pathway-closer bug.",
+  "actions_taken": "Read-only verification sweep. No new dispatches (would amplify dead-loop cascade per flag-kai-020). Healthcheck JSON rewritten; KAI_BRIEF.md Current state updated with 6 P1 findings.",
   "recent_queue_results": [
-    {"id": "fe94de0f", "ts": "2026-05-19T13:53:03Z", "command": "aether.sh", "exit_code": 0, "note": "kill-switch refusal"},
-    {"id": "b181b7a7", "ts": "2026-05-19T13:53:03Z", "command": "aetherbot-monitor.sh", "exit_code": 0, "note": "kill-switch refusal"},
-    {"id": "5cd3f9e4", "ts": "2026-05-19T13:53:03Z", "command": "queue-hygiene.sh", "exit_code": 0, "note": "BUT syntax error in line 39 — no stale-RUNNING sweep across 70+ briefs"}
+    {
+      "id": "cmd-1779242585-25597",
+      "command": "cd ~/Documents/Projects/Hyo && git add kai/tickets/tickets.jsonl kai/ledger/ && git commit",
+      "exit_code": "0",
+      "ts": "2026-05-20T02:03:12Z"
+    },
+    {
+      "id": "921e29c4-921f-4b36-92f3-dc458a6274fb",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/agents/a",
+      "exit_code": "0",
+      "ts": "2026-05-20T01:53:54Z"
+    },
+    {
+      "id": "41f5b483-05b9-418b-913e-d9a072010f01",
+      "command": "HYO_ROOT=/Users/kai/Documents/Projects/Hyo bash /Users/kai/Documents/Projects/Hyo/bin/aeth",
+      "exit_code": "0",
+      "ts": "2026-05-20T01:53:54Z"
+    }
   ],
-  "queue_state": {"pending": 0, "running": 14, "running_alive": 7, "running_failed_orphans": 7, "completed_total": 12466, "failed_total": 53},
-  "agent_output_today_MT": {"nel": 21, "sam": 1, "dex": 3, "ra_logs": 0, "ra_output_dir": "script+input+3briefs present", "aether": 0, "ant": 0},
-  "active_md_freshness": "all 6 mtimes 0h (cron-touch artifact, not real content freshness)",
   "next_check": "in 2 hours (30min if P0 found)"
 }
