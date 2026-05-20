@@ -1,46 +1,46 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-20T02:09:26Z
+Last updated: 2026-05-20T06:46:12Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-20T02:09:26Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-20T06:46:10Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-20T02:00:07Z
+  - Delegated: 2026-05-20T06:46:11Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-20T02:09:26Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-20T06:46:10Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-20T02:00:07Z
+  - Delegated: 2026-05-20T06:46:11Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-20T02:00:07Z
+  - Delegated: 2026-05-20T06:46:11Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-19 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-05-19T23:59:46Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 367 recurrent patterns detected — increased from 343, root-cause fix needed (flagged by kai)
+  - Delegated: 2026-05-20T06:46:12Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-19 — past 06:00 MT deadline
-  - Delegated: 2026-05-19T22:11:19Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-20 — past 06:00 MT deadline
+  - Delegated: 2026-05-20T02:11:49Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-19 — past 06:00 MT deadline
-  - Delegated: 2026-05-19T22:11:19Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-20 — past 06:00 MT deadline
+  - Delegated: 2026-05-20T02:11:49Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-19 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-05-19T22:11:19Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-20 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
+  - Delegated: 2026-05-20T02:11:49Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-19 — past 06:00 MT deadline
