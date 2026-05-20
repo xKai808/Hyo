@@ -1194,3 +1194,20 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/clever-beautiful-hypatia/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:c31102b4:escalated]
 
 - [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/clever-beautiful-hypatia/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:8fc54f1f:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/serene-modest-shannon/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:e9c92c57] _(filed 2026-05-19)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/serene-modest-shannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f47a897e] _(filed 2026-05-19)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/serene-modest-shannon/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:e9c92c57:escalated]
+
+- [ ] **[K]** [sentinel] **ESCALATED** P1 elevated — failing 3 runs in a row: no aurora logs in /sessions/serene-modest-shannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:f47a897e:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/epic-great-sagan/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:a160d8ef] _(filed 2026-05-19)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/epic-great-sagan/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4e05ef58] _(filed 2026-05-19)_
+
+- [x] **[K]** [cipher] **P1** Dependency vulnerabilities found — see agents/nel/ledger/dep-audit.jsonl [cipher:dep-audit-vulnerable:97c9b34f] _(filed 2026-05-19)_ — **RESOLVED 2026-05-19 (cipher hourly)**: mcp-server deps patched — fast-uri 3.1.0→3.1.2, hono 4.12.12→4.12.21, ip-address 10.1.0→10.2.0, express-rate-limit 8.3.2→8.5.2; `npm audit` clean (0 vulns), verified on Mini; `@modelcontextprotocol/sdk` unchanged (1.29.0).
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/dreamy-charming-newton/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:662f0039] _(filed 2026-05-19)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/dreamy-charming-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:23c3fed7] _(filed 2026-05-19)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/dreamy-charming-newton/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:662f0039:escalated]

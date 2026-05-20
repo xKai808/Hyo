@@ -170,8 +170,11 @@ fi
 DEP_AUDIT="$ROOT/agents/nel/dep-audit.sh"
 if [[ -x "$DEP_AUDIT" ]]; then
   log "Running dep-audit (Nel W2)..."
-  DEP_RESULT=$(HYO_ROOT="$ROOT" bash "$DEP_AUDIT" 2>&1 || true)
-  DEP_STATUS=$?
+  # Capture dep-audit's REAL exit code. A trailing `|| true` inside the
+  # command substitution would make $? always 0 and silently swallow every
+  # dependency CVE — fixed 2026-05-19 (cipher hourly run, SE: exit-code mask).
+  DEP_STATUS=0
+  DEP_RESULT=$(HYO_ROOT="$ROOT" bash "$DEP_AUDIT" 2>&1) || DEP_STATUS=$?
   DEP_SUMMARY=$(echo "$DEP_RESULT" | grep -E "Dep Audit:|CRITICAL|HIGH" | head -3 | tr '
 ' ' ')
   log "dep-audit: $DEP_SUMMARY"

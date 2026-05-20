@@ -302,7 +302,7 @@ if [[ $FAIL -gt 0 && "$DRY_RUN" == "false" ]]; then
       --type "security" \
       --severity "P1" \
       --title "Dep audit: $FAIL critical/high CVE(s) detected — $TODAY" \
-      --description "Nel dep-audit found $FAIL vulnerability/vulnerabilities. Run: cd $NPM_TARGET && npm audit fix" \
+      --description "Nel dep-audit found $FAIL vulnerability/vulnerabilities. See agents/nel/ledger/dep-audit.jsonl for the affected target(s); run 'npm audit fix' in each." \
       --agent "nel" 2>/dev/null || true
     echo "  [ticket] P1 security ticket opened" >&2
   fi
