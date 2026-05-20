@@ -1211,3 +1211,11 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/dreamy-charming-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:23c3fed7] _(filed 2026-05-19)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/dreamy-charming-newton/mnt/Hyo/newsletters/2026-05-19.md [sentinel:aurora-ran-today:662f0039:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/eager-relaxed-hamilton/mnt/Hyo/newsletters/2026-05-20.md [sentinel:aurora-ran-today:293aaccd] _(filed 2026-05-20)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/eager-relaxed-hamilton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d8e80925] _(filed 2026-05-20)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/eager-relaxed-hamilton/mnt/Hyo/newsletters/2026-05-20.md [sentinel:aurora-ran-today:293aaccd:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/fervent-vigilant-hypatia/mnt/Hyo/newsletters/2026-05-20.md [sentinel:aurora-ran-today:2086684a] _(filed 2026-05-20)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/fervent-vigilant-hypatia/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:705bc622] _(filed 2026-05-20)_
