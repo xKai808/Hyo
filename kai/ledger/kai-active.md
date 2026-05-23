@@ -1,15 +1,15 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-05-23T08:02:27-0600
+**Last updated:** 2026-05-23T08:17:30-0600
 
 ## System Health
-- Status: ISSUES (6 P0/P1)
+- Status: ISSUES (7 P0/P1)
 - Warnings: 5
-- Actions taken: Dispatched auto-remediation for 4 P0/P1 issues
+- Actions taken: Dispatched auto-remediation for 5 P0/P1 issues
 
 ## Agent ACTIVE.md Status
 - aether: updated 0h ago
 - ant: updated 722h ago
-- dex: updated 5h ago
+- dex: updated 6h ago
 - hyo: updated 22h ago
 - kai: updated 611h ago
 - manifests: NO ACTIVE.md
@@ -18,4 +18,4 @@
 - sam: updated 0h ago
 
 ## Top Issues
-- [P1] dead-loop: nel stuck in dead-loop (assessment_stuck): routine maintenance run
+- [P1] flags: 1 unaddressed P0/P1 flags in last 2h
