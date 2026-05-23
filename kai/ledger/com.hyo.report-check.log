@@ -2962,3 +2962,36 @@ To https://github.com/xKai808/Hyo.git
    127afd77..545b44ed  main -> main
 [check 07:00:53] === Completeness check done. Failures: 2 ===
 [check 07:00:53] AUTONOMOUS ACTION NEEDED: 2 item(s) require resolution — check daily-issues.jsonl
+[check 07:00:04] === Completeness check 2026-05-23 (dow=6) ===
+[check 07:00:04] Saturday — checking weekly reports...
+[check 07:00:04] FAIL: weekly nel (nel-weekly-2026-W21)
+/Users/kai/Documents/Projects/Hyo/bin/report-completeness-check.sh: line 116: ${agent^} weekly $WEEK: bad substitution
+[check 07:00:04] Remediating: nel weekly
+[weekly 07:00:04] === Weekly report starting for 2026-W21 ===
+[weekly 07:00:04] Triggering pending tickets (1hr SLA)...
+[tickets] triggered 390 pending → ACTIVE with 1hr SLA
+[weekly 07:00:04] Generating weekly report: nel
+[weekly:nel] published nel-weekly-2026-W21 verdict=needs attention shipped=0 pending_triggered=390
+[weekly 07:00:04] Generating weekly report: ra
+[weekly:ra] published ra-weekly-2026-W21 verdict=needs attention shipped=0 pending_triggered=390
+[weekly 07:00:04] Generating weekly report: sam
+[weekly:sam] published sam-weekly-2026-W21 verdict=needs attention shipped=0 pending_triggered=390
+[weekly 07:00:04] Generating weekly report: aether
+[weekly:aether] published aether-weekly-2026-W21 verdict=needs attention shipped=0 pending_triggered=390
+[weekly 07:00:04] Generating weekly report: kai
+[weekly:kai] published kai-weekly-2026-W21 verdict=needs attention shipped=0 pending_triggered=390
+[weekly 07:00:04] Archiving week's reports to research section...
+[archive] removed 83 entries from feed (moved to research archive)
+[archive] week=2026-W21 archived=104 entries to research-archive.json
+[weekly 07:00:04] Committing weekly reports...
+[main add48f1b] weekly: 2026-W21 reports + research archive + pending tickets triggered
+ 5 files changed, 8440 insertions(+), 7746 deletions(-)
+To https://github.com/xKai808/Hyo.git
+   744bb926..add48f1b  main -> main
+[weekly 07:00:07] === Weekly report complete for 2026-W21 ===
+[check 07:00:07] OK: weekly nel — FIXED
+[check 07:00:07] OK: weekly ra
+[check 07:00:07] OK: weekly sam
+[check 07:00:07] OK: weekly aether
+[check 07:00:07] OK: weekly kai
+[check 07:00:07] === Saturday check done. Failures: 0 ===
