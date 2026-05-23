@@ -1,20 +1,20 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-22T14:13:37Z
+Last updated: 2026-05-23T14:15:17Z
 
 ## In Progress
 
 - **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-22T14:13:37Z
+  - Delegated: 2026-05-23T14:15:17Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-005) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
-  - Delegated: 2026-05-22T08:07:21Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-006) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-23T08:06:44Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-21 — past 06:00 MT deadline
-  - Delegated: 2026-05-21T22:12:21Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-007) — scan entire codebase for similar patterns: Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spam) — weekly-maintenance.sh dead since 2026-04-25 (4 weeks), inbox-trim not running. Any real Hyo message is now unfindable. Root cause: DELEGATED->DONE pipeline broken (TASK-20260505-* now 427h overdue, re-spamming inbox). Compounds dex-002 NEEDS-HYO launchctl item.
+  - Delegated: 2026-05-23T08:08:03Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-010) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-21 — past 06:00 MT deadline
@@ -78,4 +78,10 @@ Last updated: 2026-05-22T14:13:37Z
 
 - **flag-nel-016** [P2] Found 29 broken documentation links — fix or cleanup needed
   - Created: 2026-05-06T18:13:30Z
+
+- **flag-nel-017** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-22T18:16:00Z
+
+- **flag-nel-018** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-22T18:16:08Z
 

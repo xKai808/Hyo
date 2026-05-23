@@ -437,3 +437,24 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/vibrant-busy-goodall/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6846b805] _(filed 2026-05-22)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/vibrant-busy-goodall/mnt/Hyo/newsletters/2026-05-22.md [sentinel:aurora-ran-today:96c91b9e:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/great-keen-hamilton/mnt/Hyo/newsletters/2026-05-22.md [sentinel:aurora-ran-today:c24237cf] _(filed 2026-05-22)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/great-keen-hamilton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:5f254a2c] _(filed 2026-05-22)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/sweet-beautiful-hamilton/mnt/Hyo/newsletters/2026-05-22.md [sentinel:aurora-ran-today:9386df84] _(filed 2026-05-22)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/sweet-beautiful-hamilton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d79ab513] _(filed 2026-05-22)_
+- [ ] **[K]** [sentinel] **ESCALATED** P2 elevated — failing 5 runs in a row: 38 P0 tasks (overload threshold 5) [sentinel:task-queue-size:95efdccb:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/peaceful-affectionate-maxwell/mnt/Hyo/newsletters/2026-05-23.md [sentinel:aurora-ran-today:45323dbd] _(filed 2026-05-23)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/peaceful-affectionate-maxwell/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0f0d2397] _(filed 2026-05-23)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/brave-nice-newton/mnt/Hyo/newsletters/2026-05-23.md [sentinel:aurora-ran-today:31b393a4] _(filed 2026-05-23)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/brave-nice-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:e78fe594] _(filed 2026-05-23)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/brave-nice-newton/mnt/Hyo/newsletters/2026-05-23.md [sentinel:aurora-ran-today:31b393a4:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/lucid-loving-newton/mnt/Hyo/newsletters/2026-05-23.md [sentinel:aurora-ran-today:d37265ac] _(filed 2026-05-23)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/lucid-loving-newton/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:370fcad8] _(filed 2026-05-23)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/confident-stoic-johnson/mnt/Hyo/newsletters/2026-05-23.md [sentinel:aurora-ran-today:09f19390] _(filed 2026-05-23)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-stoic-johnson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:bed8f139] _(filed 2026-05-23)_

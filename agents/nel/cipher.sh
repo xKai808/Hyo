@@ -43,10 +43,15 @@ fi
 
 # ---- portable stat wrapper (macOS BSD vs Linux GNU) ------------------------
 # Probe once: GNU stat supports -c, BSD stat supports -f.
+# -L dereferences symlinks. .secrets is a symlink -> agents/nel/security; without
+# -L stat returns the symlink's own cosmetic 755 mode instead of the target dir's
+# real 700. That false 755 was pushed to HQ hourly as secretsDir AND made the
+# Layer 3 perm check blind to real drift on the target. Fixed 2026-05-22
+# (cipher hourly run, SE: symlink-stat-no-deref).
 if stat -c %a / >/dev/null 2>&1; then
-  stat_mode() { stat -c %a "$1" 2>/dev/null; }
+  stat_mode() { stat -L -c %a "$1" 2>/dev/null; }
 else
-  stat_mode() { stat -f %Mp%Lp "$1" 2>/dev/null; }
+  stat_mode() { stat -L -f %Mp%Lp "$1" 2>/dev/null; }
 fi
 
 # ---- state bootstrap --------------------------------------------------------
@@ -117,14 +122,18 @@ TRUFFLEHOG_INSTALLED=0
 # ---- Layer 3: Filesystem hygiene (auto-fix) ---------------------------------
 if [[ -d "$ROOT/.secrets" ]]; then
   SMODE=$(stat_mode "$ROOT/.secrets")
-  if [[ ! "$SMODE" =~ ^7[0-9][0-9]$ ]]; then
+  # Strict ^700$ — the old ^7[0-9][0-9]$ accepted 750/755/770/777, far too loose
+  # for a secrets store (700 = owner-only is the only correct mode).
+  if [[ ! "$SMODE" =~ ^700$ ]]; then
     chmod 700 "$ROOT/.secrets"
     autofix ".secrets/ dir mode $SMODE -> 700"
   fi
   for f in "$ROOT/.secrets"/*; do
     [[ -f "$f" ]] || continue
     FMODE=$(stat_mode "$f")
-    if [[ ! "$FMODE" =~ ^6[0-9][0-9]$ ]]; then
+    # Strict ^600$ — the old ^6[0-9][0-9]$ accepted 640/644/660/666, which would
+    # leave a secret file group/world-readable and pass the check.
+    if [[ ! "$FMODE" =~ ^600$ ]]; then
       chmod 600 "$f"
       autofix "$(basename "$f") mode $FMODE -> 600"
     fi
