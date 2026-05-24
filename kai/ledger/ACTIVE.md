@@ -1,62 +1,62 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-23T18:03:07Z
+Last updated: 2026-05-24T11:06:30Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-23T18:03:06Z
+  - Delegated: 2026-05-24T11:06:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-23T18:03:06Z
+  - Delegated: 2026-05-24T11:06:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-23T18:03:06Z
+  - Delegated: 2026-05-24T11:06:30Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-23T18:03:07Z
+  - Delegated: 2026-05-24T11:06:30Z
   - Status: DELEGATED
 
-- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 452 recurrent patterns detected — increased from 420, root-cause fix needed (flagged by dex, cascade flag-dex-001)
-  - Delegated: 2026-05-23T06:41:17Z
+- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 479 recurrent patterns detected — increased from 452, root-cause fix needed (flagged by dex, cascade flag-dex-001)
+  - Delegated: 2026-05-24T06:43:59Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
-  - Delegated: 2026-05-23T16:02:48Z
+  - Delegated: 2026-05-24T10:06:21Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-006) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
-  - Delegated: 2026-05-23T08:06:44Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-008) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-24T08:06:10Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-006): Daily audit: 2 critical issues found
-  - Delegated: 2026-05-23T08:06:44Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-008): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-24T08:06:10Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-23 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-015)
-  - Delegated: 2026-05-23T02:10:58Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-24 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
+  - Delegated: 2026-05-24T02:13:51Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-007) — scan entire codebase for similar patterns: Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spam) — weekly-maintenance.sh dead since 2026-04-25 (4 weeks), inbox-trim not running. Any real Hyo message is now unfindable. Root cause: DELEGATED->DONE pipeline broken (TASK-20260505-* now 427h overdue, re-spamming inbox). Compounds dex-002 NEEDS-HYO launchctl item.
-  - Delegated: 2026-05-23T08:08:03Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-23 — past 06:00 MT deadline
+  - Delegated: 2026-05-23T22:14:48Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-007): Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spam) — weekly-maintenance.sh dead since 2026-04-25 (4 weeks), inbox-trim not running. Any real Hyo message is now unfindable. Root cause: DELEGATED->DONE pipeline broken (TASK-20260505-* now 427h overdue, re-spamming inbox). Compounds dex-002 NEEDS-HYO launchctl item.
-  - Delegated: 2026-05-23T08:08:03Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-23 — past 06:00 MT deadline
+  - Delegated: 2026-05-23T22:14:48Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-006)
-  - Delegated: 2026-05-23T08:06:44Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-008)
+  - Delegated: 2026-05-24T08:06:10Z
   - Status: DELEGATED
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-22 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
-  - Delegated: 2026-05-22T22:13:47Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-23 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
+  - Delegated: 2026-05-23T22:14:48Z
   - Status: DELEGATED
 
 - **aether-002** [P1] [AUTO-REMEDIATE] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim) (flagged by kai, cascade flag-kai-019)
