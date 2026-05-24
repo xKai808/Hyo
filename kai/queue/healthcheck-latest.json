@@ -1,24 +1,51 @@
 {
-  "ts": "2026-05-23T14:04:50Z",
+  "ts": "2026-05-24T14:06:58Z",
   "status": "ISSUES",
   "issues": 4,
   "warnings": 4,
   "findings": [
-    {"severity": "P1", "area": "dead-loop", "detail": "nel/sam/ra/aether all assessment_stuck; identical [GUIDANCE] task re-delegated to all 4 every 15 min — 241 GUIDANCE DELEGATEs logged today, zero behavior change. Auto-remediation IS the loop. log.jsonl bloated to 14MB / 54,937 lines. nel-001/sam-001/ra-001/aether-001 re-stamped 2026-05-23T14:02:25Z, never closed."},
-    {"severity": "P1", "area": "closure-pipeline", "detail": "DELEGATED->DONE closer still unwired; 0 RESOLVE/CLOSE/ACK/REPORT in last 2000 log lines. P1 SAFEGUARD tasks pile up inside ACTIVE.md: nel-002/003/004/005 (6-17d old), ra-002/003/004 ([AUTO-REMEDIATE] no-newsletter, 1-3d) — none ever transition."},
-    {"severity": "P1", "area": "inbox-flood", "detail": "hyo-inbox.jsonl now 53,320 lines / 16MB (+256 since 06:05 MT, still growing). SLA-enforcer auto-spam from overdue TASK-20260505-* buries real Hyo messages. weekly-maintenance.sh dead since 2026-04-25 (4 weeks)."},
-    {"severity": "P1", "area": "hydration-state", "detail": "verified-state.json + session-handoff.json frozen 2026-05-06 00:59 UTC (~17.5d stale; mandated 15-min refresh). kai-session-prep.sh / session-close.sh schedulers dead on the Mini — needs Hyo."},
-    {"severity": "P2", "area": "queue-hygiene", "detail": "15 running/ orphans (May 5-13, 6 .json.failed, newest recheck-flag-nel-001 from 02:14 MT). completed/ 13,837 unarchived (+28 since 06:05). failed/ 53. queue-hygiene.sh ran exit 0 @13:59Z, reaped/archived nothing."},
-    {"severity": "P2", "area": "uncommitted-backlog", "detail": "204 files uncommitted. git-lock is CLEARED — last commit 409dcb33 landed 2026-05-23 07:45 MT, commits flowing. Drain backlog next interactive session."},
-    {"severity": "P3", "area": "render-binding", "detail": "agents.json still has 0 references in hq.html (carries from prior healthchecks)."},
-    {"severity": "P3", "area": "agent-output", "detail": "ra produced 0 dated logs today (render/publish dark, chronic). aether 0 output is EXPECTED — aetherbot-monitor refused this run (AETHERBOT KILL-SWITCH 2026-05-13, Hyo-approved); kill-switch holding correctly, not a finding."}
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "aether has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "ra has no output today"
+    },
+    {
+      "severity": "P2",
+      "area": "render-binding",
+      "detail": "Data file agents.json has no reference in hq.html"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel stuck in dead-loop (assessment_stuck): routine maintenance run"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "sam stuck in dead-loop (assessment_stuck): routine engineering check"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "ra stuck in dead-loop (assessment_stuck): health check with 1 warning(s)"
+    },
+    {
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "aether stuck in dead-loop (assessment_stuck): metrics cycle complete; WARNING: dashboard out-of-sync"
+    }
   ],
-  "actions_taken": "None dispatched — re-firing the [GUIDANCE]/[AUTO-REMEDIATE] cascade is itself the dead-loop (Kai's own notes confirm this repeatedly). Chronic cluster needs a deliberate restart with Hyo present. Wrote healthcheck-latest.json + appended KAI_BRIEF.md Current state note.",
-  "recent_queue_results": [
-    {"id": "f35f0d14", "ts": "2026-05-23T13:59:51Z", "command": "aether.sh", "exit_code": 0},
-    {"id": "af4ac177", "ts": "2026-05-23T13:59:51Z", "command": "queue-hygiene.sh", "exit_code": 0},
-    {"id": "6630758e", "ts": "2026-05-23T13:59:50Z", "command": "aetherbot-monitor.sh", "exit_code": 0, "note": "kill-switch refused by design"}
-  ],
-  "queue_health": {"pending": 0, "running_orphans": 15, "completed_unarchived": 13837, "failed": 53, "worker": "healthy"},
+  "actions_taken": "Dispatched auto-remediation for 4 P0/P1 issues",
+  "recent_queue_results": [],
   "next_check": "in 2 hours (30min if P0 found)"
 }

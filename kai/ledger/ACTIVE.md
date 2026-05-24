@@ -1,26 +1,26 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-24T13:51:57Z
+Last updated: 2026-05-24T14:16:53Z
 
 ## In Progress
 
-- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-24T13:51:56Z
+- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-05-24T14:16:53Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-24T13:51:57Z
+  - Delegated: 2026-05-24T14:06:59Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-24T13:51:56Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
+  - Delegated: 2026-05-24T14:16:53Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-24T13:51:57Z
+  - Delegated: 2026-05-24T14:06:59Z
   - Status: DELEGATED
 
 - **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 479 recurrent patterns detected — increased from 452, root-cause fix needed (flagged by dex, cascade flag-dex-001)
