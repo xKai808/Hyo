@@ -512,3 +512,8 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/exciting-modest-thompson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1b95e32b] _(filed 2026-05-25)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/exciting-modest-thompson/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:08a18367:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/confident-blissful-brahmagupta/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:59f59910] _(filed 2026-05-25)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/confident-blissful-brahmagupta/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:0f69aec0] _(filed 2026-05-25)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/confident-blissful-brahmagupta/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:59f59910:escalated]
