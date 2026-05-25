@@ -1,62 +1,62 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-24T14:16:53Z
+Last updated: 2026-05-25T11:26:20Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-24T14:16:53Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-25T11:26:19Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-24T14:06:59Z
+  - Delegated: 2026-05-25T11:26:20Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-24T14:16:53Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-25T11:26:19Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-24T14:06:59Z
+  - Delegated: 2026-05-25T11:26:20Z
   - Status: DELEGATED
 
-- **dex-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 479 recurrent patterns detected — increased from 452, root-cause fix needed (flagged by dex, cascade flag-dex-001)
-  - Delegated: 2026-05-24T06:43:59Z
+- **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
+  - Delegated: 2026-05-25T11:26:20Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
-  - Delegated: 2026-05-24T10:06:21Z
+  - Delegated: 2026-05-25T10:11:07Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-008) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
-  - Delegated: 2026-05-24T08:06:10Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-009) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-25T08:06:45Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-008): Daily audit: 2 critical issues found
-  - Delegated: 2026-05-24T08:06:10Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-009): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-25T08:06:45Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-24 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
-  - Delegated: 2026-05-24T02:13:51Z
+- **ra-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) — NEEDS HYO INTERVENTION. 22 stuck DELEGATED items in Kai ledger; meta-fix ticket aether-002 itself stuck 8d. Newsletter pipeline is a no-op: missed 2026-05-25/21/17/12/09/08/07/06 — Ra AUTO-REMEDIATE records DELEGATED but never produces output. verified-state.json + session-handoff.json frozen 20d at 2026-05-05 (kai-session-prep.sh + session-close.sh dead). daily-audit.sh HYO_ROOT bug recurred (scheduled task wrapper sets no HYO_ROOT; first run today produced phantom FAILs). ~20 consecutive daily Kai audit flags unresolved. Kai cannot restart dead launchd plists from Cowork sandbox — Hyo must run: launchctl list | grep com.hyo on the Mini, then reload kai-session-prep, session-close, weekly-maintenance, and the Ra newsletter pipeline. (flagged by kai, cascade flag-kai-010)
+  - Delegated: 2026-05-25T08:08:07Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-23 — past 06:00 MT deadline
-  - Delegated: 2026-05-23T22:14:48Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-010) — scan entire codebase for similar patterns: Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) — NEEDS HYO INTERVENTION. 22 stuck DELEGATED items in Kai ledger; meta-fix ticket aether-002 itself stuck 8d. Newsletter pipeline is a no-op: missed 2026-05-25/21/17/12/09/08/07/06 — Ra AUTO-REMEDIATE records DELEGATED but never produces output. verified-state.json + session-handoff.json frozen 20d at 2026-05-05 (kai-session-prep.sh + session-close.sh dead). daily-audit.sh HYO_ROOT bug recurred (scheduled task wrapper sets no HYO_ROOT; first run today produced phantom FAILs). ~20 consecutive daily Kai audit flags unresolved. Kai cannot restart dead launchd plists from Cowork sandbox — Hyo must run: launchctl list | grep com.hyo on the Mini, then reload kai-session-prep, session-close, weekly-maintenance, and the Ra newsletter pipeline.
+  - Delegated: 2026-05-25T08:08:07Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-23 — past 06:00 MT deadline
-  - Delegated: 2026-05-23T22:14:48Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-010): Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) — NEEDS HYO INTERVENTION. 22 stuck DELEGATED items in Kai ledger; meta-fix ticket aether-002 itself stuck 8d. Newsletter pipeline is a no-op: missed 2026-05-25/21/17/12/09/08/07/06 — Ra AUTO-REMEDIATE records DELEGATED but never produces output. verified-state.json + session-handoff.json frozen 20d at 2026-05-05 (kai-session-prep.sh + session-close.sh dead). daily-audit.sh HYO_ROOT bug recurred (scheduled task wrapper sets no HYO_ROOT; first run today produced phantom FAILs). ~20 consecutive daily Kai audit flags unresolved. Kai cannot restart dead launchd plists from Cowork sandbox — Hyo must run: launchctl list | grep com.hyo on the Mini, then reload kai-session-prep, session-close, weekly-maintenance, and the Ra newsletter pipeline.
+  - Delegated: 2026-05-25T08:08:07Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-008)
-  - Delegated: 2026-05-24T08:06:10Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-009)
+  - Delegated: 2026-05-25T08:06:45Z
   - Status: DELEGATED
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-23 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
-  - Delegated: 2026-05-23T22:14:48Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-25 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-012)
+  - Delegated: 2026-05-25T02:15:43Z
   - Status: DELEGATED
 
 - **aether-002** [P1] [AUTO-REMEDIATE] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim) (flagged by kai, cascade flag-kai-019)
