@@ -1,71 +1,75 @@
 {
-  "ts": "2026-05-24T08:05:21-06:00",
+  "ts": "2026-05-25T14:05:44Z",
   "status": "ISSUES",
-  "issues": 3,
-  "warnings": 7,
-  "writer": "kai-cowork",
-  "note": "Durable copy of the Cowork-side 2h sweep (Sunday 2026-05-24 08:05 MT). Written to healthcheck-cowork-latest.json (NOT healthcheck-latest.json) deliberately: healthcheck-latest.json is owned by the Mini-side cron healthcheck.sh (last write 07:51 MT) and there is a documented healthcheck-write-race (P2). This path is the authoritative Cowork record, consistent with the 02:05/04:05/06:04 MT runs. Read-only check — no fixes applied per scheduled-task scope.",
+  "issues": 4,
+  "warnings": 5,
   "findings": [
     {
       "severity": "P1",
       "area": "closure-pipeline",
-      "detail": "ROOT CAUSE (carries). DELEGATED->DONE transition still broken across all agents — no [AUTO-REMEDIATE] task ever closes. Today: 47 FLAG, 9 P1, 375 DELEGATE, but only 3 CLOSE (sim-ack) and 0 RESOLVE. Stuck DELEGATED: nel-006 (~18d), sam-005/aether-002/aether-003 (~7d). Internal remediation structurally cannot fix this. Needs a Hyo decision: rebuild the cascade or wire a pathway-closer daemon. Single highest-leverage fix."
+      "detail": "DELEGATED->DONE transition unwired (ROOT CAUSE). ~10 tasks stuck DELEGATED: aether-002/003, sam-005, nel-005 ~8d (since 2026-05-17); nel-004/sam-004/ra-004 ~86h (2026-05-21); dex-002 ~54h (2026-05-23); plus today's cascade nel-002/003, sam-002/003, ra-002 (08:06-08:08 MT). SLA enforcer now re-spamming hyo-inbox.jsonl - TASK-20260505-* entries 468-481h overdue, P0-labeled. No [AUTO-REMEDIATE] task ever closes. Needs Hyo decision (pathway-closer daemon or runners call dispatch close)."
     },
     {
       "severity": "P1",
-      "area": "hydration-layer",
-      "detail": "verified-state.json verified_at frozen 2026-05-05T18:59:41-0600 — 445h / ~18.5d stale vs the 15-min mandate. kai-session-prep.sh scheduler dead. CLAUDE.md VERIFIED STATE RULE breached >18d; every session boots on stale credits/SICQ/OMP truth."
+      "area": "dead-loop",
+      "detail": "nel/sam/ra/aether/dex all assessment_stuck/bottleneck_stuck; identical [GUIDANCE] delegation re-fired to all 5 @13:26/13:41/13:56Z UTC with zero behavior change. The guidance cascade is itself the loop. ACTIVE.md still shows sim-ack theater (CLAUDE.md forbids)."
+    },
+    {
+      "severity": "P1",
+      "area": "hydration-state",
+      "detail": "verified-state.json (verified_at 2026-05-05T18:59) and session-handoff.json (content from Session 27 / 2026-04-21) both frozen at mtime 2026-05-06 - ~19.5d stale. kai-session-prep.sh + session-close.sh schedulers dead. CLAUDE.md VERIFIED STATE RULE breached >19d."
     },
     {
       "severity": "P1",
       "area": "newsletter-pipeline",
-      "detail": "No rendered newsletter for 2026-05-23 or 2026-05-24. flag-nel-001 'No newsletter produced for 2026-05-23 — past 06:00 MT deadline' (P1, 05:30:07Z) still FLAGGED. Stacked [AUTO-REMEDIATE]s ra-002/003/004 never close — symptom of the closure-pipeline bug; render/publish stage dark."
-    },
-    {
-      "severity": "P2",
-      "area": "dead-loop",
-      "detail": "Guidance meta-loop. 375 DELEGATE today, ~360 are identical [GUIDANCE] dead-loop re-fires to nel/sam/ra/aether every 15 min. The Mini healthcheck flags nel/sam/ra/aether assessment_stuck as P1; aether is a FALSE POSITIVE (AetherBot kill-switch held since 2026-05-13). Re-firing the cascade IS the loop — no dispatches made. Mini detection should exclude kill-switched agents and Sundays."
+      "detail": "No rendered newsletter for 2026-05-25. agents/ra/output/ holds 2026-05-25.input.md + script-2026-05-25.txt only - no rendered .md/.html, nothing published. Render+publish stage dark. ra produced 0 dated logs today; newsletter due 03:00 MT."
     },
     {
       "severity": "P2",
       "area": "queue-hygiene",
-      "detail": "kai/queue/running/ holds 14 stale orphans dated May 5-13 (6 *.json.failed misfiled inside running/). queue-hygiene.sh ran exit 0 @08:01 MT but reaped none — still no stale-RUNNING sweep. Worker itself healthy: pending=0, completed/ fresh @08:01 MT, 0 failed today."
+      "detail": "kai/queue/running/ holds 14 orphan files (7 live cmd-*/uuid .json May 6-13, 7 .json.failed May 5). queue-hygiene.sh ran exit 0 @13:48:15Z but reaped none - per prior briefs cause is bin/queue-hygiene.sh line-39 bash syntax error. Queue worker itself HEALTHY."
     },
     {
       "severity": "P2",
-      "area": "git-backlog",
-      "detail": "195 files uncommitted in the working tree. NOT a P0: the .git/index.lock is cleared, commits are landing (HEAD 8e4b90177 @ 2026-05-24 07:58 MT), HEAD == origin/main, 0 unpushed. Batch-commit chore for the next interactive session."
+      "area": "stale-tasks",
+      "detail": "10+ tasks >72h in DELEGATED state across all agent ledgers - symptom of the closure-pipeline P1. All 6 ACTIVE.md mtimes are cron-fresh (5 @13:56Z); staleness is in the tasks, not the files."
     },
     {
       "severity": "P2",
       "area": "render-binding",
-      "detail": "Data file agents.json still has 0 references in hq.html (carries across 40+ sweeps)."
-    },
-    {
-      "severity": "P2",
-      "area": "tickets-sla-spam",
-      "detail": "ticket-sla-enforcer still escalating overdue tickets (escalated=352, archived=0 @ 07:56 MT per last commit). Root cause: TASK-20260505-* tickets never closed — same closure-pipeline failure. SLA-breach noise continues until those tickets drain."
+      "detail": "Data file agents.json has no reference in hq.html (carried from baseline Mini healthcheck)."
     },
     {
       "severity": "P3",
       "area": "agent-output",
-      "detail": "NOT A FAULT. Dated output today: nel=21, dex=3 (producing normally); sam=1 (self-review only); ra=0, aether=0. ra/aether 0 is EXPECTED — Sunday no-reports rule (CLAUDE.md) + AetherBot kill-switch (verified: aetherbot-monitor and aether.sh both refused @14:01Z)."
+      "detail": "ra 0 dated output today (REAL finding - newsletter no-op). aether 0 EXPECTED (AetherBot kill-switch since 2026-05-13, aetherbot-monitor verified refused @13:48:15Z). hyo 0 EXPECTED at 08:03 MT Monday. nel=21, dex=3, sam=1 producing normally."
     },
     {
       "severity": "P3",
-      "area": "flags",
-      "detail": "9 P1 FLAGs raised today, all unresolved (flag-kai-008 'Daily audit: 2 critical issues' x2 @08:06Z, flag-dex-001 'Dex Phase 4: 479 recurrent patterns — up from 452' @06:44Z, flag-nel-001 newsletter/broken-link). ZERO new FLAG entries in the strict last-2h window (12:05-14:05Z) — latest FLAG was 10:30Z. All are symptoms of the closure-pipeline P1, not independent failures."
+      "area": "scheduled-maintenance",
+      "detail": "weekly-maintenance.sh per prior briefs has not logged since ~2026-04-25; not re-verified this sweep. Note: hyo-inbox.jsonl is currently 3549 lines / 1.1M - NOT flooded, so some trim has occurred since the stale dex-002 14.7MB claim."
     }
   ],
-  "positive_deltas": [
-    "P0 git-lock CLEARED (was P0 in the 02:05 + 04:05 MT notes, ~16h unresolved). .git/index.lock is gone; HEAD == origin/main == 8e4b90177 @ 07:58 MT; 0 unpushed commits. Commits are landing again.",
-    "Queue worker healthy: pending=0, completed/ fresh @08:01 MT (queue-hygiene.sh / aetherbot-monitor / aether.sh all exit 0), 0 failed today."
-  ],
-  "actions_taken": "Read-only health check. No fixes applied (per scheduled-task scope). No dispatches made — re-firing the dead-loop cascade IS the loop. P1 cluster surfaced in KAI_BRIEF.md Current state for the next interactive session.",
   "recent_queue_results": [
-    {"id": "e2643f55-d5fc-4e1e-8839-03401fc0a2c0", "ts": "2026-05-24T14:01:34Z", "exit_code": 0, "note": "queue-hygiene.sh — ran clean, reaped nothing"},
-    {"id": "b2afbed1-e51d-4315-9087-cc3787511e8d", "ts": "2026-05-24T14:01:34Z", "exit_code": 0, "note": "aetherbot-monitor.sh — refused by kill-switch (intended)"},
-    {"id": "82e714ae-5ad4-4f0c-b72c-e17202589361", "ts": "2026-05-24T14:01:33Z", "exit_code": 0, "note": "aether.sh — kill-switch held (intended)"}
+    {
+      "id": "e1167b72-efa2-48e3-8e89-bdaaa37a4991",
+      "command": "queue-hygiene.sh",
+      "exit_code": 0,
+      "ts": "2026-05-25T13:48:15Z"
+    },
+    {
+      "id": "c01648e4-d986-4b98-9c03-13791f172baf",
+      "command": "aetherbot-monitor.sh",
+      "exit_code": 0,
+      "ts": "2026-05-25T13:48:15Z",
+      "note": "AetherBot kill-switch refused (expected)"
+    },
+    {
+      "id": "a81e778d-4549-4f4d-804e-ced4c574ccb1",
+      "command": "aether.sh",
+      "exit_code": 0,
+      "ts": "2026-05-25T13:48:15Z"
+    }
   ],
-  "next_check": "in 2 hours (30min if P0 found)"
+  "note": "Automated 2h Cowork-side sweep. Read-only, no fixes applied (scheduled-task scope). Scheduled-task file referenced stale session path 'sharp-gracious-franklin'; used live mount. git healthy: no index.lock, HEAD 091f0afd6 landed 2026-05-25 07:37 MT, 202 files uncommitted, unpushed=0. Queue worker healthy (pending=0, latest completion @14:03:16Z, 0 failed today)."
 }

@@ -485,3 +485,30 @@ Hyo called out that agents are bash scripts with no AI. Reports are templates wr
 - [ ] **[K]** [sentinel] no aurora logs in /sessions/friendly-modest-franklin/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:4c479690] _(filed 2026-05-24)_
 
 - [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/friendly-modest-franklin/mnt/Hyo/newsletters/2026-05-24.md [sentinel:aurora-ran-today:93c8bcaf:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/beautiful-kind-babbage/mnt/Hyo/newsletters/2026-05-24.md [sentinel:aurora-ran-today:15ce30b2] _(filed 2026-05-24)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/beautiful-kind-babbage/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a138693f] _(filed 2026-05-24)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/eloquent-intelligent-thompson/mnt/Hyo/newsletters/2026-05-24.md [sentinel:aurora-ran-today:43fe2fad] _(filed 2026-05-24)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/eloquent-intelligent-thompson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:54249ab2] _(filed 2026-05-24)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/clever-happy-davinci/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:791f1a87] _(filed 2026-05-25)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/clever-happy-davinci/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:fa39e5fa] _(filed 2026-05-25)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/clever-happy-davinci/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:791f1a87:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/pensive-dazzling-curie/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:00d37933] _(filed 2026-05-25)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/pensive-dazzling-curie/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:d1f55513] _(filed 2026-05-25)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/jolly-gallant-cannon/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:c5941edf] _(filed 2026-05-25)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/jolly-gallant-cannon/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:a77e4dc5] _(filed 2026-05-25)_
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/nice-focused-davinci/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:15d94107] _(filed 2026-05-25)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/nice-focused-davinci/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:6450820c] _(filed 2026-05-25)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/nice-focused-davinci/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:15d94107:escalated]
+
+- [ ] **[K]** [sentinel] missing or empty /sessions/exciting-modest-thompson/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:08a18367] _(filed 2026-05-25)_
+- [ ] **[K]** [sentinel] no aurora logs in /sessions/exciting-modest-thompson/mnt/Hyo/agents/nel/logs [sentinel:scheduled-tasks-fired:1b95e32b] _(filed 2026-05-25)_
+
+- [ ] **[K]** [sentinel] **ESCALATED** P0 escalated — failing 2 runs in a row: missing or empty /sessions/exciting-modest-thompson/mnt/Hyo/newsletters/2026-05-25.md [sentinel:aurora-ran-today:08a18367:escalated]

@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-05-24T07:00:00.484939+00:00",
-  "total_entries": 457,
+  "generated_at": "2026-05-25T07:00:01.065979+00:00",
+  "total_entries": 472,
   "total_clusters": 145,
   "singleton_clusters": 140,
   "multi_entry_clusters": 5,
   "agent_breakdown": {
-    "ra": 227,
-    "unknown": 116,
-    "dex": 37,
+    "ra": 236,
+    "unknown": 120,
+    "dex": 39,
     "aether": 23,
     "kai": 22,
     "sam": 15,
@@ -15,7 +15,7 @@
     "ant": 4
   },
   "status_breakdown": {
-    "active": 361,
+    "active": 376,
     "open": 6,
     "mitigated": 2,
     "logged": 12,
@@ -26,18 +26,18 @@
   },
   "top_clusters": [
     {
-      "size": 185,
-      "score": 227.52,
+      "size": 194,
+      "score": 236.4,
       "label": "No newsletter produced for 2026-04-24 \u2014 past 06:00 MT deadline",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 185
+        "ra": 194
       },
       "status_breakdown": {
-        "active": 185
+        "active": 194
       },
       "first_seen": "2026-04-24T02:09:45+00:00",
-      "last_seen": "2026-05-24T05:30:07+00:00",
+      "last_seen": "2026-05-25T05:30:05+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -50,18 +50,18 @@
       ]
     },
     {
-      "size": 108,
-      "score": 121.65,
+      "size": 112,
+      "score": 124.95,
       "label": "1 broken links detected",
       "dominant_agent": "unknown",
       "agent_breakdown": {
-        "unknown": 108
+        "unknown": 112
       },
       "status_breakdown": {
-        "active": 108
+        "active": 112
       },
       "first_seen": "2026-04-21T08:40:26+00:00",
-      "last_seen": "2026-05-24T02:16:09+00:00",
+      "last_seen": "2026-05-25T02:17:46+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -74,18 +74,18 @@
       ]
     },
     {
-      "size": 11,
-      "score": 14.42,
+      "size": 12,
+      "score": 15.65,
       "label": "Daily audit: 5 critical issues found",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 11
+        "dex": 12
       },
       "status_breakdown": {
-        "active": 11
+        "active": 12
       },
       "first_seen": "2026-05-05T01:04:12+00:00",
-      "last_seen": "2026-05-23T08:06:44+00:00",
+      "last_seen": "2026-05-24T08:06:10+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -98,18 +98,18 @@
       ]
     },
     {
-      "size": 11,
-      "score": 13.97,
+      "size": 12,
+      "score": 15.2,
       "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 11
+        "dex": 12
       },
       "status_breakdown": {
-        "active": 11
+        "active": 12
       },
       "first_seen": "2026-04-21T06:17:08+00:00",
-      "last_seen": "2026-05-24T06:43:59+00:00",
+      "last_seen": "2026-05-25T06:45:00+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -123,7 +123,7 @@
     },
     {
       "size": 1,
-      "score": 1.85,
+      "score": 1.8,
       "label": "daily-agent-report.sh used 'declare -A' associative arrays. macOS ships with bash 3.2 which does not",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -143,7 +143,7 @@
     },
     {
       "size": 1,
-      "score": 1.85,
+      "score": 1.8,
       "label": "kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema gate (exit 1) for an",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -163,7 +163,7 @@
     },
     {
       "size": 1,
-      "score": 1.75,
+      "score": 1.7,
       "label": "AetherBot 401 auth failures were invisible \u2014 aether.sh reported 0 trades as standby mode instead of ",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -183,7 +183,7 @@
     },
     {
       "size": 2,
-      "score": 1.6,
+      "score": 1.55,
       "label": "Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl \u2014 chronic system health RED (25",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -204,7 +204,7 @@
     },
     {
       "size": 1,
-      "score": 1.55,
+      "score": 1.5,
       "label": "Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, exceeded GitHub 100MB",
       "dominant_agent": "nel",
       "agent_breakdown": {
@@ -224,7 +224,7 @@
     },
     {
       "size": 1,
-      "score": 1.5,
+      "score": 1.47,
       "label": "Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spa",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -244,7 +244,7 @@
     },
     {
       "size": 1,
-      "score": 1.5,
+      "score": 1.45,
       "label": "Anthropic API key on Mini hit usage quota (until 2026-05-01). kai_analysis.py had no fallback \u2014 fail",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -264,7 +264,7 @@
     },
     {
       "size": 1,
-      "score": 1.45,
+      "score": 1.42,
       "label": "Daily audit 2026-05-21: 3 chronic issues re-flagged 3-21 consecutive days with ZERO closure \u2014 system",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -284,7 +284,7 @@
     },
     {
       "size": 1,
-      "score": 1.45,
+      "score": 1.42,
       "label": "Dex Phase 1.5: Repaired corruption but 1 entries still unfixable (manual review needed)",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -304,7 +304,7 @@
     },
     {
       "size": 1,
-      "score": 1.45,
+      "score": 1.4,
       "label": "generate-morning-report.sh staged website/data/feed.json but not agents/sam/website/data/feed.json. ",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -324,7 +324,7 @@
     },
     {
       "size": 1,
-      "score": 1.45,
+      "score": 1.4,
       "label": "Answered 12 Hyo questions without reading source files first. Made two wrong claims: (1) no follow-u",
       "dominant_agent": "unknown",
       "agent_breakdown": {
@@ -344,7 +344,7 @@
     },
     {
       "size": 1,
-      "score": 1.45,
+      "score": 1.4,
       "label": "Injected score card JS into hq.html via Python string replace. Used escaped dollar (backslash-dollar",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -364,7 +364,7 @@
     },
     {
       "size": 1,
-      "score": 1.4,
+      "score": 1.38,
       "label": "morning-report pushed to git but not visible live \u2014 check Vercel deploy",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -384,7 +384,7 @@
     },
     {
       "size": 1,
-      "score": 1.38,
+      "score": 1.35,
       "label": "Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 ",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -404,7 +404,7 @@
     },
     {
       "size": 1,
-      "score": 1.37,
+      "score": 1.33,
       "label": "aetherbot_logger.py REQUIRED_KEYS missing AETHERBOT_TELEGRAM_TOKEN \u2014 bot.py fell back to Kai bot tok",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -424,7 +424,7 @@
     },
     {
       "size": 1,
-      "score": 1.35,
+      "score": 1.32,
       "label": "Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/0",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -446,18 +446,18 @@
   "temporal_patterns": [],
   "dedup_candidates": [
     {
-      "size": 185,
-      "score": 227.52,
+      "size": 194,
+      "score": 236.4,
       "label": "No newsletter produced for 2026-04-24 \u2014 past 06:00 MT deadline",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 185
+        "ra": 194
       },
       "status_breakdown": {
-        "active": 185
+        "active": 194
       },
       "first_seen": "2026-04-24T02:09:45+00:00",
-      "last_seen": "2026-05-24T05:30:07+00:00",
+      "last_seen": "2026-05-25T05:30:05+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -470,18 +470,18 @@
       ]
     },
     {
-      "size": 108,
-      "score": 121.65,
+      "size": 112,
+      "score": 124.95,
       "label": "1 broken links detected",
       "dominant_agent": "unknown",
       "agent_breakdown": {
-        "unknown": 108
+        "unknown": 112
       },
       "status_breakdown": {
-        "active": 108
+        "active": 112
       },
       "first_seen": "2026-04-21T08:40:26+00:00",
-      "last_seen": "2026-05-24T02:16:09+00:00",
+      "last_seen": "2026-05-25T02:17:46+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -494,18 +494,18 @@
       ]
     },
     {
-      "size": 11,
-      "score": 14.42,
+      "size": 12,
+      "score": 15.65,
       "label": "Daily audit: 5 critical issues found",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 11
+        "dex": 12
       },
       "status_breakdown": {
-        "active": 11
+        "active": 12
       },
       "first_seen": "2026-05-05T01:04:12+00:00",
-      "last_seen": "2026-05-23T08:06:44+00:00",
+      "last_seen": "2026-05-24T08:06:10+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -518,18 +518,18 @@
       ]
     },
     {
-      "size": 11,
-      "score": 13.97,
+      "size": 12,
+      "score": 15.2,
       "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 11
+        "dex": 12
       },
       "status_breakdown": {
-        "active": 11
+        "active": 12
       },
       "first_seen": "2026-04-21T06:17:08+00:00",
-      "last_seen": "2026-05-24T06:43:59+00:00",
+      "last_seen": "2026-05-25T06:45:00+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -543,7 +543,7 @@
     },
     {
       "size": 2,
-      "score": 1.6,
+      "score": 1.55,
       "label": "Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl \u2014 chronic system health RED (25",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -564,9 +564,9 @@
     }
   ],
   "signal_summary": {
-    "noise_reduction": "457 entries \u2192 145 clusters (68.3% dedup rate)",
+    "noise_reduction": "472 entries \u2192 145 clusters (69.3% dedup rate)",
     "top_agent": "ra",
-    "largest_cluster_size": 185,
+    "largest_cluster_size": 194,
     "recurring_patterns": 0
   }
 }
