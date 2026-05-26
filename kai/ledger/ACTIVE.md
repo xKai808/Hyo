@@ -1,46 +1,46 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-26T01:59:15Z
+Last updated: 2026-05-26T13:16:45Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-26T01:59:14Z
+  - Delegated: 2026-05-26T13:16:43Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-26T01:59:14Z
+  - Delegated: 2026-05-26T13:16:43Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-26T01:59:14Z
+  - Delegated: 2026-05-26T13:16:43Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-26T01:59:14Z
+  - Delegated: 2026-05-26T13:16:44Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-26T01:59:15Z
+  - Delegated: 2026-05-26T13:16:44Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-25 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-05-25T23:58:53Z
+- **kai-001** [P1] [AUTO-REMEDIATE] morning-report pushed to git but not visible live — check Vercel deploy (flagged by kai)
+  - Delegated: 2026-05-26T13:16:45Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-003) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-25 — past 06:00 MT deadline
-  - Delegated: 2026-05-25T22:11:38Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-011) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-26T08:07:00Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-003): No newsletter produced for 2026-05-25 — past 06:00 MT deadline
-  - Delegated: 2026-05-25T22:11:38Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-011): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-26T08:07:00Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-25 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-003)
-  - Delegated: 2026-05-25T22:11:38Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-26 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-007)
+  - Delegated: 2026-05-26T02:11:08Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-kai-010) — scan entire codebase for similar patterns: Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) — NEEDS HYO INTERVENTION. 22 stuck DELEGATED items in Kai ledger; meta-fix ticket aether-002 itself stuck 8d. Newsletter pipeline is a no-op: missed 2026-05-25/21/17/12/09/08/07/06 — Ra AUTO-REMEDIATE records DELEGATED but never produces output. verified-state.json + session-handoff.json frozen 20d at 2026-05-05 (kai-session-prep.sh + session-close.sh dead). daily-audit.sh HYO_ROOT bug recurred (scheduled task wrapper sets no HYO_ROOT; first run today produced phantom FAILs). ~20 consecutive daily Kai audit flags unresolved. Kai cannot restart dead launchd plists from Cowork sandbox — Hyo must run: launchctl list | grep com.hyo on the Mini, then reload kai-session-prep, session-close, weekly-maintenance, and the Ra newsletter pipeline.
@@ -51,8 +51,8 @@ Last updated: 2026-05-26T01:59:15Z
   - Delegated: 2026-05-25T08:08:07Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-009)
-  - Delegated: 2026-05-25T08:06:45Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-011)
+  - Delegated: 2026-05-26T08:07:00Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-25 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-012)
