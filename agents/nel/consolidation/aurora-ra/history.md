@@ -320,3 +320,17 @@
 **Cipher:** leaks=0 in agents/ra/pipeline/
 **Newsletters shipped:** 46
 **Research archive entries:** 63
+
+## 2026-05-26 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in agents/ra/pipeline/
+**Newsletters shipped:** 47
+**Research archive entries:** 63
+
+## 2026-05-27 — nightly consolidation
+
+**Sentinel:** passed=4 failed=0
+**Cipher:** leaks=0 in agents/ra/pipeline/
+**Newsletters shipped:** 48
+**Research archive entries:** 63

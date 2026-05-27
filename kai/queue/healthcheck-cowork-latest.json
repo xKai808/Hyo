@@ -1,6 +1,6 @@
 {
-  "ts": "2026-05-25T20:04:34Z",
-  "ts_mt": "2026-05-25 14:04 MT",
+  "ts": "2026-05-26T00:04:39Z",
+  "ts_mt": "2026-05-25 18:04 MT (Monday)",
   "source": "cowork-automated-2h-sweep",
   "status": "ISSUES",
   "issues": 5,
@@ -9,42 +9,42 @@
     {
       "severity": "P1",
       "area": "closure-pipeline",
-      "detail": "ROOT CAUSE (carries). DELEGATED->DONE still unwired. Last 1000 log.jsonl actions = 854 DELEGATE / 97 FLAG / 3 CLOSE / 3 ACK / 3 VERIFY. kai-001 [AUTO-REMEDIATE] 'No newsletter 2026-05-25' re-delegated 30x since 18:00Z, never closes. Stuck DELEGATED: aether-002/aether-003/sam-005/nel-005 ~8.3d (2026-05-17 08:07Z); nel-004/sam-004/ra-004 ~3.9d (2026-05-21 22:13Z); nel-006 ~19d (2026-05-06); dex-002 ~2.2d (2026-05-23). Needs Hyo decision: pathway-closer daemon, or runners call 'dispatch close' on completion."
-    },
-    {
-      "severity": "P1",
-      "area": "dead-loop",
-      "detail": "nel/sam/ra/aether/dex all assessment_stuck/bottleneck_stuck. Identical [GUIDANCE] DELEGATE re-fired to all 5 at 19:57-19:58Z. All 5 agent ACTIVE.md still read 'sim-ack: agent handshake test' / 'DELEGATED - sim-report: all clear' = theater, which CLAUDE.md forbids. Zero behavior change across 60+ briefs."
+      "detail": "ROOT CAUSE (carries 80+ briefs). DELEGATED->DONE pathway closer still unwired. kai-001 [AUTO-REMEDIATE] 'No newsletter 2026-05-25' re-delegated repeatedly (23:28/23:43/23:58Z) and never closes. log.jsonl tail dominated by DELEGATE actions, near-zero CLOSE. Needs Hyo decision: pathway-closer daemon, OR runners call 'dispatch close' on completion."
     },
     {
       "severity": "P1",
       "area": "hydration-state",
-      "detail": "verified-state.json AND session-handoff.json both frozen at mtime 2026-05-05 18:59:42 - ~19.8d stale. kai-session-prep.sh (15-min) + session-close.sh schedulers dead. CLAUDE.md VERIFIED STATE RULE (2h freshness) breached >19d - every brief claim about credits/scores/freshness unverified."
+      "detail": "verified-state.json AND session-handoff.json frozen at mtime 2026-05-06 (~20d stale). kai-session-prep.sh (15-min) + session-close.sh schedulers dead on the Mini. CLAUDE.md VERIFIED STATE RULE (2h freshness) breached ~20d - every brief claim about credits/scores/freshness is unverified until a fresh read."
     },
     {
       "severity": "P1",
       "area": "newsletter-pipeline",
-      "detail": "HARD MISS 2026-05-25 (carries). agents/ra/output/ holds script-2026-05-25.txt only - no rendered .md/.html, nothing published. Render+publish stage dark. ra produced 0 dated logs in agents/ra/logs/ today; due 03:00 MT. 2 P1 FLAG entries in last-2h window (18:11:05Z, 18:13:27Z) both 'No newsletter produced for 2026-05-25', 0 resolution."
+      "detail": "Hard miss 2026-05-25 persists. agents/ra/output/ holds only 2026-05-25.input.md + script-2026-05-25.txt - no rendered .md/.html, nothing published. Render+publish stage dark. Pattern: missed 2026-05-25/21/17/12/09/08/07/06."
     },
     {
       "severity": "P1",
       "area": "flags",
-      "detail": "2 action=FLAG P1 entries in strict last-2h window (since 18:03Z), both 'No newsletter produced for 2026-05-25 - past 06:00 MT deadline' (18:11:05Z + 18:13:27Z), no corresponding resolution. Plus 36 P1 DELEGATE re-fires in window (kai-001 x30, nel-002/sam-002/ra-002 x2 each) - all newsletter cascade, none close."
+      "detail": "1 unaddressed P1 FLAG in strict last-2h window (since 22:05Z): flag-nel-003 @22:11:38Z 'No newsletter produced for 2026-05-25 - past 06:00 MT deadline', status FLAGGED, no resolution. AUTO-REMEDIATE kai-001 re-delegated 3x in window, none close."
     },
     {
-      "severity": "P2",
-      "area": "queue-hygiene",
-      "detail": "kai/queue/running/ holds 14 orphans (8 cmd-*/uuid .json May 6-13, 6 .json.failed May 5). Re-verified this sweep: 'bash -n bin/queue-hygiene.sh' -> 'line 39: syntax error near unexpected token 2' on line 39: for f in \"$QUEUE/completed/\"*.json 2>/dev/null; do -- a redirect inside a for-glob. Script aborts before sweep logic; worker wrapper still reports exit 0, masking it. Fix: drop the 2>/dev/null on line 39, add stale-RUNNING reaper."
+      "severity": "P1",
+      "area": "dead-loop",
+      "detail": "nel/sam/ra/aether/dex all assessment_stuck/bottleneck_stuck. Identical [GUIDANCE] DELEGATE re-fired to all 5 at 23:58:51-52Z. All 5 agent ACTIVE.md top items read 'sim-ack: agent handshake test' / 'DELEGATED - sim-report: all clear' = theater CLAUDE.md forbids. Zero behavior change across 60+ briefs."
     },
     {
       "severity": "P2",
       "area": "stale-tasks",
-      "detail": "~8 In-Progress tasks >72h DELEGATED (aether-002/003, nel-004/005/006, sam-004/005, ra-004 - see closure-pipeline). Queued backlog also stale: flag-aether-001 ~26d, flag-dex-001 ~24d, dozens of P2 flags from 2026-04-28/05-05/05-06 across all agent ledgers. All 6 ACTIVE.md mtimes cron-fresh (13:57-13:58 MT) - staleness is in the tasks, not the files."
+      "detail": "~8 In-Progress DELEGATED tasks >72h old by task body (ACTIVE.md file mtimes are cron-fresh): aether-002/003 ~9d (2026-05-17), nel-005/sam-005 ~9d (2026-05-17), nel-006 ~19d (2026-05-06), nel-004/sam-004/ra-004 ~4d (2026-05-21). Queued backlog also stale: flag-aether-001 ~27d, flag-dex-001 ~25d, multiple P2 flags from 2026-04-28/05-01. All blocked on the closure-pipeline P1."
+    },
+    {
+      "severity": "P2",
+      "area": "queue-hygiene",
+      "detail": "kai/queue/running/ holds 14 orphans (8 cmd-*/uuid .json May 6-13, 6 .json.failed May 5). Spec expects 0-1. queue-hygiene.sh has a line-39 syntax error that aborts the sweep while the worker wrapper still reports exit 0, masking it. Worker itself HEALTHY. Fix: repair line 39 + add stale-RUNNING reaper."
     },
     {
       "severity": "P2",
       "area": "scheduled-maintenance",
-      "detail": "weekly-maintenance.sh dead - kai/ledger/weekly-maintenance.log last written 2026-04-25 01:48 (~30d, 4 missed Saturdays). Consequence: context-bomb files re-bloat - KAI_BRIEF.md now 981KB / 2996 lines, at the 1MB threshold; needs archiving."
+      "detail": "weekly-maintenance.sh dead ~30d (4 missed Saturdays). Consequence: context-bomb files re-bloat - KAI_BRIEF.md now 3018 lines / ~1MB, at the archiving threshold."
     },
     {
       "severity": "P2",
@@ -54,39 +54,38 @@
     {
       "severity": "P3",
       "area": "agent-output",
-      "detail": "Today 2026-05-25: nel=27, sam=1, dex=3, hyo=2 producing normally. ra=0 dated logs is a REAL finding (newsletter no-op above). aether=0 EXPECTED (AetherBot kill-switch since 2026-05-13, verified aetherbot-monitor refused @19:48:41Z)."
+      "detail": "Today 2026-05-25: nel=27, dex=3 producing normally; sam=1, ra=2 (self-review + ra-2026-05-25.md, but 0 rendered newsletter - real finding above). aether=0 EXPECTED (AetherBot kill-switch since 2026-05-13, aetherbot-monitor refused @23:48:58Z)."
     }
   ],
   "queue_state": {
     "pending": 0,
     "running_orphans": 14,
-    "completed_total": 14607,
-    "failed_total": 53,
-    "failed_today": 0,
-    "worker": "HEALTHY"
+    "worker": "HEALTHY",
+    "last_completed": "2026-05-25T23:53:01Z (git commit+push exit 0)"
   },
   "recent_queue_results": [
     {
-      "id": "b9ce7d59",
-      "ts": "2026-05-25T19:48:41Z",
+      "id": "cmd-1779753173-33720",
+      "ts": "2026-05-25T23:53:01Z",
+      "command": "git add tickets.jsonl + ledger && git commit && git push origin main",
+      "exit_code": 0,
+      "note": "enforcer commit 881e0e65d pushed to origin"
+    },
+    {
+      "id": "e06eb1c2-958b-4c44-b5c3-26748f6fc3ef",
+      "ts": "2026-05-25T23:48:58Z",
+      "command": "agents/aether/aether.sh",
+      "exit_code": 0,
+      "note": "kill-switched, no-op"
+    },
+    {
+      "id": "78c71b27-325a-45ef-acf7-22ec041a1995",
+      "ts": "2026-05-25T23:48:58Z",
       "command": "bin/aetherbot-monitor.sh",
       "exit_code": 0,
       "note": "kill-switch refused (expected)"
-    },
-    {
-      "id": "2e0cf3c2",
-      "ts": "2026-05-25T19:48:40Z",
-      "command": "agents/aether/aether.sh",
-      "exit_code": 0
-    },
-    {
-      "id": "0998ecfa",
-      "ts": "2026-05-25T19:48:40Z",
-      "command": "bin/queue-hygiene.sh",
-      "exit_code": 0,
-      "note": "exit 0 but line-39 syntax error aborts sweep"
     }
   ],
-  "actions_taken": "Read-only Cowork sweep - no fixes, no dispatches (scheduled-task scope). Wrote healthcheck-latest.json + durable healthcheck-cowork-latest.json; prepended note to KAI_BRIEF.md Current state. NOTE: scheduled-task file referenced a stale session path (sharp-gracious-franklin); used the live mount (kind-bold-newton).",
+  "actions_taken": "Read-only Cowork sweep - no fixes, no dispatches (scheduled-task scope; another remediation cascade only adds immortal zombies per closure-pipeline bug). Wrote healthcheck-latest.json + healthcheck-cowork-latest.json; prepended note to KAI_BRIEF.md Current state. NOTE: scheduled-task file referenced a stale session path (sharp-gracious-franklin); used the live mount (vigilant-blissful-meitner).",
   "next_check": "in 2 hours (30min if P0 found)"
 }
