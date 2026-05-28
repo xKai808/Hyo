@@ -1,42 +1,42 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-28T07:25:56Z
+Last updated: 2026-05-28T08:06:55Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T07:25:54Z
+  - Delegated: 2026-05-28T07:56:00Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T07:25:54Z
+  - Delegated: 2026-05-28T07:56:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T07:25:54Z
+  - Delegated: 2026-05-28T07:56:01Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T07:25:55Z
+  - Delegated: 2026-05-28T07:56:01Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-28T07:25:55Z
+  - Delegated: 2026-05-28T07:56:02Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 572 recurrent patterns detected — increased from 553, root-cause fix needed (flagged by kai)
-  - Delegated: 2026-05-28T07:25:56Z
+  - Delegated: 2026-05-28T07:56:02Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-012) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-28 — past 06:00 MT deadline
-  - Delegated: 2026-05-28T02:11:43Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
+  - Delegated: 2026-05-28T08:06:55Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-012): No newsletter produced for 2026-05-28 — past 06:00 MT deadline
-  - Delegated: 2026-05-28T02:11:43Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit: 2 critical issues found
+  - Delegated: 2026-05-28T08:06:55Z
   - Status: DELEGATED
 
 - **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-28 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-012)
@@ -51,8 +51,8 @@ Last updated: 2026-05-28T07:25:56Z
   - Delegated: 2026-05-27T22:12:17Z
   - Status: DELEGATED
 
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-002)
-  - Delegated: 2026-05-27T08:07:17Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-003)
+  - Delegated: 2026-05-28T08:06:55Z
   - Status: DELEGATED
 
 - **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-27 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
