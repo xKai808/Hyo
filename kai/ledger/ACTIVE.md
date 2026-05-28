@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-28T08:23:27Z
+Last updated: 2026-05-28T08:26:10Z
 
 ## In Progress
 
-- **nel-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-05-28T08:23:27Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-28T08:26:07Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T08:11:04Z
+  - Delegated: 2026-05-28T08:26:08Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-28T08:23:27Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-05-28T08:26:08Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T08:11:04Z
+  - Delegated: 2026-05-28T08:26:08Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-28T08:11:05Z
+  - Delegated: 2026-05-28T08:26:09Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai)
-  - Delegated: 2026-05-28T08:11:06Z
+- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
+  - Delegated: 2026-05-28T08:26:10Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
