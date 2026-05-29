@@ -1,20 +1,20 @@
 # Sam Active Tasks
 
-Last updated: 2026-05-28T08:23:27Z
+Last updated: 2026-05-29T14:31:18Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): 1 broken links detected
-  - Delegated: 2026-05-28T08:23:27Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 15d old (>14d critical)
+  - Delegated: 2026-05-29T14:31:18Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit: 2 critical issues found
-  - Delegated: 2026-05-28T08:06:55Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-29 — past 06:00 MT deadline
+  - Delegated: 2026-05-29T02:12:26Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-27 — past 06:00 MT deadline
-  - Delegated: 2026-05-27T22:12:17Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-05-29 — past 06:00 MT deadline
+  - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
 - **sam-004** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-05-27 — past 06:00 MT deadline
