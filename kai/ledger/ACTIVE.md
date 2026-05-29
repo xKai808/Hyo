@@ -1,62 +1,62 @@
 # Kai Active Tasks
 
-Last updated: 2026-05-28T13:57:19Z
+Last updated: 2026-05-29T13:19:37Z
 
 ## In Progress
 
 - **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T13:57:18Z
+  - Delegated: 2026-05-29T13:19:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T13:57:18Z
+  - Delegated: 2026-05-29T13:19:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T13:57:18Z
+  - Delegated: 2026-05-29T13:19:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-05-28T13:57:19Z
+  - Delegated: 2026-05-29T13:19:36Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-05-28T13:57:19Z
+  - Delegated: 2026-05-29T13:19:37Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] 1 broken links detected (flagged by kai)
-  - Delegated: 2026-05-28T10:11:37Z
+- **kai-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 15d old (>14d critical) (flagged by kai)
+  - Delegated: 2026-05-29T10:18:46Z
   - Status: DELEGATED
 
-- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-kai-003) — scan entire codebase for similar patterns: Daily audit: 2 critical issues found
-  - Delegated: 2026-05-28T08:06:55Z
+- **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
+  - Delegated: 2026-05-29T02:12:26Z
   - Status: DELEGATED
 
-- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-003): Daily audit: 2 critical issues found
-  - Delegated: 2026-05-28T08:06:55Z
+- **sam-002** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-29 — past 06:00 MT deadline
+  - Delegated: 2026-05-29T02:12:26Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-28 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-012)
-  - Delegated: 2026-05-28T02:11:43Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-29 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
+  - Delegated: 2026-05-29T02:12:26Z
   - Status: DELEGATED
 
-- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-27 — past 06:00 MT deadline
-  - Delegated: 2026-05-27T22:12:17Z
+- **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-009) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
+  - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
-- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-006): No newsletter produced for 2026-05-27 — past 06:00 MT deadline
-  - Delegated: 2026-05-27T22:12:17Z
+- **sam-003** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-009): No newsletter produced for 2026-05-29 — past 06:00 MT deadline
+  - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
 - **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-003)
   - Delegated: 2026-05-28T08:06:55Z
   - Status: DELEGATED
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-27 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
-  - Delegated: 2026-05-27T22:12:17Z
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-29 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
+  - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
 - **aether-002** [P1] [AUTO-REMEDIATE] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim) (flagged by kai, cascade flag-kai-019)
