@@ -1,9 +1,7 @@
-# nel Self-Review — 2026-05-29T02:29
+# nel Self-Review — 2026-05-29T08:32
 
 ## Gate 1: Trigger Validation
-- ✗ **2026-05-29-nel-results.json**: WHAT triggers this? Found 0 callers.
-  - Agent: investigate. Is this dead or newly created?
-- ✗ **nel-agent-reflection-2026-05-29.json**: WHAT triggers this? Found 0 callers.
+- ✗ **sam-card.json**: WHAT triggers this? Found 0 callers.
   - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
@@ -63,6 +61,6 @@ Questions for nel to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 14
-- Gate results: trigger=8/10, visibility=checked, resolutions=8, adoption=-6/5
+- Findings: 13
+- Gate results: trigger=4/5, visibility=checked, resolutions=8, adoption=-6/5
 
