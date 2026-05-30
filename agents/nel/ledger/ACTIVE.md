@@ -1,6 +1,6 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-29T20:34:32Z
+Last updated: 2026-05-30T02:36:06Z
 
 ## In Progress
 
@@ -12,8 +12,8 @@ Last updated: 2026-05-29T20:34:32Z
   - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 15d old (>14d critical)
-  - Delegated: 2026-05-29T20:34:32Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 16d old (>14d critical)
+  - Delegated: 2026-05-30T02:36:06Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
