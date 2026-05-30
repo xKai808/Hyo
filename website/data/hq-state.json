@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-30T03:00:00Z",
+  "updatedAt": "2026-05-30T07:00:00Z",
   "morningReport": {
     "date": "2026-05-28",
     "generatedAt": "2026-05-29T06:30:00Z",
@@ -30,123 +30,63 @@
   },
   "events": [
     {
+      "ts": "2026-05-30T07:00:00Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-05-30"
+    },
+    {
+      "ts": "2026-05-30T07:00:00Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-05-30",
+      "doc": "/viewer?agent=simulation&file=2026-05-30"
+    },
+    {
       "ts": "2026-05-30T03:00:00Z",
       "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-29 ~21:00 MT Friday (brave-jolly-heisenberg Cowork sandbox) — DEGRADED CYCLE Day 2, 6th sandbox-side degraded fire today. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/brave-jolly-heisenberg` (exit 12) — identical failure mode to 00:30 MT (happy-beautiful-goodall), 09:00 MT (ecstatic-quirky-ride), ~12:00 MT (elegant-affectionate-mendel), ~15:00 MT (zealous-eager-mayer), and ~18:00 MT (practical-pensive-babbage) degraded cycles. SENTINEL not run, CIPHER not run, NEL not run — sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~25h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings producible. Read paths verified; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 (continuation) — Cowork sandbox `useradd` regression persists across 6 consecutive sandbox-fired scheduled tasks today (00:30 / 09:00 / ~12:00 / ~15:00 / ~18:00 / ~21:00 MT). Mini-side kai-autonomous.sh remains authoritative path. P1 against Cowork sandbox infra (per 09:00 MT escalation) STILL STANDING after 14+ hours — not yet acknowledged Mini-side across 5 prior escalations. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED (urgency escalating further): (1) Mini-side land P1 against Cowork sandbox `useradd` regression NOW — 14+ hours unacknowledged across 5 prior escalations; (2) gate Cowork scheduled fires on `useradd` exit=12, OR remove the duplicate sandbox fire since Mini cron is authoritative (6 consecutive failures today = pure noise); (3) prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
+      "msg": "Ops sync 2026-05-29 ~21:00 MT Friday (brave-jolly-heisenberg Cowork sandbox) \u2014 DEGRADED CYCLE Day 2, 6th sandbox-side degraded fire today. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/brave-jolly-heisenberg` (exit 12) \u2014 identical failure mode to 00:30 MT (happy-beautiful-goodall), 09:00 MT (ecstatic-quirky-ride), ~12:00 MT (elegant-affectionate-mendel), ~15:00 MT (zealous-eager-mayer), and ~18:00 MT (practical-pensive-babbage) degraded cycles. SENTINEL not run, CIPHER not run, NEL not run \u2014 sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~25h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings producible. Read paths verified; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 (continuation) \u2014 Cowork sandbox `useradd` regression persists across 6 consecutive sandbox-fired scheduled tasks today (00:30 / 09:00 / ~12:00 / ~15:00 / ~18:00 / ~21:00 MT). Mini-side kai-autonomous.sh remains authoritative path. P1 against Cowork sandbox infra (per 09:00 MT escalation) STILL STANDING after 14+ hours \u2014 not yet acknowledged Mini-side across 5 prior escalations. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED (urgency escalating further): (1) Mini-side land P1 against Cowork sandbox `useradd` regression NOW \u2014 14+ hours unacknowledged across 5 prior escalations; (2) gate Cowork scheduled fires on `useradd` exit=12, OR remove the duplicate sandbox fire since Mini cron is authoritative (6 consecutive failures today = pure noise); (3) prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
       "doc": "/viewer?agent=ops&file=2026-05-30T03"
     },
     {
       "ts": "2026-05-30T03:00:00Z",
       "agent": "sentinel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/brave-jolly-heisenberg, exit 12). No QA sweep executed this cycle (6th skip today after 00:30 MT, 09:00 MT, ~12:00 MT, ~15:00 MT, ~18:00 MT degraded cycles). Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
+      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/brave-jolly-heisenberg, exit 12). No QA sweep executed this cycle (6th skip today after 00:30 MT, 09:00 MT, ~12:00 MT, ~15:00 MT, ~18:00 MT degraded cycles). Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
       "doc": "/viewer?agent=sentinel&file=2026-05-29"
     },
     {
       "ts": "2026-05-30T03:00:00Z",
       "agent": "cipher",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/brave-jolly-heisenberg, exit 12). No security scan executed this cycle (6th skip today). Authoritative state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
+      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/brave-jolly-heisenberg, exit 12). No security scan executed this cycle (6th skip today). Authoritative state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
       "doc": "/viewer?agent=cipher&file=2026-05-29"
     },
     {
       "ts": "2026-05-30T03:00:00Z",
       "agent": "nel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/brave-jolly-heisenberg, exit 12). No weekly sweep executed this cycle (6th skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
-      "doc": "/viewer?agent=nel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-30T00:00:00Z",
-      "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-29 ~18:00 MT Friday (practical-pensive-babbage Cowork sandbox) \u2014 DEGRADED CYCLE Day 2, 5th sandbox-side degraded fire today. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/practical-pensive-babbage` (exit 12) \u2014 identical failure mode to 00:30 MT (happy-beautiful-goodall), 09:00 MT (ecstatic-quirky-ride), ~12:00 MT (elegant-affectionate-mendel), and ~15:00 MT (zealous-eager-mayer) degraded cycles. SENTINEL not run, CIPHER not run, NEL not run \u2014 sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~22h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings producible. Read paths verified; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 (continuation) \u2014 Cowork sandbox `useradd` regression persists across 5 consecutive sandbox-fired scheduled tasks today (00:30 / 09:00 / ~12:00 / ~15:00 / ~18:00 MT). Mini-side kai-autonomous.sh remains authoritative path. P1 against Cowork sandbox infra (per 09:00 MT escalation) STILL STANDING after 11+ hours \u2014 not yet acknowledged Mini-side across 4 prior escalations. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED (urgency escalating further): (1) Mini-side land P1 against Cowork sandbox `useradd` regression NOW \u2014 11+ hours unacknowledged across 4 prior escalations; (2) gate Cowork scheduled fires on `useradd` exit=12, OR remove the duplicate sandbox fire since Mini cron is authoritative (5 consecutive failures today = pure noise); (3) prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
-      "doc": "/viewer?agent=ops&file=2026-05-30T00"
-    },
-    {
-      "ts": "2026-05-30T00:00:00Z",
-      "agent": "sentinel",
-      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/practical-pensive-babbage, exit 12). No QA sweep executed this cycle (5th skip today after 00:30 MT, 09:00 MT, ~12:00 MT, ~15:00 MT degraded cycles). Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
-      "doc": "/viewer?agent=sentinel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-30T00:00:00Z",
-      "agent": "cipher",
-      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/practical-pensive-babbage, exit 12). No security scan executed this cycle (5th skip today). Authoritative state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
-      "doc": "/viewer?agent=cipher&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-30T00:00:00Z",
-      "agent": "nel",
-      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/practical-pensive-babbage, exit 12). No weekly sweep executed this cycle (5th skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
+      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/brave-jolly-heisenberg, exit 12). No weekly sweep executed this cycle (6th skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
       "doc": "/viewer?agent=nel&file=2026-05-29"
     },
     {
       "ts": "2026-05-29T21:00:00Z",
       "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-29 ~15:00 MT Friday (zealous-eager-mayer Cowork sandbox) — DEGRADED CYCLE Day 2, 4th sandbox-side degraded fire today. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/zealous-eager-mayer` (exit 12) — identical failure mode to 00:30 MT (happy-beautiful-goodall), 09:00 MT (ecstatic-quirky-ride), and ~12:00 MT (elegant-affectionate-mendel) degraded cycles. SENTINEL not run, CIPHER not run, NEL not run — sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~19h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings producible. Read paths verified; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 (continuation) — Cowork sandbox `useradd` regression persists across 5+ consecutive sandbox-fired scheduled tasks today (00:30 / 09:00 / ~12:00 / ~15:00 MT). Mini-side kai-autonomous.sh remains authoritative path. P1 against Cowork sandbox infra (per 09:00 MT escalation) STILL STANDING after 8+ hours — not yet acknowledged Mini-side. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED (urgency escalating): (1) Mini-side land P1 against Cowork sandbox `useradd` regression NOW — 8+ hours unacknowledged across 3 prior escalations; (2) gate Cowork scheduled fires on `useradd` exit=12, OR remove the duplicate sandbox fire since Mini cron is authoritative (4 consecutive failures today = pure noise); (3) prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
+      "msg": "Ops sync 2026-05-29 ~15:00 MT Friday (zealous-eager-mayer Cowork sandbox) \u2014 DEGRADED CYCLE Day 2, 4th sandbox-side degraded fire today. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/zealous-eager-mayer` (exit 12) \u2014 identical failure mode to 00:30 MT (happy-beautiful-goodall), 09:00 MT (ecstatic-quirky-ride), and ~12:00 MT (elegant-affectionate-mendel) degraded cycles. SENTINEL not run, CIPHER not run, NEL not run \u2014 sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~19h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings producible. Read paths verified; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 (continuation) \u2014 Cowork sandbox `useradd` regression persists across 5+ consecutive sandbox-fired scheduled tasks today (00:30 / 09:00 / ~12:00 / ~15:00 MT). Mini-side kai-autonomous.sh remains authoritative path. P1 against Cowork sandbox infra (per 09:00 MT escalation) STILL STANDING after 8+ hours \u2014 not yet acknowledged Mini-side. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED (urgency escalating): (1) Mini-side land P1 against Cowork sandbox `useradd` regression NOW \u2014 8+ hours unacknowledged across 3 prior escalations; (2) gate Cowork scheduled fires on `useradd` exit=12, OR remove the duplicate sandbox fire since Mini cron is authoritative (4 consecutive failures today = pure noise); (3) prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
       "doc": "/viewer?agent=ops&file=2026-05-29T21"
     },
     {
       "ts": "2026-05-29T21:00:00Z",
       "agent": "sentinel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/zealous-eager-mayer, exit 12). No QA sweep executed this cycle (4th skip today after 00:30 MT, 09:00 MT, 12:00 MT degraded cycles). Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
+      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/zealous-eager-mayer, exit 12). No QA sweep executed this cycle (4th skip today after 00:30 MT, 09:00 MT, 12:00 MT degraded cycles). Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
       "doc": "/viewer?agent=sentinel&file=2026-05-29"
     },
     {
       "ts": "2026-05-29T21:00:00Z",
       "agent": "cipher",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/zealous-eager-mayer, exit 12). No security scan executed this cycle (4th skip today). Authoritative state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
+      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/zealous-eager-mayer, exit 12). No security scan executed this cycle (4th skip today). Authoritative state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
       "doc": "/viewer?agent=cipher&file=2026-05-29"
     },
     {
       "ts": "2026-05-29T21:00:00Z",
       "agent": "nel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/zealous-eager-mayer, exit 12). No weekly sweep executed this cycle (4th skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
-      "doc": "/viewer?agent=nel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T18:00:00Z",
-      "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-29 ~12:00 MT Friday (elegant-affectionate-mendel Cowork sandbox) — DEGRADED CYCLE Day 2, 3rd sandbox-side degraded fire today. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/elegant-affectionate-mendel` (exit 12) — identical failure mode to 00:30 MT (happy-beautiful-goodall) and 09:00 MT (ecstatic-quirky-ride) degraded cycles. SENTINEL not run, CIPHER not run, NEL not run — sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~16h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings producible. Read paths verified; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 (continuation) — Cowork sandbox `useradd` regression persists across 4+ consecutive sandbox-fired scheduled tasks today. Mini-side kai-autonomous.sh remains authoritative path. P1 against Cowork sandbox infra (per 09:00 MT escalation) STILL STANDING — not yet acknowledged Mini-side. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED: (1) Mini-side confirm/file P1 against Cowork sandbox `useradd` regression (host/volume-mount fault, not Hyo-repo); (2) Mini-side investigation; (3) gate Cowork scheduled fires on `useradd` exit=12, or remove the duplicate sandbox fire since Mini cron is authoritative; (4) prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
-      "doc": "/viewer?agent=ops&file=2026-05-29T18"
-    },
-    {
-      "ts": "2026-05-29T18:00:00Z",
-      "agent": "sentinel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/elegant-affectionate-mendel, exit 12). No QA sweep executed this cycle (3rd skip today after 00:30 MT and 09:00 MT degraded cycles). Authoritative scan state still run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
-      "doc": "/viewer?agent=sentinel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T18:00:00Z",
-      "agent": "cipher",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/elegant-affectionate-mendel, exit 12). No security scan executed this cycle (3rd skip today). Authoritative state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
-      "doc": "/viewer?agent=cipher&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T18:00:00Z",
-      "agent": "nel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/elegant-affectionate-mendel, exit 12). No weekly sweep executed this cycle (3rd skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
-      "doc": "/viewer?agent=nel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T15:00:00Z",
-      "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-29 09:00 MT Friday (ecstatic-quirky-ride Cowork sandbox) — DEGRADED CYCLE Day 2 (continuation). Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/ecstatic-quirky-ride` (exit 12) — identical failure mode to the 00:30 MT degraded cycle and 60+ prior sandbox-fired scheduled tasks today and across recent days. SENTINEL not run, CIPHER not run, NEL not run — all three scripts require bash; sandbox container never booted. Authoritative scan state still run #609 (2026-05-29T02:16Z, ~13h ago): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. Cipher last clean at 02:14Z. No new findings producible. Read paths verified — both hq-state.json copies readable; dual-path degraded entry written to both. POSTURE: DEGRADED Day 2 — Cowork sandbox useradd regression persists across 00:30 MT, 02:00 MT, 04:00 MT, ~06:00 MT, and 09:00 MT scheduled fires (this fire). Mini-side kai-autonomous.sh remains the authoritative path; the morning-report cadence should still produce findings Mini-side. ESCALATING: per the 00:30 MT cycle's own recommendation (\"open P1 against Cowork infra if still broken at next scheduled run\") — Cowork sandbox `useradd: cannot create directory /sessions/<mount>` (exit 12) is now confirmed persistent and blocks every sandbox-side scheduled-task script. No safeguard cascade fired (nothing to cascade from). No spurious flags created. RECOMMENDED (unchanged from 00:30 cycle, +1 escalation): (1) NEW — file P1 against Cowork sandbox infrastructure for the `useradd` regression (host-permission or volume-mount fault, not a Hyo-repo bug); (2) Mini-side investigation of the same; (3) consider gating Cowork scheduled-task fires to skip when `useradd` exit=12 is seen, or remove the Cowork ops-sync fire entirely since Mini cron covers it authoritatively (this duplicate is redundant when sandbox is healthy and a no-op when it isn't); (4) all prior recommendations stand (sentinel.sh + nel.sh `.input.md` path fix; sentinel scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious nel-003/sam-003/ra-003 cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: this degraded entry written identically to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
-      "doc": "/viewer?agent=ops&file=2026-05-29T15"
-    },
-    {
-      "ts": "2026-05-29T15:00:00Z",
-      "agent": "sentinel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/ecstatic-quirky-ride, exit 12). No QA sweep executed this cycle (2nd skip today after 00:30 MT degraded cycle). Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
-      "doc": "/viewer?agent=sentinel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T15:00:00Z",
-      "agent": "cipher",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/ecstatic-quirky-ride, exit 12). No security scan executed this cycle (2nd skip today). Authoritative scan state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
-      "doc": "/viewer?agent=cipher&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T15:00:00Z",
-      "agent": "nel",
-      "msg": "SKIPPED — Cowork sandbox bash unavailable (useradd cannot create /sessions/ecstatic-quirky-ride, exit 12). No weekly sweep executed this cycle (2nd skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
+      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/zealous-eager-mayer, exit 12). No weekly sweep executed this cycle (4th skip today). Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
       "doc": "/viewer?agent=nel&file=2026-05-29"
     },
     {
@@ -160,30 +100,6 @@
       "agent": "simulation",
       "msg": "24h action plan \u2014 2026-05-29",
       "doc": "/viewer?agent=simulation&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T06:30:00Z",
-      "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-29 00:30 MT Friday (happy-beautiful-goodall Cowork sandbox) \u2014 DEGRADED CYCLE. Workspace bash unavailable: every shell invocation returned `useradd: cannot create directory /sessions/happy-beautiful-goodall` (exit 12). SENTINEL not run, CIPHER not run, NEL not run \u2014 sandbox container never booted. Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100. No new findings. Read paths verified \u2014 both hq-state.json copies readable; dual-path degraded entry written to both. POSTURE: DEGRADED. Mini-side kai-autonomous.sh is the authoritative path. No safeguard cascade fired (nothing to cascade from). No spurious flags. RECOMMENDED: (1) Mini-side investigation of Cowork sandbox useradd failure (likely host-permission/volume-mount regression on Cowork infra, not Hyo repo); (2) if sandbox still broken at next scheduled run, open P1 against Cowork infra; (3) prior recommendations still stand (sentinel.sh + nel.sh newsletter MT/.input.md fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc link repair; cancel spurious nel-003/sam-003/ra-003 cascade; smoke-test 47 untested scripts).",
-      "doc": "/viewer?agent=ops&file=2026-05-29T06"
-    },
-    {
-      "ts": "2026-05-29T06:30:00Z",
-      "agent": "sentinel",
-      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/happy-beautiful-goodall, exit 12). No QA sweep executed this cycle. Authoritative scan state remains run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today day 4, P1 scheduled-tasks-fired day 4, P2 task-queue-size day 100 chronic-escalated.",
-      "doc": "/viewer?agent=sentinel&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T06:30:00Z",
-      "agent": "cipher",
-      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/happy-beautiful-goodall, exit 12). No security scan executed this cycle. Authoritative scan state remains 2026-05-29T02:14Z: CLEAN, 0 findings, 0 leaks, perms 700/600, HQ push HTTP 200.",
-      "doc": "/viewer?agent=cipher&file=2026-05-29"
-    },
-    {
-      "ts": "2026-05-29T06:30:00Z",
-      "agent": "nel",
-      "msg": "SKIPPED \u2014 Cowork sandbox bash unavailable (useradd cannot create /sessions/happy-beautiful-goodall, exit 12). No weekly sweep executed this cycle. Authoritative state remains 2026-05-29T02:15Z: Phases 1-5 complete, Phase 6 reaped at sandbox 45s; 29 broken doc links, 47 untested scripts unchanged.",
-      "doc": "/viewer?agent=nel&file=2026-05-29"
     },
     {
       "ts": "2026-05-28T22:12:00Z",
@@ -424,48 +340,6 @@
       "type": "nel",
       "event": "Weekly system sweep \u2014 PARTIAL (phases 1-5; sandbox 45s ceiling)",
       "msg": "Nel weekly sweep partial: phases 1-5 completed, killed at Phase 6 by the sandbox 45s/bash-call ceiling (detached runs also reaped via --die-with-parent). Phase-1 sentinel synth: 2/4 projects with findings (hyo 2p/2f, aether 1/1). Phase-2 cipher clean. Phase-3 stale-files clean. Phase-4 broken-links 29 (flag-nel-011 P2). Phase-5 47 untested scripts. Phases 6-13 (improvementScore, Phase-8 HQ-state write, Phase-10 audit, dispatch) not run \u2014 nel block retains last full-run values (score 65). FALSE POSITIVE: flag-nel-010 P1 'no newsletter for 2026-05-21' is wrong \u2014 Ra produced 2026-05-21.input.md (45KB); nel auto-delegated spurious ra-002 + sam-002 tickets that should be cancelled."
-    },
-    {
-      "ts": "2026-05-19T14:12:00Z",
-      "agent": "kai",
-      "event": "hq-ops-sync cycle complete (cowork, 08:10 MT 2026-05-19, scheduled-task)",
-      "summary": "Ops sync @ 08:10 MT 2026-05-19 (hq-ops-sync, cowork, scheduled-task). Sentinel run #484: 6p/3f \u2014 0 NEW, 3 RECURRING all escalated: P0 aurora-ran-today day 3 (newsletters/2026-05-19.md missing in sandbox UTC view \u2014 Mini authoritative); P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox /agents/nel/logs); P2 task-queue-size day 218 (35 P0 tasks FLAT vs threshold 5). Cipher CLEAN \u2014 0 secret findings, 0 leaks, 0 autofixes; permissions verified (secretsDir 755 via symlink, founderToken 600); HQ push http 200; verification skipped (no HYO_HQ_PASSWORD). dep-audit: HIGH 1 CVE in agents/sam/mcp-server CARRIED (day 14+). Nel partial: Growth IDLE (ARIC complete for 2026-05-19, no open IMP). Phase 1 sentinel synth: 2 projects with findings (hyo 2p/2f, aether 1p/1f); aurora-ra 4p/0f, kai-ceo 4p/0f. Newsletter check SKIPPED (HOUR=08, threshold logic preserved \u2014 verify Mini canonical state). Phase 2 cipher synth: 0 leaks. Phase 3 stale-files: clean. Phase 4 broken-links: 29 FLAT. Phase 5 test-coverage: 47 untested FLAT. Phase 6 timed out in sandbox (grep loop over bin/kai/consolidation shell scripts exceeded 45s); phases 6\u201310 + self-review not captured this cycle \u2014 Mini run authoritative. Carried: HIGH 1 CVE agents/sam/mcp-server day 14+; 29 broken links FLAT; 47 untested scripts FLAT; 35 P0 KAI_TASKS overload day 218. Cycle posture: WATCH \u2014 no NEW issues; sentinel recurring stable day 3; sandbox completed sentinel+cipher fully, nel partial (Mini authoritative for full nel sweep).",
-      "type": "ops_sync"
-    },
-    {
-      "ts": "2026-05-19T14:12:00Z",
-      "agent": "sentinel",
-      "event": "QA sweep run #484 \u2014 6p/3f, 0 NEW, 3 recurring (day-3+ escalated), 0 resolved",
-      "msg": "Sentinel #484: 6 passed, 3 failed. 0 NEW. 3 RECURRING all escalated: P0 aurora-ran-today day 3 (newsletters/2026-05-19.md missing in sandbox UTC view \u2014 Mini authoritative); P1 scheduled-tasks-fired day 3 (no aurora-*.log in /agents/nel/logs sandbox view); P2 task-queue-size day 218 (35 P0 tasks FLAT vs threshold 5). Sandbox UTC artifacts; Mini authoritative.",
-      "type": "sentinel"
-    },
-    {
-      "ts": "2026-05-19T14:12:00Z",
-      "agent": "cipher",
-      "event": "Security scan CLEAN \u2014 0 findings, 0 leaks, 0 autofixes; HQ push http 200",
-      "msg": "Cipher CLEAN: 0 secret findings, 0 leaks, 0 autofixes. Permissions verified (secretsDir 755 via symlink, founderToken 600). HQ push http 200; verification skipped (no HYO_HQ_PASSWORD). dep-audit: HIGH 1 CVE in agents/sam/mcp-server CARRIED (day 14+ \u2014 Sam priority, unchanged).",
-      "type": "cipher"
-    },
-    {
-      "ts": "2026-05-19T14:12:00Z",
-      "agent": "nel",
-      "event": "Nel partial run \u2014 phases 1\u20135 complete; Phase 6 sandbox timeout; Mini authoritative",
-      "msg": "Nel sweep (sandbox, partial): Growth IDLE (ARIC done for 2026-05-19, no open IMP). Phase 1 sentinel synth: 2/4 projects with findings (hyo 2p/2f, aether 1p/1f); aurora-ra 4p/0f, kai-ceo 4p/0f. Phase 2 cipher 0 leaks. Phase 3 stale-files clean. Phase 4 broken-links 29 FLAT. Phase 5 test-coverage 47 untested FLAT. Phase 6 (inefficient-patterns grep) exceeded sandbox 45s timeout \u2014 phases 6\u201310 + self-review not captured this cycle. Mini run authoritative for full nel sweep + improvement score.",
-      "type": "nel"
-    },
-    {
-      "ts": "2026-05-18T22:10:00Z",
-      "agent": "kai",
-      "event": "hq-ops-sync cycle complete (cowork, 16:10 MT 2026-05-18, scheduled-task)",
-      "summary": "Ops sync @ 16:10 MT 2026-05-18 (hq-ops-sync, cowork, scheduled-task). All 3 runners executed via cowork sandbox. Sentinel run #469: 6p/3f \u2014 0 NEW, 3 RECURRING all escalated: P0 aurora-ran-today day 3 (newsletters/2026-05-18.md missing in sandbox UTC view \u2014 Mini authoritative), P1 scheduled-tasks-fired day 3 (no aurora logs in sandbox /agents/nel/logs), P2 task-queue-size day 203 ELEVATED (35 P0 tasks FLAT vs threshold 5). Cipher CLEAN \u2014 0 secret findings, 0 leaks, 0 autofixes; permissions verified (secretsDir 755, founderToken 600); HQ push http 200; verification skipped (no HYO_HQ_PASSWORD). Dep-audit context: HIGH 1 CVE in agents/sam/mcp-server (day 14+ carried). Nel ran: Growth IDLE (ARIC research complete for 2026-05-18, no open IMP tickets). Phase 1 sentinel synth: 2 projects with findings (hyo 2p/2f, aether 1p/1f) \u2192 P2 flag-nel-002 filed. Newsletter check FIRED THIS CYCLE \u2014 HOUR=16 (decimal-safe); P1 flag-nel-003 dispatched with full safeguard cascade: nel-002 (scan codebase for pattern), sam-002 (add test coverage), ra-002 (AUTO-REMEDIATE newsletter for 2026-05-18). Event-ra-flag-nel-003 queued for ra runner. Phase 2 cipher synth: 0 leaks. Phase 3 stale-files: clean. Phase 4 broken-links: 29 FLAT \u2192 P2 flag-nel-004. Phase 5 test-coverage: 47 untested scripts FLAT (P3 rolling, dispatch suppressed). Phase 6 inefficient-patterns: truncated by sandbox 45s cap (known pattern, deferred to Mini queue). Carried: HIGH 1 CVE agents/sam/mcp-server day 14+; nel.sh:165 octal bug LATENT (didn't fire at HOUR=16 but still pending Sam fix `(( 10#$HOUR < 6 ))` for 08/09 hours); 29 broken links FLAT; 47 untested scripts FLAT; 35 P0 KAI_TASKS overload day 203. Cycle posture: WATCH (newsletter P1 cascade fired correctly this cycle \u2014 ra-002 dispatched, Mini will execute remediation; sentinel recurring stable day 3; no NEW issues).",
-      "type": "ops_sync"
-    },
-    {
-      "ts": "2026-05-18T22:10:00Z",
-      "agent": "sentinel",
-      "event": "QA sweep run #469 \u2014 6p/3f, 0 NEW, 3 recurring (day-3+ escalated), 0 resolved",
-      "msg": "Sentinel #469: 6 passed, 3 failed. 0 NEW. 3 RECURRING all escalated: P0 aurora-ran-today day 3 (newsletters/2026-05-18.md missing in sandbox UTC view \u2014 Mini authoritative); P1 scheduled-tasks-fired day 3 (no aurora-*.log in /agents/nel/logs sandbox view); P2 task-queue-size day 203 ELEVATED (35 P0 tasks FLAT vs threshold 5). Sandbox UTC artifacts; Mini authoritative.",
-      "type": "sentinel"
     }
   ],
   "ra": {
@@ -536,7 +410,7 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-05-29T07:00:01Z"
+    "lastRun": "2026-05-30T07:00:00Z"
   },
   "aether": {},
   "nel": {

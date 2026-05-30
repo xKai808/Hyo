@@ -1,7 +1,8 @@
-# nel Self-Review — 2026-05-29T14:35
+# nel Self-Review — 2026-05-29T23:31
 
 ## Gate 1: Trigger Validation
-- ✓ 1 files checked, all have triggers.
+- ✗ **2026-05-29-nel-results.json**: WHAT triggers this? Found 0 callers.
+  - Agent: investigate. Is this dead or newly created?
 
 ## Gate 2: Visibility Check
 Questions for nel to answer:
@@ -35,6 +36,9 @@ Questions for nel to answer:
 - Open resolution **RES-041** is relevant to nel
   - This resolution has pending steps. Can nel contribute?
   - Agent: read the resolution and add your findings.
+- Open resolution **RES-042** is relevant to nel
+  - This resolution has pending steps. Can nel contribute?
+  - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
 - Prior resolutions for 'nel': 0 matches
@@ -60,6 +64,6 @@ Questions for nel to answer in PLAYBOOK.md:
 - What question should I be asking that isn't on this list?
 
 ## Summary
-- Findings: 12
-- Gate results: trigger=1/1, visibility=checked, resolutions=8, adoption=-6/5
+- Findings: 13
+- Gate results: trigger=4/5, visibility=checked, resolutions=9, adoption=-6/5
 
