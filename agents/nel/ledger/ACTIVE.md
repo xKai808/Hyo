@@ -1,6 +1,6 @@
 # Nel Active Tasks
 
-Last updated: 2026-05-30T14:40:50Z
+Last updated: 2026-05-31T08:46:32Z
 
 ## In Progress
 
@@ -12,14 +12,14 @@ Last updated: 2026-05-30T14:40:50Z
   - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 16d old (>14d critical)
-  - Delegated: 2026-05-30T14:40:50Z
-  - Method: sim-ack: agent handshake test
-  - Status: DELEGATED — sim-report: all clear
-
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-009) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-27 — past 06:00 MT deadline
   - Delegated: 2026-05-27T22:12:57Z
   - Status: DELEGATED
+
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 17d old (>14d critical)
+  - Delegated: 2026-05-31T08:46:32Z
+  - Method: sim-ack: agent handshake test
+  - Status: DELEGATED — sim-report: all clear
 
 - **nel-005** [P1] SAFEGUARD: Cross-reference issue (flag-kai-020) — scan entire codebase for similar patterns: Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
   - Delegated: 2026-05-17T08:07:47Z
@@ -31,23 +31,23 @@ Last updated: 2026-05-30T14:40:50Z
 
 ## Queued
 
+- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-01T06:57:29Z
+
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-01T02:10:15Z
+  - Created: 2026-05-05T02:03:37Z
 
-- **flag-nel-003** [P2] No newsletter produced for 2026-05-01 — past 06:00 MT deadline
-  - Created: 2026-05-01T02:10:15Z
+- **flag-nel-003** [P2] No newsletter produced for 2026-05-05 — past 06:00 MT deadline
+  - Created: 2026-05-05T02:03:37Z
 
-- **flag-nel-004** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-01T02:10:23Z
+- **flag-nel-004** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-05T02:03:48Z
 
 - **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-01T02:11:04Z
+  - Created: 2026-05-05T02:07:42Z
 
-- **flag-nel-006** [P2] No newsletter produced for 2026-05-01 — past 06:00 MT deadline
-  - Created: 2026-05-01T02:11:04Z
-
-- **flag-nel-001** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-01T04:00:22Z
+- **flag-nel-006** [P2] No newsletter produced for 2026-05-05 — past 06:00 MT deadline
+  - Created: 2026-05-05T02:07:42Z
 
 - **flag-nel-007** [P2] Found 29 broken documentation links — fix or cleanup needed
   - Created: 2026-05-05T02:07:54Z
