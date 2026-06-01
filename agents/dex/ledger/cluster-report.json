@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-05-31T07:00:04.438589+00:00",
-  "total_entries": 558,
+  "generated_at": "2026-06-01T07:00:03.042820+00:00",
+  "total_entries": 571,
   "total_clusters": 147,
   "singleton_clusters": 140,
   "multi_entry_clusters": 7,
   "agent_breakdown": {
-    "ra": 277,
-    "unknown": 144,
-    "dex": 49,
-    "aether": 32,
+    "ra": 281,
+    "unknown": 148,
+    "dex": 50,
+    "aether": 36,
     "kai": 23,
     "sam": 16,
     "nel": 13,
     "ant": 4
   },
   "status_breakdown": {
-    "active": 462,
+    "active": 475,
     "open": 6,
     "mitigated": 2,
     "logged": 12,
@@ -26,18 +26,18 @@
   },
   "top_clusters": [
     {
-      "size": 235,
-      "score": 265.85,
+      "size": 239,
+      "score": 265.98,
       "label": "No newsletter produced for 2026-04-24 \u2014 past 06:00 MT deadline",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 235
+        "ra": 239
       },
       "status_breakdown": {
-        "active": 235
+        "active": 239
       },
       "first_seen": "2026-04-24T02:09:45+00:00",
-      "last_seen": "2026-05-31T05:30:10+00:00",
+      "last_seen": "2026-06-01T05:30:08+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -50,18 +50,18 @@
       ]
     },
     {
-      "size": 136,
-      "score": 142.65,
+      "size": 140,
+      "score": 145.25,
       "label": "1 broken links detected",
       "dominant_agent": "unknown",
       "agent_breakdown": {
-        "unknown": 136
+        "unknown": 140
       },
       "status_breakdown": {
-        "active": 136
+        "active": 140
       },
       "first_seen": "2026-04-21T08:40:26+00:00",
-      "last_seen": "2026-05-31T02:44:55+00:00",
+      "last_seen": "2026-06-01T02:51:44+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -74,18 +74,18 @@
       ]
     },
     {
-      "size": 18,
-      "score": 22.03,
+      "size": 19,
+      "score": 23.07,
       "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 18
+        "dex": 19
       },
       "status_breakdown": {
-        "active": 18
+        "active": 19
       },
       "first_seen": "2026-04-21T06:17:08+00:00",
-      "last_seen": "2026-05-31T06:56:29+00:00",
+      "last_seen": "2026-06-01T06:58:27+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -98,8 +98,32 @@
       ]
     },
     {
+      "size": 13,
+      "score": 19.12,
+      "label": "aether PLAYBOOK.md is 15d old (>14d critical)",
+      "dominant_agent": "aether",
+      "agent_breakdown": {
+        "aether": 13
+      },
+      "status_breakdown": {
+        "active": 13
+      },
+      "first_seen": "2026-05-29T02:27:05+00:00",
+      "last_seen": "2026-06-01T02:51:45+00:00",
+      "sources": [
+        "kai/ledger/known-issues.jsonl"
+      ],
+      "member_descriptions": [
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 16d old (>14d critical)"
+      ]
+    },
+    {
       "size": 16,
-      "score": 19.5,
+      "score": 19.1,
       "label": "Daily audit: 5 critical issues found",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -122,32 +146,8 @@
       ]
     },
     {
-      "size": 9,
-      "score": 13.35,
-      "label": "aether PLAYBOOK.md is 15d old (>14d critical)",
-      "dominant_agent": "aether",
-      "agent_breakdown": {
-        "aether": 9
-      },
-      "status_breakdown": {
-        "active": 9
-      },
-      "first_seen": "2026-05-29T02:27:05+00:00",
-      "last_seen": "2026-05-31T02:44:56+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 16d old (>14d critical)"
-      ]
-    },
-    {
       "size": 2,
-      "score": 2.62,
+      "score": 2.58,
       "label": "morning-report pushed to git but not visible live \u2014 check Vercel deploy",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -168,7 +168,7 @@
     },
     {
       "size": 1,
-      "score": 1.5,
+      "score": 1.45,
       "label": "daily-agent-report.sh used 'declare -A' associative arrays. macOS ships with bash 3.2 which does not",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -188,7 +188,7 @@
     },
     {
       "size": 1,
-      "score": 1.5,
+      "score": 1.45,
       "label": "kai/schemas/kai_daily.schema.json missing. publish-to-feed.sh has a hard schema gate (exit 1) for an",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -208,27 +208,7 @@
     },
     {
       "size": 1,
-      "score": 1.4,
-      "label": "AetherBot 401 auth failures were invisible \u2014 aether.sh reported 0 trades as standby mode instead of ",
-      "dominant_agent": "ra",
-      "agent_breakdown": {
-        "ra": 1
-      },
-      "status_breakdown": {
-        "unknown": 1
-      },
-      "first_seen": "2026-04-28T01:19:52-06:00",
-      "last_seen": "2026-04-28T01:19:52-06:00",
-      "sources": [
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "AetherBot 401 auth failures were invisible \u2014 aether.sh reported 0 trades as stan"
-      ]
-    },
-    {
-      "size": 1,
-      "score": 1.38,
+      "score": 1.35,
       "label": "Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) \u2014 NEEDS HYO INTER",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -248,7 +228,27 @@
     },
     {
       "size": 1,
-      "score": 1.32,
+      "score": 1.35,
+      "label": "AetherBot 401 auth failures were invisible \u2014 aether.sh reported 0 trades as standby mode instead of ",
+      "dominant_agent": "ra",
+      "agent_breakdown": {
+        "ra": 1
+      },
+      "status_breakdown": {
+        "unknown": 1
+      },
+      "first_seen": "2026-04-28T01:19:52-06:00",
+      "last_seen": "2026-04-28T01:19:52-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "AetherBot 401 auth failures were invisible \u2014 aether.sh reported 0 trades as stan"
+      ]
+    },
+    {
+      "size": 1,
+      "score": 1.3,
       "label": "Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spa",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -268,7 +268,7 @@
     },
     {
       "size": 1,
-      "score": 1.27,
+      "score": 1.25,
       "label": "Daily audit 2026-05-21: 3 chronic issues re-flagged 3-21 consecutive days with ZERO closure \u2014 system",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -288,7 +288,7 @@
     },
     {
       "size": 1,
-      "score": 1.27,
+      "score": 1.25,
       "label": "Dex Phase 1.5: Repaired corruption but 1 entries still unfixable (manual review needed)",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -308,7 +308,7 @@
     },
     {
       "size": 2,
-      "score": 1.25,
+      "score": 1.2,
       "label": "Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl \u2014 chronic system health RED (25",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -329,7 +329,7 @@
     },
     {
       "size": 1,
-      "score": 1.2,
+      "score": 1.18,
       "label": "Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 ",
       "dominant_agent": "kai",
       "agent_breakdown": {
@@ -349,27 +349,7 @@
     },
     {
       "size": 1,
-      "score": 1.2,
-      "label": "Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, exceeded GitHub 100MB",
-      "dominant_agent": "nel",
-      "agent_breakdown": {
-        "nel": 1
-      },
-      "status_breakdown": {
-        "unknown": 1
-      },
-      "first_seen": "2026-04-24T05:12:38-06:00",
-      "last_seen": "2026-04-24T05:12:38-06:00",
-      "sources": [
-        "kai/ledger/session-errors.jsonl"
-      ],
-      "member_descriptions": [
-        "Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, e"
-      ]
-    },
-    {
-      "size": 1,
-      "score": 1.18,
+      "score": 1.15,
       "label": "Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/0",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -389,7 +369,7 @@
     },
     {
       "size": 1,
-      "score": 1.18,
+      "score": 1.15,
       "label": "Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh s",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -409,7 +389,7 @@
     },
     {
       "size": 1,
-      "score": 1.18,
+      "score": 1.15,
       "label": "Daily audit META: DELEGATED\u2192DONE transition broken across all agents \u2014 sam-005 stuck 16d, aether-002",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -430,6 +410,26 @@
     {
       "size": 1,
       "score": 1.15,
+      "label": "Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, exceeded GitHub 100MB",
+      "dominant_agent": "nel",
+      "agent_breakdown": {
+        "nel": 1
+      },
+      "status_breakdown": {
+        "unknown": 1
+      },
+      "first_seen": "2026-04-24T05:12:38-06:00",
+      "last_seen": "2026-04-24T05:12:38-06:00",
+      "sources": [
+        "kai/ledger/session-errors.jsonl"
+      ],
+      "member_descriptions": [
+        "Morning report git push blocked: kai/ledger/ticket-enforcer.log grew to 175MB, e"
+      ]
+    },
+    {
+      "size": 1,
+      "score": 1.1,
       "label": "Anthropic API key on Mini hit usage quota (until 2026-05-01). kai_analysis.py had no fallback \u2014 fail",
       "dominant_agent": "ra",
       "agent_breakdown": {
@@ -451,32 +451,32 @@
   "temporal_patterns": [
     {
       "tokens": [
-        "aether",
         "critical",
         "old",
+        "aether",
         "playbook"
       ],
-      "occurrences": 9,
+      "occurrences": 13,
       "avg_interval_hours": 6.0,
       "consistency_pct": 99.8,
       "first_seen": "2026-05-29T02:27:05+00:00",
-      "last_seen": "2026-05-31T02:44:56+00:00"
+      "last_seen": "2026-06-01T02:51:45+00:00"
     }
   ],
   "dedup_candidates": [
     {
-      "size": 235,
-      "score": 265.85,
+      "size": 239,
+      "score": 265.98,
       "label": "No newsletter produced for 2026-04-24 \u2014 past 06:00 MT deadline",
       "dominant_agent": "ra",
       "agent_breakdown": {
-        "ra": 235
+        "ra": 239
       },
       "status_breakdown": {
-        "active": 235
+        "active": 239
       },
       "first_seen": "2026-04-24T02:09:45+00:00",
-      "last_seen": "2026-05-31T05:30:10+00:00",
+      "last_seen": "2026-06-01T05:30:08+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -489,18 +489,18 @@
       ]
     },
     {
-      "size": 136,
-      "score": 142.65,
+      "size": 140,
+      "score": 145.25,
       "label": "1 broken links detected",
       "dominant_agent": "unknown",
       "agent_breakdown": {
-        "unknown": 136
+        "unknown": 140
       },
       "status_breakdown": {
-        "active": 136
+        "active": 140
       },
       "first_seen": "2026-04-21T08:40:26+00:00",
-      "last_seen": "2026-05-31T02:44:55+00:00",
+      "last_seen": "2026-06-01T02:51:44+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -513,18 +513,18 @@
       ]
     },
     {
-      "size": 18,
-      "score": 22.03,
+      "size": 19,
+      "score": 23.07,
       "label": "Dex Phase 4: 235 recurrent patterns detected \u2014 increased from 0, root-cause fix needed",
       "dominant_agent": "dex",
       "agent_breakdown": {
-        "dex": 18
+        "dex": 19
       },
       "status_breakdown": {
-        "active": 18
+        "active": 19
       },
       "first_seen": "2026-04-21T06:17:08+00:00",
-      "last_seen": "2026-05-31T06:56:29+00:00",
+      "last_seen": "2026-06-01T06:58:27+00:00",
       "sources": [
         "kai/ledger/known-issues.jsonl"
       ],
@@ -537,8 +537,32 @@
       ]
     },
     {
+      "size": 13,
+      "score": 19.12,
+      "label": "aether PLAYBOOK.md is 15d old (>14d critical)",
+      "dominant_agent": "aether",
+      "agent_breakdown": {
+        "aether": 13
+      },
+      "status_breakdown": {
+        "active": 13
+      },
+      "first_seen": "2026-05-29T02:27:05+00:00",
+      "last_seen": "2026-06-01T02:51:45+00:00",
+      "sources": [
+        "kai/ledger/known-issues.jsonl"
+      ],
+      "member_descriptions": [
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 15d old (>14d critical)",
+        "aether PLAYBOOK.md is 16d old (>14d critical)"
+      ]
+    },
+    {
       "size": 16,
-      "score": 19.5,
+      "score": 19.1,
       "label": "Daily audit: 5 critical issues found",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -561,32 +585,8 @@
       ]
     },
     {
-      "size": 9,
-      "score": 13.35,
-      "label": "aether PLAYBOOK.md is 15d old (>14d critical)",
-      "dominant_agent": "aether",
-      "agent_breakdown": {
-        "aether": 9
-      },
-      "status_breakdown": {
-        "active": 9
-      },
-      "first_seen": "2026-05-29T02:27:05+00:00",
-      "last_seen": "2026-05-31T02:44:56+00:00",
-      "sources": [
-        "kai/ledger/known-issues.jsonl"
-      ],
-      "member_descriptions": [
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 15d old (>14d critical)",
-        "aether PLAYBOOK.md is 16d old (>14d critical)"
-      ]
-    },
-    {
       "size": 2,
-      "score": 2.62,
+      "score": 2.58,
       "label": "morning-report pushed to git but not visible live \u2014 check Vercel deploy",
       "dominant_agent": "sam",
       "agent_breakdown": {
@@ -607,7 +607,7 @@
     },
     {
       "size": 2,
-      "score": 1.25,
+      "score": 1.2,
       "label": "Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl \u2014 chronic system health RED (25",
       "dominant_agent": "dex",
       "agent_breakdown": {
@@ -628,9 +628,9 @@
     }
   ],
   "signal_summary": {
-    "noise_reduction": "558 entries \u2192 147 clusters (73.7% dedup rate)",
+    "noise_reduction": "571 entries \u2192 147 clusters (74.3% dedup rate)",
     "top_agent": "ra",
-    "largest_cluster_size": 235,
+    "largest_cluster_size": 239,
     "recurring_patterns": 1
   }
 }

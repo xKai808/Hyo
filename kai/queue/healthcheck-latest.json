@@ -1,9 +1,14 @@
 {
-  "ts": "2026-05-31T20:40:33Z",
+  "ts": "2026-06-01T08:45:12Z",
   "status": "ISSUES",
-  "issues": 5,
-  "warnings": 3,
+  "issues": 6,
+  "warnings": 5,
   "findings": [
+    {
+      "severity": "P1",
+      "area": "flags",
+      "detail": "1 unaddressed P0/P1 flags in last 2h"
+    },
     {
       "severity": "P3",
       "area": "agent-output",
@@ -12,7 +17,17 @@
     {
       "severity": "P3",
       "area": "agent-output",
+      "detail": "hyo has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
       "detail": "ra has no output today"
+    },
+    {
+      "severity": "P3",
+      "area": "agent-output",
+      "detail": "sam has no output today"
     },
     {
       "severity": "P2",
@@ -45,7 +60,7 @@
       "detail": "dex stuck in dead-loop (bottleneck_stuck): detected 2 corrupt JSONL entries \u2014 check if auto-repair ra"
     }
   ],
-  "actions_taken": "Dispatched auto-remediation for 5 P0/P1 issues",
+  "actions_taken": "Dispatched auto-remediation for 6 P0/P1 issues",
   "recent_queue_results": [],
   "next_check": "in 2 hours (30min if P0 found)"
 }
