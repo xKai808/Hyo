@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-06-01T07:00:00Z",
+  "updatedAt": "2026-06-01T19:00:00Z",
   "morningReport": {
     "date": "2026-05-28",
     "generatedAt": "2026-05-29T06:30:00Z",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync 2026-05-31 Sunday (elegant-serene-edison Cowork sandbox; timestamp approximate \u2014 bash down) \u2014 DEGRADED, 10th consecutive sandbox-side degraded fire. `useradd: cannot create directory /sessions/elegant-serene-edison` (exit 12) on every bash retry; sandbox container never booted, so sentinel.sh + nel.sh cannot run. PARTIAL RECOVERY via read-only fallback this cycle: manual CIPHER sweep (Read/Grep/Glob) ran CLEAN \u2014 broad live-credential regex (sk-ant-/AKIA/ghp_/xox*/AIza) + multiline PEM private-key-body regex both returned no matches; 0 leaks, 0 findings. Read-only system check: queue pending=0 (OK) but running/ holds 15 STALE files (8 active *.json + 7 *.json.failed incl feed-push-retry, oldest ~2026-04-26) \u2014 worker not draining running/; verified-state.json CONFIRMED FROZEN at 2026-05-05T18:59 (~26d stale, threshold 2h) \u2014 kai-session-prep.sh dead Mini-side. Authoritative sentinel/nel state unchanged from run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today + P1 scheduled-tasks-fired false-positives, P2 task-queue-size day 100+ chronic. No safeguard cascade; no spurious flags. POSTURE: DEGRADED \u2014 Cowork `useradd` regression spans 10 logged sandbox fires; Mini-side kai-autonomous.sh remains authoritative. RECOMMENDED (ESCALATING, 10 cycles): (1) disable the Cowork ops-sync fire OR gate it to exit-0 on `useradd` exit=12 so the noise stops bleeding into hq-state.json; (2) NEEDS HYO/Mini interactive \u2014 restart dead launchd jobs (kai-session-prep.sh, weekly-maintenance.sh) + drain queue running/ stale files; (3) prior recs stand (sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 29 broken doc-link repair; cancel spurious cascade tickets; smoke-test 47 untested scripts). DUAL-PATH: written to website/data/hq-state.json and agents/sam/website/data/hq-state.json (local symlink \u2014 single physical file).",
+    "summary": "Ops sync 2026-06-01 Monday (modest-pensive-thompson Cowork sandbox; timestamp approximate -- bash down) -- DEGRADED, 13th consecutive sandbox-side degraded fire; 3rd of 6/01, spanning 4 days (5/29-6/01). `useradd: cannot create directory /sessions/modest-pensive-thompson` (exit 12) on every bash retry; sandbox container never booted, so sentinel.sh / cipher.sh / nel.sh cannot run. MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (improvementScore 85, brokenLinks 28, 47 untested) -- authoritative, carried forward in both copies. Authoritative sentinel/cipher unchanged from run #609 (2026-05-29T02:16Z): 6p/3f, P0/P1 confirmed false-positives, P2 task-queue day 100+ chronic; cipher CLEAN. No new findings; no cascade; no spurious flags. Dual-path current-state sections already aligned from 12th cycle; reaffirmed identical on both copies this cycle. RECOMMENDATION UNCHANGED, ESCALATING (13 cycles): disable the Cowork ops-sync fire OR gate it to exit-0 on `useradd` exit=12 -- 13 identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and working. Open Mini-side items NEEDING HYO/Mini interactive: restart dead launchd jobs (kai-session-prep.sh -- verified-state.json frozen ~26d; weekly-maintenance.sh) + drain 15 stale queue running/ files (per 5/31 read-only fallback, unverified this cycle). Prior recs stand: sentinel.sh + nel.sh `.input.md` path fix; scheduled-tasks-fired grep fix; 38-deep P0 backlog; 28 broken doc-links. DUAL-PATH: written to both hq-state.json copies.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,19 +14,31 @@
       "dex": "active"
     },
     "topIssues": [
-      "DEGRADED: Cowork sandbox bash unavailable (useradd cannot create /sessions/elegant-serene-edison, exit 12) \u2014 10th consecutive sandbox-side degraded fire; sentinel.sh + nel.sh cannot run",
-      "PARTIAL RECOVERY: manual CIPHER sweep via Read/Grep/Glob ran CLEAN this cycle \u2014 credential + multiline PEM private-key regex tree-wide = 0 matches, 0 leaks",
-      "verified-state.json CONFIRMED FROZEN at 2026-05-05T18:59 (~26d stale, threshold 2h) \u2014 kai-session-prep.sh dead Mini-side (NEEDS HYO/Mini restart)",
-      "Queue: pending=0 (OK) but running/ holds 15 STALE files (8 active *.json + 7 *.json.failed incl feed-push-retry, oldest ~2026-04-26) \u2014 worker not draining running/",
-      "Authoritative sentinel/nel state still run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today + P1 scheduled-tasks-fired false-positives, P2 task-queue-size day 100+ chronic",
-      "No safeguard cascade fired this cycle (nothing to cascade from); no spurious flags created",
-      "ESCALATING (10 cycles): disable the Cowork ops-sync fire OR gate it to exit-0 on useradd exit=12; restart dead launchd jobs (kai-session-prep, weekly-maintenance) + drain queue running/ \u2014 both NEED HYO/Mini interactive",
+      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/modest-pensive-thompson, exit 12) -- 13th consecutive sandbox-side degraded fire; 3rd of 6/01, spanning 4 days (5/29-6/01); sentinel/cipher/nel all skipped",
+      "MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (improvementScore 85, brokenLinks 28, 47 untested) -- authoritative, carried forward in both copies",
+      "Authoritative sentinel/cipher state still run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today + P1 scheduled-tasks-fired false-positives, P2 task-queue-size day 100+ chronic; cipher CLEAN",
+      "verified-state.json frozen at 2026-05-05T18:59 (~26d stale, threshold 2h) -- kai-session-prep.sh dead Mini-side (per 5/31 read-only fallback; unverified this cycle -- bash down); NEEDS HYO/Mini restart",
+      "Queue running/ holds 15 stale files (per 5/31 read-only fallback; unverified this cycle) -- worker not draining running/; NEEDS HYO/Mini drain",
+      "No new findings producible this cycle; no safeguard cascade; no spurious flags",
+      "ESCALATING (13 cycles / 4 days): disable the Cowork ops-sync fire OR gate it to skip-and-exit-0 on useradd exit=12 -- 13 identical degraded fires = pure noise",
       "Mini-side kai-autonomous.sh remains the authoritative path",
-      "Dual-path hq-state.json written identically (local symlink \u2014 single physical file)"
+      "Dual-path hq-state.json current-state sections reaffirmed identical this cycle (aligned since 12th cycle)"
     ],
-    "lastOpsSync": "2026-05-31T21:00:00Z"
+    "lastOpsSync": "2026-06-01T19:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-06-01T19:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-01 Monday (modest-pensive-thompson Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 13th consecutive sandbox-side degraded fire; 3rd of 6/01, spanning 4 days (5/29-6/01). Identical fault: every bash invocation returned `useradd: cannot create directory /sessions/modest-pensive-thompson` (exit 12) on all retries; sandbox container never booted, so sentinel.sh / cipher.sh / nel.sh cannot run (all three require bash). MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (improvementScore 85, brokenLinks 28, 47 untested) -- authoritative, carried forward in both hq-state copies. Authoritative sentinel/cipher unchanged from run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today + P1 scheduled-tasks-fired confirmed false-positives, P2 task-queue-size day 100+ chronic; cipher CLEAN 02:14Z. No new sandbox findings; no safeguard cascade; no spurious flags. Dual-path current-state sections (ops_sync, updatedAt, morningReport) already aligned from the 12th cycle; reaffirmed identical on BOTH copies this cycle; deep event-history tail still differs (Mini nightly consolidation owns history). RECOMMENDATION UNCHANGED, ESCALATING (13 cycles / 4 days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on `useradd` exit=12 -- 13 consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and working. Open Mini-side items NEEDING HYO/Mini interactive: restart dead launchd jobs (kai-session-prep.sh -- verified-state.json frozen ~26d; weekly-maintenance.sh) + drain 15 stale queue running/ files (per 5/31 read-only fallback, unverified this cycle -- bash down). Prior recs stand: sentinel.sh + nel.sh `.input.md` path fix; sentinel scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 28 broken doc-link repair. DUAL-PATH: written to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
+      "doc": "/viewer?agent=ops&file=2026-06-01T19"
+    },
+    {
+      "ts": "2026-06-01T13:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-01 Monday (awesome-relaxed-mccarthy Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 12th consecutive sandbox-side degraded fire; 2nd of 6/01, spanning 4 days (5/29-6/01). Identical fault: every bash invocation returned `useradd: cannot create directory /sessions/awesome-relaxed-mccarthy` (exit 12) on all retries; sandbox container never booted, so sentinel.sh / cipher.sh / nel.sh cannot run (all three require bash). MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (improvementScore 85, brokenLinks 28, 47 untested) -- authoritative, already reconciled into both hq-state copies. Authoritative sentinel/cipher unchanged from run #609 (2026-05-29T02:16Z): 6p/3f, P0 aurora-ran-today + P1 scheduled-tasks-fired confirmed false-positives, P2 task-queue-size day 100+ chronic; cipher CLEAN 02:14Z. No new sandbox findings; no safeguard cascade; no spurious flags. DUAL-PATH DRIFT FOUND + reconciled: website morningReport held the 11th-cycle (6/01T07:00) summary while agents/sam held the 10th-cycle (5/31T21:00) summary; current-state sections (ops_sync, nel, updatedAt, morningReport) aligned to this cycle on BOTH copies; deep event-history tail still differs (Mini nightly consolidation owns history). RECOMMENDATION UNCHANGED, ESCALATING (12 cycles / 4 days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on `useradd` exit=12 -- 12 consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and working. Open Mini-side items NEEDING HYO/Mini interactive: restart dead launchd jobs (kai-session-prep.sh -- verified-state.json frozen ~26d; weekly-maintenance.sh) + drain 15 stale queue running/ files (per 5/31 read-only fallback, unverified this cycle -- bash down). Prior recs stand: sentinel.sh + nel.sh `.input.md` path fix; sentinel scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 28 broken doc-link repair. DUAL-PATH: written to website/data/hq-state.json and agents/sam/website/data/hq-state.json.",
+      "doc": "/viewer?agent=ops&file=2026-06-01T13"
+    },
     {
       "ts": "2026-06-01T07:00:00Z",
       "agent": "ops_sync",
@@ -788,7 +800,7 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-06-01T07:00:10Z",
+    "lastRun": "2026-06-01T08:53:33Z",
     "improvementScore": 85,
     "findingsCount": 1,
     "staleFiles": 0,
@@ -804,19 +816,19 @@
     }
   },
   "ops_sync": {
-    "lastRun": "2026-06-01T07:00:00Z",
-    "lastRunLocalMT": "2026-06-01 Monday (wall-clock unavailable -- bash down)",
+    "lastRun": "2026-06-01T19:00:00Z",
+    "lastRunLocalMT": "2026-06-01 Monday (wall-clock unavailable -- bash down, timestamp approximate)",
     "trigger": "scheduled-task:hq-ops-sync",
-    "session": "charming-great-shannon (Cowork sandbox)",
+    "session": "modest-pensive-thompson (Cowork sandbox)",
     "posture": "DEGRADED",
     "sentinelRun": 609,
     "sentinelResult": "SKIPPED -- sandbox bash unavailable (useradd exit 12); authoritative state remains run #609 from 2026-05-29T02:16Z",
     "cipherResult": "SKIPPED -- sandbox bash unavailable; authoritative state remains CLEAN at 2026-05-29T02:14Z",
-    "nelResult": "Mini kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (authoritative): improvementScore 85, brokenLinks 28 (-1), 47 untested; reconciled into both hq-state copies this cycle. Sandbox nel.sh itself SKIPPED (bash down).",
+    "nelResult": "Mini kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (authoritative): improvementScore 85, brokenLinks 28, 47 untested; carried forward this cycle. Sandbox nel.sh itself SKIPPED (bash down).",
     "newGenuineIssues": 0,
     "dualPathReconciled": true,
-    "degradedCycleCount": 11,
-    "degradedCycleNote": "11th consecutive sandbox-side degraded fire; 1st of 6/01. useradd exit-12 regression now spans 4 days (5/29-6/01). Mini kai-autonomous.sh path is HEALTHY (nel ran 2026-06-01T04:00:02Z). Mini-side P1 to disable/gate the duplicate Cowork ops-sync fire still unacknowledged across 10 prior escalations.",
-    "summary": "Ops sync 2026-06-01 Monday (charming-great-shannon Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 11th consecutive sandbox-side degraded fire; 1st of 6/01, spanning 4 days (5/29-6/01). Identical fault: every bash invocation returned `useradd: cannot create directory /sessions/charming-great-shannon` (exit 12); sandbox container never booted, so sentinel.sh / cipher.sh / nel.sh cannot run. Mini path HEALTHY: kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (improvementScore 85, brokenLinks 28, 47 untested) -- that authoritative result reconciled into both hq-state copies this cycle. Authoritative sentinel/cipher unchanged from run #609 (2026-05-29): 6p/3f, P0/P1 confirmed false-positives, P2 task-queue day 100+ chronic; cipher CLEAN. No new sandbox findings; no cascade; no spurious flags. Current-state sections (nel, ops_sync, updatedAt) reconciled on BOTH copies; deep event-history tail still differs (Mini nightly consolidation owns history). RECOMMENDATION UNCHANGED, ESCALATING (11 cycles / 4 days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on `useradd` exit=12 -- 11 consecutive degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and working. Prior Mini-side items stand: sentinel.sh + nel.sh `.input.md` path fix; sentinel scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 28 broken doc-link repair. DUAL-PATH: written to website/data/hq-state.json and agents/sam/website/data/hq-state.json."
+    "degradedCycleCount": 13,
+    "degradedCycleNote": "13th consecutive sandbox-side degraded fire; 3rd of 6/01. useradd exit-12 regression now spans 4 days (5/29-6/01). Mini kai-autonomous.sh path is HEALTHY (nel ran 2026-06-01T04:00:02Z). Mini-side P1 to disable/gate the duplicate Cowork ops-sync fire still unacknowledged across 12 prior escalations. Also standing (NEEDS HYO/Mini interactive, per 5/31 read-only fallback): kai-session-prep.sh dead (verified-state.json frozen ~26d) + 15 stale queue running/ files.",
+    "summary": "Ops sync 2026-06-01 Monday (modest-pensive-thompson Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 13th consecutive sandbox-side degraded fire; 3rd of 6/01, spanning 4 days (5/29-6/01). Identical fault: every bash invocation returned `useradd: cannot create directory /sessions/modest-pensive-thompson` (exit 12) on all retries; sandbox container never booted, so sentinel.sh / cipher.sh / nel.sh cannot run. Mini path HEALTHY: kai-autonomous.sh ran nel 2026-06-01T04:00:02Z (improvementScore 85, brokenLinks 28, 47 untested) -- authoritative, carried forward into both hq-state copies. Authoritative sentinel/cipher unchanged from run #609 (2026-05-29): 6p/3f, P0/P1 confirmed false-positives, P2 task-queue day 100+ chronic; cipher CLEAN. No new sandbox findings; no cascade; no spurious flags. Dual-path current-state sections (ops_sync, nel, updatedAt, morningReport) already aligned from the 12th cycle; reaffirmed identical on BOTH copies this cycle; deep event-history tail still differs (Mini nightly consolidation owns history). RECOMMENDATION UNCHANGED, ESCALATING (13 cycles / 4 days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on `useradd` exit=12 -- 13 consecutive degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and working. Open Mini-side items NEEDING HYO/Mini interactive: restart dead launchd jobs (kai-session-prep.sh -- verified-state.json frozen ~26d; weekly-maintenance.sh) + drain 15 stale queue running/ files (per 5/31 read-only fallback, unverified this cycle). Prior recs stand: sentinel.sh + nel.sh `.input.md` path fix; sentinel scheduled-tasks-fired grep fix; 38-deep P0 backlog burn-down; 28 broken doc-link repair. DUAL-PATH: written to website/data/hq-state.json and agents/sam/website/data/hq-state.json."
   }
 }
