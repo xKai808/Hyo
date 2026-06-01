@@ -1,5 +1,5 @@
 # Kai — System State (auto-updated q2h by healthcheck)
-**Last updated:** 2026-06-01T02:45:17-0600
+**Last updated:** 2026-06-01T02:55:47-0600
 
 ## System Health
 - Status: ISSUES (8 P0/P1)
@@ -18,4 +18,4 @@
 - sam: updated 0h ago
 
 ## Top Issues
-- [P1] flags: 1 unaddressed P0/P1 flags in last 2h
+- [P1] flags: 3 unaddressed P0/P1 flags in last 2h
