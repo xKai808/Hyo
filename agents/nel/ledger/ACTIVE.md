@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-01T14:55:13Z
+Last updated: 2026-06-02T09:12:11Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 18d old (>14d critical)
-  - Delegated: 2026-06-01T14:55:13Z
+- **nel-001** [P0] [AUTO-REMEDIATE] hyo.world returned HTTP 000000 (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-06-02T09:12:11Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

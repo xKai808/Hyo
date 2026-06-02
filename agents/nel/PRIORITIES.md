@@ -23,6 +23,8 @@
 
 | ? | P2 | [RESEARCH] Evaluate trivy for integration into QA cycle | OPEN | 2026-05-20 |
 
+| ? | P0 | [RESEARCH] Build detection for confirmed blindspot: My blindspot 'Missing coverage on external dependency vulnerabilities (onl...' — | OPEN | 2026-06-02 |
+
 
 ## Daily Research Mandate
 

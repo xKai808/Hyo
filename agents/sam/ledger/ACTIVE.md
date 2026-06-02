@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-06-01T14:55:13Z
+Last updated: 2026-06-02T09:12:11Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 18d old (>14d critical)
-  - Delegated: 2026-06-01T14:55:13Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): hyo.world returned HTTP 000000
+  - Delegated: 2026-06-02T09:12:11Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
