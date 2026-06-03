@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-02T09:12:11Z
+Last updated: 2026-06-03T09:34:52Z
 
 ## In Progress
 
 - **nel-001** [P0] [AUTO-REMEDIATE] hyo.world returned HTTP 000000 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-02T09:12:11Z
+  - Delegated: 2026-06-03T09:34:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 

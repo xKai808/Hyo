@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-06-02T15:03:57Z
+Last updated: 2026-06-03T09:34:52Z
 
 ## In Progress
 
-- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-02T15:03:56Z
+- **nel-001** [P0] [AUTO-REMEDIATE] hyo.world returned HTTP 000000 (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-06-03T09:34:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-02T15:03:56Z
+  - Delegated: 2026-06-03T09:32:28Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-001): morning report generated but git push failed — report not live
-  - Delegated: 2026-06-02T13:00:35Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): hyo.world returned HTTP 000000
+  - Delegated: 2026-06-03T09:34:52Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-02T15:03:56Z
+- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 20d old (>14d critical) (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-06-03T09:34:50Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-06-02T15:03:57Z
+  - Delegated: 2026-06-03T09:32:29Z
   - Status: DELEGATED
 
-- **kai-001** [P0] [AUTO-REMEDIATE] morning report generated but git push failed — report not live (flagged by kai)
-  - Delegated: 2026-06-02T14:48:24Z
+- **kai-001** [P1] [AUTO-REMEDIATE] Dex Phase 4: 668 recurrent patterns detected — increased from 653, root-cause fix needed (flagged by kai)
+  - Delegated: 2026-06-03T09:01:24Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline

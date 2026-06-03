@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-02T07:00:04Z",
+  "updatedAt": "2026-06-03T07:00:04Z",
   "morningReport": {
     "date": "2026-05-28",
     "generatedAt": "2026-05-29T06:30:00Z",
@@ -27,6 +27,18 @@
     "lastOpsSync": "2026-06-01T19:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-06-03T07:00:04Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-06-03"
+    },
+    {
+      "ts": "2026-06-03T07:00:04Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-06-03",
+      "doc": "/viewer?agent=simulation&file=2026-06-03"
+    },
     {
       "ts": "2026-06-02T07:00:04Z",
       "agent": "consolidation",
@@ -317,19 +329,6 @@
       "type": "cipher",
       "event": "Security scan run #1120 - CLEAN, 0 findings / 0 leaks / 0 autofixes",
       "msg": "Cipher #1120 clean: 0 findings, 0 leaks, 0 autofixes. dep-audit 3 passed / 1 warning / 0 failures. HQ push http 200. gitleaks skipped (sandbox; Mini authoritative). Permissions correct: secretsDir 700, founderToken 600. Verification skipped (no HYO_HQ_PASSWORD)."
-    },
-    {
-      "ts": "2026-05-24T18:16:00Z",
-      "agent": "nel",
-      "type": "nel",
-      "event": "Weekly system sweep - COMPLETE, improvementScore 65/100",
-      "msg": "Nel full weekly sweep complete (18:13:01Z): improvementScore 65 (down from 85). 0 stale files, 28 broken doc links (flag-nel-009 P2), 47 untested scripts, 9 inefficient patterns (flag-nel-010 P3), audit 7/7 checks but 5 issues incl. 9 sensitive files outside .secrets/ (gitignored, 0 live leaks; flag-nel-011 P2), self-review 13 findings / 1 untriggered (flag-nel-012 P2). flag-nel-008 P1 newsletter cascade is a spurious Sunday false positive. nel.sh wrote only the agents/sam dual-path copy; reconciled to both this cycle."
-    },
-    {
-      "ts": "2026-05-24T07:00:00Z",
-      "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
-      "doc": "/viewer?agent=consolidation&file=2026-05-24"
     }
   ],
   "ra": {
@@ -400,7 +399,7 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-06-02T07:00:04Z"
+    "lastRun": "2026-06-03T07:00:04Z"
   },
   "aether": {},
   "nel": {
