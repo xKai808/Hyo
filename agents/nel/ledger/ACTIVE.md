@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-03T09:34:52Z
+Last updated: 2026-06-04T09:57:48Z
 
 ## In Progress
 
 - **nel-001** [P0] [AUTO-REMEDIATE] hyo.world returned HTTP 000000 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-03T09:34:52Z
+  - Delegated: 2026-06-04T09:57:48Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -31,32 +31,32 @@ Last updated: 2026-06-03T09:34:52Z
 
 ## Queued
 
-- **flag-nel-001** [P2] No newsletter produced for 2026-05-04 — past 06:00 MT deadline
-  - Created: 2026-05-05T00:55:19Z
+- **flag-nel-001** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-06T04:02:27Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-05T02:03:37Z
+  - Created: 2026-05-06T06:11:07Z
 
-- **flag-nel-003** [P2] No newsletter produced for 2026-05-05 — past 06:00 MT deadline
-  - Created: 2026-05-05T02:03:37Z
+- **flag-nel-003** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-06T06:11:14Z
 
-- **flag-nel-004** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-05T02:03:48Z
+- **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-06T06:11:57Z
 
 - **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-05T02:07:42Z
+  - Created: 2026-05-06T06:13:46Z
 
-- **flag-nel-006** [P2] No newsletter produced for 2026-05-05 — past 06:00 MT deadline
-  - Created: 2026-05-05T02:07:42Z
+- **flag-nel-006** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-06T06:13:53Z
 
-- **flag-nel-007** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-05T02:07:54Z
+- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-06T14:14:28Z
 
-- **flag-nel-008** [P2] Found 9 code optimization opportunities — rolling improvement
-  - Created: 2026-05-05T02:07:54Z
+- **flag-nel-008** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-06T14:14:33Z
 
-- **flag-nel-009** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-05-05T02:08:02Z
+- **flag-nel-009** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-06T18:10:26Z
 
 - **flag-nel-010** [P2] No newsletter produced for 2026-05-06 — past 06:00 MT deadline
   - Created: 2026-05-06T18:10:26Z
