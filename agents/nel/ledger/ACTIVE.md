@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-04T09:57:48Z
+Last updated: 2026-06-05T10:20:36Z
 
 ## In Progress
 
 - **nel-001** [P0] [AUTO-REMEDIATE] hyo.world returned HTTP 000000 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-04T09:57:48Z
+  - Delegated: 2026-06-05T10:20:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -31,23 +31,23 @@ Last updated: 2026-06-04T09:57:48Z
 
 ## Queued
 
-- **flag-nel-001** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T04:02:27Z
+- **flag-nel-001** [P2] 1 broken links detected
+  - Created: 2026-05-06T07:45:03Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T06:11:07Z
+  - Created: 2026-05-06T10:10:28Z
 
-- **flag-nel-003** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T06:11:14Z
+- **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-06T10:10:36Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T06:11:57Z
+  - Created: 2026-05-06T14:14:17Z
 
-- **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T06:13:46Z
+- **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-06T14:14:24Z
 
-- **flag-nel-006** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T06:13:53Z
+- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
+  - Created: 2026-05-06T14:14:25Z
 
 - **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
   - Created: 2026-05-06T14:14:28Z
