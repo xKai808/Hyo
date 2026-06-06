@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-05T10:20:36Z
+Last updated: 2026-06-06T10:36:45Z
 
 ## In Progress
 
-- **nel-001** [P0] [AUTO-REMEDIATE] hyo.world returned HTTP 000000 (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-05T10:20:36Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 23d old (>14d critical)
+  - Delegated: 2026-06-06T10:36:45Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -25,59 +25,55 @@ Last updated: 2026-06-05T10:20:36Z
   - Delegated: 2026-05-17T08:07:47Z
   - Status: DELEGATED
 
-- **nel-006** [P1] SAFEGUARD: Cross-reference issue (flag-nel-015) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Delegated: 2026-05-06T18:13:22Z
-  - Status: DELEGATED
-
 ## Queued
 
 - **flag-nel-001** [P2] 1 broken links detected
-  - Created: 2026-05-06T07:45:03Z
+  - Created: 2026-05-07T07:46:30Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T10:10:28Z
+  - Created: 2026-05-07T10:10:16Z
 
 - **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T10:10:36Z
+  - Created: 2026-05-07T10:10:25Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T14:14:17Z
+  - Created: 2026-05-07T10:11:16Z
 
-- **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T14:14:24Z
+- **flag-nel-005** [P2] No newsletter produced for 2026-05-07 — past 06:00 MT deadline
+  - Created: 2026-05-07T18:10:10Z
 
-- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
-  - Created: 2026-05-06T14:14:25Z
+- **flag-nel-006** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-07T18:10:20Z
 
-- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-05-06T14:14:28Z
+- **flag-nel-007** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-07T18:12:59Z
 
-- **flag-nel-008** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-06T14:14:33Z
+- **flag-nel-008** [P2] No newsletter produced for 2026-05-07 — past 06:00 MT deadline
+  - Created: 2026-05-07T18:12:59Z
 
-- **flag-nel-009** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T18:10:26Z
+- **flag-nel-009** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-07T22:11:55Z
 
-- **flag-nel-010** [P2] No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Created: 2026-05-06T18:10:26Z
+- **flag-nel-010** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-07T22:12:00Z
 
-- **flag-nel-011** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T18:10:35Z
+- **flag-nel-011** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-14T02:13:05Z
 
-- **flag-nel-012** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T18:11:39Z
+- **flag-nel-012** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-14T02:13:14Z
 
-- **flag-nel-013** [P2] No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Created: 2026-05-06T18:11:39Z
+- **flag-nel-013** [P2] No newsletter produced for 2026-05-16 — past 06:00 MT deadline
+  - Created: 2026-05-16T02:15:27Z
 
-- **flag-nel-014** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-06T18:13:22Z
+- **flag-nel-014** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-16T02:15:43Z
 
-- **flag-nel-015** [P2] No newsletter produced for 2026-05-06 — past 06:00 MT deadline
-  - Created: 2026-05-06T18:13:22Z
+- **flag-nel-015** [P2] Found 9 code optimization opportunities — rolling improvement
+  - Created: 2026-05-22T02:12:43Z
 
-- **flag-nel-016** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-06T18:13:30Z
+- **flag-nel-016** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-22T02:12:50Z
 
 - **flag-nel-017** [P2] Audit found 5 system issues — review security/structure
   - Created: 2026-05-22T18:16:00Z
