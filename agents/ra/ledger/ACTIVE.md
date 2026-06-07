@@ -1,11 +1,11 @@
 # Ra Active Tasks
 
-Last updated: 2026-06-06T10:27:32Z
+Last updated: 2026-06-07T10:32:19Z
 
 ## In Progress
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-06T10:27:32Z
+  - Delegated: 2026-06-07T10:32:19Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -24,5 +24,5 @@ Last updated: 2026-06-06T10:27:32Z
 ## Queued
 
 - **flag-ra-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-07T13:47:46Z
+  - Created: 2026-05-08T13:49:14Z
 

@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-06T10:36:45Z
+Last updated: 2026-06-07T10:38:34Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 23d old (>14d critical)
-  - Delegated: 2026-06-06T10:36:45Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 24d old (>14d critical)
+  - Delegated: 2026-06-07T10:38:34Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -27,35 +27,35 @@ Last updated: 2026-06-06T10:36:45Z
 
 ## Queued
 
-- **flag-nel-001** [P2] 1 broken links detected
-  - Created: 2026-05-07T07:46:30Z
+- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-08T07:00:31Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-07T10:10:16Z
+  - Created: 2026-05-08T10:03:16Z
 
-- **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-07T10:10:25Z
+- **flag-nel-003** [P2] Found 30 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-08T10:03:26Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-07T10:11:16Z
+  - Created: 2026-05-08T18:10:22Z
 
-- **flag-nel-005** [P2] No newsletter produced for 2026-05-07 — past 06:00 MT deadline
-  - Created: 2026-05-07T18:10:10Z
+- **flag-nel-005** [P2] No newsletter produced for 2026-05-08 — past 06:00 MT deadline
+  - Created: 2026-05-08T18:10:23Z
 
-- **flag-nel-006** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-07T18:10:20Z
+- **flag-nel-006** [P2] Found 30 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-08T18:10:34Z
 
 - **flag-nel-007** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-07T18:12:59Z
+  - Created: 2026-05-08T18:11:18Z
 
-- **flag-nel-008** [P2] No newsletter produced for 2026-05-07 — past 06:00 MT deadline
-  - Created: 2026-05-07T18:12:59Z
+- **flag-nel-008** [P2] No newsletter produced for 2026-05-08 — past 06:00 MT deadline
+  - Created: 2026-05-08T18:11:18Z
 
-- **flag-nel-009** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-05-07T22:11:55Z
+- **flag-nel-009** [P2] Found 30 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-08T18:11:29Z
 
-- **flag-nel-010** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-07T22:12:00Z
+- **flag-nel-010** [P2] Found 9 code optimization opportunities — rolling improvement
+  - Created: 2026-05-14T02:12:59Z
 
 - **flag-nel-011** [P2] Audit found 5 system issues — review security/structure
   - Created: 2026-05-14T02:13:05Z

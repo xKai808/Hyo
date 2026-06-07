@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-06T07:00:00Z",
+  "updatedAt": "2026-06-07T07:00:00Z",
   "morningReport": {
     "date": "2026-05-28",
     "generatedAt": "2026-05-29T06:30:00Z",
@@ -27,6 +27,18 @@
     "lastOpsSync": "2026-06-01T19:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-06-07T07:00:00Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-06-07"
+    },
+    {
+      "ts": "2026-06-07T07:00:00Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-06-07",
+      "doc": "/viewer?agent=simulation&file=2026-06-07"
+    },
     {
       "ts": "2026-06-06T07:00:00Z",
       "agent": "consolidation",
@@ -314,18 +326,6 @@
       "agent": "ops_sync",
       "msg": "Ops sync 16:17 MT Monday -- posture WATCH; sentinel #544 6/3 (2 false positives, 1 real P2 queue overload day 35), cipher #1155 clean, nel partial run (file-scans corroborate 29 broken links / 47 untested / 0 stale); dual-path hq-state drift reconciled; deploy not blocked",
       "doc": "/viewer?agent=ops&file=2026-05-25"
-    },
-    {
-      "ts": "2026-05-25T10:17:00Z",
-      "agent": "nel",
-      "msg": "System sweep (partial) -- score 65/100, 29 broken links, 47 untested scripts",
-      "doc": "/viewer?agent=nel&file=2026-05-25"
-    },
-    {
-      "ts": "2026-05-25T10:17:00Z",
-      "agent": "cipher",
-      "msg": "Security scan #1140 -- clean, 0 findings / 0 leaks / 0 autofixes",
-      "doc": "/viewer?agent=cipher&file=2026-05-25"
     }
   ],
   "ra": {
@@ -396,7 +396,7 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-06-06T07:00:00Z"
+    "lastRun": "2026-06-07T07:00:00Z"
   },
   "aether": {},
   "nel": {
