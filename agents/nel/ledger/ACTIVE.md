@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-08T10:40:27Z
+Last updated: 2026-06-09T10:42:18Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 25d old (>14d critical)
-  - Delegated: 2026-06-08T10:40:27Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 26d old (>14d critical)
+  - Delegated: 2026-06-09T10:42:18Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -27,26 +27,26 @@ Last updated: 2026-06-08T10:40:27Z
 
 ## Queued
 
-- **flag-nel-001** [P2] Found 30 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-09T07:00:33Z
+- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-10T07:00:39Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-09T14:10:19Z
+  - Created: 2026-05-10T10:09:00Z
 
-- **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-09T14:10:31Z
+- **flag-nel-003** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-10T10:09:13Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-09T18:10:24Z
+  - Created: 2026-05-10T10:10:36Z
 
-- **flag-nel-005** [P2] No newsletter produced for 2026-05-09 — past 06:00 MT deadline
-  - Created: 2026-05-09T18:10:24Z
+- **flag-nel-005** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-10T10:10:49Z
 
-- **flag-nel-006** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-09T18:10:35Z
+- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
+  - Created: 2026-05-10T10:10:49Z
 
-- **flag-nel-007** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-09T22:11:42Z
+- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-10T10:10:54Z
 
 - **flag-nel-008** [P2] [SELF-REVIEW] 2 untriggered files found
   - Created: 2026-05-10T10:11:02Z

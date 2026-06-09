@@ -1,0 +1,31 @@
+[2026-06-08] cipher run — MANUAL FALLBACK (Cowork sandbox shell unavailable)
+
+Context: scheduled cipher-hyo-hourly run (session: festive-relaxed-rubin). The Linux sandbox
+shell (mcp__workspace__bash) failed to initialize with a persistent infra error
+("useradd: cannot create directory /sessions/festive-relaxed-rubin", exit 12) across multiple
+retries — identical recurring Cowork harness fault to 100+ prior fires since ~2026-04-22.
+cipher.sh could not be executed. Ran the critical checks manually via file/grep tools.
+
+Checks performed:
+- Layer 4 (P0) founder-token-leak: Grep'd literal token value tree-wide (excluding .git,
+  .secrets, security, node_modules, logs, memory, kai dirs). RESULT: 0 hits. CLEAN.
+- Layer 1 credential-format sweep: regex sk-ant-*/ghp_*/AKIA*/xox[baprs]-* tree-wide.
+  RESULT: No files found. CLEAN.
+- .env-gitignore check: Glob **/.env* found 3 files:
+    * newsletter/.env.example — exempted by .gitignore line 14 (!.env.example). CLEAN.
+    * website/.env.local + agents/sam/website/.env.local — same file via symlink;
+      covered by .gitignore line 13 (.env.*). CLEAN. File contains expired
+      VERCEL_OIDC_TOKEN (exp 2026-05-10 per JWT decode) — no current risk.
+- .secrets/ / founder.token covered by root .gitignore lines 5-7. CLEAN.
+
+Not performed (require sandbox/Mini binaries): gitleaks pattern scan, filesystem perm
+auto-fix (stat mode bits), dep-audit, cipher.state.json runHistory update, HQ push.
+Per CLAUDE.md, the authoritative gitleaks/perm scan runs on the Mini via cron. State +
+HQ push will reconcile on the next Mini run.
+
+ADDITIONAL FINDING: cipher.state.json lastRunAt = 2026-05-29T04:03:01Z — Mini's
+authoritative cipher cron has been dark ~10 days. This is likely part of the broader
+launchd/plist outage already flagged as P1 (NEEDS HYO: Mini launchctl restart). The Cowork
+manual fallback scans have been filling the gap and all show CLEAN.
+
+VERDICT: cipher CLEAN — 0 verified leaks, 0 secrets exposed outside the store. No fix needed.
