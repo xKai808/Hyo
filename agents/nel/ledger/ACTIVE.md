@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-09T22:43:29Z
+Last updated: 2026-06-10T10:44:27Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 26d old (>14d critical)
-  - Delegated: 2026-06-09T22:43:29Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 27d old (>14d critical)
+  - Delegated: 2026-06-10T10:44:27Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -27,32 +27,32 @@ Last updated: 2026-06-09T22:43:29Z
 
 ## Queued
 
-- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-10T07:00:39Z
+- **flag-nel-001** [P2] Found 28 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-11T07:00:42Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-10T10:09:00Z
+  - Created: 2026-05-11T10:10:51Z
 
-- **flag-nel-003** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-10T10:09:13Z
+- **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-11T10:11:04Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-10T10:10:36Z
+  - Created: 2026-05-11T10:13:25Z
 
-- **flag-nel-005** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-10T10:10:49Z
+- **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-11T10:13:39Z
 
-- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
-  - Created: 2026-05-10T10:10:49Z
+- **flag-nel-006** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-11T14:11:02Z
 
-- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-05-10T10:10:54Z
+- **flag-nel-007** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-11T18:10:03Z
 
-- **flag-nel-008** [P2] [SELF-REVIEW] 2 untriggered files found
-  - Created: 2026-05-10T10:11:02Z
+- **flag-nel-008** [P2] No newsletter produced for 2026-05-11 — past 06:00 MT deadline
+  - Created: 2026-05-11T18:10:03Z
 
-- **flag-nel-009** [P2] Found 28 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-10T14:08:12Z
+- **flag-nel-009** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-11T18:10:17Z
 
 - **flag-nel-010** [P2] Found 9 code optimization opportunities — rolling improvement
   - Created: 2026-05-14T02:12:59Z

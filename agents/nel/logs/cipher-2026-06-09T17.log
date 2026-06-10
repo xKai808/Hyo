@@ -1,0 +1,13 @@
+[2026-06-09T17:00:00Z] cipher run start (Cowork scheduled task — degraded mode)
+[2026-06-09T17:00:00Z] INFRA: bash workspace unavailable (RPC sandbox failure this session)
+[2026-06-09T17:00:00Z] INFRA: computer-use unavailable (user not present for approval)
+[2026-06-09T17:00:00Z] FALLBACK: manual file-tool checks performed
+[2026-06-09T17:00:00Z] STATE CHECK: last Mini run 2026-06-09T16:02:50Z — 0 findings, 7 perm autofixes (normal)
+[2026-06-09T17:00:00Z] STATE CHECK: knownIssues={}, verifiedLeakHistory=[], totalRuns=1245
+[2026-06-09T17:00:00Z] CHECK .gitignore: .env/,.env.*,.secrets/,agents/nel/security/ all properly ignored — PASS
+[2026-06-09T17:00:00Z] CHECK .env files: found website/.env.local, agents/sam/website/.env.local — both matched by .env.* gitignore rule — PASS
+[2026-06-09T17:00:00Z] CHECK gitleaks: not runnable in sandbox (binary unavailable) — authoritative scan ran on Mini at 16:02Z — PASS (Mini)
+[2026-06-09T17:00:00Z] CHECK token leak: not runnable in sandbox — no new files added since last Mini run — deferred to Mini
+[2026-06-09T17:00:00Z] PERM DRIFT NOTE: recurring 7-autofix pattern (593 perm_drift_events total) — files drift between runs, cipher re-corrects hourly. Systemic cause not yet diagnosed.
+[2026-06-09T17:00:00Z] RESULT: cipher clean (Mini-verified). This Cowork run degraded due to sandbox failure — Mini cron remains authoritative.
+[2026-06-09T17:00:00Z] cipher run end

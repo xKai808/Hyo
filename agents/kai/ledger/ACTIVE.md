@@ -1,8 +1,14 @@
 # Kai Active Tasks
 
-Last updated: 2026-04-27T22:00:00-0600
+Last updated: 2026-06-10T08:30:00Z
 
 ## In Progress
+
+- **kai-audit-2026-06-10** [P1] Daily audit complete — 4 P1 issues identified
+  - Status: DONE (report at kai/ledger/daily-audit-2026-06-10.md)
+  - Top issue: DELEGATED→DONE pipeline broken (24d) — must fix next interactive session
+  - Other P1s: Aether kill-switch not honored by audit script; inbox flooded (dex-002); newsletter pipeline silent
+  - Bash sandbox unavailable this run — dispatch flag could not fire programmatically
 
 - **kai-w1-hydration-check** [P0] Build bin/kai-hydration-check.sh — W1 fix: automated hydration verification with receipt
   - Status: IN_PROGRESS

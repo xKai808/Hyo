@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-06-10T05:00:00Z",
+  "updatedAt": "2026-06-10T12:00:00Z",
   "morningReport": {
     "date": "2026-06-10",
-    "generatedAt": "2026-06-10T05:00:00Z",
+    "generatedAt": "2026-06-10T12:00:00Z",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync 2026-06-10 Wednesday (fervent-wonderful-gauss Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 23rd+ consecutive sandbox-side degraded fire spanning 12+ days (5/29-6/10). Identical fault on every retry: `useradd: cannot create directory /sessions/fervent-wonderful-gauss` (exit 12); sandbox container never booted, sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31 [+3 from 28], staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (P0/P1 false-positives resolved on Mini side); cipher CLEAN. No new Cowork-side findings producible; no cascade; no spurious flags. RECOMMENDATION UNCHANGED, STILL ESCALATING (23+ cycles / 12+ days): disable or gate the Cowork ops-sync scheduled task -- it produces zero signal when bash is down. Mini kai-autonomous.sh is the authoritative path and is healthy. NEEDS HYO/Mini interactive: kai-session-prep.sh dead (verified-state.json frozen ~35d+); drain queue running/ stale files. DUAL-PATH: written to both hq-state.json copies.",
+    "summary": "Ops sync 2026-06-10 Wednesday (compassionate-keen-tesla Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 24th+ consecutive sandbox-side degraded fire spanning 12+ days (5/29-6/10). Identical fault on every retry: `useradd: cannot create directory /sessions/compassionate-keen-tesla` (exit 12); sandbox container never booted, sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31 [+3 from 28], staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (P0/P1 false-positives resolved on Mini side); cipher CLEAN. No new Cowork-side findings producible; no cascade; no spurious flags. RECOMMENDATION UNCHANGED, STILL ESCALATING (24+ cycles / 12+ days): disable or gate the Cowork ops-sync scheduled task -- it produces zero signal when bash is down. Mini kai-autonomous.sh is the authoritative path and is healthy. NEEDS HYO/Mini interactive: kai-session-prep.sh dead (verified-state.json frozen ~36d+); drain queue running/ stale files. DUAL-PATH: written to both hq-state.json copies.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,19 +14,55 @@
       "dex": "active"
     },
     "topIssues": [
-      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/fervent-wonderful-gauss, exit 12) -- 23rd+ consecutive sandbox-side degraded fires spanning 12+ days (5/29-6/10); sentinel/cipher/nel all skipped",
+      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/compassionate-keen-tesla, exit 12) -- 24th+ consecutive sandbox-side degraded fires spanning 12+ days (5/29-6/10); sentinel/cipher/nel all skipped",
       "MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1) -- authoritative",
       "Mini sentinel now 4p/0f -- recurring P0 aurora-ran-today and P1 scheduled-tasks-fired false-positives appear resolved on Mini side",
       "brokenLinks 31 (+3 from 28 on 6/01); staleFiles 4; inefficient 9 -- trend watch",
-      "verified-state.json frozen at 2026-05-05T18:59 (~35d+ stale, threshold 2h) -- kai-session-prep.sh dead Mini-side; NEEDS HYO/Mini restart",
+      "verified-state.json frozen at 2026-05-05T18:59 (~36d+ stale, threshold 2h) -- kai-session-prep.sh dead Mini-side; NEEDS HYO/Mini restart",
       "Queue running/ likely still holds stale files (unverifiable via Cowork sandbox); NEEDS HYO/Mini drain",
-      "ESCALATING (23+ cycles / 12+ days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on useradd exit=12 -- pure noise",
+      "ESCALATING (24+ cycles / 12+ days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on useradd exit=12 -- pure noise",
       "Mini-side kai-autonomous.sh remains the authoritative path and is healthy",
       "Dual-path hq-state.json current-state sections written identically this cycle"
     ],
-    "lastOpsSync": "2026-06-10T05:00:00Z"
+    "lastOpsSync": "2026-06-10T12:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-06-10T12:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-10 Wednesday (compassionate-keen-tesla Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 24th+ consecutive sandbox-side degraded fire spanning 12+ days (5/29-6/10). Identical fault: `useradd: cannot create directory /sessions/compassionate-keen-tesla` (exit 12) on all retries; sandbox container never booted. sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (false-positives resolved); cipher CLEAN. RECOMMENDATION: disable Cowork ops-sync scheduled task -- 24+ consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and healthy. DUAL-PATH: written to both hq-state.json copies.",
+      "doc": "/viewer?agent=ops&file=2026-06-10T12"
+    },
+    {
+      "ts": "2026-06-10T12:00:00Z",
+      "agent": "sentinel",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/compassionate-keen-tesla, exit 12). 24th+ consecutive skip. Mini authoritative: 4p/0f (false-positives resolved).",
+      "doc": "/viewer?agent=sentinel&file=2026-06-10"
+    },
+    {
+      "ts": "2026-06-10T12:00:00Z",
+      "agent": "cipher",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/compassionate-keen-tesla, exit 12). 24th+ consecutive skip. Authoritative: CLEAN (Mini path; last sandbox cipher was 2026-05-29T02:14Z).",
+      "doc": "/viewer?agent=cipher&file=2026-06-10"
+    },
+    {
+      "ts": "2026-06-10T12:00:00Z",
+      "agent": "nel",
+      "msg": "SKIPPED (Cowork sandbox) -- bash unavailable (useradd exit 12, session compassionate-keen-tesla). 24th+ consecutive skip. Mini authoritative: nel ran 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9).",
+      "doc": "/viewer?agent=nel&file=2026-06-10"
+    },
+    {
+      "ts": "2026-06-10T07:00:00Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-06-10"
+    },
+    {
+      "ts": "2026-06-10T07:00:00Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-06-10",
+      "doc": "/viewer?agent=simulation&file=2026-06-10"
+    },
     {
       "ts": "2026-06-10T05:00:00Z",
       "agent": "ops_sync",
@@ -314,42 +350,6 @@
       "agent": "cipher",
       "msg": "Security scan CLEAN \u2014 0 findings, 0 leaks, 0 autofixes (perms already 700/600). gitleaks skipped in sandbox (authoritative on Mini). dep-audit 3 passed / 1 warning / 0 failures. HQ push HTTP 200. Exit 0.",
       "doc": "/viewer?agent=cipher&file=2026-05-28"
-    },
-    {
-      "ts": "2026-05-28T22:11:49Z",
-      "agent": "nel",
-      "msg": "Weekly sweep \u2014 Phases 1-5 complete; Phase 6 reaped at sandbox 45s ceiling. ARIC already done for today (skipped). Growth idle (no IMP tickets). Phase 1 sentinel synth: hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f \u2192 P2 flag-nel-004 (SENTINEL_FAIL=2). Phase 2 cipher clean. Phase 3 0 stale files. Phase 4 29 broken doc links \u2192 P2 flag-nel-005. Phase 5 47 untested scripts (P3 backlog). Newsletter check fired P1 \u2014 FALSE-POSITIVE: newsletters/2026-05-28.input.md exists; checker uses bare .md path (same root-cause as sentinel P0).",
-      "doc": "/viewer?agent=nel&file=2026-05-28"
-    },
-    {
-      "ts": "2026-05-27T18:09:51Z",
-      "agent": "ops_sync",
-      "msg": "Ops sync 2026-05-27 12:09 MT Wednesday (inspiring-ecstatic-johnson (Cowork sandbox)) \u2014 posture WATCH; sentinel #584 6/3 (P0/P1 day 5 confirmed false-positives, P2 task-queue 38 P0 day 75 real-escalated); cipher CLEAN (perms 700/600, dep-audit 3p/1w); nel PARTIAL Phases 1-5 (sandbox 45s reap at Phase 6, growth idle); broken-links 29 (-1), untested 47; newsletter cascade fired correctly (nel-002/sam-002/ra-002); 0 new genuine issues; dual-path reconciled",
-      "doc": "/viewer?agent=ops&file=2026-05-27"
-    },
-    {
-      "ts": "2026-05-27T18:09:51Z",
-      "agent": "sentinel",
-      "msg": "QA sweep #584 \u2014 6 passed / 3 failed, 0 new / 3 recurring / 0 resolved. P0 aurora-ran-today day 5 + P1 scheduled-tasks-fired day 5 confirmed false-positives (retired-path/log-name checks). P2 task-queue-size day 75 chronic-escalated (38 P0 tasks vs threshold 5, the only genuine finding). Exit RC 2 = findings present (not error).",
-      "doc": "/viewer?agent=sentinel&file=2026-05-27"
-    },
-    {
-      "ts": "2026-05-27T18:09:51Z",
-      "agent": "cipher",
-      "msg": "Security scan \u2014 CLEAN, 0 findings / 0 leaks / 0 autofixes; secretsDir 700, founderToken 600; dep-audit 3 passed / 1 warning / 0 failures; exit 0. gitleaks skipped (sandbox); push verification skipped (no HYO_HQ_PASSWORD).",
-      "doc": "/viewer?agent=cipher&file=2026-05-27"
-    },
-    {
-      "ts": "2026-05-27T18:09:51Z",
-      "agent": "nel",
-      "msg": "System sweep PARTIAL (reaped at Phase 6 by sandbox ~45s ceiling). Phase1 sentinel synth (hyo 2p/2f, aurora-ra 4p/0f, aether 1p/1f, kai-ceo 4p/0f) \u2192 P2 flag. Phase2 cipher clean. Phase3 0 stale. Phase4 29 broken links (-1 from 30). Phase5 47 untested scripts. Newsletter check fired correctly (HOUR=12 > 06) \u2192 P1 flag-nel-003, safeguard cascade (nel-002, sam-002) + auto-remediation to ra (ra-002). Growth IDLE (ARIC complete for 2026-05-27, no IMP tickets).",
-      "doc": "/viewer?agent=nel&file=2026-05-27"
-    },
-    {
-      "ts": "2026-05-27T07:00:01Z",
-      "agent": "consolidation",
-      "msg": "Nightly consolidation \u2014 sam",
-      "doc": "/viewer?agent=consolidation&file=2026-05-27"
     }
   ],
   "ra": {
@@ -420,7 +420,7 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-06-09T07:00:03Z"
+    "lastRun": "2026-06-10T07:00:00Z"
   },
   "aether": {},
   "nel": {
