@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-06-09T16:02:50Z",
-  "totalRuns": 1245,
+  "lastRunAt": "2026-06-11T12:00:00Z",
+  "totalRuns": 1254,
   "runHistory": [
     {
       "ts": "2026-05-28T04:02:20Z",
@@ -244,6 +244,96 @@
       "recurring": 0,
       "resolved": 0,
       "autofixes": 7
+    },
+    {
+      "ts": "2026-06-10T00:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: sandbox unavailable (useradd failed); manual file checks passed — no secrets, .env gitignored"
+    },
+    {
+      "ts": "2026-06-10T06:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable; manual grep scan — no secret patterns (API keys, AWS, GitHub tokens), .env.local gitignored in both website paths, VERCEL_OIDC_TOKEN expired (exp April 2026), env var refs only (no hardcoded values)"
+    },
+    {
+      "ts": "2026-06-10T12:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed), computer-use timed out (unattended); manual checks via file tools: no sk-/ghp_/AKIA patterns in tracked files, .env.local in both website paths covered by .gitignore (.env.* rule root + explicit .env.local in website/.gitignore), 0 knownIssues open"
+    },
+    {
+      "ts": "2026-06-10T18:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); manual scan via file tools: no hardcoded API keys (sk-*, ghp_*, AKIA*), .env.local gitignored in both website paths, VERCEL_OIDC_TOKEN in .env.local is expired JWT (exp 2026-04-09), .secrets/ and agents/nel/security/ correctly gitignored, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-10T19:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); manual grep scan via file tools: no sk-/ghp_/AKIA/AIza/xoxb patterns in any tracked file, two regex matches in agent-execute-improvement.sh and kai.sh both confirmed env var refs (not hardcoded values), 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-10T20:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed), computer-use timed out (unattended); manual Grep scan: no sk-*/ghp_*/AKIA*/AIza*/xoxb- in tracked files, .env.local match in website paths is gitignored expired VERCEL_OIDC_TOKEN JWT (consistent with prior runs), .env.* covered by root .gitignore + website/.gitignore, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-10T21:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed), computer-use unavailable (unattended); Grep scan via file tools: no sk-*/ghp_*/AKIA*/AIza*/xoxb- patterns in any .js/.ts/.py/.sh/.json/.md/.html/.env files, root .gitignore covers .env.* + .secrets/ + agents/nel/security/, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-11T00:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed), computer-use timed out (unattended); Grep scan via file tools: no sk-*/ghp_*/AKIA*/AIza*/xoxb- patterns in .py/.sh/.js/.ts/.json/.md files, root .gitignore covers .env + .env.* + .secrets/ + agents/nel/security/, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-11T06:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools: no sk-*/ghp_*/AKIA*/AIza*/xoxb- patterns found in any .py/.sh/.js/.ts/.json/.md/.html file, root .gitignore covers .env + .env.* + .secrets/ + agents/nel/security/, .env.local in website/ paths gitignored, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-11T12:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools: no sk-*/ghp_*/AKIA*/AIza*/xoxb- patterns in any tracked file, root .gitignore covers .env + .env.* + .secrets/ + agents/nel/security/, website/ + agents/sam/website/ .gitignore both cover .env.local, 0 knownIssues open, clean"
     }
   ],
   "knownIssues": {},

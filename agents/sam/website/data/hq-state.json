@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-06-10T12:00:00Z",
+  "updatedAt": "2026-06-10T16:00:00Z",
   "morningReport": {
     "date": "2026-06-10",
-    "generatedAt": "2026-06-10T12:00:00Z",
+    "generatedAt": "2026-06-10T16:00:00Z",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync 2026-06-10 Wednesday (compassionate-keen-tesla Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 24th+ consecutive sandbox-side degraded fire spanning 12+ days (5/29-6/10). Identical fault on every retry: `useradd: cannot create directory /sessions/compassionate-keen-tesla` (exit 12); sandbox container never booted, sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31 [+3 from 28], staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (P0/P1 false-positives resolved on Mini side); cipher CLEAN. No new Cowork-side findings producible; no cascade; no spurious flags. RECOMMENDATION UNCHANGED, STILL ESCALATING (24+ cycles / 12+ days): disable or gate the Cowork ops-sync scheduled task -- it produces zero signal when bash is down. Mini kai-autonomous.sh is the authoritative path and is healthy. NEEDS HYO/Mini interactive: kai-session-prep.sh dead (verified-state.json frozen ~36d+); drain queue running/ stale files. DUAL-PATH: written to both hq-state.json copies.",
+    "summary": "Ops sync 2026-06-10 Wednesday (fervent-compassionate-turing Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 25th+ consecutive sandbox-side degraded fire spanning 12+ days (5/29-6/10). Identical fault on every retry: `useradd: cannot create directory /sessions/fervent-compassionate-turing` (exit 12); sandbox container never booted, sentinel.sh / cipher.sh / nel.sh all skipped. computer-use request_access also timed out (180s). MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31 [+3 from 28], staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (P0/P1 false-positives resolved on Mini side); cipher CLEAN. No new Cowork-side findings producible; no cascade; no spurious flags. RECOMMENDATION UNCHANGED, STILL ESCALATING (25+ cycles / 12+ days): disable or gate the Cowork ops-sync scheduled task -- it produces zero signal when bash is down. Mini kai-autonomous.sh is the authoritative path and is healthy. NEEDS HYO/Mini interactive: kai-session-prep.sh dead (verified-state.json frozen ~36d+); drain queue running/ stale files. DUAL-PATH: written to both hq-state.json copies.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,19 +14,43 @@
       "dex": "active"
     },
     "topIssues": [
-      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/compassionate-keen-tesla, exit 12) -- 24th+ consecutive sandbox-side degraded fires spanning 12+ days (5/29-6/10); sentinel/cipher/nel all skipped",
+      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/fervent-compassionate-turing, exit 12) -- 25th+ consecutive sandbox-side degraded fires spanning 12+ days (5/29-6/10); sentinel/cipher/nel all skipped",
       "MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1) -- authoritative",
       "Mini sentinel now 4p/0f -- recurring P0 aurora-ran-today and P1 scheduled-tasks-fired false-positives appear resolved on Mini side",
       "brokenLinks 31 (+3 from 28 on 6/01); staleFiles 4; inefficient 9 -- trend watch",
       "verified-state.json frozen at 2026-05-05T18:59 (~36d+ stale, threshold 2h) -- kai-session-prep.sh dead Mini-side; NEEDS HYO/Mini restart",
       "Queue running/ likely still holds stale files (unverifiable via Cowork sandbox); NEEDS HYO/Mini drain",
-      "ESCALATING (24+ cycles / 12+ days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on useradd exit=12 -- pure noise",
+      "ESCALATING (25+ cycles / 12+ days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on useradd exit=12 -- pure noise",
       "Mini-side kai-autonomous.sh remains the authoritative path and is healthy",
       "Dual-path hq-state.json current-state sections written identically this cycle"
     ],
-    "lastOpsSync": "2026-06-10T12:00:00Z"
+    "lastOpsSync": "2026-06-10T16:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-06-10T16:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-10 Wednesday (fervent-compassionate-turing Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 25th+ consecutive sandbox-side degraded fire spanning 12+ days (5/29-6/10). Identical fault: `useradd: cannot create directory /sessions/fervent-compassionate-turing` (exit 12) on all retries; sandbox never booted. computer-use request_access timed out (180s). sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (false-positives resolved); cipher CLEAN. RECOMMENDATION: disable Cowork ops-sync scheduled task -- 25+ consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and healthy. DUAL-PATH: written to both hq-state.json copies.",
+      "doc": "/viewer?agent=ops&file=2026-06-10T16"
+    },
+    {
+      "ts": "2026-06-10T16:00:00Z",
+      "agent": "sentinel",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/fervent-compassionate-turing, exit 12). 25th+ consecutive skip. Mini authoritative: 4p/0f (false-positives resolved).",
+      "doc": "/viewer?agent=sentinel&file=2026-06-10"
+    },
+    {
+      "ts": "2026-06-10T16:00:00Z",
+      "agent": "cipher",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/fervent-compassionate-turing, exit 12). 25th+ consecutive skip. Authoritative: CLEAN (Mini path; last sandbox cipher was 2026-05-29T02:14Z).",
+      "doc": "/viewer?agent=cipher&file=2026-06-10"
+    },
+    {
+      "ts": "2026-06-10T16:00:00Z",
+      "agent": "nel",
+      "msg": "SKIPPED (Cowork sandbox) -- bash unavailable (useradd exit 12, session fervent-compassionate-turing). 25th+ consecutive skip. Mini authoritative: nel ran 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9).",
+      "doc": "/viewer?agent=nel&file=2026-06-10"
+    },
     {
       "ts": "2026-06-10T12:00:00Z",
       "agent": "ops_sync",
@@ -896,11 +920,11 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-06-10T07:00:07Z",
+    "lastRun": "2026-06-11T07:00:07Z",
     "improvementScore": 80,
     "findingsCount": 1,
-    "staleFiles": 16,
-    "brokenLinks": 30,
+    "staleFiles": 33,
+    "brokenLinks": 29,
     "untested": 47,
     "inefficient": 9,
     "sentinel": {

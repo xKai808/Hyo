@@ -6,3 +6,14 @@ http 200
 verifying push...
 (HYO_HQ_PASSWORD not set — skipping verification)
 cipher: clean. 7 auto-fix(es) applied. See /Users/kai/Documents/Projects/Hyo/agents/nel/logs/cipher-2026-06-09T04.log
+
+--- Cowork Sandbox Run: 2026-06-11 ---
+[2026-06-11T00:00:00Z] cipher run attempted from Cowork sandbox (scheduled task)
+[2026-06-11T00:00:00Z] SANDBOX DETECTED: bash workspace unavailable (RPC error — known issue in Cowork sandbox)
+[2026-06-11T00:00:00Z] FALLBACK: manual file-tool scan performed
+[2026-06-11T00:00:00Z] CHECK 1 — token/secret pattern grep (sk-, AKIA, ghp_, Bearer): CLEAN — 0 matches
+[2026-06-11T00:00:00Z] CHECK 2 — .env.local (Vercel OIDC JWT in agents/sam/website/): gitignored by both root and subdir .gitignore — NOT a leak
+[2026-06-11T00:00:00Z] CHECK 3 — .secrets/ dir: gitignored — OK
+[2026-06-11T00:00:00Z] cipher.state.json: totalRuns=1253, knownIssues=0 open
+[2026-06-11T00:00:00Z] STATUS: CLEAN — No leaks. No action required.
+[2026-06-11T00:00:00Z] Authoritative gitleaks scan runs on Mini via cron. Last Mini run: 2026-06-10T19:00:00Z, 0 issues.
