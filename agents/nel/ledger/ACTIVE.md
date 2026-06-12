@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-11T10:46:25Z
+Last updated: 2026-06-12T10:48:22Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 28d old (>14d critical)
-  - Delegated: 2026-06-11T10:46:25Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 29d old (>14d critical)
+  - Delegated: 2026-06-12T10:48:22Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -27,29 +27,29 @@ Last updated: 2026-06-11T10:46:25Z
 
 ## Queued
 
-- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-12T07:00:44Z
+- **flag-nel-001** [P2] Found 30 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-13T07:00:47Z
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-12T10:10:10Z
+  - Created: 2026-05-13T10:10:04Z
 
-- **flag-nel-003** [P2] Found 30 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-12T10:10:26Z
+- **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-13T10:10:19Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-12T14:11:18Z
+  - Created: 2026-05-13T10:12:53Z
 
-- **flag-nel-005** [P2] Found 30 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-12T14:11:32Z
+- **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-13T10:13:08Z
 
-- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-12T18:10:05Z
+- **flag-nel-006** [P2] No newsletter produced for 2026-05-13 — past 06:00 MT deadline
+  - Created: 2026-05-13T18:10:02Z
 
-- **flag-nel-007** [P2] No newsletter produced for 2026-05-12 — past 06:00 MT deadline
-  - Created: 2026-05-12T18:10:05Z
+- **flag-nel-007** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-13T18:10:17Z
 
-- **flag-nel-008** [P2] Found 30 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-12T18:10:20Z
+- **flag-nel-008** [P2] No newsletter produced for 2026-05-14 — past 06:00 MT deadline
+  - Created: 2026-05-14T02:12:44Z
 
 - **flag-nel-009** [P2] Found 29 broken documentation links — fix or cleanup needed
   - Created: 2026-05-14T02:12:59Z

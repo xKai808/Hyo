@@ -1,0 +1,29 @@
+cipher.hyo — Cowork scheduled run 2026-06-11T19:xx UTC
+================================================================
+STATUS: PARTIAL — bash sandbox unavailable; manual file-tool scan performed
+
+ENVIRONMENT
+  run_by: Cowork scheduled task (cipher-hyo-hourly)
+  bash_sandbox: DOWN (useradd failed: exit status 12)
+  computer_use: TIMEOUT (request_access 180s)
+  scan_mode: file-tool grep (no gitleaks/trufflehog available)
+
+CIPHER STATE (from cipher.state.json)
+  lastRunAt: 2026-06-11T18:00:00Z  (Mini cron, earlier today)
+  totalRuns: 1255
+  last run: 0 failed, 0 newIssues, 0 recurring, 0 autofixes
+
+MANUAL SCAN RESULTS
+  [OK] No .env files found in repo
+  [OK] No .key files outside agents/nel/security/
+  [OK] No raw API key strings (sk-, ghp_, xox*, AKIA) in .sh/.py/.js/.json/.md files
+  [NOTE] agents/aether/analysis/api_usage_check.py matched — CONFIRMED placeholder comment only
+  [OK] KAI_BRIEF.md: no leaked secrets
+  [OK] Secrets directory (agents/nel/security/): contains aethel-bot.key, openai.key, anthropic.key — all properly scoped
+
+FINDINGS: 0 leaks detected
+
+INFRASTRUCTURE NOTE
+  Bash sandbox failure (exit status 12 — useradd) should be investigated.
+  Mini cron is the authoritative cipher scan; this Cowork run is supplemental.
+  No P1 action required from this run.
