@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-06-13T10:50:19Z
+Last updated: 2026-06-13T10:51:59Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 30d old (>14d critical)
-  - Delegated: 2026-06-13T10:50:19Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-06-13T10:51:58Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 30d old (>14d critical)
-  - Delegated: 2026-06-13T10:50:19Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-06-13T10:51:58Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-13T10:46:30Z
+  - Delegated: 2026-06-13T10:51:58Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 30d old (>14d critical) (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-13T10:50:19Z
+- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-06-13T10:51:59Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-06-13T10:46:31Z
+  - Delegated: 2026-06-13T10:51:59Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-06-12 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-06-13T07:15:59Z
+- **kai-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 30d old (>14d critical) (flagged by kai)
+  - Delegated: 2026-06-13T10:51:59Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
