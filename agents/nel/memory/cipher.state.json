@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-06-13T08:00:00Z",
-  "totalRuns": 1272,
+  "lastRunAt": "2026-06-13T14:00:00Z",
+  "totalRuns": 1278,
   "runHistory": [
     {
       "ts": "2026-05-28T04:02:20Z",
@@ -496,6 +496,60 @@
       "resolved": 0,
       "autofixes": 0,
       "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: no sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (0 matches); 1 password/api_key/secret/token match confirmed doc placeholder in README-refresh-usage.md (sk-ant-... literal), 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-13T09:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env}: no sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (0 matches); 2 password/secret/token matches confirmed safe — ant-update.sh:token='' empty strings, README-refresh-usage.md:sk-ant-... doc placeholder, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-13T10:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: no sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (0 matches); 2 password/secret/token matches confirmed safe — ant-update.sh:token='' empty strings, README-refresh-usage.md:sk-ant-... doc placeholder, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-13T11:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools: 13 sk-ant-/ghp_/xoxb- matches all confirmed false positives (hq-state.json log text, verify.sh pattern strings, api_usage_check.py doc placeholders, cipher.state.json notes, KAI_BRIEF cipher notes, KNOWLEDGE.md refs, Simulation files, github-security docs, README-refresh-usage.md placeholder); founder token not found outside .secrets/; 2 hardcoded-assignment matches safe (ant-update.sh:token='' empty, cipher.state.json log text); 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-13T12:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: 20 sk-ant-/ghp_/AKIA/AIza/xoxb- matches all confirmed false positives (consolidate.sh:grep pattern string, kai_telegram.py:error message placeholder ghp_..., cipher.hyo.json:detection command pattern, lab docs x3, simulation files x3, cipher state notes, KAI_BRIEF, KNOWLEDGE.md, verify.sh, README-refresh-usage.md, memory_engine.py, Friday_Open_Brief.md); hardcoded-assignment scan: 1 match in github-security-scan.sh is a code comment (not real key); founder token not found outside .secrets/ (0 matches); 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-13T13:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean), 0 matches for hardcoded password/api_key/secret/token assignments (clean), .env.local in website/ + agents/sam/website/ gitignored, newsletter/.env.example safe, 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-13T14:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd failed); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean), 1 hardcoded-assignment match in README-refresh-usage.md confirmed doc placeholder (sk-ant-... literal not a real key), .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe (example file), 0 knownIssues open, clean"
     }
   ],
   "knownIssues": {},
