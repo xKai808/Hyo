@@ -1,0 +1,23 @@
+[2026-06-13T00:00:00Z] cipher run start
+[2026-06-13T00:00:00Z] MODE: degraded-run (bash sandbox unavailable — useradd exit 12, computer-use timed out unattended)
+[2026-06-13T00:00:00Z] LAYER 1 (gitleaks): SKIPPED — bash unavailable; using manual Grep via file tools
+[2026-06-13T00:00:00Z] LAYER 2 (trufflehog): REMOVED per SE-011-007
+[2026-06-13T00:00:00Z] LAYER 3 (filesystem perms .secrets/): SKIPPED — stat/chmod require bash
+[2026-06-13T00:00:00Z] LAYER 4 (founder token leak): SKIPPED — bash grep unavailable
+[2026-06-13T00:00:00Z] LAYER 5 (dep audit): SKIPPED — bash unavailable
+[2026-06-13T00:00:00Z] MANUAL SCAN: Grep *.{py,sh,js,ts,json,md,html,txt,env} for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns
+[2026-06-13T00:00:00Z] MANUAL SCAN RESULT: 8 files matched — all confirmed false positives:
+  - website/docs/research/lab/github-security-scanning-best-practices.md: example keys in docs
+  - KAI_BRIEF.md: cipher run notes referencing regex patterns (documentation)
+  - agents/nel/memory/cipher.state.json: state log noting false positives (documentation)
+  - kai/memory/KNOWLEDGE.md: documentation references
+  - agents/aether/analysis/api_usage_check.py: code checking API patterns
+  - agents/aether/analysis/Simulation_2026-04-08_v2.txt: simulation document with example strings
+  - agents/sam/website/docs/research/lab/github-security-scanning-best-practices.md: mirrored lab doc
+  - agents/ra/research/lab/github-security-scanning-best-practices.md: mirrored lab doc
+[2026-06-13T00:00:00Z] MANUAL SCAN: hardcoded password/api_key/secret/token assignments
+[2026-06-13T00:00:00Z] FINDING P2: agents/aether/ops/start_all.sh line 26 — hardcoded Telegram bot token (8764945876:...) in dead code block (script has exit 1 at line 3, never executes). Token is for @Kai_11_bot (AetherBot trading halted 2026-05-13 by Hyo kill-switch).
+[2026-06-13T00:00:00Z] AUTOFIX: redacted hardcoded token in start_all.sh line 26 — replaced with ${KAI_TELEGRAM_BOT_TOKEN:?...} env var reference
+[2026-06-13T00:00:00Z] NOTE: Token was in dead code (exit 1 at line 3) — no active exposure risk, but credential in tracked source is a P2 hygiene issue
+[2026-06-13T00:00:00Z] RESULT: 1 finding (P2), 1 autofix applied — agents/aether/ops/start_all.sh hardcoded Telegram token redacted
+[2026-06-13T00:00:00Z] cipher run end

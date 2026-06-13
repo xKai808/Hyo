@@ -1,0 +1,28 @@
+[2026-06-13T01:00:00Z] cipher run start
+[2026-06-13T01:00:00Z] MODE: degraded-run (bash sandbox unavailable — useradd exit 12, computer-use timed out unattended). Authoritative scan runs on Mini via cron.
+[2026-06-13T01:00:00Z] LAYER 1 (gitleaks): SKIPPED — bash unavailable; using manual Grep via file tools
+[2026-06-13T01:00:00Z] LAYER 2 (trufflehog): REMOVED per SE-011-007
+[2026-06-13T01:00:00Z] LAYER 3 (filesystem perms .secrets/): SKIPPED — stat/chmod require bash
+[2026-06-13T01:00:00Z] LAYER 4 (founder token leak): SKIPPED — bash unavailable; prior runs clean
+[2026-06-13T01:00:00Z] LAYER 5 (dep audit): SKIPPED — bash unavailable
+[2026-06-13T01:00:00Z] MANUAL SCAN: credential regex tree-wide (sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb-/Telegram bot token pattern)
+[2026-06-13T01:00:00Z] MANUAL SCAN RESULT: matched files all confirmed false positives:
+  - KAI_BRIEF.md: cipher run log entries referencing patterns (documentation)
+  - website/docs/research/lab/github-security-scanning-best-practices.md: example keys in docs
+  - kai/memory/KNOWLEDGE.md: documentation references
+  - agents/aether/analysis/*.txt + api_usage_check.py: simulation/analysis docs
+  - agents/ra/research/lab/ + agents/sam/website/docs/research/lab/: mirrored lab docs
+  - agents/nel/memory/cipher.state.json: state log noting false positives
+  - kai/ledger/known-issues-archive-pre2026-04-23.jsonl, kai/tickets/tickets.jsonl.bak: archive files
+  - kai/queue/README-refresh-usage.md: docs
+[2026-06-13T01:00:00Z] MANUAL SCAN: Telegram hardcoded token check
+[2026-06-13T01:00:00Z] RESULT: agents/aether/ops/start_all.sh line 26 — CONFIRMED CLEAN: already uses ${KAI_TELEGRAM_BOT_TOKEN:?...} env var reference (autofix from 2026-06-13T00 run verified in-place)
+[2026-06-13T01:00:00Z] MANUAL SCAN: hardcoded password/api_key/secret assignments
+[2026-06-13T01:00:00Z] RESULT: agents/nel/github-security-scan.sh — code comment only (not real secret)
+[2026-06-13T01:00:00Z] MANUAL SCAN: private key pattern (-----BEGIN PRIVATE KEY-----)
+[2026-06-13T01:00:00Z] RESULT: false positive in kai/queue/completed/cmd-1777339979-242.json — captured stdout from `head -1 AethelBot.txt` diagnostic command (key header only, no key body, known false positive since 2026-04-28)
+[2026-06-13T01:00:00Z] .env check: website/.env.local — gitignored (.env.* rule), contains expired VERCEL_OIDC_TOKEN JWT (expected, safe)
+[2026-06-13T01:00:00Z] .env check: agents/sam/website/.env.local — gitignored (.env.* rule), safe
+[2026-06-13T01:00:00Z] knownIssues open: 0 new
+[2026-06-13T01:00:00Z] RESULT: CLEAN — 0 new findings, 0 autofixes needed (prior run autofix for start_all.sh already in place)
+[2026-06-13T01:00:00Z] cipher run end

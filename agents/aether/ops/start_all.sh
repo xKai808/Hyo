@@ -23,7 +23,7 @@ echo "  Done."
 #               AETHERBOT_TELEGRAM_TOKEN = @xAetherbot (trade alerts via AetherBot + kai_analysis.py)
 ENV_FILE="$HOME/Documents/Projects/Kai/.env"
 if ! grep -q "TELEGRAM_BOT_TOKEN=" "$ENV_FILE" 2>/dev/null; then
-    echo "TELEGRAM_BOT_TOKEN=8764945876:AAEpWflnfYqmCtN-2oFvSC3QU_DTP8_9OQY" >> "$ENV_FILE"
+    echo "TELEGRAM_BOT_TOKEN=${KAI_TELEGRAM_BOT_TOKEN:?KAI_TELEGRAM_BOT_TOKEN not set}" >> "$ENV_FILE"
     echo "  Added TELEGRAM_BOT_TOKEN (@Kai_11_bot) to .env"
 fi
 if ! grep -q "TELEGRAM_CHAT_ID=" "$ENV_FILE" 2>/dev/null; then
