@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-13T22:51:20Z
+Last updated: 2026-06-14T10:52:20Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 30d old (>14d critical)
-  - Delegated: 2026-06-13T22:51:20Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 31d old (>14d critical)
+  - Delegated: 2026-06-14T10:52:20Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -27,26 +27,26 @@ Last updated: 2026-06-13T22:51:20Z
 
 ## Queued
 
-- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-14T07:00:42Z
-
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-14T10:10:00Z
+  - Created: 2026-05-15T06:10:49Z
 
 - **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-14T10:10:15Z
+  - Created: 2026-05-15T06:11:07Z
+
+- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-15T07:00:45Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-14T14:12:10Z
+  - Created: 2026-05-15T14:11:18Z
 
 - **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-14T14:12:26Z
+  - Created: 2026-05-15T14:11:33Z
 
-- **flag-nel-006** [P2] No newsletter produced for 2026-05-14 — past 06:00 MT deadline
-  - Created: 2026-05-14T22:11:02Z
+- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-15T18:10:12Z
 
-- **flag-nel-007** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-14T22:11:19Z
+- **flag-nel-007** [P2] No newsletter produced for 2026-05-15 — past 06:00 MT deadline
+  - Created: 2026-05-15T18:10:13Z
 
 - **flag-nel-008** [P2] Found 29 broken documentation links — fix or cleanup needed
   - Created: 2026-05-15T18:10:28Z

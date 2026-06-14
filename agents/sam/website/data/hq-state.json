@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-06-13T10:00:00Z",
+  "updatedAt": "2026-06-14T22:00:00Z",
   "morningReport": {
-    "date": "2026-06-13",
-    "generatedAt": "2026-06-13T10:00:00Z",
+    "date": "2026-06-14",
+    "generatedAt": "2026-06-14T22:00:00Z",
     "dataUrl": "/data/morning-report.json",
-    "summary": "Ops sync 2026-06-13 Saturday (serene-compassionate-pasteur Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 30th+ consecutive sandbox-side degraded fire spanning 15+ days (5/29-6/13). Identical fault on every retry: `useradd: cannot create directory /sessions/serene-compassionate-pasteur` (exit 12); sandbox container never booted, sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31 [+3 from 28], staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (P0/P1 false-positives resolved on Mini side); cipher CLEAN. No new Cowork-side findings producible; no cascade; no spurious flags. RECOMMENDATION UNCHANGED, STILL ESCALATING (30+ cycles / 15+ days): disable or gate the Cowork ops-sync scheduled task -- it produces zero signal when bash is down. Mini kai-autonomous.sh is the authoritative path and is healthy. NEEDS HYO/Mini interactive: kai-session-prep.sh dead (verified-state.json frozen ~39d+); drain queue running/ stale files. DUAL-PATH: written to both hq-state.json copies.",
+    "summary": "Ops sync 2026-06-14 Sunday (magical-exciting-wright Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 33rd+ consecutive sandbox-side degraded fire spanning 16+ days (5/29-6/14). Identical fault on every retry: `useradd: cannot create directory /sessions/magical-exciting-wright` (exit 12); sandbox container never booted, sentinel.sh / cipher.sh / nel.sh all skipped. computer-use request_access timed out 180s (Hyo not present for approval). MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31 [+3 from 28], staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (P0/P1 false-positives resolved on Mini side); cipher CLEAN. No new Cowork-side findings producible; no cascade; no spurious flags. RECOMMENDATION UNCHANGED, STILL ESCALATING (33+ cycles / 16+ days): disable or gate the Cowork ops-sync scheduled task -- it produces zero signal when bash is down. Mini kai-autonomous.sh is the authoritative path and is healthy. NEEDS HYO/Mini interactive: kai-session-prep.sh dead (verified-state.json frozen ~40d+); drain queue running/ stale files. DUAL-PATH: written to both hq-state.json copies.",
     "systemStatus": "warnings",
     "agentStatuses": {
       "nel": "active",
@@ -14,19 +14,91 @@
       "dex": "active"
     },
     "topIssues": [
-      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/serene-compassionate-pasteur, exit 12) -- 30th+ consecutive sandbox-side degraded fires spanning 15+ days (5/29-6/13); sentinel/cipher/nel all skipped",
+      "DEGRADED CYCLE: Cowork sandbox bash unavailable (useradd cannot create /sessions/magical-exciting-wright, exit 12) -- 33rd+ consecutive sandbox-side degraded fires spanning 16+ days (5/29-6/14); sentinel/cipher/nel all skipped",
       "MINI PATH HEALTHY: kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1) -- authoritative",
       "Mini sentinel 4p/0f -- P0 aurora-ran-today and P1 scheduled-tasks-fired false-positives resolved Mini-side",
       "brokenLinks 31 (+3 from 28 on 6/01); staleFiles 4; inefficient 9 -- trend watch (Mini last run 6/09)",
-      "verified-state.json frozen at 2026-05-05T18:59 (~39d+ stale, threshold 2h) -- kai-session-prep.sh dead Mini-side; NEEDS HYO/Mini restart",
+      "verified-state.json frozen at 2026-05-05T18:59 (~40d+ stale, threshold 2h) -- kai-session-prep.sh dead Mini-side; NEEDS HYO/Mini restart",
       "Queue running/ likely still holds stale files (unverifiable via Cowork sandbox); NEEDS HYO/Mini drain",
-      "ESCALATING (30+ cycles / 15+ days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on useradd exit=12 -- pure noise",
+      "ESCALATING (33+ cycles / 16+ days): disable the Cowork ops-sync scheduled task OR gate it to skip-and-exit-0 on useradd exit=12 -- pure noise",
       "Mini-side kai-autonomous.sh remains the authoritative path and is healthy",
       "Dual-path hq-state.json current-state sections written identically this cycle"
     ],
-    "lastOpsSync": "2026-06-13T10:00:00Z"
+    "lastOpsSync": "2026-06-14T22:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-06-14T22:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-14 Sunday (magical-exciting-wright Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 33rd+ consecutive sandbox-side degraded fire spanning 16+ days (5/29-6/14). Identical fault: `useradd: cannot create directory /sessions/magical-exciting-wright` (exit 12) on all retries; sandbox container never booted. computer-use request_access timed out 180s. sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (false-positives resolved); cipher CLEAN. RECOMMENDATION UNCHANGED: disable Cowork ops-sync scheduled task -- 33+ consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and healthy. DUAL-PATH: written to both hq-state.json copies.",
+      "doc": "/viewer?agent=ops&file=2026-06-14T22"
+    },
+    {
+      "ts": "2026-06-14T22:00:00Z",
+      "agent": "sentinel",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/magical-exciting-wright, exit 12). 33rd+ consecutive skip. Mini authoritative: 4p/0f (false-positives resolved Mini-side).",
+      "doc": "/viewer?agent=sentinel&file=2026-06-14"
+    },
+    {
+      "ts": "2026-06-14T22:00:00Z",
+      "agent": "cipher",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/magical-exciting-wright, exit 12). 33rd+ consecutive skip. Authoritative: CLEAN (Mini path; last sandbox cipher was 2026-05-29T02:14Z).",
+      "doc": "/viewer?agent=cipher&file=2026-06-14"
+    },
+    {
+      "ts": "2026-06-14T22:00:00Z",
+      "agent": "nel",
+      "msg": "SKIPPED (Cowork sandbox) -- bash unavailable (useradd exit 12, session magical-exciting-wright). 33rd+ consecutive skip. Mini authoritative: nel ran 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9).",
+      "doc": "/viewer?agent=nel&file=2026-06-14"
+    },
+    {
+      "ts": "2026-06-14T18:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-14 Sunday (relaxed-eager-planck Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 32nd+ consecutive sandbox-side degraded fire spanning 16+ days (5/29-6/14). Identical fault: `useradd: cannot create directory /sessions/relaxed-eager-planck` (exit 12) on all retries; sandbox container never booted. sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (false-positives resolved); cipher CLEAN. RECOMMENDATION UNCHANGED: disable Cowork ops-sync scheduled task -- 32+ consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and healthy. DUAL-PATH: written to both hq-state.json copies.",
+      "doc": "/viewer?agent=ops&file=2026-06-14T18"
+    },
+    {
+      "ts": "2026-06-14T18:00:00Z",
+      "agent": "sentinel",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/relaxed-eager-planck, exit 12). 32nd+ consecutive skip. Mini authoritative: 4p/0f (false-positives resolved Mini-side).",
+      "doc": "/viewer?agent=sentinel&file=2026-06-14"
+    },
+    {
+      "ts": "2026-06-14T18:00:00Z",
+      "agent": "cipher",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/relaxed-eager-planck, exit 12). 32nd+ consecutive skip. Authoritative: CLEAN (Mini path; last sandbox cipher was 2026-05-29T02:14Z).",
+      "doc": "/viewer?agent=cipher&file=2026-06-14"
+    },
+    {
+      "ts": "2026-06-14T18:00:00Z",
+      "agent": "nel",
+      "msg": "SKIPPED (Cowork sandbox) -- bash unavailable (useradd exit 12, session relaxed-eager-planck). 32nd+ consecutive skip. Mini authoritative: nel ran 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9).",
+      "doc": "/viewer?agent=nel&file=2026-06-14"
+    },
+    {
+      "ts": "2026-06-13T14:00:00Z",
+      "agent": "ops_sync",
+      "msg": "Ops sync 2026-06-13 Saturday (youthful-epic-noether Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 31st+ consecutive sandbox-side degraded fire spanning 15+ days (5/29-6/13). Identical fault: `useradd: cannot create directory /sessions/youthful-epic-noether` (exit 12) on all retries; sandbox container never booted. sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (false-positives resolved); cipher CLEAN. RECOMMENDATION UNCHANGED: disable Cowork ops-sync scheduled task -- 31+ consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and healthy. DUAL-PATH: written to both hq-state.json copies.",
+      "doc": "/viewer?agent=ops&file=2026-06-13T14"
+    },
+    {
+      "ts": "2026-06-13T14:00:00Z",
+      "agent": "sentinel",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/youthful-epic-noether, exit 12). 31st+ consecutive skip. Mini authoritative: 4p/0f (false-positives resolved Mini-side).",
+      "doc": "/viewer?agent=sentinel&file=2026-06-13"
+    },
+    {
+      "ts": "2026-06-13T14:00:00Z",
+      "agent": "cipher",
+      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/youthful-epic-noether, exit 12). 31st+ consecutive skip. Authoritative: CLEAN (Mini path; last sandbox cipher was 2026-05-29T02:14Z).",
+      "doc": "/viewer?agent=cipher&file=2026-06-13"
+    },
+    {
+      "ts": "2026-06-13T14:00:00Z",
+      "agent": "nel",
+      "msg": "SKIPPED (Cowork sandbox) -- bash unavailable (useradd exit 12, session youthful-epic-noether). 31st+ consecutive skip. Mini authoritative: nel ran 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9).",
+      "doc": "/viewer?agent=nel&file=2026-06-13"
+    },
     {
       "ts": "2026-06-13T10:00:00Z",
       "agent": "ops_sync",
@@ -1016,10 +1088,10 @@
   },
   "aether": {},
   "nel": {
-    "lastRun": "2026-06-13T16:50:56Z",
+    "lastRun": "2026-06-14T07:00:07Z",
     "improvementScore": 80,
     "findingsCount": 1,
-    "staleFiles": 367,
+    "staleFiles": 469,
     "brokenLinks": 30,
     "untested": 47,
     "inefficient": 9,

@@ -1,0 +1,28 @@
+[2026-06-13T06:00:00Z] cipher run start
+[2026-06-13T06:00:00Z] MODE: degraded-run (bash sandbox unavailable — useradd exit 12, same as T00/T01 runs). Authoritative scan runs on Mini via cron.
+[2026-06-13T06:00:00Z] LAYER 1 (gitleaks): SKIPPED — bash unavailable; manual Grep scan performed
+[2026-06-13T06:00:00Z] LAYER 2 (trufflehog): REMOVED per SE-011-007
+[2026-06-13T06:00:00Z] LAYER 3 (filesystem perms .secrets/): SKIPPED — stat/chmod require bash
+[2026-06-13T06:00:00Z] LAYER 4 (founder token leak): SKIPPED — bash unavailable; prior runs clean
+[2026-06-13T06:00:00Z] LAYER 5 (dep audit): SKIPPED — bash unavailable
+[2026-06-13T06:00:00Z] MANUAL SCAN: credential regex tree-wide (sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb-)
+[2026-06-13T06:00:00Z] MANUAL SCAN RESULT (12 files matched): all confirmed false positives
+  - KAI_BRIEF.md: cipher run log entries referencing patterns (documentation)
+  - agents/nel/memory/cipher.state.json: state log noting false positives
+  - website/docs/research/lab/github-security-scanning-best-practices.md: example keys in docs
+  - agents/sam/website/docs/research/lab/github-security-scanning-best-practices.md: mirrored docs
+  - agents/ra/research/lab/github-security-scanning-best-practices.md: mirrored docs
+  - kai/memory/KNOWLEDGE.md: documentation references
+  - kai/ledger/known-issues-archive-pre2026-04-23.jsonl: archive file
+  - agents/aether/analysis/api_usage_check.py + Simulation_2026-04-08_v2.txt: analysis/simulation docs
+  - agents/nel/logs/cipher-2026-06-13T00.log + T01.log: prior cipher log entries
+[2026-06-13T06:00:00Z] MANUAL SCAN: private key pattern (-----BEGIN PRIVATE KEY-----)
+[2026-06-13T06:00:00Z] RESULT: 95 files matched — all known false positives:
+  - KAI_TASKS.md line 283: task description text for cipher:pem-header-fp:2026-05-29 (the task IS about this pattern — not a key)
+  - agents/nel/logs/consolidation-*.md + website/docs/consolidation/*.md: consolidated log propagation of cmd-1777339979-242.json header-only stdout (documented known FP, redact pending Mini run per KAI_TASKS line 283)
+  - kai/ledger/consolidation.log: same propagation
+  - lab docs: documentation references
+[2026-06-13T06:00:00Z] NO NEW FINDINGS — 0 new leaks, 0 autofixes applied
+[2026-06-13T06:00:00Z] ONGOING: cipher:pem-header-fp:2026-05-29 — open P2 in KAI_TASKS (false positive propagation, not a real leak; redact pending Mini access)
+[2026-06-13T06:00:00Z] ONGOING INFRASTRUCTURE NOTE: bash sandbox unavailable (useradd exit 12) for 3rd consecutive hourly run (T00, T01, T06). Mini-side cron remains authoritative. No action required from Cowork.
+[2026-06-13T06:00:00Z] cipher run end — CLEAN

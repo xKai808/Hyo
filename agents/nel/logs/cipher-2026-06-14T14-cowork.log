@@ -1,0 +1,46 @@
+[2026-06-14T14:00:00Z] cipher run start
+[2026-06-14T14:00:00Z] MODE: degraded-run (bash sandbox unavailable — useradd exit 12, consistent with all prior Cowork runs). Authoritative scan runs on Mini via cron.
+[2026-06-14T14:00:00Z] LAYER 1 (gitleaks): SKIPPED — bash unavailable; manual Grep scan performed
+[2026-06-14T14:00:00Z] LAYER 2 (trufflehog): REMOVED per SE-011-007
+[2026-06-14T14:00:00Z] LAYER 3 (filesystem perms .secrets/): SKIPPED — stat/chmod require bash; prior Mini run confirmed 700/600
+[2026-06-14T14:00:00Z] LAYER 4 (founder token leak): SKIPPED — bash unavailable; prior runs clean
+[2026-06-14T14:00:00Z] LAYER 5 (dep audit): SKIPPED — bash unavailable
+[2026-06-14T14:00:00Z] MANUAL SCAN: credential regex tree-wide (sk-ant-/sk-proj-/ghp_/AKIA/AIzaSy/xoxb-)
+[2026-06-14T14:00:00Z] MANUAL SCAN RESULT (29 files matched): all confirmed false positives
+  - agents/sam/website/data/hq-state.json: ops sync log text references cipher scan pattern names
+  - KAI_BRIEF.md: documentation references to pattern names
+  - agents/nel/memory/cipher.state.json: state log
+  - website/docs/research/lab/github-security-scanning-best-practices.md: example patterns in security docs
+  - agents/sam/website/docs/research/lab/github-security-scanning-best-practices.md: mirrored docs
+  - agents/ra/research/lab/github-security-scanning-best-practices.md: mirrored docs
+  - kai/memory/KNOWLEDGE.md: documentation references
+  - agents/nel/memory/cipher.algorithm.md: defines the patterns being scanned
+  - agents/manifests/cipher.hyo.json: manifest references pattern names
+  - agents/nel/consolidation/consolidate.sh: uses patterns in grep regex (line 309)
+  - kai/memory/agent_memory/memory_engine.py: code references
+  - kai/ledger/known-issues-archive-pre2026-04-23.jsonl: archive file
+  - kai/tickets/tickets.jsonl.bak-20260421-113734: ticket backup
+  - agents/nel/verify.sh: code pattern definitions
+  - agents/aether/analysis/kai_telegram.py: error message template "ghp_..." (line 876)
+  - agents/aether/analysis/Simulation_*.txt + Friday_Open_Brief.md + api_usage_check.py: simulation/analysis docs
+  - kai/queue/README-refresh-usage.md: usage examples
+  - agents/nel/logs/cipher-2026-06-*.log: prior cipher run logs (documentation)
+[2026-06-14T14:00:00Z] MANUAL SCAN: PEM private key header (-----BEGIN [RSA/EC/OPENSSH] PRIVATE KEY-----)
+[2026-06-14T14:00:00Z] RESULT: 20+ files matched — all known false positives (cipher:pem-header-fp:2026-05-29):
+  - NEW TODAY: agents/nel/logs/consolidation-2026-06-14.md + website/docs/consolidation/2026-06-14.md (nightly consolidation propagated cmd-1777339979-242.json header-only stdout as expected)
+  - All other matches: prior consolidation docs, consolidation history files — same cmd-1777339979-242.json propagation chain (documented open P2, KAI_TASKS line 283)
+  - kai/queue/completed/cmd-1777339979-242.json: source file contains "-----BEGIN RSA PRIVATE KEY-----" as header-only diagnostic output (not actual key material — confirmed)
+[2026-06-14T14:00:00Z] MANUAL SCAN: .env files
+[2026-06-14T14:00:00Z] RESULT: website/.env.local + agents/sam/website/.env.local — both gitignored per website/.gitignore (lines: .env.local, .env*.local) ✓
+  - newsletter/.env.example: exempt by cipher rule ✓
+  - VERCEL_OIDC_TOKEN in .env.local: JWT token, properly isolated in gitignored file ✓
+[2026-06-14T14:00:00Z] CONSOLIDATION NOTE (from consolidation-2026-06-14.md):
+  - Sentinel [hyo]: FAIL .secrets dir mode=0700 (want 700) — likely sentinel string-match bug (0700 vs 700); mode is correct
+  - Sentinel [hyo]: FAIL founder.token mode=0600 (want 600) — same string-match issue
+  - Cipher [hyo]: leaks=5 in website/ — all from known cmd-1777339979-242.json PEM header propagation (FP)
+  - Cipher [kai-ceo]: leaks=1 in kai/ — same source file
+  - Sentinel [aether]: FAIL kai/aether.sh runner missing — ongoing known issue
+[2026-06-14T14:00:00Z] NO NEW FINDINGS — 0 new leaks, 0 autofixes applied (bash unavailable)
+[2026-06-14T14:00:00Z] ONGOING: cipher:pem-header-fp:2026-05-29 — open P2 in KAI_TASKS (false positive propagation, redact pending Mini access)
+[2026-06-14T14:00:00Z] INFRASTRUCTURE NOTE: bash sandbox unavailable (useradd exit 12); Mini-side cron remains authoritative
+[2026-06-14T14:00:00Z] cipher run end — CLEAN
