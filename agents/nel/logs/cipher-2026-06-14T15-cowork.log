@@ -1,0 +1,10 @@
+[2026-06-14T15:00:00Z] cipher run start
+[2026-06-14T15:00:00Z] MODE: degraded-run (bash sandbox unavailable — useradd exit 12, consistent with all prior Cowork runs). Authoritative scan runs on Mini via cron.
+[2026-06-14T15:00:00Z] NOTE: Prior Cowork run at T14 today already performed full manual scan — see cipher-2026-06-14T14-cowork.log
+[2026-06-14T15:00:00Z] INCREMENTAL CHECK: re-ran Grep scans for new credential patterns (sk-ant-, sk-proj-, AKIA, ghp_, VERCEL_OIDC_TOKEN outside gitignored paths)
+[2026-06-14T15:00:00Z] RESULT: No new findings since T14 run
+[2026-06-14T15:00:00Z] ONGOING KNOWN ISSUES (unchanged from T14):
+  - cipher:pem-header-fp:2026-05-29 — P2 open, cmd-1777339979-242.json PEM header propagation into consolidation docs (false positive, Mini-side redact pending)
+  - Sentinel string-match bug: reports .secrets mode=0700 as failure when 700 is correct (cosmetic)
+[2026-06-14T15:00:00Z] NO NEW LEAKS. NO AUTOFIXES APPLIED.
+[2026-06-14T15:00:00Z] cipher run end — CLEAN
