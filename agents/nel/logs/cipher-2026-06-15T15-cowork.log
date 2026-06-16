@@ -1,0 +1,9 @@
+[2026-06-15T15:00:00Z] cipher run start
+[2026-06-15T15:00:00Z] MODE: degraded-run (bash sandbox unavailable — workspace boot error exit 12). Authoritative scan runs on Mini via cron.
+[2026-06-15T15:00:00Z] SCAN: Grep scan — hardcoded secret patterns (sk-/ghp_/AKIA/AIza/xoxb-) across *.{py,sh,js,html} — 0 matches
+[2026-06-15T15:00:00Z] SCAN: Hardcoded assignment check (password/api_key/secret/token = '...' ≥15 chars) on *.{py,sh,js,html} — 0 matches (clean)
+[2026-06-15T15:00:00Z] GITIGNORE: agents/nel/security/ and .env.* both present in .gitignore (verified)
+[2026-06-15T15:00:00Z] SECRETS DIR: agents/nel/security/ contains founder.token, openai.key, anthropic.key, aethel-bot.key, deploy-hook, env — all gitignored
+[2026-06-15T15:00:00Z] .ENV.LOCAL: website/.env.local contains VERCEL_OIDC_TOKEN (JWT, short-lived) — covered by .env.* gitignore rule (safe)
+[2026-06-15T15:00:00Z] NO NEW LEAKS. NO AUTOFIXES APPLIED.
+[2026-06-15T15:00:00Z] cipher run end — CLEAN

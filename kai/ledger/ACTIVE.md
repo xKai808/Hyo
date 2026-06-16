@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-06-15T22:42:01Z
+Last updated: 2026-06-16T10:56:26Z
 
 ## In Progress
 
-- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-15T22:42:00Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 33d old (>14d critical)
+  - Delegated: 2026-06-16T10:56:26Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-15T22:42:00Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 33d old (>14d critical)
+  - Delegated: 2026-06-16T10:56:26Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-15T22:42:00Z
+  - Delegated: 2026-06-16T10:44:13Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-15T22:42:00Z
+- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 33d old (>14d critical) (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-06-16T10:56:26Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-06-15T22:42:01Z
+  - Delegated: 2026-06-16T10:44:13Z
   - Status: DELEGATED
 
 - **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-06-15 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-06-15T18:41:22Z
+  - Delegated: 2026-06-16T07:28:41Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
@@ -39,8 +39,8 @@ Last updated: 2026-06-15T22:42:01Z
   - Delegated: 2026-05-29T02:12:26Z
   - Status: DELEGATED
 
-- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-29 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
-  - Delegated: 2026-05-29T02:12:26Z
+- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-003)
+  - Delegated: 2026-05-28T08:06:55Z
   - Status: DELEGATED
 
 - **nel-003** [P1] SAFEGUARD: Cross-reference issue (flag-nel-009) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
@@ -51,12 +51,8 @@ Last updated: 2026-06-15T22:42:01Z
   - Delegated: 2026-05-29T02:14:53Z
   - Status: DELEGATED
 
-- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-29 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
-  - Delegated: 2026-05-29T02:14:53Z
-  - Status: DELEGATED
-
-- **kai-002** [P1] [AUTO-REMEDIATE] Daily audit: 2 critical issues found (flagged by kai, cascade flag-kai-003)
-  - Delegated: 2026-05-28T08:06:55Z
+- **ra-002** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-29 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-006)
+  - Delegated: 2026-05-29T02:12:26Z
   - Status: DELEGATED
 
 - **nel-004** [P1] SAFEGUARD: Cross-reference issue (flag-nel-009) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-27 — past 06:00 MT deadline
@@ -83,6 +79,10 @@ Last updated: 2026-06-15T22:42:01Z
   - Delegated: 2026-05-17T08:07:47Z
   - Status: DELEGATED
 
+- **ra-003** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-05-29 — past 06:00 MT deadline (flagged by nel, cascade flag-nel-009)
+  - Delegated: 2026-05-29T02:14:53Z
+  - Status: DELEGATED
+
 - **dex-002** [P1] [AUTO-REMEDIATE] Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spam) — weekly-maintenance.sh dead since 2026-04-25 (4 weeks), inbox-trim not running. Any real Hyo message is now unfindable. Root cause: DELEGATED->DONE pipeline broken (TASK-20260505-* now 427h overdue, re-spamming inbox). Compounds dex-002 NEEDS-HYO launchctl item. (flagged by kai, cascade flag-kai-007)
   - Delegated: 2026-05-23T08:08:03Z
   - Status: DELEGATED
@@ -94,37 +94,22 @@ Last updated: 2026-06-15T22:42:01Z
 ## Queued
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-16T06:10:20Z
+  - Created: 2026-05-17T06:11:02Z
 
 - **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-16T06:10:37Z
+  - Created: 2026-05-17T06:11:20Z
 
-- **flag-dex-001** [P2] Dex Phase 4: 261 recurrent patterns detected — increased from 235, root-cause fix needed
-  - Created: 2026-05-16T06:27:17Z
+- **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-17T06:11:41Z
+
+- **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-17T06:11:58Z
+
+- **flag-dex-001** [P2] Dex Phase 4: 277 recurrent patterns detected — increased from 261, root-cause fix needed
+  - Created: 2026-05-17T06:29:03Z
 
 - **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-16T07:00:46Z
-
-- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-16T10:30:15Z
-
-- **flag-ra-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-16T20:04:07Z
-
-- **flag-nel-004** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-16T22:10:20Z
-
-- **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-16T22:11:43Z
-
-- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-16T22:12:51Z
-
-- **flag-nel-007** [P2] No newsletter produced for 2026-05-16 — past 06:00 MT deadline
-  - Created: 2026-05-16T22:12:51Z
-
-- **flag-nel-008** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-16T22:13:07Z
+  - Created: 2026-05-17T07:00:50Z
 
 - **flag-kai-017** [P2] Daily audit: 2 critical issues found
   - Created: 2026-05-17T08:05:55Z
@@ -137,6 +122,18 @@ Last updated: 2026-06-15T22:42:01Z
 
 - **flag-kai-020** [P2] Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
   - Created: 2026-05-17T08:07:47Z
+
+- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-17T10:30:11Z
+
+- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
+  - Created: 2026-05-17T14:12:01Z
+
+- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-17T14:12:07Z
+
+- **flag-nel-008** [P2] [SELF-REVIEW] 2 untriggered files found
+  - Created: 2026-05-17T14:12:16Z
 
 - **flag-nel-009** [P2] Sentinel: 2 project(s) with test failures
   - Created: 2026-05-17T18:10:08Z
@@ -155,6 +152,9 @@ Last updated: 2026-06-15T22:42:01Z
 
 - **flag-nel-014** [P2] Found 29 broken documentation links — fix or cleanup needed
   - Created: 2026-05-17T18:11:34Z
+
+- **flag-ra-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-17T20:06:12Z
 
 - **flag-kai-021** [P2] Daily audit: 2 critical issues found
   - Created: 2026-05-18T08:06:44Z

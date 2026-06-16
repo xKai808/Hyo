@@ -1,11 +1,11 @@
 # Aether Active Tasks
 
-Last updated: 2026-06-15T16:54:55Z
+Last updated: 2026-06-16T10:56:26Z
 
 ## In Progress
 
-- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 32d old (>14d critical) (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-15T16:54:55Z
+- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 33d old (>14d critical) (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-06-16T10:56:26Z
   - Status: DELEGATED
 
 - **aether-002** [P1] [AUTO-REMEDIATE] Daily audit: Aether KILL-SWITCH active since 2026-05-13 (Hyo refused aether.sh) but daily-audit.sh still flags 'no runner output' and 'evolution.jsonl 80h stale' — script must read kill-switch and skip-stamp instead of flagging; also evolution.jsonl never existed (false stale claim) (flagged by kai, cascade flag-kai-019)

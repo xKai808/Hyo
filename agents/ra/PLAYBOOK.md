@@ -129,6 +129,14 @@ Format: `date | decision | reasoning | outcome`
 
 ## Research Log
 
+- **2026-06-15:** Researched 9/9 sources. See `research/findings-2026-06-15.md` for details.
+
+- **2026-06-15:** Researched 9/9 sources. See `research/findings-2026-06-15.md` for details.
+
+- **2026-06-15:** Researched 9/9 sources. See `research/findings-2026-06-15.md` for details.
+
+- **2026-06-15:** Researched 9/9 sources. See `research/findings-2026-06-15.md` for details.
+
 - **2026-06-14:** Researched 9/9 sources. See `research/findings-2026-06-14.md` for details.
 
 - **2026-06-14:** Researched 9/9 sources. See `research/findings-2026-06-14.md` for details.
