@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-06-17T16:59:16Z
+Last updated: 2026-06-17T17:20:06Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 34d old (>14d critical)
-  - Delegated: 2026-06-17T16:59:16Z
+- **nel-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-06-17T17:20:04Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 34d old (>14d critical)
-  - Delegated: 2026-06-17T16:59:16Z
+- **sam-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-06-17T17:20:04Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-17T16:49:59Z
+  - Delegated: 2026-06-17T17:20:04Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 34d old (>14d critical) (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-17T16:59:16Z
+- **aether-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
+  - Delegated: 2026-06-17T17:20:05Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-06-17T16:49:59Z
+  - Delegated: 2026-06-17T17:20:05Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] morning-report pushed to git but not visible live — check Vercel deploy (flagged by kai)
-  - Delegated: 2026-06-17T14:49:39Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-06-17 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-06-17T17:20:06Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
