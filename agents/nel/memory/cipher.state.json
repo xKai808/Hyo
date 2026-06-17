@@ -2,8 +2,8 @@
   "schema": "hyo.agent.memory.v1",
   "agent": "cipher.hyo",
   "firstSeenAt": "2026-04-10T21:55:00Z",
-  "lastRunAt": "2026-06-16T23:00:00Z",
-  "totalRuns": 1303,
+  "lastRunAt": "2026-06-17T19:00:00Z",
+  "totalRuns": 1315,
   "runHistory": [
     {
       "ts": "2026-05-28T04:02:20Z",
@@ -775,6 +775,114 @@
       "resolved": 0,
       "autofixes": 0,
       "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 matches for hardcoded password/api_key/secret/token assignments (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T00:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools: founder token not found outside .secrets/ (0 matches); 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 matches for ANTHROPIC_API_KEY/OPENAI_API_KEY hardcoded assignments (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule) and website .gitignore (.env.local rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T06:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 matches for hardcoded password/api_key/secret/token assignments (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-16T12:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 3 hardcoded-assignment matches confirmed safe (dashboard.html x3 paths — JS encodeURIComponent(token) var refs, consistent with all prior runs); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-16T19:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 hardcoded-assignment matches outside known safe set (clean); VERCEL_OIDC_TOKEN in website/.env.local confirmed gitignored by root .gitignore (.env.* rule) + agents/sam/website/.gitignore (.env.local explicit); .env.local is expired JWT (exp 2026-06-09) — low risk; newsletter/.env.example safe (example file); 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-16T20:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 5 sk-ant-/ghp_/AKIA/AIza/xoxb- matches all confirmed false positives (hq-state.json log text, cipher.state.json notes, memory_engine.py code, verify.sh detection patterns, api_usage_check.py code — same set as all prior degraded runs); 0 hardcoded password/api_key/secret/token assignment matches (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T03:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume), computer-use timed out (unattended); Grep scan via file tools on *.{py,sh,js,ts,json,md,html,env,txt}: 13 sk-ant-/ghp_/AKIA/AIza/xoxb- matches all confirmed false positives (hq-state.json log text, github-security-scanning-best-practices.md x3 lab docs, KAI_BRIEF.md cipher notes, cipher.state.json run-log, KNOWLEDGE.md refs, memory_engine.py code, verify.sh detection patterns, api_usage_check.py code, Simulation_*.txt x2, README-refresh-usage.md doc placeholder); 1 hardcoded-assignment match confirmed doc placeholder (README-refresh-usage.md:sk-ant-... literal); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T09:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 matches for hardcoded password/api_key/secret/token assignments (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T15:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume), computer-use timed out (unattended); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 matches for hardcoded password/api_key/secret/token assignments (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T16:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 9 sk-ant-/ghp_/AKIA/AIza/xoxb- matches all confirmed false positives (hq-state.json log text, cipher.state.json notes, consolidate.sh grep pattern, memory_engine.py code, verify.sh detection patterns, kai_telegram.py error placeholder, api_usage_check.py code, github-security-scan.sh code comment, cipher.hyo.json manifest — same set as all prior runs); 0 hardcoded-assignment matches (clean); founder token not found outside .secrets/ (0 matches); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T17:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 0 matches for hardcoded password/api_key/secret/token assignments (clean); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T18:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume); Grep scan via file tools on *.{py,sh,js,ts,json,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 2 hardcoded-assignment matches confirmed false positives (cipher.state.json log text, ant-update.sh:token='' empty string — consistent with all prior runs); .env.local in website/ + agents/sam/website/ gitignored by root .gitignore (.env.* rule), newsletter/.env.example safe; 0 knownIssues open, clean"
+    },
+    {
+      "ts": "2026-06-17T19:00:00Z",
+      "failed": 0,
+      "newIssues": 0,
+      "recurring": 0,
+      "resolved": 0,
+      "autofixes": 0,
+      "note": "degraded-run: bash sandbox unavailable (useradd exit 12 on create+resume), computer-use timed out (unattended); Grep scan via file tools on *.{py,sh,js,ts,html,env}: 0 matches for sk-ant-/sk-proj-/ghp_/AKIA/AIza/xoxb- patterns (clean); 1 hardcoded-assignment match confirmed safe (ant-update.sh:598:token='' empty string); VERCEL_OIDC_TOKEN in website/.env.local confirmed expired JWT (exp ~2026-04-09) and gitignored by root .gitignore (.env.* rule) + website/.gitignore; newsletter/.env.example safe (example file); 0 knownIssues open, clean"
     }
   ],
   "knownIssues": {},

@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-06-16T10:56:26Z
+Last updated: 2026-06-17T10:58:38Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 33d old (>14d critical)
-  - Delegated: 2026-06-16T10:56:26Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 34d old (>14d critical)
+  - Delegated: 2026-06-17T10:58:38Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -21,12 +21,8 @@ Last updated: 2026-06-16T10:56:26Z
   - Delegated: 2026-05-27T22:12:57Z
   - Status: DELEGATED
 
-- **sam-005** [P1] SAFEGUARD: Add test coverage for issue (flag-kai-020): Daily audit META: DELEGATED→DONE transition broken across all agents — sam-005 stuck 16d, aether-002 stuck 7d, dex-002 stuck 4d, ra-002/003/004 stuck; no agent's auto-remediate ever closes; cascade fires endlessly. dex-002 already flagged 4d ago and itself is the stuck item. Need: pathway-closer daemon OR runners must call dispatch close on completion. Without this, every flag is a one-way street and audit metrics grow forever.
-  - Delegated: 2026-05-17T08:07:47Z
-  - Status: DELEGATED
-
 ## Queued
 
 - **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-17T10:30:11Z
+  - Created: 2026-05-18T10:30:14Z
 
