@@ -1,11 +1,11 @@
 # Nel Active Tasks
 
-Last updated: 2026-06-17T16:59:16Z
+Last updated: 2026-06-18T13:39:56Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 34d old (>14d critical)
-  - Delegated: 2026-06-17T16:59:16Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 35d old (>14d critical)
+  - Delegated: 2026-06-18T13:39:56Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -24,28 +24,28 @@ Last updated: 2026-06-17T16:59:16Z
 ## Queued
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-18T06:10:31Z
+  - Created: 2026-05-19T06:10:27Z
 
 - **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-18T06:10:49Z
+  - Created: 2026-05-19T06:10:46Z
 
 - **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-18T07:00:51Z
+  - Created: 2026-05-19T07:00:52Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-18T14:14:40Z
+  - Created: 2026-05-19T10:15:07Z
 
 - **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-18T14:14:56Z
+  - Created: 2026-05-19T10:15:23Z
 
-- **flag-nel-006** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-18T18:10:50Z
+- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
+  - Created: 2026-05-19T10:15:24Z
 
-- **flag-nel-007** [P2] No newsletter produced for 2026-05-18 — past 06:00 MT deadline
-  - Created: 2026-05-18T18:10:50Z
+- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-19T10:15:31Z
 
-- **flag-nel-008** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-18T18:11:08Z
+- **flag-nel-008** [P2] [SELF-REVIEW] 2 untriggered files found
+  - Created: 2026-05-19T10:15:39Z
 
 - **flag-nel-009** [P2] No newsletter produced for 2026-05-20 — past 06:00 MT deadline
   - Created: 2026-05-20T18:11:32Z
