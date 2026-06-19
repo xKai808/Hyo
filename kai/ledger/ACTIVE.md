@@ -1,34 +1,34 @@
 # Kai Active Tasks
 
-Last updated: 2026-06-18T13:39:56Z
+Last updated: 2026-06-19T07:41:47Z
 
 ## In Progress
 
-- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 35d old (>14d critical)
-  - Delegated: 2026-06-18T13:39:56Z
+- **nel-001** [P1] SAFEGUARD: Cross-reference issue (flag-nel-001) — scan entire codebase for similar patterns: aether PLAYBOOK.md is 36d old (>14d critical)
+  - Delegated: 2026-06-19T07:41:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 35d old (>14d critical)
-  - Delegated: 2026-06-18T13:39:56Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 36d old (>14d critical)
+  - Delegated: 2026-06-19T07:41:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
 - **ra-001** [P2] [GUIDANCE] Your last 3 cycles had the same assessment. What's preventing progress? What would you try differently?
-  - Delegated: 2026-06-18T13:25:23Z
+  - Delegated: 2026-06-19T07:28:36Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
-- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 35d old (>14d critical) (flagged by nel, cascade flag-nel-001)
-  - Delegated: 2026-06-18T13:39:56Z
+- **aether-001** [P1] [AUTO-REMEDIATE] aether PLAYBOOK.md is 36d old (>14d critical) (flagged by nel, cascade flag-nel-001)
+  - Delegated: 2026-06-19T07:41:47Z
   - Status: DELEGATED
 
 - **dex-001** [P2] [GUIDANCE] You've reported the same bottleneck 3 cycles in a row. What systemic fix would eliminate it? What assumption are you making?
-  - Delegated: 2026-06-18T13:25:23Z
+  - Delegated: 2026-06-19T07:28:36Z
   - Status: DELEGATED
 
-- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-06-17 — past 06:00 MT deadline (flagged by kai)
-  - Delegated: 2026-06-18T07:22:54Z
+- **kai-001** [P1] [AUTO-REMEDIATE] No newsletter produced for 2026-06-18 — past 06:00 MT deadline (flagged by kai)
+  - Delegated: 2026-06-19T07:28:36Z
   - Status: DELEGATED
 
 - **nel-002** [P1] SAFEGUARD: Cross-reference issue (flag-nel-006) — scan entire codebase for similar patterns: No newsletter produced for 2026-05-29 — past 06:00 MT deadline
@@ -78,52 +78,46 @@ Last updated: 2026-06-18T13:39:56Z
 ## Queued
 
 - **flag-nel-002** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-19T06:10:27Z
+  - Created: 2026-05-20T06:15:18Z
 
 - **flag-nel-003** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-19T06:10:46Z
-
-- **flag-dex-001** [P2] Dex Phase 4: 343 recurrent patterns detected — increased from 316, root-cause fix needed
-  - Created: 2026-05-19T06:33:18Z
-
-- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-19T07:00:52Z
-
-- **flag-kai-023** [P2] Daily audit: 2 critical issues found
-  - Created: 2026-05-19T08:07:00Z
+  - Created: 2026-05-20T06:15:38Z
 
 - **flag-nel-004** [P2] Sentinel: 2 project(s) with test failures
-  - Created: 2026-05-19T10:15:07Z
+  - Created: 2026-05-20T06:16:20Z
 
-- **flag-nel-005** [P2] Found 29 broken documentation links — fix or cleanup needed
-  - Created: 2026-05-19T10:15:23Z
+- **flag-nel-005** [P2] Sentinel: 2 project(s) with test failures
+  - Created: 2026-05-20T06:17:26Z
 
-- **flag-nel-006** [P2] Found 9 code optimization opportunities — rolling improvement
-  - Created: 2026-05-19T10:15:24Z
+- **flag-nel-006** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-20T06:17:46Z
 
-- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
-  - Created: 2026-05-19T10:15:31Z
+- **flag-dex-001** [P2] Dex Phase 4: 367 recurrent patterns detected — increased from 343, root-cause fix needed
+  - Created: 2026-05-20T06:35:00Z
 
-- **flag-nel-008** [P2] [SELF-REVIEW] 2 untriggered files found
-  - Created: 2026-05-19T10:15:39Z
-
-- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-19T10:30:16Z
-
-- **flag-kai-001** [P2] morning-report pushed to git but not visible live — check Vercel deploy
-  - Created: 2026-05-19T11:14:30Z
-
-- **flag-ra-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-19T20:10:19Z
+- **flag-nel-001** [P2] Found 29 broken documentation links — fix or cleanup needed
+  - Created: 2026-05-20T07:00:54Z
 
 - **flag-kai-002** [P2] Daily audit: 2 critical issues found
   - Created: 2026-05-20T08:05:59Z
+
+- **flag-nel-007** [P2] Audit found 5 system issues — review security/structure
+  - Created: 2026-05-20T10:13:10Z
+
+- **flag-nel-008** [P2] [SELF-REVIEW] 2 untriggered files found
+  - Created: 2026-05-20T10:13:18Z
+
+- **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-20T10:30:16Z
 
 - **flag-nel-009** [P2] No newsletter produced for 2026-05-20 — past 06:00 MT deadline
   - Created: 2026-05-20T18:11:32Z
 
 - **flag-nel-010** [P2] Found 29 broken documentation links — fix or cleanup needed
   - Created: 2026-05-20T18:11:50Z
+
+- **flag-ra-001** [P2] [SELF-REVIEW] 1 untriggered files found
+  - Created: 2026-05-20T20:12:13Z
 
 - **flag-kai-003** [P2] Daily audit: 2 critical issues found
   - Created: 2026-05-21T08:06:23Z
@@ -175,4 +169,7 @@ Last updated: 2026-06-18T13:39:56Z
 
 - **flag-kai-011** [P2] Daily audit: 2 critical issues found
   - Created: 2026-05-26T08:07:00Z
+
+- **flag-kai-001** [P2] morning-report pushed to git but not visible live — check Vercel deploy
+  - Created: 2026-05-26T13:00:37Z
 
