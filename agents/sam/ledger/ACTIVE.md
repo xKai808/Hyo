@@ -1,11 +1,11 @@
 # Sam Active Tasks
 
-Last updated: 2026-06-22T07:48:32Z
+Last updated: 2026-06-23T07:50:47Z
 
 ## In Progress
 
-- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 39d old (>14d critical)
-  - Delegated: 2026-06-22T07:48:32Z
+- **sam-001** [P1] SAFEGUARD: Add test coverage for issue (flag-nel-001): aether PLAYBOOK.md is 40d old (>14d critical)
+  - Delegated: 2026-06-23T07:50:47Z
   - Method: sim-ack: agent handshake test
   - Status: DELEGATED — sim-report: all clear
 
@@ -24,5 +24,5 @@ Last updated: 2026-06-22T07:48:32Z
 ## Queued
 
 - **flag-sam-001** [P2] [SELF-REVIEW] 1 untriggered files found
-  - Created: 2026-05-23T10:30:12Z
+  - Created: 2026-05-24T10:30:12Z
 
