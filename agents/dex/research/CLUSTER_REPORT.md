@@ -1,21 +1,21 @@
 # Dex Pattern Cluster Report
-**Generated:** 2026-06-23
-**Total entries analyzed:** 924
-**Noise reduction:** 924 entries → 149 clusters (83.9% dedup rate)
+**Generated:** 2026-06-24
+**Total entries analyzed:** 936
+**Noise reduction:** 936 entries → 149 clusters (84.1% dedup rate)
 
 ## Signal Summary
 - Multi-entry clusters: **10** (same root cause, different timestamps)
 - Singleton clusters: **139** (unique issues)
 - Recurring temporal patterns: **4**
 - Highest-volume agent: **ra**
-- Largest cluster: **352 entries** with same root cause
+- Largest cluster: **356 entries** with same root cause
 
 ## Agent Breakdown
 | Agent | Issues |
 |-------|--------|
-| ra | 398 |
-| unknown | 252 |
-| aether | 123 |
+| ra | 402 |
+| unknown | 256 |
+| aether | 127 |
 | sam | 58 |
 | dex | 53 |
 | kai | 23 |
@@ -25,34 +25,34 @@
 ## Top Issue Clusters (by impact score)
 
 ### Cluster 1 — No newsletter produced for 2026-04-24 — past 06:00 MT deadline
-- **Size:** 352 entries | **Score:** 272.55 | **Agent:** ra
-- **Range:** 2026-04-24 → 2026-06-23
-- **Status:** {'active': 352}
+- **Size:** 356 entries | **Score:** 270.13 | **Agent:** ra
+- **Range:** 2026-04-24 → 2026-06-24
+- **Status:** {'active': 356}
 - **Sample entries:**
   - No newsletter produced for 2026-04-24 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
 
 ### Cluster 2 — 1 broken links detected
-- **Size:** 227 entries | **Score:** 179.35 | **Agent:** unknown
-- **Range:** 2026-04-21 → 2026-06-23
-- **Status:** {'active': 227}
+- **Size:** 231 entries | **Score:** 180.52 | **Agent:** unknown
+- **Range:** 2026-04-21 → 2026-06-24
+- **Status:** {'active': 231}
 - **Sample entries:**
   - 1 broken links detected
   - 1 broken links detected
   - 1 broken links detected
 
 ### Cluster 3 — aether PLAYBOOK.md is 15d old (>14d critical)
-- **Size:** 100 entries | **Score:** 119.47 | **Agent:** aether
-- **Range:** 2026-05-29 → 2026-06-23
-- **Status:** {'active': 100}
+- **Size:** 104 entries | **Score:** 122.98 | **Agent:** aether
+- **Range:** 2026-05-29 → 2026-06-24
+- **Status:** {'active': 104}
 - **Sample entries:**
   - aether PLAYBOOK.md is 15d old (>14d critical)
   - aether PLAYBOOK.md is 15d old (>14d critical)
   - aether PLAYBOOK.md is 15d old (>14d critical)
 
 ### Cluster 4 — hyo.world returned HTTP 000000
-- **Size:** 34 entries | **Score:** 34.95 | **Agent:** sam
+- **Size:** 34 entries | **Score:** 34.1 | **Agent:** sam
 - **Range:** 2026-06-01 → 2026-06-05
 - **Status:** {'active': 34}
 - **Sample entries:**
@@ -61,7 +61,7 @@
   - /api/health returned HTTP 000000
 
 ### Cluster 5 — /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
-- **Size:** 17 entries | **Score:** 17.48 | **Agent:** sam
+- **Size:** 17 entries | **Score:** 17.05 | **Agent:** sam
 - **Range:** 2026-06-01 → 2026-06-05
 - **Status:** {'resolved_fp': 17}
 - **Sample entries:**
@@ -70,7 +70,7 @@
   - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
 
 ### Cluster 6 — Dex Phase 4: 235 recurrent patterns detected — increased from 0, root-cause fix needed
-- **Size:** 22 entries | **Score:** 16.15 | **Agent:** dex
+- **Size:** 22 entries | **Score:** 15.65 | **Agent:** dex
 - **Range:** 2026-04-21 → 2026-06-05
 - **Status:** {'active': 22}
 - **Sample entries:**
@@ -79,7 +79,7 @@
   - Dex Phase 4: 261 recurrent patterns detected — increased from 235, root-cause fi
 
 ### Cluster 7 — morning-report pushed to git but not visible live — check Vercel deploy
-- **Size:** 10 entries | **Score:** 11.52 | **Agent:** sam
+- **Size:** 10 entries | **Score:** 11.28 | **Agent:** sam
 - **Range:** 2026-05-19 → 2026-06-17
 - **Status:** {'active': 10}
 - **Sample entries:**
@@ -88,7 +88,7 @@
   - morning-report pushed to git but not visible live — check Vercel deploy
 
 ### Cluster 8 — Daily audit: 5 critical issues found
-- **Size:** 16 entries | **Score:** 10.3 | **Agent:** dex
+- **Size:** 16 entries | **Score:** 9.9 | **Agent:** dex
 - **Range:** 2026-05-05 → 2026-05-28
 - **Status:** {'active': 16}
 - **Sample entries:**
@@ -97,7 +97,7 @@
   - Daily audit: 1 critical issues found
 
 ### Cluster 9 — morning report generated but git push failed — report not live
-- **Size:** 5 entries | **Score:** 4.45 | **Agent:** ra
+- **Size:** 5 entries | **Score:** 4.32 | **Agent:** ra
 - **Range:** 2026-05-05 → 2026-06-05
 - **Status:** {'active': 5}
 - **Sample entries:**
@@ -106,56 +106,56 @@
   - morning report generated but git push failed — report not live
 
 ### Cluster 10 — Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) — NEEDS HYO INTER
-- **Size:** 1 entries | **Score:** 0.8 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 0.77 | **Agent:** kai
 - **Range:** 2026-05-25 → 2026-05-25
 - **Status:** {'active': 1}
 
 ### Cluster 11 — Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spa
-- **Size:** 1 entries | **Score:** 0.75 | **Agent:** dex
+- **Size:** 1 entries | **Score:** 0.72 | **Agent:** dex
 - **Range:** 2026-05-23 → 2026-05-23
 - **Status:** {'active': 1}
 
 ### Cluster 12 — Daily audit 2026-05-21: 3 chronic issues re-flagged 3-21 consecutive days with ZERO closure — system
-- **Size:** 1 entries | **Score:** 0.7 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 0.67 | **Agent:** kai
 - **Range:** 2026-05-21 → 2026-05-21
 - **Status:** {'active': 1}
 
 ### Cluster 13 — Dex Phase 1.5: Repaired corruption but 1 entries still unfixable (manual review needed)
-- **Size:** 1 entries | **Score:** 0.7 | **Agent:** dex
+- **Size:** 1 entries | **Score:** 0.67 | **Agent:** dex
 - **Range:** 2026-05-22 → 2026-05-22
 - **Status:** {'active': 1}
 
 ### Cluster 14 — Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 
-- **Size:** 1 entries | **Score:** 0.62 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 0.6 | **Agent:** kai
 - **Range:** 2026-05-18 → 2026-05-18
 - **Status:** {'active': 1}
 
 ### Cluster 15 — Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/0
-- **Size:** 1 entries | **Score:** 0.6 | **Agent:** ra
+- **Size:** 1 entries | **Score:** 0.57 | **Agent:** ra
 - **Range:** 2026-05-17 → 2026-05-17
 - **Status:** {'active': 1}
 
 ## Temporal Patterns (recurring at consistent intervals)
 | Pattern | Occurrences | Avg Interval | Consistency | Last Seen |
 |---------|-------------|--------------|-------------|-----------|
-| playbook aether critical old | 100 | 6.1h | 95.6% | 2026-06-23 |
-| api/health http returned | 17 | 6.1h | 99.8% | 2026-06-05 |
-| api/hq http expected action | 17 | 6.1h | 99.8% | 2026-06-05 |
-| world http returned hyo | 17 | 6.1h | 99.8% | 2026-06-05 |
+| old critical aether playbook | 104 | 6.1h | 95.7% | 2026-06-24 |
+| http api/health returned | 17 | 6.1h | 99.8% | 2026-06-05 |
+| api/hq action http data | 17 | 6.1h | 99.8% | 2026-06-05 |
+| http hyo returned world | 17 | 6.1h | 99.8% | 2026-06-05 |
 
 ## Deduplication Candidates
 The following clusters contain multiple entries with the same root cause.
 Consider merging them into a single canonical issue:
 
-- **No newsletter produced for 2026-04-24 — past 06:00 MT deadline** (352 entries, ra)
+- **No newsletter produced for 2026-04-24 — past 06:00 MT deadline** (356 entries, ra)
   - No newsletter produced for 2026-04-24 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
 
-- **1 broken links detected** (227 entries, unknown)
+- **1 broken links detected** (231 entries, unknown)
   - 1 broken links detected
   - 1 broken links detected
 
-- **aether PLAYBOOK.md is 15d old (>14d critical)** (100 entries, aether)
+- **aether PLAYBOOK.md is 15d old (>14d critical)** (104 entries, aether)
   - aether PLAYBOOK.md is 15d old (>14d critical)
   - aether PLAYBOOK.md is 15d old (>14d critical)
 
