@@ -1,4 +1,4 @@
-# nel Self-Review — 2026-06-25T01:01
+# nel Self-Review — 2026-06-25T23:31
 
 ## Gate 1: Trigger Validation
 - ✗ **2026-06-25-nel-results.json**: WHAT triggers this? Found 0 callers.
@@ -132,6 +132,9 @@ Questions for nel to answer:
 - Open resolution **RES-079** is relevant to nel
   - This resolution has pending steps. Can nel contribute?
   - Agent: read the resolution and add your findings.
+- Open resolution **RES-081** is relevant to nel
+  - This resolution has pending steps. Can nel contribute?
+  - Agent: read the resolution and add your findings.
 
 ## Gate 4: Recall
 - Prior resolutions for 'nel': 0 matches
@@ -158,5 +161,5 @@ Questions for nel to answer in PLAYBOOK.md:
 
 ## Summary
 - Findings: 13
-- Gate results: trigger=7/8, visibility=checked, resolutions=40, adoption=-6/5
+- Gate results: trigger=3/4, visibility=checked, resolutions=41, adoption=-6/5
 
