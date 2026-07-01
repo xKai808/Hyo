@@ -25,6 +25,8 @@
 
 | ? | P0 | [RESEARCH] Build detection for confirmed blindspot: My blindspot 'Missing coverage on external dependency vulnerabilities (onl...' — | OPEN | 2026-06-02 |
 
+| ? | P2 | [RESEARCH] Evaluate safety for integration into QA cycle | OPEN | 2026-06-30 |
+
 
 ## Daily Research Mandate
 
