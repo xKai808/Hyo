@@ -589,3 +589,10 @@ findings:
 findings:
 - FAIL: kai/aether.sh runner missing
 **Status:** awaiting scope definition
+
+## 2026-07-03 — nightly consolidation
+
+**Sentinel:** passed=1 failed=1
+findings:
+- FAIL: kai/aether.sh runner missing
+**Status:** awaiting scope definition
