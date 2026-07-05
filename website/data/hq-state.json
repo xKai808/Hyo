@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-07-04T07:00:03Z",
+  "updatedAt": "2026-07-05T07:00:03Z",
   "morningReport": {
     "date": "2026-06-17",
     "generatedAt": "2026-06-17T00:00:00Z",
@@ -27,6 +27,18 @@
     "lastOpsSync": "2026-06-17T00:00:00Z"
   },
   "events": [
+    {
+      "ts": "2026-07-05T07:00:03Z",
+      "agent": "consolidation",
+      "msg": "Nightly consolidation \u2014 sam",
+      "doc": "/viewer?agent=consolidation&file=2026-07-05"
+    },
+    {
+      "ts": "2026-07-05T07:00:03Z",
+      "agent": "simulation",
+      "msg": "24h action plan \u2014 2026-07-05",
+      "doc": "/viewer?agent=simulation&file=2026-07-05"
+    },
     {
       "ts": "2026-07-04T07:00:03Z",
       "agent": "consolidation",
@@ -314,18 +326,6 @@
       "agent": "simulation",
       "msg": "24h action plan \u2014 2026-06-15",
       "doc": "/viewer?agent=simulation&file=2026-06-15"
-    },
-    {
-      "ts": "2026-06-15T06:00:00Z",
-      "agent": "ops_sync",
-      "msg": "Ops sync 2026-06-15 Monday (friendly-adoring-babbage Cowork sandbox; wall-clock unavailable -- bash down, timestamp approximate) -- DEGRADED, 35th+ consecutive sandbox-side degraded fire spanning 17+ days (5/29-6/15). Identical fault: `useradd: cannot create directory /sessions/friendly-adoring-babbage` (exit 12) on all retries; sandbox container never booted. computer-use request_access timed out 180s (no user present). sentinel.sh / cipher.sh / nel.sh all skipped. MINI PATH HEALTHY (carried forward): kai-autonomous.sh ran nel 2026-06-09T04:41:55Z (improvementScore 80, brokenLinks 31, staleFiles 4, untested 47, inefficient 9, findingsCount 1); sentinel 4p/0f (false-positives resolved); cipher CLEAN. RECOMMENDATION UNCHANGED: disable Cowork ops-sync scheduled task -- 35+ consecutive identical degraded fires = pure noise; Mini kai-autonomous.sh is authoritative and healthy. DUAL-PATH: written to both hq-state.json copies.",
-      "doc": "/viewer?agent=ops&file=2026-06-15T06"
-    },
-    {
-      "ts": "2026-06-15T06:00:00Z",
-      "agent": "sentinel",
-      "msg": "SKIPPED -- Cowork sandbox bash unavailable (useradd cannot create /sessions/friendly-adoring-babbage, exit 12). 35th+ consecutive skip. Mini authoritative: 4p/0f (false-positives resolved Mini-side).",
-      "doc": "/viewer?agent=sentinel&file=2026-06-15"
     }
   ],
   "ra": {
@@ -396,7 +396,7 @@
     "latestDoc": "/viewer?agent=sim&file=2026-04-10"
   },
   "consolidation": {
-    "lastRun": "2026-07-04T07:00:03Z"
+    "lastRun": "2026-07-05T07:00:03Z"
   },
   "aether": {},
   "nel": {

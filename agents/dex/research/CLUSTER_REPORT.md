@@ -1,23 +1,23 @@
 # Dex Pattern Cluster Report
-**Generated:** 2026-07-04
-**Total entries analyzed:** 1047
-**Noise reduction:** 1047 entries → 149 clusters (85.8% dedup rate)
+**Generated:** 2026-07-05
+**Total entries analyzed:** 1054
+**Noise reduction:** 1054 entries → 149 clusters (85.9% dedup rate)
 
 ## Signal Summary
 - Multi-entry clusters: **10** (same root cause, different timestamps)
 - Singleton clusters: **139** (unique issues)
 - Recurring temporal patterns: **4**
 - Highest-volume agent: **ra**
-- Largest cluster: **389 entries** with same root cause
+- Largest cluster: **392 entries** with same root cause
 
 ## Agent Breakdown
 | Agent | Issues |
 |-------|--------|
-| ra | 435 |
-| unknown | 296 |
-| aether | 167 |
-| sam | 56 |
+| ra | 438 |
+| unknown | 300 |
+| aether | 171 |
 | dex | 53 |
+| sam | 52 |
 | kai | 23 |
 | nel | 13 |
 | ant | 4 |
@@ -25,34 +25,34 @@
 ## Top Issue Clusters (by impact score)
 
 ### Cluster 1 — No newsletter produced for 2026-04-24 — past 06:00 MT deadline
-- **Size:** 389 entries | **Score:** 234.9 | **Agent:** ra
-- **Range:** 2026-04-24 → 2026-07-04
-- **Status:** {'active': 389}
+- **Size:** 392 entries | **Score:** 231.55 | **Agent:** ra
+- **Range:** 2026-04-24 → 2026-07-05
+- **Status:** {'active': 392}
 - **Sample entries:**
   - No newsletter produced for 2026-04-24 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
 
 ### Cluster 2 — 1 broken links detected
-- **Size:** 271 entries | **Score:** 188.18 | **Agent:** unknown
-- **Range:** 2026-04-21 → 2026-07-04
-- **Status:** {'active': 271}
+- **Size:** 275 entries | **Score:** 188.8 | **Agent:** unknown
+- **Range:** 2026-04-21 → 2026-07-05
+- **Status:** {'active': 275}
 - **Sample entries:**
   - 1 broken links detected
   - 1 broken links detected
   - 1 broken links detected
 
 ### Cluster 3 — aether PLAYBOOK.md is 15d old (>14d critical)
-- **Size:** 144 entries | **Score:** 152.47 | **Agent:** aether
-- **Range:** 2026-05-29 → 2026-07-04
-- **Status:** {'active': 144}
+- **Size:** 148 entries | **Score:** 154.87 | **Agent:** aether
+- **Range:** 2026-05-29 → 2026-07-05
+- **Status:** {'active': 148}
 - **Sample entries:**
   - aether PLAYBOOK.md is 15d old (>14d critical)
   - aether PLAYBOOK.md is 15d old (>14d critical)
   - aether PLAYBOOK.md is 15d old (>14d critical)
 
 ### Cluster 4 — hyo.world returned HTTP 000000
-- **Size:** 34 entries | **Score:** 25.6 | **Agent:** sam
+- **Size:** 34 entries | **Score:** 24.75 | **Agent:** sam
 - **Range:** 2026-06-01 → 2026-06-05
 - **Status:** {'active': 34}
 - **Sample entries:**
@@ -60,17 +60,8 @@
   - hyo.world returned HTTP 000000
   - /api/health returned HTTP 000000
 
-### Cluster 5 — /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
-- **Size:** 15 entries | **Score:** 11.4 | **Agent:** sam
-- **Range:** 2026-06-02 → 2026-06-05
-- **Status:** {'resolved_fp': 15}
-- **Sample entries:**
-  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
-  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
-  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
-
-### Cluster 6 — Dex Phase 4: 235 recurrent patterns detected — increased from 0, root-cause fix needed
-- **Size:** 22 entries | **Score:** 10.65 | **Agent:** dex
+### Cluster 5 — Dex Phase 4: 235 recurrent patterns detected — increased from 0, root-cause fix needed
+- **Size:** 22 entries | **Score:** 10.15 | **Agent:** dex
 - **Range:** 2026-04-21 → 2026-06-05
 - **Status:** {'active': 22}
 - **Sample entries:**
@@ -78,8 +69,8 @@
   - Dex Phase 4: 235 recurrent patterns detected — increased from 0, root-cause fix 
   - Dex Phase 4: 261 recurrent patterns detected — increased from 235, root-cause fi
 
-### Cluster 7 — morning-report pushed to git but not visible live — check Vercel deploy
-- **Size:** 10 entries | **Score:** 8.78 | **Agent:** sam
+### Cluster 6 — morning-report pushed to git but not visible live — check Vercel deploy
+- **Size:** 10 entries | **Score:** 8.53 | **Agent:** sam
 - **Range:** 2026-05-19 → 2026-06-17
 - **Status:** {'active': 10}
 - **Sample entries:**
@@ -87,8 +78,17 @@
   - morning-report pushed to git but not visible live — check Vercel deploy
   - morning-report pushed to git but not visible live — check Vercel deploy
 
+### Cluster 7 — /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
+- **Size:** 11 entries | **Score:** 8.22 | **Agent:** sam
+- **Range:** 2026-06-03 → 2026-06-05
+- **Status:** {'resolved_fp': 11}
+- **Sample entries:**
+  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
+  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
+  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
+
 ### Cluster 8 — Daily audit: 5 critical issues found
-- **Size:** 16 entries | **Score:** 6.28 | **Agent:** dex
+- **Size:** 16 entries | **Score:** 5.95 | **Agent:** dex
 - **Range:** 2026-05-05 → 2026-05-28
 - **Status:** {'active': 16}
 - **Sample entries:**
@@ -97,7 +97,7 @@
   - Daily audit: 1 critical issues found
 
 ### Cluster 9 — morning report generated but git push failed — report not live
-- **Size:** 5 entries | **Score:** 3.2 | **Agent:** ra
+- **Size:** 5 entries | **Score:** 3.1 | **Agent:** ra
 - **Range:** 2026-05-05 → 2026-06-05
 - **Status:** {'active': 5}
 - **Sample entries:**
@@ -106,66 +106,65 @@
   - morning report generated but git push failed — report not live
 
 ### Cluster 10 — Daily audit 2026-05-25: DELEGATED->DONE pipeline broken 25 days (since 2026-05-01) — NEEDS HYO INTER
-- **Size:** 1 entries | **Score:** 0.52 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 0.5 | **Agent:** kai
 - **Range:** 2026-05-25 → 2026-05-25
 - **Status:** {'active': 1}
 
 ### Cluster 11 — Daily audit 2026-05-23: hyo-inbox.jsonl flooded to 52,616 lines / 14.7MB (52,588 SLA-breach auto-spa
-- **Size:** 1 entries | **Score:** 0.47 | **Agent:** dex
+- **Size:** 1 entries | **Score:** 0.45 | **Agent:** dex
 - **Range:** 2026-05-23 → 2026-05-23
 - **Status:** {'active': 1}
 
 ### Cluster 12 — Daily audit 2026-05-21: 3 chronic issues re-flagged 3-21 consecutive days with ZERO closure — system
-- **Size:** 1 entries | **Score:** 0.42 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 0.4 | **Agent:** kai
 - **Range:** 2026-05-21 → 2026-05-21
 - **Status:** {'active': 1}
 
 ### Cluster 13 — Dex Phase 1.5: Repaired corruption but 1 entries still unfixable (manual review needed)
-- **Size:** 1 entries | **Score:** 0.42 | **Agent:** dex
+- **Size:** 1 entries | **Score:** 0.4 | **Agent:** dex
 - **Range:** 2026-05-22 → 2026-05-22
 - **Status:** {'active': 1}
 
 ### Cluster 14 — Daily audit 2026-05-18: verified-state.json + session-handoff.json + dispatch-transcripts all 12-18 
-- **Size:** 1 entries | **Score:** 0.35 | **Agent:** kai
+- **Size:** 1 entries | **Score:** 0.33 | **Agent:** kai
 - **Range:** 2026-05-18 → 2026-05-18
 - **Status:** {'active': 1}
 
-### Cluster 15 — Daily audit: Ra newsletter pipeline silent 3 days (no .input.md for 5/17; 5/16 partial; ra-002/003/0
-- **Size:** 1 entries | **Score:** 0.33 | **Agent:** ra
-- **Range:** 2026-05-17 → 2026-05-17
-- **Status:** {'active': 1}
+### Cluster 15 — Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl — chronic system health RED (25
+- **Size:** 2 entries | **Score:** 0.3 | **Agent:** dex
+- **Range:** 2026-04-24 → 2026-04-26
+- **Status:** {'active': 2}
+- **Sample entries:**
+  - Daily audit 2026-04-24: 54 unread URGENT hyo-inbox messages (duplicates from rep
+  - Daily audit 2026-04-26: 63 unread URGENT messages in hyo-inbox.jsonl — chronic s
 
 ## Temporal Patterns (recurring at consistent intervals)
 | Pattern | Occurrences | Avg Interval | Consistency | Last Seen |
 |---------|-------------|--------------|-------------|-----------|
-| critical playbook old aether | 144 | 6.0h | 96.3% | 2026-07-04 |
-| api/health http returned | 17 | 6.1h | 99.8% | 2026-06-05 |
-| hyo world http returned | 17 | 6.1h | 99.8% | 2026-06-05 |
-| expected data action http | 15 | 6.1h | 99.8% | 2026-06-05 |
+| playbook aether old critical | 148 | 6.0h | 96.4% | 2026-07-05 |
+| returned http api/health | 17 | 6.1h | 99.8% | 2026-06-05 |
+| world hyo returned http | 17 | 6.1h | 99.8% | 2026-06-05 |
+| data api/hq action expected | 11 | 6.1h | 99.8% | 2026-06-05 |
 
 ## Deduplication Candidates
 The following clusters contain multiple entries with the same root cause.
 Consider merging them into a single canonical issue:
 
-- **No newsletter produced for 2026-04-24 — past 06:00 MT deadline** (389 entries, ra)
+- **No newsletter produced for 2026-04-24 — past 06:00 MT deadline** (392 entries, ra)
   - No newsletter produced for 2026-04-24 — past 06:00 MT deadline
   - No newsletter produced for 2026-04-25 — past 06:00 MT deadline
 
-- **1 broken links detected** (271 entries, unknown)
+- **1 broken links detected** (275 entries, unknown)
   - 1 broken links detected
   - 1 broken links detected
 
-- **aether PLAYBOOK.md is 15d old (>14d critical)** (144 entries, aether)
+- **aether PLAYBOOK.md is 15d old (>14d critical)** (148 entries, aether)
   - aether PLAYBOOK.md is 15d old (>14d critical)
   - aether PLAYBOOK.md is 15d old (>14d critical)
 
 - **hyo.world returned HTTP 000000** (34 entries, sam)
   - /api/health returned HTTP 000000
   - hyo.world returned HTTP 000000
-
-- **/api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)** (15 entries, sam)
-  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
-  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
 
 - **Dex Phase 4: 235 recurrent patterns detected — increased from 0, root-cause fix needed** (22 entries, dex)
   - Dex Phase 4: 225 recurrent patterns detected — check safeguard status
@@ -174,6 +173,10 @@ Consider merging them into a single canonical issue:
 - **morning-report pushed to git but not visible live — check Vercel deploy** (10 entries, sam)
   - morning-report pushed to git but not visible live — check Vercel deploy
   - morning-report pushed to git but not visible live — check Vercel deploy
+
+- **/api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)** (11 entries, sam)
+  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
+  - /api/hq?action=data returned unexpected HTTP 000000 (expected 200 or 401)
 
 - **Daily audit: 5 critical issues found** (16 entries, dex)
   - Daily audit: 5 critical issues found
