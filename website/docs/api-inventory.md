@@ -16,34 +16,19 @@ Location: `agents/sam/website/api/`
 - **File:** `hq-auth.js`
 - **Method:** POST
 - **Auth:** Password (SHA256 hash comparison)
-- **Purpose:** Issues HMAC-based session tokens for HQ dashboard access.
+- **Purpose:** Issues HMAC-based session tokens for HQ dashboard access. Kept as standalone fallback; all active callers use `/api/hq?action=auth`.
 - **Body:** `{ password }`
 - **Response:** `{ ok, token }` — token format: `timestamp.signature`, TTL 24h.
-- **Exports:** `verifyToken(token)` used by hq-data and hq.js.
-
-### /api/hq-data
-- **File:** `hq-data.js`
-- **Method:** GET
-- **Auth:** Session token via `Authorization: Bearer`
-- **Purpose:** Returns full HQ dashboard state snapshot.
-- **Response:** `{ ok, ts, ...store }` — includes ra, aurora, sentinel, cipher, sim, consolidation, aether, health sections.
-
-### /api/hq-push
-- **File:** `hq-push.js`
-- **Method:** POST
-- **Auth:** Founder token via `x-founder-token` or `Authorization: Bearer`
-- **Purpose:** Receives agent state updates from Mini and updates HQ store.
-- **Body:** `{ agent (required), data (optional), event (optional) }`
-- **Response:** `{ ok, ts }`
-- **Side effect:** Updates global store section, pushes to events array (max 100).
 
 ### /api/hq (unified)
 - **File:** `hq.js`
 - **Method:** GET/POST, routed by `?action=` query param
 - **Subroutes:**
-  - `POST ?action=auth` — same as /api/hq-auth
-  - `POST ?action=push` — same as /api/hq-push
-  - `GET ?action=data` — same as /api/hq-data
+  - `POST ?action=auth` — password login, issues 24h session token
+  - `POST ?action=push` — agent state push (founder-token gated)
+  - `GET ?action=data` — full HQ store snapshot (session-token gated)
+  - `POST ?action=hyo-message` — Hyo → Kai message (session-token gated)
+  - `GET ?action=hyo-export` — Mini pulls hyoMessages (founder-token gated)
   - `GET` (no action) — health check: `{ ok, service: "hq", ts }`
 
 ### /api/register-founder
@@ -89,9 +74,7 @@ Location: `agents/sam/website/api/`
 |----------|-----------|-----------|
 | health | None | — |
 | hq-auth | Password | SHA256 hash |
-| hq-data | Session token | HMAC-SHA256 |
-| hq-push | Founder token | `HYO_FOUNDER_TOKEN` env |
-| hq (unified) | Mixed | All of above |
+| hq (unified) | Mixed | auth/push/data/hyo-message via ?action= |
 | register-founder | Founder token | `HYO_FOUNDER_TOKEN` env |
 | marketplace-request | None | — |
 | aurora-subscribe | None | — |

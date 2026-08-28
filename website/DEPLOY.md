@@ -7,9 +7,20 @@
 `marketplace.html`, `cafe.html`.
 
 **Serverless functions (Vercel Node 20):**
+
+> **Hobby plan limit: 12 serverless functions max.** Files starting with `_` (e.g. `_hq-store.js`) are private modules — Vercel does NOT count them. Current count: **11**. Do not add a new `api/*.js` without deleting one first or upgrading the plan.
+
 - `api/health.js` — deploy smoke test
+- `api/hq.js` — unified HQ endpoint (auth/push/data/hyo-message via `?action=`)
+- `api/hq-auth.js` — standalone auth fallback (active callers use `hq.js?action=auth`)
 - `api/register-founder.js` — Hyo-operator bypass, validates founder token
 - `api/marketplace-request.js` — premium-handle request queue
+- `api/aurora-checkout.js` — Stripe checkout session creation
+- `api/aurora-data.js` — Aurora subscriber profile + brief index
+- `api/aurora-magic-link.js` — magic link sign-in email
+- `api/aurora-retention.js` — Day 7 trial retention email (cron-triggered)
+- `api/aurora-subscribe.js` — free-tier subscription intake
+- `api/aurora-webhook.js` — Stripe webhook lifecycle handler
 
 ## Environment variables
 
